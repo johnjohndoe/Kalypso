@@ -1,5 +1,6 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -28,9 +29,13 @@ public class LayerTableLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
-  public String getColumnText( Object element, int columnIndex )
+  public String getColumnText( final Object element, final int columnIndex )
   {
-    final String name = m_layerTable.getFeatureTypePropertyFromIndex(columnIndex).getName();
+    final FeatureTypeProperty ftp = m_layerTable.getFeatureTypePropertyFromIndex(columnIndex);
+    if( ftp == null )
+      return "";
+    
+    final String name = ftp.getName();
     final Object property = ((KalypsoFeature)element).getProperty( name );
     return property == null ? "" : property.toString();
   }
@@ -38,7 +43,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
-  public void addListener( ILabelProviderListener listener )
+  public void addListener( final ILabelProviderListener listener )
   {
   //  
   }

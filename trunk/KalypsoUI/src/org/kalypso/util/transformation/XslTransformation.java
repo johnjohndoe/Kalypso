@@ -1,14 +1,11 @@
 package org.kalypso.util.transformation;
 
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.io.Writer;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -73,8 +70,6 @@ public class XslTransformation implements CalculationCaseTransformation
       PipedOutputStream outStream = new PipedOutputStream();
       outputFile.create( new PipedInputStream( outStream ), true, new NullProgressMonitor() );
       transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outStream ) );
-      //   inputFile.copy( outputFile.getFullPath(), false, new
-      // NullProgressMonitor() );
     }
     catch( CoreException e )
     {

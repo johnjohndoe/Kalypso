@@ -1,4 +1,4 @@
-package org.kalypso.loader;
+package org.kalypso.loader.impl;
 
 import java.util.Properties;
 
@@ -7,10 +7,12 @@ import org.deegree.graphics.sld.Style;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.UserLayer;
 import org.deegree.graphics.sld.UserStyle;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.loader.AbstractLoader;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.util.loader.ILoader;
-import org.kalypso.util.loader.LoaderException;
 import org.kalypso.util.pool.PoolableObjectType;
 
 /**
@@ -18,13 +20,12 @@ import org.kalypso.util.pool.PoolableObjectType;
  * 
  * @author bce
  */
-public class StyleLoader implements ILoader
+public class StyleLoader extends AbstractLoader
 {
   /**
-   * @see org.kalypso.util.loader.ILoader#load(java.util.Properties,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public Object load( final Properties source, Object helper ) throws LoaderException
+  protected final Object loadIntern( final Properties source, final IProject project, final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
@@ -32,7 +33,7 @@ public class StyleLoader implements ILoader
 
      
       final StyledLayerDescriptor sld = (StyledLayerDescriptor)KalypsoGisPlugin.getDefault()
-          .getPool( StyledLayerDescriptor.class ).borrowObject( new PoolableObjectType( "sld", source, helper ) );
+          .getPool( StyledLayerDescriptor.class ).getObject( new PoolableObjectType( "sld", source, project ), monitor );
       // TODO: move to StyleLoader
 
       final NamedLayer[] namedLayers = sld.getNamedLayers();
@@ -70,7 +71,7 @@ public class StyleLoader implements ILoader
   }
 
   /**
-   * @see org.kalypso.util.loader.ILoader#save(java.util.Properties,
+   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
    *      java.lang.Object)
    */
   public void save( Properties source, Object data ) throws LoaderException
@@ -80,33 +81,9 @@ public class StyleLoader implements ILoader
   }
 
   /**
-   * @see org.kalypso.util.loader.ILoader#getDescription()
+   * @see org.kalypso.loader.ILoader#getDescription()
    */
   public String getDescription()
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.util.loader.ILoader#setSource(java.util.Properties)
-   */
-  public void setSource( Properties source )
-  {
-  //
-  }
-
-  /**
-   * @see org.kalypso.util.loader.ILoader#getSource()
-   */
-  public Properties getSource()
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.util.loader.ILoader#createControl(java.lang.Object)
-   */
-  public Object createControl( Object argument )
   {
     return null;
   }

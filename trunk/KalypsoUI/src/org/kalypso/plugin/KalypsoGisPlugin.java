@@ -8,16 +8,14 @@ import java.util.ResourceBundle;
 
 import javax.swing.UIManager;
 
-import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
-import org.kalypso.util.loader.DefaultLoaderFactory;
-import org.kalypso.util.loader.ILoaderFactory;
-import org.kalypso.util.pool.KalypsoKeyedObjectPool;
-import org.kalypso.util.pool.TypedKeyedPoolableObjectFactory;
+import org.kalypso.loader.DefaultLoaderFactory;
+import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.RepositorySpecification;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -166,13 +164,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return loaderFactory;
   }
   
-  public KeyedObjectPool getPool( final Class valueClass )
+  public ResourcePool getPool( final Class valueClass )
   {
-    KeyedObjectPool pool = (KeyedObjectPool)myPools.get( valueClass );
+    ResourcePool pool = (ResourcePool)myPools.get( valueClass );
     if( pool == null )
     {
-    //  pool = new StackKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ) ) );
-      pool = new KalypsoKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ) ) );
+      pool = new ResourcePool( getLoaderFactory( valueClass ) );
       myPools.put(valueClass, pool);
     }
     

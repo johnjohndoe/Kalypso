@@ -1,4 +1,4 @@
-package org.kalypso.loader.test;
+package org.kalypso.loader.impl.test;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package org.kalypso.loader;
+package org.kalypso.loader.impl;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -8,16 +8,15 @@ import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree_impl.graphics.sld.SLDFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.util.loader.ILoader;
-import org.kalypso.util.loader.LoaderException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.loader.AbstractLoader;
+import org.kalypso.loader.LoaderException;
 
 /**
  * @author schlienger
  *  
  */
-public class SLDLoader implements ILoader
+public class SLDLoader extends AbstractLoader
 {
   public SLDLoader()
   {
@@ -25,7 +24,7 @@ public class SLDLoader implements ILoader
   }
 
   /**
-   * @see org.kalypso.util.loader.ILoader#getDescription()
+   * @see org.kalypso.loader.ILoader#getDescription()
    */
   public String getDescription()
   {
@@ -33,16 +32,12 @@ public class SLDLoader implements ILoader
   }
 
   /**
-   * 
-   * @see org.kalypso.util.loader.ILoader#load(java.util.Properties,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public Object load( final Properties source, final Object helper ) throws LoaderException
+  protected Object loadIntern( final Properties source, final IProject project, final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
-      final IProject project = (IProject)helper;
-
       final String sourcePath = source.getProperty( "PATH", "" );
       final IFile file = project.getFile( sourcePath );
 
@@ -60,7 +55,7 @@ public class SLDLoader implements ILoader
 
   /**
    * 
-   * @see org.kalypso.util.loader.ILoader#save(java.util.Properties,
+   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
    *      java.lang.Object)
    */
   public void save( final Properties source, final Object data ) throws LoaderException
@@ -68,31 +63,5 @@ public class SLDLoader implements ILoader
     // TODO: Transformation vom laden muss rueckgaengig gemacht werden !
     // TODO: support it
     throw new LoaderException( "Operation not supported" );
-  }
-
-  /**
-   * 
-   * @see org.kalypso.util.loader.ILoader#setSource(java.util.Properties)
-   */
-  public void setSource( final Properties source )
-  {
-  //
-  }
-
-  /**
-   * @see org.kalypso.util.loader.ILoader#getSource()
-   */
-  public Properties getSource()
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.util.loader.ILoader#createControl(java.lang.Object)
-   */
-  public Object createControl( final Object argument )
-  {
-    final Composite c = new Composite( (Composite)argument, SWT.NONE );
-    return c;
   }
 }

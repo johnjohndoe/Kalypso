@@ -295,8 +295,19 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
   public FeatureTypeProperty getFeatureTypePropertyFromIndex( final int columnIndex )
   {
     if( m_viewer != null )
-      return (FeatureTypeProperty)m_viewer.getTable().getColumn( columnIndex ).getData();
+    {
+      final Table table = m_viewer.getTable();
+      if( columnIndex >= table.getColumnCount() )
+        return null;
+      
+      return (FeatureTypeProperty)table.getColumn( columnIndex ).getData();
+    }
 
     return null;
+  }
+
+  public boolean isDisposed()
+  {
+    return m_viewer.getTable().isDisposed();
   }
 }

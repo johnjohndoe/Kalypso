@@ -1,16 +1,19 @@
 package org.kalypso.editor.mapeditor;
 
 import java.awt.Frame;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -23,10 +26,20 @@ import org.kalypso.ogc.IMapPanelProvider;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
+import org.kalypso.template.types.StyledLayerType.StyleType;
+import org.kalypso.util.pool.BorrowObjectJob;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 
 /**
  * <p>
@@ -46,8 +59,14 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, IMapModellProvider
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider,
+    IMapModellProvider, IPoolListener
 {
+  private final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
+      KalypsoFeatureLayer.class );
+
+  private final ResourcePool m_stylePool = KalypsoGisPlugin.getDefault().getPool( UserStyle.class );
+
   private final ObjectFactory m_gisviewObjectFactory = new ObjectFactory();
 
   private final Unmarshaller m_unmarshaller;
@@ -65,7 +84,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     try
     {
       m_unmarshaller = m_gisviewObjectFactory.createUnmarshaller();
-//      m_marshaller = m_gisviewObjectFactory.createMarshaller();
+      //      m_marshaller = m_gisviewObjectFactory.createMarshaller();
     }
     catch( JAXBException e )
     {
@@ -75,7 +94,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       throw new RuntimeException( e );
     }
   }
-
 
   public void dispose()
   {
@@ -93,8 +111,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( IContentOutlinePage.class.equals( adapter ) )
     {
       m_outlinePage = new GisMapOutlinePage( this );
-      
-      m_outlinePage.setMapModell(m_mapModell);
+
+      m_outlinePage.setMapModell( m_mapModell );
 
       return m_outlinePage;
     }
@@ -104,40 +122,42 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    // TODO: do it!
-//    if( m_gisview == null )
-//      return;
-//
-//    try
-//    {
-//      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//      m_marshaller.marshal( m_gisview, bos );
-//      bos.close();
-//
-//      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-//
-//      final IFile file = input.getFile();
-//      if( file.exists() )
-//        file.setContents( bis, false, true, monitor );
-//      else
-//        file.create( bis, false, monitor );
-//
-//      bis.close();
-//
-//      setDirty( false );
-//    }
-//    catch( JAXBException e )
-//    {
-//      e.printStackTrace();
-//    }
-//    catch( IOException e )
-//    {
-//      e.printStackTrace();
-//    }
-//    catch( CoreException e )
-//    {
-//      e.printStackTrace();
-//    }
+  // TODO: do it!
+  //    if( m_gisview == null )
+  //      return;
+  //
+  //    try
+  //    {
+  //      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+  //      m_marshaller.marshal( m_gisview, bos );
+  //      bos.close();
+  //
+  //      final ByteArrayInputStream bis = new ByteArrayInputStream(
+  // bos.toByteArray()
+  // );
+  //
+  //      final IFile file = input.getFile();
+  //      if( file.exists() )
+  //        file.setContents( bis, false, true, monitor );
+  //      else
+  //        file.create( bis, false, monitor );
+  //
+  //      bis.close();
+  //
+  //      setDirty( false );
+  //    }
+  //    catch( JAXBException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //    catch( IOException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //    catch( CoreException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
   }
 
   /**
@@ -150,7 +170,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     // create MapPanel
     final Frame virtualFrame = SWT_AWT
         .new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
-    //     final Frame virtualFrame = new Frame("test");
     virtualFrame.setVisible( true );
     myMapPanel.setVisible( true );
     virtualFrame.add( myMapPanel );
@@ -183,22 +202,62 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       e.printStackTrace();
     }
 
-    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+    m_mapModell = new MapModell( myMapPanel, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
 
-    final KeyedObjectPool layerPool = KalypsoGisPlugin.getDefault().getPool( KalypsoFeatureLayer.class );
-    final KeyedObjectPool stylePool = KalypsoGisPlugin.getDefault().getPool( UserStyle.class );
+    loadGisview( gisview );
 
-    m_mapModell = new MapModell( gisview, KalypsoGisPlugin.getDefault()
-            .getCoordinatesSystem(), layerPool, stylePool, project, myMapPanel );
-    
     myMapPanel.setMapModell( m_mapModell );
+
     if( m_outlinePage != null )
-      m_outlinePage.setMapModell(m_mapModell);
-    
+      m_outlinePage.setMapModell( m_mapModell );
+
     setDirty( false );
 
     setContentDescription( input.getFile().getName() );
     setPartName( input.getFile().getName() );
+  }
+
+  private void loadGisview( final Gismapview gisview )
+  {
+    if( gisview == null )
+      return;
+    
+    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+
+    final LayersType layerListType = gisview.getLayers();
+    final List layerList = layerListType.getLayer();
+
+    for( int i = 0; i < layerList.size(); i++ )
+    {
+      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
+          .get( i );
+
+      final String layerName = layerType.getName();
+      final IPoolableObjectType layerKey = new PoolableObjectType( layerType.getLinktype(),
+          layerType.getHref(), project );
+
+      final Job layerJob = new BorrowObjectJob( "Thema laden", m_layerPool, this, layerKey,
+          new LoadLayerHelper( layerType, layerKey ) );
+      layerJob.setRule( new LayerRule( layerName  ) );
+      layerJob.schedule();
+
+      final List stylesList = layerType.getStyle();
+
+      for( int is = 0; is < stylesList.size(); is++ )
+      {
+        final StyleType styleType = ( (StyleType)stylesList.get( is ) );
+
+        final IPoolableObjectType styleKey = new PoolableObjectType( styleType.getLinktype(),
+            styleType.getHref(), project );
+
+        final LoadStyleHelper lsh = new LoadStyleHelper( styleType, styleKey, layerName );
+
+        final Job styleJob = new BorrowObjectJob( "Style wird geladen", m_stylePool, this,
+            styleKey, lsh );
+        styleJob.setRule( new StyleRule( layerName ) );
+        styleJob.schedule();
+      }
+    }
   }
 
   public void showProperties( final LayerType layer )
@@ -209,48 +268,150 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     layer.getClass();
   }
 
-//  public List getLayerlist()
-//  {
-//    return m_gisview == null ? null : m_gisview.getLayers().getLayer();
-//  }
-
-//  /**
-//   * @see org.kalypso.xml.types.ILayerTypeFactory#createNewLayer()
-//   */
-//  public LayerType createNewLayer()
-//  {
-//    try
-//    {
-//      final GisviewLayerType layer = m_typeObjectFactory.createGisviewLayerType();
-//
-//      if( new Propsdiag( getEditorSite().getShell(), layer ).open() != Window.OK )
-//        return null;
-//
-//      // hm, wer macht die id?
-//      layer.setId( "TODO:" );
-//
-//      // TODO: should do propsdialog
-//      layer.setName( "<neu>" );
-//
-//      layer.setVisible( false );
-//
-//      return layer;
-//    }
-//    catch( JAXBException e )
-//    {
-//      // sollte nie passieren
-//      e.printStackTrace();
-//    }
-//
-//    return null;
-//  }
-  
   public MapModell getMapModell()
   {
     return m_mapModell;
   }
+
   public MapPanel getMapPanel()
   {
-      return myMapPanel;
+    return myMapPanel;
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(java.lang.Object,
+   *      boolean)
+   */
+  public void onObjectInvalid( final Object oldObject, final boolean bCannotReload )
+      throws Exception
+  {
+    if( oldObject instanceof LoadLayerHelper )
+    {
+      // verzoegertes laden, also neuen layer erzeugen
+      final LoadLayerHelper layerHelper = (LoadLayerHelper)oldObject;
+
+      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)m_layerPool.getObject(
+          layerHelper.layerKey, new NullProgressMonitor() );
+
+      final KalypsoTheme theme = new KalypsoTheme( layer, layerHelper.layerType.getName() );
+
+      try
+      {
+        m_mapModell.addTheme( theme );
+      }
+      catch( final Exception ex )
+      {
+        System.out.println( "could not add Theme" );
+        ex.printStackTrace();
+      }
+    }
+    else if( oldObject instanceof LoadStyleHelper )
+    {
+      final LoadStyleHelper styleHelper = (LoadStyleHelper)oldObject;
+
+      final KalypsoUserStyle style = (KalypsoUserStyle)m_stylePool.getObject( styleHelper.styleKey,
+          new NullProgressMonitor() );
+
+      // TODO thema finden und style hinzufuegen
+
+      // TODO was passiert, wenn der name doppelt vorkommt
+      final KalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+      for( int i = 0; i < allThemes.length; i++ )
+      {
+        if( allThemes[i].getName().equals( styleHelper.themeName ) )
+          allThemes[i].addStyle( style );
+      }
+    }
+    else
+    {
+      // TODO !!!!
+      // hier kommen wir an, wenn sich ein objekt aendett, also das objekt suchen und ersetzen
+    }
+  }
+
+  private static final class LoadLayerHelper
+  {
+    public final GismapviewType.LayersType.Layer layerType;
+
+    public final IPoolableObjectType layerKey;
+
+    public LoadLayerHelper( final GismapviewType.LayersType.Layer layerTypeArg,
+        final IPoolableObjectType layerKeyArg )
+    {
+      layerType = layerTypeArg;
+      layerKey = layerKeyArg;
+    }
+  }
+
+  /**
+   * @author belger
+   */
+  private class LoadStyleHelper
+  {
+    public final IPoolableObjectType styleKey;
+
+    public final StyleType styleType;
+
+    public final String themeName;
+
+    public LoadStyleHelper( final StyleType styleTypeArg, final IPoolableObjectType styleKeyArg,
+        final String themeNameArg )
+    {
+      styleType = styleTypeArg;
+      styleKey = styleKeyArg;
+      themeName = themeNameArg;
+    }
+  }
+
+  class LayerRule implements ISchedulingRule
+  {
+    private String m_name;
+
+    public LayerRule( final String name )
+    {
+      m_name = name;
+    }
+
+    public boolean isConflicting( final ISchedulingRule rule )
+    {
+      return ( rule instanceof StyleRule && ((StyleRule)rule).getName().equals( m_name ) );
+    }
+
+    public boolean contains( ISchedulingRule rule )
+    {
+      return rule == this;
+    }
+
+    public String getName()
+    {
+      return m_name;
+    }
+  }
+
+  class StyleRule implements ISchedulingRule
+  {
+    private String m_name;
+
+    public StyleRule( final String name )
+    {
+      m_name = name;
+    }
+
+    public String getName()
+    {
+      return m_name;
+    }
+
+    public boolean isConflicting( final ISchedulingRule rule )
+    {
+      return ( rule instanceof LayerRule && ((LayerRule)rule).getName().equals( m_name ) );
+    }
+
+    public boolean contains( ISchedulingRule rule )
+    {
+      return rule == this;
+    }
+  }
+
+  
 }
