@@ -19,14 +19,9 @@
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Zufluesse" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
 		</layer>
 		
-		<layer name="Fluesse" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/major_rivers#SRS=EPSG:4326" linktype="shape">
+		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/major_rivers#SRS=EPSG:4326" linktype="shape">
 			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=default:europe:major_rivers" linktype="style" />
 		</layer>
 		
-<!--
-		<layer name="Gewässerverlauf" visible="true" id="layer3" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=shapes/kleine_spree_rs#SRS=EPSG:31469" linktype="shape">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/styles.sld#STYLE=Spree:Gewaesserverlauf" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
-		</layer>
--->
 	</layers>
 </gismapview>
