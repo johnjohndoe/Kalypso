@@ -6,22 +6,23 @@ package org.deegree_impl.model.feature.xlink;
 public class XLinkArc
 {
   private final String myLabelFrom;
+
   private final String myLabelTo;
-  
-  public XLinkArc(String labelFrom,String labelTo)
+
+  public XLinkArc( String labelFrom, String labelTo )
   {
-    myLabelFrom=labelFrom;
-    myLabelTo=labelTo;
+    myLabelFrom = labelFrom;
+    myLabelTo = labelTo;
   }
-  
+
   public String getFromLabel()
   {
     return myLabelFrom;
-    
+
   }
-  
+
   public String getLabelTo()
   {
-      return myLabelTo;
+    return myLabelTo;
   }
 }

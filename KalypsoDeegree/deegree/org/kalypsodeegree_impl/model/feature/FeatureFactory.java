@@ -52,7 +52,6 @@ import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.feature.xlink.XLinkArc;
 import org.deegree_impl.model.feature.xlink.XLinkResource;

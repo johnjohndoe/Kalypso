@@ -43,13 +43,18 @@
 package org.deegree_impl.model.feature;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.opengis.gc.*;
-
-import org.deegree.model.geometry.*;
-import org.deegree.model.feature.*;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Point;
 import org.deegree_impl.model.geometry.GeometryFactory;
+import org.opengis.gc.GC_GridCoverage;
 
 /**
  * Features are, according to the Abstract Specification, digital

@@ -372,10 +372,11 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.3  2004/08/17 07:51:56  doemming
+ * Revision 1.4  2004/08/30 00:36:53  doemming
  * *** empty log message ***
- * Revision 1.2 2004/08/11 11:20:16 doemming ***
- * empty log message ***
+ * Revision 1.3 2004/08/17 07:51:56 doemming ***
+ * empty log message *** Revision 1.2 2004/08/11 11:20:16 doemming *** empty log
+ * message ***
  * 
  * Revision 1.1.1.1 2004/05/11 16:43:25 doemming backup of local modified
  * deegree sources

@@ -13,10 +13,10 @@ import org.deegree.graphics.FeatureLayer;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.GMLDocument_Impl;
+import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.JMSchema;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.xml.XMLTools;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -34,7 +34,7 @@ public class GMLArrayLoaderTest extends TestCase
     final InputStream gmlInputStream = getClass().getResourceAsStream( "point.gml" );
     try
     {
-      final JMSchema schema = new JMSchema( XMLTools.getAsDOM( schemaInputStream ) );
+      final GMLSchema schema = new GMLSchema( XMLTools.getAsDOM( schemaInputStream ) );
       final HashMap layerMap = new HashMap();
       final FeatureType[] types = schema.getFeatureTypes();
 

@@ -2,5 +2,5 @@
 
 package org.deegree.services.wcas.capabilities;
 
-public interface LockRecord extends RequestType {
-}
+public interface LockRecord extends RequestType
+{}

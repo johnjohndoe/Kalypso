@@ -44,99 +44,119 @@ package org.deegree_impl.clients.context;
 
 import org.deegree.xml.Marshallable;
 
-
 /**
  * Implements the access to the IO settings of a Web Map Context.
- *
+ * 
  * @version $Revision$
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth</a>
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-public class IOSettings implements Marshallable {
-	
-	private String rootDirectory = null;
-	private DirectoryAccess downloadDirectory = null;
-	private DirectoryAccess sLDDirectory = null;
-	private DirectoryAccess printDirectory = null;
-	
-	
-	
-	/**
-	 * @param rootDirectory root directory of the Web Map Context  
-	 * @param downloadDirectory directory to store temoprary files for 
-	 * 							downloading
-	 * @param sLDDirectory directory for storing temporary SLD files 
-	 * @param printDirectory directory for storing temporary for
-	 * 						 print-views
-	 */
-	IOSettings(String rootDirectory, DirectoryAccess downloadDirectory, 
-			DirectoryAccess sLDDirectory, DirectoryAccess printDirectory) {
-		this.rootDirectory = rootDirectory;
-		this.downloadDirectory = downloadDirectory;
-		this.sLDDirectory = sLDDirectory;
-		this.printDirectory = printDirectory;
-	}
-	/**
-	 * @return Returns the downloadDirectory.
-	 */
-	public DirectoryAccess getDownloadDirectory() {
-		return downloadDirectory;
-	}
+public class IOSettings implements Marshallable
+{
 
-	/**
-	 * @param downloadDirectory The downloadDirectory to set.
-	 */
-	public void setDownloadDirectory(DirectoryAccess downloadDirectory) {
-		this.downloadDirectory = downloadDirectory;
-	}
+  private String rootDirectory = null;
 
-	/**
-	 * @return Returns the printDirectory.
-	 */
-	public DirectoryAccess getPrintDirectory() {
-		return printDirectory;
-	}
+  private DirectoryAccess downloadDirectory = null;
 
-	/**
-	 * @param printDirectory The printDirectory to set.
-	 */
-	public void setPrintDirectory(DirectoryAccess printDirectory) {
-		this.printDirectory = printDirectory;
-	}
+  private DirectoryAccess sLDDirectory = null;
 
-	/**
-	 * @return Returns the rootDirectory.
-	 */
-	public String getRootDirectory() {
-		return rootDirectory;
-	}
+  private DirectoryAccess printDirectory = null;
 
-	/**
-	 * @param rootDirectory The rootDirectory to set.
-	 */
-	public void setRootDirectory(String rootDirectory) {
-		this.rootDirectory = rootDirectory;
-	}
+  /**
+   * @param rootDirectory
+   *          root directory of the Web Map Context
+   * @param downloadDirectory
+   *          directory to store temoprary files for downloading
+   * @param sLDDirectory
+   *          directory for storing temporary SLD files
+   * @param printDirectory
+   *          directory for storing temporary for print-views
+   */
+  IOSettings( String rootDirectory, DirectoryAccess downloadDirectory,
+      DirectoryAccess sLDDirectory, DirectoryAccess printDirectory )
+  {
+    this.rootDirectory = rootDirectory;
+    this.downloadDirectory = downloadDirectory;
+    this.sLDDirectory = sLDDirectory;
+    this.printDirectory = printDirectory;
+  }
 
-	/**
-	 * @return Returns the sLDDirectory.
-	 */
-	public DirectoryAccess getSLDDirectory() {
-		return sLDDirectory;
-	}
+  /**
+   * @return Returns the downloadDirectory.
+   */
+  public DirectoryAccess getDownloadDirectory()
+  {
+    return downloadDirectory;
+  }
 
-	/**
-	 * @param directory The sLDDirectory to set.
-	 */
-	public void setSLDDirectory(DirectoryAccess directory) {
-		sLDDirectory = directory;
-	}
+  /**
+   * @param downloadDirectory
+   *          The downloadDirectory to set.
+   */
+  public void setDownloadDirectory( DirectoryAccess downloadDirectory )
+  {
+    this.downloadDirectory = downloadDirectory;
+  }
 
-	/* (non-Javadoc)
-	 * @see org.deegree.xml.Marshallable#exportAsXML()
-	 */
-	public String exportAsXML() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  /**
+   * @return Returns the printDirectory.
+   */
+  public DirectoryAccess getPrintDirectory()
+  {
+    return printDirectory;
+  }
+
+  /**
+   * @param printDirectory
+   *          The printDirectory to set.
+   */
+  public void setPrintDirectory( DirectoryAccess printDirectory )
+  {
+    this.printDirectory = printDirectory;
+  }
+
+  /**
+   * @return Returns the rootDirectory.
+   */
+  public String getRootDirectory()
+  {
+    return rootDirectory;
+  }
+
+  /**
+   * @param rootDirectory
+   *          The rootDirectory to set.
+   */
+  public void setRootDirectory( String rootDirectory )
+  {
+    this.rootDirectory = rootDirectory;
+  }
+
+  /**
+   * @return Returns the sLDDirectory.
+   */
+  public DirectoryAccess getSLDDirectory()
+  {
+    return sLDDirectory;
+  }
+
+  /**
+   * @param directory
+   *          The sLDDirectory to set.
+   */
+  public void setSLDDirectory( DirectoryAccess directory )
+  {
+    sLDDirectory = directory;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.deegree.xml.Marshallable#exportAsXML()
+   */
+  public String exportAsXML()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

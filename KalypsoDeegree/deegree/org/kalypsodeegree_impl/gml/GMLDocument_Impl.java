@@ -42,24 +42,28 @@
  ---------------------------------------------------------------------------*/
 package org.deegree_impl.gml;
 
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.deegree.gml.*;
-import org.deegree.xml.*;
-
-import org.deegree_impl.tools.*;
-
-import org.w3c.dom.*;
-
-import org.xml.sax.*;
+import org.deegree.gml.GMLDocument;
+import org.deegree.gml.GMLFeatureCollection;
+import org.deegree.gml.GMLNameSpace;
+import org.deegree.xml.DOMPrinter;
+import org.deegree.xml.XMLTools;
+import org.deegree_impl.tools.Debug;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * 
@@ -75,7 +79,8 @@ import org.xml.sax.*;
 public class GMLDocument_Impl implements GMLDocument
 {
   private org.w3c.dom.Document document = null;
-      private List myNS=new ArrayList();
+
+  private List myNS = new ArrayList();
 
   /**
    * Creates a new GMLDocument_Impl object.
@@ -211,8 +216,8 @@ public class GMLDocument_Impl implements GMLDocument
   public void addNameSpace( GMLNameSpace nameSpace )
   {
     Debug.debugMethodBegin();
-    if(!myNS.contains(nameSpace))
-      myNS.add(nameSpace);
+    if( !myNS.contains( nameSpace ) )
+      myNS.add( nameSpace );
     Element root = document.getDocumentElement();
 
     if( nameSpace.getSubSpaceName() != null )
@@ -242,7 +247,7 @@ public class GMLDocument_Impl implements GMLDocument
   public void setRoot( GMLFeatureCollection root )
   {
     Debug.debugMethodBegin();
-   
+
     Node node = document.getDocumentElement();
 
     // remove root node if it already exists
@@ -253,7 +258,7 @@ public class GMLDocument_Impl implements GMLDocument
 
     XMLTools.insertNodeInto( ( (GMLFeatureCollection_Impl)root ).getAsElement(), document );
     for( int i = 0; i < myNS.size(); i++ )
-      addNameSpace( (GMLNameSpace)myNS.get(i) );
+      addNameSpace( (GMLNameSpace)myNS.get( i ) );
     Debug.debugMethodEnd();
   }
 
@@ -282,10 +287,11 @@ public class GMLDocument_Impl implements GMLDocument
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.2  2004/08/11 11:20:16  doemming
+ * Revision 1.3  2004/08/30 00:36:58  doemming
  * *** empty log message ***
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming
- * backup of local modified deegree sources
+ * Revision 1.2 2004/08/11 11:20:16 doemming ***
+ * empty log message *** Revision 1.1.1.1 2004/05/11 16:43:24 doemming backup of
+ * local modified deegree sources
  * 
  * Revision 1.7 2004/03/02 07:38:14 poth no message
  * 

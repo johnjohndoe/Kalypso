@@ -4,7 +4,6 @@ import org.deegree.gml.GMLException;
 import org.deegree.gml.GMLProperty;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.tools.Debug;
 import org.w3c.dom.Document;
@@ -25,17 +24,17 @@ public class GMLCustomProperty_Impl extends GMLProperty_Impl
   {
     try
     {
-    final Element element = doc.createElement( ftp.getName() );
+      final Element element = doc.createElement( ftp.getName() );
 
-    // marshalling
-    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
-        .getTypeHandlerForClassName( ftp.getType() );
-    typeHandler.marshall( customObject, element );
+      // marshalling
+      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( ftp.getType() );
+      typeHandler.marshall( customObject, element );
 
-    GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
+      GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
 
-    Debug.debugMethodEnd();
-    return gmlProp;
+      Debug.debugMethodEnd();
+      return gmlProp;
     }
     catch( final Exception e )
     {
