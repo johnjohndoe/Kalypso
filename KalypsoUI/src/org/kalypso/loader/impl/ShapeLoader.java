@@ -3,18 +3,15 @@ package org.kalypso.loader.impl;
 import java.io.File;
 import java.util.Properties;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureType;
-import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.eclipse.core.runtime.UtilProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -61,47 +58,13 @@ public class ShapeLoader extends AbstractLoader
       }
 
       final String sourceSrs = source.getProperty( "SRS", "" );
-
-      final ShapeFile sf = new ShapeFile( sourceFile.getAbsolutePath() );
-
-      final int count = sf.getRecordNum();
-
-      final FeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
-      final String name = source + featureType.getName();
-      final KalypsoFeatureLayer layer = new KalypsoFeatureLayer( name, featureType,
-          KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
-
-      // die shape-api liefert stets WGS84 als Koordinatensystem, daher
-      // Anpassung hier:
-
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
 
-      final CS_CoordinateSystem srcCS = org.deegree_impl.model.cs.Adapters.getDefault().export(
+      final CS_CoordinateSystem sourceCrs = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
-      //      final int max= count < 20 ? count:20;
-      final int max = count; // < 20 ? count:20;
-      if( max < count ) 
-        System.out.println( "WARNUNG es werden nur " + max + " von " + count + " Features geladen" );
 
-      monitor.beginTask( "Geometrien werden geladen...", max + 1 );
+      final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), new UtilProgressMonitor( monitor ) );
       
-      for( int i = 0; i < max; i++ )
-      {
-        final Feature fe = sf.getFeatureByRecNo( i + 1 );
-        GMLHelper.setCrs( fe, srcCS );
-        if( fe != null )
-          layer.addFeature( new KalypsoFeature( fe ) );
-        
-        monitor.worked(i);
-      }
-
-      sf.close();
-      
-      monitor.setTaskName( "Layer wird optimiert..." );
-      layer.optimize();
-      
-      monitor.worked( max );
-
       if( shpResource != null )
         addResource( shpResource, layer );
       if( dbfResource != null )
