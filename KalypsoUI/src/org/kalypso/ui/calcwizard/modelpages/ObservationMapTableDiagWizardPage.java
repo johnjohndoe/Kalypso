@@ -118,7 +118,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
   private void createTablePanel( final Composite parent )
   {
-    // TODO
 //    Composite comp = new Cop
     initDiagramTable( parent );
 

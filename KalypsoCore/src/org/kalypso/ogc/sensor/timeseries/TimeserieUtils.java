@@ -1,10 +1,15 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -16,6 +21,8 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class TimeserieUtils
 {
+  private static Properties m_config;
+
   private TimeserieUtils( )
   {
     // no instanciation
@@ -69,18 +76,42 @@ public class TimeserieUtils
    */
   public final static Color getColorFor( final String mdAlarm )
   {
-    if( TimeserieConstants.MD_ALARM_1.equals( mdAlarm ) )
+    final String strColor = getProperties().getProperty( "COLOR_" + mdAlarm );
+    if( strColor == null )
       return Color.RED;
-    if( TimeserieConstants.MD_ALARM_2.equals( mdAlarm ) )
-      return Color.ORANGE;
-    if( TimeserieConstants.MD_ALARM_3.equals( mdAlarm ) )
-      return Color.CYAN;
-    if( TimeserieConstants.MD_ALARM_4.equals( mdAlarm ) )
-      return Color.MAGENTA;
     
-    return null;
+    return StringUtilities.stringToColor( strColor );
   }
   
+  /**
+   * Layze loading of the properties
+   * 
+   * @return config of the timeseries package
+   */
+  private static Properties getProperties( )
+  {
+    if( m_config == null )
+    {
+      m_config = new Properties();
+     
+      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
+      
+      try
+      {
+        m_config.load( ins );
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( ins );
+      }
+    }
+    return m_config;
+  }
+
   /**
    * Sets the 'forecast' metadata of the given observation using the given date
    * range.
