@@ -21,7 +21,7 @@ echo -e "\n clean jars"
 
 echo -e "\n copy classes from $SRC to $INSTALL"
 cd $SRC
-cp -r com datacenter de timeserieSelection  $INSTALL
+cp -r symbols com datacenter de timeserieSelection  $INSTALL
 
 echo -e "\n generate new jarfile"
 
