@@ -156,6 +156,13 @@
             class="org.kalypso.ui.editor.featureeditor.FeatureEditor"
             id="org.kalypso.ui.editor.FeatureEditor">
       </editor>
+      <editor
+            class="org.kalypso.ui.editor.gmleditor.ui.GMLEditor"
+            icon="icons/kalypso_gtt.gif"
+            default="true"
+            name="GMLEditor"
+            id="org.kalypso.ui.editor.GMLEditor"
+            extensions="gmv"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">

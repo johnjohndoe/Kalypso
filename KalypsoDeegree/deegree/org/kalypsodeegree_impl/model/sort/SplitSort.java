@@ -254,7 +254,7 @@ public class SplitSort implements FeatureList
    */
   public void add( int index, Object element )
   {
-    throw new UnsupportedOperationException();
+    m_objects.add( index, element);    
   }
 
   /**

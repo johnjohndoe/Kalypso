@@ -56,5 +56,9 @@ public interface GMLWorkspace extends ModellEventProvider
   
   public String getSchemaLocation();
   
-  public String getSchemaNamespace(); 
+  public String getSchemaNamespace();
+
+  public Feature createFeature( FeatureType type ); 
+  
+  public void addFeature(Feature parent,String propName,int pos,Feature newFeature) throws Exception; 
 }
