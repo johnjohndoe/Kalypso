@@ -122,11 +122,17 @@
             id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             extensions="ott"/>
       <editor
-            launcher="org.kalypso.ui.editorLauncher.GmlTemplateLauncher"
+            launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
+            default="true"
+            name="Gis Vorlagenauswahl"
+            id="org.kalypso.ui.editor.GisEditor"
+            extensions="gml,shp"/>
+      <editor
+            launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher"
             default="false"
-            name="Gml Vorlagenauswahl"
-            id="org.kalypso.ui.editor.GmlEditor"
-            extensions="*.gml"/>
+            name="Zeitreihen Vorlagenauswahl"
+            id="org.kalypso.ui.editor.ObsEditor"
+            extensions="zml"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">
