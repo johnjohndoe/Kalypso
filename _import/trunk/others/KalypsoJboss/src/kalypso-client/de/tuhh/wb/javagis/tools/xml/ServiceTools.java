@@ -308,19 +308,36 @@ public class ServiceTools
 
     }
 
+//    public static void xslTransform(File xmlFile,File xslFile,File outputFile) throws Exception
+//    {
+//	Runtime.getRuntime().gc();
+//	System.out.println("Transformation can take some minutes ...");
+//	String outString=xslTransform(xmlFile,xslFile);
+//	
+//	System.out.println(" writing to file: "+outputFile.toString());
+//	FileWriter out=new FileWriter(outputFile);
+//	out.write(outString);
+//	out.close();
+//	outString=null;
+//	Runtime.getRuntime().gc();
+//	// File.createTempFile( filename, suffix )
+//    }
+//    
     public static void xslTransform(File xmlFile,File xslFile,File outputFile) throws Exception
     {
-	Runtime.getRuntime().gc();
-	System.out.println("Transformation can take some minutes ...");
-	String outString=xslTransform(xmlFile,xslFile);
-	
-	System.out.println(" writing to file: "+outputFile.toString());
-	FileWriter out=new FileWriter(outputFile);
-	out.write(outString);
-	out.close();
-	outString=null;
-	Runtime.getRuntime().gc();
-	// File.createTempFile( filename, suffix )
+      Runtime.getRuntime().gc();
+    System.out.println("Transformation can take some minutes ...");
+      DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+      factory.setNamespaceAware(true);
+      DocumentBuilder docuBuilder=factory.newDocumentBuilder();
+      Document xmlDOM=docuBuilder.parse(xmlFile); 
+      Document xslDOM=docuBuilder.parse(xslFile);      
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      //    transformerFactory.setAttribute("version",new String("1.0"));
+      Transformer transformer =transformerFactory.newTransformer(new DOMSource(xslDOM));
+      FileWriter resultFW=new FileWriter(outputFile);   
+      transformer.transform(new DOMSource(xmlDOM), new StreamResult(resultFW));
+      Runtime.getRuntime().gc();
     }
     
     public static String xslTransform(File xmlFile,File xslFile) throws Exception
@@ -344,8 +361,8 @@ public class ServiceTools
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		//		transformerFactory.setAttribute("version",new String("1.0"));
 		Transformer transformer =transformerFactory.newTransformer(xslSource);
-		StringWriter resultSW=new StringWriter();
-		transformer.transform( xmlSource, new StreamResult(resultSW));
+		StringWriter resultSW=new StringWriter();		
+    transformer.transform( xmlSource, new StreamResult(resultSW));
 		return resultSW.toString();
 		// reuse the transformer with a new Source, which is our identity stylesheet itself
 		//	transformer.transform( new StreamSource(new java.io.StringReader(xslString) ) , new StreamResult(System.out) );
