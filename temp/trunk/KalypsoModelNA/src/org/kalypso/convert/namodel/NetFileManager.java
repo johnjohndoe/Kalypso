@@ -61,8 +61,8 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
-import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.java.util.FortranFormatHelper;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -611,20 +611,20 @@ public class NetFileManager extends AbstractManager
         izuf = 5;
 
       asciiBuffer.getNetBuffer().append(
-          ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( izug ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( iabg ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( iueb ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( izuf ), "i5" ) );
+          FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( izug ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( iabg ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( iueb ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( izuf ), "i5" ) );
       asciiBuffer.getNetBuffer().append(
-          ASCIIHelper.toAscii( String.valueOf( ivzwg ), "i5" ) + "\n" );
+          FortranFormatHelper.printf( String.valueOf( ivzwg ), "i5" ) + "\n" );
 
       if( ivzwg != 0 )
       {
         asciiBuffer.getNetBuffer().append(
-            ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
+            FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
         asciiBuffer.getNetBuffer().append(
-            ASCIIHelper.toAscii( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
+            FortranFormatHelper.printf( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
       }
       if( izuf != 0 )
       {

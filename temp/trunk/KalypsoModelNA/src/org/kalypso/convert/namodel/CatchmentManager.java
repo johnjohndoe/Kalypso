@@ -60,7 +60,7 @@ import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
-import org.kalypso.convert.ASCIIHelper;
+import org.kalypso.java.util.FortranFormatHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
@@ -157,8 +157,8 @@ public class CatchmentManager extends AbstractManager
     if( igwzu > 0 )
     {
       HashMap col2 = new HashMap();
-      String format13 = createFormatLine( "ngwzu", "*", "_", igwzu );
-      String format14 = createFormatLine( "gwwi", "*", "_", igwzu );
+      String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu );
+      String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu );
       line = reader.readLine();
       createProperties( col2, line, format13 );
       line = reader.readLine();
@@ -222,6 +222,7 @@ public class CatchmentManager extends AbstractManager
     return feature;
   }
 
+
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
     Feature rootFeature = workspace.getRootFeature();
@@ -245,10 +246,10 @@ public class CatchmentManager extends AbstractManager
       asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
 
     StringBuffer b = new StringBuffer();
-    b.append( ASCIIHelper.toAscii( FeatureHelper.getAsString( feature, "pns" ), "a1" ) );
+    b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pns" ), "a1" ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
-    b.append( " " + ASCIIHelper.toAscii( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" )
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" )
         + "\n" );
     // 5
     b.append( "std.tmp std.ver\n" );

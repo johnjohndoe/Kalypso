@@ -49,8 +49,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
@@ -58,6 +56,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.convert.ASCIIHelper;
+import org.kalypso.java.util.FortranFormatHelper;
 
 /**
  * @author doemming
@@ -164,90 +163,21 @@ public abstract class AbstractManager
   public void createProperties( HashMap propCollector, String line, int formatLine )
       throws Exception
   {
-    createProperties( propCollector, line, m_asciiFormat[formatLine] );
+    createProperties(propCollector, line, m_asciiFormat[formatLine]);
   }
-
-  public void createProperties( HashMap propCollector, String line, String formatLine )
-      throws Exception
+  
+  protected void createProperties( HashMap propCollector, String line, String formatLine ) throws Exception
   {
-    line = line + "                                                ";
-    List nameCollector = new ArrayList();
-    StringBuffer pattern = new StringBuffer( "^" );
-    String[] formats = ASCIIHelper.patternBrackets.split( formatLine );
-    for( int i = 0; i < formats.length; i++ )
+    final HashMap propertyMap=FortranFormatHelper.scanf( formatLine, line);
+    final Iterator it=propertyMap.keySet().iterator();
+    while(it.hasNext())
     {
-      String format = formats[i];
-      String regExp = getRegExp( format, nameCollector );
-      pattern.append( regExp );
-    }
-    pattern.append( "\\s*$" );
-    Pattern linePattern = Pattern.compile( pattern.toString() );
-    Matcher m = linePattern.matcher( line );
-    if( !m.matches() )
-    {
-      throw new Exception( "NA-ASCII parsingexception " + "\n format:" + formatLine + "\nline:"
-          + line + "\nregExp:" + pattern.toString() + "\n  does not match n" );
-    }
-
-    for( int i = 0; i < m.groupCount(); i++ )
-    {
-      String name = (String)nameCollector.get( i );
-      String value = m.group( i + 1 ).trim();
-      //System.out.println( 1 + ". " + name + "=" + value );
-      propCollector.put( name, FeatureFactory.createFeatureProperty( name, value ) );
-    }
-
+      final String key=(String)it.next();
+      propCollector.put( key, FeatureFactory.createFeatureProperty( key, propertyMap.get(key) ) );      
+    }  
   }
 
-  private String getRegExp( String string, List nameCollector )
-  {
-    Matcher m = ASCIIHelper.pPairFormat.matcher( string );
-    if( m.matches() )
-      return "(" + getPairRegExp( string, nameCollector ) + ")";
-    m = ASCIIHelper.pSpaceFormat.matcher( string );
-    if( m.matches() )
-    {
-      return string.replace( '_', ' ' );
-    }
-    throw new UnsupportedOperationException();
-  }
-
-  private String getPairRegExp( String fPair, List nameCollector )
-  {
-    if( "".equals( fPair ) )
-      return "";
-    final String[] s = fPair.split( "," );
-    nameCollector.add( s[0] ); // PropertyName
-
-    final String format = s[1];
-
-    if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
-      return ASCIIHelper.freeFormat;
-    Matcher m = ASCIIHelper.pFortranFormat.matcher( format );
-    if( m.matches() )
-    {
-      String type = m.group( 1 );
-      String regExpChar = "";
-      if( "aA".indexOf( type ) >= 0 )
-        regExpChar = ASCIIHelper.textRegExp;
-      if( "iIfF".indexOf( type ) >= 0 )
-        regExpChar = ASCIIHelper.decimalValue;
-
-      String charMax = m.group( 2 ); // gesamt anzahl stellen
-      String decimalPlace = m.group( 3 ); // Nachkommastellen
-
-      if( "".equals( decimalPlace ) )
-      {
-        return regExpChar + "{1," + charMax + "}";
-      }
-      int max = Integer.parseInt( charMax );
-      int decimal = Integer.parseInt( decimalPlace );
-      return regExpChar + "{1," + ( max - decimal - 1 ) + "}" + ASCIIHelper.decimalPoint + regExpChar + "{"
-          + ( decimal ) + "}";
-    }
-    throw new UnsupportedOperationException();
-  }
-
+  
   public String toAscci( Feature feature, int formatLineIndex )
   {
     return ASCIIHelper.toAsciiLine(feature,m_asciiFormat[formatLineIndex]); 
@@ -267,22 +197,6 @@ public abstract class AbstractManager
         System.out.println( "property does not exist: >" + feProp.getName() + "="
             + feProp.getValue() + "<" );
     }
-  }
-
-  public static String createFormatLine( String name, String format, String separator, int repeats )
-  {
-    //    (ngwzu,*)
-    if( repeats < 1 )
-      return "";
-    StringBuffer b = new StringBuffer( "(" + name + "" + 0 + "," + format + ")" );
-    if( repeats > 1 )
-    {
-      for( int i = 1; i < repeats; i++ )
-      {
-        b.append( separator + "(" + name + "" + i + "," + format + ")" );
-      }
-    }
-    return b.toString();
   }
 
   private class IntID
