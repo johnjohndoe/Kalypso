@@ -214,7 +214,7 @@ public class NewCalculationCaseWizardMainPage extends WizardPage implements List
 
     WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {
-      public void execute( IProgressMonitor monitor ) throws CoreException
+      public void execute( final IProgressMonitor monitor ) throws CoreException
       {
         try
         {

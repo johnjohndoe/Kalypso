@@ -3,11 +3,11 @@ package org.kalypso.model.transformation;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
@@ -15,11 +15,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  */
 public class CopyTransformation extends AbstractTransformation
 {
-  /**
-   * @throws TransformationException
-   * @see org.kalypso.model.transformation.ICalculationCaseTransformation#transform(org.eclipse.core.resources.IFolder, org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public void transformIntern( final IFolder targetFolder, final Properties properties, final IProgressMonitor monitor ) throws TransformationException
+ /**
+  * @see org.kalypso.model.transformation.AbstractTransformation#transformIntern(java.util.Properties, org.eclipse.core.runtime.IProgressMonitor)
+  */
+  public void transformIntern( final Properties properties, final IProgressMonitor monitor ) throws TransformationException
   {
     monitor.beginTask( "Transform", 2000 );
     
@@ -30,15 +29,13 @@ public class CopyTransformation extends AbstractTransformation
       throw new TransformationException( "Parameter 'input' nicht gesetzt" );
     if( output == null || output.length() == 0 )
       throw new TransformationException( "Parameter 'output' nicht gesetzt" );
-    
-    final IProject project = targetFolder.getProject();
-    
-    final IResource inputResource = project.findMember( input );
-    if( inputResource == null || !inputResource.exists() || !( inputResource instanceof IFile ) )
+
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile inputFile = root.getFile( new Path( input ) );
+    if( inputFile == null || !inputFile.exists() )
       throw new TransformationException( "input file doesn't exist or is not a file: " + input );
 
-    final IFile inputFile = (IFile)inputResource;
-    final IFile outputFile = targetFolder.getFile( output );
+    final IFile outputFile = root.getFile( new Path( output ) );
 
     try
     {
