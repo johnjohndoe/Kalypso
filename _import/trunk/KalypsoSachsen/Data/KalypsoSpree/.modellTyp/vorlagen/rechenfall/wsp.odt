@@ -7,8 +7,5 @@
 	<legend title="Legende" visible="true"/>
 
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="wsp" datatype="xs:double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
-	<axis id="nied" datatype="xs:double" label="Niederschlag" unit="mm" direction="vertical" inverted="true" position="left" />
-	<axis id="abgabe" datatype="xs:double" label="Abgabe" unit="m³" direction="vertical" position="left" />
-	<axis id="zugabe" datatype="xs:double" label="Zugabe" unit="m³" direction="vertical" position="left" />
+	<axis id="w" datatype="xs:double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
 </obsdiagview>

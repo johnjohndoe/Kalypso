@@ -7,5 +7,5 @@
 	<legend title="Legende" visible="true"/>
 
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="w" datatype="xs:double" label="Volumen" unit="m³" direction="vertical" position="left" />
+	<axis id="a" datatype="xs:double" label="Abgabe" unit="m³/s" direction="vertical" position="left" />
 </obsdiagview>

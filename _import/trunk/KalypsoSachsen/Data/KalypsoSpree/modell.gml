@@ -69,7 +69,7 @@
 			<Wasserstand_gemessenEingang/>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_LIESKE.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_LIESKE.zml"/>
 			</Wasserstand_gerechnet>
 		</Flusslaufmodell>
 	</gml:featureMember>
@@ -88,7 +88,7 @@
 			<Wasserstand_gemessenEingang/>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_BOXBRG.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_BOXBRG.zml"/>
 			</Wasserstand_gerechnet>
 		</Flusslaufmodell>
 	</gml:featureMember>
@@ -107,7 +107,7 @@
 			<Wasserstand_gemessenEingang/>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_SPREY.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SPREY.zml"/>
 			</Wasserstand_gerechnet>
 		</Flusslaufmodell>
 	</gml:featureMember>
@@ -126,7 +126,7 @@
 			<Wasserstand_gemessenEingang/>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_SPWITZ.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SPWITZ.zml"/>
 			</Wasserstand_gerechnet>
 		</Flusslaufmodell>
 	</gml:featureMember>
@@ -141,7 +141,7 @@
 			<Wasserstand_gemessenEingang/>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_SPREMB.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SPREMB.zml"/>
 			</Wasserstand_gerechnet>
 		</Flusslaufmodell>
 	</gml:featureMember>
@@ -166,7 +166,7 @@
 			</Wasserstand_gemessenEingang>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_SCHIRG.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SCHIRG.zml"/>
 			</Wasserstand_gerechnet>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -191,7 +191,7 @@
 			</Wasserstand_gemessenEingang>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_BAUTZWB.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_BAUTZWB.zml"/>
 			</Wasserstand_gerechnet>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -216,7 +216,7 @@
 			</Wasserstand_gemessenEingang>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_GROEDI.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_GROEDI.zml"/>
 			</Wasserstand_gerechnet>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -241,7 +241,7 @@
 			</Wasserstand_gemessenEingang>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_JAENKD.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_JAENKD.zml"/>
 			</Wasserstand_gerechnet>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -266,7 +266,7 @@
 			</Wasserstand_gemessenEingang>
 			<Wasserstand_gemessen/>
 			<Wasserstand_gerechnet>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/WV_SAERI.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/WV_SAERI.zml"/>
 			</Wasserstand_gerechnet>
 		</Einzugsgebiet>
 	</gml:featureMember>
@@ -284,7 +284,7 @@
 			</Abgabe_eingang>
 			<Abgabe/>
 			<Stauinhalt>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/V_TSBAUTZ.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/V_TSBAUTZ.zml"/>
 			</Stauinhalt>
 		</Talsperre>
 	</gml:featureMember>
@@ -303,7 +303,7 @@
 			</Abgabe_eingang>
 			<Abgabe/>
     		<Stauinhalt>
-				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=calcdir:.results/V_TSQUITZ.zml"/>
+				<obslink:TimeseriesLink linktype="zml" timeaxis="Datum" valueaxis="Wert" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:actuate="onRequest" xlink:href="TYPE=relative#LOCATION=localcalc:.results/V_TSQUITZ.zml"/>
 			</Stauinhalt>
 		</Talsperre>
 	</gml:featureMember>

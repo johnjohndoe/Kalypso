@@ -76,6 +76,7 @@
 
 	<transformation className="org.kalypso.model.transformation.ReplaceTransformation">
 		<arg name="protocol0" value="calcdir=calcdir:"/>
+		<arg name="protocol1" value="localcalc=localcalc:"/>
 		<arg name="file0" value="calcdir:calcCase.gml"/>
 	</transformation>
 
