@@ -263,14 +263,18 @@ public class Timeserie extends Persistent {
 
 				SimpleDateFormat sdf = null;
 
-				if (dateFormatPattern != null) {
-					sdf = new SimpleDateFormat(dateFormatPattern);
+				if (dateFormatPattern != null) {					
+				sdf = new SimpleDateFormat(dateFormatPattern);
 				} else {
 					sdf = new SimpleDateFormat();
 				}
 
-				while (set.next()) {
-					fw.write(sdf.format(set.getDate(1)));
+				while (set.next()) {					
+				
+					Date datum=new Date(set.getTime(1).getTime()
+					+
+					set.getDate(1).getTime());					
+					fw.write(sdf.format(datum));
 					fw.write(separator);
 					fw.write(set.getString(2));
 					fw.write(separator);
