@@ -108,6 +108,8 @@ public class ViewManager
 
 	private static JComboBox comboBox;
 	private static boolean processingFlag = true;
+	
+	Component gp_Component = null;
 
 	private static ProjectView projectView;
 
@@ -162,6 +164,26 @@ public class ViewManager
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		gp_Component = this.getGlassPane();
+		gp_Component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		gp_Component.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				//System.out.println("GlassPane: MouseClicked");
+			}
+			public void mouseEntered(MouseEvent e) {
+			}
+			public void mouseExited(MouseEvent e) {
+			}
+			public void mousePressed(MouseEvent e) {
+			}
+			public void mouseMoved(MouseEvent e) {
+			}
+			public void mouseDragged(MouseEvent e) {
+			}
+			public void mouseReleased(MouseEvent e) {
+			}
+		});
 	}
 
 	public ViewManager(JDesktopPane desktopPane) {
@@ -291,26 +313,6 @@ public class ViewManager
 		//WaitingThread waitThread = new WaitingThread();
 		//waitThread.start();
 
-		final Component gp_Component = this.getGlassPane();
-		gp_Component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		gp_Component.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-				//System.out.println("GlassPane: MouseClicked");
-			}
-			public void mouseEntered(MouseEvent e) {
-			}
-			public void mouseExited(MouseEvent e) {
-			}
-			public void mousePressed(MouseEvent e) {
-			}
-			public void mouseMoved(MouseEvent e) {
-			}
-			public void mouseDragged(MouseEvent e) {
-			}
-			public void mouseReleased(MouseEvent e) {
-			}
-		});
-
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -420,7 +422,7 @@ public class ViewManager
 			String myCommand = "grafik.exe";
 			File kalypsoTemplate =
 				new File(Main.props.getProperty("template_simulation"));
-			File myWorkingDir = new File(kalypsoTemplate,"tools");
+			File myWorkingDir = new File(kalypsoTemplate, "tools");
 			String commandLine =
 				myWorkingDir.getPath()
 					+ System.getProperty("file.separator")
