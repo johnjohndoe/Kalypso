@@ -137,6 +137,8 @@ final class KeyInfo extends Job implements ILoaderListener
   {
     if( m_object == object )
     {
+      LOGGER.info( "Object invalid for key: " + m_key );
+      
       m_object = null;
 
       final IPoolListener[] ls = (IPoolListener[])m_listeners

@@ -41,6 +41,7 @@
 package org.kalypso.ui.view.prognose;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -226,8 +227,12 @@ public class PrognosePanel
       try
       {
         final URL imageURL = new URL( m_location, model.getImage() );
-        imageData = new ImageData( imageURL.openStream() );
-        m_imageHash.put( model, imageData );
+        final InputStream openStream = imageURL.openStream();
+        if( openStream != null )
+        {
+          imageData = new ImageData( openStream );
+          m_imageHash.put( model, imageData );
+        }
       }
       catch( MalformedURLException e )
       {
@@ -239,7 +244,7 @@ public class PrognosePanel
       }
     }
 
-    final Image newImage = imageData == null ? null : new Image( m_control.getDisplay(), imageData ); 
+    final Image newImage = imageData == null ? null : new Image( m_control.getDisplay(), imageData );
     m_imageLabel.setImage( newImage );
 
     if( oldImage != null )
