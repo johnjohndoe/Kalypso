@@ -13,7 +13,7 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.gml.schema.virtual.VirtuelFeatureTypeProperty;
+import org.deegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 
@@ -391,7 +391,7 @@ public class Feature_Impl implements Feature
    */
   public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace )
   {
-    VirtuelFeatureTypeProperty virtuelFeatureTypeProperty = (VirtuelFeatureTypeProperty)m_featureType
+    VirtualFeatureTypeProperty virtuelFeatureTypeProperty = (VirtualFeatureTypeProperty)m_featureType
         .getVirtuelFeatureTypeProperty( propertyName );
     return virtuelFeatureTypeProperty.getVirtuelValue( this, workspace );
   }

@@ -49,6 +49,37 @@
 		</complexContent>
 	</complexType>
 	<element name="operationFilter" type="filters:operationFilterType" substitutionGroup="filters:filter"/>
+    
+    
+    <!-- Filter: intervall building filter 
+        required axis: date-axis value-axis        
+        optionam axis: status-axis
+        more then one value-axis will throw exceptions,
+        result will have date-axis, value-axis eventually one status-axis,
+        date axis will be build with intervalls,
+        value-axis will be build calculating summs or avarages over intervall (resp. mode),
+        status axis will be build using bitmask on source-status
+        -->
+	<complexType name="intervallFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter" minOccurs="0"/>
+				</sequence>
+                <!-- mode: "sum" or "average"-->
+				<attribute name="mode" type="string"/>
+
+                <!-- calendar field to build intervall--> 
+            	<attribute type="string" name="calendarField"/>
+				<!-- amount of time for the step -->
+				<attribute type="int" name="amount"/>
+			</extension>		
+		</complexContent>
+	</complexType>
+	<element name="intervallFilter" type="filters:intervallFilterType" substitutionGroup="filters:filter"/>
+    
+    
+    
 	
 	<!-- Filter: Math Operation between Filters -->
 	<complexType name="nOperationFilterType">
