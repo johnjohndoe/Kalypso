@@ -17,7 +17,7 @@
 	<classpathentry exported="true" kind="lib" path="/backupdeegree/lib/jai/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="/backupdeegree/lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="/backupdeegree/lib/jai/mlibwrapper_jai.jar"/>
-	<classpathentry kind="lib" path="lib/kalypsodeegree.jar"/>
+	<classpathentry sourcepath="/backupdeegree/deegree" kind="lib" path="lib/kalypsodeegree.jar"/>
 	<classpathentry kind="lib" path="/backupdeegree/lib/acme/acme.jar"/>
 	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-awt-util.jar"/>
 	<classpathentry kind="lib" path="/backupdeegree/lib/batik/lib/batik-css.jar"/>
