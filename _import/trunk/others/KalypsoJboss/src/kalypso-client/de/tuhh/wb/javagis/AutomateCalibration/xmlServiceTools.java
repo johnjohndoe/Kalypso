@@ -69,44 +69,58 @@ public class xmlServiceTools {
 	}
 
 	public static void setParameter(
-		String query,
+		String[] querys,
 		String value,
 		Document myDom) {
-		System.out.println("Query: " + query);
-		NodeList nl = getXPath(query, myDom);
+		for (int n = 0; n < querys.length; n++) {
 
-		for (int i = 0; i < nl.getLength(); i++) {
-			(nl.item(i)).setNodeValue(value);
+			String query = querys[n];
+			System.out.println("Query: " + query);
+			NodeList nl = getXPath(query, myDom);
+
+			for (int i = 0; i < nl.getLength(); i++) {
+				(nl.item(i)).setNodeValue(value);
+			}
 		}
 
 	}
 
 	public static void setParameter_Factor(
-		String query,
+		String[] querys,
 		double value,
 		Document myDom) {
-		NodeList nl = getXPath(query, myDom);
+		for (int n = 0; n < querys.length; n++) {
 
-		for (int i = 0; i < nl.getLength(); i++) {
-			String nodeValue = (nl.item(i)).getNodeValue();
-			double setValue = value*Double.parseDouble(nodeValue);
-			(nl.item(i)).setNodeValue(String.valueOf(setValue));
+			String query = querys[n];
+			System.out.println("Query: " + query);
+			NodeList nl = getXPath(query, myDom);
+
+			for (int i = 0; i < nl.getLength(); i++) {
+				String nodeValue = (nl.item(i)).getNodeValue();
+				double setValue = value * Double.parseDouble(nodeValue);
+				(nl.item(i)).setNodeValue(String.valueOf(setValue));
+			}
 		}
 	}
 
 	public static void setParameter_Offset(
-		String query,
+		String[] querys,
 		double value,
 		Document myDom) {
-		NodeList nl = getXPath(query, myDom);
+		for (int n = 0; n < querys.length; n++) {
 
-		for (int i = 0; i < nl.getLength(); i++) {
-			String nodeValue = (nl.item(i)).getNodeValue();
-			double setValue = value+Double.parseDouble(nodeValue);
-			(nl.item(i)).setNodeValue(String.valueOf(setValue));
+			String query = querys[n];
+			System.out.println("Query: " + query);
+			NodeList nl = getXPath(query, myDom);
+
+			for (int i = 0; i < nl.getLength(); i++) {
+				String nodeValue = (nl.item(i)).getNodeValue();
+				double setValue = value + Double.parseDouble(nodeValue);
+				(nl.item(i)).setNodeValue(String.valueOf(setValue));
+			}
 		}
 	}
-	
+
 	public static Document getXML(String file) throws Exception {
 		return getXML(new File(file));
 	}

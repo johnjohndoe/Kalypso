@@ -65,13 +65,14 @@ public class SCE_KALYPSO
 	private StartKalypso startKalypso;
 
 	//Parameter
-	private double[] paramUpperBounds;
-	private double[] paramLowerBounds;
+	//private double[] paramUpperBounds;
+	//private double[] paramLowerBounds;
 	//private double[] initialParamValues;
-	private double[] synteticParamValues;
-	private String[] xPaths;
+	//private double[] synteticParamValues;
+	//private String[] xPaths;
 	//private double[] startValues;
-	private String[] modes;
+	//private String[] modes;
+	private CalContext[] calContexts;
 
 	private int anzKalypso = 1;
 	private int rootNode = 0;
@@ -418,10 +419,15 @@ public class SCE_KALYPSO
 		double[] realValue = new double[numsce];
 		Double[] real_Double = new Double[numsce];
 		for (int i = 0; i < sce.length; i++) {
-			realValue[i] =
+			/*realValue[i] =
 				paramLowerBounds[i]
 					+ sce[i].doubleValue()
-						* (paramUpperBounds[i] - paramLowerBounds[i]);
+						* (paramUpperBounds[i] - paramLowerBounds[i]);*/
+			realValue[i] =
+				calContexts[i].getLowerBound()
+					+ sce[i].doubleValue()
+						* (calContexts[i].getUpperBound()
+							- calContexts[i].getLowerBound());
 			real_Double[i] = new Double(realValue[i]);
 		}
 		return real_Double;
@@ -432,9 +438,13 @@ public class SCE_KALYPSO
 		int numreal = real.length;
 		double[] sce = new double[numreal];
 		for (int i = 0; i < real.length; i++) {
-			sce[i] =
+			/*sce[i] =
 				(real[i] - paramLowerBounds[i])
-					/ (paramUpperBounds[i] - paramLowerBounds[i]);
+					/ (paramUpperBounds[i] - paramLowerBounds[i]);*/
+			sce[i] =
+				(real[i] - calContexts[i].getLowerBound())
+					/ (calContexts[i].getUpperBound()
+						- calContexts[i].getLowerBound());
 		}
 		return sce;
 	}
@@ -523,7 +533,7 @@ public class SCE_KALYPSO
 				for (int n = 0; n < data.size(); n++) {
 					System.out.println((String) data.elementAt(n));
 				}
-				
+
 			} catch (Exception e) {
 				System.out.println("InterruptedException: " + e.getMessage());
 				return;
@@ -609,7 +619,7 @@ public class SCE_KALYPSO
 					endDate_pegel);
 
 			}
-	ps.close();
+			ps.close();
 		}
 	}
 
@@ -624,8 +634,10 @@ public class SCE_KALYPSO
 				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\" or @m_rbNumber=\"102\"]/@m_retAquif";*/
 			String query =
 				"/theme/table[@key=\"rb\"]/o/sp[@m_rbNumber=\"104\" or @m_rbNumber=\"101\"]/@m_retInterflow";
+			String[] querys = new String[1];
 			System.out.println(xmlServiceTools.getParameter(query, doc));
-			xmlServiceTools.setParameter(query, "10", doc);
+			querys[0] = query;
+			xmlServiceTools.setParameter(querys, "10", doc);
 			System.out.println(xmlServiceTools.getParameter(query, doc));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -638,20 +650,20 @@ public class SCE_KALYPSO
 
 			for (int i = 0; i < valueParam.length; i++) {
 				//check, ob Parameter als Faktor oder normal, dann zwei Möglichkeiten
-				String mode = modes[i];
+				String mode = calContexts[i].getMode();
 				if (mode.equals("factor")) {
 					xmlServiceTools.setParameter_Factor(
-						xPaths[i],
+						calContexts[i].getxPaths(),
 						valueParam[i].doubleValue(),
 						doc);
 				} else if (mode.equals("offset")) {
 					xmlServiceTools.setParameter_Offset(
-						xPaths[i],
+						calContexts[i].getxPaths(),
 						valueParam[i].doubleValue(),
 						doc);
 				} else {
 					xmlServiceTools.setParameter(
-						xPaths[i],
+						calContexts[i].getxPaths(),
 						(valueParam[i]).toString(),
 						doc);
 				}
@@ -751,10 +763,10 @@ public class SCE_KALYPSO
 			} else {
 				syntetic = false;
 			}
-			System.out.println(fileValue + "Syntetic: " + syntetic);
+			System.out.println("Syntetic: " + syntetic);
 
 			//if syntetic; synteticValues
-			if (syntetic) {
+			/*if (syntetic) {
 				String querySynValues =
 					"/autoCalibration/parameterlist/parameter/synteticValue";
 				NodeList nlSynVal =
@@ -769,53 +781,116 @@ public class SCE_KALYPSO
 				/*for (int n = 0; n < anzParam; n++) {
 					System.out.println(synteticParamValues[n]);
 				}*/
-			}
+			//}
 
 			//xPath, ParamUpperBound, ParamLowerBound
-			String queryXPath =
-				"/autoCalibration/parameterlist/parameter/xpath";
+			String queryID = "/autoCalibration/parameterlist/parameter/@ID";
+			/*String queryXPath =
+				"/autoCalibration/parameterlist/parameter/xpath";*/
 			String queryUpBound =
 				"/autoCalibration/parameterlist/parameter/upperBound";
 			String queryLoBound =
 				"/autoCalibration/parameterlist/parameter/lowerBound";
+			String querySynValues =
+				"/autoCalibration/parameterlist/parameter/synteticValue";
 			String queryFactor =
 				"/autoCalibration/parameterlist/parameter/@mode";
 
-			NodeList nlXPath = xmlServiceTools.getXPath(queryXPath, doc);
+			NodeList nlID = xmlServiceTools.getXPath(queryID, doc);
+			//NodeList nlXPath = xmlServiceTools.getXPath(queryXPath, doc);
 			NodeList nlUpBound = xmlServiceTools.getXPath(queryUpBound, doc);
 			NodeList nlLoBound = xmlServiceTools.getXPath(queryLoBound, doc);
+			NodeList nlSynVal = xmlServiceTools.getXPath(querySynValues, doc);
 			NodeList nlMode = xmlServiceTools.getXPath(queryFactor, doc);
 
-			int anzParam = nlXPath.getLength();
+			int anzParam = nlID.getLength();
 			System.out.println("Anzahl Parameter: " + anzParam);
 
-			xPaths = new String[anzParam];
-			paramUpperBounds = new double[anzParam];
-			paramLowerBounds = new double[anzParam];
-			modes = new String[anzParam];
+			//xPaths = new String[anzParam];
+			//paramUpperBounds = new double[anzParam];
+			//paramLowerBounds = new double[anzParam];
+			//modes = new String[anzParam];
+			calContexts = new CalContext[anzParam];
 
+			/*for (int n = 0; n < anzParam; n++) {
+				String id = (nlID.item(n)).getNodeValue();
+				String query = "/autoCalibration/parameterlist/parameter[@ID=\""+id+"\"]/xpath";
+				NodeList nl = xmlServiceTools.getXPath(query,doc);
+				System.out.println(id);
+				System.out.println(query);
+				for(int k = 0; k < nl.getLength(); k++){
+				System.out.println(((nl.item(k)).getFirstChild()).getNodeValue());
+				}
+			}*/
 			for (int i = 0; i < anzParam; i++) {
+				CalContext calContext = new CalContext();
+				Node n = (nlUpBound.item(i)).getFirstChild();
+				double value = Double.parseDouble(n.getNodeValue());
+				calContext.setUpperbound(value);
+				n = (nlLoBound.item(i)).getFirstChild();
+				value = Double.parseDouble(n.getNodeValue());
+				calContext.setLowerbound(value);
+				if (syntetic) {
+					n = (nlSynVal.item(i)).getFirstChild();
+					value = Double.parseDouble(n.getNodeValue());
+					calContext.setSynteticValue(value);
+				}
+				n = nlMode.item(i);
+				String nodeValue = n.getNodeValue();
+				calContext.setMode(nodeValue);
+				String id = (nlID.item(i)).getNodeValue();
+				String xPathquery =
+					"/autoCalibration/parameterlist/parameter[@ID=\""
+						+ id
+						+ "\"]/xpath";
+				NodeList nlXPath = xmlServiceTools.getXPath(xPathquery, doc);
+				String[] xPaths = new String[nlXPath.getLength()];
+				for (int k = 0; k < nlXPath.getLength(); k++) {
+					xPaths[k] =
+						((nlXPath.item(k)).getFirstChild()).getNodeValue();
+				}
+				calContext.setXPath(xPaths);
+				calContexts[i] = calContext;
+			}
+			for (int n = 0; n < anzParam; n++) {
+				System.out.print(
+					n
+						+ ": "
+						+ "UpperBound="
+						+ calContexts[n].getUpperBound()
+						+ ", LowerBound="
+						+ calContexts[n].getLowerBound()
+						+ ", Syntetic Value="
+						+ calContexts[n].getSynteticValue()
+						+ ", Mode="
+						+ calContexts[n].getMode());
+				String[] xPaths = calContexts[n].getxPaths();
+				for (int k = 0; k < xPaths.length; k++) {
+					System.out.println(", xPath=" + xPaths[k]);
+				}
+			}
+			/*for (int i = 0; i < anzParam; i++) {
 				Node n = (nlXPath.item(i)).getFirstChild();
 				xPaths[i] = n.getNodeValue();
 			}
 			for (int n = 0; n < anzParam; n++) {
 				System.out.println(xPaths[n]);
-			}
-			for (int i = 0; i < anzParam; i++) {
+			}*/
+			/*for (int i = 0; i < anzParam; i++) {
 				Node n = (nlUpBound.item(i)).getFirstChild();
 				paramUpperBounds[i] = Double.parseDouble(n.getNodeValue());
 			}
 			/*for(int n=0;n<anzParam;n++){
 				System.out.println(paramUpperBounds[n]);
 			}*/
-			for (int i = 0; i < anzParam; i++) {
+			/*for (int i = 0; i < anzParam; i++) {
 				Node n = (nlLoBound.item(i)).getFirstChild();
 				paramLowerBounds[i] = Double.parseDouble(n.getNodeValue());
 			}
 			/*for(int n=0;n<anzParam;n++){
 				System.out.println(paramLowerBounds[n]);
 			}*/
-			for (int i = 0; i < anzParam; i++) {
+			/*for (int i = 0; i < anzParam; i++) {
 				Node n = nlMode.item(i);
 				String nodeValue = n.getNodeValue();
 				//System.out.println(nodeValue);
@@ -823,7 +898,7 @@ public class SCE_KALYPSO
 			}
 			for (int n = 0; n < anzParam; n++) {
 				System.out.println(modes[n]);
-			}
+			}*/
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -895,7 +970,11 @@ public class SCE_KALYPSO
 		writeln(writer, line2);
 		String line3 = "TRUE PARAMETER VALUES:";
 		writeln(writer, line3);
-		double[] realValues = new double[synteticParamValues.length];
+		double[] realValues = new double[calContexts.length];
+		double[] synteticParamValues = new double[calContexts.length];
+		for (int n = 0; n < synteticParamValues.length; n++) {
+			synteticParamValues[n] = calContexts[n].getSynteticValue();
+		}
 		realValues = realTosce(synteticParamValues);
 		String line = "";
 		for (int i = 0; i < realValues.length; i++) {
@@ -1017,4 +1096,21 @@ public class SCE_KALYPSO
 
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
+
+	/*public static void main(String[] args) {
+		openSCEView();
+		inputFile = new File("C://Kalypso//TestMode//input_neu2.xml");
+		controlFile = new File("C://Kalypso//TestMode//control.xml");
+		modelFile = new File("C://Kalypso//TestMode//model.xml");
+		instance.readXMLinput();
+		Double[] param =
+			{
+				new Double(10.0),
+				new Double(20.0),
+				new Double(30.0),
+				new Double(40.0),
+				new Double(50.0),
+				new Double(60.0)};
+		instance.makeModelxml(param, true);
+	}*/
 }
