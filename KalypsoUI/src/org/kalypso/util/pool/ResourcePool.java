@@ -174,6 +174,9 @@ public class ResourcePool implements ILoaderListener
   protected void onObjectLoaded( final IPoolableObjectType key, final Object object,
       final IStatus status )
   {
+    if( object == null )
+      return;
+    
     // das Objekt eintragen
     m_objects.put( key, object );
 

@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -52,7 +53,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 
 /**
@@ -211,6 +214,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     } );
 
+    setObsIgnoreType( "W" );
     radioW.setSelection( true );
   }
 
@@ -307,12 +311,23 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final List features = getFeatures( false );
     final List selectedFeatures = getSelectedFeatures( false );
     final IFolder selectedCalcCase = getSelectedCalcCase();
+    
+    if( selectedCalcCase == null )
+      // TODO: error handling
+      return;
 
     // view it!
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
     final FeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() )
         .getFeatureType();
     final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
+    if( ftp == null )
+    {
+      // TODO error handling
+      System.out.println( "No FeatureType for Property: " + nameProperty );
+      return;
+    }
+    
     final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
     final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(),
         features, new ArrayContentProvider(), labelProvider,
@@ -385,8 +400,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           final URL urlRS = resolver.resolveURL( context, lnkRS.href );
           final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
 
-          final URL urlPG = resolver.resolveURL( context, lnkPG.href );
-          final IObservation dest = ZmlFactory.parseXML( urlPG, lnkPG.href );
+          final String destRef = ZmlURL.insertDateRange( lnkPG.href, new DateRangeArgument( new Date(), new Date() ) );
+          final URL urlPG = resolver.resolveURL( context, destRef );
+          
+          final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
 
           // let's hope that it works
           dest.setValues( source.getValues( null ) );
