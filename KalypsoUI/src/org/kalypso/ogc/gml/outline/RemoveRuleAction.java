@@ -6,9 +6,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
-import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.event.ModellEvent;
+import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.list.IListManipulator;
 
 /**
@@ -38,7 +38,7 @@ public class RemoveRuleAction extends AbstractOutlineAction
     	IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
     	StyleEditorViewPart part;
 		try {
-			part = (StyleEditorViewPart)window.getActivePage().showView("org.kalypso.editor.mapeditor.views.styleeditor" );
+			part = (StyleEditorViewPart)window.getActivePage().showView("org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 			if( part != null )
 			{
 	    	 	part.setSelectionChangedProvider( getOutlineviewer() );

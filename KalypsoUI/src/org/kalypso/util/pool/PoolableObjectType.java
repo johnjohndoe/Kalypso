@@ -3,7 +3,7 @@ package org.kalypso.util.pool;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
-import org.kalypso.java.properties.PropertiesHelper;
+import org.kalypso.java.util.PropertiesHelper;
 
 /**
  * @author vdoemming

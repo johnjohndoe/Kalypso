@@ -9,9 +9,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.kalypso.eclipse.jface.operation.IProgressRunnable;
-import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.services.calcjob.CalcJobDescription;
 import org.kalypso.services.calcjob.CalcJobStatus;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
 /**

@@ -5,13 +5,13 @@ import org.deegree.graphics.sld.UserStyle;
 import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.IMapModell;
-import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.event.ModellEvent;
+import org.kalypso.ogc.gml.event.ModellEventListener;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * Dieser TreeContentProvider akzeptiert nur MapModell'e als Input.
@@ -118,7 +118,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   }
 
   /**
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

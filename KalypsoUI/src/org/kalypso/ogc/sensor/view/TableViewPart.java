@@ -20,8 +20,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.adapter.IAdaptable;
-import org.kalypso.util.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**

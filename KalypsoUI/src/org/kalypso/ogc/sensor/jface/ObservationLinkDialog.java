@@ -37,13 +37,13 @@ import org.kalypso.ogc.sensor.tableview.rules.Rules;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
-import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypso.util.status.MaskedNumber;
+
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -200,7 +200,9 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   {
     final JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( MaskedNumber.class, new MaskedNumberTableCellRenderer() );
+    
+    // TODO: habe MaskedNumber.class durch Double.class ersetzt. OK?
+    table.setDefaultRenderer( Double.class, new MaskedNumberTableCellRenderer() );
     
     m_model.setRules( new Rules() );
 

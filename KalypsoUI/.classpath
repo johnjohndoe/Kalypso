@@ -3,6 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-0.9.20.jar"/>
+	<classpathentry kind="src" path="/KalypsoCalcService"/>
+	<classpathentry kind="src" path="/KalypsoCoreServices"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

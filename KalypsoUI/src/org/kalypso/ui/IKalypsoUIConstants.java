@@ -15,6 +15,6 @@ public interface IKalypsoUIConstants
   /** Observation Table View identifier (value <code>org.kalypso.ogc.sensor.view.TableViewPart</code>) */
   public final static String ID_OBSTABLE_VIEW = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
   
-  /** Repository View identifier (value <code>org.kalypso.util.repository.view.RepositoryExplorerPart</code>) */
-  public final static String ID_REPOSITORY_VIEW = "org.kalypso.util.repository.view.RepositoryExplorerPart";
+  /** Repository View identifier (value <code>org.kalypso.ui.repository.view.RepositoryExplorerPart</code>) */
+  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart";
 }
