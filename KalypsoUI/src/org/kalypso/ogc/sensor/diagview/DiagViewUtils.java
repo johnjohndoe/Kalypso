@@ -230,10 +230,11 @@ public class DiagViewUtils
 
       final IObservation obs = theme.getObservation();
 
+      if( obs == null )
+        continue;
+      
       final TypeObservation xmlTheme = ODT_OF.createTypeObservation();
       xmlTheme.setLinktype( "zml" );
-      
-      // TODO obs.getHref() gibt manschmal null zurück: vielleicht besser fangen und richtige Fehlermeldung?
       xmlTheme.setHref( obs.getHref() );
 
       final List xmlCurves = xmlTheme.getCurve();
