@@ -135,10 +135,10 @@ public class Mapper
       return new Boolean( false );
     }
     if( "java.util.Date".equals( type ) )
-      return XML_DATE_FORMAT.parseObject( value );
+      return XML_DATETIME_FORMAT.parseObject( value );
 
     if( DateWithoutTime.class.getName().equals( type ) )
-      return XML_DATETIME_FORMAT.parseObject( value );
+      return XML_DATE_FORMAT.parseObject( value );
 
     throw new Exception( "unknown XML type: " + type + "  for value: " + value );
   }

@@ -90,6 +90,12 @@ public class InterpolationFilter extends AbstractObservationFilter
       cal.setTime( dr.getFrom() );
       d1 = cal.getTime();
       
+      for( int i = 0; i < valueAxes.length; i++ )
+      {
+        final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
+        v1[ valueAxes[i].getPosition() ] = nb.doubleValue();
+      }
+      
       while( cal.getTime().compareTo( begin ) < 0 )
       {
         d1 = cal.getTime();
@@ -148,7 +154,7 @@ public class InterpolationFilter extends AbstractObservationFilter
           }
           catch( SameXValuesException e )
           {
-            tupple[valueAxes[ia].getPosition()] = m_defValue;
+            tupple[valueAxes[ia].getPosition()] = new Double( v1[valueAxes[ia].getPosition()] );
           }
         }
 
