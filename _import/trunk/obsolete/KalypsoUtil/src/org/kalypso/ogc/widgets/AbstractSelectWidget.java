@@ -20,8 +20,6 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
   private Point startPoint = null;
 
-  private int mySelectionId = 10;
-
   private int myRadius = 20;
 
   private boolean mySnapEnabled = true;
@@ -98,7 +96,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       if( endPoint == null ) // not dragged
       {
         final ICommand command = new JMMarkSelectCommand( activeTheme , GeometryFactory
-            .createGM_Position( g1x, g1y ), gisRadius, mySelectionId,getSelectionMode() );
+            .createGM_Position( g1x, g1y ), gisRadius, mapPanel.getSelectionID(),getSelectionMode() );
 
         postCommand( command, null );
       }
@@ -120,7 +118,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         if( minX != maxX && minY != maxY )
         {
           final ICommand command = new JMMarkSelectCommand( activeTheme, GeometryFactory
-              .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mySelectionId,getSelectionMode() );
+              .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mapPanel.getSelectionID(),getSelectionMode() );
 
           postCommand( command, null );
         }

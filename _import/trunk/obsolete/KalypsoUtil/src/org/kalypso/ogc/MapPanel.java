@@ -56,8 +56,12 @@ public class MapPanel extends Canvas implements IMapModellView
 
   private GM_Envelope myBoundingBox = new GM_Envelope_Impl();
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs )
+  private final int m_selectionID;
+
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final int selectionID )
   {
+    m_selectionID = selectionID;
+    
     // set empty Modell:
     setMapModell( new MapModell( crs ) );
     myWidgetManager = new WidgetManager( viewCommandTarget, this );
@@ -154,7 +158,7 @@ public class MapPanel extends Canvas implements IMapModellView
 
         myModell.paintSelected( gr, p, bbox, scale, -1 );
         gr.setXORMode( Color.red );
-        myModell.paintSelected( gr, p, bbox, scale, 10 );
+        myModell.paintSelected( gr, p, bbox, scale, m_selectionID );
         gr.setPaintMode();
       }
       catch( Exception e )
@@ -462,6 +466,11 @@ public class MapPanel extends Canvas implements IMapModellView
       return myWidgetManager.getActualWidget();
 
     return null;
+  }
+
+  public int getSelectionID()
+  {
+    return m_selectionID;
   }
 
 }
