@@ -43,15 +43,10 @@ package org.kalypso.ui.editor.gmleditor.util.actions;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.event.ModellEvent;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 
 public final class PasteFeatureAction extends Action
 {
