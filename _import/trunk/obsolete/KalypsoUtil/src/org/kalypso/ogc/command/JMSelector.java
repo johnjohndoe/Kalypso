@@ -9,7 +9,7 @@ import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 
 /**
  * DOCUMENT ME!
@@ -90,7 +90,7 @@ break;
    * SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry);
    * //Filter filter=new ComplexFilter(operation);
    */
-  public List select( GM_Envelope env, KalypsoTheme theme, boolean selectWithinBoxStatus,int selectionId )
+  public List select( GM_Envelope env, KalypsoFeatureTheme theme, boolean selectWithinBoxStatus,int selectionId )
   {
     List resultDE = new ArrayList();
 
@@ -123,7 +123,7 @@ break;
 
   //           selects all features (display elements) that intersects the submitted
   // point.
-  public List select( GM_Position position, KalypsoTheme theme,int selectionId )
+  public List select( GM_Position position, KalypsoFeatureTheme theme,int selectionId )
   {
     List resultFe = new ArrayList();
     List testFe = new ArrayList();
@@ -156,7 +156,7 @@ break;
 
   //           selects all features (display elements) that are located within the circle
   // described by the position and the radius.
-  public List select( GM_Position pos, double r, KalypsoTheme theme, boolean withinStatus,int selectionId )
+  public List select( GM_Position pos, double r, KalypsoFeatureTheme theme, boolean withinStatus,int selectionId )
   {
     List resultDE = select( GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos
         .getX()

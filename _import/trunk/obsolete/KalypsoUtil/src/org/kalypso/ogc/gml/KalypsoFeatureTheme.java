@@ -14,7 +14,7 @@ import org.kalypso.ogc.event.ModellEventProviderAdapter;
 /**
  * @author vdoemming
  */
-public class KalypsoTheme implements ModellEventProvider, ModellEventListener//Theme,
+public class KalypsoFeatureTheme implements ModellEventProvider, ModellEventListener, IKalypsoTheme
 {
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
@@ -28,7 +28,7 @@ public class KalypsoTheme implements ModellEventProvider, ModellEventListener//T
 
   private String myName;
 
-  public KalypsoTheme( final KalypsoFeatureLayer layer, final String name )
+  public KalypsoFeatureTheme( final KalypsoFeatureLayer layer, final String name )
   {
     myLayer = layer;
 //    myStyles = new KalypsoUserStyle[] {};

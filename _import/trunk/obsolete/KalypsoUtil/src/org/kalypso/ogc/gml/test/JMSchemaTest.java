@@ -24,9 +24,9 @@ public class JMSchemaTest extends TestCase
       JMSchema jmSchema =
         new JMSchema(
           XMLTools.getAsDOM(
-              getClass().getResourceAsStream("point.xsd")));
+        //      getClass().getResourceAsStream("point.xsd")));
               
-   //           getClass().getResourceAsStream("kalypsoNA.xsd")));
+              getClass().getResourceAsStream("kalypsoNA.xsd")));
    //           getClass().getResourceAsStream("KalypsoSpree.xsd")));
               
               FeatureType[] ftps = jmSchema.getFeatureTypes();

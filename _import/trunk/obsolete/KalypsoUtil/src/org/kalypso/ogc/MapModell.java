@@ -18,7 +18,8 @@ import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -42,7 +43,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
   private final GeoTransform myProjection = new WorldToScreenTransform();
   
-  private KalypsoTheme myActiveTheme = null;
+  private IKalypsoTheme myActiveTheme = null;
 
   private GM_Envelope myBoundingBox = null;
 
@@ -84,7 +85,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 //        continue;
 //      }
 //
-//      final KalypsoTheme theme = new KalypsoTheme( layer, layerType.getName() );
+//      final KalypsoFeatureTheme theme = new KalypsoFeatureTheme( layer, layerType.getName() );
 //      final List stylesList = layerType.getStyle();
 //
 //      final List result = new ArrayList();
@@ -122,17 +123,17 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 //    }
 //  }
 
-  public void activateTheme( KalypsoTheme theme )
+  public void activateTheme( IKalypsoTheme theme )
   {
     myActiveTheme = theme;
     fireModellEvent( null );
   }
-  public KalypsoTheme getActiveTheme()
+  public IKalypsoTheme getActiveTheme()
   {
     return myActiveTheme;
   }
 
-  public void addTheme( KalypsoTheme theme ) throws Exception
+  public void addTheme( IKalypsoTheme theme ) throws Exception
   {
     if(myActiveTheme==null)
     myActiveTheme = theme;
@@ -147,13 +148,13 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
   public void clear()
   {
     myActiveTheme = null;
-    KalypsoTheme[] themes = getAllThemes();
+    IKalypsoTheme[] themes = getAllThemes();
     for( int i = 0; i < themes.length; i++ )
       removeTheme( themes[i] );
     fireModellEvent( null );
   }
 
-  public void enableTheme( KalypsoTheme theme, boolean status )
+  public void enableTheme( IKalypsoTheme theme, boolean status )
   {
     if( status )
       myEnabledThemeStatus.put( theme, THEME_ENABLED );
@@ -162,9 +163,9 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
     fireModellEvent( null );
   }
 
-  public KalypsoTheme[] getAllThemes()
+  public IKalypsoTheme[] getAllThemes()
   {
-    return (KalypsoTheme[])myThemes.toArray( new KalypsoTheme[myThemes.size()] );
+    return (IKalypsoTheme[])myThemes.toArray( new IKalypsoTheme[myThemes.size()] );
   }
 
   public GM_Envelope getBoundingBox()
@@ -309,16 +310,16 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
     return dist * 1000;
   }
 
-  public KalypsoTheme getTheme( int pos )
+  public IKalypsoTheme getTheme( int pos )
   {
-    return (KalypsoTheme)myThemes.elementAt( pos );
+    return (IKalypsoTheme)myThemes.elementAt( pos );
   }
 
-  public KalypsoTheme getTheme( String themeName )
+  public IKalypsoTheme getTheme( String themeName )
   {
     for( int i = 0; i < myThemes.size(); i++ )
-      if( themeName.equals( ( (KalypsoTheme)myThemes.elementAt( i ) ).getName() ) )
-        return (KalypsoTheme)myThemes.elementAt( i );
+      if( themeName.equals( ( (IKalypsoTheme)myThemes.elementAt( i ) ).getName() ) )
+        return (IKalypsoTheme)myThemes.elementAt( i );
     return null;
   }
 
@@ -327,24 +328,24 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
     return myThemes.size();
   }
 
-  public boolean isThemeActivated( KalypsoTheme theme )
+  public boolean isThemeActivated( IKalypsoTheme theme )
   {
     return myActiveTheme == theme;
   }
 
-  public boolean isThemeEnabled( KalypsoTheme theme )
+  public boolean isThemeEnabled( IKalypsoTheme theme )
   {
     return myEnabledThemeStatus.get( theme ) == THEME_ENABLED;
   }
 
-  public void moveDown( KalypsoTheme theme )
+  public void moveDown( IKalypsoTheme theme )
   {
     int pos = myThemes.indexOf( theme );
     if( pos > 0 )
       swapThemes( theme, getTheme( pos - 1 ) );
   }
 
-  public void moveUp( KalypsoTheme theme )
+  public void moveUp( IKalypsoTheme theme )
   {
     int pos = myThemes.indexOf( theme );
     if( pos + 1 < myThemes.size() )
@@ -353,7 +354,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
   public void removeTheme( int pos )
   {
-    removeTheme( (KalypsoTheme)myThemes.elementAt( pos ) );
+    removeTheme( (IKalypsoTheme)myThemes.elementAt( pos ) );
   }
 
   public void removeTheme( String themeName )
@@ -361,7 +362,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
     removeTheme( getTheme( themeName ) );
   }
 
-  public void removeTheme( KalypsoTheme theme )
+  public void removeTheme( IKalypsoTheme theme )
   {
     myThemes.remove( theme );
     myEnabledThemeStatus.remove( theme );
@@ -383,7 +384,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
       throw new UnsupportedOperationException();
   }
 
-  public void swapThemes( KalypsoTheme theme1, KalypsoTheme theme2 )
+  public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 )
   {
     int pos1 = myThemes.indexOf( theme1 );
     int pos2 = myThemes.indexOf( theme2 );
@@ -441,7 +442,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
   public GM_Envelope getFullExtentBoundingBox()
   {
-    KalypsoTheme[] themes = getAllThemes();
+    IKalypsoTheme[] themes = getAllThemes();
     boolean found = false;
     double resultMinX = 0;
     double resultMaxX = 0;
@@ -451,8 +452,9 @@ public class MapModell implements ModellEventProvider, ModellEventListener//MapV
 
     for( int i = 0; i < themes.length; i++ )
     {
-      //if( myMapView.isThemeEnabled( themes[i] ) )
-      {
+        
+   if( isThemeEnabled( themes[i] ) )
+    {
         try
         {
           final GeoTransformer gt = new GeoTransformer( getCoordinatesSystem() );

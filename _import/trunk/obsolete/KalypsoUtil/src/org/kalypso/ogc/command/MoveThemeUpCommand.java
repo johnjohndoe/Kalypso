@@ -1,7 +1,7 @@
 package org.kalypso.ogc.command;
 
 import org.kalypso.ogc.MapModell;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -11,9 +11,9 @@ public class MoveThemeUpCommand implements ICommand
 {
   private final MapModell m_MapModell;
 
-  private final KalypsoTheme m_theme;
+  private final IKalypsoTheme m_theme;
 
-  public MoveThemeUpCommand( final MapModell mapModell, final KalypsoTheme theme )
+  public MoveThemeUpCommand( final MapModell mapModell, final IKalypsoTheme theme )
   {
     m_MapModell = mapModell;
     m_theme = theme;

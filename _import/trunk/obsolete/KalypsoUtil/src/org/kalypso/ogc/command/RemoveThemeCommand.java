@@ -1,7 +1,7 @@
 package org.kalypso.ogc.command;
 
 import org.kalypso.ogc.MapModell;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -11,9 +11,9 @@ public class RemoveThemeCommand implements ICommand
 {
   private final MapModell m_mapModell;
 
-  private final KalypsoTheme m_theme;
+  private final IKalypsoTheme m_theme;
 
-  public RemoveThemeCommand( final MapModell mapModell, final KalypsoTheme theme )
+  public RemoveThemeCommand( final MapModell mapModell, final IKalypsoTheme theme )
   {
     m_mapModell = mapModell;
     m_theme = theme;

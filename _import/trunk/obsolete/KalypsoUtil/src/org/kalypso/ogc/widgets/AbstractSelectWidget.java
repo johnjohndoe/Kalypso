@@ -7,6 +7,8 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.command.JMMarkSelectCommand;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.util.command.ICommand;
 
 public abstract class AbstractSelectWidget extends AbstractWidget
@@ -80,7 +82,10 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   {
     final MapModell mapModell = m_mapPanel.getMapModell();
     GeoTransform transform = mapModell.getProjection();
-    if( startPoint != null )
+    IKalypsoTheme activeTheme=mapModell.getActiveTheme();
+    if(activeTheme==null || activeTheme instanceof KalypsoFeatureTheme)
+        return;
+        if( startPoint != null )
     {
       double g1x = transform.getSourceX( startPoint.getX() );
       double g1y = transform.getSourceY( startPoint.getY() );
@@ -88,7 +93,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    
       if( endPoint == null ) // not dragged
       {
-        ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
+        
+        ICommand command = new JMMarkSelectCommand((KalypsoFeatureTheme) activeTheme , GeometryFactory
             .createGM_Position( g1x, g1y ), gisRadius, mySelectionId,getSelectionMode() );
 
         m_commandPoster.postCommand( command, null );
@@ -110,7 +116,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
         if( minX != maxX && minY != maxY )
         {
-          final ICommand command = new JMMarkSelectCommand( mapModell.getActiveTheme(), GeometryFactory
+          final ICommand command = new JMMarkSelectCommand( (KalypsoFeatureTheme) activeTheme, GeometryFactory
               .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mySelectionId,getSelectionMode() );
 
           m_commandPoster.postCommand( command, null );
