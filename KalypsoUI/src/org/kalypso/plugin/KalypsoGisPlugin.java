@@ -7,7 +7,6 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.commons.pool.KeyedObjectPool;
-import org.apache.commons.pool.impl.StackKeyedObjectPool;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -15,6 +14,7 @@ import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.util.loader.DefaultLoaderFactory;
 import org.kalypso.util.loader.ILoaderFactory;
+import org.kalypso.util.pool.KalypsoKeyedObjectPool;
 import org.kalypso.util.pool.TypedKeyedPoolableObjectFactory;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.RepositorySpecification;
@@ -160,7 +160,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     KeyedObjectPool pool = (KeyedObjectPool)myPools.get( valueClass );
     if( pool == null )
     {
-      pool = new StackKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ) ) );
+    //  pool = new StackKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ) ) );
+      pool = new KalypsoKeyedObjectPool( new TypedKeyedPoolableObjectFactory( getLoaderFactory( valueClass ) ) );
       myPools.put(valueClass, pool);
     }
     
