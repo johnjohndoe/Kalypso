@@ -8,6 +8,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
@@ -19,7 +20,7 @@ import de.psi.go.lhwz.PSICompact.ArchiveData;
  * 
  * @author schlienger
  */
-public class PSICompactTuppleModel implements ITuppleModel
+public class PSICompactTuppleModel extends AbstractTuppleModel
 {
   private final ArchiveData[] m_data;
 

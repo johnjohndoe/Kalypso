@@ -45,8 +45,11 @@ public class MetaDocSerializer
   private final static String TAG_APPFILES = "AppFiles";
 
   /** date format for the date elements of the xml file */
-  private final static DateFormat DF = new SimpleDateFormat(
+  private final static DateFormat DFDATE = new SimpleDateFormat(
       "yyyy-MM-dd'T'HH:mm:ss" );
+
+  private final static DateFormat DFDATETIME = new SimpleDateFormat(
+      "yyyy-MM-dd" );
 
   /**
    * Prepares the properties with some default value
@@ -67,9 +70,9 @@ public class MetaDocSerializer
     props.setProperty( TAG_ERSTELLER, "string;"
         + serviceProps.getProperty( TAG_ERSTELLER, "Ersteller" ) );
     props.setProperty( TAG_AUTOR, "string;Autor" );
-    props.setProperty( TAG_ERSTELLUNGSDATUM, "dateTime;"
-        + DF.format( new Date() ) );
-    props.setProperty( TAG_ENDEGDATUM, "dateTime;" + DF.format( new Date() ) );
+    props.setProperty( TAG_ERSTELLUNGSDATUM, "date;"
+        + DFDATE.format( new Date() ) );
+    props.setProperty( TAG_ENDEGDATUM, "date;" + DFDATE.format( new Date() ) );
   }
 
   /**
@@ -98,8 +101,8 @@ public class MetaDocSerializer
       writer.write( "</" + TAG_HEADER + ">" );
       writer.write( "<" + TAG_RECORD + ">" );
       writer.write( "<" + TAG_DOKUMENTTYP + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) )
-          + "</" + TAG_DOKUMENTTYP + ">" );
+          + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) ) + "</"
+          + TAG_DOKUMENTTYP + ">" );
       writer.write( "<" + TAG_ERSTELLER + ">"
           + valueOfProperty( mdProps.getProperty( TAG_ERSTELLER ) ) + "</"
           + TAG_ERSTELLER + ">" );
@@ -110,17 +113,11 @@ public class MetaDocSerializer
           + valueOfProperty( mdProps.getProperty( TAG_REGION, "ohne" ) ) + "</"
           + TAG_REGION + ">" );
 
-      final String defaultDate = DF.format( new Date() );
-      writer.write( "<"
-          + TAG_EINGANGSDATUM
-          + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_EINGANGSDATUM,
-              defaultDate ) ) + "</" + TAG_EINGANGSDATUM + ">" );
-      writer.write( "<"
-          + TAG_ERSTELLUNGSDATUM
-          + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM,
-              defaultDate ) ) + "</" + TAG_ERSTELLUNGSDATUM + ">" );
+      writer.write( "<" + TAG_EINGANGSDATUM + ">"
+          + DFDATETIME.format( new Date() ) + "</" + TAG_EINGANGSDATUM + ">" );
+      writer.write( "<" + TAG_ERSTELLUNGSDATUM + ">"
+          + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM ) )
+          + "</" + TAG_ERSTELLUNGSDATUM + ">" );
 
       writer.write( "<" + TAG_ENDEGDATUM + ">"
           + valueOfProperty( mdProps.getProperty( TAG_ENDEGDATUM ) ) + "</"
@@ -152,7 +149,7 @@ public class MetaDocSerializer
   {
     if( prop == null )
       return "";
-    
+
     final String[] splits = prop.split( ";" );
 
     if( splits.length > 1 )
