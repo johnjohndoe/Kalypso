@@ -19,63 +19,69 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
 
 /**
- * Act as a proxy to the observation which is delivered by the Kalypso Observation Service.
- * 
  * @author schlienger
  */
 public class ServiceRepositoryObservation implements IObservation
 {
   private final IObservationService m_srv;
+
   private final ObservationBean m_ob;
+
   private IObservation m_obs = null;
 
-  public ServiceRepositoryObservation( final IObservationService srv, final ObservationBean ob )
+  public ServiceRepositoryObservation( final IObservationService srv,
+      final ObservationBean ob )
   {
     m_srv = srv;
     m_ob = ob;
   }
-  
+
   /**
    * Lazy loading.
+   * 
    * @param args
    * @return IObservation loaded from the server
    * 
    * @throws SensorException
    */
-  private IObservation getRemote( final IVariableArguments args ) throws SensorException
+  private IObservation getRemote( final IVariableArguments args )
+      throws SensorException
   {
     if( args == null && m_obs != null )
       return m_obs;
-    
+
     m_obs = loadFromServer( args );
-    
-    return m_obs;        
+
+    return m_obs;
   }
-  
+
   /**
    * Uses the webservice to request the observation.
+   * 
    * @param args
    * @return IObservation loaded from the server
    * 
    * @throws SensorException
    */
-  private IObservation loadFromServer( final IVariableArguments args ) throws SensorException 
+  private IObservation loadFromServer( final IVariableArguments args )
+      throws SensorException
   {
     final DateRangeBean drb;
-    
+
     if( args instanceof DateRangeArgument )
-      drb = ProxyFactory.createDateRangeBean( (DateRangeArgument)args );
+      drb = ProxyFactory.createDateRangeBean( (DateRangeArgument) args );
     else
       drb = new DateRangeBean();
-    
+
     try
     {
       final OCSDataBean db = m_srv.readData( m_ob, drb );
 
-      final IObservation obs = ZmlFactory.parseXML( new URL( db.getLocation() ), db.getObsId() );
+      final IObservation obs = ZmlFactory.parseXML(
+          new URL( db.getLocation() ), db.getObsId() );
 
       m_srv.clearTempData( db );
-      
+
       return obs;
     }
     catch( Exception e ) // generic exception caught for simplicity
@@ -83,13 +89,14 @@ public class ServiceRepositoryObservation implements IObservation
       throw new SensorException( e );
     }
   }
-  
+
   /**
-   * Identifier is build using service protocol + id of observation on the server.
+   * Identifier is build using service protocol + id of observation on the
+   * server.
    * 
    * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return OcsURLStreamHandler.SCHEME_OCS + ":" + m_ob.getId();
   }
@@ -97,7 +104,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_ob.getName();
   }
@@ -105,7 +112,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#isEditable()
    */
-  public boolean isEditable()
+  public boolean isEditable( )
   {
     try
     {
@@ -121,7 +128,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public IXlink getTarget()
+  public IXlink getTarget( )
   {
     try
     {
@@ -137,18 +144,18 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public MetadataList getMetadataList()
+  public MetadataList getMetadataList( )
   {
     final MetadataList ml = new MetadataList();
     ml.putAll( m_ob.getMetadataList() );
-    
+
     return ml;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public IAxis[] getAxisList( )
   {
     try
     {
@@ -164,9 +171,23 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args )
+      throws SensorException
   {
-    return getRemote( args ).getValues( args );
+    synchronized( this )
+    {
+      // tricky: uses the cache
+      ITuppleModel values = ObservationValuesCache.getValues( this );
+
+      if( values == null )
+      {
+        values = getRemote( args ).getValues( null );
+
+        ObservationValuesCache.addValues( this, values );
+      }
+
+      return values;
+    }
   }
 
   /**

@@ -1,18 +1,18 @@
-package org.kalypso.ogc.sensor.view;
+package org.kalypso.services.ocs.repository;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.util.adapter.IAdaptable;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 
 /**
- * A very simple cache for observations...
+ * A very simple cache for values of observations...
  * 
  * @author schlienger
  */
-public class ObservationCache
+public class ObservationValuesCache
 {
-  /** timeout of 4 minutes */
+  /** timeout of 4 mins */
   private final static int timeout = 1000 * 60 * 4;
 
   /** cache size of 200 */
@@ -21,7 +21,7 @@ public class ObservationCache
   /** our cache */
   private static Cache m_cache = null;
 
-  private ObservationCache()
+  private ObservationValuesCache(  )
   {
   // not intended to be instanciated
   }
@@ -31,29 +31,31 @@ public class ObservationCache
     if( m_cache == null )
     {
       final LfuCacheFactory factory = new LfuCacheFactory();
-      m_cache = factory.newInstance( "view.observations", timeout, size );
+      m_cache = factory.newInstance( "view.observations.values", timeout, size );
     }
 
     return m_cache;
   }
 
-  public static IObservation getObservationFor( final IAdaptable adapt )
+  
+  public static ITuppleModel getValues( final IObservation obs )
   {
     synchronized( getCache() )
     {
-      IObservation obs = (IObservation)getCache().getObject( adapt );
+      return (ITuppleModel) getCache().getObject( obs );
+    }
+  }
+  
 
-      if( obs == null )
-      {
-        obs = (IObservation)adapt.getAdapter( IObservation.class );
-
-        getCache().addObject( adapt, obs );
-      }
-
-      return obs;
+  public static void addValues( final IObservation obs, final ITuppleModel values )
+  {
+    synchronized( getCache() )
+    {
+      getCache().addObject( obs, values );
     }
   }
 
+  
   public static void clear()
   {
     synchronized( getCache() )

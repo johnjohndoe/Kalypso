@@ -13,72 +13,81 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public class ZmlTuppleModel implements ITuppleModel
 {
-  private final IAxis[] m_axes;
-
   private final Map m_valuesMap;
 
   /**
    * Constructor
+   * 
+   * @param valuesMap
    */
-  public ZmlTuppleModel( final IAxis[] axes, final Map valuesMap )
+  public ZmlTuppleModel( final Map valuesMap )
   {
-    m_axes = axes;
     m_valuesMap = valuesMap;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount() throws SensorException
+  public int getCount( ) throws SensorException
   {
-    if( m_axes.length == 0 )
+    if( m_valuesMap.size() == 0 )
       return 0;
 
-    return ( (IZmlValues)m_valuesMap.get( m_axes[0] ) ).getCount();
+    return ((IZmlValues) m_valuesMap.values().iterator().next()).getCount();
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( final Object element, final IAxis axis ) throws SensorException
+  public int indexOf( final Object element, final IAxis axis )
+      throws SensorException
   {
-    if( m_axes.length == 0 )
+    if( m_valuesMap.size() == 0 )
       throw new IllegalStateException( "No Axis" );
 
-    return ( (IZmlValues)m_valuesMap.get( axis ) ).indexOf( element );
+    final IZmlValues values = (IZmlValues) m_valuesMap.get( axis );
+    if( values == null )
+      return -1;
+
+    return values.indexOf( element );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public IAxis[] getAxisList( )
   {
-    return m_axes;
+    return (IAxis[]) m_valuesMap.keySet().toArray( new IAxis[0]);
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis )
+      throws SensorException
   {
-    if( m_axes.length == 0 )
+    if( m_valuesMap.size() == 0 )
       throw new IllegalStateException( "No Axis" );
 
-    return ( (IZmlValues)m_valuesMap.get( axis ) ).getElement( index );
+    final IZmlValues values = (IZmlValues) m_valuesMap.get( axis );
+    if( values == null )
+      return new Double( 0 );
+
+    return values.getElement( index );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( final int index, final Object element, final IAxis axis )
-      throws SensorException
+  public void setElement( final int index, final Object element,
+      final IAxis axis ) throws SensorException
   {
-    if( m_axes.length == 0 )
+    if( m_valuesMap.size() == 0 )
       throw new IllegalStateException( "No Axis" );
 
-    ( (IZmlValues)m_valuesMap.get( axis ) ).setElement( index, element );
+    ((IZmlValues) m_valuesMap.get( axis )).setElement( index, element );
   }
 }

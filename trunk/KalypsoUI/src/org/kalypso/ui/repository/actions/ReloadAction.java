@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.services.ocs.repository.ObservationValuesCache;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -46,8 +47,10 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements
       {
         monitor.beginTask( "Repository aktualisieren", 2 );
 
+        // Important: clear the caches
         ObservationCache.clear();
-
+        ObservationValuesCache.clear();
+        
         try
         {
           rep.reload();

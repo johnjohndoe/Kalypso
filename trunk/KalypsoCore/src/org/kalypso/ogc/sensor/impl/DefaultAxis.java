@@ -34,6 +34,7 @@ public class DefaultAxis implements IAxis
    *          className of the data on this axis
    * @param position
    *          position of this axis in regards to the tupple of data
+   * @param isKey
    */
   public DefaultAxis( final String label, final String type, final String unit,
       final Class dataClass, final int position, final boolean isKey )
@@ -48,16 +49,19 @@ public class DefaultAxis implements IAxis
 
   /**
    * Copy Constuctor.
+   * 
+   * @param axis
    */
   public DefaultAxis( final IAxis axis )
   {
-    this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.getPosition(), axis.isKey() );
+    this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(),
+        axis.getPosition(), axis.isKey() );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getUnit()
    */
-  public String getUnit()
+  public String getUnit( )
   {
     return m_unit;
   }
@@ -65,7 +69,7 @@ public class DefaultAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_label;
   }
@@ -73,12 +77,12 @@ public class DefaultAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getDataClass()
    */
-  public Class getDataClass()
+  public Class getDataClass( )
   {
     return m_dataClass;
   }
 
-  public int getPosition()
+  public int getPosition( )
   {
     return m_position;
   }
@@ -86,7 +90,7 @@ public class DefaultAxis implements IAxis
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  public String toString( )
   {
     if( getUnit().length() == 0 )
       return getName();
@@ -95,21 +99,54 @@ public class DefaultAxis implements IAxis
   }
 
   /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( !(obj instanceof IAxis) )
+      return false;
+
+    final IAxis other = (IAxis) obj;
+
+    // Important: Axis' position is not relevant for two axes to be equal
+    if( m_dataClass == other.getDataClass() && m_isKey == other.isKey()
+        && m_label.equals( other.getName() ) && m_type.equals( other.getType() )
+        && m_unit.equals( other.getUnit() ) )
+      return true;
+
+    return false;
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode( )
+  {
+    final StringBuffer bf = new StringBuffer();
+
+    // Important: Axis' position is not relevant for two axes to be equal
+    bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_label )
+        .append( m_type ).append( m_unit );
+
+    return bf.toString().hashCode();
+  }
+
+  /**
    * @see org.kalypso.ogc.sensor.IAxis#getType()
    */
-  public String getType()
+  public String getType( )
   {
     return m_type;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IAxis#isKey()
    */
-  public boolean isKey()
+  public boolean isKey( )
   {
     return m_isKey;
   }
-  
+
   public void setDataClass( Class dataClass )
   {
     m_dataClass = dataClass;

@@ -250,17 +250,14 @@ public class ZmlFactory
       valuesMap.put( axis, values );
     }
 
-    final IAxis[] axes = (IAxis[]) valuesMap.keySet().toArray(
-        new IAxis[valuesMap.size()] );
-
-    final ZmlTuppleModel model = new ZmlTuppleModel( axes, valuesMap );
+    final ZmlTuppleModel model = new ZmlTuppleModel( valuesMap );
 
     IXlink target = null;
     if( obs.getTarget() != null )
       target = new JAXBXLink( obs.getTarget() );
 
     final IObservation zmlObs = new SimpleObservation( identifier, obs
-        .getName(), obs.isEditable(), target, metadata, axes, model );
+        .getName(), obs.isEditable(), target, metadata, model.getAxisList(), model );
 
     // tricky: first check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( context, zmlObs );
