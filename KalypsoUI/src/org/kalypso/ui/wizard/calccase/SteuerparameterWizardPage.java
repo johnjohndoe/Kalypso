@@ -1,6 +1,5 @@
 package org.kalypso.ui.wizard.calccase;
 
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -122,10 +121,9 @@ public class SteuerparameterWizardPage extends WizardPage
     
     final SetContentThread thread = new SetContentThread( controlFile, !controlFile.exists(), false, false, new NullProgressMonitor() )
     {
-      public void writeStream() throws Throwable
+      public void write( final Writer w ) throws Throwable
       {
-        final Writer controlWriter = new OutputStreamWriter( getOutputStream() );
-        GmlSerializer.serializeFeature( controlWriter, rootFeature, new NullProgressMonitor() );
+        GmlSerializer.serializeFeature( w, rootFeature, new NullProgressMonitor() );
       }
     };
     thread.start();

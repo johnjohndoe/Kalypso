@@ -2,9 +2,10 @@ package org.kalypso.eclipse.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.Writer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -26,11 +27,13 @@ public abstract class SetContentThread extends CatchThread
   private final PipedInputStream m_pis;
 
   private CatchRunnable m_catchRunnable;
+  private final IFile m_file;
 
 
   public SetContentThread( final IFile file, final boolean create, final boolean force,
       final boolean keepHistory, final IProgressMonitor monitor ) throws CoreException
   {
+    m_file = file;
     try
     {
       m_pis = new PipedInputStream( m_pos );
@@ -56,13 +59,16 @@ public abstract class SetContentThread extends CatchThread
           "Fehler beim Erzeugen der Kontrolldatei: " + e.getLocalizedMessage(), e ) );
     }
   }
-
-  protected OutputStream getOutputStream()
+  
+  private String getCharset() throws CoreException
   {
-    return m_pos;
+    if( m_file.exists() )
+        return m_file.getCharset();
+
+    return m_file.getWorkspace().getRoot().getDefaultCharset();
   }
 
-  protected abstract void writeStream() throws Throwable;
+  protected abstract void write( final Writer writer ) throws Throwable;
 
   /** Exceptions, welche beim Schreiben des Files entstehen */
   public CoreException getFileException()
@@ -75,7 +81,9 @@ public abstract class SetContentThread extends CatchThread
   {
     try
     {
-      writeStream();
+      final Writer outputStreamWriter = new OutputStreamWriter( m_pos, getCharset() );
+      
+      write( outputStreamWriter );
     }
     finally
     {

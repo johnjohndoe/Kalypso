@@ -185,7 +185,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
   public boolean isUpdateCalcCase()
   {
-    return m_choice.isUpdateCalcCase();
+    return m_choice == null ? false : m_choice.isUpdateCalcCase();
   }
 
   public List getCalcCases()

@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
@@ -518,13 +519,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
           new NullProgressMonitor() )
       {
-        protected void writeStream() throws Throwable
+        protected void write( final Writer w ) throws Throwable
         {
           FileInputStream fis = null;
           try
           {
             fis = new FileInputStream( serverfile );
-            CopyUtils.copy( fis, getOutputStream() );
+            CopyUtils.copy( fis, w );
           }
           finally
           {

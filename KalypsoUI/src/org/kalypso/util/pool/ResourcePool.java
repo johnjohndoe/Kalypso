@@ -188,18 +188,9 @@ public class ResourcePool implements ILoaderListener
 
     final ILoader loader = getLoader( type );
 
-    try
-    {
-      final Object object = loader.load( key.getSource(), key.getProject(), monitor );
-      
-      return object;
-    }
-    catch( UnsupportedOperationException e )
-    {
-      final Object object = loader.load( key.getSource(), key.getContext(), monitor );
-      
-      return object;
-    }
+    final Object object = loader.load( key.getSource(), key.getContext(), monitor );
+     
+    return object;
   }
 
   private ILoader getLoader( final String type ) throws FactoryException
@@ -242,7 +233,7 @@ public class ResourcePool implements ILoaderListener
 
       try
       {
-        loader.save( key.getSource(), key.getProject(), monitor, object );
+        loader.save( key.getSource(), key.getContext(), monitor, object );
       }
       catch( LoaderException e )
       {
