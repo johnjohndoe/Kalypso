@@ -85,7 +85,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
     if( !typeFile.exists() )
       throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
     m_calcJobFactory = new CalcJobFactory( typeFile );
-    
+
     // Konfiguration dieser Service-Implementation
     final Properties confProps = new Properties();
     final File confFile = new File( myConfDir, "calculationService.properties" );
@@ -98,11 +98,13 @@ public class CalcJobService_impl_Queued implements ICalculationService
     catch( final IOException e )
     {
       e.printStackTrace();
-      
-      LOGGER.warning( "Could not load service configuration file.\nWill proceed with default values" );
+
+      LOGGER
+          .warning( "Could not load service configuration file.\nWill proceed with default values" );
     }
-    
-    LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + m_maxThreads + "\nSCHEDULING_PERIOD = " + m_schedulingPeriod );
+
+    LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + m_maxThreads
+        + "\nSCHEDULING_PERIOD = " + m_schedulingPeriod );
   }
 
   /**
@@ -282,7 +284,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
       LOGGER.info( "Job waiting for scheduling: " + jobID );
 
       startScheduling();
-      
+
       return;
     }
 
@@ -301,7 +303,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
         final CalcJobThread cjt = (CalcJobThread)jIt.next();
         if( cjt.isAlive() )
           runningCount++;
-        
+
         final CalcJobBean jobBean = cjt.getJobBean();
         if( jobBean.getState() == ICalcServiceConstants.WAITING )
           waitingCount++;
@@ -353,12 +355,9 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
     public CalcJobBean getJobBean()
     {
-      if( jobBean.getState() == ICalcServiceConstants.RUNNING )
-      {
-        jobBean.setMessage( job.getMessage() );
-        jobBean.setResults( job.getResults() );
-        jobBean.setProgress( job.getProgress() );
-      }
+      jobBean.setMessage( job.getMessage() );
+      jobBean.setResults( job.getResults() );
+      jobBean.setProgress( job.getProgress() );
 
       return jobBean;
     }
@@ -372,7 +371,11 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
       try
       {
+        LOGGER.info( "Calling run for ID: " + jobBean.getId() );
+
         job.run( new File( jobBean.getBasedir() ), jobBean.getInputData() );
+
+        LOGGER.info( "Run finished for ID: " + jobBean.getId() );
 
         if( job.isCanceled() )
         {
@@ -396,10 +399,10 @@ public class CalcJobService_impl_Queued implements ICalculationService
       }
     }
   }
-  
+
   /**
-   * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann alle restlichen Jobs zerstören
-   * und insbesondere alle Dateien löschen
+   * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann
+   * alle restlichen Jobs zerstören und insbesondere alle Dateien löschen
    * 
    * @see java.lang.Object#finalize()
    */
@@ -413,9 +416,9 @@ public class CalcJobService_impl_Queued implements ICalculationService
         final CalcJobBean jobBean = cjt.getJobBean();
         disposeJob( jobBean.getId() );
       }
-      
+
     }
-    
+
     super.finalize();
   }
 }

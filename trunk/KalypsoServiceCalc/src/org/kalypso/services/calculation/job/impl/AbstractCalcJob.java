@@ -1,7 +1,7 @@
 package org.kalypso.services.calculation.job.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -18,7 +18,7 @@ public abstract class AbstractCalcJob implements ICalcJob
   
   private int m_progress = -1;
   
-  private Collection m_results = new ArrayList();
+  private Collection m_results = new Vector();
 
   private boolean m_canceled = false;
   
@@ -61,7 +61,11 @@ public abstract class AbstractCalcJob implements ICalcJob
    */
   public final CalcJobDataBean[] getResults()
   {
-    return (CalcJobDataBean[])m_results.toArray( new CalcJobDataBean[m_results.size()] );
+    m_logger.info( "Getting results" );
+    synchronized( m_results )
+    {
+      return (CalcJobDataBean[])m_results.toArray( new CalcJobDataBean[m_results.size()] );
+    }
   }
 
   protected void progress( final int work )
@@ -79,7 +83,12 @@ public abstract class AbstractCalcJob implements ICalcJob
 
   protected void addResult( final CalcJobDataBean bean )
   {
-    m_results.add( bean );
+    m_logger.info( "Adding result: " + bean.getPath() );
+    
+    synchronized( m_results )
+    {
+      m_results.add( bean );
+    }
     
     m_logger.info( "Added result: " + bean.getPath() );
   }
