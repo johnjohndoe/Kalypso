@@ -1,21 +1,22 @@
-#Mon Aug 23 11:36:51 CEST 2004
+#Tue Apr 27 16:08:23 CEST 2004
+encoding//tabellen/flutungen.gtt=UTF-8
 encoding//rechenfaelle/r1/calcCase.gml=Cp1252
 encoding//.modellTyp/vorlagen/rechenfall/karte2.gmt=UTF-8
 encoding//tabellen/einzugsgebiete.gtt=UTF-8
+encoding//.prognose/prognose2/calcCase.gml=UTF-8
 eclipse.preferences.version=1
-encoding//.prognose/prognose5/calcCase.gml=UTF-8
 encoding//.prognose/prognose0/calcCase.gml=UTF-8
 encoding//.prognose/prognose8/calcCase.gml=UTF-8
 encoding//karten/modell.gmt=UTF-8
->>>>>>>=1.22
+encoding//.rechenfaelle/r1/calcCase.gml=UTF-8
 encoding/modell.gml=UTF-8
-<<<<<<<=org.eclipse.core.resources.prefs
+encoding//tabellen/zufluesse.gtt=UTF-8
 encoding//.modellTyp/vorlagen/rechenfall/karte1.gmt=UTF-8
-encoding//.modellTyp/vorlagen/rechenfall/table1.gtt=UTF-8
 encoding//rechenfaelle/r2/calcCase.gml=UTF-8
+encoding//.modellTyp/vorlagen/rechenfall/table1.gtt=UTF-8
+encoding//tabellen/Talsperren.gtt=UTF-8
 encoding//.prognose/prognose6/calcCase.gml=UTF-8
 encoding//.prognose/prognose9/calcCase.gml=UTF-8
-encoding//.prognose/prognose4/calcCase.gml=UTF-8
 encoding//.prognose/prognose7/calcCase.gml=UTF-8
+encoding//tabellen/flussmodelle.gtt=UTF-8
 encoding//test/TestModell.gmt=UTF-8
-=\=\=\=\=\=\=

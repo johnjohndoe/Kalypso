@@ -2,6 +2,8 @@
 <gistableview xmlns="gistableview.template.kalypso.org">
 	<layer linktype="gml" id="örgl" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
 		<column name="Name" width="100" editable="false"/>
+		<column name="BodenfeuchteMin" width="100" editable="false"/>
 		<column name="Bodenfeuchte" width="100" editable="true"/>
+		<column name="BodenfeuchteMax" width="100" editable="false"/>
 	</layer>
 </gistableview>

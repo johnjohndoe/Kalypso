@@ -10,12 +10,61 @@
 		<arg name="output" value="calcdir:calcCase.gml"/>
 	</transformation>
 
+<!-- Einzugsgebiete -->
 	<transformation className="org.kalypso.model.transformation.ObservationResolver">
 		<arg name="project" value="project:"/>
 		<arg name="type" value="gml"/>
 		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
-		<arg name="sourceObservation" value="Niederschlag"/>
-		<arg name="targetObservation" value="Niederschlag_Berechnung"/>
+		<arg name="sourceObservation" value="Niederschlag_eingabeEingang"/>
+		<arg name="targetObservation" value="Niederschlag_eingabe"/>
+		<arg name="targetFolder" value="calcdir:zeitreihen"/>
+	</transformation>
+
+	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+		<arg name="project" value="project:"/>
+		<arg name="type" value="gml"/>
+		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+		<arg name="sourceObservation" value="Wasserstand_gemessenEingang"/>
+		<arg name="targetObservation" value="Wasserstand_gemessen"/>
+		<arg name="targetFolder" value="calcdir:zeitreihen"/>
+	</transformation>
+
+<!-- Flusslaufmodelle -->
+	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+		<arg name="project" value="project:"/>
+		<arg name="type" value="gml"/>
+		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+		<arg name="sourceObservation" value="Wasserstand_gemessenEingang"/>
+		<arg name="targetObservation" value="Wasserstand_gemessen"/>
+		<arg name="targetFolder" value="calcdir:zeitreihen"/>
+	</transformation>
+
+<!-- Talsperre -->
+	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+		<arg name="project" value="project:"/>
+		<arg name="type" value="gml"/>
+		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Talsperre#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+		<arg name="sourceObservation" value="Abgabe_eingang"/>
+		<arg name="targetObservation" value="Abgabe"/>
+		<arg name="targetFolder" value="calcdir:zeitreihen"/>
+	</transformation>
+
+<!-- Flutung -->
+	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+		<arg name="project" value="project:"/>
+		<arg name="type" value="gml"/>
+		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Flutung#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+		<arg name="sourceObservation" value="Abgabe_eingang"/>
+		<arg name="targetObservation" value="Abgabe"/>
+		<arg name="targetFolder" value="calcdir:zeitreihen"/>
+	</transformation>
+
+	<transformation className="org.kalypso.model.transformation.ObservationResolver">
+		<arg name="project" value="project:"/>
+		<arg name="type" value="gml"/>
+		<arg name="href" value="PATH=calcdir:calcCase.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+		<arg name="sourceObservation" value="Zugabe_eingang"/>
+		<arg name="targetObservation" value="Zugabe"/>
 		<arg name="targetFolder" value="calcdir:zeitreihen"/>
 	</transformation>
 

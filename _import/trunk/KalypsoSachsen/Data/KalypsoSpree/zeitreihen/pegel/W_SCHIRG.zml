@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Observation editable="false" xmlns="zml.kalypso.org">
+	<Name>W_SCHIRG</Name>
+	<MetadataList>
+		<Metadata name="StartZeit" value="24.4.1941"/>
+		<Metadata name="Berechnung" value="Beschreibung"/>
+	</MetadataList>
+	<Axis datatype="TYPE=xs:date#FORMAT=yyyy.MM.dd HH:mm:ss" name="Datum" unit="">
+		<ValueArray separator=";">2004.04.27 01:00:00;2004.04.27 04:00:00;2004.04.27 07:00:00;2004.04.27 10:00:00</ValueArray>
+	</Axis>
+	<Axis datatype="TYPE=xs:double" name="Pegel" unit="cm">
+		<ValueArray separator=";">170;170;170;182</ValueArray>
+	</Axis>
+</Observation>
