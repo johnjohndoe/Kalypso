@@ -58,18 +58,6 @@ public class SpreeCalcJobTest extends TestCase
     FileUtilities.deleteRecursive( resultDir );
   }
 
-  public void test040427() throws IOException, TypeRegistryException, JAXBException
-  {
-    final File baseDir = calculateModel( "040427" );
-    FileUtilities.deleteRecursive( baseDir );
-  }
-
-  public void test040427_neu() throws IOException, TypeRegistryException, JAXBException
-  {
-    final File baseDir = calculateModel( "040427_neu" );
-    FileUtilities.deleteRecursive( baseDir );
-  }
-
   public void test040427_ns_problem() throws IOException, TypeRegistryException, JAXBException
   {
     final File baseDir = calculateModel( "040427_ns_problem" );
@@ -84,8 +72,8 @@ public class SpreeCalcJobTest extends TestCase
   
   public void test041125() throws IOException, TypeRegistryException, JAXBException
   {
-    final File baseDir = calculateModel( "041125" );
-    FileUtilities.deleteRecursive( baseDir );
+    final File basedir = calculateModel( "041125" );
+    FileUtilities.deleteRecursive( basedir );
   }
   
   public File calculateModel( final String testName ) throws IOException, TypeRegistryException, JAXBException
