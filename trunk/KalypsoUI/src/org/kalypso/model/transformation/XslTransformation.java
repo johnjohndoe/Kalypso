@@ -33,7 +33,7 @@ public class XslTransformation extends AbstractTransformation
   public void transformIntern( final IFolder targetFolder, final Properties properties, final IProgressMonitor monitor )
       throws TransformationException
   {
-    monitor.beginTask( "XSL Transformation", 2000 );
+    monitor.beginTask( "XSL Transformation", 3000 );
     
     final String input = properties.getProperty( "input" );
     final String xsl = properties.getProperty( "xsl" );
@@ -71,9 +71,8 @@ public class XslTransformation extends AbstractTransformation
       
       monitor.worked( 1000 );
       
-      // TODO: stimmt das, oder sollte das was im XM Lsteht genommen werden?
       outputFile.create( pis, false, new SubProgressMonitor( monitor, 1000 ) );
-      outputFile.setCharset( inputFile.getCharset() );
+      outputFile.setCharset( inputFile.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
       
       if( thread.getThrowable() != null )
         throw new TransformationException( thread.getThrowable() );
