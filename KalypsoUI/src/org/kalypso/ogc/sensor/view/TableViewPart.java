@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.util.adapter.IAdaptable;
@@ -82,7 +83,15 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void selectionChanged( SelectionChangedEvent event )
   {
-    m_model.setColumns( null );
+    try
+    {
+      m_model.setColumns( null, null );
+    }
+    catch( SensorException e )
+    {
+      // TODO handling
+      e.printStackTrace();
+    }
 
     StructuredSelection selection = (StructuredSelection)event.getSelection();
 
@@ -170,8 +179,15 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 
       DefaultTableViewTemplate tab = new DefaultTableViewTemplate( m_obs );
 
-      m_model.setArguments( new DateRangeArgument( from, to ) );
-      m_model.setColumns( tab.getColumns() );
+      try
+      {
+        m_model.setColumns( tab.getColumns(), new DateRangeArgument( from, to ) );
+      }
+      catch( SensorException e )
+      {
+        // TODO handling
+        e.printStackTrace();
+      }
 
       return Status.OK_STATUS;
     }

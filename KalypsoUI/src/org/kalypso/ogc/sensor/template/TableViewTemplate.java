@@ -19,7 +19,7 @@ public class TableViewTemplate
 
   private ObstableviewType m_baseTemplate;
 
-  private TableViewColumn[] m_columns = null;
+  private ColumnPair[] m_columns = null;
 
   protected IFile m_file;
 
@@ -48,6 +48,7 @@ public class TableViewTemplate
       }
       catch( Exception e )
       {
+        // TODO: handling
         e.printStackTrace();
       }
     }
@@ -58,20 +59,20 @@ public class TableViewTemplate
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getColumns()
    */
-  public TableViewColumn[] getColumns()
+  public ColumnPair[] getColumns()
   {
     if( m_columns == null )
     {
-      List cols = getBaseTemplate().getColumn();
+      List cols = getBaseTemplate().getColumnpair();
       
-      m_columns = new TableViewColumn[ cols.size() ];
+      m_columns = new ColumnPair[ cols.size() ];
     
       int i = 0;
       for( Iterator it = cols.iterator(); it.hasNext(); )
       {
-        ObstableviewType.ColumnType col = (ObstableviewType.ColumnType)it.next();
+        ObstableviewType.ColumnpairType col = (ObstableviewType.ColumnpairType)it.next();
         
-        m_columns[i++] = new TableViewColumn( this, col );
+        m_columns[i++] = new ColumnPair( this, col );
       }
     }
     

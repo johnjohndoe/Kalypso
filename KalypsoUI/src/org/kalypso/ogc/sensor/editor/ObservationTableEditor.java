@@ -17,7 +17,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.IObservationProvider;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.template.TableViewColumn;
+import org.kalypso.ogc.sensor.template.ColumnPair;
 import org.kalypso.ogc.sensor.template.TableViewTemplate;
 import org.kalypso.ogc.sensor.view.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.view.DoubleTableCellRenderer;
@@ -39,7 +39,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
   private TableViewTemplate m_tableview = null;
 
-  private TableViewColumn[] m_cols;
+  private ColumnPair[] m_cols;
 
   private Map m_providers = new Hashtable();
 
@@ -121,7 +121,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
     
     if( changed && m_providers.size() == m_cols.length )
     {
-      m_model.setColumns( m_cols );
+      m_model.setColumns( m_cols, null );
     }
   }
 }
