@@ -6,6 +6,9 @@ import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
 
 /**
+ * TODO: normally should also override equals() according to
+ * interface specification... Check if this is possible here.
+ * 
  * @author belger
  */
 public class StorageEditorInput implements IStorageEditorInput
@@ -62,7 +65,8 @@ public class StorageEditorInput implements IStorageEditorInput
    */
   public String getToolTipText()
   {
-    return null;
+    // null not allowed, so return name of storage
+    return m_storage.getName();
   }
 
   /**

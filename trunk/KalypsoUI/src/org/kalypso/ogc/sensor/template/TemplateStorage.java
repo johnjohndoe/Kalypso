@@ -9,25 +9,26 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 /**
- * TemplateStorage
+ * TemplateStorage is a wrapper over an IFile. It delivers additionaly its context
+ * and the URL from which the file was retrieved.
  * 
  * @author schlienger
  */
 public class TemplateStorage implements IEncodedStorage
 {
   private final URL m_context;
-  private final IFile m_zmlFile;
+  private final IFile m_file;
   private final String m_href;
 
-  public TemplateStorage( final IFile zmlFile, final URL context, final String href )
+  public TemplateStorage( final IFile file, final URL context, final String href )
   {
-    m_zmlFile = zmlFile;
+    m_file = file;
     m_context = context;
     m_href = href;
   }
 
   /**
-   * @return Returns the context.
+   * @return Returns the context
    */
   public URL getContext( )
   {
@@ -35,15 +36,15 @@ public class TemplateStorage implements IEncodedStorage
   }
   
   /**
-   * @return Returns the zmlFile.
+   * @return Returns the file
    */
-  public IFile getZmlFile( )
+  public IFile getFile( )
   {
-    return m_zmlFile;
+    return m_file;
   }
 
   /**
-   * @return Returns the href.
+   * @return Returns the href
    */
   public String getHref( )
   {
@@ -55,7 +56,7 @@ public class TemplateStorage implements IEncodedStorage
    */
   public InputStream getContents( ) throws CoreException
   {
-    return m_zmlFile.getContents();
+    return m_file.getContents();
   }
 
   /**
@@ -63,7 +64,7 @@ public class TemplateStorage implements IEncodedStorage
    */
   public IPath getFullPath( )
   {
-    return m_zmlFile.getFullPath();
+    return m_file.getFullPath();
   }
 
   /**
@@ -71,7 +72,7 @@ public class TemplateStorage implements IEncodedStorage
    */
   public String getName( )
   {
-    return m_zmlFile.getName();
+    return m_file.getName();
   }
 
   /**
@@ -95,6 +96,6 @@ public class TemplateStorage implements IEncodedStorage
    */
   public String getCharset( ) throws CoreException
   {
-    return "UTF-8";
+    return m_file.getCharset();
   }
 }

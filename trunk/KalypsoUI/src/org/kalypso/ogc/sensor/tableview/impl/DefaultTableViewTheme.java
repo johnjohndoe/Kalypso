@@ -123,6 +123,18 @@ public class DefaultTableViewTheme implements ITableViewTheme
    */
   public String toString( )
   {
-    return getName();
+    final StringBuffer bf = new StringBuffer();
+
+    if( m_themeName != null )
+      bf.append( m_themeName );
+
+    if( m_obs != null )
+      bf.append( "Thema: " ).append( m_obs.getName() ).append( " (" )
+          .append( m_obs.getHref() ).append( ')' );
+
+    if( bf.length() == 0 )
+      return super.toString();
+
+    return bf.toString();
   }
 }

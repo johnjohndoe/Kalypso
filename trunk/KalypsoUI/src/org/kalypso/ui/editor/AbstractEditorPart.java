@@ -213,11 +213,6 @@ public abstract class AbstractEditorPart extends EditorPart implements
    */
   public void init( IEditorSite site, IEditorInput input )
   {
-    // do not check because we have also string storage...
-    // TODO: find a long lasting solution to this problem
-    //    if( !( input instanceof IFileEditorInput ) )
-    //      throw new PartInitException( "Can only use IFileEditorInput" );
-
     setSite( site );
 
     setInput( input );
