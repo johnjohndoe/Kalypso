@@ -26,8 +26,8 @@ public class CalcCaseLaunchConfigurationDelegate extends LaunchConfigurationDele
     final Properties properties = new Properties();
     properties.putAll( configuration.getAttributes() );
     
-    final String label = properties.getProperty( IKalypsoLaunchConfigurationConstants.CALC_LABEL );
+    //final String label = properties.getProperty( IKalypsoLaunchConfigurationConstants.CALC_LABEL );
     
-    new RunnableProcessJob( launch, runnable, "Modellrechnung: " + label, properties );
+    new RunnableProcessJob( launch, runnable, "Modellrechnung" /*+ label*/, properties );
   }
 }
