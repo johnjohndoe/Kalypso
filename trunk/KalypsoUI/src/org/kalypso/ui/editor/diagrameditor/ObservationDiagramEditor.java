@@ -114,6 +114,9 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
 
     if( m_outline != null )
       m_outline.dispose();
+    
+    if( m_obsChart != null )
+      m_obsChart.dispose();
 
     super.dispose();
   }
@@ -153,6 +156,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       if( thread.getThrown() != null )
         throw new CoreException( KalypsoGisPlugin.createErrorStatus(
             "Diagrammvorlage speichern", thread.getThrown() ) );
+      
+      fireDirty();
     }
     catch( InterruptedException e )
     {

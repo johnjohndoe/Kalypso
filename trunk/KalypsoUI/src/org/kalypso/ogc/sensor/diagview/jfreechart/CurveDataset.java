@@ -31,6 +31,19 @@ class CurveDataset extends AbstractIntervalXYDataset
       fireDatasetChanged();
     }
   }
+  
+  public void removeCurveSerie( final XYCurveSerie xyc )
+  {
+    synchronized( m_curves )
+    {
+      if( m_curves.contains( xyc ) )
+      {
+        m_curves.remove( xyc );
+        
+        fireDatasetChanged();
+      }
+    }
+  }
 
   /**
    * @see org.jfree.data.general.SeriesDataset#getSeriesCount()
