@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+--------------- Kalypso-Deegree-Header ------------------------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -36,27 +36,25 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
+ 
+ 
+ history:
   
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.io;
+ Files in this package are originally taken from deegree and modified here
+ to fit in kalypso. As goals of kalypso differ from that one in deegree
+ interface-compatibility to deegree is wanted but not retained always. 
+     
+ If you intend to use this software in other ways than in kalypso 
+ (e.g. OGC-web services), you should consider the latest version of deegree,
+ see http://www.deegree.org .
 
-/**
- * @author schlienger
- */
-public interface ITabledValues
-{
-  /**
-   * Returns the number of lines fetched from the CSV-File.
-   */
-  public int getLines();
-
-  /**
-   * Returns the item at the given position in the CSV-File.
-   */
-  public String getItem( final int row, final int col );
-  
-  /**
-   * Sets the element in the mem representation of the CSV file
-   */
-  public void setItem( final int row, final int col, final String str );
-}
+ all modifications are licensed as deegree, 
+ original copyright:
+ 
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon GmbH
+ http://www.lat-lon.de
+ 
+---------------------------------------------------------------------------------------------------
