@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.FontChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LabelPlacementComboPanel;
@@ -260,10 +261,12 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     if( geometry != null )
     {
       String geoPropName = geometry.getPropertyName();
-ftp=m_featureTyped.getProperty(geoPropName);
+      ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureTyped,
+          geoPropName );
+      
     }
     else
-      ftp=m_featureTyped.getDefaultGeometryProperty();
+      ftp = m_featureTyped.getDefaultGeometryProperty();
     if( getFeatureTypeGeometryType( ftp ) == GM_LINESTRING )
     {
       if( labelPlacement == null )
@@ -392,8 +395,4 @@ ftp=m_featureTyped.getProperty(geoPropName);
     return textLabelComboPanel;
   }
 
-  public void setTextLabelComboPanel( TextLabelComboPanel m_textLabelComboPanel )
-  {
-    this.textLabelComboPanel = m_textLabelComboPanel;
-  }
 }

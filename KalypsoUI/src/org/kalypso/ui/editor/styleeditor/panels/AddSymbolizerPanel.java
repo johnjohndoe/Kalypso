@@ -71,6 +71,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 
 /**
@@ -194,7 +195,7 @@ public class AddSymbolizerPanel
     symbolizerAddButton.addMouseListener( new MouseListener()
     {
       public void mouseDoubleClick( MouseEvent e )
-      {     
+      {
         fire();
       }
 
@@ -219,7 +220,7 @@ public class AddSymbolizerPanel
     symbolizerLabelData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerLabel.setLayoutData( symbolizerLabelData );
     symbolizerLabel.setText( m_label );
-  
+
     updateSymbolizerCombo();
   }
 
@@ -249,7 +250,9 @@ public class AddSymbolizerPanel
   public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString,
       FeatureType featureType )
   {
-    FeatureTypeProperty ftp=featureType.getProperty(geometryPropertyName);
+    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( featureType,
+        geometryPropertyName );
+
     if( symbolizerString.equals( "Point" ) )
     {
       Mark mark = StyleFactory.createMark( "square" );
@@ -312,9 +315,10 @@ public class AddSymbolizerPanel
 
   private String[] getSymbolizerTypesByFeatureProperty( String propName )
   {
-    FeatureTypeProperty ftp=m_featureType.getProperty(propName);
-    if(ftp==null)
-      ftp=m_featureType.getVirtuelFeatureTypeProperty(propName);
+  
+    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType,
+        propName );
+    
     String items[] = null;
     // in case of Pattern-Rule it does not make sense to have a pattern for
     // textsymbolizer
@@ -349,7 +353,7 @@ public class AddSymbolizerPanel
         items[1] = "Point";
       }
     }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType(ftp ) == TextSymbolizerLayout.GM_POLYGON )
+    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_POLYGON )
     {
       if( m_isSimpleRule )
       {
