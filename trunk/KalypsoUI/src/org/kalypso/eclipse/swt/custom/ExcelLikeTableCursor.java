@@ -11,17 +11,20 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * 
- * 
  * @author gernot
  */
-public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener, DisposeListener
+public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener, DisposeListener, MouseListener
 {
   protected final TableViewer m_viewer;
 
@@ -77,7 +80,7 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
     super.dispose();
   }
 
-  private void startEditing()
+  private void startEditing( final KeyEvent ke )
   {
     final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
     if( !selection.isEmpty() )
@@ -87,15 +90,29 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
       setVisible( false );
 
       m_viewer.editElement( selection.getFirstElement(), column );
-
-   //   m_viewer.getCellEditors()[column].addListener( this );
+      if( ke != null )
+      {
+      final Widget editorControl = m_viewer.getCellEditors()[column].getControl();
+        
+        // eigentlich würde ich gerne direkt den event weiterschicken, das klappt aber nicht
+//        final Event event = new Event();
+//        event.type = SWT.KeyDown;
+//        event.character = ke.character;
+//        event.keyCode = ke.keyCode;
+//        
+//        
+//        // wäre schön, jetzt ein KeyPressed abzusetzen
+//        editorControl.notifyListeners( SWT.KeyDown, event );
+        
+        // deshalb einfach den text setzen
+        if( editorControl instanceof Text )
+          ((Text)editorControl).insert( "" + ke.character );
+      }
     }
   }
 
   protected void stopEditing()
   {
-    final int column = getColumn();
-
     setVisible( true );
     setFocus();
   }
@@ -114,7 +131,7 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
    */
   public void widgetDefaultSelected( final SelectionEvent e )
   {
-    startEditing();
+    startEditing( null );
   }
 
   /**
@@ -123,7 +140,9 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   public void keyPressed( final KeyEvent e )
   {
     if( e.keyCode == SWT.F2 )
-      startEditing();
+      startEditing( null );
+    else if( e.character >= '0' && e.character <= 'z' )
+      startEditing( e );
   }
 
   /**
@@ -140,5 +159,29 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   public void widgetDisposed( final DisposeEvent e )
   {
     m_timertask.cancel();
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+   */
+  public void mouseDoubleClick( final MouseEvent e )
+  {
+    startEditing( null );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+   */
+  public void mouseDown( final MouseEvent e )
+  {
+    startEditing( null );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+   */
+  public void mouseUp( MouseEvent e )
+  {
+    // nix tun
   }
 }

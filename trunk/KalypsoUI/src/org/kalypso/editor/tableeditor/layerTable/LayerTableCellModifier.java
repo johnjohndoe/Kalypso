@@ -2,11 +2,14 @@ package org.kalypso.editor.tableeditor.layerTable;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.ogc.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.util.command.CommandJob;
+import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
 
 /**
@@ -21,12 +24,15 @@ public class LayerTableCellModifier implements ICellModifier
   private final LayerTableModel m_modell;
 
   private final ICommandManager m_commandManager;
+
+  private final ISchedulingRule m_schedulingRule;
   
-  public LayerTableCellModifier( final ICommandManager commandManager, final LayerTableModel modell, final FeatureType type )
+  public LayerTableCellModifier( final ICommandManager commandManager, final ISchedulingRule schedulingRule, final LayerTableModel modell, final FeatureType type )
   {
     m_modell = modell;
     m_commandManager = commandManager;
     m_type = type;
+    m_schedulingRule = schedulingRule;
   }
   
   /**
@@ -59,16 +65,9 @@ public class LayerTableCellModifier implements ICellModifier
     final TableItem tableItem = (TableItem)element;
     final KalypsoFeature  feature = (KalypsoFeature)tableItem.getData();
     final KalypsoFeatureLayer layer = m_modell.getLayer();
-    try
-    {
-      // TODO: error handling -> sollte in einem Job ablaufen!
-      m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, property, value ) );
-    }
-    catch( final Exception e )
-    {
-      // sollte nicht passieren
-      e.printStackTrace();
-    }
+    
+    final ICommand command = new ModifyFeatureCommand( layer, feature, property, value );
+    new CommandJob( command, m_commandManager, m_schedulingRule, null, CommandJob.POST );
    }
 
 }
