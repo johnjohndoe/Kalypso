@@ -287,10 +287,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     final String prognoseTsName = getArguments().getProperty(
         PROP_PROGNOSE_TS_NAME );
 
+    // TODO: eventuell noch mal filtern (letztes argument != null)
     final TSLinkWithName[] resultTss = getTimeseriesForProperty( "", Arrays
-        .asList( dialog.getResult() ), resultTsName );
+        .asList( dialog.getResult() ), resultTsName, null );
     final TSLinkWithName[] prognoseTss = getTimeseriesForProperty( "", Arrays
-        .asList( dialog.getResult() ), prognoseTsName );
+        .asList( dialog.getResult() ), prognoseTsName, null );
 
     try
     {
@@ -299,7 +300,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
         protected void execute( IProgressMonitor monitor )
-            throws CoreException
         {
           performPrognoseExport( resultTss, prognoseTss, context, monitor );
         }
@@ -321,11 +321,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * @param prognoseTss
    * @param context
    * @param monitor
-   * @throws CoreException
    */
   protected void performPrognoseExport( final TSLinkWithName[] resultTss,
       final TSLinkWithName[] prognoseTss, final URL context,
-      final IProgressMonitor monitor ) throws CoreException
+      final IProgressMonitor monitor )
   {
     if( resultTss.length != prognoseTss.length )
       throw new IllegalArgumentException( "Timeseries links not same length" );

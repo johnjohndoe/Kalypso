@@ -39,7 +39,7 @@ public class KalypsoApplication implements IPlatformRunnable
       e1.printStackTrace();
     }
     
-    rights = chooseRight( rights, username );
+    rights = chooseRight( rights /*, username */);
     
     if( rights == null )
       return null;
@@ -50,7 +50,7 @@ public class KalypsoApplication implements IPlatformRunnable
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
 
-  private String[] chooseRight( final String[] rights, final String username )
+  private String[] chooseRight( final String[] rights /*, final String username */)
   {
     String[] choosenRights = null;
     final Display display = new Display();

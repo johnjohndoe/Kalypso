@@ -52,8 +52,10 @@ public class ZmlLoader extends AbstractLoader
         addResource( file, obs );
       return obs;
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
+      e.printStackTrace();
+      
       throw new LoaderException( e );
     }
     finally

@@ -112,7 +112,7 @@ public class ResourcePool implements ILoaderListener
 
   public void removePoolListener( final IPoolListener l )
   {
-    synchronized( this )
+    synchronized( m_listeners )
     {
       // von allen keys den Listener löschen
       for( final Iterator iter = m_listeners.entrySet().iterator(); iter.hasNext(); )
@@ -137,6 +137,7 @@ public class ResourcePool implements ILoaderListener
   /**
    * Prüft, ob das Objekt für den Key vorhanden ist Falls ja wird es
    * zurückgegeben. Falls nein wird der Ladevorgang gestartet
+   * 
    * @param key
    * @return object belonging to key
    */
@@ -223,26 +224,28 @@ public class ResourcePool implements ILoaderListener
 
   /**
    * Erzeugt ein Objekt anhand seines Typs. Benutzt den entsprechenden ILoader.
+   * 
    * @param key
    * @param monitor
    * @return instance using loader
    * @throws LoaderException
    * @throws FactoryException
    */
-  protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException, FactoryException
+  protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
+      throws LoaderException, FactoryException
   {
     m_logger.info( "Loading objekt for key: " + key );
-    
+
     final String type = key.getType();
 
     final ILoader loader = getLoader( type );
 
     final Object object = loader.load( key.getLocation(), key.getContext(), monitor );
-    
+
     return object;
   }
 
-  protected ILoader getLoader( final String type ) throws FactoryException 
+  protected ILoader getLoader( final String type ) throws FactoryException
   {
     ILoader loader = (ILoader)m_loaderCache.get( type );
     if( loader == null )
@@ -259,35 +262,39 @@ public class ResourcePool implements ILoaderListener
 
   private void releaseKey( final IPoolableObjectType key )
   {
-    final BorrowObjectJob job = (BorrowObjectJob)m_jobs.get( key );
-    if( job != null )
-      job.cancel();
-
-    m_jobs.remove( key );
-
-    final Set listeners = (Set)m_listeners.get( key );
-    if( listeners != null )
-      listeners.clear();
-    m_listeners.remove( key );
-
-    final Object object = m_objects.get( key );
-    if( object != null )
+    synchronized( this )
     {
-      try
-      {
-        final ILoader loader = getLoader( key.getType() );
-        loader.release( object );
-      }
-      catch( final FactoryException e1 )
-      {
-        e1.printStackTrace();
-      }
-    }
+      final BorrowObjectJob job = (BorrowObjectJob)m_jobs.get( key );
+      if( job != null )
+        job.cancel();
 
-    m_objects.remove( key );
+      m_jobs.remove( key );
+
+      final Set listeners = (Set)m_listeners.get( key );
+      if( listeners != null )
+        listeners.clear();
+      m_listeners.remove( key );
+
+      final Object object = m_objects.get( key );
+      if( object != null )
+      {
+        try
+        {
+          final ILoader loader = getLoader( key.getType() );
+          loader.release( object );
+        }
+        catch( final FactoryException e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
+
+      m_objects.remove( key );
+    }
   }
 
-  public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException, FactoryException
+  public void saveObject( final Object object, final IProgressMonitor monitor )
+      throws LoaderException, FactoryException
 
   {
     synchronized( this )
@@ -309,7 +316,8 @@ public class ResourcePool implements ILoaderListener
   }
 
   /**
-   * BorrowObjectJob borrows the job from the pool and fires event once object is loaded.
+   * BorrowObjectJob borrows the job from the pool and fires event once object
+   * is loaded.
    * 
    * @author belger
    */
@@ -319,13 +327,17 @@ public class ResourcePool implements ILoaderListener
 
     protected Object m_object = null;
 
-    /** exceptions that occur when job runs can be ignored. In that case the job is canceled */
+    /**
+     * exceptions that occur when job runs can be ignored. In that case the job
+     * is canceled
+     */
     private boolean m_ignoreExceptions;
 
     /**
      * Constructor
      * 
-     * @param key the key to which this job is associated
+     * @param key
+     *          the key to which this job is associated
      */
     public BorrowObjectJob( final IPoolableObjectType key )
     {
@@ -375,7 +387,7 @@ public class ResourcePool implements ILoaderListener
       {
         if( m_ignoreExceptions )
           return Status.CANCEL_STATUS;
-        
+
         return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
             "Fehler beim Laden einer Resource", e );
       }
@@ -388,11 +400,11 @@ public class ResourcePool implements ILoaderListener
   {
     return m_keyComparator.compare( key1, key2 ) == 0;
   }
-  
+
   /**
    * @return Returns the keyComparator.
    */
-  public Comparator getKeyComparator( )
+  public Comparator getKeyComparator()
   {
     return m_keyComparator;
   }
