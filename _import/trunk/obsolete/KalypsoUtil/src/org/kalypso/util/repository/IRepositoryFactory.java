@@ -19,7 +19,7 @@ public interface IRepositoryFactory
    * 
    * @return true wenn Benutzer die Konfiguration bestätigt hat.
    */
-  public abstract boolean configureRepository( final Shell shell, final IRepository rep );
+  public boolean configureRepository( final Shell shell, final IRepository rep );
   
-  public abstract IRepository createRepository( ) throws RepositoryException;
+  public IRepository createRepository( ) throws RepositoryException;
 }

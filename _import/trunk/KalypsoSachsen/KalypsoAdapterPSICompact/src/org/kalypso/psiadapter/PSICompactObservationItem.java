@@ -55,6 +55,11 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
   public final static String MD_MESSTISCHBLATT = "Messtischblattnummer";
 
+  // used for caching
+  private ITuppleModel m_values = null;
+  private Date m_from = null;
+  private Date m_to = null;
+
   /**
    * Constructor
    * 
@@ -194,12 +199,18 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    */
   public ITuppleModel getValues( final Date from, final Date to ) throws SensorException
   {
+    if( m_values != null && from.compareTo( m_from ) == 0 && to.compareTo( m_to ) == 0 )
+      return m_values;
+    
     try
     {
       ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
           PSICompact.ARC_MIN15, from, to );
 
-      return new PSICompactTuppleModel( data );
+      m_from = from;
+      m_to = to;
+      m_values = new PSICompactTuppleModel( data );
+      return m_values;
     }
     catch( ECommException e )
     {

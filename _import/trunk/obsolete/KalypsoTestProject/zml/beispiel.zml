@@ -1,0 +1,25 @@
+<Observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
+./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<Name>Eine Test-Observation</Name>
+	<TargetProperty source="./model.gml#pegel" type="gml" objectid="234"/>
+	<MetadataList>
+		<Metadata name="Pegelnullpunkt" value="10"/>
+		<Metadata name="Rechtswert" value="445566"/>
+		<Metadata name="Hochwert" value="887766"/>
+		<Metadata name="Alarmstufe 1" value="4.3"/>
+		<Metadata name="Alarmstufe 2" value="5.6"/>
+	</MetadataList>
+
+	<Axis name="Datum" unit="" datatype="xs:date">
+		<ValueArray>01.01.2004 02.01.2004 03.01.2004 04.01.2004 05.01.2004 06.01.2004 07.01.2004 08.01.2004 09.01.2004 10.01.2004 11.01.2004 12.01.2004 13.01.2004 14.01.2004 15.01.2004 16.01.2004 17.01.2004 18.01.2004 19.01.2004 20.01.2004 21.01.2004</ValueArray>
+	</Axis>
+	
+	<Axis name="Pegel" unit="m" datatype="xs:double">
+		<ValueArray>1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21</ValueArray>
+	</Axis>
+
+	<!--Axis name="Pegel" unit="m" datatype="xs:double">
+		<ValueLink xlink:type="simple" xlink:href="PATH=beispiel.zml.values/values.txt#COLUMN=2" xlink:actuate="onLoad"/>
+	</Axis-->
+
+</Observation>

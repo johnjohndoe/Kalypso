@@ -10,7 +10,7 @@ public interface IRepository extends IRepositoryItem
 {
   public String getLocation();
   
-  public void addRepositoryListener( IRepositoryListener l );
-  public void removeRepositoryListener( IRepositoryListener l );
+  public void addRepositoryListener( final IRepositoryListener l );
+  public void removeRepositoryListener( final IRepositoryListener l );
   public void fireRepositoryStructureChanged();
 }

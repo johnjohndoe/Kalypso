@@ -1,28 +1,21 @@
 package org.kalypso.util.repository.file;
 
 import java.io.File;
-import java.io.FileFilter;
 
 import org.kalypso.util.repository.IRepositoryItem;
 
 /**
  * @author schlienger
- *
  */
 public class FileItem implements IRepositoryItem
 {
+  private final FileRepository m_rep;
   private final File m_file;
-  private final FileFilter m_filter;
 
-  public FileItem( final String fileName, final FileFilter filter )
+  public FileItem( final FileRepository rep, final File file )
   {
-    this( new File( fileName ), filter);
-  }
-  
-  public FileItem( final File file, final FileFilter filter )
-  {
+    m_rep = rep;
     m_file = file;
-    m_filter = filter;
   }
 
   /**
@@ -38,7 +31,7 @@ public class FileItem implements IRepositoryItem
    */
   public IRepositoryItem getParent()
   {
-    return new FileItem( m_file.getParent(), m_filter );
+    return m_rep.createItem( m_file.getParentFile() );
   }
 
   /**
@@ -46,11 +39,11 @@ public class FileItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren()
   {
-    File[] files = m_file.listFiles( m_filter );
-    FileItem[] items = new FileItem[ files.length ];
+    File[] files = m_file.listFiles( m_rep.getFilter() );
+    IRepositoryItem[] items = new IRepositoryItem[ files.length ];
     
     for( int i = 0; i < items.length; i++ )
-      items[i] = new FileItem( files[i], m_filter );
+      items[i] = m_rep.createItem( files[i] );
     
     return items;
   }

@@ -17,8 +17,8 @@ import org.kalypso.util.repository.IRepositoryItem;
  */
 public class FileRepository extends AbstractRepository
 {
-  private final File m_root;
-  private final FileFilter m_filter;
+  protected final File m_root;
+  protected final FileFilter m_filter;
 
   public FileRepository( final String location, final FileFilter filter )
   {
@@ -44,7 +44,7 @@ public class FileRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren()
   {
-    return new FileItem( m_root, m_filter ).getChildren();
+    return createItem( m_root ).getChildren();
   }
 
   /**
@@ -53,5 +53,18 @@ public class FileRepository extends AbstractRepository
   public boolean hasChildren()
   {
     return m_root.isDirectory();
+  }
+  
+  public FileFilter getFilter()
+  {
+    return m_filter;
+  }
+  
+  /**
+   * Factory method
+   */
+  public FileItem createItem( final File file )
+  {
+    return new FileItem( this, file );
   }
 }
