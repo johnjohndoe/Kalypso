@@ -54,6 +54,7 @@ $debug="false";
 $test="false"; 
 # test="false": no testing
 # test="true" : TEST-MODE enabled, checks if all files can be processed with this program.
+#		splits comments from code, rejoins code and comments and compares with original content.
 #               if not, program will interrupt.
 
 # TEST-MODE eq "true" will force allways DEBUG-MODE
@@ -63,7 +64,9 @@ if($test eq "true")
 }
 
 $headerKalypso=&readHeader("HeaderKalypso.txt");
+$headerKalypso2D=&readHeader("HeaderKalypso2D.txt");
 $headerDeegreeFork=&readHeader("HeaderDeegreeFork.txt");
+
 
 # in deegreefork is also code from third parties (neither from deegree nor from kalypso).
 # This code went into deegree before this fork. the headers will keep untouched, 
@@ -71,10 +74,16 @@ $headerDeegreeFork=&readHeader("HeaderDeegreeFork.txt");
 # 
 $defaultHeader="";
 
-&examine("../../backupdeegree/deegree/org/deegree");
-&examine("../../backupdeegree/deegree/org/deegree_impl");
+#&examine("../../backupdeegree/deegree/org/deegree");
+#&examine("../../backupdeegree/deegree/org/deegree_impl");
+
+$defaultHeader=$headerKalypso2D;
+&examine("../../Kalypso2d/src/org");
 
 # the open source part of kalypso (other things should not occur here or have to be commented out):
+
+
+
 $defaultHeader=$headerKalypso;
 &examine("../../KalypsoUI/src");
 &examine("../../KalypsoCalcService/src");
@@ -145,11 +154,23 @@ sub updateHeader()
   @code=split(/\/\*.*?\*\//s,$inline);  
   # pattern:
   # /*...*/
-  @comment=split(/^.*?\/\*|\*\/.*?\/\*|\*\/.*?$/s,$inline);
+  
+#  for(@code)
+  #{
+  	#print "\ncode:\n";
+	#print $_;
+  #}
+  @comment=split(/^.*?\/\*|\*\/.*?\/\*|\*\/.*?$/s,$inline);  
   # patterns:
   # |   /*  or
   # */.../* or
   # */    |
+  #for(@comment)
+  #{
+  	#print "\ncomment:\n";
+	#print $_;
+  #}
+
   my $fileStatus="unknown";
   my $newContent="";    
   my $c=0;
@@ -182,23 +203,23 @@ sub updateHeader()
      $fileStatus=$status;
     }  
    
-   if($first eq "comment")
-   {
-    if(not $commentContent =~ /^\s*$/)
+    if($first eq "comment")
     {
-     $newContent.="/*".$commentContent."*/"; 
+     if(not $commentContent =~ /^\s*$/)
+     {
+      $newContent.="/*".$commentContent."*/"; 
+     }
+     $newContent.=$codeContent; 
     }
-    $newContent.=$codeContent; 
-   }
-   else
-   {
-    $newContent.=$codeContent; 
-    if(not $commentContent =~ /^\s*$/)
+    else
     {
-     $newContent.="/*".$commentContent."*/"; 
-    }
-   }      
-   $c++;
+     $newContent.=$codeContent; 
+     if(not $commentContent =~ /^\s*$/)
+     {
+      $newContent.="/*".$commentContent."*/"; 
+     }
+    }      
+    $c++;
   }
   
   # if no header is found insert default header
@@ -251,8 +272,13 @@ sub updateText()
  elsif($text =~ /This file is part of kalypso/)
  {
    # file is from kalypso
-   return ($text,"kalypso");
+   return ($headerKalypso,"kalypso");
  }
+ elsif($text =~ /This file is part of ekalypso/)
+ {
+   # file is from kalypso
+   return ($headerKalypso2D,"ekalypso");
+ } 
  else
  {
   # noheaderComment
