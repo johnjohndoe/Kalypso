@@ -16,7 +16,7 @@
 	</MetadataList>
 
 	<!-- im datatype der Achse kann man eine FORMAT-Angabe machen 
-		Die Mögliche Eingabe als FORMAT sind abhängig vom Datentyp, sie
+		Die MÃ¶gliche Eingabe als FORMAT sind abhÃ¤ngig vom Datentyp, sie
 		entsprechen aber den Java-Format wie man aus der API-Docs entnehmen
 		kann (Siehe SimpleDateFormat, NumberFormat, usw).
 	-->
@@ -30,7 +30,7 @@
 	</Axis>
 
 	<!-- hier sind die Werte in eine andere CSV-Datei
-		Zwei Links-Typen (TYPE) sind möglich:
+		Zwei Links-Typen (TYPE) sind mÃ¶glich:
 		- absolute
 		- relative (zu dieser Datei)
 		Dazu kommt noch die Angabe der Spaltennummer (COLUMN) wie
