@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
 
 import org.jfree.data.AbstractSeriesDataset;
 import org.jfree.data.XYDataset;
