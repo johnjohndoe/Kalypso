@@ -119,10 +119,15 @@ public class NetFileManager extends AbstractManager
                 .getAsciiBaseDir().toString()
                 + "/zufluss/" );
         File tsFile = new File( correctedPath );
-        TimeseriesLink link = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, false );
-        FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( "zuflussZR", link );
-        propCollector.put( "zuflussZR", linkProperty );
+        TimeseriesLink link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
+            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false );
+        FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty( "zuflussZRRepository", link1 );
+        propCollector.put( "zuflussZRRepository", linkPropertyRepository );
+        
+        TimeseriesLink link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
+            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, true );
+        FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( "zuflussZR", link2 );
+        propCollector.put( "zuflussZR", linkProperty );        
       }
       if( ivzwg > 0 ) // VERZWEIGUNG
       {

@@ -150,12 +150,26 @@ public class CatchmentManager extends AbstractManager
     String tsFileString = (String)ts.getValue();
     String relativeZmlPath="zml/N_C_"+asciiID+".zml";
     File orgTsFile = new File( m_conf.getAsciiBaseDir(),"klima.dat/"+tsFileString );
+    // repository LINK 
+    // is absolute
+    // do copy
     Object link = NAZMLGenerator
         .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
-            .getGmlBaseDir(),relativeZmlPath, true ,true);
+            .getGmlBaseDir(),relativeZmlPath, false ,false);
+    FeatureProperty niederschlagZRRepositoryProp = FeatureFactory.createFeatureProperty( "niederschlagZRRepository",
+        link );
+    propCollector.put( "niederschlagZRRrepository", niederschlagZRRepositoryProp );
+    // calculation LINK 
+    // is relative
+    // no copy
+
+    Object link2 = NAZMLGenerator
+    .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
+        .getGmlBaseDir(),relativeZmlPath, true ,true);
     FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
         link );
     propCollector.put( "niederschlagZR", niederschlagZRProp );
+
     // continue reading
 
     
