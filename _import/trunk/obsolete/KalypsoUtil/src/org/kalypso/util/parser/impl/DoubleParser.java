@@ -1,6 +1,7 @@
 package org.kalypso.util.parser.impl;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -14,16 +15,13 @@ import org.kalypso.util.parser.ParserException;
  */
 public class DoubleParser extends AbstractParser
 {
-  private final NumberFormat m_df;
-
-  private final String m_format;
 
   /**
    * Default constructor: calls DoubleParser( "" )
    */
   public DoubleParser()
   {
-    this( "" );
+    this( "");
   }
 
   /**
@@ -33,12 +31,7 @@ public class DoubleParser extends AbstractParser
    */
   public DoubleParser( String format )
   {
-    m_format = format;
 
-    if( format.length() == 0 )
-      m_df = new DecimalFormat(  );
-    else
-      m_df = new DecimalFormat( format );
   }
 
   /**
@@ -54,20 +47,19 @@ public class DoubleParser extends AbstractParser
    */
   public String getFormat()
   {
-    return m_format;
+    return "";
   }
 
   /**
-   * @throws ParserException
    * @see org.kalypso.util.parser.IParser#parse(java.lang.String)
    */
   public Object parse( String text ) throws ParserException
   {
     try
     {
-      return m_df.parse( text );
+      return Double.valueOf(text);
     }
-    catch( ParseException e )
+    catch( NumberFormatException e )
     {
       throw new ParserException( e );
     }
@@ -78,6 +70,6 @@ public class DoubleParser extends AbstractParser
    */
   public String toStringInternal( Object obj )
   {
-    return m_df.format( obj );
+    return obj.toString();
   }
 }
