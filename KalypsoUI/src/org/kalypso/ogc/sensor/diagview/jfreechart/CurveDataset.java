@@ -113,6 +113,9 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public Number getStartXValue( int series, int item )
   {
+    if( item > 0 )
+      return getXValue( series, item - 1 );
+    
     return getXValue( series, item );
   }
 
@@ -129,6 +132,9 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public Number getStartYValue( int series, int item )
   {
+    if( item > 0 )
+      return getYValue( series, item - 1 );
+    
     return getYValue( series, item );
   }
 
