@@ -180,7 +180,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     {
       // actually creates the template
       final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper
-          .loadDiagramTemplateXML( diagFile );
+          .loadDiagramTemplateXML( diagFile.getContents() );
       m_diagTemplate = new LinkedDiagramTemplate( obsdiagviewType,
           ResourceUtilities.createURL( diagFile ) );
 
@@ -277,7 +277,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
         .getWorkspace(), kft.getFeatureType(), SELECTION_ID );
 
     final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
-    diagTemplate.removeAllCurves();
+    diagTemplate.removeAllThemes();
 
     if( selectedFeatures.size() > 0 )
     {

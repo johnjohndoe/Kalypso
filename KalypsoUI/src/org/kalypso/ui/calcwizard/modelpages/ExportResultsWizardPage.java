@@ -151,7 +151,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
     try
     {
-      m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile );
+      m_obsdiagviewType = ObservationTemplateHelper.loadDiagramTemplateXML( diagFile.getContents() );
     }
     catch( Exception e )
     {

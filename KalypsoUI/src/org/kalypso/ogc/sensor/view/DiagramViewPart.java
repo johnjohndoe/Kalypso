@@ -17,11 +17,11 @@ import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-import org.kalypso.util.factory.FactoryException;
 
 /**
  * Diagram QuickView.
@@ -44,7 +44,7 @@ public class DiagramViewPart extends ViewPart implements
     {
       m_chart = new ObservationChart( m_template );
     }
-    catch( FactoryException e )
+    catch( SensorException e )
     {
       MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
       return;
@@ -95,7 +95,7 @@ public class DiagramViewPart extends ViewPart implements
     {
       public void runIntern()
       {
-        m_template.removeAllCurves();
+        m_template.removeAllThemes();
 
         final StructuredSelection selection = (StructuredSelection) event
             .getSelection();

@@ -7,7 +7,6 @@ import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
-import org.kalypso.util.factory.FactoryException;
 
 /**
  * @author schlienger
@@ -16,11 +15,11 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
 {
   /**
    * Creates an ObservationChart
-   * @param template
    * 
-   * @throws FactoryException
+   * @param template
+   * @throws SensorException
    */
-  public ObservationChart( final IDiagramTemplate template ) throws FactoryException
+  public ObservationChart( final IDiagramTemplate template ) throws SensorException
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory
         .createObservationPlot( template ), template.isShowLegend() );

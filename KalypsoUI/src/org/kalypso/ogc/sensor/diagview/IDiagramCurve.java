@@ -1,7 +1,5 @@
 package org.kalypso.ogc.sensor.diagview;
 
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.util.runtime.IVariableArguments;
 
 
 
@@ -23,13 +21,7 @@ public interface IDiagramCurve
   public IAxisMapping[] getMappings();
   
   /**
-   * @return observation on which this curve is based
+   * @return theme to which this curve belongs to
    */
-  public IObservation getObservation();
-
-  /**
-   * @return [optional] variable arguments that can be used when values are fetched from
-   * the observation
-   */
-  public IVariableArguments getArguments( );
+  public IDiagramTemplateTheme getTheme();
 }

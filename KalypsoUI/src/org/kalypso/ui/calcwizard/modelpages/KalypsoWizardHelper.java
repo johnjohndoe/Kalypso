@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
+import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplateTheme;
 import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewColumn;
@@ -84,7 +85,7 @@ public class KalypsoWizardHelper
   public static void updateDiagramTemplate( final TimeserieFeatureProps[] props,
       final List features, final LinkedDiagramTemplate template, final URL context )
   {
-    template.removeAllCurves();
+    template.removeAllThemes();
 
     for( final Iterator it = features.iterator(); it.hasNext(); )
     {
@@ -112,12 +113,13 @@ public class KalypsoWizardHelper
             final IFile file = ResourceUtilities.findFileFromURL( url );
             if( file != null && file.exists() )
             {
-              final List curves = new ArrayList();
-              curves.add( curve );
-
               final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(),
                    obsLink.getHref(), context );
-              template.addObservationTheme( key, curves );
+              
+              final DefaultDiagramTemplateTheme theme = new DefaultDiagramTemplateTheme( null );
+              theme.addCurve( curve );
+              
+              template.startLoading( key, theme );
             }
           }
           catch( MalformedURLException e )

@@ -189,7 +189,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
     {
       // actually creates the template
       final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper
-          .loadDiagramTemplateXML( diagFile );
+          .loadDiagramTemplateXML( diagFile.getContents() );
       m_diagTemplate = new LinkedDiagramTemplate( obsdiagviewType, ResourceUtilities
           .createURL( diagFile ) );
 
@@ -286,7 +286,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
         .getFeatureType(), SELECTION_ID );
 
     final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
-    diagTemplate.removeAllCurves();
+    diagTemplate.removeAllThemes();
 
     if( selectedFeatures!=null && selectedFeatures.size() > 0 )
     {

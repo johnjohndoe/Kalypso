@@ -43,13 +43,13 @@ public class ZmlLinkValues implements IZmlValues
     if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
     {
       // stream is closed in CSV()
-      m_csv = new CSV( new InputStreamReader( url.openStream() ), vl.getSeparator(), vl.getLine() );
+      m_csv = new CSV( new InputStreamReader( url.openStream() ), vl.getSeparator(), vl.getLine(), true );
     }
     else
     {
       // stream closed in RegexCSV()
       m_csv = new RegexCSV( new InputStreamReader( url.openStream() ), Pattern.compile( vl
-          .getRegexp() ), vl.getLine() );
+          .getRegexp() ), vl.getLine(), true );
     }
   }
 

@@ -21,13 +21,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -126,7 +126,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     {
       m_chart = new ObservationChart( m_diagTemplate );
     }
-    catch( FactoryException e )
+    catch( SensorException e )
     {
       MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
       return;
