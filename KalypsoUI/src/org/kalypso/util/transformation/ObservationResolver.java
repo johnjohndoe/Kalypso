@@ -2,6 +2,7 @@ package org.kalypso.util.transformation;
 
 import java.io.Writer;
 import java.net.URL;
+import java.util.Date;
 import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
@@ -24,7 +25,10 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
@@ -149,12 +153,26 @@ public class ObservationResolver extends AbstractTransformation
 
       try
       {
-        final String sourceref = sourcelink.getHref();
+        String sourceref = sourcelink.getHref();
+
+        // TODO... Gernot, this is the way to go
+        
+        // Date from = new Date();
+        // Date to = new Date();
+        // sourceref = ZmlURL.insertDateRange( sourceref, new DateRangeArgument( from, to ) );
         
         final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
 
         final IObservation obs = ZmlFactory.parseXML( sourceURL, targetName );
-
+        
+        // TODO here: merge the two observations that you got from the previous steps
+        // NOTE: the order is important: 
+        // obs( i ) has a higher priority than obs( i + 1 )
+        // with 'i' the index in the observations array...
+        
+        // final ForecastFilter fc = new ForecastFilter();
+        // fc.initFilter( new IObservation[] { obs, obs }, null );
+        
         final IFile targetfile = targetFolder.getFile( new Path( targetlink.getHref() ) );
         FolderUtilities.mkdirs( targetfile.getParent() );
         
