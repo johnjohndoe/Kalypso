@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns:na="http://www.tuhh.de/kalypsoSpree" xmlns:gml="http://www.opengis.net/gml"
-    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tuhh.de/kalypsoSpree /modellTyp/modell.xsd">
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gml:featureMember>
         <Zufluss fid="new">
             <Name>Burgneudorf</Name>
@@ -123,7 +123,9 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>70.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag/>
+            <Niederschlag>
+                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
+            </Niederschlag>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -139,7 +141,9 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>130.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag/>
+            <Niederschlag>
+                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
+            </Niederschlag>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -155,7 +159,9 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>70.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag/>
+            <Niederschlag>
+                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
+            </Niederschlag>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -171,7 +177,9 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>200.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag/>
+            <Niederschlag>
+                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
+            </Niederschlag>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>
@@ -187,7 +195,9 @@
             <Bodenfeuchte>0.0</Bodenfeuchte>
             <BodenfeuchteMax>310.0</BodenfeuchteMax>
             <Ausdehnung/>
-            <Niederschlag/>
+            <Niederschlag>
+                <obs:observation xlink:actuate="onRequest" xlink:href="path=blubb" xlink:type="simple"/>
+            </Niederschlag>
             <Wasserstand/>
         </Einzugsgebiet>
     </gml:featureMember>

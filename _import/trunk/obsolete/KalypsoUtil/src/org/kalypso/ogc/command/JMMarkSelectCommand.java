@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.util.command.ICommand;
 
 
@@ -21,13 +21,13 @@ public class JMMarkSelectCommand implements ICommand
     private GM_Envelope mySelectEnv = null;
     private GM_Position mySelectPos = null;
     private List myListFe = null; // list of display elements
-    private KalypsoFeatureTheme myTheme = null;
+    private IKalypsoTheme myTheme = null;
     private boolean mySelectWithinStatus = true;
     private final double myRadius;
     private int mySelectionMode = -1;
     private int mySelectionId;
   
-    public JMMarkSelectCommand(KalypsoFeatureTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus,double gisSelectionRadius, int selectionId ,int selectionMode)
+    public JMMarkSelectCommand( final IKalypsoTheme theme, GM_Envelope selectEnv, boolean selectWithinStatus,double gisSelectionRadius, int selectionId ,int selectionMode)
     { 
         mySelectEnv = selectEnv;
         myRadius = gisSelectionRadius;
@@ -35,17 +35,18 @@ public class JMMarkSelectCommand implements ICommand
         init(theme,selectionId,selectionMode);
     }
 
-    public JMMarkSelectCommand(KalypsoFeatureTheme theme, GM_Position selectPos,double gisSelectionRadius,int selectionId, int selectionMode )
+    public JMMarkSelectCommand( final IKalypsoTheme theme, GM_Position selectPos,double gisSelectionRadius,int selectionId, int selectionMode )
     {
         mySelectPos = selectPos;
         myRadius = gisSelectionRadius;
         init(theme,selectionId,selectionMode  );
     }
 
-    private void init(KalypsoFeatureTheme theme,int selectionId,int selectionMode  )
+    private void init( final IKalypsoTheme theme,int selectionId,int selectionMode  )
     {
+      // TODO: warum ist das kein Konstruktor?
         mySelectionMode=selectionMode;
-        myTheme =theme;
+        myTheme = theme;
         mySelectionId=selectionId;
     }
     

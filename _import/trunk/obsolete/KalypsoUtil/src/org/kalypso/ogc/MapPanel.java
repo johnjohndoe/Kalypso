@@ -92,7 +92,7 @@ public class MapPanel extends Canvas implements IMapModellView
   private void paintMap( Graphics g )
   {
     //    TODO paintWMS(g); //
-    if( myModell.getThemeSize() == 0 ) // no maps ...
+    if( myModell == null || myModell.getThemeSize() == 0 ) // no maps ...
     {
       g.setColor( Color.white );
       g.fillRect( 0, 0, getWidth(), getHeight() );

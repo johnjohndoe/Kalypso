@@ -93,8 +93,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    
       if( endPoint == null ) // not dragged
       {
-        
-        ICommand command = new JMMarkSelectCommand((KalypsoFeatureTheme) activeTheme , GeometryFactory
+        final ICommand command = new JMMarkSelectCommand( activeTheme , GeometryFactory
             .createGM_Position( g1x, g1y ), gisRadius, mySelectionId,getSelectionMode() );
 
         m_commandPoster.postCommand( command, null );
@@ -116,7 +115,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
         if( minX != maxX && minY != maxY )
         {
-          final ICommand command = new JMMarkSelectCommand( (KalypsoFeatureTheme) activeTheme, GeometryFactory
+          final ICommand command = new JMMarkSelectCommand( activeTheme, GeometryFactory
               .createGM_Envelope( minX, minY, maxX, maxY ), withinStatus, gisRadius, mySelectionId,getSelectionMode() );
 
           m_commandPoster.postCommand( command, null );

@@ -4,6 +4,15 @@
  	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/> 
     <import namespace="zml.kalypso.org" schemaLocation="observation.xsd"/> 
 
+<!--
+	<element name="SpreeModell" substitutionGroup="gml:_FeatureCollection"/>
+	<complexType name="_SpreeModellType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureCollectionType"/>
+		</complexContent>
+	</complexType>
+-->
+
 	<element name="Einzugsgebiet" type="na:_EinzugsgebietType" substitutionGroup="gml:_Feature"/>
 	<complexType name="_EinzugsgebietType">
 		<complexContent>
@@ -15,7 +24,7 @@
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
-					<element name="Niederschlag" type="string"/>
+					<element name="Niederschlag" type="obs:ObservationLink"/>
 					<element name="Wasserstand" type="string"/>
 				</sequence>
 			</extension>
