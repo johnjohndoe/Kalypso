@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="HWS_Logistics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>HWS Logistics</name>
+	<description>Specification of users logistical capacities</description>
+	<package>de.tuhh.wb.javagis.model.hwslogistics</package>
+	<objectClass ID="logistics">
+		<name>Logistical data</name>
+		<description>detailed compilation of logistical capacities of operational area</description>
+		<simpleProperty key="lo_logSetName">
+			<name>Name of logistical set</name>
+			<description>Recognisable name of certain logistical set to conduct the flood defence system</description>
+			<type>java.lang.String</type>
+		</simpleProperty>
+		<simpleProperty key="lo_dispStaff">
+			<name>Disposable Staff</name>
+			<description>disposable number of people for setup of the defence system</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+		<simpleProperty key="lo_dispTransp">
+			<name>Disposable means of transport</name>
+			<description>disposable number of means of transport for hauling components between storage site and defence line</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+		<vectorSet key="lo_dispTranspVol">
+			<name>Disposable transport volume</name>
+			<description>Data set to describe each typ of means of transport regarding volume and necesarry staff</description>
+			<simpleProperty key="v_loadVol">
+				<name>Typical loading volume</name>
+				<description>Loading volumen of one type of means of transport</description>
+				<unit>m3</unit>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_lo_numTransMeans">
+				<name>Number of means of transport</name>
+				<description>Number of means of transport of one typ</description>
+				<type>java.lang.Integer</type>
+			</simpleProperty>
+			<simpleProperty key="v_lo_vehStaff">
+				<name>Staff per vehicle</name>
+				<description>nummber of people needed to operate one transport vehicle</description>
+				<type>java.lang.Integer</type>
+			</simpleProperty>
+			<simpleProperty key="v_lo_loadStaff">
+				<name>Additional staff per vehicle fpr loading</name>
+				<description>number of peole needed in addition to \"Staff per vehicle\" for loading / unloading on vehicle of this type</description>
+				<type>java.lang.Integer</type>
+			</simpleProperty>
+		</vectorSet>
+		<simpleProperty key="lo_specLoadTime">
+			<name>Specifi loading time</name>
+			<description>Time neede to load / unload the parts of the FPS [h/m3]</description>
+			<unit>h/m3</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="lo_parLoad">
+			<name>Parallel loading</name>
+			<description>Numer of vehicles to be loaded at the same time</description>
+			<type>java.lang.Integer</type>
+		</simpleProperty>	
+	</objectClass>
+	<objectClass ID="storage">
+		<name>Storage data</name>
+		<description>describing the capacities of the storage site</description>
+
+		<simpleProperty key="lo_storeVol">
+			<name>Storage volume</name>
+			<description>Total storage volume available</description>
+			<unit>m3</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="lo_transDist">
+			<name>Distance of transportation</name>
+			<description>Distance between storage site and defence site, road length</description>
+			<unit>km</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="lo_transTime">
+			<name>Transportation time</name>
+			<description>Driving time of transport vehicles between loading site and defence line</description>
+			<unit>h</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+	</objectClass>		
+	
+</theme>
