@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.zml;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -56,6 +58,37 @@ public class ZmlURL
   }
 
   /**
+   * Returns the scheme part of the given url
+   * 
+   * @param url
+   * @return scheme
+   */
+  public static String getSchemePart( final URL url )
+  {
+    return getSchemePart( url.toExternalForm() );
+  }
+
+  /**
+   * Returns the scheme part of the given url
+   * 
+   * @param strUrl
+   * @return scheme
+   */
+  public static String getSchemePart( final String strUrl )
+  {
+    try
+    {
+      final URI uri = new URI( strUrl );
+      return uri.getScheme();
+    }
+    catch( URISyntaxException e )
+    {
+      e.printStackTrace();
+      return "";
+    }
+  }
+
+  /**
    * Inserts the date range or replaces the one if existing. The date range is
    * inserted in the from-to specification in the query part of the url.
    * 
@@ -84,7 +117,9 @@ public class ZmlURL
    * simple XML representation in the format:
    * 
    * <pre>
-   *  	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
+   * 
+   *   	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
+   *  
    * </pre>
    * 
    * @param dra
@@ -99,8 +134,10 @@ public class ZmlURL
     bf.append( TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) )
         .append( TAG_TO2 );
 
-    // TODO prüfen ob in Ordnung dass die < und > Zeichen mit Entities ersetzt werden...
-    return bf.toString();//.replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
+    // TODO prüfen ob in Ordnung dass die < und > Zeichen mit Entities ersetzt
+    // werden...
+    return bf.toString();//.replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;"
+                         // );
   }
 
   /**
@@ -108,9 +145,11 @@ public class ZmlURL
    * creates the corresponding DateRangeArgument.
    * 
    * <pre>
-   *      The format of the from-to specification should be as follows:
-   *      
-   *      ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
+   * 
+   *       The format of the from-to specification should be as follows:
+   *       
+   *       ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
+   *  
    * </pre>
    * 
    * @param str
