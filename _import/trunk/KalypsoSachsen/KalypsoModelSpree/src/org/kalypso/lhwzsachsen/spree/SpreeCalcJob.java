@@ -57,7 +57,7 @@ public class SpreeCalcJob extends AbstractCalcJob
 {
   public static final String VHS_FILE = "_vhs.dbf";
 
-  public static final   String FLP_FILE = "_flp";
+  public static final String FLP_FILE = "_flp";
 
   public static final String FLP_NAME = "FlusslaufModell";
 
@@ -119,7 +119,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_SCHIRG" ),
       new TSDesc( "WV_SCHIRG" ),
       new TSDesc( "QV_SCHIRG" ),
-      new TSDesc( "QP_SCHIRG" ),
+      new TSDesc( "QP_SCHIRG", true, "W_SCHIRG" ),
       new TSDesc( "PG_SCHIRG" ),
       new TSDesc( "PP_SCHIRG" ),
       new TSDesc( "PA_SCHIRG" ),
@@ -129,7 +129,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_BAUTZWB" ),
       new TSDesc( "WV_BAUTZWB" ),
       new TSDesc( "QV_BAUTZWB" ),
-      new TSDesc( "QP_BAUTZWB" ),
+      new TSDesc( "QP_BAUTZWB", true, "W_BAUTZWB" ),
       new TSDesc( "PG_BAUTZWB" ),
       new TSDesc( "PP_BAUTZWB" ),
       new TSDesc( "PA_BAUTZWB" ),
@@ -144,7 +144,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_GROEDI" ),
       new TSDesc( "WV_GROEDI" ),
       new TSDesc( "QV_GROEDI" ),
-      new TSDesc( "QP_GROEDI" ),
+      new TSDesc( "QP_GROEDI", true, "W_GROEDI" ),
       new TSDesc( "ZG_GROEDI" ),
       new TSDesc( "PG_GROEDI" ),
       new TSDesc( "PP_GROEDI" ),
@@ -158,14 +158,14 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_LIESKE" ),
       new TSDesc( "WV_LIESKE" ),
       new TSDesc( "QV_LIESKE" ),
-      new TSDesc( "QP_LIESKE" ),
+      new TSDesc( "QP_LIESKE", true, "W_LIESKE" ),
       new TSDesc( "S_JAENKD" ),
       new TSDesc( "W_JAENKD" ),
       new TSDesc( "Q_JAENKD" ),
       new TSDesc( "QX_JAENKD" ),
       new TSDesc( "WV_JAENKD" ),
       new TSDesc( "QV_JAENKD" ),
-      new TSDesc( "QP_JAENKD" ),
+      new TSDesc( "QP_JAENKD", true, "W_JAENKD" ),
       new TSDesc( "PG_JAENKD" ),
       new TSDesc( "PP_JAENKD" ),
       new TSDesc( "PA_JAENKD" ),
@@ -180,7 +180,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_SAERI" ),
       new TSDesc( "WV_SAERI" ),
       new TSDesc( "QV_SAERI" ),
-      new TSDesc( "QP_SAERI" ),
+      new TSDesc( "QP_SAERI", true, "W_SAERI" ),
       new TSDesc( "ZG_SAERI" ),
       new TSDesc( "PG_SAERI" ),
       new TSDesc( "PP_SAERI" ),
@@ -191,7 +191,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_BOXBRG" ),
       new TSDesc( "WV_BOXBRG" ),
       new TSDesc( "QV_BOXBRG" ),
-      new TSDesc( "QP_BOXBRG" ),
+      new TSDesc( "QP_BOXBRG", true, "W_BOXBRG" ),
       new TSDesc( "S_BWALDE" ),
       new TSDesc( "QV_BWALDE" ),
       new TSDesc( "QP_BWALDE" ),
@@ -204,7 +204,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_SPREY" ),
       new TSDesc( "WV_SPREY" ),
       new TSDesc( "QV_SPREY" ),
-      new TSDesc( "QP_SPREY" ),
+      new TSDesc( "QP_SPREY", true, "W_SPREY" ),
       new TSDesc( "S_BURGNEU" ),
       new TSDesc( "QP_BURGNEU" ),
       new TSDesc( "S_SPWITZ" ),
@@ -213,7 +213,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_SPWITZ" ),
       new TSDesc( "WV_SPWITZ" ),
       new TSDesc( "QV_SPWITZ" ),
-      new TSDesc( "QP_SPWITZ" ),
+      new TSDesc( "QP_SPWITZ", true, "W_SPWITZ" ),
       new TSDesc( "S_RLKETTE" ),
       new TSDesc( "QV_RLKETTE" ),
       new TSDesc( "QP_RLKETTE" ),
@@ -223,7 +223,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       new TSDesc( "QX_SPREMB" ),
       new TSDesc( "WV_SPREMB" ),
       new TSDesc( "QV_SPREMB" ),
-      new TSDesc( "QP_SPREMB" ) };
+      new TSDesc( "QP_SPREMB", true, "W_SPREMB" ) };
 
   private static final String EXE_FILE = "spree.exe";
 
@@ -250,8 +250,9 @@ public class SpreeCalcJob extends AbstractCalcJob
     final File outputdir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
     outputdir.mkdirs();
     final File logfile = new File( outputdir, "spree.log" );
-    addResult( new CalcJobDataBean( "LOG", "Spree-Log", FileUtilities.getRelativeFileTo( outputdir, logfile ).getPath() ) );
-    
+    addResult( new CalcJobDataBean( "LOG", "Spree-Log", FileUtilities.getRelativeFileTo( outputdir,
+        logfile ).getPath() ) );
+
     PrintWriter pw = null;
 
     try
@@ -266,7 +267,8 @@ public class SpreeCalcJob extends AbstractCalcJob
       final Properties props = new Properties();
       setMessage( "Dateien für Rechenkern werden erzeugt" );
       pw.println( "Dateien für Rechenkern werden erzeugt" );
-      final File exedir = SpreeInputWorker.createNativeInput( inputdir, input, props, pw );
+      final TSMap tsmap = new TSMap();
+      final File exedir = SpreeInputWorker.createNativeInput( inputdir, input, props, pw, tsmap );
 
       final File napFile = (File)props.get( DATA_NAPFILE );
       final File vhsFile = (File)props.get( DATA_VHSFILE );
@@ -298,7 +300,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       try
       {
         final String tsFilename = (String)props.get( DATA_TSFILENAME );
-        writeResultsToFolder( tsFilename, outputdir, props );
+        writeResultsToFolder( tsFilename, outputdir, props, tsmap );
       }
       catch( final Exception e )
       {
@@ -315,8 +317,8 @@ public class SpreeCalcJob extends AbstractCalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n"
-          + e.getLocalizedMessage(), e );
+      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(),
+          e );
     }
     finally
     {
@@ -325,7 +327,8 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
   }
 
-  private void copyAndAddToOutput( final String subdirname, final File outputdir, final File toCopy ) throws CalcJobServiceException
+  private void copyAndAddToOutput( final String subdirname, final File outputdir, final File toCopy )
+      throws CalcJobServiceException
   {
     try
     {
@@ -338,14 +341,14 @@ public class SpreeCalcJob extends AbstractCalcJob
       CopyUtils.copy( is, os );
       is.close();
       os.close();
-      
+
       addResult( new CalcJobDataBean( toCopy.getName(), toCopy.getName(), FileUtilities
           .getRelativeFileTo( outputdir, targetfile ).getPath() ) );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      
+
       throw new CalcJobServiceException( "Fehler beim Übertragen der Ergebnisdateien", e );
     }
   }
@@ -384,8 +387,6 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         CopyUtils.copy( inStream, logwriter );
         CopyUtils.copy( errStream, nul_dev );
-        //        ReaderUtilities.dumpAllAvailable( inStream );
-        //        ReaderUtilities.dumpAllAvailable( errStream );
 
         try
         {
@@ -488,8 +489,8 @@ public class SpreeCalcJob extends AbstractCalcJob
   // die dateien werden extern gelöscht, sonst hab ich nix gemacht
   }
 
-  public void writeResultsToFolder( final String tsFilename, final File outdir, final Map dataMap )
-      throws Exception
+  public void writeResultsToFolder( final String tsFilename, final File outdir, final Map dataMap,
+      final TSMap tsmap ) throws Exception
   {
     final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     final CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault().export(
@@ -501,7 +502,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = new GregorianCalendar();
 
-    // für jede Spalte der Liste eine Zeitreihe erzeugen!
+    // Die erzeugten Daten sammeln
     final Map valuesMap = new HashMap();
     final Collection dates = new ArrayList();
 
@@ -521,6 +522,8 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         final TSDesc desc = TS_DESCRIPTOR[j];
         final String column = desc.id;
+        if( !desc.output )
+          continue;
 
         Collection values = (Collection)valuesMap.get( column );
         if( values == null )
@@ -543,9 +546,10 @@ public class SpreeCalcJob extends AbstractCalcJob
       }
     }
 
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, 0, true );
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
+        Date.class, 0, true );
     // TODO: statt wert, die Einheit nehmen!
-    
+
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
 
     // create ZML for each timeserie
@@ -553,6 +557,10 @@ public class SpreeCalcJob extends AbstractCalcJob
     {
       final TSDesc desc = TS_DESCRIPTOR[i];
       final String column = desc.id;
+
+      // entscheiden, ob es ein Ergebnis ist: falls ja weitermachen
+      if( !desc.output )
+        continue;
 
       final String outdirname = "Zeitreihen";
       final String outfilename = column + ".zml";
@@ -595,16 +603,26 @@ public class SpreeCalcJob extends AbstractCalcJob
         final IAxis[] achsen = new IAxis[]
         {
             dateAxis,
-            valueAxis 
-        };
-        
+            valueAxis };
+
         final Object[][] tupleArray = (Object[][])tuples.toArray( new Object[tuples.size()][] );
         final SimpleTuppleModel model = new SimpleTuppleModel( achsen, tupleArray );
 
-        final MetadataList metadata = new MetadataList();
-        //metadata.setProperty( "Berechnung", (String)dataMap.get( DATA_LABEL )
-        // );
-        metadata.setProperty( "StartZeit", (String)dataMap.get( DATA_STARTDATESTRING ) );
+        // jetzt die Metadaten entsprechend der Kennung aus den Eingangsdaten
+        // übertragen!
+        MetadataList metadata;
+        if( tsmap == null )
+          metadata = new MetadataList();
+        else
+          metadata = tsmap.getMetadataFor( desc.useMetadataFrom );
+
+        if( metadata == null )
+          metadata = new MetadataList();
+          
+        
+        //        final MetadataList metadata = new MetadataList();
+        //        metadata.setProperty( "StartZeit", (String)dataMap.get(
+        // DATA_STARTDATESTRING ) );
 
         final IObservation observation = new SimpleObservation( column, column, false, null,
             metadata, achsen );
@@ -614,7 +632,6 @@ public class SpreeCalcJob extends AbstractCalcJob
         final FileOutputStream outStream = new FileOutputStream( outFile );
         ZmlFactory.getMarshaller().marshal( observationType, outStream );
         outStream.close();
-
       }
       else
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
@@ -623,5 +640,4 @@ public class SpreeCalcJob extends AbstractCalcJob
       addResult( new CalcJobDataBean( column, column, outFileRelative.getPath() ) );
     }
   }
-
 }

@@ -10,11 +10,11 @@
     <input id="XLINKSEXT_XSD" path=".model/schema/xlinksext.xsd" relativeToCalcCase="false"/>
     <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
     
-    <input id="PG_BAUTZWB" path="zeitreihen/PG_BAUTZWB.zml" relativeToCalcCase="true"/>
-    <input id="PG_GROEDI" path="zeitreihen/PG_GROEDI.zml" relativeToCalcCase="true"/>
-    <input id="PG_JAENKD" path="zeitreihen/PG_JAENKD.zml" relativeToCalcCase="true"/>
-    <input id="PG_SAERI" path="zeitreihen/PG_SAERI.zml" relativeToCalcCase="true"/>
-    <input id="PG_SCHIRG" path="zeitreihen/PG_SCHIRG.zml" relativeToCalcCase="true"/>
+    <input id="PA_BAUTZWB" path="zeitreihen/PA_BAUTZWB.zml" relativeToCalcCase="true"/>
+    <input id="PA_GROEDI" path="zeitreihen/PA_GROEDI.zml" relativeToCalcCase="true"/>
+    <input id="PA_JAENKD" path="zeitreihen/PA_JAENKD.zml" relativeToCalcCase="true"/>
+    <input id="PA_SAERI" path="zeitreihen/PA_SAERI.zml" relativeToCalcCase="true"/>
+    <input id="PA_SCHIRG" path="zeitreihen/PA_SCHIRG.zml" relativeToCalcCase="true"/>
 
     <input id="QP_BURGNEU" path="zeitreihen/QP_BURGNEU.zml" relativeToCalcCase="true"/>
 

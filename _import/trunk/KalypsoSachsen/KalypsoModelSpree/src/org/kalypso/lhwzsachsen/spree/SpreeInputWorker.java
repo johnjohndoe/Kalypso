@@ -83,7 +83,7 @@ public class SpreeInputWorker
    * @throws IOException
    */
   public static File createNativeInput( final File tmpdir, final CalcJobDataBean[] input,
-      final Properties props, final PrintWriter logwriter ) throws IOException
+      final Properties props, final PrintWriter logwriter, final TSMap tsmap ) throws IOException
   {
     try
     {
@@ -122,8 +122,8 @@ public class SpreeInputWorker
 
       
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
-      final TSMap valuesMap = createTsData( tmpdir, inputMap );
-      createTimeseriesFile( tsFilename, valuesMap, logwriter );
+      readZML( tmpdir, inputMap, tsmap );
+      createTimeseriesFile( tsFilename, tsmap, logwriter );
 
       return nativedir;
     }
@@ -233,10 +233,8 @@ public class SpreeInputWorker
   }
 
   /** Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map) */
-  public static TSMap createTsData( final File inputdir, final Map inputMap ) throws IOException
+  public static TSMap readZML( final File inputdir, final Map inputMap, final TSMap tsmap ) throws IOException
   {
-    final TSMap tsmap = new TSMap();
-    
     // alle Zeitreihen lesen
     for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
     {

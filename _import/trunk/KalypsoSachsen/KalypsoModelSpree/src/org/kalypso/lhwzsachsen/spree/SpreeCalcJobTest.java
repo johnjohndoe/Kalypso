@@ -22,7 +22,6 @@ import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.xml.sax.InputSource;
 
@@ -33,7 +32,7 @@ public class SpreeCalcJobTest extends TestCase
 {
   public void testSpreeJob() throws IOException, TypeRegistryException, JAXBException
   {
-    final ICalcJob cj = new SpreeCalcJob();
+    final SpreeCalcJob cj = new SpreeCalcJob();
 
     final File basedir = FileUtilities.createNewTempDir( "Spree-CalcJob-Test" );
     
@@ -118,7 +117,7 @@ public class SpreeCalcJobTest extends TestCase
     map.put( SpreeCalcJob.DATA_LABEL, "Prognose" );
     map.put( SpreeCalcJob.DATA_STARTDATESTRING, "27.4.2005 12:00" );
 
-    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, map );
+    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, map, null );
     FileUtilities.deleteRecursive( resultDir );
   }
 }
