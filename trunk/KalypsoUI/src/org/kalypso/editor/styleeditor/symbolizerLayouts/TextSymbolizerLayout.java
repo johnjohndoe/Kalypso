@@ -73,7 +73,8 @@ public class TextSymbolizerLayout extends SymbolizerLayout{
 		// ***** Font group
 		Group fontGroup = new Group(composite,SWT.NULL);		
 		GridData fontGroupData = new GridData();
-		fontGroupData.widthHint = 210;			
+		fontGroupData.widthHint = 210;		
+		fontGroupData.heightHint = 298;
 		fontGroup.setLayoutData(fontGroupData);			
 		fontGroup.setLayout(compositeLayout);
 		fontGroup.layout();				 		

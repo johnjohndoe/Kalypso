@@ -31,7 +31,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
   public void run()
   {
     StyleEditorViewPart part = null;
-    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();    
     Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
 
     try

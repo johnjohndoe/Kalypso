@@ -53,7 +53,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 		Group fillGroup = new Group(composite, SWT.NULL);
 		fillGroup.setText("Fill");				
 		GridData fillGroupData = new GridData();
-		fillGroupData.widthHint = 210;			
+		fillGroupData.widthHint = 210;
 		fillGroup.setLayoutData(fillGroupData);	
 		fillGroup.setLayout(compositeLayout);
 		fillGroup.layout();		
@@ -89,8 +89,9 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 		Group strokeGroup = new Group(composite,SWT.NULL);
 		strokeGroup.setText("Stroke");
 		GridData strokeGroupData = new GridData();
-		fillGroupData.widthHint = 210;			
-		fillGroup.setLayoutData(strokeGroupData);			
+		strokeGroupData.widthHint = 210;
+		strokeGroupData.heightHint = 233;	
+		strokeGroup.setLayoutData(strokeGroupData);			
 		strokeGroup.setLayout(compositeLayout);
 		strokeGroup.layout();	
 		

@@ -74,7 +74,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable {
     /**
     * default constructor
     */
-    FeatureTypeStyle_Impl() {
+    public FeatureTypeStyle_Impl() {
         semanticTypeIdentifier = new ArrayList();
         rules = new ArrayList();
     }

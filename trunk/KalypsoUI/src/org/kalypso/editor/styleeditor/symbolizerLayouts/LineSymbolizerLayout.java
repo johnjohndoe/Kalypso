@@ -49,7 +49,8 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 		Group strokeGroup = new Group(composite,SWT.NULL);
 		strokeGroup.setText("Stroke");
 		GridData strokeGroupData = new GridData();
-		strokeGroupData.widthHint = 210;			
+		strokeGroupData.widthHint = 210;
+		strokeGroupData.heightHint = 298;
 		strokeGroup.setLayoutData(strokeGroupData);			
 		strokeGroup.setLayout(compositeLayout);
 		strokeGroup.layout();	

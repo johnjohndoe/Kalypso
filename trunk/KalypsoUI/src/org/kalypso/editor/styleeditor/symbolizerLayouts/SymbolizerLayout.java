@@ -34,7 +34,7 @@ public abstract class SymbolizerLayout {
 	public void draw() throws FilterEvaluationException
 	{			
 		GridLayout compositeLayout = new GridLayout();		
-		compositeLayout.marginHeight = 2;		
+		compositeLayout.marginHeight = 2;	
 				
 		// ***** Label Group
 		Group labelGroup = new Group(composite,SWT.NULL);		
