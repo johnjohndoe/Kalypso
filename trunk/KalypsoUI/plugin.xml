@@ -69,6 +69,17 @@
       <import plugin="org.eclipse.ui.forms" export="true"/>
       <import plugin="org.eclipse.debug.ui"/>
    </requires>
+   <extension point="org.eclipse.core.runtime.preferences">
+	    <initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.kalypso.ui.preferences.KalypsoPreferencePage"
+            name="Kalypso"
+            id="org.kalypso.ui.preferences.KalypsoPreferencePage"/>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -515,5 +526,4 @@
                id="org.kalypso.action.model.checkoutModel"/>
       </actionSet>
    </extension>
-
 </plugin>

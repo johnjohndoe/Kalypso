@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.repository.IRepository;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
@@ -24,7 +25,7 @@ public class RemoveRepositoryAction extends FullAction implements ISelectionChan
 
   public RemoveRepositoryAction( final Shell shell, final RepositoryExplorerPart explorer )
   {
-    super( "Repository entfernen", null, "Entfernt ein Repository..." );
+    super( "Repository entfernen", ImageProvider.IMAGE_ZML_REPOSITORY_REMOVE, "Entfernt ein Repository..." );
 
     m_explorer = explorer;
     m_shell = shell;
