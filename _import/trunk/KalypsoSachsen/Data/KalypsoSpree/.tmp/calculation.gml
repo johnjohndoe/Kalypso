@@ -3,8 +3,8 @@
 project:/.model/schema/control.xsd">
 	<startsimulation>2004-04-27T10:00:00</startsimulation>
 	<startforecast>2004-04-27T10:00:00</startforecast>
-	<editor>:user:</editor>
-	<description>- bitte ausfüllen -</description>
-	<comment>- bitte ausfüllen -</comment>
+	<editor>aha</editor>
+	<description>blubb</description>
+	<comment>soso</comment>
 	<calctime>2004-04-27T10:00:00</calctime>
 </SpreeControl>

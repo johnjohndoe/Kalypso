@@ -1,4 +1,4 @@
-#Sun Oct 31 02:28:32 CEST 2004
+#Sun Oct 31 19:47:40 CET 2004
 encoding//.templates/calcCase/teilgebiete.ott=UTF-8
 encoding//berechnung/r8/Pegel/.info.txt=UTF-8
 encoding//berechnung/r80/Pegel/.info.txt=UTF-8
@@ -17,6 +17,7 @@ encoding//.styles/teilgebiete.sld=UTF-8
 encoding//Modell_Tabellen/Tabelle_VGewaesser.gtt=UTF-8
 encoding//Rechenfaelle/r1/zufluss/.info.txt=UTF-8
 encoding//berechnung/r80/Zufluss/.info.txt=UTF-8
+encoding/modell.gml=UTF-8
 encoding//berechnung/r5/calcCase.gml=UTF-8
 encoding//.styles/VChannel.sld=UTF-8
 encoding//Rechenvarianten/ganzNeu/zml/.info.txt=UTF-8
