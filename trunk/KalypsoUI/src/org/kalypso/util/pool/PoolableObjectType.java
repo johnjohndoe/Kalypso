@@ -10,6 +10,7 @@ import org.kalypso.java.properties.PropertiesHelper;
  */
 public class PoolableObjectType implements IPoolableObjectType
 {
+  private static final char PROPERTY_SEPARATOR = '#';
   private final String myType;
 
   private final Properties mySource;
@@ -18,7 +19,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   public PoolableObjectType( final String type, final String source, final IProject project )
   {
-    this( type, PropertiesHelper.parseFromString( source, '#' ), project );
+    this( type, PropertiesHelper.parseFromString( source, PROPERTY_SEPARATOR ), project );
   }
 
   public PoolableObjectType( final String type, final Properties source, final IProject project )
@@ -75,6 +76,11 @@ public class PoolableObjectType implements IPoolableObjectType
   public String toString()
   {
     return getClass().getName() + ": source=" + getSource() + " type=" + getType() + " project=" + getProject().getName();
+  }
+
+  public String getSourceAsString()
+  {
+    return PropertiesHelper.format( getSource(), PROPERTY_SEPARATOR );
   }
 
 }

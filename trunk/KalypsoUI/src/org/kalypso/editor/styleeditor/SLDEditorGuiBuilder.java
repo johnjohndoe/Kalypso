@@ -83,7 +83,7 @@ public class SLDEditorGuiBuilder {
 						addRule(rule, userStyle);
 						focusedRuleItem = rules.length;					
 						buildSWTGui(userStyle, featureType);						
-						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));												
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));												
 						break;
 					}					
 					case ControlRulePanel.REM_RULE:
@@ -95,7 +95,7 @@ public class SLDEditorGuiBuilder {
 							if(index >=0)
 								focusedRuleItem = index;
 							buildSWTGui(userStyle, featureType);
-							userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));							
+							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));							
 						}
 						break;
 					}
@@ -117,7 +117,7 @@ public class SLDEditorGuiBuilder {
 							setRules(newOrderedObjects,userStyle);
 							focusedRuleItem = index-1;
 							buildSWTGui(userStyle, featureType);						
-							userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));							
+							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));							
 						}
 						break;
 					}
@@ -140,7 +140,7 @@ public class SLDEditorGuiBuilder {
 							setRules(newOrderedObjects,userStyle);
 							focusedRuleItem = index+1;	
 							buildSWTGui(userStyle, featureType);
-							userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));							
+							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));							
 						}
 					}					
 					default: break;

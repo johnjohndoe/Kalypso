@@ -13,12 +13,12 @@ public class StartEditingActionDelagate extends GisTableAbstractActionDelagate
    */
   public void run( final IAction action )
   {
-    getEditor().setEditing( action.isChecked() );
+    getEditor().getTheme().setEditing( action.isChecked() );
   }
   
   protected boolean isChecked()
   {
-    return getEditor().isEditing();
+    return getEditor().getTheme() != null && getEditor().getTheme().isEditing();
   }
 
   /**
@@ -26,6 +26,6 @@ public class StartEditingActionDelagate extends GisTableAbstractActionDelagate
    */
   protected boolean isEnabled( final ISelection selection )
   {
-    return true;
+    return getEditor().getTheme() != null;
   }
 }

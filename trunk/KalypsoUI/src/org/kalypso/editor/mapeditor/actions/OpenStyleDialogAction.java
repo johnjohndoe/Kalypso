@@ -19,81 +19,89 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 /**
  * @author belger
  */
-public class OpenStyleDialogAction extends FullAction implements ISelectionChangedListener {
-	
-	private final StructuredViewer m_viewer;
+public class OpenStyleDialogAction extends FullAction implements ISelectionChangedListener
+{
 
-	private final GisMapOutlinePage m_page;
+  private final StructuredViewer m_viewer;
 
-	public OpenStyleDialogAction(final String text,final ImageDescriptor image, final String tooltipText, final StructuredViewer structuredViewer, GisMapOutlinePage page) 
-	{
-		super(text, image, tooltipText);
+  private final GisMapOutlinePage m_page;
 
-		m_viewer = structuredViewer;
+  public OpenStyleDialogAction( final String text, final ImageDescriptor image,
+      final String tooltipText, final StructuredViewer structuredViewer, GisMapOutlinePage page )
+  {
+    super( text, image, tooltipText );
 
-		m_viewer.addSelectionChangedListener(this);		
+    m_viewer = structuredViewer;
 
-		m_page = page;
+    m_viewer.addSelectionChangedListener( this );
 
-		refresh();
-	}
+    m_page = page;
 
-	public void dispose() {
-		m_viewer.removeSelectionChangedListener(this);
-	}
+    refresh();
+  }
 
-	private static boolean test = true;
+  public void dispose()
+  {
+    m_viewer.removeSelectionChangedListener( this );
+  }
 
-	/**
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	public void run() {
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
+  public void run()
+  {
 
-		StyleEditorViewPart part = null;
-		IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
-		Object o = ((IStructuredSelection) m_viewer.getSelection()).getFirstElement();		
-		
-		try {							
-			part = (StyleEditorViewPart) window.getActivePage().showView("org.kalypso.editor.mapeditor.views.styleeditor");
-		
-			if (part != null) {
-				part.setSelectionChangedProvider(m_page);
-			}
-			// if UserStyle selected path that on to styleeditor
-			if (o instanceof ThemeStyleTreeObject) {
-				KalypsoFeatureLayer layer = ((ThemeStyleTreeObject) o).getTheme().getLayer();
-				if (layer instanceof KalypsoFeatureLayer) {
-					FeatureType ft = ((KalypsoFeatureLayer) layer).getFeatureType();
-					KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
-					if (part != null)
-						part.initStyleEditor(kalypsoStyle,ft);
-					else
-						part.initStyleEditor(null, null);
-				}
-			}	
-			else if(o instanceof IKalypsoTheme)
-				part.initStyleEditor(null, null);
-		} catch (Exception e) {			
-			e.printStackTrace();
-		}		
-	}
+    StyleEditorViewPart part = null;
+    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+    Object o = ( (IStructuredSelection)m_viewer.getSelection() ).getFirstElement();
 
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	public void selectionChanged(final SelectionChangedEvent event) {
-		refresh();
-	}
+    try
+    {
+      part = (StyleEditorViewPart)window.getActivePage().showView(
+          "org.kalypso.editor.mapeditor.views.styleeditor" );
 
-	private void refresh() {
-		boolean bEnable = false;
+      if( part != null )
+      {
+        part.setSelectionChangedProvider( m_page );
+      }
+      // if UserStyle selected path that on to styleeditor
+      if( o instanceof ThemeStyleTreeObject )
+      {
+        KalypsoFeatureLayer layer = ( (ThemeStyleTreeObject)o ).getTheme().getLayer();
 
-		final IStructuredSelection s = (IStructuredSelection) m_viewer
-				.getSelection();
+        FeatureType ft = layer.getFeatureType();
+        KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
+        if( part != null )
+          part.initStyleEditor( kalypsoStyle, ft );
+        else
+          part.initStyleEditor( null, null );
+      }
+      else if( o instanceof IKalypsoTheme )
+        part.initStyleEditor( null, null );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
 
-		if (s.getFirstElement() instanceof ThemeStyleTreeObject)
-			bEnable = true;
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    refresh();
+  }
 
-		setEnabled(bEnable);
-	}
+  private void refresh()
+  {
+    boolean bEnable = false;
+
+    final IStructuredSelection s = (IStructuredSelection)m_viewer.getSelection();
+
+    if( s.getFirstElement() instanceof ThemeStyleTreeObject )
+      bEnable = true;
+
+    setEnabled( bEnable );
+  }
 }

@@ -108,7 +108,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private void configureLogger()
   {
     final Logger logger = Logger.getLogger( "" );
-    logger.setLevel( Level.FINER );
+    logger.setLevel( Level.INFO );
     
     final Handler[] handlers = logger.getHandlers();
     for( int i = 0; i < handlers.length; i++ )

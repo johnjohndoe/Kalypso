@@ -48,7 +48,6 @@ public final class GMLArrayLoader extends AbstractLoader
       final InputSource schemaSource = new InputSource( schemaFile.getContents() );
       schemaSource.setEncoding( schemaFile.getCharset() );
       
-  
       final String gmlPath = source.getProperty( "PATH", "" );
       final IFile gmlFile = project.getFile( gmlPath );
       final InputSource gmlSource = new InputSource( gmlFile.getContents() );

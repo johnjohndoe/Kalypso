@@ -75,12 +75,14 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
-  {}
+  {
+  // TODO: implement it  
+  }
 
   /**
    * @see org.kalypso.editor.AbstractEditorPart#load()
    */
-  protected void load()
+  protected void loadInternal()
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
@@ -90,8 +92,6 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
     for( int i = 0; i < m_cols.length; i++ )
       m_cols[i].startBorrowObjectJob( m_pool, this );
-
-    setDirty( false );
 
     setContentDescription( input.getFile().getName() );
     setPartName( input.getFile().getName() );

@@ -17,7 +17,7 @@ public class SaveDataActionDelagate extends GisTableAbstractActionDelagate
     if( !MessageDialog.openConfirm( getEditor().getSite().getShell(), "Daten speichern", "Sollen die Daten wirklich gespeichert werden?" ) )
       return;
     
-    getEditor().saveData();
+    getEditor().getTheme().saveFeatures();
   }
   
   /**

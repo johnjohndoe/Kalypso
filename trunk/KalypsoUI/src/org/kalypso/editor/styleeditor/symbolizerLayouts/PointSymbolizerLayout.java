@@ -110,7 +110,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				double size = ((SliderPanel)event.getSource()).getSelection();
 				graphic.setSize(size);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});
 
@@ -119,7 +119,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				double opacity = ((SliderPanel)event.getSource()).getSelection();
 				graphic.setOpacity(opacity);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});
 		
@@ -129,7 +129,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				double rotation = ((SliderPanel)event.getSource()).getSelection();
 				rotation = rotation/180.0;
 				graphic.setRotation(rotation);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});		
 	
@@ -144,7 +144,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 						pointSymbolizer.getGraphic().addMarksAndExtGraphic(newMark);	
 						selectionIndex = graphic.getMarksAndExtGraphics().length-1;
 						draw();
-						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));						
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));						
 					} catch (FilterEvaluationException e) {						
 						e.printStackTrace();
 					}				
@@ -159,7 +159,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 						selectionIndex = index;
 						if(selectionIndex<0)
 							selectionIndex = 0;
-						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 						try {
 							draw();
 						} catch (FilterEvaluationException e) {							
@@ -185,7 +185,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 					}
 					graphic.setMarksAndExtGraphics(newOrderedObjects);
 					selectionIndex = index+1;
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 					try {
 						draw();						
 					} catch (FilterEvaluationException e) { 
@@ -210,7 +210,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 					}
 					graphic.setMarksAndExtGraphics(newOrderedObjects);
 					selectionIndex = index-1;
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 					try {
 						draw();						
 					} catch (FilterEvaluationException e) { 
@@ -258,7 +258,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) {
 					int index = ((ComboPanel)event.getSource()).getSelection();
 					mark.setWellKnownName(WellKnownNameComboPanel.getWellKnownNameByIndex(index));						
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 				}
 			});	
 			
@@ -272,7 +272,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) { 
 					Color color = ((ColorChooserPanel) event.getSource()).getColor();			
 					markFill.setFill(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));				
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 				}
 			});				
 			
@@ -281,7 +281,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) {				
 					double opacity = ((SliderPanel)event.getSource()).getSelection();
 					markFill.setOpacity(opacity);
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 				}
 			});	
 			
@@ -295,7 +295,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) {
 					Color color = ((ColorChooserPanel) event.getSource()).getColor();
 					markStroke.setStroke(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 				}
 			});
 			
@@ -304,7 +304,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) {
 					double width = ((SliderPanel)event.getSource()).getSelection();
 					markStroke.setWidth(width);
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 				}
 			});
 	
@@ -313,7 +313,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) {
 					double opacity = ((SliderPanel)event.getSource()).getSelection();
 					markStroke.setOpacity(opacity);
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));					
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 				}
 			});				
 		}
@@ -326,7 +326,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				public void valueChanged(PanelEvent event) {
 					URL url = ((UrlInputPanel)event.getSource()).getURL();
 					externalGraphic.setOnlineResource(url);	
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 				}
 			});
 			FormatDisplayPanel formatDisplayPanel = new FormatDisplayPanel(group, "Format:", externalGraphic.getFormat());																					

@@ -111,7 +111,7 @@ public class RuleTabItemBuilder {
 			titleInputPanel.addPanelListener(new PanelListener() {				
 				public void valueChanged(PanelEvent event) {
 					rule.setTitle(((TextInputPanel)event.getSource()).getLabelText());
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));									
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));									
 					focuedRuleItem = ruleTabFolder.getSelectionIndex();										
 				}
 			});
@@ -127,7 +127,7 @@ public class RuleTabItemBuilder {
 					  ComplexFilter filter = new ComplexFilter(operation);
 					  rule.setFilter(filter);
 					 
-						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 						System.out.println(((Rule_Impl)rule).exportAsXML());
 					
 					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
@@ -138,7 +138,7 @@ public class RuleTabItemBuilder {
 			minDenominatorPanel.addPanelListener(new PanelListener() {				
 				public void valueChanged(PanelEvent event) {
 					rule.setMinScaleDenominator(((SliderPanel)event.getSource()).getSelection());
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
 				}
 			});			
@@ -157,7 +157,7 @@ public class RuleTabItemBuilder {
 //					rule.setFilter(filter);
 					
 					System.out.println(((Rule_Impl)rule).exportAsXML());
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));						
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));						
 				}
 			});
 			
@@ -180,7 +180,7 @@ public class RuleTabItemBuilder {
 							symbolizerTabFolder.getItem(index).dispose();																					
 							focusedSymbolizerItem = index;							
 							focuedRuleItem = ruleTabFolder.getSelectionIndex();							
-							userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));											
+							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));											
 						}	
 						draw();						
 					}
@@ -203,7 +203,7 @@ public class RuleTabItemBuilder {
 							rule.setSymbolizers(newOrderedObjects);
 							focusedSymbolizerItem = index+1;
 							focuedRuleItem = ruleTabFolder.getSelectionIndex();											
-							userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 							draw();
 						}
 					}
@@ -226,7 +226,7 @@ public class RuleTabItemBuilder {
 							rule.setSymbolizers(newOrderedObjects);
 							focusedSymbolizerItem = index-1;
 							focuedRuleItem = ruleTabFolder.getSelectionIndex();							
-							userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 							draw();	
 						}
 					}				
@@ -239,7 +239,7 @@ public class RuleTabItemBuilder {
 					if(symbolizer instanceof Symbolizer)
 					{
 						rule.addSymbolizer(symbolizer);											
-						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 						focuedRuleItem = ruleTabFolder.getSelectionIndex();
 						focusedSymbolizerItem = rule.getSymbolizers().length-1;						
 						draw();

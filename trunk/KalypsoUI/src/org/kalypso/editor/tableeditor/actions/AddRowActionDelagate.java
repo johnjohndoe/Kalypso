@@ -8,7 +8,6 @@ import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
 import org.kalypso.editor.tableeditor.layerTable.command.AddRowCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.ICommand;
 
 /**
@@ -39,8 +38,7 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
     };
 
     final ICommand command = new AddRowCommand( model, feature );
-    new CommandJob( command, getEditor().getLayerCommandManager(), getEditor().getSchedulingRule(),
-        r, CommandJob.POST );
+    getEditor().getTheme().postCommand( command, r );
   }
 
   /**
@@ -48,7 +46,7 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
    */
   protected boolean isEnabled( final ISelection selection )
   {
-    return true;
+    return getEditor().getTheme() != null;
   }
 
   /**

@@ -69,7 +69,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) { 
 				Color color = ((ColorChooserPanel) event.getSource()).getColor();			
 				polygonFill.setFill(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));				
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});
 		
@@ -78,7 +78,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {				
 				double opacity = ((SliderPanel)event.getSource()).getSelection();
 				polygonFill.setOpacity(opacity);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});			
 		
@@ -100,7 +100,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				Color color = ((ColorChooserPanel) event.getSource()).getColor();
 				polygonStroke.setStroke(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 		
@@ -109,7 +109,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				double width = ((SliderPanel)event.getSource()).getSelection();
 				polygonStroke.setWidth(width);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});
 
@@ -118,7 +118,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				double opacity = ((SliderPanel)event.getSource()).getSelection();
 				polygonStroke.setOpacity(opacity);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));				
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));				
 			}
 		});			
 		
@@ -129,7 +129,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				int lineJoin = ((StrokeLinejoinComboPanel)event.getSource()).getSelection();
 				polygonStroke.setLineJoin(lineJoin);											
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 
@@ -140,7 +140,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				int lineCap = ((StrokeLinecapComboPanel)event.getSource()).getSelection();
 				polygonStroke.setLineCap(lineCap);				
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 		
@@ -150,7 +150,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				float dashOffset = ((StrokeDashoffsetPanel)event.getSource()).getValue();
 				polygonStroke.setDashOffset(dashOffset);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});
 		
@@ -160,7 +160,7 @@ public class PolygonSymbolizerLayout extends SymbolizerLayout{
 			public void valueChanged(PanelEvent event) {
 				float dashArray[] = ((StrokeDasharrayPanel)event.getSource()).getValue();
 				polygonStroke.setDashArray(dashArray);
-				userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
+				userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 			}
 		});					
 	}
