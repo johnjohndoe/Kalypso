@@ -243,7 +243,8 @@ public class ObservationResolver extends AbstractTransformation
     if( sourceProperty == null )
       return null;
     final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceProperty );
-
+    if(sourcelink == null) // keine Zeitreihe verlink, z.B. kein Pegel am Knoten in KalypsoNA
+      return null;
     final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(), new DateRangeArgument(
         from, to ) );
 
