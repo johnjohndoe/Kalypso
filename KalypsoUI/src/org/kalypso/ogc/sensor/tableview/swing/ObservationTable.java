@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -132,8 +131,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     setDefaultEditor( Double.class, new SelectAllCellEditor(
         new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
 
-    setSelectionForeground( Color.BLACK );
-    setSelectionBackground( Color.YELLOW );
+    setCellSelectionEnabled( true );
 
     getTableHeader().setReorderingAllowed( false );
 

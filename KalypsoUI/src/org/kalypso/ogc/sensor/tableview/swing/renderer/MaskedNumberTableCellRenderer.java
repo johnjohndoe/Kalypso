@@ -101,7 +101,10 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
       if( hasFocus )
         label.setBackground( Color.LIGHT_GRAY );
       else
-        label.setBackground( Color.YELLOW );
+      {
+        label.setForeground( table.getSelectionForeground() );
+        label.setBackground( table.getSelectionBackground() );
+      }
     }
     
     // apply rendering rule

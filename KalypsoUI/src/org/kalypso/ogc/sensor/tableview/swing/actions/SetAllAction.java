@@ -16,10 +16,7 @@ public class SetAllAction extends AbstractObservationTableAction
     super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf den selektierten Wert" );
   }
 
-  /**
-   * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-   */
-  public void actionPerformed( ActionEvent e )
+  public void internalActionPerformed( ActionEvent e )
   {
     final ObservationTable table = getTable();
     final int col = table.getSelectedColumn();
@@ -31,7 +28,5 @@ public class SetAllAction extends AbstractObservationTableAction
     
     for( int i = row + 1; i < table.getRowCount(); i++ )
       table.setValueAt( value, i, col );
-    
-    table.repaint();
   }
 }
