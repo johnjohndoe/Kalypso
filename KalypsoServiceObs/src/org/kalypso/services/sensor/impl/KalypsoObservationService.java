@@ -15,7 +15,6 @@ import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.beans.ItemBean;
-import org.kalypso.repository.beans.RepositoryBean;
 import org.kalypso.repository.conf.RepositoryConfig;
 import org.kalypso.repository.conf.RepositoryConfigItem;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
@@ -67,22 +66,6 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#getObservations(org.kalypso.repository.beans.ItemBean)
-   */
-  public ObservationBean[] getObservations( ItemBean node )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#getMetadataFor(org.kalypso.ogc.sensor.beans.ObservationBean)
-   */
-  public Map getMetadataFor( ObservationBean observation )
-  {
-    return null;
-  }
-
-  /**
    * @see org.kalypso.services.sensor.IObservationService#readData(org.kalypso.ogc.sensor.beans.ObservationBean)
    */
   public ObservationDataDescriptorBean readData( ObservationBean observation )
@@ -100,39 +83,13 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.repository.IRepositoryService#getRepositories()
-   */
-  public RepositoryBean[] getRepositories()
-  {
-    if( m_mapObj2Obj.containsKey( m_repositories ) )
-      return (RepositoryBean[])m_mapObj2Obj.get( m_repositories );
-
-    final RepositoryBean[] beans = new RepositoryBean[m_repositories.size()];
-
-    for( int i = 0; i < beans.length; i++ )
-    {
-      final IRepository rep = (IRepository)m_repositories.get( i );
-
-      beans[i] = new RepositoryBean( m_lastId++, rep.getName() );
-      m_mapId2Obj.put( new Integer( beans[i].getId() ), rep );
-    }
-
-    m_mapObj2Obj.put( m_repositories, beans );
-
-    return beans;
-  }
-
-  /**
    * @see org.kalypso.services.repository.IRepositoryService#hasChildren(org.kalypso.repository.beans.ItemBean)
    */
   public boolean hasChildren( final ItemBean parent )
   {
-    if( parent instanceof RepositoryBean )
-    {
-      final IRepository rep = (IRepository)m_mapId2Obj.get( new Integer( parent.getId() ) );
-
-      return rep.hasChildren();
-    }
+    // dealing with ROOT?
+    if( parent == null )
+      return m_repositories.size() > 0;
 
     final IRepositoryItem item = (IRepositoryItem)m_mapId2Obj.get( new Integer( parent.getId() ) );
     return item.hasChildren();
@@ -143,37 +100,35 @@ public class KalypsoObservationService implements IObservationService
    */
   public ItemBean[] getChildren( final ItemBean parent )
   {
-    // IRepository
-    if( parent instanceof RepositoryBean )
+    // dealing with ROOT?
+    if( parent == null )
     {
-      final IRepository rep = (IRepository)m_mapId2Obj.get( new Integer( parent.getId() ) );
+      if( m_mapObj2Obj.containsKey( m_repositories ) )
+        return (ItemBean[])m_mapObj2Obj.get( m_repositories );
 
-      if( m_mapObj2Obj.containsKey( rep ) )
-        return (ItemBean[])m_mapObj2Obj.get( rep );
-
-      final IRepositoryItem[] items = rep.getChildren();
-      final ItemBean[] beans = new ItemBean[items.length];
+      final ItemBean[] beans = new ItemBean[m_repositories.size()];
 
       for( int i = 0; i < beans.length; i++ )
       {
-        beans[i] = new ItemBean( m_lastId++, items[i].getName() );
-        m_mapId2Obj.put( new Integer( beans[i].getId() ), items[i] );
+        final IRepository rep = (IRepository)m_repositories.get( i );
+
+        beans[i] = new ItemBean( m_lastId++, rep.getName() );
+        m_mapId2Obj.put( new Integer( beans[i].getId() ), rep );
       }
 
-      m_mapObj2Obj.put( rep, beans );
-      
+      m_mapObj2Obj.put( m_repositories, beans );
+
       return beans;
     }
-    
-    // Standard IRepositoryItem
+
     final IRepositoryItem item = (IRepositoryItem)m_mapId2Obj.get( new Integer( parent.getId() ) );
-    
+
     if( m_mapObj2Obj.containsKey( item ) )
       return (ItemBean[])m_mapObj2Obj.get( item );
-    
+
     final IRepositoryItem[] children = item.getChildren();
-    final ItemBean[] beans = new ItemBean[ children.length ];
-    
+    final ItemBean[] beans = new ItemBean[children.length];
+
     for( int i = 0; i < beans.length; i++ )
     {
       beans[i] = new ItemBean( m_lastId++, children[i].getName() );
@@ -181,9 +136,8 @@ public class KalypsoObservationService implements IObservationService
     }
 
     m_mapObj2Obj.put( item, beans );
-    
+
     return beans;
-    //return null;
   }
 
   /**
@@ -195,18 +149,19 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.repository.IRepositoryService#hasRepositories()
-   */
-  public boolean hasRepositories()
-  {
-    return m_repositories.size() > 0;
-  }
-
-  /**
    * @see org.kalypso.services.sensor.IObservationService#hasObservations(org.kalypso.repository.beans.ItemBean)
    */
   public boolean hasObservations( final ItemBean node )
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypso.services.sensor.IObservationService#getDescription()
+   */
+  public String getDescription()
+  {
+    // TODO way to specify location?
+    return System.getProperty( "Kalypso Observation Service" );
   }
 }

@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import junit.framework.TestCase;
 
 import org.kalypso.repository.beans.ItemBean;
-import org.kalypso.repository.beans.RepositoryBean;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
 
 /**
@@ -34,33 +33,11 @@ public class KalypsoObservationServiceTest extends TestCase
     assertTrue( ver >= 0 );
   }
 
-  public void testHasRepositories()
-  {
-    final boolean b = m_srv.hasRepositories();
-
-    System.out.println( "Service has repositories: " + b );
-
-    assertTrue( b );
-  }
-
-  public void testGetRepositories()
-  {
-    final RepositoryBean[] beans = m_srv.getRepositories();
-
-    assertTrue( beans.length > 0 );
-
-    System.out.println( "Start Repository Listing:" );
-    for( int i = 0; i < beans.length; i++ )
-      System.out.println( "Repository: " + beans[i].getId() + " - " + beans[i].getName() );
-
-    System.out.println( ":stop Repository Listing" );
-  }
-
   public void testGetChildren() throws RemoteException
   {
     System.out.println( "Start Tree Listing:" );
     
-    final RepositoryBean[] beans = m_srv.getRepositories();
+    final ItemBean[] beans = m_srv.getChildren( null );
 
     for( int i = 0; i < beans.length; i++ )
       outputBean( beans[i], "#" );

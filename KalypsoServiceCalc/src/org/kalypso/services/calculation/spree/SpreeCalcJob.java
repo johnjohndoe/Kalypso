@@ -705,8 +705,8 @@ public class SpreeCalcJob extends AbstractCalcJob
       }
     }
 
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", "datum", "", Date.class, false, 0 );
-    final IAxis valueAxis = new DefaultAxis( "Wert", "wert", "", Double.class, false, 1 );
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", "datum", "", Date.class, 0 );
+    final IAxis valueAxis = new DefaultAxis( "Wert", "wert", "", Double.class, 1 );
     final IAxis[] achsen = new IAxis[]
     {
         dateAxis,

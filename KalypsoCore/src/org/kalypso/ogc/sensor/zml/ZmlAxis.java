@@ -42,7 +42,7 @@ public class ZmlAxis extends DefaultAxis
    */
   public ZmlAxis( final AxisType axisType, final int position ) throws SensorException
   {
-    super( axisType.getName(), axisType.getType(), axisType.getUnit(), null, false, position );
+    super( axisType.getName(), axisType.getType(), axisType.getUnit(), null, position );
 
     m_axisType = axisType;
 

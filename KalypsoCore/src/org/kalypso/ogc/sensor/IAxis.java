@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor;
 
-import java.util.List;
 
 
 /**
@@ -24,10 +23,4 @@ public interface IAxis
   
   /** returns the position of this axis in the tupple */
   public int getPosition();
-  
-  /** returns true when this axis has a restriction on the values that can be assigned */
-  public boolean isRestricted();
-  
-  /** returns the list of the values that can be assigned to items on this axis */
-  public List getRestrictedValues();
 }
