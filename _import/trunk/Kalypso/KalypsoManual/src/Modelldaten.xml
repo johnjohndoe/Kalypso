@@ -134,7 +134,7 @@
       Pegelganglinien beschreiben und Modelldateien, die Parameter zur
       Modellberechnung enthalten. Die Zeitreihen werden in das gleichnamige
       Verzeichnis abgelegt. Für jeden Vorhersagepegel wird eine Zeitreihe mit
-      gemessenen Abflüssen vom Server geladen und in das Verzeichnis
+      gemessenen Abflüssen aus PSICompact geladen und in das Verzeichnis
       gespeichert. Folgende Tabellen sind im Verzeichnis der Rechenvariante
       enthalten:</para>
 
@@ -432,9 +432,10 @@
       Rechenvariante automatisch vom Programm in das entsprechende Verzeichnis
       kopiert. Beim Vorhersagemodell Weiße Elster werden Zeitreihen und
       Modellparameter in das Verzeichnis der Rechenvariante abgelegt.
-      Pegelganglinien, Niederschlagszeitreihen und Zuflussganglinien
-      (TS-Abgaben) werden vom Server geladen und im jeweils gleichnamigen
-      Verzeichnis gespeichert.</para>
+      Pegelganglinien, Niederschlagszeitreihen (Ombrometer und
+      Gebietsniederschläge) und Zuflussganglinien (TS-Abgaben) werden aus
+      PSICompact geladen und im jeweils gleichnamigen Verzeichnis
+      gespeichert.</para>
 
       <figure id="pic_weisse_elster_rechenlauf">
         <title>Verzeichnis Rechenvarianten (Weisse Elster)</title>
@@ -446,8 +447,15 @@
         </mediaobject>
       </figure>
 
-      <para>Die Steuerdaten der Berechnung können in einer Eingabemaske durch
-      Öffnen der Tabelle expertcontrol vorgegeben werden. Neben den
+      <para>Um an einem Modellknoten bzw. Pegel Ergebnisse aus Berechnungen
+      auszugeben, muss in der <emphasis>expertTabelleKnoten.gtt</emphasis> ein
+      Häkchen in der Spalte generateResult gesetzt werden. Die Anzahl der
+      gesetzten Häkchen ist dabei beliebig. Für jeden gewählten Ausgabeknoten
+      wird nach der Berechnung eine Zeitreihe im Unterordner
+      <guimenu>Ergebnisse</guimenu> abgelegt.</para>
+
+      <para>Die Steuerdaten der Berechnung können in Tabelle
+      <emphasis>expertControl.gtt</emphasis> geändert werden. Neben den
       Zeitpunkten für den Start der Berechnung und das Ende der Simulation
       kann auch der Berechnungszeitschritt vorgegeben werden. Daneben folgen
       die Ausgabeoptionen für die Berechnung. Es können Zeitreihen für den

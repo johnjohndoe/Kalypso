@@ -67,7 +67,7 @@
       </listitem>
     </itemizedlist>
 
-    <graphic fileref="img/wasserbau-logo.png" />
+    <graphic fileref="img/wasserbau-logo.png" scale="" />
 
     <para></para>
 
