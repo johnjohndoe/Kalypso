@@ -51,6 +51,7 @@ public class Main
 			props.setProperty("jboss_user","kalypso");
 			props.setProperty("jboss_pass","kalypso");
 			props.setProperty("template_simulation","/tmp/kalypso_template");
+			props.setProperty("automatedCalibration","disabled");
 			confView = new ConfigurationView(I18n.get("CV_Title"),false);
 			confView.show();
 			
