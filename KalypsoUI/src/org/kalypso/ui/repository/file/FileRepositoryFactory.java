@@ -69,6 +69,6 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     }
 
     // could be improved: instead of directly instantiating we could use class loading...
-    return new ZmlObservationRepository( m_location, isReadOnly(), filter );
+    return new ZmlObservationRepository( this, m_location, isReadOnly(), filter );
   }
 }

@@ -1,5 +1,7 @@
 package org.kalypso.util.link;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -27,19 +29,29 @@ public class LinkResolver implements IPoolListener
 
   /**
    * Resolves the given links.
+   * 
+   * @deprecated
+   * 
    * @param links
    * @param resolveType
    * @param project
    * @param listener
+   * 
+   * @throws MalformedURLException
    */
-  public LinkResolver( final ObjectLink[] links, final Class resolveType, final IProject project, final ILinkResolverListener listener )
+  public LinkResolver( final ObjectLink[] links, final Class resolveType, final IProject project, final ILinkResolverListener listener ) throws MalformedURLException
+  {
+    this( links, resolveType, project.getFullPath().toFile().toURL(), listener );
+  }
+
+  public LinkResolver( final ObjectLink[] links, final Class resolveType, final URL context, final ILinkResolverListener listener )
   {
     m_listener = listener;
     m_pool = KalypsoGisPlugin.getDefault().getPool( resolveType );
     
     for( int i = 0; i < links.length; i++ )
     {
-      final PoolableObjectType key = new PoolableObjectType( links[i].getLinkType(), links[i].getXlink().getHRef(), project );
+      final PoolableObjectType key = new PoolableObjectType( links[i].getLinkType(), links[i].getXlink().getHRef(), context );
 
       m_key2link.put( key, links[i] );
       

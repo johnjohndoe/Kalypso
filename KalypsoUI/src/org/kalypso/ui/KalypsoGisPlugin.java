@@ -29,6 +29,7 @@ import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.table.celleditors.DefaultCellEditorFactory;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.services.IServicesConstants;
@@ -214,7 +215,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    * these repositories, it creates a simple wrapper class that contains its
    * specification.
    */
-  private void configureObservationRepositorySpecifications() throws IOException
+  private void configureRepositorySpecifications() throws IOException
   {
     m_zmlRepositoriesProperties.load( getClass().getResourceAsStream(
         OBSERVATION_REPOSITORIES_PROPERTIES ) );
@@ -339,7 +340,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       configure();
       configureProxy();
       configurePool();
-      configureObservationRepositorySpecifications();
+      configureRepositorySpecifications();
       configureServiceProxyFactory();
       configureURLStreamHandler( context );
     }
@@ -356,6 +357,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
+    
+    ObservationCache.dispose();
   }
 
   public static String getId()
@@ -421,7 +424,18 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     return m_tsRepositoryContainer;
   }
-
+  
+  public Properties getDefaultRepositoryProperties()
+  {
+    final Properties props = new Properties();
+    
+    // set all known properties for repository
+    final String value = getPluginPreferences().getString( IKalypsoPreferences.NUMBER_OF_DAYS );
+    props.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, value );
+    
+    return props;
+  }
+  
   private Properties getFeatureTypeCellEditorProperties()
   {
     if( m_ftpProperties == null )

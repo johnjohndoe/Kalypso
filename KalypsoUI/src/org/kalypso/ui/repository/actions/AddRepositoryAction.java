@@ -10,7 +10,6 @@ import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
@@ -48,11 +47,7 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
       {
         final IRepository rep = f.createRepository();
 
-        // set all known properties for repository
-        final String value = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.NUMBER_OF_DAYS );
-        rep.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, value );
-
-        getRepositoryContainer().addRepository( rep );
+        getRepositoryContainer().addRepository( rep, KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
       }
     }
     catch( Exception e ) // generic exception caught for simplicity

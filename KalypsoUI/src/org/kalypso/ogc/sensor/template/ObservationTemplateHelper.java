@@ -16,6 +16,7 @@ import org.deegree_impl.gml.schema.XMLHelper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
@@ -66,7 +67,7 @@ public class ObservationTemplateHelper
   public static IDiagramTemplate loadDiagramTemplate( final IFile file ) throws CoreException,
       JAXBException, IOException
   {
-    return new LinkedDiagramTemplate( loadDiagramTemplateXML( file ), file.getProject() );
+    return new LinkedDiagramTemplate( loadDiagramTemplateXML( file ), ResourceUtilities.createURL( file ) );
   }
 
   /**
@@ -99,7 +100,7 @@ public class ObservationTemplateHelper
         .unmarshal( ins );
     ins.close();
 
-    return new LinkedTableViewTemplate( baseTemplate, file.getProject() );
+    return new LinkedTableViewTemplate( baseTemplate, ResourceUtilities.createURL( file ) );
   }
 
   /**

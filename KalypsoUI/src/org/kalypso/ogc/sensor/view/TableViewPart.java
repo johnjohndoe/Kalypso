@@ -89,19 +89,17 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 
     final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
     
-    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
+//    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
+    final IObservation obs = ObservationCache.getObservationFor( item );
     if( obs == null )
       return;
 
     final int days = Integer.valueOf( item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
 
-    synchronized( obs )
-    {
+//    synchronized( obs )
+//    {
       m_template.setObservation( obs, false, DateRangeArgument.createFromPastDays( days ) );
-    }
-
-    //    Job job = new ShowObservationJob( obs );
-    //    job.schedule();
+//    }
   }
 
   /**

@@ -29,10 +29,15 @@ public class DefaultTableViewTemplate implements ITableViewTemplate
     
     final IAxis[] axes = obs.getAxisList();
 
+    // do not even continue if there are no axes
+    if( axes.length == 0 )
+      return;
+    
     final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( axes );
     
+    // do not continue if no key axis
     if( keyAxes.length != 1 )
-      throw new IllegalArgumentException( "DefaultTableViewTemplate can deal with one and only one key-axis! Found " + keyAxes.length + " key-axes." );
+      return;
     
     for( int i = 0; i < axes.length; i++ )
     {

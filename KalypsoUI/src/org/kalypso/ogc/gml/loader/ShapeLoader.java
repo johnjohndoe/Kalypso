@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml.loader;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Properties;
 
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -27,6 +28,15 @@ public class ShapeLoader extends AbstractLoader
   public String getDescription()
   {
     return "ESRI Shape";
+  }
+
+  /**
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
+  {
+    // TODO: currently unsupported, remove deprecated one and implement this one
+    throw new UnsupportedOperationException();
   }
 
   /**
