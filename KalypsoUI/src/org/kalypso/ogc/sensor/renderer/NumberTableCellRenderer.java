@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.view;
+package org.kalypso.ogc.sensor.renderer;
 
 import java.awt.Component;
 import java.text.NumberFormat;
@@ -8,9 +8,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 
-public class DoubleTableCellRenderer extends DefaultTableCellRenderer
+public class NumberTableCellRenderer extends DefaultTableCellRenderer
 {
   private final static NumberFormat nf = NumberFormat.getInstance();
+  
+  
 
   /**
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,

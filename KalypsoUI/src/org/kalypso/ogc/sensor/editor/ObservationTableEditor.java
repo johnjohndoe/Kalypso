@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.IObservationProvider;
+import org.kalypso.ogc.sensor.renderer.DateTableCellRenderer;
+import org.kalypso.ogc.sensor.renderer.NumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.ColumnPair;
 import org.kalypso.ogc.sensor.template.TableViewTemplate;
-import org.kalypso.ogc.sensor.view.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.view.DoubleTableCellRenderer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -28,6 +28,28 @@ import org.kalypso.util.pool.ResourcePool;
 
 /**
  * The Observation TableEditor.
+ * <p>
+ * <b>Hinweise zu den internen Verbrauch von BitMask für den Tagging von
+ * Werte (Themengegliedert)</b>:
+ * <pre>
+ * Gültigkeit
+ * 0x01 - Für Berechnung ok
+ * 0x02 - Für Berechnung eventuell nicht geeignet
+ * 0x04 - Für Berechnung nicht geeignet
+ * 
+ * Benutzer Eingabe
+ * 0x08 - benötigt
+ * 0x0F - optional
+ * 0x10 - gesperrt
+ * 
+ * Typ
+ * 0x12 - gemessene
+ * 0x14 - vorhergesagte
+ * 
+ * Änderungen vom Benutzer
+ * 0x18 - vom Benutzer nicht geändert
+ * 0x1F - vom Benutzer geändert
+ * </pre> 
  * 
  * @author schlienger
  */
@@ -61,7 +83,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
     JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Double.class, new DoubleTableCellRenderer() );
+    table.setDefaultRenderer( Number.class, new NumberTableCellRenderer() );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );

@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.view;
+package org.kalypso.ogc.sensor.renderer;
 
 import java.awt.Component;
 import java.text.DateFormat;
