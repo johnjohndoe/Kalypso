@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.editor;
 
 import java.awt.Frame;
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
@@ -16,11 +17,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.IObservationProvider;
-import org.kalypso.ogc.sensor.tableview.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.renderer.MaskedNumberTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.ColumnPair;
-import org.kalypso.ogc.sensor.template.TableViewTemplate;
+import org.kalypso.ogc.sensor.template.TableViewTemplateFactory;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -61,9 +64,9 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
       IObservationProvider.class );
 
-  private TableViewTemplate m_tableview = null;
+  private ITableViewTemplate m_tableview = null;
 
-  private ColumnPair[] m_cols;
+  private ITableViewColumn[] m_cols;
 
   private Map m_providers = new Hashtable();
 
@@ -108,7 +111,15 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
    */
   protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    m_tableview = new TableViewTemplate( input.getFile() );
+    try
+    {
+      m_tableview = TableViewTemplateFactory.createTemplate( input.getFile() );
+    }
+    catch( MalformedURLException e )
+    {
+      // TODO: handling
+      throw new RuntimeException( e );
+    }
 
     // the rules will be used for rendering, they are used in the table cell renderer
     m_model.setRules( m_tableview.getRules() );
@@ -117,9 +128,13 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
     monitor.beginTask( "Spalten initialisieren", m_cols.length );
 
+    // TODO: blöder trick hier, ich teste ob es sich um ColumPair handelt, dies
+    // ist sicherlich nicht so schön.
     for( int i = 0; i < m_cols.length; i++ )
     {
-      m_cols[i].startBorrowObjectJob( m_pool, this );
+      if( m_cols[i] instanceof ColumnPair )
+        ((ColumnPair)m_cols[i]).startBorrowObjectJob( m_pool, this );
+      
       monitor.worked( 1 );
     }
   }
@@ -135,12 +150,13 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
 
     for( int i = 0; i < m_cols.length; i++ )
     {
-      if( m_cols[i].isInvalid( oldObject ) )
+      // TODO: auch nicht schön: feste Test ob es sich um ColumnPair handelt
+      if( m_cols[i] instanceof ColumnPair && ((ColumnPair)m_cols[i]).isInvalid( oldObject ) )
       {
-        IObservationProvider p = (IObservationProvider)m_pool.getObject( m_cols[i].getKey(),
+        IObservationProvider p = (IObservationProvider)m_pool.getObject( ((ColumnPair)m_cols[i]).getKey(),
             new NullProgressMonitor() );
 
-        m_cols[i].setProvider( p );
+        ((ColumnPair)m_cols[i]).setProvider( p );
 
         m_providers.put( m_cols[i], p );
 
