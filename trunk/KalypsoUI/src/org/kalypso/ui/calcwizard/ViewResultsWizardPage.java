@@ -1,6 +1,9 @@
 package org.kalypso.ui.calcwizard;
 
 import java.awt.Frame;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,7 @@ import org.kalypso.ogc.gml.mapactions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
+import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.ObservationTemplateHelper;
@@ -78,13 +82,13 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
 
   /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
   public final static String PROP_DIAGTEMPLATE = "diagTemplate";
-  
+
   /**
    * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
    * geben-Property geben: eine für jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
-  
+
   private static final int SELECTION_ID = 0x100;
 
   private LayerTableViewer m_viewer;
@@ -159,7 +163,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
     {
       e.printStackTrace();
     }
-    
+
     //final Composite composite = new Composite( parent, SWT.RIGHT );
 
     final Button button = new Button( parent, SWT.PUSH );
@@ -267,22 +271,20 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
 
   private class GraficToolStarter implements SelectionListener
   {
-
     /**
      * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
      */
     public void widgetSelected( SelectionEvent e )
     {
-      System.out.println( "GraficToolStarter.widgetSelected() start GrafikTool" );
-
       final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
       if( !( layer instanceof KalypsoFeatureLayer ) )
         return;
 
       m_obsdiagviewType.getCurve().clear();
-      
+
       final List selectedFeatures = new ArrayList();
-      
+      FileOutputStream fos = null;
+
       try
       {
         final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
@@ -292,13 +294,33 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
             selectedFeatures.add( allFeatures[i] );
 
         if( selectedFeatures.size() > 0 )
-          KalypsoWizardHelper.updateXMLDiagramTemplate( m_tsProps, selectedFeatures, m_obsdiagviewType );
-        
-        ObservationTemplateHelper.openGrafik4odt( m_obsdiagviewType );
+          KalypsoWizardHelper.updateXMLDiagramTemplate( m_tsProps, selectedFeatures,
+              m_obsdiagviewType );
+
+        // create tmp odt template
+        final File file = File.createTempFile( "diag", ".odt" );
+        fos = new FileOutputStream( file );
+        DiagramTemplateFactory.writeTemplate( m_obsdiagviewType, fos );
+
+        ObservationTemplateHelper.openGrafik4odt( file, getProject() );
+
+        file.delete();
       }
       catch( Exception ex )
       {
         ex.printStackTrace();
+      }
+      finally
+      {
+        try
+        {
+          if( fos != null )
+            fos.close();
+        }
+        catch( IOException e1 )
+        {
+          e1.printStackTrace();
+        }
       }
     }
 
@@ -307,7 +329,7 @@ public class ViewResultsWizardPage extends AbstractCalcWizardPage implements Mod
      */
     public void widgetDefaultSelected( SelectionEvent e )
     {
-    // empty  
+    // empty
     }
   }
 }

@@ -29,6 +29,7 @@ import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.template.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.widgets.ToggleSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
@@ -86,6 +87,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
   private LinkedTableViewTemplate m_tableTemplate = null;
 
   private TimeserieFeatureProps[] m_tsProps;
+
+  private boolean m_useResolver = false;
 
   public ObservationMapTableDiagWizardPage()
   {
@@ -145,6 +148,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     {
       // actually creates the template
       m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
+      
+      // TODO tricky: to be ameliorated once pool geschichte is better!!!
+      ((LinkedDiagramTemplate)m_diagTemplate).setUseResolver( m_useResolver );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
@@ -179,6 +185,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       m_tableTemplate = ObservationTemplateHelper.loadTableViewTemplate( templateFile );
       m_tableModel.setRules( m_tableTemplate );
       m_tableTemplate.addTemplateEventListener( m_tableModel );
+      
+      // TODO tricky: to be ameliorated once pool geschichte is better!!!
+      m_tableTemplate.setUseResolver( m_useResolver );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
@@ -268,8 +277,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
       
     if( selectedFeatures.size() > 0 )
     {
-      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate );
-      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate );
+      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate, m_useResolver, getProject() );
+      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate, m_useResolver, getProject() );
     }
   }
 }

@@ -36,7 +36,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            icon="icons/sample.gif"
+            icon="icons/kalypso_gmt.gif"
             class="org.kalypso.editor.mapeditor.GisMapEditor"
             default="true"
             name="Kalypso Gisview Editor"
@@ -44,7 +44,7 @@
             extensions="gmt"/>
       <editor
             class="org.kalypso.editor.tableeditor.GisTableEditor"
-            icon="icons/sample.gif"
+            icon="icons/kalypso_gtt.gif"
             default="true"
             contributorClass="org.kalypso.editor.tableeditor.GisTableEditorActionBarContributor"
             name="Kalypso GisTableEditor"

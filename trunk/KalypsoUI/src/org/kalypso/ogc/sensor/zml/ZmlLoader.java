@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -41,8 +42,16 @@ public class ZmlLoader extends AbstractLoader
 
     try
     {
+      
       if( type.equals( "relative" ) )
-        url = project.findMember( location ).getLocation().toFile().toURL();
+      {
+        IResource m = project.findMember( location );
+        
+        if( m != null )
+          url = m.getLocation().toFile().toURL();
+        else
+          throw new LoaderException( "Location <" + location + "> could not be found in project:" + project );
+      }
       else if( type.equals( "absolute" ) )
         url = new URL( location );
       else
