@@ -12,7 +12,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ui.editor.diagrameditor.TemplateStorage;
 
 /**
@@ -50,15 +49,10 @@ public class DefaultObsDiagTemplateLauncher implements IDefaultTemplateLauncher
     try
     {
       final IPath projectRelativePath = file.getProjectRelativePath();
-
-      final LinkedDiagramTemplate template = new LinkedDiagramTemplate();
-      template.setTitle( file.getName() );
-      template.addObservation( file.getName(), ResourceUtilities
-          .createURL( file ), "project:/" + projectRelativePath, "zml", false,
-          null );
-
+      
       final StorageEditorInput input = new StorageEditorInput(
-          new TemplateStorage( template, file.getFullPath() ) );
+          new TemplateStorage( file, ResourceUtilities
+              .createURL( file ), "project:/" + projectRelativePath ) );
 
       return input;
     }

@@ -37,6 +37,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     ITemplateEventListener
 {
   protected ObservationDiagramTemplate m_template;
+
   private RemoveThemeAction m_removeThemeAction;
 
   /**
@@ -53,31 +54,31 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
 
     getTreeViewer().setContentProvider( new ObsDiagTemplateContentProvider() );
     getTreeViewer().setInput( m_template );
-    
+
     m_removeThemeAction = new RemoveThemeAction( this );
   }
-  
+
   /**
    * @return the selected theme or null
    */
-  public IDiagramTemplateTheme getSelectedTheme()
+  public IDiagramTemplateTheme getSelectedTheme( )
   {
     final ISelection sel = getSelection();
-    
+
     if( sel instanceof IStructuredSelection )
     {
-      final Object element = ((IStructuredSelection)sel).getFirstElement();
+      final Object element = ((IStructuredSelection) sel).getFirstElement();
 
       if( element instanceof IDiagramTemplateTheme )
         return (IDiagramTemplateTheme) element;
-      
+
       if( element instanceof IDiagramCurve )
-        return ((IDiagramCurve)element).getTheme();
+        return ((IDiagramCurve) element).getTheme();
     }
-    
+
     return null;
   }
-  
+
   /**
    * @return template
    */
@@ -85,7 +86,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   {
     return m_template;
   }
-  
+
   /**
    * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
    */
@@ -99,32 +100,34 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
   /**
    * This method must be called from the ui thread
    */
-  protected void refreshViewer()
+  protected void refreshViewer( )
   {
-    if( getTreeViewer() != null )
-      getTreeViewer().refresh();
+    getTreeViewer().refresh();
   }
 
   /**
    * This method must be called from the ui thread
    */
-  protected void setTemplateAsInput()
+  protected void setTemplateAsInput( )
   {
     getTreeViewer().setInput( m_template );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
   public void onTemplateChanged( TemplateEvent evt )
   {
-    getSite().getShell().getDisplay().asyncExec( new Runnable()
+    if( getTreeViewer() != null )
     {
-      public void run( )
+      getSite().getShell().getDisplay().asyncExec( new Runnable()
       {
-        refreshViewer();
-      }
-    } );
+        public void run( )
+        {
+          refreshViewer();
+        }
+      } );
+    }
   }
 
   /**
@@ -137,14 +140,17 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
 
     m_template = template;
 
-    getSite().getShell().getDisplay().asyncExec( new Runnable()
+    if( getTreeViewer() != null )
     {
-      public void run( )
+      getSite().getShell().getDisplay().asyncExec( new Runnable()
       {
-        setTemplateAsInput();
-        refreshViewer();
-      }
-    } );
+        public void run( )
+        {
+          setTemplateAsInput();
+          refreshViewer();
+        }
+      } );
+    }
 
     if( m_template != null )
       m_template.addTemplateEventListener( this );
@@ -186,7 +192,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     {
       if( m_template == null )
         return false;
-      
+
       final String[] files = (String[]) data;
 
       final Job updateTemplateJob = new Job( "Diagram aktualisieren" )
@@ -199,16 +205,18 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
           {
             for( int i = 0; i < files.length; i++ )
             {
-              final IObservation obs = ZmlFactory.parseXML( new File( files[i] ).toURL(), files[i] );
+              final IObservation obs = ZmlFactory.parseXML( new File( files[i] )
+                  .toURL(), files[i] );
 
               m_template.addObservation( obs, null );
             }
-            
+
             return Status.OK_STATUS;
           }
           catch( Exception e )
           {
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "", e );
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "",
+                e );
           }
           finally
           {
@@ -218,7 +226,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
       };
 
       updateTemplateJob.schedule();
-      
+
       return true;
     }
 

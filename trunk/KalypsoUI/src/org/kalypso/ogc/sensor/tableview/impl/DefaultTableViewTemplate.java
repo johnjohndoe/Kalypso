@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.tableview.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -28,7 +29,15 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
    */
   public Collection getColumns()
   {
-    return m_themesMap.values();
+    final Collection allCurves = new ArrayList();
+    for( final Iterator iter = m_themesMap.values().iterator(); iter.hasNext(); )
+    {
+      final Collection curves = (Collection) iter.next();
+      allCurves.addAll( curves );
+    }
+    
+//    return m_themesMap.values();
+    return allCurves;
   }
 
   /**

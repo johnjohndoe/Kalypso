@@ -1,16 +1,12 @@
 package org.kalypso.ui.editor.diagrameditor;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringWriter;
+import java.net.URL;
 
 import org.eclipse.core.resources.IEncodedStorage;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
-import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * TemplateStorage
@@ -19,48 +15,47 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class TemplateStorage implements IEncodedStorage
 {
-  private LinkedDiagramTemplate m_template;
+  private final URL m_context;
+  private final IFile m_zmlFile;
+  private final String m_href;
 
-  private IPath m_path;
-
-  public TemplateStorage( final LinkedDiagramTemplate template,
-      final IPath path )
+  public TemplateStorage( final IFile zmlFile, final URL context, final String href )
   {
-    m_template = template;
-    m_path = path;
+    m_zmlFile = zmlFile;
+    m_context = context;
+    m_href = href;
   }
 
   /**
-   * @return Returns the template.
+   * @return Returns the context.
    */
-  public LinkedDiagramTemplate getTemplate( )
+  public URL getContext( )
   {
-    return m_template;
+    return m_context;
+  }
+  
+  /**
+   * @return Returns the zmlFile.
+   */
+  public IFile getZmlFile( )
+  {
+    return m_zmlFile;
   }
 
+  /**
+   * @return Returns the href.
+   */
+  public String getHref( )
+  {
+    return m_href;
+  }
+  
   /**
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
   public InputStream getContents( ) throws CoreException
   {
-    try
-    {
-      final ObsdiagviewType tType = ObservationTemplateHelper
-          .buildDiagramTemplateXML( m_template );
-
-      final StringWriter writer = new StringWriter();
-      
-      // writer is closed during call
-      ObservationTemplateHelper.saveDiagramTemplateXML( tType, writer );
-
-      final byte[] bytes = writer.toString().getBytes( "UTF-8" );
-
-      return new ByteArrayInputStream( bytes );
-    }
-    catch( Exception e ) // generic for simplicity
-    {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "", e ) );
-    }
+    return m_zmlFile.getContents();
   }
 
   /**
@@ -68,7 +63,7 @@ public class TemplateStorage implements IEncodedStorage
    */
   public IPath getFullPath( )
   {
-    return m_path;
+    return m_zmlFile.getFullPath();
   }
 
   /**
@@ -76,7 +71,7 @@ public class TemplateStorage implements IEncodedStorage
    */
   public String getName( )
   {
-    return m_template.getTitle();
+    return m_zmlFile.getName();
   }
 
   /**

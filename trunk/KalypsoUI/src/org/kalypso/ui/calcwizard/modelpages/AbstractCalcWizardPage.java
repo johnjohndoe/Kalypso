@@ -298,7 +298,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     m_mapPanel.setBoundingBox( m_boundingBox );
   }
 
-  protected void initDiagram( final Composite parent )
+  protected Control initDiagram( final Composite parent )
   {
     try
     {
@@ -321,6 +321,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       m_diagFrame.add( chartPanel );
 
       refreshTimeseries();
+      
+      return composite;
     }
     catch( Exception e )
     {
@@ -328,6 +330,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
       final Text text = new Text( parent, SWT.CENTER );
       text.setText( "Kein Diagram vorhanden" );
+      
+      return text;
     }
   }
 
@@ -435,11 +439,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     }
   }
 
-  public TSLinkWithName[] getObservationsFromMap( final boolean useTable )
+  protected List getSelectedFeatures(boolean useTable)
   {
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
-      return new TSLinkWithName[] {};
+      return new ArrayList();
 
     final IKalypsoTheme activeTheme;
     if( useTable )
@@ -448,17 +452,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       activeTheme = mapModell.getActiveTheme();
 
     if( activeTheme == null )
-      return new TSLinkWithName[] {};
+      return new ArrayList();
 
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = kft.getFeatureList();
 
     if( featureList == null )
-      return new TSLinkWithName[] {};
+      return new ArrayList();
 
-    final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures(
+    return GetSelectionVisitor.getSelectedFeatures(
         featureList, m_selectionID );
-
+  }
+  
+  public TSLinkWithName[] getObservationsFromMap( final boolean useTable )
+  {
+    final List selectedFeatures = getSelectedFeatures( useTable );
+    
     final Collection foundObservations = new ArrayList( selectedFeatures.size() );
 
     for( final Iterator it = selectedFeatures.iterator(); it.hasNext(); )
@@ -478,6 +487,28 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
           foundObservations.add( linkWithName );
         }
       }
+    }
+
+    return (TSLinkWithName[]) foundObservations
+        .toArray( new TSLinkWithName[foundObservations.size()] );
+  }
+  
+  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features, final String property )
+  {
+    final Collection foundObservations = new ArrayList( features.size() );
+
+    for( final Iterator it = features.iterator(); it.hasNext(); )
+    {
+      final Feature kf = (Feature) it.next();
+
+        final TimeseriesLink obsLink = (TimeseriesLink) kf
+            .getProperty( property );
+        if( obsLink != null )
+        {
+          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
+              .getLinktype(), obsLink.getHref() );
+          foundObservations.add( linkWithName );
+        }
     }
 
     return (TSLinkWithName[]) foundObservations
@@ -505,5 +536,28 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
   public TimeserieFeatureProps[] getTsProps( )
   {
     return m_tsProps;
+  }
+
+  protected List getFeatures( boolean useTable )
+  {
+    final IMapModell mapModell = getMapModell();
+    if( mapModell == null )
+      return new ArrayList();
+
+    final IKalypsoTheme activeTheme;
+    if( useTable )
+      activeTheme = m_viewer.getTheme();
+    else
+      activeTheme = mapModell.getActiveTheme();
+
+    if( activeTheme == null )
+      return new ArrayList();
+
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
+    final FeatureList featureList = kft.getFeatureList();
+    if( featureList == null )
+      return new ArrayList();
+    
+    return featureList;
   }
 }

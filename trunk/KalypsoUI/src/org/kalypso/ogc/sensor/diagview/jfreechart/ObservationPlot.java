@@ -98,8 +98,8 @@ public class ObservationPlot extends XYPlot
     final Collection curves = template.getCurves();
     for( Iterator it = curves.iterator(); it.hasNext(); )
     {
-      final IDiagramCurve diagramCurve = (IDiagramCurve) it.next();
-      addCurve( diagramCurve );
+      final Object diagramCurve = it.next();
+      addCurve( (IDiagramCurve) diagramCurve );
     }
   }
 

@@ -4,13 +4,9 @@ import java.awt.Frame;
 import java.io.Writer;
 import java.net.URL;
 
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -20,6 +16,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
@@ -37,15 +34,13 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 public class ObservationDiagramEditor extends AbstractEditorPart implements
     ITemplateEventListener
 {
-  protected LinkedDiagramTemplate m_template = null;
+  protected final LinkedDiagramTemplate m_template = new LinkedDiagramTemplate();
 
   protected Frame m_diagFrame = null;
 
   protected ObservationChart m_obsChart = null;
 
   protected ObsDiagOutlinePage m_outline;
-
-  private ListenerList m_listener;
 
   private boolean m_dirty = false;
 
@@ -60,13 +55,21 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
 
-    JTextField txt = new JTextField( "Daten werden geladen..." );
-    txt.setEditable( false );
+    try
+    {
+      m_obsChart = new ObservationChart( m_template );
+      m_template.addTemplateEventListener( m_obsChart );
 
-    m_diagFrame.add( txt );
-    m_diagFrame.setVisible( true );
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart );
+      chartPanel.setMouseZoomable( true, false );
+      m_diagFrame.add( chartPanel );
 
-    m_listener = new ListenerList();
+      m_diagFrame.setVisible( true );
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -77,13 +80,14 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     if( adapter == IContentOutlinePage.class )
     {
       // lazy loading
-      if( m_outline == null || m_outline.getControl().isDisposed() )
+      if( m_outline == null || m_outline.getControl() != null && m_outline.getControl().isDisposed() )
       {
         // TODO check if ok to dispose when not null
         if( m_outline != null )
           m_outline.dispose();
 
         m_outline = new ObsDiagOutlinePage();
+        m_outline.setTemplate( m_template );
       }
 
       return m_outline;
@@ -163,64 +167,46 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   {
     monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
 
-//    final Runnable runnable = new Runnable()
-//    {
-//      public void run( )
-//      {
-        try
-        {
-          final IStorage storage = input.getStorage();
+    //    final Runnable runnable = new Runnable()
+    //    {
+    //      public void run( )
+    //      {
+    try
+    {
+      final IStorage storage = input.getStorage();
 
-          if( storage instanceof TemplateStorage )
-          {
-            m_template = ((TemplateStorage) storage).getTemplate();
-          }
-          else
-          {
-            m_template = new LinkedDiagramTemplate();
+      if( storage instanceof TemplateStorage )
+      {
+        final TemplateStorage ts = (TemplateStorage) storage;
+        m_template.setTitle( ts.getName() );
+        m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+            "zml", false, null );
+      }
+      else
+      {
+        final ObsdiagviewType baseTemplate = ObservationTemplateHelper
+            .loadDiagramTemplateXML( storage.getContents() );
 
-            final ObsdiagviewType baseTemplate = ObservationTemplateHelper
-                .loadDiagramTemplateXML( storage.getContents() );
-
-            final String strUrl = ResourceUtilities.createURLSpec( input
-                .getStorage().getFullPath() );
-            m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
-          }
-
-          // call-order is important: first set base template and then create
-          // the chart
-          m_obsChart = new ObservationChart( m_template );
-          m_template.addTemplateEventListener( m_obsChart );
-
-          if( m_outline != null )
-            m_outline.setTemplate( m_template );
-
-          m_diagFrame.removeAll();
-
-          final ChartPanel chartPanel = new ChartPanel( m_obsChart );
-          chartPanel.setMouseZoomable( true, false );
-          m_diagFrame.add( chartPanel );
-
-          m_diagFrame.setVisible( true );
-          
-          if( storage instanceof TemplateStorage )
-            m_template.fireTemplateChanged( new TemplateEvent( this, m_template.getThemes(), TemplateEvent.TYPE_REFRESH ) );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
-//      }
-//    };
-//
-//    try
-//    {
-//      SwingUtilities.invokeAndWait( runnable );
-//    }
-//    catch( Exception e ) // generic exception caught for simplicity
-//    {
-//      e.printStackTrace();
-//    }
+        final String strUrl = ResourceUtilities.createURLSpec( input
+            .getStorage().getFullPath() );
+        m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    //      }
+    //    };
+    //
+    //    try
+    //    {
+    //      SwingUtilities.invokeAndWait( runnable );
+    //    }
+    //    catch( Exception e ) // generic exception caught for simplicity
+    //    {
+    //      e.printStackTrace();
+    //    }
     finally
     {
       monitor.done();
