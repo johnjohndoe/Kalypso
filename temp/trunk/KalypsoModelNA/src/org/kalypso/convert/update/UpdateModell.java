@@ -36,7 +36,7 @@ public class UpdateModell
     URL schemaURL = KalypsoNADefaultSchema.getInstance().getDefaultNaModellSchemaURL();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL,
         schemaURL );
-    updateRepositoryLink( workspace );
+    updateRepositoryLinks( workspace );
     File file = File.createTempFile( "model", ".gml" );
     Writer writer = new FileWriter( file );
     GmlSerializer.serializeWorkspace( writer, workspace );
@@ -56,7 +56,7 @@ public class UpdateModell
     }
   }
 
-  public static void updateRepositoryLink( GMLWorkspace workspace )
+  public static void updateRepositoryLinks( GMLWorkspace workspace )
   {
     final FeatureType featureType = workspace.getFeatureType( "Catchment" );
     final Feature[] features = workspace.getFeatures( featureType );
