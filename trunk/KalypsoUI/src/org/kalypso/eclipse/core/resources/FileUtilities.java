@@ -2,7 +2,8 @@ package org.kalypso.eclipse.core.resources;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
 
@@ -26,20 +27,23 @@ public class FileUtilities
   /**
    * Sets the contents of the dest file using the source file.
    * 
+   * @param sourceCharset
    * @param source
    * @param dest
    * @param monitor
    * @throws CoreException
    */
-  public static void copyFile( final File source, final IFile dest, final IProgressMonitor monitor ) throws CoreException
+  public static void copyFile( final String sourceCharset, final File source,
+      final IFile dest, final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper helper = new SetContentHelper()
     {
       protected void write( final Writer writer ) throws Throwable
       {
         final PrintWriter pwr = new PrintWriter( writer );
-        final BufferedReader reader = new BufferedReader( new FileReader( source ) );
-        
+        final BufferedReader reader = new BufferedReader(
+            new InputStreamReader( new FileInputStream( source ), sourceCharset ) );
+
         try
         {
           String strLine = reader.readLine();
@@ -57,7 +61,7 @@ public class FileUtilities
         }
       }
     };
-    
+
     helper.setFileContents( dest, false, false, monitor );
   }
 }

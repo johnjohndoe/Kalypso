@@ -75,6 +75,8 @@ public class LogStatus extends Status
         IOUtils.closeQuietly( reader );
       }
 
+      // TODO prüfen ob der encoding der benutzt wird im ErrorDialog
+      // mit der encoding der strings passt.
       m_children = new IStatus[lines.size()];
       for( int i = 0; i < m_children.length; i++ )
         m_children[i] = new Status( getSeverity(), getPlugin(),
