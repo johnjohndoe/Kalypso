@@ -359,4 +359,8 @@ public abstract class GisElementClass implements TableListener
 			listener.onSimplePropertyChanged(elementTable,eId);
 	    }
     }
+    public String toString()
+    {
+        return getName();
+    }
 }
