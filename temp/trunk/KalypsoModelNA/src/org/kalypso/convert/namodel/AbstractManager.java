@@ -38,8 +38,8 @@ public abstract class AbstractManager
   private String[] m_asciiFormat;
 
   public AbstractManager( URL parseDefinition ) throws IOException
-  {   
-    if( parseDefinition != null )
+  {
+      if( parseDefinition != null )
       readParseDefinition( parseDefinition );
     //    m_rootFeature = rootFeature;
   }
