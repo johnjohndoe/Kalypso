@@ -2,8 +2,9 @@
 <NAModellControl fid="ID000000" xmlns="org.kalypso.namodell.control" xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
 	xs:schemaLocation="org.kalypso.namodell.control project:/.model/schema/nacontrol.xsd" >
-	<editor>Editor</editor>
+<name>Elsterberg</name>
 	<description>Beschreibung</description>
+	<editor>Editor</editor>
 	<comment>Kommentar</comment>
 	<calctime>2001-12-17T09:30:47</calctime>
 	<startsimulation>1995-09-01T01:00:00</startsimulation>
@@ -47,6 +48,7 @@
 	<KMChannelsFaktorRkf></KMChannelsFaktorRkf>
 	<KMChannelsFaktorRnf></KMChannelsFaktorRnf>
 	<rootNode>Node1300</rootNode>
+	<resultForRootNodeOnly>false</resultForRootNodeOnly>
 	<pegelZR/>
 	<qberechnetZR/>
 </NAModellControl>

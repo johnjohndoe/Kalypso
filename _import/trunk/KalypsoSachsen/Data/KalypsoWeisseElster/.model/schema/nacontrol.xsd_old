@@ -4,11 +4,17 @@
 	<import namespace="obslink.zml.kalypso.org" 
 		schemaLocation="obslink.xsd"/>
 	<element name="NAModellControl" type="na:_NAModellControlType"/>
+	<complexType name="_NAModellControlBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
 	<complexType name="_NAModellControlType">
 		<complexContent>
-			<extension base="gml:AbstractFeatureType">
+			<extension base="na:_NAModellControlBaseType">
 				<sequence>
-					<element name="editor" type="string"/>					
+					<element name="editor" type="string"/>
+					<element name="description" type="string"/>
 					<element name="comment" type="string"/>
 					<element name="calctime" type="dateTime"/>
 					<element name="startsimulation" type="dateTime"/>
@@ -44,7 +50,7 @@
 					
 					<!-- parameter fuer den prognose-kallibrierung -->
 					<element name="automaticCallibration" type="boolean"/>
-					
+
 					<element name="Catchments" type="string"/>
 					<element name="CatchmentsBianf" type="double"/>
 					<element name="CatchmentsFaktorRetobTetint" type="double"/>
@@ -55,8 +61,7 @@
 					<element name="KMChannelsFaktorRnf" type="double"/>			
 					<!-- fuer die erstellung der netzdatei -->
 					<element name="rootNode" type="string"/>					
-					<element name="resultForRootNodeOnly" type="boolean"/>
-						<!-- link auf den pegel -->
+					<!-- link auf den pegel -->
 			            <element name="pegelZR" type="obslink:TimeseriesLink"/>
 					<!-- link auf das simulations -->
 			            <element name="qberechnetZR" type="obslink:TimeseriesLink"/>

@@ -13,7 +13,6 @@
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	-->
 	
-	
 	<element name="NaModell" type="na:NaModellType"/>
 	<complexType name="NaModellType">
 		<complexContent>
@@ -67,21 +66,126 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
                     <element name="Ort" type="gml:PointPropertyType"/>            
-        			<element name="num" type="integer"></element>
-					<element name="generateResult" type="boolean"/>
-        			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
+        			<element name="num" type="integer">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Nummer</label>
+                                <tooltip>Knoten Nummer</tooltip>
+                                <description>Jedem knoten ist eine Knotennummer zugewiesen. Diese ist eindeutig und sollte nicht veraendert werden</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="generateResult" type="boolean">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>berechne</label>
+                                <tooltip>Ergebnis für diesen Knoten berechnen/erzeugen</tooltip>
+                                <description></description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+        			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>UnterwasserLink</label>
+                                <tooltip>Gewaesserstrang der Unterwasser anschliesst</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 					<!-- ZR Zufluss falls zufluss vorhanden --> 
-		            <element name="zuflussZRRepository" type="obslink:TimeseriesLink"/>
-		            <element name="zuflussZR" type="obslink:TimeseriesLink"/>
+		            <element name="zuflussZRRepository" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zufluss Eingang</label>
+                                <tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+		            <element name="zuflussZR" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Zufluss Berechnung</label>
+                                <tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
           			<element name="nzufPfad" type="string"/> <!-- TODO loeschen -->
         			<!-- ZR Pegel falls Pegel vorhanden-->
-		            <element name="pegelZRRepository" type="obslink:TimeseriesLink"/>
-		            <element name="pegelZR" type="obslink:TimeseriesLink"/>
+		            <element name="pegelZRRepository" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Pegel(rep)</label>
+                                <tooltip>Verknuepfung Pegel Repository</tooltip>
+                                <description>.</description>
+                            </documentation>
+                                                   </annotation>
+        			</element>
+		            <element name="pegelZR" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Pegel (lok)</label>
+                                <tooltip>Verknuepfung Pegel lokal</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 					<!-- ZR berechnet hier wird das ergebnis gespeichert-->
-		            <element name="qberechnetZR" type="obslink:TimeseriesLink"/>
+		            <element name="qberechnetZR" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Abfluss berechnet</label>
+                                <tooltip>Berechnete Abflussganglinie</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <!-- verzweigung -->
-					<element name="zproz" type="double"/>
-					<element name="verzweigungNodeMember" type="na:NodeAssociationType"/>
+					<element name="zproz" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Verzweigungsfaktor</label>
+                                <tooltip>Anteil des Abflusses, der dem Verzweigungsknoten zugefuehrt wird (0-1)</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="verzweigungNodeMember" type="na:NodeAssociationType">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Verzweigung</label>
+                                <tooltip>Verknuepfung Zielknoten der Verzweigung</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -137,34 +241,138 @@
 (snowtype,a15)(ftem,*)_(fver,*)
     -->
                     <element name="Ort" type="gml:PolygonPropertyType"/>
-                    <element name="inum" type="integer"/>
-                    <element name="generateResult" type="boolean"/>
-                    <element name="ispk" type="integer"/>
-                    <element name="text" type="string"/> <!-- TODO benoetigt ? -->
-                    <element name="flaech" type="long"/>
+                    <element name="inum" type="integer">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Nummer</label>
+                                <tooltip>Teilgebietnummer</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="generateResult" type="boolean">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>berechnen</label>
+                                <tooltip>Berechnung bzw. Ergebnisse erzeugen</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="ispk" type="integer">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Gebietsart</label>
+                                <tooltip></tooltip>
+                                <description>nicht veraenderbar</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="text" type="string">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Kommentar</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element> <!-- TODO benoetigt ? -->
+                    <element name="flaech" type="long">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Flaeche</label>
+                                <tooltip>Flaeche des Teilgebietes</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <element name="pns" type="string"/> <!-- TODO loeschen, standardwert rausschreiben -->
                     <element name="kurzzeit" type="string"/> <!-- TODO loeschen, da jetzt Teilgebietsmodell -->
                     <element name="langzeit" type="string"/> <!-- TODO loeschen, da jetzt Teilgebietsmodell -->               
                     <element name="namfn" type="string"/> <!-- TODO loeschen, da standard-name -->
-                    <element name="faktn" type="double"/>
+                    <element name="faktn" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Faktor Niederschlag</label>
+                                <tooltip>Faktor mit dem der Niederschlag multipliziert wird</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <element name="namft" type="string"/> <!-- TODO loeschen, da standard-name -->
                     <element name="namept" type="string"/> <!-- TODO loeschen, da standard-name -->
                     <element name="namfzf" type="string"/> <!-- TODO zeitflaechenfunktion lesen -->
                     <element name="namhydro" type="string"/> <!-- TODO hydrotope uebernehmen -->
                     <element name="snowtype" type="string"/> <!-- TODO standard oder snowdatei uebernehmen -->
-                    <element name="ftem" type="double"/> 
-                    <element name="fver" type="double"/>
+                    <element name="ftem" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Temperaturverschiebung</label>
+                                <tooltip>Korrekturwert Temperatur, additiv</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element> 
+                    <element name="fver" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Korrektur Verdunstung</label>
+                                <tooltip>Korreturwert Verdunstung, multiplikativ</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <!--
 (vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
 -->
-                    <element name="vsg" type="double"/>
+                    <element name="vsg" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Versiegelungsgrad</label>
+                                <tooltip>Versiegelungsgrad (0.0-1.0)</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <element name="anzlayy" type="integer"/> <!-- TODO loeschen sollte aus listtenanzahl hervorgehen-->
-                    <element name="bimax" type="double"/>
-                    <element name="bianf" type="double"/>
+                    <element name="bimax" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Korr. Max Interzeption</label>
+                                <tooltip>Korrekturfaktor maximaler Inhalt Interzeptionsspeicher</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="bianf" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Korr. Anfang Interzeption</label>
+                                <tooltip>Korrekturfaktor Anfangsinhalt Interzeptionsspeicher</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <element name="faktorBianf" type="double"/> <!-- TODO loeschen, bianf ist schon der faktor -->                     
                     <element name="izkn_vers" type="integer"/> <!-- TODO loeschen, geht aus relation hervor -->
-                    <element name="tint" type="double"/> 
-                    <element name="rintmx" type="double"/>
+                    <element name="tint" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anstieg Interflow</label>
+                                <tooltip>Anstiegsrate Interflow</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element> 
+                    <element name="rintmx" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Interflow max</label>
+                                <tooltip>maximaler Interflow</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <!-- 
  (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
 siehe bodenkorrekturmember...
@@ -175,27 +383,207 @@ siehe bodenkorrekturmember...
 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
 (igwzu,*)
 -->
-                    <element name="f_eva" type="double"/>
-                    <element name="aint" type="double"/>
-                    <element name="aigw" type="double"/>
-                    <element name="faktorAigw" type="double"/>
-                    <element name="fint" type="double"/>
-                    <element name="ftra" type="double"/>
-                    <element name="retvs" type="double"/>
-                    <element name="retob" type="double"/>
-                    <element name="retint" type="double"/>
-                    <element name="faktorRetobRetint" type="double"/>                
-                    <element name="retbas" type="double"/>
-                    <element name="retgw" type="double"/>
-                    <element name="retklu" type="double"/>
+                    <element name="f_eva" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Korr. Verdunstung Vegetationsabhaengig</label>
+                                <tooltip>Vegetationsabhaengige Korrektur der Verdunstung</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="aint" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anfangsinhalt Interzeptionsspeicher</label>
+                                <tooltip>Anfangsinhalt Interzeptionsspeicher</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="aigw" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>Anfangsinhalt Grundwasserspeicher</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="faktorAigw" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>faktor AIGW</label>
+                                <tooltip>Faktor</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="fint" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="ftra" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="retvs" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="retob" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="retint" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="faktorRetobRetint" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>                
+                    <element name="retbas" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="retgw" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="retklu" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <element name="igwzu" type="integer"/> <!-- TODO loeschen, sollte aus listenanzahl hervorgehen -->
                     <!--
  (ngwzu,*)_...
  (gwwi,*)_...
 -->
                     
-                    <element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6"/>
-                    <element name="entwaesserungsStrangMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
+                    <element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="entwaesserungsStrangMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <!--	<element name="ngwzu" type="string"/>
 					<element name="gwwi" type="string"/>
 					-->
@@ -203,17 +591,180 @@ siehe bodenkorrekturmember...
 (hgru,*)(hgro,*)(rtr,*)(pors,*)(gwsent,*)(klupor,*)(izkn,*)
 
 -->
-                    <element name="hgru" type="double"/>
-                    <element name="hgro" type="double"/>
-                    <element name="rtr" type="double"/>
-                    <element name="pors" type="double"/>
-                    <element name="gwsent" type="double"/>
-                    <element name="klupor" type="double"/>
+                    <element name="hgru" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="hgro" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="rtr" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="pors" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="gwsent" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                    <element name="klupor" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
                     <element name="izkn" type="integer"/> <!-- TODO loeschen, sollte aus relation hervorgehen -->
     
+   					<element name="temperaturZRRepository" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+   					<element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+   					<element name="temperaturZR" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+
 					<!-- ZR niederschlag -->
-   					<element name="niederschlagZRRepository" type="obslink:TimeseriesLink"/>
-   					<element name="niederschlagZR" type="obslink:TimeseriesLink"/>                                        
+   					<element name="niederschlagZRRepository" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					
+   					<element name="niederschlagZRRepositoryVorhersage" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					
+   					<element name="niederschlagZR" type="obslink:TimeseriesLink">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>                                        
 
                 </sequence>
 			</extension>
@@ -263,9 +814,48 @@ siehe bodenkorrekturmember...
 			<complexContent>
 				<extension base="gml:AbstractFeatureType">
 					<sequence>
-         				<element name="Ort" type="gml:LineStringPropertyType"/>            
-            			<element name="inum" type="integer"/>
-                		<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="1"/>		
+         				<element name="Ort" type="gml:LineStringPropertyType">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>            
+            			<element name="inum" type="integer">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+                		<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="1">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>		
         			</sequence>		
 				</extension>
 			</complexContent>
@@ -293,13 +883,78 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:AbstractChannelType">
 				<sequence>
-					<element name="qfmax" type="double"/>
-					<element name="c" type="double"/>
-					<element name="faktorRkf" type="double"/>
-					<element name="faktorRnf" type="double"/>
+					<element name="qfmax" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="c" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="faktorRkf" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="faktorRnf" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 					<element name="KMParameterMember" 
 						type="na:KMParameterAssociationType" minOccurs="5" 
-						maxOccurs="5"/>
+						maxOccurs="5">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -318,11 +973,76 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="na:NonGeometricAbstractFeatureType">
 				<sequence>
-					<element name="qrk" type="double"/>
-					<element name="rkf" type="double"/>
-					<element name="rnf" type="double"/>
-					<element name="rkv" type="double"/>
-					<element name="rnv" type="double"/>
+					<element name="qrk" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="rkf" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="rnf" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="rkv" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="rnv" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -351,13 +1071,104 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="cinh" type="double"/>
-					<element name="cind" type="double"/>
-					<element name="cex" type="double"/>
-					<element name="bmax" type="double"/>
-					<element name="banf" type="double"/>
-					<element name="fko" type="double"/>
-					<element name="retlay" type="double"/>
+					<element name="cinh" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="cind" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="cex" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="bmax" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="banf" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="fko" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
+					<element name="retlay" type="double">
+                       <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+        			</element>
 					<element name="evalay" type="double"/> <!-- TODO loeschen und standard schreiben, da vom NA-modell nicht benutzt -->
 				</sequence>
 			</extension>
@@ -377,10 +1188,36 @@ siehe bodenkorrekturmember...
 	<complexType name="grundwasserabflussType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="ngwzu" type="na:CatchmentLinkType"/>
-					<element name="gwwi" type="double"/>
-				</sequence>
+                <sequence>
+                    <element name="ngwzu" type="na:CatchmentLinkType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="gwwi" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>l</label>
+                                <tooltip>tip</tooltip>
+                                <description>.</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>l</label>
+                                <tooltip>t</tooltip>
+                                <description>d</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
 			</extension>
 		</complexContent>
 	</complexType>

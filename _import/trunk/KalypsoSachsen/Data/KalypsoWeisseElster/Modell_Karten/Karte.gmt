@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="50.19490405282986" left="11.46495750187964" right="13.043018470994953" top="51.550525576830516"/>
+    <extent bottom="50.19490405282986" left="11.450099796010289" right="13.057876176864305" top="51.550525576830516"/>
     <layers active="ID_1">
         <layer name="Knoten" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Node" ns1:actuate="onRequest" ns1:href="../.styles/Node.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

@@ -3,6 +3,17 @@
     <layer featurePath="/" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="expertControl.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column editable="true" name="editor" width="75"/>
         <column editable="true" name="rootNode" width="129"/>
+        <column editable="false" name="name" width="100"/>
+        <column editable="false" name="timeStep" width="100"/>
+        <column editable="false" name="qgs" width="100"/>
+        <column editable="false" name="automaticCallibration" width="100"/>
+        <column editable="false" name="Catchments" width="100"/>
+        <column editable="false" name="CatchmentsBianf" width="100"/>
+        <column editable="false" name="CatchmentsFaktorRetobTetint" width="100"/>
+        <column editable="false" name="CatchmentsFaktn" width="100"/>
+        <column editable="false" name="CatchmentsFaktorAigw" width="100"/>
+        <column editable="false" name="KMChannels" width="100"/>
+        <column editable="false" name="resultForRootNodeOnly" width="100"/>
     </layer>
 </gistableview>
 

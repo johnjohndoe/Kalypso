@@ -22,13 +22,13 @@
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1600" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
-		<arg name="tableTemplate" value=".templates/calcCase/control_1600.gtt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_1.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
-		<arg name="modelspec" value="modelspec_1600.xml"/>
+		<arg name="modelspec" value="modelspec_1.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
@@ -36,13 +36,13 @@
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1401" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
-		<arg name="tableTemplate" value=".templates/calcCase/control_1401.gtt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_2.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
-		<arg name="modelspec" value="modelspec_1401.xml"/>
+		<arg name="modelspec" value="modelspec_2.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
@@ -50,17 +50,216 @@
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
-		<arg name="tableTemplate" value=".templates/calcCase/control_1300.gtt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_3.gtt"/>
 		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
-		<arg name="modelspec" value="modelspec_1300.xml"/>
+		<arg name="modelspec" value="modelspec_3.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
 	</page>
 	
+
+
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_4.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_4.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_5.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_5.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_6.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_6.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_7.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_7.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_8.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_8.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_9.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_9.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_10.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_10.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_11.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_11.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_12.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_12.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_13.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_13.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_14.gtt"/>
+	  <arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_14.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_15.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_15.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_16.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_16.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
+	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Kallibrierung Knoten 1300" 
+		imageLocation="icons/calcwizard/boden.gif" >
+		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
+		<arg name="tableTemplate" value=".templates/calcCase/control_17.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/control.odt"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="selectionID" value="32"/>
+		<arg name="clearResultFolder" value="false"/>
+		<arg name="modelspec" value="modelspec_17.xml"/>
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
+	</page>
+
 		<!--
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/control1.gmt"/>
