@@ -467,7 +467,7 @@ public class NetFileManager extends AbstractManager
               NAZMLGenerator.NA_ZUFLUSS_EINGABE, observation );
         }
         buffer.append( "    1234\n" ); // dummyLine
-        buffer.append( targetFile.getCanonicalPath() + "\n" );
+        buffer.append( ".."+File.separator+"zufluss"+File.separator+tsFileName + "\n" );
       }
     }
   }

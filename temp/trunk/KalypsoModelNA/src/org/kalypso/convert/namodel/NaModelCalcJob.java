@@ -578,6 +578,7 @@ public class NaModelCalcJob extends AbstractCalcJob
 
         if( isCanceled() )
         {
+          // TODO mit remote debugging testen ob dies auch im tomcat funktioniert - sollte eigentlich
           process.destroy();
           return;
         }
