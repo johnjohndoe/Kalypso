@@ -13,6 +13,7 @@
 				<xs:element name="MetadataList" type="MetadataListType" minOccurs="0"/>
 				<xs:element name="Axis" type="AxisType" maxOccurs="unbounded"/>
 			</xs:sequence>
+			<xs:attribute name="editable" type="xs:boolean" use="optional" default="true"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="MetadataType">

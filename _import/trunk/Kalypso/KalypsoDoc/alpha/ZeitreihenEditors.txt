@@ -7,4 +7,4 @@ Beschreibung .ott-Dateien: Observation Table Template
 - beinhaltet:
 	Liste der Zeitreihen mit Achsen
 	Liste der visuelle Status-Abhängige Eigenschaften (sog. RenderingRules)
-	
+- Beispiel: Siehe KalypsoUtil - /etc/schemas/template/obstableview_example.ott

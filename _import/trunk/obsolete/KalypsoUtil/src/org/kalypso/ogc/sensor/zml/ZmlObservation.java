@@ -192,4 +192,13 @@ public class ZmlObservation implements IObservation
   {
   // TODO
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#isEditable()
+   */
+  public boolean isEditable()
+  {
+    //getObservation().
+    return true;
+  }
 }

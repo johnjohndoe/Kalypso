@@ -265,4 +265,13 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       }
     }
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#isEditable()
+   */
+  public boolean isEditable()
+  {
+    // only editable when it represents a forecast
+    return m_valueType == PSICompact.TYPE_VALUE;
+  }
 }
