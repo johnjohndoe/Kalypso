@@ -43,29 +43,18 @@ public class Feature_Impl implements Feature
   // fields from old KalypsoFeature
   private int mySelection = 0;
 
-  protected Feature_Impl( FeatureType ft, String id )
-  {
-    this( ft, id, null );
-  }
-
-  protected Feature_Impl( FeatureType ft, String id, Object[] propValues )
-  {
-    if( ft == null )
-      throw new UnsupportedOperationException( "must provide a featuretype" );
-
-    m_featureType = ft;
-    m_id = id;
-    m_properties = propValues;
-  }
-
-  protected Feature_Impl( FeatureType ft, String id, FeatureProperty[] featureProperties )
+  /**
+   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit
+   * Standardwerten
+   */
+  protected Feature_Impl( final FeatureType ft, final String id )
   {
     if( ft == null )
       throw new UnsupportedOperationException( "must provide a featuretype" );
     m_featureType = ft;
     m_id = id;
     // initialize
-    FeatureTypeProperty[] ftp = ft.getProperties();
+    final FeatureTypeProperty[] ftp = ft.getProperties();
     m_properties = new Object[ftp.length];
     for( int i = 0; i < ftp.length; i++ )
     {
@@ -77,12 +66,24 @@ public class Feature_Impl implements Feature
           m_properties[i] = new ArrayList();
       }
     }
-    // setproperties
-    if( featureProperties != null )
+
+    final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp,
+        false );
+    for( int i = 0; i < ftp.length; i++ )
     {
-      for( int i = 0; i < featureProperties.length; i++ )
-        setProperty( featureProperties[i] );
+      if( properties[i].getValue() != null )
+        setProperty( properties[i] );
     }
+  }
+
+  protected Feature_Impl( FeatureType ft, String id, Object[] propValues )
+  {
+    if( ft == null )
+      throw new UnsupportedOperationException( "must provide a featuretype" );
+
+    m_featureType = ft;
+    m_id = id;
+    m_properties = propValues;
   }
 
   /**
@@ -124,7 +125,7 @@ public class Feature_Impl implements Feature
     final int pos = m_featureType.getPropertyPosition( name );
     if( pos == -1 )
       return null;
-    
+
     return m_properties[pos];
   }
 

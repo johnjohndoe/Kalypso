@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import java.awt.Color;
@@ -53,16 +53,11 @@ import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
-import org.deegree.model.geometry.GM_Exception;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.deegree_impl.model.feature.FeatureFactory;
@@ -208,10 +203,10 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
         }
       }
     }
-    
+
     if( stylesCol.isEmpty() )
       return;
-    
+
     // draw bufferedImage...
     final Image tmpImage = new BufferedImage( m_styleWidth, m_styleHeight * stylesCol.size(),
         BufferedImage.TYPE_INT_RGB );
@@ -219,7 +214,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setPaintMode();
     g.setColor( backColor );
     g.fillRect( 0, 0, m_styleWidth, m_styleHeight * stylesCol.size() );
-    
+
     for( int i = 0; i < stylesCol.size(); i++ )
     {
       final Image styleImage = (Image)stylesCol.get( i );
@@ -251,7 +246,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setColor( backColor );
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
-    Feature feature = createDefaultFeature( ft );
+    final Feature feature = FeatureFactory.createDefaultFeature( ft, true );
     try
     {
       DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
@@ -269,73 +264,6 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     return image;
   }
 
-  private Feature createDefaultFeature( FeatureType ft )
-  {
-    FeatureTypeProperty[] propTypes = ft.getProperties();
-    FeatureProperty[] props = createDefaultFeatureProperty( propTypes );
-    Feature feature = FeatureFactory.createFeature( "default", ft, props );
-    return feature;
-  }
-
-  private FeatureProperty[] createDefaultFeatureProperty( FeatureTypeProperty[] propTypes )
-  {
-    List results = new ArrayList();
-    for( int i = 0; i < propTypes.length; i++ )
-    {
-      FeatureTypeProperty ftp = propTypes[i];
-      Object value = ftp.getName();
-      String type = ftp.getType();
-      if( "java.lang.String".equals( type ) )
-        value = ftp.getName();
-      if( "org.deegree.model.geometry.GM_Point".equals( type ) )
-        value = DEFAULT_POINT;
-      if( "org.deegree.model.geometry.GM_LineString".equals( type ) )
-        value = DEFAULT_LINESTRING;
-      if( "org.deegree.model.geometry.GM_Polygon".equals( type ) )
-        value = DEFAULT_POLYGONE;
-      // TODO if type=Feature ... createDeafultFeature
-      results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
-    }
-    return (FeatureProperty[])results.toArray( new FeatureProperty[results.size()] );
-  }
-
-  private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
-
-  private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[]
-  {
-      GeometryFactory.createGM_Position( 0.00, 0.3 ),
-      GeometryFactory.createGM_Position( 0.33, 0.7 ),
-      GeometryFactory.createGM_Position( 0.66, 0.3 ),
-      GeometryFactory.createGM_Position( 1.00, 0.7 ), };
-
-  private static GM_Envelope DEFAULT_ENVELOPE = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
-
-  private static GM_Object DEFAULT_LINESTRING = null;
-
-  private static GM_Object DEFAULT_POLYGONE = null;
-  static
-  {
-    try
-    {
-      DEFAULT_LINESTRING = GeometryFactory.createGM_Curve( DEFAULT_LINEPOSITIONS, null );
-    }
-    catch( GM_Exception e )
-    {
-      DEFAULT_LINESTRING = null;
-      e.printStackTrace();
-    }
-  }
-  static
-  {
-    try
-    {
-      DEFAULT_POLYGONE = GeometryFactory.createGM_Surface( DEFAULT_ENVELOPE, null );
-    }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */

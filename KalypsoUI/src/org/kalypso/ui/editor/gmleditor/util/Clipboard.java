@@ -7,7 +7,6 @@ import org.deegree.model.feature.Feature;
  */
 public class Clipboard
 {
-  
   private Feature clipboardFeature = null;
   
   public void setClipboardFeature(Feature ft)

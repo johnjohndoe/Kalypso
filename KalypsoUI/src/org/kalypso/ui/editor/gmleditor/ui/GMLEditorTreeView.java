@@ -1,6 +1,8 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
@@ -33,23 +35,25 @@ import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent;
 import org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener;
+import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.Model;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
+import org.kalypso.ui.editor.gmleditor.util.model.visitors.FindDataElementsVisitor;
 
 public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListener
 {
-  protected TreeViewer treeViewer;
+  private final static int DEFAULT_EXPANSION_LEVEL = 3;
 
-  protected GMLEditorLabelProvider labelProvider;
+  protected TreeViewer m_treeViewer;
 
-  protected FeatureElement root;
+  protected GMLEditorLabelProvider m_labelProvider;
 
-  protected CommandableWorkspace workspace = null;
+  protected FeatureElement m_root;
+
+  protected CommandableWorkspace m_workspace = null;
 
   protected Composite composite = null;
-
-  private final static int DEFAULT_EXPANSION_LEVEL = 3;
 
   protected Action deleteFeatureAction = null;
 
@@ -58,13 +62,13 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   protected Action moveFeatureUpAction = null;
 
   protected Action moveFeatureDownAction = null;
-  
+
   protected Action addFeatureActions[] = null;
-  
+
   protected Action copyFeatureAction = null;
-  
+
   protected Action pasteFeatureAction = null;
-  
+
   protected Clipboard clipboard = null;
 
   /**
@@ -75,7 +79,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   public GMLEditorTreeView( Composite m_composite )
   {
     clipboard = new Clipboard();
-    
+
     composite = m_composite;
     GridLayout layout = new GridLayout();
     layout.numColumns = 1;
@@ -84,11 +88,11 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     layout.marginHeight = 2;
     composite.setLayout( layout );
 
-    treeViewer = new TreeViewer( composite );
-    treeViewer.setContentProvider( new GMLEditorContentProvider() );
-    labelProvider = new GMLEditorLabelProvider();
-    treeViewer.setLabelProvider( labelProvider );
-    treeViewer.setUseHashlookup( true );
+    m_treeViewer = new TreeViewer( composite );
+    m_treeViewer.setContentProvider( new GMLEditorContentProvider() );
+    m_labelProvider = new GMLEditorLabelProvider();
+    m_treeViewer.setLabelProvider( m_labelProvider );
+    m_treeViewer.setUseHashlookup( true );
 
     GridData layoutData = new GridData();
     layoutData = new GridData();
@@ -96,11 +100,11 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     layoutData.grabExcessVerticalSpace = true;
     layoutData.horizontalAlignment = GridData.FILL;
     layoutData.verticalAlignment = GridData.FILL;
-    treeViewer.getControl().setLayoutData( layoutData );    
-    
+    m_treeViewer.getControl().setLayoutData( layoutData );
+
     hookListeners();
     createActions();
-    createMenu( treeViewer.getControl() );
+    createMenu( m_treeViewer.getControl() );
   }
 
   public void setGmlReader( GMLReader m_reader )
@@ -116,9 +120,9 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     {
       public void run()
       {
-        if( treeViewer.getSelection().isEmpty() )
+        if( m_treeViewer.getSelection().isEmpty() )
           return;
-        IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
         for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
         {
           Model model = (Model)iterator.next();
@@ -138,11 +142,11 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
               childItem = ( (LinkedFeatureElement)model ).getName();
               parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
             }
-            DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature,
+            DeleteFeatureCommand command = new DeleteFeatureCommand( m_workspace, parentFeature,
                 ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem );
             try
             {
-              workspace.postCommand( command );
+              m_workspace.postCommand( command );
               return;
             }
             catch( Exception e )
@@ -158,9 +162,9 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     {
       public void run()
       {
-        if( treeViewer.getSelection().isEmpty() )
+        if( m_treeViewer.getSelection().isEmpty() )
           return;
-        IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
         for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
         {
           Model model = (Model)iterator.next();
@@ -181,12 +185,12 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
               parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
             }
 
-            MoveFeatureCommand command = new MoveFeatureCommand( workspace, parentFeature,
+            MoveFeatureCommand command = new MoveFeatureCommand( m_workspace, parentFeature,
                 ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem,
                 MoveFeatureCommand.UP );
             try
             {
-              workspace.postCommand( command );
+              m_workspace.postCommand( command );
               return;
             }
             catch( Exception e )
@@ -202,9 +206,9 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     {
       public void run()
       {
-        if( treeViewer.getSelection().isEmpty() )
+        if( m_treeViewer.getSelection().isEmpty() )
           return;
-        IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
         for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
         {
           Model model = (Model)iterator.next();
@@ -217,7 +221,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
             if( model instanceof FeatureElement )
             {
               childItem = ( (FeatureElement)model ).getFeature();
-              parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();              
+              parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
             }
             else
             {
@@ -225,13 +229,13 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
               parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
             }
 
-            MoveFeatureCommand command = new MoveFeatureCommand( workspace, parentFeature,
+            MoveFeatureCommand command = new MoveFeatureCommand( m_workspace, parentFeature,
                 ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem,
                 MoveFeatureCommand.DOWN );
 
             try
             {
-              workspace.postCommand( command );
+              m_workspace.postCommand( command );
               return;
             }
             catch( Exception e )
@@ -241,7 +245,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           }
         }
       }
-    };    
+    };
   }
 
   protected void createMenu( Control control )
@@ -255,15 +259,15 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
         mgr.add( deleteFeatureAction );
         mgr.add( moveFeatureUpAction );
         mgr.add( moveFeatureDownAction );
-        if(addFeatureActions != null)
+        if( addFeatureActions != null )
         {
-          for(int i=0; i<addFeatureActions.length; i++)
-            mgr.add(addFeatureActions[i]);
+          for( int i = 0; i < addFeatureActions.length; i++ )
+            mgr.add( addFeatureActions[i] );
         }
-        if(copyFeatureAction != null)
-          mgr.add(copyFeatureAction);
-        if(pasteFeatureAction != null)
-          mgr.add(pasteFeatureAction);
+        if( copyFeatureAction != null )
+          mgr.add( copyFeatureAction );
+        if( pasteFeatureAction != null )
+          mgr.add( pasteFeatureAction );
       }
     } );
     Menu menu = rootMenuManager.createContextMenu( control );
@@ -272,8 +276,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
   protected void hookListeners()
   {
-    //    treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    treeViewer.addDoubleClickListener( new IDoubleClickListener()
+    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
       public void doubleClick( DoubleClickEvent event )
       {
@@ -289,13 +292,13 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           {
             StructuredSelection ss = new StructuredSelection(
                 findFeatureElement( (LinkedFeatureElement)obj ) );
-            treeViewer.setSelection( ss, true );
+            m_treeViewer.setSelection( ss, true );
           }
         }
       }
     } );
 
-    treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
@@ -309,46 +312,50 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           deleteFeatureAction.setEnabled( false );
           moveFeatureUpAction.setEnabled( false );
           moveFeatureDownAction.setEnabled( false );
-          
-          FeatureType types[] = ((PropertyElement) obj).getProperty().getAssociationFeatureTypes();
-          Feature parentFeature = ((FeatureElement)((PropertyElement) obj).getParent()).getFeature();
-          
-          addFeatureActions = new Action[types.length];                              
-          for(int i=0; i<types.length; i++)
-          {            
-            addFeatureActions[i] = new AddFeatureAction(types[i], workspace, parentFeature, ((PropertyElement) obj).getProperty().getName(), 0, composite.getShell());        
-          }      
-          
-          pasteFeatureAction = new PasteFeatureAction(workspace, parentFeature,((PropertyElement) obj).getProperty().getName(),clipboard);
-          
-          if(clipboard.getClipboardFeature() != null)
-          {                       
-            pasteFeatureAction.setEnabled(true);
+
+          FeatureType types[] = ( (PropertyElement)obj ).getProperty().getAssociationFeatureTypes();
+          Feature parentFeature = ( (FeatureElement)( (PropertyElement)obj ).getParent() )
+              .getFeature();
+
+          addFeatureActions = new Action[types.length];
+          for( int i = 0; i < types.length; i++ )
+          {
+            addFeatureActions[i] = new AddFeatureAction( types[i], m_workspace, parentFeature,
+                ( (PropertyElement)obj ).getProperty().getName(), 0, composite.getShell() );
+          }
+
+          pasteFeatureAction = new PasteFeatureAction( m_workspace, parentFeature,
+              ( (PropertyElement)obj ).getProperty().getName(), clipboard );
+
+          if( clipboard.getClipboardFeature() != null )
+          {
+            pasteFeatureAction.setEnabled( true );
           }
           else
-          {            
-            pasteFeatureAction.setEnabled(false);
+          {
+            pasteFeatureAction.setEnabled( false );
           }
-          
-          if(copyFeatureAction != null)
-            copyFeatureAction.setEnabled(false);          
+
+          if( copyFeatureAction != null )
+            copyFeatureAction.setEnabled( false );
         }
         else
         {
           deleteFeatureAction.setEnabled( true );
           moveFeatureUpAction.setEnabled( true );
-          moveFeatureDownAction.setEnabled( true ); 
+          moveFeatureDownAction.setEnabled( true );
           addFeatureActions = null;
-          if(copyFeatureAction != null)
-            copyFeatureAction.setEnabled(false);
-          
-          if(obj instanceof FeatureElement)
+          if( copyFeatureAction != null )
+            copyFeatureAction.setEnabled( false );
+
+          if( obj instanceof FeatureElement )
           {
-            copyFeatureAction = new CopyFeatureAction(((FeatureElement)obj).getFeature(),workspace, clipboard);
-            copyFeatureAction.setEnabled(true);
+            copyFeatureAction = new CopyFeatureAction( ( (FeatureElement)obj ).getFeature(),
+                m_workspace, clipboard );
+            copyFeatureAction.setEnabled( true );
           }
-          if(pasteFeatureAction != null)
-           pasteFeatureAction.setEnabled(false);                    
+          if( pasteFeatureAction != null )
+            pasteFeatureAction.setEnabled( false );
         }
       }
     } );
@@ -356,17 +363,18 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
   protected FeatureElement findFeatureElement( LinkedFeatureElement lfe )
   {
-    return findFeatureElement( ( (FeatureElement)root.getElements()[0] ), lfe.getName() );
+    return findFeatureElement( ( (FeatureElement)m_root.getChildren()[0] ), lfe.getName() );
   }
 
-  FeatureElement findFeatureElement( FeatureElement m_root, String searchString )
+  private FeatureElement findFeatureElement( final FeatureElement root, final String searchString )
   {
-    if( m_root.getName().equals( searchString ) )
-      return m_root;
-    Object[] pe = m_root.getElements(); // PropertyElement[]
+    if( root.getName().equals( searchString ) )
+      return root;
+    
+    Object[] pe = root.getChildren(); // PropertyElement[]
     for( int i = 0; i < pe.length; i++ )
     {
-      Object[] model = ( (PropertyElement)pe[i] ).getElements();
+      Object[] model = ( (PropertyElement)pe[i] ).getChildren();
       for( int j = 0; j < model.length; j++ )
       {
         if( model[j] instanceof FeatureElement )
@@ -380,37 +388,31 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     return null;
   }
 
-  /*
-   * @see IWorkbenchPart#setFocus()
-   */
-  public void setFocus()
-  {/**/}
-
   /**
    * @see org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener#onChange(org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent)
    */
   public void onChange( GMLDocumentEvent event )
   {
-    root = event.getGmlDocument();
-    if( workspace != null )
+    m_root = event.getGmlDocument();
+    if( m_workspace != null )
     {
-      workspace.removeModellListener( this );
+      m_workspace.removeModellListener( this );
     }
-    workspace = event.getWorkspace();
-    workspace.addModellListener( this );
+    m_workspace = event.getWorkspace();
+    m_workspace.addModellListener( this );
 
     composite.getDisplay().asyncExec( new Runnable()
     {
       public void run()
       {
-        treeViewer.getTree().setVisible( false );
-        treeViewer.setInput( root );
+        m_treeViewer.getTree().setVisible( false );
+        m_treeViewer.setInput( m_root );
         // need to expand in order to load all elements into the treeviewers
         // cache
-        treeViewer.expandAll();
-        treeViewer.collapseAll();
-        treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
-        treeViewer.getTree().setVisible( true );
+        m_treeViewer.expandAll();
+        m_treeViewer.collapseAll();
+        m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
+        m_treeViewer.getTree().setVisible( true );
       }
     } );
   }
@@ -431,11 +433,45 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
       {
         public void run()
         {
-          treeViewer.setInput( reader.getGMLDocument( (CommandableWorkspace)modellEvent
-              .getEventSource() ) );
+          // das selektierte Feature merken und dann wieder anzeigen
+          final Object[] expandedElements = m_treeViewer.getExpandedElements();
+          final Object[] expandedData = getDataFromElements( expandedElements );
+          
+          final IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
+          final Object[] selecteddata = getDataFromElements( selection.toArray() );
+
+          final FeatureElement root = reader.getGMLDocument( (CommandableWorkspace)modellEvent
+              .getEventSource() );
+          m_root = root;
+          m_treeViewer.setInput( root );
+
+          m_treeViewer.setExpandedElements( findDataElements( expandedData ) );
+          m_treeViewer.setSelection( new StructuredSelection( findDataElements( selecteddata ) ) );
         }
       } );
     }
-    System.out.println( "model changed " + modellEvent.getType() );
+//    System.out.println( "model changed " + modellEvent.getType() );
+  }
+
+  protected Object[] getDataFromElements( final Object[] elements )
+  {
+    final Collection data = new LinkedList();
+    for( int i = 0; i < elements.length; i++ )
+    {
+      final Object object = elements[i];
+      if( object instanceof FeatureElement )
+        data.add( ((FeatureElement)object).getFeature() );
+      else if( object instanceof PropertyElement )
+        data.add( ((PropertyElement)object).getProperty() );
+    }
+
+    return data.toArray();
+  }
+
+  protected IModel[] findDataElements( final Object[] data )
+  {
+    final FindDataElementsVisitor visitor = new FindDataElementsVisitor( data );
+    m_root.accept( visitor );
+    return visitor.getResults();
   }
 }

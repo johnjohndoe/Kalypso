@@ -94,8 +94,11 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
+    if( modifier == null )
+      return "";
     
-    return modifier.getLabel( feature ).toString();
+    final String label = modifier.getLabel( feature );
+    return label == null ? "" : label;
   }
 
   /**

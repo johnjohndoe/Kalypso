@@ -1,10 +1,7 @@
-/*
- * Created on Jan 19, 2005
- *  
- */
 package org.kalypso.ui.editor.gmleditor.util;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.EventListenerList;
@@ -73,65 +70,57 @@ public class GMLReader implements IPoolListener
   {
     if( m_workspace == null )
       return null;
-    Feature feature = m_workspace.getRootFeature();
-    FeatureElement element = new FeatureElement( feature );
-    recursiveRead( feature, element );
-
-    // adds a root element that holds the entire tree -> for visualization
-    // purposes
-    return FeatureElement.createRootFeatureElement( element );
+    
+    final FeatureElement rootElement = FeatureElement.createRootFeature();
+    final Feature feature = m_workspace.getRootFeature();
+    final FeatureElement element = new FeatureElement( rootElement, feature );
+    createFeatureChildren( element, feature );
+    
+    return rootElement;
   }
-
-  // reads the GMLDocument recursivly into a tree with root "element"
-  private void recursiveRead( Feature ft, FeatureElement element )
+  
+  public void createFeatureChildren( final FeatureElement parent, final Feature ft )
   {
-    FeatureTypeProperty[] ftp = ft.getFeatureType().getProperties();
+    // children erzeugen
+    final FeatureTypeProperty[] ftp = ft.getFeatureType().getProperties();
     if( ftp != null )
     {
       for( int i = 0; i < ftp.length; i++ )
       {
         if( ftp[i] instanceof FeatureAssociationTypeProperty )
         {
-          PropertyElement propertyElement = new PropertyElement(
+          final PropertyElement propertyElement = new PropertyElement( parent,
               (FeatureAssociationTypeProperty)ftp[i] );
-          element.addProperty( propertyElement );
           try
           {
-            if( ft.getProperties()[i] instanceof Feature )
+            final Object value = ft.getProperties()[i];
+            if( value instanceof Feature )
             {
-              Feature feature = (Feature)ft.getProperties()[i];
-              FeatureElement fe = new FeatureElement( feature );
-              propertyElement.addFeature( fe );
-              recursiveRead( feature, fe );
+              final Feature feature = (Feature)value;
+              final FeatureElement fe = new FeatureElement( propertyElement, feature );
+              createFeatureChildren( fe, feature );
             }
-            else if( ft.getProperties()[i] instanceof List )
+            else if( value instanceof List )
             {
-              List ss = (List)ft.getProperties()[i];
-              for( int j = 0; j < ss.size(); j++ )
+              final List ss = (List)value;
+              for( final Iterator listIt = ss.iterator(); listIt.hasNext(); )
               {
-                if( ss.get( j ) instanceof Feature )
+                final Object next = listIt.next();
+                if( next instanceof Feature )
                 {
-                  Feature feature = (Feature)ss.get( j );
-                  FeatureElement fe = new FeatureElement( feature );
-                  propertyElement.addFeature( fe );
-                  recursiveRead( feature, fe );
+                  final Feature f = (Feature)next;
+                  final FeatureElement element = new FeatureElement( propertyElement, f );
+                  createFeatureChildren( element, f );
                 }
-                else if(ss.get(j) instanceof String)
-                {
-                  LinkedFeatureElement lfe = new LinkedFeatureElement( ss.get(j).toString() );
-                  propertyElement.addLinkedFeature( lfe );                  
-                }                   
+                else if( next instanceof String )
+                  new LinkedFeatureElement( propertyElement, next.toString() );
               }
             }
             else
             {
-              if( ft.getProperties()[i] != null
-                  && ft.getProperties()[i].toString().trim().length() > 0 )
-              {
-                LinkedFeatureElement lfe = new LinkedFeatureElement( ft.getProperties()[i]
-                    .toString() );
-                propertyElement.addLinkedFeature( lfe );
-              }
+              if( value != null
+                  && value.toString().trim().length() > 0 )
+                new LinkedFeatureElement( propertyElement, value.toString() );
             }
           }
           catch( Exception e )

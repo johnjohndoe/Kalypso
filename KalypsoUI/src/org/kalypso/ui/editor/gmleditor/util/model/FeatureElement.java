@@ -1,11 +1,4 @@
-/*
- * Created on Jan 19, 2005
- *  
- */
 package org.kalypso.ui.editor.gmleditor.util.model;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.deegree.model.feature.Feature;
 
@@ -15,57 +8,27 @@ import org.deegree.model.feature.Feature;
  */
 public class FeatureElement extends Model
 {
+  private Feature m_feature = null;
 
-  protected List elements;
-
-  private Feature feature = null;
-
-  private FeatureElement()
+  public static FeatureElement createRootFeature()
   {
-    elements = new ArrayList();    
+    return new FeatureElement( null, null ); 
   }
-
-  public FeatureElement( Feature ft )
+  
+  public FeatureElement( final IModel parent, final  Feature ft )
   {
-    this();
-    this.name = ft.getId().trim();
-    feature = ft;
-  }
-
-  public static FeatureElement createRootFeatureElement( FeatureElement fe )
-  {
-    FeatureElement f = new FeatureElement();
-    fe.parent = f;
-    f.elements.add( fe );
-    return f;
-  }
-
-  public Object[] getElements()
-  {
-    return elements.toArray();
-  }
-
-  public void addProperty( PropertyElement element )
-  {
-    elements.add( element );
-    element.parent = this;
+    super( parent, ft == null ? null : ft.getId().trim() );
+    
+    m_feature = ft;
   }
 
   public Feature getFeature()
   {
-    return feature;
+    return m_feature;
   }
 
-  public void setFeature( Feature m_feature )
+  public void setFeature( final Feature m_feature )
   {
-    this.feature = m_feature;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.gmleditor.util.model.Model#remove(org.kalypso.ui.editor.gmleditor.util.model.Model)
-   */
-  public void remove( Model model )
-  {
-    elements.remove(model);    
+    this.m_feature = m_feature;
   }
 }

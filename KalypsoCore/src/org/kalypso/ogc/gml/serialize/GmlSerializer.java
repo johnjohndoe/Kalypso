@@ -63,6 +63,7 @@ import org.deegree.gml.GMLNameSpace;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree.ogcbasic.CommonNamespaces;
 import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.gml.GMLFactory;
 import org.deegree_impl.gml.GMLNameSpace_Impl;
@@ -112,11 +113,11 @@ public final class GmlSerializer
 
       // TODO: why aren't those already in the namespace map???
       final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl(
-          "gml","http://www.opengis.net/gml" );
+          "gml",CommonNamespaces.GMLNS );
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
-          "xlink","http://www.w3.org/1999/xlink" );
+          "xlink",CommonNamespaces.XLINKNS );
       final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
-          "xsi","http://www.w3.org/2001/XMLSchema-instance" );
+          "xsi", CommonNamespaces.XSINS );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
@@ -129,7 +130,7 @@ public final class GmlSerializer
       workspace.getContext();
       final String schemaLoc = workspace.getSchemaLocation();
       if( schemaLoc != null )
-        gmlDoc.setSchemaLocation( schemaLoc );
+        gmlDoc.setSchemaLocation( schemaNamespace + " " + schemaLoc );
 
       // DOM als GML schreiben
       final Document xmlDOM = gmlDoc;
