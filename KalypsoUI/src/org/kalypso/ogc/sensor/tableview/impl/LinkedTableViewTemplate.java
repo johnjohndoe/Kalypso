@@ -223,4 +223,7 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
     return new LinkedTableViewTemplate( baseTemplate, ResourceUtilities
         .createURL( file ) );
   }
+
+  public void addObservation( String name, URL context, String href, String linktype, Object object )
+  {}
 }
