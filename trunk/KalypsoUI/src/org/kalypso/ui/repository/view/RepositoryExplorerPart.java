@@ -45,6 +45,7 @@ import org.kalypso.ui.repository.actions.CollapseAllAction;
 import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
 import org.kalypso.ui.repository.actions.CopyLinkAction;
 import org.kalypso.ui.repository.actions.ExpandAllAction;
+import org.kalypso.ui.repository.actions.ExportAsFileAction;
 import org.kalypso.ui.repository.actions.ReloadAction;
 import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
 import org.kalypso.util.adapter.IAdaptable;
@@ -85,6 +86,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   private static final String TAG_IDENFITIER = "identifier"; //$NON-NLS-1$
 
   private static final String TAG_REPOSITORIES = "repositories"; //$NON-NLS-1$
+
+  private ExportAsFileAction m_exportAsFileAction;
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
@@ -141,6 +144,9 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     if( m_reloadAction != null )
       m_reloadAction.dispose();
+    
+    if( m_exportAsFileAction != null )
+      m_exportAsFileAction.dispose();
 
     if( m_repViewer != null )
       removeSelectionChangedListener( this );
@@ -186,6 +192,11 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     toolBarManager.add( new CollapseAllAction( this ) );
     toolBarManager.add( new ExpandAllAction( this ) );
+    
+    toolBarManager.add( new Separator() );
+    
+    m_exportAsFileAction = new ExportAsFileAction( this );
+    toolBarManager.add( m_exportAsFileAction );
 
     getViewSite().getActionBars().updateActionBars();
 
