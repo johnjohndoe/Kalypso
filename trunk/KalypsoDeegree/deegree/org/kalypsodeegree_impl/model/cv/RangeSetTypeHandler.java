@@ -76,6 +76,7 @@ public class RangeSetTypeHandler implements ITypeHandler
    */
   public Object unmarshall( Node node, URL context ) throws TypeRegistryException  
   {
+    // TODO do not give context here, better give resolver
     Node node_File = ( (Element)node ).getElementsByTagNameNS( NSRGC, "File" ).item( 0 );
     Node node_FileName = ( (Element)node_File ).getElementsByTagNameNS( NSRGC, "fileName" )
         .item( 0 );

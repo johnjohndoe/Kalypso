@@ -107,8 +107,11 @@ public class GeometryUtilities
       double distanceFromBasePoint )
   {
     final double[] p1 = basePoint.getAsArray();
-    final double[] p2 = basePoint.getAsArray();
-    final double factor=basePoint.getDistance(directionPoint)/distanceFromBasePoint;
+    double distance = basePoint.getDistance(directionPoint);
+    if(distance==0)
+      return GeometryFactory.createGM_Position(p1);
+    final double[] p2 = directionPoint.getAsArray();
+    final double factor=distanceFromBasePoint/distance;
     double newPos[]=new double[p1.length];
     for( int i = 0; i < newPos.length; i++ )
       newPos[i]=p1[i]+(p2[i]-p1[i])*factor;
