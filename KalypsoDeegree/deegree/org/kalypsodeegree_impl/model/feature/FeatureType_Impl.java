@@ -64,6 +64,32 @@ import org.deegree.model.feature.FeatureTypeProperty;
  */
 class FeatureType_Impl implements FeatureType, Serializable
 {
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( obj == null || ( !( obj instanceof FeatureType ) ) )
+      return false;
+    FeatureType other = (FeatureType)obj;
+    if( m_namespace != null )
+      if( !m_namespace.equals( other.getNamespace() ) )
+        return false;
+    if( !m_name.equals( other.getName() ) )
+      return false;
+    return true;
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode()
+  {
+    if( m_namespace != null )
+      return ( m_namespace + m_name ).hashCode();
+    return m_name.hashCode();
+  }
+
   private final String m_namespace;
 
   private final String m_substitutionGroup;
@@ -86,12 +112,13 @@ class FeatureType_Impl implements FeatureType, Serializable
   private final HashMap m_posOfFTP;
 
   private int m_defaultGeometryPropPos = -1;
+
   private final Map m_annotationsMap;
-  
+
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
-      int[] minOccurs, int[] maxOccurs, String substitutionGroup ,Map annotationMap)
+      int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
-      m_annotationsMap=annotationMap;
+    m_annotationsMap = annotationMap;
     m_substitutionGroup = substitutionGroup;
     this.m_name = name;
     m_namespace = namespace;
@@ -203,13 +230,13 @@ class FeatureType_Impl implements FeatureType, Serializable
   {
     return m_defaultGeometryPropPos;
   }
-  
+
   /**
    * @see org.deegree.model.feature.FeatureType#getAnnotation(java.lang.String)
    */
   public Annotation getAnnotation( String langKey )
   {
-    return (Annotation)m_annotationsMap.get(langKey);
+    return (Annotation)m_annotationsMap.get( langKey );
   }
 
   /**

@@ -32,6 +32,22 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   private final HashMap m_featureMap = new HashMap();
 
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
+   */
+  public Feature getFeature( FeatureType ft,String id )
+  {
+    List list=(List)m_featureMap.get(ft);
+    for( Iterator iter = list.iterator(); iter.hasNext(); )
+    {
+      Feature feature = (Feature)iter.next();
+      if(id.equals(feature.getId()))
+        return feature;
+    }
+    return null;
+  }
+  
+
   public Feature resolveLink( Feature srcFeature, String linkPropertyName )
   {
     Object linkValue = srcFeature.getProperty( linkPropertyName );
@@ -57,6 +73,47 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     // broken Link
     return null;
+  }
+
+  /**
+   * @see org.deegree.model.feature.GMLWorkspace#resolveLinks(org.deegree.model.feature.Feature,
+   *      java.lang.String)
+   */
+  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
+  {
+    final List result = new ArrayList();
+    final List linkList = (List)srcFeature.getProperty( linkPropertyName );
+
+    for( Iterator iter = linkList.iterator(); iter.hasNext(); )
+    {
+      Object linkValue = iter.next();
+      if( linkValue instanceof Feature )
+      {
+        result.add( linkValue );
+        continue;
+      }
+      // must be a reference
+      String linkID = (String)linkValue;
+      FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature
+          .getFeatureType().getProperty( linkPropertyName );
+      FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
+      for( int _ft = 0; _ft < linkFTs.length; _ft++ )
+      {
+        Feature[] features = getFeatures( linkFTs[_ft] );
+        // TODO performance-todo: todo oben aufloesen und hier das feature
+        // aus dem hash holen:
+        for( int i = 0; i < features.length; i++ )
+        {
+          if( linkID.equals( features[i].getId() ) )
+          {
+            result.add( features[i] );
+            continue;
+          }
+        }
+      }
+    }
+    // broken Link
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
   public GMLWorkspace_Impl( GMLSchema schema, Feature feature )
@@ -130,30 +187,32 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return (Feature[])list.toArray( new Feature[list.size()] );
   }
 
- private final Collection m_listener = new ArrayList();
+  private final Collection m_listener = new ArrayList();
 
-    /**
-     * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
-     */
-    public void addModellListener( final ModellEventListener listener )
-    {
-      m_listener.add( listener );
-    }
+  /**
+   * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+   */
+  public void addModellListener( final ModellEventListener listener )
+  {
+    m_listener.add( listener );
+  }
 
-    /**
-     * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
-     */
-    public void removeModellListener( final ModellEventListener listener )
-    {
-      m_listener.remove( listener );
-    }
+  /**
+   * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+   */
+  public void removeModellListener( final ModellEventListener listener )
+  {
+    m_listener.remove( listener );
+  }
 
-    /**
-     * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.gml.event.ModellEvent)
-     */
-    public void fireModellEvent( final ModellEvent event )
-    {
-      for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
-        ((ModellEventListener)iter.next()).onModellChange(event);
-    }
+  /**
+   * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.gml.event.ModellEvent)
+   */
+  public void fireModellEvent( final ModellEvent event )
+  {
+    for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
+      ( (ModellEventListener)iter.next() ).onModellChange( event );
+  }
+
+
 }
