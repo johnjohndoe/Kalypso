@@ -6,6 +6,7 @@ package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Point;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
@@ -13,7 +14,6 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.CreateFeatureCommand;
 import org.kalypso.util.command.ICommand;
@@ -28,7 +28,7 @@ public class CreatePointFeatureWidget extends AbstractWidget
 
   private final KalypsoFeatureLayer myLayer;
 
-  private final FeatureType myFt;
+  private final FeatureType m_featureType;
 
   private final FeatureTypeProperty myFtp;
 
@@ -38,7 +38,7 @@ public class CreatePointFeatureWidget extends AbstractWidget
   {
   myParentWidget=parentWidget;
   myLayer=layer;
-  myFt=ft;
+  m_featureType=ft;
   myFtp=ftp;
   }
 
@@ -55,15 +55,16 @@ public class CreatePointFeatureWidget extends AbstractWidget
   {
     if( myPoint != null)
     {
-      final Object[] properties = new Object[myFt.getProperties().length];
-      final KalypsoFeature feature = new KalypsoFeature( FeatureFactory.createFeature( "x",
-          myFt, properties ) );
+//      final Object[] properties = new Object[myFt.getProperties().length];
+      final Feature feature =FeatureFactory.createFeature("x",m_featureType); 
+//          new Feature( FeatureFactory.createFeature( "x",
+//          myFt, properties ) );
       final GM_Position position = myParentWidget.getPosition(myPoint);
       final CS_CoordinateSystem coordinatesSystem = myLayer.getCoordinatesSystem();
       final GM_Object geometry=GeometryFactory.createGM_Point(position, coordinatesSystem);
       final FeatureProperty fp=FeatureFactory.createFeatureProperty(myFtp.getName(),geometry);
       feature.setProperty(fp);
-      return new CreateFeatureCommand( myLayer, new KalypsoFeature[]{feature} );
+      return new CreateFeatureCommand( myLayer, new Feature[]{feature} );
     }
     return null;
   }

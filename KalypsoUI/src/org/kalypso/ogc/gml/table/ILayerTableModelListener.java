@@ -1,13 +1,13 @@
 package org.kalypso.ogc.gml.table;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+import org.deegree.model.feature.Feature;
 
 /**
  * @author bce
  */
 public interface ILayerTableModelListener
 {
-  public void onRowsChanged( final KalypsoFeature fe);
+  public void onRowsChanged( final Feature fe);
 
   public void onColumnsChanged();
 }

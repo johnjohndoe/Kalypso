@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+import org.deegree.model.feature.Feature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
@@ -38,10 +38,10 @@ public class UnselectAllCommand implements ICommand
     for(int i=0;i<m_layers.length;i++)
     {
       KalypsoFeatureLayer layer=m_layers[i];
-      KalypsoFeature[] fes = layer.getAllFeatures();
+      Feature[] fes = layer.getAllFeatures();
       for( int j = 0; j < fes.length; j++ )
       {
-        KalypsoFeature feature = fes[j];
+        Feature feature = fes[j];
         if(feature.unselect(m_selectionId))
           m_touchedFeature.add(feature);
       }
@@ -56,7 +56,7 @@ public class UnselectAllCommand implements ICommand
   {
     Iterator i=m_touchedFeature.iterator();
     while( i.hasNext() )
-     ((KalypsoFeature)i.next()).unselect(m_selectionId);       
+     ((Feature)i.next()).unselect(m_selectionId);       
 
     fireEvents();
   }
@@ -68,7 +68,7 @@ public class UnselectAllCommand implements ICommand
   {
     Iterator i=m_touchedFeature.iterator();
     while( i.hasNext() )
-     ((KalypsoFeature)i.next()).select(m_selectionId);       
+     ((Feature)i.next()).select(m_selectionId);       
    
     fireEvents();
   }

@@ -3,9 +3,9 @@ package org.kalypso.ogc.gml.table;
 import java.text.Collator;
 import java.util.Date;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
  * @author belger
@@ -51,8 +51,8 @@ public class LayerTableSorter extends ViewerSorter
   
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final KalypsoFeature kf1 = (KalypsoFeature)e1;
-    final KalypsoFeature kf2 = (KalypsoFeature)e2;
+    final Feature kf1 = (Feature)e1;
+    final Feature kf2 = (Feature)e2;
     
     final String propertyName = getPropertyName();
     final Object o1 = kf1.getProperty( propertyName );

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -28,7 +29,6 @@ import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.event.ModellEventListener;
@@ -53,16 +53,16 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
-  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
 
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
-  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
+  /** Pfad auf Vorlage f?r die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
-  /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
+  /** Pfad auf die Vorlage f?r das Diagramm (.odt Datei) */
   public final static String PROP_DIAGTEMPLATE = "diagTemplate";
 
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
@@ -73,7 +73,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
   /**
    * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine für jede Kurventyp.
+   * geben-Property geben: eine f?r jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
@@ -149,7 +149,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     createDiagramPanel( rightSash );
 
     final Button button = new Button( rightPanel, SWT.NONE | SWT.PUSH );
-    button.setText( "Berechnung durchführen" );
+    button.setText( "Berechnung durchf?hren" );
 
     final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
     final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
@@ -303,7 +303,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     final List selectedFeatures = new ArrayList();
 
     final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+    final Feature[] allFeatures = kfl.getAllFeatures();
     for( int i = 0; i < allFeatures.length; i++ )
       if( allFeatures[i].isSelected( SELECTION_ID ) )
         selectedFeatures.add( allFeatures[i] );
@@ -338,7 +338,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
           try
           {
 
-            monitor.beginTask( "Prognoserechnung durchführen", 2000 );
+            monitor.beginTask( "Prognoserechnung durchf?hren", 2000 );
 
             final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
                 ModelNature.ID );

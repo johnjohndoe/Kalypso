@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+
+import org.deegree.model.feature.Feature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
@@ -10,9 +11,9 @@ import org.kalypso.util.command.ICommand;
 public class CreateFeatureCommand implements ICommand
 {
   private final KalypsoFeatureLayer m_layer;
-  private final KalypsoFeature[] m_features;
+  private final Feature[] m_features;
   
-  public CreateFeatureCommand( final KalypsoFeatureLayer layer, final KalypsoFeature[] features )
+  public CreateFeatureCommand( final KalypsoFeatureLayer layer, final Feature[] features )
   {
     m_layer = layer;
     m_features = features;

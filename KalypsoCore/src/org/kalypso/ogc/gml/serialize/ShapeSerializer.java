@@ -12,7 +12,6 @@ import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.progress.IProgressMonitor;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -55,12 +54,12 @@ public class ShapeSerializer
 
     try
     {
-      final KalypsoFeature[] features = layer.getAllFeatures();
+      final Feature[] features = layer.getAllFeatures();
       
       final Collection shapeFeatures = new ArrayList( features.length );
       for( int i = 0; i < features.length; i++ )
       {
-        final KalypsoFeature kalypsoFeature = features[i];
+        final Feature kalypsoFeature = features[i];
 
         final Object[] data = new Object[ftps.length];
 
@@ -113,7 +112,7 @@ public class ShapeSerializer
         final Feature fe = sf.getFeatureByRecNo( i + 1 );
         GMLHelper.setCrs( fe, sourceCrs );
         if( fe != null )
-          layer.addFeature( new KalypsoFeature( fe ) );
+          layer.addFeature( fe );
       }
 
       sf.close();

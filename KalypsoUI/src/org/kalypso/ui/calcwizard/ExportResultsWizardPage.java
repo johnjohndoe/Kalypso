@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
@@ -27,7 +28,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.event.ModellEventListener;
@@ -66,13 +66,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   //    </page>
   //  
 
-  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  /** Pfad auf Vorlage f?r die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
 
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
 
-  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
+  /** Pfad auf Vorlage f?r die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
@@ -81,12 +81,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   /** Position des rechten Sash: Integer von 0 bis 100 */
   public final static String PROP_RIGHTSASH = "rightSash";
 
-  /** Pfad auf die Vorlage für das Diagramm (.odt Datei) */
+  /** Pfad auf die Vorlage f?r das Diagramm (.odt Datei) */
   public final static String PROP_DIAGTEMPLATE = "diagTemplate";
 
   /**
    * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine für jede Kurventyp.
+   * geben-Property geben: eine f?r jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
@@ -311,7 +311,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       try
       {
         final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-        final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+        final Feature[] allFeatures = kfl.getAllFeatures();
         for( int i = 0; i < allFeatures.length; i++ )
           if( allFeatures[i].isSelected( SELECTION_ID ) )
             selectedFeatures.add( allFeatures[i] );

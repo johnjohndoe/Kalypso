@@ -5,7 +5,7 @@
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import org.deegree.graphics.sld.Stroke;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Administrator

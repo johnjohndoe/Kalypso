@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Administrator

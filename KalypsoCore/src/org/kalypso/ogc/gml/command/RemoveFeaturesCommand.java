@@ -1,6 +1,6 @@
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.ogc.gml.KalypsoFeature;
+import org.deegree.model.feature.Feature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommand;
 
@@ -11,9 +11,9 @@ public class RemoveFeaturesCommand implements ICommand
 {
   private final KalypsoFeatureLayer m_layer;
 
-  private final KalypsoFeature[] m_features;
+  private final Feature[] m_features;
 
-  public RemoveFeaturesCommand( final KalypsoFeatureLayer layer, final KalypsoFeature[] features )
+  public RemoveFeaturesCommand( final KalypsoFeatureLayer layer, final Feature[] features )
   {
     m_layer = layer;
     m_features = features;
@@ -48,7 +48,7 @@ public class RemoveFeaturesCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    // TODO: an der alten Position wieder einfügen?
+    // TODO: an der alten Position wieder einf?gen?
     m_layer.addFeatures( m_features );
   }
 
@@ -57,6 +57,6 @@ public class RemoveFeaturesCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Element löschen";
+    return "Element l?schen";
   }
 }

@@ -8,11 +8,11 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.deegree.TimeserieFeatureProps;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
@@ -79,7 +79,7 @@ public class KalypsoWizardHelper
 
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
-      final KalypsoFeature kf = (KalypsoFeature)it.next();
+      final Feature kf = (Feature)it.next();
 
       for( int i = 0; i < props.length; i++ )
       {
@@ -134,7 +134,7 @@ public class KalypsoWizardHelper
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
-      final KalypsoFeature kf = (KalypsoFeature)it.next();
+      final Feature kf = (Feature)it.next();
 
       for( int i = 0; i < props.length; i++ )
       {
@@ -188,7 +188,7 @@ public class KalypsoWizardHelper
   {
     for( Iterator it = features.iterator(); it.hasNext(); )
     {
-      final KalypsoFeature kf = (KalypsoFeature)it.next();
+      final Feature kf = (Feature)it.next();
 
       for( int i = 0; i < props.length; i++ )
       {

@@ -3,10 +3,10 @@ package org.kalypso.ogc.gml.table.celleditors;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.sensor.jface.ObservationLinkDialog;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
@@ -36,18 +36,18 @@ public class ObservationFeatureCellEditor extends AbstractFeatureCellEditor impl
   }
 
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#doSetFeature(org.kalypso.ogc.gml.KalypsoFeature)
+   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#doSetFeature(org.kalypso.ogc.gml.Feature)
    */
-  protected void doSetFeature( final KalypsoFeature feature )
+  protected void doSetFeature( final Feature feature )
   {
     final Object value = feature.getProperty( getPropertyName() );
     getEditor().setValue( value );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.KalypsoFeature)
+   * @see org.kalypso.ogc.gml.table.celleditors.AbstractFeatureCellEditor#renderLabel(org.kalypso.ogc.gml.Feature)
    */
-  public String renderLabel( KalypsoFeature feature )
+  public String renderLabel( Feature feature )
   {
     final TimeseriesLink link = (TimeseriesLink)feature.getProperty( getPropertyName() );
     return link == null ? "<kein Wert>" : "Zeitreihe: " + link.getHref();

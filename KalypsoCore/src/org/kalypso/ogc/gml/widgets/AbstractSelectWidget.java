@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
@@ -103,7 +103,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         JMSelector selector = new JMSelector( getSelectionMode() );
         GM_Position pointSelect = GeometryFactory.createGM_Position( g1x, g1y );
 
-        KalypsoFeature fe = selector.selectNearest( pointSelect, gisRadius, (KalypsoFeatureLayer)activeLayer, false,
+        Feature fe = selector.selectNearest( pointSelect, gisRadius, (KalypsoFeatureLayer)activeLayer, false,
             mapPanel.getSelectionID() );
         List listFe = new ArrayList();
         if( fe != null )
@@ -150,7 +150,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )
     {
-      KalypsoFeature fe = (KalypsoFeature)listFe.get( 0 );
+      Feature fe = (Feature)listFe.get( 0 );
       command = new SingleSelectCommand( fe, selectionId, activeLayer, getAllKalypsoFeatureLayers() );
     }
     else

@@ -7,12 +7,16 @@ package org.kalypso.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 
-import org.eclipse.swt.*;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;

@@ -2,9 +2,9 @@ package org.kalypso.ogc.gml.table;
 
 import java.util.Map;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.util.command.ICommand;
@@ -32,7 +32,7 @@ public class LayerTableCellModifier implements ICellModifier
   }
 
   /**
-   * Gibt das Feature zurück
+   * Gibt das Feature zur?ck
    * 
    * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
@@ -49,7 +49,7 @@ public class LayerTableCellModifier implements ICellModifier
   public void modify( final Object element, final String property, final Object map )
   {
     final TableItem tableItem = (TableItem)element;
-    final KalypsoFeature  feature = (KalypsoFeature)tableItem.getData();
+    final Feature  feature = (Feature)tableItem.getData();
     final IKalypsoLayer layer = m_viewer.getTheme().getLayer();
     
     final ICommand command = new ModifyFeatureCommand( layer, feature, (Map)map );

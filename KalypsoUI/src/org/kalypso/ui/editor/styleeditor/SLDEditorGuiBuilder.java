@@ -16,6 +16,7 @@ import org.deegree.graphics.sld.PolygonSymbolizer;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -35,7 +36,6 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.editor.styleeditor.RuleCollection;
 import org.kalypso.editor.styleeditor.RuleFilterCollection;
 import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.event.ModellEvent;
@@ -259,7 +259,7 @@ public class SLDEditorGuiBuilder {
 					
 					if(layer instanceof KalypsoFeatureLayer)
 					{
-						KalypsoFeature[] fts = ((KalypsoFeatureLayer)layer).getAllFeatures();
+						Feature[] fts = ((KalypsoFeatureLayer)layer).getAllFeatures();
 						double minValue = -1;
 						double maxValue = -1;
 						double value;

@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.util.command.ICommand;
 
@@ -17,12 +17,12 @@ import org.kalypso.util.command.ICommand;
 public class ModifyFeatureCommand implements ICommand
 {
   private final IKalypsoLayer m_layer;
-  private final KalypsoFeature m_feature;
+  private final Feature m_feature;
   private final Map m_newMap;
   private final Map m_oldMap = new HashMap();
   
 
-  public ModifyFeatureCommand( final IKalypsoLayer layer, final KalypsoFeature feature, final Map map )
+  public ModifyFeatureCommand( final IKalypsoLayer layer, final Feature feature, final Map map )
   {
     m_layer = layer;
     m_feature = feature;
@@ -72,7 +72,7 @@ public class ModifyFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Wert ändern";
+    return "Wert ?ndern";
   }
 
   private void setFeatureProperty( final Map map )

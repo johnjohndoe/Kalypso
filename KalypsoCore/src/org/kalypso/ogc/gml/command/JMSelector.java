@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.model.geometry.GM_Surface;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 
 /**
  * DOCUMENT ME!
  * 
- * @author von Dömming
+ * @author von D?mming
  */
 public class JMSelector
 {
@@ -53,7 +53,7 @@ public class JMSelector
     final Iterator iterator = listFe.iterator();
     while( iterator.hasNext() )
     {
-      final KalypsoFeature fe = (KalypsoFeature)iterator.next();
+      final Feature fe = (Feature)iterator.next();
 
       switch( mySelectionMode )
       {
@@ -99,7 +99,7 @@ public class JMSelector
 
       while( containerIterator.hasNext() )
       {
-        final KalypsoFeature fe = (KalypsoFeature)containerIterator.next();
+        final Feature fe = (Feature)containerIterator.next();
 
         if( ( selectWithinBoxStatus && bbox.contains( fe.getDefaultGeometryProperty() ) )
             || ( !selectWithinBoxStatus && bbox.intersects( fe.getDefaultGeometryProperty() ) ) )
@@ -129,7 +129,7 @@ public class JMSelector
 
     while( containerIterator.hasNext() )
     {
-      KalypsoFeature feature = (KalypsoFeature)containerIterator.next();
+      Feature feature = (Feature)containerIterator.next();
 
       try
       {
@@ -164,15 +164,15 @@ public class JMSelector
     return resultDE;
   }
 
-  public KalypsoFeature selectNearest( final GM_Position pos, final double r, final KalypsoFeatureLayer layer,
+  public Feature selectNearest( final GM_Position pos, final double r, final KalypsoFeatureLayer layer,
       final boolean withinStatus, final int selectionId )
   {
-    KalypsoFeature result = null;
+    Feature result = null;
     double dist = 0;
     final List listFE = select( pos, r, layer, withinStatus, selectionId );
     for( int i = 0; i < listFE.size(); i++ )
     {
-      KalypsoFeature fe = (KalypsoFeature)listFE.get( i );
+      Feature fe = (Feature)listFE.get( i );
       if( result == null
           || result.getDefaultGeometryProperty().distance( fe.getDefaultGeometryProperty() ) < dist )
         result = fe;

@@ -11,7 +11,6 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Position;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
@@ -62,7 +61,7 @@ public class EditFeatureWidget extends AbstractWidget
 
         final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
 
-        final KalypsoFeature fe = selector.selectNearest( position, gisRadius, featureLayer, false,
+        final Feature fe = selector.selectNearest( position, gisRadius, featureLayer, false,
             -1 );
 
         editFeature( featureLayer, fe );
