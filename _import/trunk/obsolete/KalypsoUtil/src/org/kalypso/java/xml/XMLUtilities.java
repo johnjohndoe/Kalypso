@@ -46,20 +46,26 @@ import org.w3c.dom.Text;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * @author doemming
+ */
 public class XMLUtilities
 {
-
- /*
-   * 
-   *  @author doemming
-   */
-  
   public static String removeXMLHeader( String xmlString )
   {
     return xmlString.replaceFirst( "<\\?.+?\\?>", "" );
   }
 
-
+  /**
+   * TODO Andreas, diese Methode wird scheinbar nur von
+   * WQFilterUtilities.createWQFilterInline() und
+   * UpdateHelper.createInterpolationFilter() aufgerufen, und beinhaltet
+   * ausserdem 'filter'-spezifische Tags. Sollte es nicht besser in
+   * WQFilterUtilities verschoben werden?
+   * 
+   * @param xmlString
+   * @return
+   */
   public static String prepareInLine( String xmlString )
   {
     String result = xmlString.replaceAll( "\n", "" );

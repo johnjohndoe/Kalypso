@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<repository
-		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
-		conf="D:/Programme/Kalypso/data/mirrored/WeisseElsterFlussPegel#*.zml"
-		name="FlussPegel" />
+		factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"
+		name="psicompact" />
 	<repository
 		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
 		conf="D:/Programme/Kalypso/data/mirrored/WeisseElsterVorhersage#*.zml"
 		readOnly="true"
 		name="Vorhersage" />
-	<repository
-		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
-		conf="D:/Programme/Kalypso/data/mirrored/KalypsoNA"
-		name="WeisseElster" />
-	<repository
-		factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"
-		name="psicompact" />
 	<repository
 		factory="org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory"
 		conf="D:/Programme/Kalypso/data/mirrored/Gebietsniederschlag/gebietsNiederschlagRep.xml"

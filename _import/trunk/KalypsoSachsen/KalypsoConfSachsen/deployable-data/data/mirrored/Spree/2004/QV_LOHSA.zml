@@ -10,4 +10,7 @@
     <axis datatype="TYPE=xs:double" key="false" name="Abfluss" type="Q" unit="m³/s">
         <valueArray separator=";">0;0;0;0;0;1;15;15;15;15;10;10;5;5;5;1;1;1;1;0;0;0;0;0;0;0;0;0;0;0</valueArray>
     </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Abfluss" type="kalypso-status" unit="">
+		<valueArray separator=";">1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1</valueArray>
+	</axis>
 </observation>
