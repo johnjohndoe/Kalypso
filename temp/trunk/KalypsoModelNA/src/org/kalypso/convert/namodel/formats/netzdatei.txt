@@ -9,3 +9,5 @@
 (zproz,f10.3)(ikz,i8)
 # 
 (zproz,a)_(ikz,a)
+(num,i8)
+(inum,i8)

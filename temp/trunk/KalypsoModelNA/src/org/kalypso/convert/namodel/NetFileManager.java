@@ -26,13 +26,13 @@ import org.deegree_impl.model.feature.FeatureFactory;
 public class NetFileManager extends AbstractManager
 {
 
-  private final FeatureType m_nodeFT;
+  final FeatureType m_nodeFT;
 
   private final FeatureType m_vChannelFT;
 
   private final FeatureType m_kmChannelFT;
 
-  private final FeatureType m_catchmentFT;
+  final FeatureType m_catchmentFT;
 
   public NetFileManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
@@ -301,6 +301,7 @@ public class NetFileManager extends AbstractManager
       final NetElement upStreamElement = (NetElement)netElements.get( channel.getId() );
       final NetElement downStreamElement = (NetElement)netElements
           .get( downStreamChannelFE.getId() );
+
       downStreamElement.addUpStream( upStreamElement );
     }
     //     ez -> ez
@@ -352,7 +353,9 @@ public class NetFileManager extends AbstractManager
     Feature rootChannel = workspace.resolveLink( rootNodeFE, "downStreamChannelMember" );
     NetElement rootElement = (NetElement)netElements.get( rootChannel.getId() );
     //    netElements
-    rootElement.berechne( rootChannel );
+    StringBuffer buffer = new StringBuffer();
+    rootElement.berechne( workspace, buffer );
+    System.out.println( buffer.toString() );
   }
 
   public class NetElement
@@ -367,22 +370,27 @@ public class NetFileManager extends AbstractManager
 
     private final Feature m_channelFE;
 
+    private static final String ANFANGSKNOTEN = "    9001";
+
     public NetElement( Feature channelFE )
     {
       m_channelFE = channelFE;
     }
 
-    public void berechne( Feature parentFE )
+    public Feature getChannel()
     {
-//      System.out.println( "\nworking..." + parentFE.getId() + " -> " + m_channelFE.getId() );
-      // berechne upstream
+      return m_channelFE;
+    }
+
+    public void berechne( GMLWorkspace workspace, StringBuffer buffer )
+    {
       for( Iterator iter = m_upStreamDepends.iterator(); iter.hasNext(); )
       {
         NetElement element = (NetElement)iter.next();
-        element.berechne( m_channelFE );
+        element.berechne( workspace, buffer );
       }
       // berechne mich
-      write();
+      write( workspace, buffer );
     }
 
     private void addDownStream( NetElement downStreamElement )
@@ -398,9 +406,44 @@ public class NetFileManager extends AbstractManager
       upStreamElement.addDownStream( this );
     }
 
-    public void write()
+    public void write( GMLWorkspace workspace, StringBuffer buffer )
     {
       System.out.println( "calculate: " + m_channelFE.getId() );
+      // obererknoten:
+      Feature[] features = workspace.getFeatures( m_nodeFT );
+      Feature knotO = null;
+      for( int i = 0; i < features.length; i++ )
+      {
+        if( m_channelFE == workspace.resolveLink( features[i], "downStreamChannelMember" ) )
+        {
+          knotO = features[i];
+          continue;
+        }
+      }
+      List catchmentList = new ArrayList();
+      Feature[] Cfeatures = workspace.getFeatures( m_catchmentFT );
+      for( int i = 0; i < Cfeatures.length; i++ )
+      {
+        if( m_channelFE == workspace.resolveLink( Cfeatures[i], "entwaesserungsStrangMember" ) )
+          catchmentList.add( Cfeatures[i] );
+      }
+
+      // unterer knoten
+      Feature knotU = workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
+
+      buffer.append( toAscci( m_channelFE, 12 ) );
+      if( knotO != null )
+        buffer.append( toAscci( knotO, 11 ) );
+      else
+        buffer.append( ANFANGSKNOTEN );
+      buffer.append( toAscci( knotU, 11 ) );
+      buffer.append( " " + catchmentList.size() + "\n" );
+      for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
+      {
+        Feature catchmentFE = (Feature)iter.next();
+        buffer.append( toAscci( catchmentFE, 12 ) + "\n" );
+      }
+
     }
   }
 }
