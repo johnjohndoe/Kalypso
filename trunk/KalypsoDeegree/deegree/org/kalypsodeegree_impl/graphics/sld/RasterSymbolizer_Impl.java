@@ -71,6 +71,7 @@ import javax.xml.bind.Marshaller;
 import net.opengis.sld.ObjectFactory;
 
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.Interval;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.xml.Marshallable;
@@ -89,6 +90,8 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 {
 
   private TreeMap m_colorMap = null;
+
+  private Geometry m_geometry = null;
 
   private final int mode_intervalColorMapping = 0;
 
@@ -109,6 +112,16 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   public void setColorMap( TreeMap colorMap )
   {
     m_colorMap = colorMap;
+  }
+
+  public Geometry getGeometry()
+  {
+    return m_geometry;
+  }
+
+  public void setGeometry( Geometry geometry )
+  {
+    m_geometry = geometry;
   }
 
   public int getMode()
@@ -151,7 +164,8 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     {
       ObjectFactory fac = new ObjectFactory();
       Marshaller marshaller = fac.createMarshaller();
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      //marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE
+      // );
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();
       if( m_colorMap != null )
       {
@@ -169,7 +183,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       marshaller.marshal( rasterSymbolizerElement, writer );
       writer.close();
       //System.out.println( writer.toString() );
-      return (writer.toString()).replaceFirst("<?.*?>", "");
+      return (( writer.toString() ).replaceFirst( "<?.*?>", "" )).trim();
     }
     catch( Exception e )
     {

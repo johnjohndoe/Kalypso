@@ -1714,7 +1714,7 @@ public class SLDFactory
       Unmarshaller unmarshaller = fac.createUnmarshaller();
       net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = (net.opengis.sld.RasterSymbolizer)unmarshaller
           .unmarshal( element );
-      // TODO implement other properties like geometry and opacity
+      //Geometry geometry = createGeometry(rasterSymbolizerElement.getGeometry());
       TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
       return new RasterSymbolizer_Impl( colorMap );
     }
@@ -1724,6 +1724,11 @@ public class SLDFactory
       return null;
     }
   }
+  
+  /*private static Geometry createGeometry(net.opengis.sld.GeometryType geometryType){
+    List propertyNames = geometryType.getPropertyName().getContent();
+    return new Geometry_Impl((String)propertyNames.get(0),null);
+  }*/
 
   private static TreeMap createColorMap( net.opengis.sld.ColorMapType colorMapType )
   {
