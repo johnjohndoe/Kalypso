@@ -22,6 +22,7 @@ import org.kalypso.ogc.sensor.zml.values.ValueArray;
 import org.kalypso.ogc.sensor.zml.values.ValueLink;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.parser.ParserFactory;
+import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
@@ -117,7 +118,7 @@ public class ZmlFactory
    * 
    * @throws FactoryException
    */
-  public static ObservationType createXML( final IObservation obs ) throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IVariableArguments args ) throws FactoryException
   {
     try
     {
@@ -141,7 +142,7 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      final ITuppleModel values = obs.getValues( null );
+      final ITuppleModel values = obs.getValues( args );
 
       final List axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();

@@ -16,12 +16,12 @@ public class ObservationBean extends ItemBean
 
   public ObservationBean()
   {
-    this( 0, "", null );
+    this( "", "", "", null );
   }
   
-  public ObservationBean( final int id, final String name, final Map metadata )
+  public ObservationBean( final String id, final String name, final String repId, final Map metadata )
   {
-    super( id, name );
+    super( id, name, repId );
     
     m_metadataList = metadata;
   }

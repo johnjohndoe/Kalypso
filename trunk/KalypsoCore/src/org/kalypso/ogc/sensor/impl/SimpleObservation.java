@@ -98,4 +98,12 @@ public class SimpleObservation implements IObservation
 
     m_values = values;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_name;
+  }
 }

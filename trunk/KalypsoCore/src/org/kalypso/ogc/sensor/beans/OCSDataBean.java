@@ -7,49 +7,49 @@ import java.io.Serializable;
  * 
  * @author schlienger
  */
-public class ObservationDataDescriptorBean implements Serializable
+public class OCSDataBean implements Serializable
 {
-  private String m_location;
+  private String m_obsId;
 
-  private String m_format;
+  private String m_location;
 
   private int m_id;
 
-  public ObservationDataDescriptorBean()
+  public OCSDataBean()
   {
     this( 0, "", "" );
   }
 
-  public ObservationDataDescriptorBean( final int id, final String location, final String format )
+  public OCSDataBean( final int id, final String obsId, final String location )
   {
     m_id = id;
+    m_obsId = obsId;
     m_location = location;
-    m_format = format;
   }
 
   public int getId()
   {
     return m_id;
   }
-  
+
   public void setId( int id )
   {
     m_id = id;
   }
-  
+
+  public String getObsId()
+  {
+    return m_obsId;
+  }
+
+  public void setObsId( String id )
+  {
+    m_obsId = id;
+  }
+
   public String getLocation()
   {
     return m_location;
-  }
-
-  public String getFormat()
-  {
-    return m_format;
-  }
-
-  public void setFormat( String format )
-  {
-    m_format = format;
   }
 
   public void setLocation( String location )

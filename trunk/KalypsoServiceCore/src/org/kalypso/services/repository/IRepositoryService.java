@@ -29,4 +29,14 @@ public interface IRepositoryService extends Remote
    * when the parent has no children.
    */
   public ItemBean[] getChildren( final ItemBean parent ) throws RemoteException;
+  
+  /**
+   * Returns ItemBean if found, else throws exception. 
+   */
+  public ItemBean findItem( final String id ) throws RemoteException;
+  
+  /**
+   * Forces the refresh of the remote repository.
+   */
+  public void reload() throws RemoteException;
 }

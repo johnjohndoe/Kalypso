@@ -39,6 +39,8 @@ public class ZmlObservation implements IObservation
   protected final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
 
   private final URL m_url;
+  
+  private final String m_identifier;
 
   private final SimpleObservation m_observation;
 
@@ -57,7 +59,7 @@ public class ZmlObservation implements IObservation
   public ZmlObservation( final File file ) throws MalformedURLException, JAXBException,
       IOException, SensorException
   {
-    this( file.toURL() );
+    this( file.toURL(), file.getAbsolutePath() );
   }
 
   /**
@@ -67,8 +69,9 @@ public class ZmlObservation implements IObservation
    * @throws IOException
    * @throws SensorException
    */
-  public ZmlObservation( final URL url ) throws JAXBException, IOException, SensorException
+  public ZmlObservation( final URL url, final String identifier ) throws JAXBException, IOException, SensorException
   {
+    m_identifier = identifier;
     m_url = url;
 
     Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
@@ -159,5 +162,13 @@ public class ZmlObservation implements IObservation
   public String toString()
   {
     return m_observation.toString();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_identifier;
   }
 }
