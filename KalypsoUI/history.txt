@@ -29,8 +29,12 @@ Version ...
 	fill ist gesetzt, dann werden lauter 'default' Werte im angegebenen Datumbereich
 	erzeugt.
 
-- PSICompactImlp: unsere Fake Implementation basiert jetzt auf ZMLs die in der Jar
+- PSICompactImpl: unsere Fake Implementation basiert jetzt auf ZMLs die in der Jar
 	über die PSICompact ID-Liste verknüpft sind.
+	
+- Diagramm und Grafik-Tool:
+	* N wird als durchsichtige Balke dargestellt
+	* Alarmstufen, Prognosestart werden dargestellt
 	
 - GIS Darstellung:
 	Koordinatensystem aller Karten ist jetzt Gauss-Krüger 5
