@@ -157,7 +157,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   {
     final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 
-    String text = "<Keim Element selektiert>";
+    String text = "<Kein Element selektiert>";
     if( !selection.isEmpty() )
       text = selection.getFirstElement().toString();
     m_metaViewer.setText( text );

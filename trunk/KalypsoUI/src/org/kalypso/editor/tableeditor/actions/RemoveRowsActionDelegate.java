@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.command.RemoveRowsCommand;
-import org.kalypso.java.lang.Arrays;
+import org.kalypso.java.util.Arrays;
 
 /**
  * @author bce
