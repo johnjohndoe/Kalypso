@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import javax.xml.rpc.ServiceException;
 
 import org.kalypso.repository.AbstractRepository;
+import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.proxy.IObservationService;
@@ -12,6 +13,8 @@ import org.kalypso.services.proxy.ItemBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
+ * Repository of the Observation Service.
+ * 
  * @author schlienger
  */
 public class ObservationServiceRepository extends AbstractRepository
@@ -26,9 +29,9 @@ public class ObservationServiceRepository extends AbstractRepository
    * 
    * @throws ServiceException when the underlying service is not available
    */
-  public ObservationServiceRepository( final boolean readOnly ) throws ServiceException
+  public ObservationServiceRepository( final IRepositoryFactory factory, final boolean readOnly ) throws ServiceException
   {
-    super( "", readOnly );
+    super( factory, "", readOnly );
     
     m_srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
     

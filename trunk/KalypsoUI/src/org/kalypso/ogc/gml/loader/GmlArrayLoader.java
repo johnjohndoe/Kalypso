@@ -135,4 +135,13 @@ public final class GmlArrayLoader extends AbstractLoader
       throw new LoaderException( "Fehler beim Schriben der GML-Datei", e );
     }
   }
+
+  /**
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
+  {
+    // TODO: currently unsupported, remove deprecated one and implement this one
+    throw new UnsupportedOperationException();
+  }
 }

@@ -178,6 +178,8 @@ public class ResourcePool implements ILoaderListener
 
   /**
    * Erzeugt ein Objekt anhand seines Typs. Benutzt den entsprechenden ILoader.
+   * 
+   * TODO: remove project stuff once refactoring is complete
    */
   private Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
       throws Exception
@@ -186,9 +188,18 @@ public class ResourcePool implements ILoaderListener
 
     final ILoader loader = getLoader( type );
 
-    final Object object = loader.load( key.getSource(), key.getProject(), monitor );
-
-    return object;
+    try
+    {
+      final Object object = loader.load( key.getSource(), key.getProject(), monitor );
+      
+      return object;
+    }
+    catch( UnsupportedOperationException e )
+    {
+      final Object object = loader.load( key.getSource(), key.getContext(), monitor );
+      
+      return object;
+    }
   }
 
   private ILoader getLoader( final String type ) throws FactoryException

@@ -31,6 +31,15 @@ public class WmsLoader extends AbstractLoader
   }
 
   /**
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
+  {
+    // TODO: currently unsupported, remove deprecated one and implement this one
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
    *      org.eclipse.core.resources.IProject,
    *      org.eclipse.core.runtime.IProgressMonitor)

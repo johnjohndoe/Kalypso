@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.loader;
 
+import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
@@ -36,6 +37,15 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
     super.dispose();
     
     m_gmlArrayPool.removePoolListener( this );
+  }
+
+  /**
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
+  {
+    // TODO: currently unsupported, remove deprecated one and implement this one
+    throw new UnsupportedOperationException();
   }
 
   /**

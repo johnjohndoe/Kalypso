@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.view.propertySource;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.util.adapter.IAdaptable;
 
 /**
@@ -19,7 +20,8 @@ public class ObservationPropertySourceProvider implements IPropertySourceProvide
   {
     if( object instanceof IAdaptable )
     {
-      IObservation obs = (IObservation)((IAdaptable)object).getAdapter( IObservation.class );
+//      final IObservation obs = (IObservation)((IAdaptable)object).getAdapter( IObservation.class );
+      final IObservation obs = ObservationCache.getObservationFor( (IAdaptable)object );
       if( obs == null )
         return null;
       

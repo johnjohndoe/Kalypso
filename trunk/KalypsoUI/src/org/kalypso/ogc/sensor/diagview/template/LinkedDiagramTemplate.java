@@ -1,11 +1,11 @@
 package org.kalypso.ogc.sensor.diagview.template;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
@@ -28,13 +28,13 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
 {
   private final DiagramTemplate m_template;
 
-  private final IProject m_project;
-
   private boolean m_useResolver = true;
 
-  public LinkedDiagramTemplate( final ObsdiagviewType obsDiagView, final IProject project )
+  private final URL m_context;
+
+  public LinkedDiagramTemplate( final ObsdiagviewType obsDiagView, final URL context )
   {
-    m_project = project;
+    m_context = context;
 
     final String title = obsDiagView.getTitle();
 
@@ -67,7 +67,7 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
     {
       // resolve the links!
       new LinkResolver( (LinkedDiagramCurve[])curves.toArray( new LinkedDiagramCurve[0] ),
-          IObservation.class, project, this );
+          IObservation.class, m_context, this );
     }
   }
 
@@ -122,7 +122,7 @@ public class LinkedDiagramTemplate implements IDiagramTemplate, ILinkResolverLis
     {
       // resolve link curve before adding curve to template!
       new LinkResolver( new LinkedDiagramCurve[]
-        { (LinkedDiagramCurve)curve }, IObservation.class, m_project, this );
+        { (LinkedDiagramCurve)curve }, IObservation.class, m_context, this );
     }
     else
       m_template.addCurve( curve );

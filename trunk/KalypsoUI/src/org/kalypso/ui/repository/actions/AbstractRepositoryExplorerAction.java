@@ -50,8 +50,11 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
     return m_explorer.getSite().getShell();
   }
   
+  /**
+   * Returns the repository container
+   */
   protected IRepositoryContainer getRepositoryContainer()
   {
-    return m_explorer.getReposiryContainer();
+    return m_explorer.getRepositoryContainer();
   }
 }

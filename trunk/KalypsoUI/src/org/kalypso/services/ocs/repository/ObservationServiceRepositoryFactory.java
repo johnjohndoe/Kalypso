@@ -28,7 +28,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
   {
     try
     {
-      return new ObservationServiceRepository( isReadOnly() );
+      return new ObservationServiceRepository( this, isReadOnly() );
     }
     catch( ServiceException e )
     {
