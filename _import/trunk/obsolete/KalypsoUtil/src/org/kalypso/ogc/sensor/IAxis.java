@@ -13,6 +13,7 @@ public interface IAxis
   
   public String getLabel();
   
+  // TODO: Überlegungen für Tupples!
   public List getValues();
   
   public void setValues( List values );

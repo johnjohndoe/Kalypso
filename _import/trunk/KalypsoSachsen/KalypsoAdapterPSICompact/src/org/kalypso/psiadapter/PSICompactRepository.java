@@ -36,7 +36,7 @@ public class PSICompactRepository extends AbstractRepository
       {
         System.out.println( "Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
-        m_psiRoot = new PSICompactItem( null, "psi" );
+        m_psiRoot = new PSICompactItem( null, "psi", new ObjectInfo("psi", "psi root") );
       }
       else
         m_psiRoot = nodeMeasurements;
@@ -94,9 +94,9 @@ public class PSICompactRepository extends AbstractRepository
 
           // TRICK #2: nur die Leafs von der PSICompact Struktur sind Zeitreihen
           if( i == path.length - 1 )
-            n = new PSICompactTimeserieItem( parent, path[i], info, valueType );
+            n = new PSICompactObservationItem( parent, path[i], info, valueType );
           else
-            n = new PSICompactItem( parent, path[i] );
+            n = new PSICompactItem( parent, path[i], info );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht, deswegen hier)
           if( parent != null )
@@ -131,6 +131,11 @@ public class PSICompactRepository extends AbstractRepository
     return m_psiRoot.getChildren();
   }
   
+  /**
+   * Helper class. Wird benutzt um ObjectInfo zu sortieren. Siehe TRICKs in der Hauptklasse.
+   * 
+   * @author schlienger
+   */
   private static final class ObjectInfoComparator implements Comparator
   {
     /**
