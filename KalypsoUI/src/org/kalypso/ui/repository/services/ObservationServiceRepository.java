@@ -30,6 +30,15 @@ public class ObservationServiceRepository extends AbstractRepository
     super();
     
     m_srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+    
+    try
+    {
+      m_location = m_srv.getDescription();
+    }
+    catch( RemoteException e )
+    {
+      throw new ServiceException( e );
+    }
   }
 
   /**
