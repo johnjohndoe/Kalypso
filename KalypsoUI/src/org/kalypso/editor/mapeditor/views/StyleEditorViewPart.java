@@ -1,7 +1,5 @@
 package org.kalypso.editor.mapeditor.views;
 
-
-import org.deegree.graphics.Layer;
 import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -22,9 +20,6 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 public class StyleEditorViewPart extends ViewPart implements ISelectionChangedListener {
 
-//	private Label label = null;
-
-	private boolean test = true;
 	
 	private GisMapOutlinePage gmop = null;
 	
