@@ -76,7 +76,7 @@ public class RainTimeSeries extends SimpleTimeSeries
     public void toAsciiFile(File outputFile)
 	throws IOException
     {
-	toAsciiFile(outputFile," ","dd MM yyyy HH mm ss","##########0.00");
+	toAsciiFile(outputFile," ","dd.MM.yyyy HH:mm:ss","##########0.00");
     }
 
     
