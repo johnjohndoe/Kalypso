@@ -58,7 +58,7 @@ public class SliderPanel {
 		if(inc>=maximum)
 			this.increment = max/10;
 		else
-			this.increment = inc*100;
+			this.increment = inc*100;		
 		if(value != -1 && value<=maximum)
 			setSelection(value);
 		else if(value>maximum)
@@ -67,7 +67,7 @@ public class SliderPanel {
 	}
 	// selection 1-15
 	public void setSelection(double selection){
-		this.selection = selection;
+		this.selection = selection;		
 		if(format == DECIMAL)
 			text.setText(""+selection);
 		else
