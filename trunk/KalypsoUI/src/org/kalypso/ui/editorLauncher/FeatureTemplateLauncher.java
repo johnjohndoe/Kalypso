@@ -57,7 +57,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
 
       final LayerType layer = factory.createFeaturetemplateTypeLayerType();
       layer.setId( file.toString() );
-      layer.setHref( "PATH=" + "project:/" + projectRelativePath );
+      layer.setHref( "project:/" + projectRelativePath );
       layer.setLinktype( "gml" );
       layer.setFeaturePath( "" ); // immer das root-feature
 
@@ -65,6 +65,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       featuretemplate.setLayer( layer );
 
       final Marshaller marshaller = factory.createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();
       marshaller.marshal( featuretemplate, w );

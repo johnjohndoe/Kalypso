@@ -26,6 +26,7 @@ public class ObservationLinkHandler implements ITypeHandler
   public ObservationLinkHandler() throws JAXBException
   {
   // nur da, um die exception zu werfen
+    m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
   }
 
   /**

@@ -1,16 +1,18 @@
 package org.kalypso.eclipse.core.resources;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
-import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IEncodedStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-
-import com.sun.xml.bind.StringInputStream;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author belger
  */
-public class StringStorage implements IStorage
+public class StringStorage implements IEncodedStorage
 {
   private final String m_data;
   private final IPath m_path;
@@ -22,11 +24,22 @@ public class StringStorage implements IStorage
   }
 
   /**
+   * @throws CoreException
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
-  public InputStream getContents()
+  public InputStream getContents() throws CoreException
   {
-    return new StringInputStream( m_data );
+    try
+    {
+      final byte[] bytes = m_data.getBytes( "UTF-8" );
+      return new ByteArrayInputStream( bytes );
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+      
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "", e ) );
+    }
   }
 
   /**
@@ -59,6 +72,15 @@ public class StringStorage implements IStorage
   public Object getAdapter( Class adapter )
   {
     return null;
+  }
+
+  /**
+   * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
+   */
+  public String getCharset()
+  {
+    // allways Unicode, because wie 
+    return "UTF-8";
   }
 
 }
