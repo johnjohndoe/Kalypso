@@ -102,7 +102,7 @@ public class ZmlTableExporter extends AbstractBerichtExporter
       final Object nameProp = feature.getProperty( featurename );
       final String name = nameProp == null ? "<unbekannt>" : nameProp.toString(); 
       
-      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Tabellenexport - " + name + ": ", null );
+      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ", null );
       TableViewUtils.applyXMLTemplate( view, xml, getContext(), true, result );
 
       new ExportableObservationTable( table ).exportDocument( os );

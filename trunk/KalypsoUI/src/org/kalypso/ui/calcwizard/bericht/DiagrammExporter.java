@@ -105,7 +105,7 @@ public class DiagrammExporter extends AbstractBerichtExporter
 
       tpl = new DiagView();
       
-      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Tabellenexport - " + name + ": ", null );
+      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ", null );
       DiagViewUtils.applyXMLTemplate( tpl, xml, getContext(), true, result );
 
       // diagramm refresh may take a while

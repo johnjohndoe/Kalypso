@@ -246,7 +246,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
     // clear selection
     final UnselectFeatureVisitor unselectvisitor = new UnselectFeatureVisitor( m_selectionID );
-    theme.getFeatureList().accept( unselectvisitor );
+    final FeatureList featureList = theme.getFeatureList();
+    if( featureList != null )
+      featureList.accept( unselectvisitor );
 
     final TableItem[] selection = getTable().getSelection();
     for( int i = 0; i < selection.length; i++ )

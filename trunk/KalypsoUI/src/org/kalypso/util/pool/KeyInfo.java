@@ -90,16 +90,20 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     m_loader.removeLoaderListener( this );
 
-    if( m_object != null )
-      m_loader.release( m_object );
+    synchronized( this )
+    {
+      if( m_object != null )
+        m_loader.release( m_object );
+    }
   }
 
   public void addListener( final IPoolListener l )
   {
     m_listeners.add( l );
 
-    if( m_object != null )
-      l.objectLoaded( m_key, m_object, Status.OK_STATUS );
+    final Object o = m_object;
+    if( o != null )
+      l.objectLoaded( m_key, o, Status.OK_STATUS );
     else if( getState() == Job.NONE )
       schedule();
   }
@@ -116,21 +120,37 @@ public final class KeyInfo extends Job implements ILoaderListener
   public void onLoaderObjectInvalid( final Object object, final boolean bCannotReload )
       throws Exception
   {
-    if( m_object == object )
+    Object oldObject = null;
+    synchronized( this )
     {
-      LOGGER.info( "Object invalid for key: " + m_key );
+      if( m_object == object )
+      {
+        LOGGER.info( "Object " + object + " invalid for key: " + m_key );
 
-      m_object = null;
+        m_object = null;
 
+        // nur Objekt invalidieren, wenn nicht neu geladen werden kann
+        // ansonsten einfach neu laden, dann werden die listener ja auch
+        // informiert
+        if( bCannotReload )
+          oldObject = object;
+        else
+        {
+          if( getState() == Job.NONE )
+            schedule();
+        }
+      }
+    }
+
+    if( oldObject != null )
+    {
       final IPoolListener[] ls = (IPoolListener[])m_listeners
           .toArray( new IPoolListener[m_listeners.size()] );
+
       // TRICKY: objectInvalid may add/remove PoolListener for this key,
       // so we cannot iterate over m_listeners
       for( int i = 0; i < ls.length; i++ )
-        ls[i].objectInvalid( m_key, object );
-
-      if( !bCannotReload && getState() == Job.NONE )
-        schedule();
+        ls[i].objectInvalid( m_key, oldObject );
     }
   }
 
@@ -139,16 +159,21 @@ public final class KeyInfo extends Job implements ILoaderListener
    */
   protected IStatus run( final IProgressMonitor monitor )
   {
-    final IStatus status = loadObject( monitor );
+    synchronized( this )
+    {
+      Object o = null;
+      final IStatus status = loadObject( monitor );
+      o = m_object;
 
-    final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners
-        .size()] );
-    // TRICKY: objectLoaded may add a new PoolListener for this key,
-    // so we cannot iterate over m_listeners
-    for( int i = 0; i < ls.length; i++ )
-      ls[i].objectLoaded( m_key, m_object, status );
+      final IPoolListener[] ls = (IPoolListener[])m_listeners
+          .toArray( new IPoolListener[m_listeners.size()] );
+      // TRICKY: objectLoaded may add a new PoolListener for this key,
+      // so we cannot iterate over m_listeners
+      for( int i = 0; i < ls.length; i++ )
+        ls[i].objectLoaded( m_key, o, status );
 
-    return status;
+      return status;
+    }
   }
 
   /**
@@ -156,18 +181,25 @@ public final class KeyInfo extends Job implements ILoaderListener
    */
   protected IStatus loadObject( final IProgressMonitor monitor )
   {
-    try
+    synchronized( this )
     {
-      LOGGER.info( "Loading object for key: " + m_key );
-      m_object = m_loader.load( m_key.getLocation(), m_key.getContext(), monitor );
-    }
-    catch( final Throwable e )
-    {
-      if( m_key.isIgnoreExceptions() )
-        return Status.CANCEL_STATUS;
+      try
+      {
+        LOGGER.info( "Loading object for key: " + m_key );
+        m_object = m_loader.load( m_key.getLocation(), m_key.getContext(), monitor );
+      }
+      catch( final Throwable e )
+      {
+        m_object = null;
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Laden einer Resource", e );
+        e.printStackTrace();
+
+        if( m_key.isIgnoreExceptions() )
+          return Status.CANCEL_STATUS;
+
+        return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+            "Fehler beim Laden einer Resource", e );
+      }
     }
 
     return Status.OK_STATUS;
@@ -180,7 +212,10 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public void saveObject( final IProgressMonitor monitor ) throws LoaderException
   {
-    m_loader.save( m_key.getLocation(), m_key.getContext(), monitor, m_object );
+    synchronized( this )
+    {
+      m_loader.save( m_key.getLocation(), m_key.getContext(), monitor, m_object );
+    }
   }
 
   public String toString()
@@ -190,7 +225,8 @@ public final class KeyInfo extends Job implements ILoaderListener
     if( m_object != null )
       b.append( "  pooled object (type): " + m_object.getClass().getName() + "\n" );
     else
-      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
+      b
+          .append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
     b.append( "  loader (type): " + m_loader.getClass().getName() + "\n" );
     b.append( "  key: " + m_key + "\n" );
     b.append( "  number of listeners: " + m_listeners.size() + "\n" );

@@ -282,6 +282,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( m_disposed )
       LOGGER.info( "Theme already disposed: " + this );
     
+    LOGGER.info( "Object loaded: " + key + "   -  Object: " + newValue );
+    
     try
     {
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -290,6 +292,11 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       {
         if( m_theme != null )
         {
+          // die alte selektion merken, falls das Thema gleich wieder geladen wird!
+          final FeatureList featureList = m_theme.getFeatureList();
+          m_lastSelectedFeaturesMap.clear();
+          featureList.accept( new QuerySelectionVisitor( m_lastSelectedFeaturesMap ) );
+
           m_theme.removeModellListener( this );
           m_theme.dispose();
           m_theme = null;
@@ -349,6 +356,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
+    LOGGER.info( "Object invalid: " + key + "   -  Object: " + oldValue );
+    
     m_loaded = false;
     
     if( m_theme == null )
@@ -358,6 +367,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       // die alte selektion merken, falls das Thema gleich wieder geladen wird!
       final FeatureList featureList = m_theme.getFeatureList();
+      m_lastSelectedFeaturesMap.clear();
       featureList.accept( new QuerySelectionVisitor( m_lastSelectedFeaturesMap ) );
       
       m_theme.removeModellListener( this );
