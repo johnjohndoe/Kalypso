@@ -57,21 +57,6 @@ public class PrognoseView extends ViewPart
   
   public PrognoseView()
   {
-    try
-    {
-      final URL url = BundleUtility.find( "org.kalypso.ui", "etc/modellist.xml" );
-      final InputSource inputSource = new InputSource( url.openStream() );
-      m_modellist = (Modellist)new ObjectFactory().createUnmarshaller().unmarshal(
-          inputSource );
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
   }
 
   public void dispose()
