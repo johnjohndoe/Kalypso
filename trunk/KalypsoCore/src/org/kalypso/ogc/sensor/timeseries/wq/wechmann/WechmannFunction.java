@@ -29,6 +29,9 @@ public class WechmannFunction
   }
 
   /**
+   * @param wp
+   * @param W
+   * @return Q
    * @see WechmannFunction#computeQ(double, double, double, double)
    * 
    * @throws WechmannException
@@ -44,17 +47,30 @@ public class WechmannFunction
    * Q = exp( ln( K1 ) + ln( W - W1 ) * K2 )
    * </pre>
    * 
+   * @param LNK1
+   * @param W
+   * @param W1
+   * @param K2
+   * @return Q
+   * 
    * @throws WechmannException if W - W1 <= 0
    */
   public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) throws WechmannException
   {
     if( W - W1 <= 0 )
-      throw new WechmannException( "Log 0 not valid (W - W1 <= 0)" );
+    {
+      // TODO: we thrown an exception before, but if W <= W1, then Q = 0. Please check this with an Hydrologue.
+      // throw new WechmannException( "Log 0 not valid (W - W1 <= 0)" );
+      return 0;
+    }
     
     return Math.exp( LNK1 + Math.log( W - W1 ) * K2 );
   }
 
   /**
+   * @param wp
+   * @param Q
+   * @return W
    * @see WechmannFunction#computeW(double, double, double, double)
    * 
    * @throws WechmannException
@@ -71,6 +87,11 @@ public class WechmannFunction
    * W = W1 + exp( ------------------ )
    *                       K2
    * </pre>
+   * @param W1
+   * @param Q
+   * @param LNK1
+   * @param K2
+   * @return W
    * 
    * @throws WechmannException when K2 = 0
    */

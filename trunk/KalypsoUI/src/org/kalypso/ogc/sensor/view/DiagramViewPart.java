@@ -33,19 +33,11 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
   private ObservationChart m_chart;
 
-  //private JFreeChart m_chart = null;
-
-  //protected final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
-
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
   {
-    //    m_chart = ChartFactory
-    //        .createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false, false, false
-    // );
-
     try
     {
       m_chart = new ObservationChart( m_template );
@@ -96,8 +88,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    //m_tsCol.removeAllSeries();
-
     m_template.removeAllCurves();
     
     final StructuredSelection selection = (StructuredSelection)event.getSelection();
@@ -163,74 +153,4 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   {
   // Siehe partActivated...
   }
-
-//  /**
-//   * Specific job for showing observation in diagram quickview.
-//   * 
-//   * @author schlienger
-//   */
-//  private class ShowObservationJob extends Job
-//  {
-//    private final IObservation m_obs;
-//
-//    public ShowObservationJob( final IObservation obs )
-//    {
-//      super( "Aktualisierung von Diagramm-QuickView" );
-//
-//      m_obs = obs;
-//
-//      setPriority( Job.SHORT );
-//    }
-//
-//    /**
-//     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-//     */
-//    protected IStatus run( IProgressMonitor monitor )
-//    {
-//      Calendar c = Calendar.getInstance();
-//
-//      Date to = c.getTime();
-//      c.add( Calendar.DAY_OF_YEAR, -31 );
-//      Date from = c.getTime();
-//
-//      m_template.setObservation( m_obs, new DateRangeArgument( from, to ) );
-//
-//      return Status.OK_STATUS;
-//    }
-//  }
 }
-
-//    /**
-//     * @see
-// org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-//     */
-//    protected IStatus run( IProgressMonitor monitor )
-//    {
-//      Calendar c = Calendar.getInstance();
-//
-//      Date to = c.getTime();
-//      c.add( Calendar.DAY_OF_YEAR, -31 );
-//      Date from = c.getTime();
-//
-//      try
-//      {
-//        // TODO: ok so mit der Collection von Series?
-//        List series = new ObservationTimeSeries( m_obs, new DateRangeArgument( from,
-// to ) )
-//            .getSeries();
-//
-//        for( Iterator it = series.iterator(); it.hasNext(); )
-//        {
-//          TimeSeries s = (TimeSeries)it.next();
-//
-//          m_tsCol.addSeries( s );
-//        }
-//      }
-//      catch( SensorException e )
-//      {
-//        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler beim
-// Laden der Diagrammdaten", e );
-//      }
-//      
-//      return Status.OK_STATUS;
-//    }

@@ -39,7 +39,16 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
     try
     {
-      final String id = strUrl.replaceFirst( SCHEME_OCS + ":", "" );
+      String id = strUrl.replaceFirst( SCHEME_OCS + ":", "" );
+      
+      // remove the ?... part of the URL that is supposed to contain filter specific stuff
+      // TODO: check if the char '?' will really be used. Maybe '#' is better since
+      // corresponds to the fragment part. Problem: cannot use '#' currently
+      // because part of the Kalypso URL stuff still uses it as property
+      // separator for the various template files...
+      final int ix = id.indexOf('?');
+      if( ix != -1)
+        id = id.substring( 0, ix );
 
       final ObservationBean ob = new ObservationBean( id, "", "", null );
 

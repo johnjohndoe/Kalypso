@@ -28,7 +28,8 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  * 
  * @author schlienger
  */
-public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
+public class TableViewPart extends ViewPart implements
+    ISelectionChangedListener, IPartListener
 {
   private final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
 
@@ -43,7 +44,8 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     m_template.addTemplateEventListener( m_table );
 
     // SWT-AWT Brücke für die Darstellung von JTable
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     m_table.setVisible( true );
@@ -58,21 +60,21 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     getSite().getPage().removePartListener( this );
 
     m_template.removeTemplateEventListener( m_table );
-    
+
     super.dispose();
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus()
+  public void setFocus( )
   {
-  // noch nix
+    // noch nix
   }
 
   /**
@@ -82,24 +84,24 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
     m_template.removeAllColumns();
 
-    final StructuredSelection selection = (StructuredSelection)event.getSelection();
+    final StructuredSelection selection = (StructuredSelection) event
+        .getSelection();
 
-    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
+    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
       return;
 
-    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
-    
-//    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
+    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
+
     final IObservation obs = ObservationCache.getObservationFor( item );
     if( obs == null )
       return;
 
-    final int days = Integer.valueOf( item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
+    final int days = Integer.valueOf(
+        item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) )
+        .intValue();
 
-//    synchronized( obs )
-//    {
-      m_template.setObservation( obs, false, DateRangeArgument.createFromPastDays( days ) );
-//    }
+    m_template.setObservation( obs, false, DateRangeArgument
+        .createFromPastDays( days ) );
   }
 
   /**
@@ -108,7 +110,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partActivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).addSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
   }
 
   /**
@@ -116,7 +118,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-  // nada
+    // nada
   }
 
   /**
@@ -125,7 +127,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
   /**
@@ -134,7 +136,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partDeactivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
   /**
@@ -142,43 +144,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void partOpened( IWorkbenchPart part )
   {
-  // Siehe partActivated...
+    // Siehe partActivated...
   }
-
-  //
-  //  /**
-  //   * Specific job for showing observation in table quickview.
-  //   *
-  //   * @author schlienger
-  //   */
-  //  private class ShowObservationJob extends Job
-  //  {
-  //    private final IObservation m_obs;
-  //
-  //    public ShowObservationJob( final IObservation obs )
-  //    {
-  //      super( "Aktualisierung von Tabelle-QuickView" );
-  //
-  //      m_obs = obs;
-  //
-  //      setPriority( Job.SHORT );
-  //    }
-  //
-  //    /**
-  //     * @see
-  // org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-  //     */
-  //    protected IStatus run( IProgressMonitor monitor )
-  //    {
-  //      Calendar c = Calendar.getInstance();
-  //      Date to = c.getTime();
-  //      c.add( Calendar.DAY_OF_YEAR, -31 );
-  //      Date from = c.getTime();
-  //
-  //      m_template.setObservation( m_obs, false, new DateRangeArgument( from, to )
-  // );
-  //
-  //      return Status.OK_STATUS;
-  //    }
-  //  }
 }
