@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.grafikmanual"
    name="Kalypso - Grafik - Manual"
-   version="0.0.3"
+   version="0.0.4"
    provider-name="kalypso.org">
 
    <requires>
@@ -17,4 +17,5 @@
             primary="true">
       </toc>
    </extension>
+
 </plugin>
