@@ -14,7 +14,7 @@
 	</Axis>
 	
 	<Axis name="Pegel" unit="m" datatype="xs:double">
-		<ValueLink xlink:type="simple" xlink:href="PATH=beispiel.zml.values/values.txt#COLUMN=2" xlink:actuate="onLoad"/>
+		<ValueLink separator=";" xlink:type="simple" xlink:href="PATH=file:///./beispiel.values#COLUMN=2" xlink:actuate="onLoad"/>
 	</Axis>
 
 </Observation>

@@ -25,6 +25,7 @@
 							<xs:complexType>
 								<xs:complexContent>
 									<xs:extension base="xlink:xlink-base">
+										<xs:attribute name="separator" type="xs:string" use="optional" default=";"/>
 									</xs:extension>
 								</xs:complexContent>
 					</xs:complexType>

@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor;
 
-import java.util.Date;
-import java.util.List;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder 
@@ -17,10 +16,9 @@ public interface IObservation
   
   public Metadata getMetadata();
   
-  public List getAxisList();
+  public IAxis[] getAxisList();
   
-  // TODO: arguments from and to are not so nice here? better Visitor pattern?
-  public ITuppleModel getValues( Date from, Date to ) throws SensorException;
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException;
   
   public void setValues( ITuppleModel values ) throws SensorException;
 }

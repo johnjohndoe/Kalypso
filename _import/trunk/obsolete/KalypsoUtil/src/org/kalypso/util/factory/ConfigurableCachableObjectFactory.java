@@ -15,12 +15,14 @@ import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
  * werden dann gecached und bei nochmaliger Anfrage erneut zurückgegeben.</p>
  * <p>Beim Erzeugen eines Objects kann zusätzlich angegeben werden, ob dieses von einer bestimmten Klasse ableiten soll.
  * Erfüllt das Object diese Forderung nicht wird eine Exception geworfen.</p>
+ * <p>
+ * Die Properties sind erweiterbar.
  *
  * @author schlienger
  */
 public class ConfigurableCachableObjectFactory
 {
-  private final Properties m_props;
+  private final Properties m_props = new Properties();
   private final Map m_objects = new Hashtable();
   private final boolean m_cache;
   private final ClassLoader m_classLoader;
@@ -32,7 +34,7 @@ public class ConfigurableCachableObjectFactory
    */
   public ConfigurableCachableObjectFactory( final Properties props, final boolean cache, final ClassLoader cl )
   {
-    m_props = props;
+    m_props.putAll(  props );
     m_cache = cache;
     m_classLoader = cl;
   }
@@ -69,5 +71,13 @@ public class ConfigurableCachableObjectFactory
   protected final Properties getProperties()
   {
     return m_props;
+  }
+  
+  /**
+   * Inserts the given properties in the main properties of this factory.
+   */
+  public void addProperties( Properties props )
+  {
+    m_props.putAll( props );
   }
 }

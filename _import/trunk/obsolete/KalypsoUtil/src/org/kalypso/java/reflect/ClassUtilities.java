@@ -1,5 +1,8 @@
 package org.kalypso.java.reflect;
 
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Utilities method on Class stuff
  * 
@@ -7,6 +10,8 @@ package org.kalypso.java.reflect;
  */
 public class ClassUtilities
 {
+  private static Properties m_typeToClassProps;
+
   /**
    * creates a new instance using reflection.
    * 
@@ -45,6 +50,50 @@ public class ClassUtilities
     }
   }
 
+  /**
+   * Returns the Class that corresponds to the given type. Uses the mapping
+   * defined in the type2class.map.ini file if no mapping is provided.
+   * 
+   * @param type the type to look for
+   * @param mapping [optional] if not null, uses this mapping to resolve class name
+   * @throws ClassNotFoundException
+   */
+  public static Class typeToClass( final String type, final Properties mapping ) throws ClassNotFoundException
+  {
+    Properties typeMapping = mapping == null ? getTypeToClassProperties() : mapping;
+    
+    return Class.forName( typeMapping.getProperty(type) );
+  }
+  
+  
+  /**
+   * Helper that loads the properties for type mapping
+   */
+  private static Properties getTypeToClassProperties()
+  {
+    if( m_typeToClassProps == null )
+    {
+      m_typeToClassProps = new Properties();
+      
+      try
+      {
+        m_typeToClassProps.load( ClassUtilities.class.getResourceAsStream( "type2class.map.ini" ) );
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+        throw new RuntimeException( e );
+      }
+    }
+    
+    return m_typeToClassProps;
+  }
+  
+  /**
+   * An Exception that can occur using the upper class
+   * 
+   * @author schlienger
+   */
   public static class ClassUtilityException extends Exception
   {
     public ClassUtilityException()

@@ -1,11 +1,10 @@
 package org.kalypso.ogc.sensor.zml;
 
-import java.text.ParseException;
-import java.util.List;
-import java.util.Vector;
-
+import org.kalypso.java.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.DefaultAxis;
-import org.kalypso.util.xml.SchemaUtils;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.zml.values.IZmlValuesProvider;
+import org.kalypso.ogc.sensor.zml.values.ZmlValueFactory;
 import org.kalypso.zml.AxisType;
 
 /**
@@ -16,11 +15,12 @@ import org.kalypso.zml.AxisType;
 public class ZmlAxis extends DefaultAxis
 {
   private final AxisType m_axisType;
+  private IZmlValuesProvider m_values = null;
 
-  public ZmlAxis( final AxisType axisType, final int position )
+  public ZmlAxis( final AxisType axisType, final int position ) throws ClassNotFoundException
   {
     super( axisType.getName(), axisType.getUnit(),
-        SchemaUtils.typeToClass( axisType.getDatatype() ), false, position );
+        ClassUtilities.typeToClass( axisType.getDatatype(), null ), false, position );
 
     m_axisType = axisType;
   }
@@ -30,16 +30,13 @@ public class ZmlAxis extends DefaultAxis
     return m_axisType;
   }
   
-  public List getValues( )
+  public void fetchValues() throws SensorException
   {
-    try
-    {
-      return ZmlFactory.createLoader( m_axisType ).load( this );
-    }
-    catch( ParseException e )
-    {
-      e.printStackTrace();
-      return new Vector();
-    }
+    m_values = ZmlValueFactory.createLoader( m_axisType, this ).load( );
+  }
+  
+  public IZmlValuesProvider getValues()
+  {
+    return m_values;
   }
 }

@@ -1,18 +1,22 @@
 package org.kalypso.psiadapter;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Vector;
 
+import org.kalypso.ogc.sensor.DateRangeArgument;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITarget;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.Metadata;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.util.runtime.IVariableArguments;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
-import de.psi.go.lhwz.PSICompact.*;
+import de.psi.go.lhwz.PSICompact.ArchiveData;
+import de.psi.go.lhwz.PSICompact.ObjectInfo;
+import de.psi.go.lhwz.PSICompact.ObjectMetaData;
+import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
  * Eine Observation aus PSICompact was auch ein Repository Item ist.
@@ -33,7 +37,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /** Metadaten für die Observation */
   private Metadata m_metadata = null;
 
-  private List m_axes = null;
+  private IAxis[] m_axes = null;
 
   public final static String MD_WQ = "WQ-Parameter";
 
@@ -185,41 +189,48 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public List getAxisList()
+  public IAxis[] getAxisList()
   {
     if( m_axes == null )
     {
-      m_axes = new Vector();
+      m_axes = new IAxis[3];
 
       // immer Datum Axis
-      m_axes.add( PSICompactFactory.getAxis( "Datum", "", Date.class, 0 ) );
+      m_axes[0] = PSICompactFactory.getAxis( "Datum", "", Date.class, 0 );
 
       // Wert (Einheit abfragen)
       String label = toString();
       String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
-      m_axes.add( PSICompactFactory.getAxis( label, unit, Double.class, 1 ) );
+      m_axes[1] = PSICompactFactory.getAxis( label, unit, Double.class, 1 );
 
-      // TODO: Status Axis?
+      m_axes[2] = PSICompactFactory.getAxis( "Status", "", String.class, 2 );
     }
 
     return m_axes;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues( Date, Date )
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final Date from, final Date to ) throws SensorException
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
-    if( m_values != null && from.compareTo( m_from ) == 0 && to.compareTo( m_to ) == 0 )
+    // TODO: I'm lazy here: I could create default from and to dates
+    if( !( args instanceof DateRangeArgument ) )
+      throw new SensorException( "Brauche DateRange as Argument. Kann sonst die PSICompact Schnittstelle nicht abfragen" );
+    
+    DateRangeArgument dr = (DateRangeArgument)args;
+    
+    if( m_values != null && dr.getFrom().compareTo( m_from ) == 0 && dr.getTo().compareTo( m_to ) == 0 )
       return m_values;
     
     try
     {
-      ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
-          PSICompact.ARC_MIN15, from, to );
+      m_from = dr.getFrom();
+      m_to = dr.getTo();
 
-      m_from = from;
-      m_to = to;
+      ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
+          PSICompact.ARC_MIN15, m_from, m_to );
+
       m_values = new PSICompactTuppleModel( data );
       return m_values;
     }
