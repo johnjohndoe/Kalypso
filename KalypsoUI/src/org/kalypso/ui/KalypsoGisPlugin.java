@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.MissingResourceException;
@@ -67,12 +66,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private CS_CoordinateSystem myCoordinateSystem = null;
 
-  private final HashMap myPools = new HashMap();
-
-  private final HashMap myLoaderFactories = new HashMap();
-
-  private final Properties myPoolProperties = new Properties();
-
   private Properties m_ftpProperties;
 
   /**
@@ -94,6 +87,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /** configuration of the client */
   private final Properties m_mainConf = new Properties();
+
+  private ResourcePool m_pool;
+
+  private final Properties m_poolproperties = new Properties();
+
+  private ILoaderFactory m_loaderFactory;
 
   /**
    * The constructor. Manages the configuration of the kalypso client.
@@ -217,7 +216,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   private void configurePool( ) throws IOException
   {
-    myPoolProperties.load( this.getClass()
+    m_poolproperties.load( this.getClass()
         .getResourceAsStream( POOL_PROPERTIES ) );
   }
 
@@ -339,53 +338,20 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         "Kalypso_ObservationService", "IObservationService" );
   }
 
-  public ILoaderFactory getLoaderFactory( final Class valueClass )
+  public ILoaderFactory getLoaderFactory(  )
   {
-    ILoaderFactory loaderFactory = (ILoaderFactory) myLoaderFactories
-        .get( valueClass );
+    if( m_loaderFactory == null )
+      m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass().getClassLoader() );
 
-    if( loaderFactory == null )
-    {
-      final String propFilename = (String) myPoolProperties.get( valueClass
-          .getName() );
-
-      final Properties props = new Properties();
-
-      InputStream ins = null;
-      try
-      {
-        ins = getClass().getResourceAsStream( propFilename );
-        props.load( ins );
-      }
-      catch( IOException e )
-      {
-        MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(),
-            "Interne Applikationsfehler", e.getLocalizedMessage() );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( ins );
-      }
-
-      loaderFactory = new DefaultLoaderFactory( props, this.getClass()
-          .getClassLoader() );
-
-      myLoaderFactories.put( valueClass, loaderFactory );
-    }
-
-    return loaderFactory;
+    return m_loaderFactory;
   }
 
-  public ResourcePool getPool( final Class valueClass )
+  public ResourcePool getPool( )
   {
-    ResourcePool pool = (ResourcePool) myPools.get( valueClass );
-    if( pool == null )
-    {
-      pool = new ResourcePool( getLoaderFactory( valueClass ) );
-      myPools.put( valueClass, pool );
-    }
+    if( m_pool == null )
+      m_pool = new ResourcePool( getLoaderFactory() );
 
-    return pool;
+    return m_pool;
   }
 
   /**
@@ -601,14 +567,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       msg += ":\n\r" + cause.getLocalizedMessage();
 
     return new Status( IStatus.ERROR, getId(), 0, msg, cause );
-  }
-
-  /**
-   * Clears the pool
-   */
-  public void clearPool( )
-  {
-    myPools.clear();
   }
 
   /**
