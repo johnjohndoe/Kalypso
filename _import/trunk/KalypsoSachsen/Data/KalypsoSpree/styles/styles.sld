@@ -482,5 +482,41 @@
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
+		
+		<UserStyle>
+			<Name>country:labels</Name>
+			<Title>Laendernamen</Title>
+			<IsDefault>1</IsDefault>
+			<FeatureTypeStyle>
+				<Name>MyFeatureTypeStyle4986</Name>
+				<Rule>
+					<Name>urban_Text</Name>
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>GEOM</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>NAME</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family">Arial</CssParameter>
+							<CssParameter name="font-family">Sans-Serif</CssParameter>
+							<CssParameter name="font-style">italic</CssParameter>
+							<CssParameter name="font-size">10</CssParameter>
+							<CssParameter name="font-color">#222222</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<PointPlacement auto="true"/>
+						</LabelPlacement>
+						<Halo>
+							<Fill>
+								<CssParameter name="fill">#00FFFF</CssParameter>
+								<CssParameter name="fill-opacity">0.8</CssParameter>
+							</Fill>
+						</Halo>
+					</TextSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
 	</NamedLayer>
 </StyledLayerDescriptor>
