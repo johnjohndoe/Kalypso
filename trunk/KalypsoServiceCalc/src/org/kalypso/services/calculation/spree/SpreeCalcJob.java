@@ -1,4 +1,4 @@
-package org.kalypso.services.calcjob.spree;
+package org.kalypso.services.calculation.spree;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,10 +43,10 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlObservation;
-import org.kalypso.services.calcjob.CalcJobServiceException;
-import org.kalypso.services.calcjob.CalcJobStatus;
-import org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob;
-import org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor;
+import org.kalypso.services.calculation.CalcJobBean;
+import org.kalypso.services.calculation.CalcJobServiceException;
+import org.kalypso.services.calculation.impl.jobs.AbstractCalcJob;
+import org.kalypso.services.calculation.impl.jobs.CalcJobProgressMonitor;
 import org.kalypso.util.progress.NullProgressMonitor;
 import org.kalypso.zml.ObservationType;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -253,9 +253,9 @@ public class SpreeCalcJob extends AbstractCalcJob
   }
 
   /**
-   * @see org.kalypso.services.calcjob.impl.jobs.AbstractCalcJob#runIntern(java.lang.String[], org.kalypso.services.calcjob.impl.jobs.CalcJobProgressMonitor)
+   * @see org.kalypso.services.calculation.impl.jobs.AbstractCalcJob#runIntern(java.lang.String[], org.kalypso.services.calculation.impl.jobs.CalcJobProgressMonitor)
    */
-  protected String[] runIntern( final String[] arguments, final CalcJobProgressMonitor monitor )
+  protected void runIntern( final String[] arguments, final CalcJobProgressMonitor monitor )
       throws CalcJobServiceException
   {
     checkArguments( arguments );
@@ -265,7 +265,9 @@ public class SpreeCalcJob extends AbstractCalcJob
 
     startCalculation();
 
-    return loadOutput( monitor );
+    loadOutput( monitor );
+    
+    // TODO: set results to bean
   }
 
   private void parseProperties( final String properties, final CalcJobProgressMonitor monitor )
@@ -305,7 +307,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       m_data.put( DATA_NAPFILENAME, napFilename );
       m_data.put( DATA_TSFILENAME, tsFilename );
       m_data.put( DATA_TSFILE, tsFile );
-      m_data.put( DATA_LABEL, getDescription().getDescription() );
+      m_data.put( DATA_LABEL, getJobBean().getDescription() );
 
     }
     catch( final Exception e )
@@ -405,7 +407,7 @@ public class SpreeCalcJob extends AbstractCalcJob
           // noch nicht fertig
         }
 
-        if( getDescription().getState() == CalcJobStatus.CANCELED )
+        if( getJobBean().getState() == CalcJobBean.CANCELED )
         {
           process.destroy();
           throw new CalcJobServiceException( "Benutzerabbruch", null );
@@ -568,13 +570,13 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
     catch( final Exception ioe )
     {
-      getDescription().setMessage( ioe.getLocalizedMessage() );
+      getJobBean().setMessage( ioe.getLocalizedMessage() );
       return null;
     }
   }
 
   /**
-   * @see org.kalypso.services.calcjob.CalcJob#disposeJob()
+   * @see org.kalypso.services.calculation.ICalcJob#disposeJob()
    */
   public void disposeJob()
   {

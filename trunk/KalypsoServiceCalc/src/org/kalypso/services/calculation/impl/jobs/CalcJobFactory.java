@@ -1,10 +1,10 @@
-package org.kalypso.services.calcjob.impl.jobs;
+package org.kalypso.services.calculation.impl.jobs;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import org.kalypso.services.calcjob.CalcJob;
-import org.kalypso.services.calcjob.CalcJobServiceException;
+import org.kalypso.services.calculation.ICalcJob;
+import org.kalypso.services.calculation.CalcJobServiceException;
 
 /**
  * @author belger
@@ -30,13 +30,13 @@ public class CalcJobFactory
     return (String[])m_jobTypes.keySet().toArray( new String[0] );
   }
 
-  public CalcJob createJob( final String id, final String description, final String[] arguments, final String typeID ) throws CalcJobServiceException
+  public ICalcJob createJob( final String id, final String description, final String[] arguments, final String typeID ) throws CalcJobServiceException
   {
     try
     {
       final String className = m_jobTypes.getProperty( typeID );
 
-      final CalcJob job = (CalcJob)Class.forName( className ).newInstance();
+      final ICalcJob job = (ICalcJob)Class.forName( className ).newInstance();
 
       job.init( id, description, arguments, typeID );
 

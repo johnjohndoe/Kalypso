@@ -1,4 +1,4 @@
-package org.kalypso.services.calcjob;
+package org.kalypso.services.calculation;
 
 import java.rmi.RemoteException;
 
@@ -9,6 +9,6 @@ public class CalcJobServiceException extends RemoteException
 {
   public CalcJobServiceException( final String s, final Throwable ex )
   {
-    super(s, ex);
+    super( s, ex );
   }
 }

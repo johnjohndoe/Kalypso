@@ -1,10 +1,10 @@
-package org.kalypso.services.calcjob;
+package org.kalypso.services.calculation;
 
 import java.io.Serializable;
 
 /**
  * <p>
- * Beschreibung eines Jobs.
+ * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.ICalcJob}
  * </p>
  * <p>
  * Sollte die JavaBean Spezifikation erfüllen
@@ -13,8 +13,15 @@ import java.io.Serializable;
  * @serviceComplextype 
  * @author Belger
  */
-public class CalcJobDescription implements Serializable
+public class CalcJobBean implements Serializable
 {
+  public final static int UNKNOWN = -1;
+  public final static int RUNNING = 0;
+  public final static int FINISHED = 1;
+  public final static int CANCELED = 2;
+  public final static int WAITING = 3;
+  public final static int ERROR = 4;
+  
   /** ID des beschriebenen Jobs*/
   private String m_id;
 
@@ -24,7 +31,7 @@ public class CalcJobDescription implements Serializable
   /** Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service übergeben */
   private String m_description;
 
-  /** Status des Jobs, eine der Konstanten aus {@link CalcJobStatus} */
+  /** Status des Jobs */
   private int m_state;
 
   /** Fortschritt des Jobs, ziwschen 0 und 100, -1 bedeutet: unbekannt */
@@ -33,19 +40,22 @@ public class CalcJobDescription implements Serializable
   /** Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung */
   private String m_message = "";
 
-  public CalcJobDescription()
+  private CalcJobResultBean[] m_results;
+  
+  public CalcJobBean()
   {
-    this( "-1", "UNKNOWN", "", CalcJobStatus.UNKNOWN, 0 );
+    this( "-1", "UNKNOWN", "", UNKNOWN, 0, null );
   }
 
-  public CalcJobDescription( final String idParm, final String descriptionParm,
-      final String typeParm, final int stateParm, final int progressParm )
+  public CalcJobBean( final String idParm, final String descriptionParm,
+      final String typeParm, final int stateParm, final int progressParm, final CalcJobResultBean[] results )
   {
     this.m_id = idParm;
     this.m_description = descriptionParm;
     this.m_type = typeParm;
     this.m_state = stateParm;
     this.m_progress = progressParm;
+    this.m_results = results;
   }
 
   public String getDescription()
@@ -108,4 +118,12 @@ public class CalcJobDescription implements Serializable
     m_message = message;
   }
 
+  public final CalcJobResultBean[] getResults()
+  {
+    return m_results;
+  }
+  public final void setResults( CalcJobResultBean[] results )
+  {
+    m_results = results;
+  }
 }
