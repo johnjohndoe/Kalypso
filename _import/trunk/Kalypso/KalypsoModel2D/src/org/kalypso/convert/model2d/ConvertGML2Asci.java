@@ -61,9 +61,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**
  * This class is for inserting the 2d gml file into a <GMLWorkspace>and for

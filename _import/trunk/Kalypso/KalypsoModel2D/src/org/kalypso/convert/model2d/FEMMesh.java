@@ -61,13 +61,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.kalypso.util.geom.GeometryHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypso.util.geom.GeometryHelper;
 
 /**
  * This class is for organizing the parameters of the <MeshPolygon>for

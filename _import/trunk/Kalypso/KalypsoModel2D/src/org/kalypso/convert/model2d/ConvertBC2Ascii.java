@@ -59,9 +59,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**
  * ----------------------------------------------------------------------

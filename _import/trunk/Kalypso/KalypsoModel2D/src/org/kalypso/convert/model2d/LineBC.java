@@ -63,12 +63,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**
  * ----------------------------------------------------------------------

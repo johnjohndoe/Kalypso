@@ -462,7 +462,6 @@ public class ConvertFEMAsci2XML {
                 if(!rk_roughness[i].equalsIgnoreCase("0")){
                     
 	                rk_idRoughness[i] = rk_idRoughness[i].substring(0,1);
-	                System.out.println(rk_idRoughness[i]+", "+ rk_roughness[i]+", "+rk_idRoughness[i]);
 	                rk_color[i]  = st.nextToken();
 	                
 	                //optional parameters, default value = 0;
