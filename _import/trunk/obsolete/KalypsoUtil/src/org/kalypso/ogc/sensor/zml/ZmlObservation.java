@@ -1,9 +1,8 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.FileReader;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 import org.kalypso.zml.TargetPropertyType;
+import org.xml.sax.InputSource;
 
 /**
  * A class that represents a zml based IObservation. The format is zml which is
@@ -46,17 +46,20 @@ public class ZmlObservation implements IObservation
 
   private final String m_sourceName;
 
-  private final InputStream m_inputStream;
+  private final InputSource m_inputSource;
+  
+  private final String m_currentPath;
 
   public ZmlObservation( final File file ) throws FileNotFoundException
   {
-    this( file.getName(), new FileInputStream( file ) );
+    this( file.getAbsolutePath(), file.getName(), new InputSource( new FileReader( file ) ) );
   }
 
-  public ZmlObservation( final String sourceName, final InputStream inputStream )
+  public ZmlObservation( final String currentPath, final String sourceName, final InputSource inputSource )
   {
     m_sourceName = sourceName;
-    m_inputStream = inputStream;
+    m_inputSource = inputSource;
+    m_currentPath = currentPath;
   }
 
   /**
@@ -78,9 +81,7 @@ public class ZmlObservation implements IObservation
       {
         Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
 
-        m_obsFile = (Observation)u.unmarshal( m_inputStream );
-        
-        m_inputStream.close();
+        m_obsFile = (Observation)u.unmarshal( m_inputSource );
       }
       catch( Exception e )
       {
@@ -173,12 +174,12 @@ public class ZmlObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     if( m_model == null )
     {
       getAxisList();
-      m_model = new ZmlTuppleModel( m_axisList );
+      m_model = new ZmlTuppleModel( m_currentPath, m_axisList );
     }
 
     return m_model;
@@ -187,7 +188,7 @@ public class ZmlObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  public void setValues( ITuppleModel values )
+  public void setValues( final ITuppleModel values )
   {
   // TODO
   }

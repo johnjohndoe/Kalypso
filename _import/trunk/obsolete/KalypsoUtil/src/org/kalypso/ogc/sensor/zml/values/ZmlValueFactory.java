@@ -11,7 +11,7 @@ import org.kalypso.zml.AxisType;
  */
 public class ZmlValueFactory
 {
-  public static IZmlValuesLoader createLoader( AxisType axisType, ZmlAxis axis )
+  public static IZmlValuesLoader createLoader( final String currentPath, final AxisType axisType, final ZmlAxis axis )
   {
     Object va = axisType.getValueArray();
     if( va != null )
@@ -19,7 +19,7 @@ public class ZmlValueFactory
     
     Object vl = axisType.getValueLink();
     if( vl != null )
-      return new ValueLink( (AxisType.ValueLinkType)vl, axis );
+      return new ValueLink( currentPath, (AxisType.ValueLinkType)vl, axis );
 
     throw new IllegalArgumentException( "AxisType is not supported: " + axisType.toString() );
   }

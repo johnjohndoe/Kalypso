@@ -70,9 +70,9 @@ public class ZmlAxis extends DefaultAxis
     return m_axisType;
   }
 
-  public void fetchValues( ZmlTuppleModel model ) throws SensorException
+  public void fetchValues( final String currentPath, final ZmlTuppleModel model ) throws SensorException
   {
-    IZmlValuesLoader loader = ZmlValueFactory.createLoader( m_axisType, this );
+    IZmlValuesLoader loader = ZmlValueFactory.createLoader( currentPath, m_axisType, this );
     loader.setModel( model );
     m_values = loader.load();
   }

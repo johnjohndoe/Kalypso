@@ -19,12 +19,16 @@ public class ZmlTuppleModel implements ITuppleModel
 
   private final Map m_map = new Hashtable();
 
-  public ZmlTuppleModel( final ZmlAxis[] axes ) throws SensorException
+  /**
+   * Constructor. Fetches the values for each of the axes. May use the currentPath
+   * argument which denotes how to complete relative path locations.
+   */
+  public ZmlTuppleModel( final String currentPath, final ZmlAxis[] axes ) throws SensorException
   {
     m_axes = axes;
     
     for( int i = 0; i < m_axes.length; i++ )
-      m_axes[i].fetchValues( this );
+      m_axes[i].fetchValues( currentPath, this );
   }
 
   protected Object getPoolObject( Object key )
