@@ -1,0 +1,20 @@
+Repository
+- Zeitreihen-Repositories einbinden
+- Zeitreihen-Repositories entfernen
+- Navigation durch Repository über hierarchisches Baum
+- Interaktivität zwischen Repository und sog. QuickViews
+
+Properties-View
+- listet die Eigenschaften von ausgewählte Zeitreihenobjekt
+- nicht editierbar
+
+Diagram-QuickView
+- Darstellung der ausgewählte Zeitreihe im Diagramm:
+	Die Zeitreihe wird automatisch mit allen Werte-Achsen dargestellt. Das erste
+	Datum-Achse wird als X-Achse genommen.
+	Die letzte 30 Tagen werden angezeigt.
+- Zoom ist möglich
+- nicht editierbar
+
+Table-QuickView
+- Siehe Beschreibung für Diagramm-QuickView (aber hier in Tabellenform)
