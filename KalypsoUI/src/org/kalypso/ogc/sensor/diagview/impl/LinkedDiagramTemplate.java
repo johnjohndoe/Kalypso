@@ -51,18 +51,22 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       final URL context )
   {
     removeAllThemes();
-    
+
     setTitle( obsDiagView.getTitle() );
     setLegendName( obsDiagView.getLegend() == null ? "" : obsDiagView
         .getLegend().getTitle() );
     setShowLegend( obsDiagView.getLegend() == null ? false : obsDiagView
         .getLegend().isVisible() );
 
-    for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
+    // axes spec is optional
+    if( obsDiagView.getAxis() != null )
     {
-      final TypeAxis baseAxis = (TypeAxis) it.next();
+      for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
+      {
+        final TypeAxis baseAxis = (TypeAxis) it.next();
 
-      addAxis( new DiagramAxis( baseAxis ) );
+        addAxis( new DiagramAxis( baseAxis ) );
+      }
     }
 
     final List list = obsDiagView.getObservation();
@@ -71,7 +75,8 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       final TypeObservation tobs = (TypeObservation) it.next();
 
       // no observation yet, will be updated once loaded
-      final LinkedDiagramTemplateTheme theme = new LinkedDiagramTemplateTheme( this, tobs );
+      final LinkedDiagramTemplateTheme theme = new LinkedDiagramTemplateTheme(
+          this, tobs );
 
       // create key according to observation link
       final PoolableObjectType key = new PoolableObjectType(
@@ -99,28 +104,30 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
 
   /**
    * Convenienve method for adding an observation to this template.
-   *
+   * 
    * TODO: use themeName as name for the curve of the observation...
-   *  
+   * 
    * @param themeName
    * @param context
    * @param href
    * @param linktype
    * @param args
    */
-  public void addObservation( final String themeName, final URL context, final String href, final String linktype, final IVariableArguments args )
+  public void addObservation( final String themeName, final URL context,
+      final String href, final String linktype, final IVariableArguments args )
   {
     // create key according to observation link
-    final PoolableObjectType key = new PoolableObjectType( linktype, href, context );
+    final PoolableObjectType key = new PoolableObjectType( linktype, href,
+        context );
 
     // fake theme because it won't be added directly to this template
     final DefaultDiagramTemplateTheme fakeTheme = new DefaultDiagramTemplateTheme();
     fakeTheme.setArguments( args );
-    
+
     // use load mechanism
     startLoading( key, fakeTheme );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeAllThemes()
    */
@@ -130,7 +137,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
 
     super.removeAllThemes();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeTheme(org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme)
    */
@@ -142,7 +149,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       while( it.hasNext() )
       {
         Object key = it.next();
-        
+
         if( m_key2themes.get( key ) == theme )
         {
           m_key2themes.remove( key );
@@ -150,7 +157,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
         }
       }
     }
-    
+
     super.removeTheme( theme );
   }
 
@@ -180,7 +187,7 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
       final IObservation obs = (IObservation) newValue;
 
       theme.setObservation( obs );
-      
+
       // tricky: fake theme if no curves
       if( theme.getCurves().size() == 0 )
         addObservation( obs, theme.getArguments() );

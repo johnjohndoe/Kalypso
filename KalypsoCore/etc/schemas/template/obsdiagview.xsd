@@ -61,7 +61,7 @@
 						<xs:attribute name="visible" type="xs:boolean" use="optional" default="true"/>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="axis" type="myns:typeAxis" minOccurs="2" maxOccurs="unbounded"/>
+				<xs:element name="axis" type="myns:typeAxis" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="observation" type="myns:typeObservation" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>

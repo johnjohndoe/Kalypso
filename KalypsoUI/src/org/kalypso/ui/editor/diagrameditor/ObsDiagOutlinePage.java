@@ -6,6 +6,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DND;
@@ -13,13 +16,17 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.diagrameditor.actions.RemoveThemeAction;
 
 /**
  * ObsDiagOutlinePage
@@ -30,6 +37,7 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
     ITemplateEventListener
 {
   protected ObservationDiagramTemplate m_template;
+  private RemoveThemeAction m_removeThemeAction;
 
   /**
    * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
@@ -45,6 +53,47 @@ public class ObsDiagOutlinePage extends ContentOutlinePage implements
 
     getTreeViewer().setContentProvider( new ObsDiagTemplateContentProvider() );
     getTreeViewer().setInput( m_template );
+    
+    m_removeThemeAction = new RemoveThemeAction( this );
+  }
+  
+  /**
+   * @return the selected theme or null
+   */
+  public IDiagramTemplateTheme getSelectedTheme()
+  {
+    final ISelection sel = getSelection();
+    
+    if( sel instanceof IStructuredSelection )
+    {
+      final Object element = ((IStructuredSelection)sel).getFirstElement();
+
+      if( element instanceof IDiagramTemplateTheme )
+        return (IDiagramTemplateTheme) element;
+      
+      if( element instanceof IDiagramCurve )
+        return ((IDiagramCurve)element).getTheme();
+    }
+    
+    return null;
+  }
+  
+  /**
+   * @return template
+   */
+  public ObservationDiagramTemplate getTemplate( )
+  {
+    return m_template;
+  }
+  
+  /**
+   * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
+   */
+  public void setActionBars( IActionBars actionBars )
+  {
+    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    toolBarManager.add( m_removeThemeAction );
+    actionBars.updateActionBars();
   }
 
   /**
