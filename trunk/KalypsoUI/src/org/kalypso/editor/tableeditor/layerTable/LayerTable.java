@@ -5,12 +5,14 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -36,7 +38,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   {
     m_commandManager = commandManager;
 
-    m_viewer = new TableViewer( parent, SWT.MULTI | SWT.FULL_SELECTION );
+    m_viewer = new TableViewer( parent, SWT.MULTI /*| SWT.FULL_SELECTION */);
 
     m_viewer.setContentProvider( new LayerTableContentProvider() );
     m_viewer.setLabelProvider( new LayerTableLabelProvider() );
@@ -49,7 +51,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   {
     if( m_model != null )
       m_model.removeModelListener( this );
-    
+
     if( m_menu != null )
       m_menu.dispose();
   }
@@ -78,13 +80,14 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
 
     if( m_menu != null )
       m_menu.dispose();
-    
+
     m_menu = new MenuManager( "Kontext", "context" );
 
     final KalypsoFeatureLayer layer = model.getLayer();
     final FeatureType featureType = layer.getFeatureType();
     final FeatureTypeProperty[] featureTypeProperties = featureType.getProperties();
     final String[] colProperties = new String[featureTypeProperties.length];
+    final CellEditor[] cellEditors = new CellEditor[featureTypeProperties.length];
     for( int i = 0; i < featureTypeProperties.length; i++ )
     {
       final TableColumn tc = new TableColumn( table, SWT.CENTER );
@@ -97,13 +100,18 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
       handleColumn( tc );
 
       m_menu.add( new ColumnAction( m_commandManager, this, ftp, getModel().isVisible( ftp ) ) );
-      
+
       colProperties[i] = Integer.toString( i );
+      
+      // TODO: create cell editor dependent on FeatureType
+      cellEditors[i] = new TextCellEditor( table );
     }
 
     table.setMenu( m_menu.createContextMenu( table ) );
 
     m_viewer.setColumnProperties( colProperties );
+    m_viewer.setCellEditors( cellEditors );
+    m_viewer.setCellModifier( new LayerTableCellModifier( featureType ) );
     m_viewer.setInput( model );
   }
 
@@ -147,7 +155,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
     {
       public void run()
       {
-        m_viewer.refresh( /* row */ );
+        m_viewer.refresh( /* row */);
       }
     } );
   }
@@ -174,7 +182,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
    */
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_viewer.addSelectionChangedListener(listener);
+    m_viewer.addSelectionChangedListener( listener );
   }
 
   /**
@@ -182,7 +190,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_viewer.removeSelectionChangedListener(listener);  
+    m_viewer.removeSelectionChangedListener( listener );
   }
 
   /**
@@ -190,9 +198,9 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
    */
   public void setSelection( ISelection selection )
   {
-    m_viewer.setSelection(selection);
+    m_viewer.setSelection( selection );
   }
-  
+
   public IMenuManager getMenu()
   {
     return m_menu;
