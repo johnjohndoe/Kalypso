@@ -20,14 +20,36 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
   }
 
   /**
+   * The configuration string should be build in the following way:
+   * 
+   * <pre>
+   * 
+   *  url#username#password
+   *  
+   * </pre>
+   * 
+   * <p>
+   * url: the url for the connection Example:
+   * jdbc:edbc://LOCALHOST:II7/vnode::kalypso/INGRES
+   * <p>
+   * username: the name of the user under which the connection will be
+   * established
+   * <p>
+   * password: the password for that user
+   * 
    * @see org.kalypso.repository.IRepositoryFactory#createRepository()
    */
   public IRepository createRepository( ) throws RepositoryException
   {
-    final String url = "jdbc:edbc://LOCALHOST:II7/vnode::kalypso/INGRES";
-    final String userName = "ingres";
-    final String password = "ingres";
+    final String[] conf = getConfiguration().split( "#" );
     
+    if( conf.length < 3 )
+      throw new RepositoryException( "Invalid configuration in " + getClass().getName() + ": " + getConfiguration() );
+
+    final String url = conf[0];
+    final String userName = conf[1];
+    final String password = conf[2];
+
     return new DataCenterRepository( this, url, userName, password );
   }
 }
