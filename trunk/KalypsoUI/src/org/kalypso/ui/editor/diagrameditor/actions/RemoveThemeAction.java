@@ -29,7 +29,7 @@ public class RemoveThemeAction extends FullAction
   {
     final IDiagramTemplateTheme selectedTheme = m_page.getSelectedTheme();
     
-    if( selectedTheme != null && MessageDialog.openConfirm( m_page.getSite().getShell(), "", "" ) )
+    if( selectedTheme != null && MessageDialog.openConfirm( m_page.getSite().getShell(),  "Zeitreihe entfernen", "Wollen Sie wirklich die Zeitreihe " + selectedTheme.getName()+" entfernen" ) )
         m_page.getTemplate().removeTheme( selectedTheme );
   }
 }

@@ -32,4 +32,6 @@ public interface IDiagramTemplateTheme
    * disposes this theme
    */
   public void dispose( );
+
+  public String getName();
 }

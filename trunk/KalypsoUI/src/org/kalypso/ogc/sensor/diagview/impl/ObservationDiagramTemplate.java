@@ -93,7 +93,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
           }
           mappings[1] = new AxisMapping( valueAxis[i], daValue );
   
-          final DiagramCurve curve = new DiagramCurve( valueAxis[i].getName(), theme, mappings, this );
+          final DiagramCurve curve = new DiagramCurve( theme.getName()+" ("+ valueAxis[i].getName()+")", theme, mappings, this );
           theme.addCurve( curve );
         }
       }
