@@ -2,6 +2,7 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Frame;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -42,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -430,7 +432,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     }
   }
 
-  protected void initDiagramTable( final Composite parent )
+  protected Control initDiagramTable( final Composite parent )
   {
     try
     {
@@ -455,6 +457,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       m_tableFrame.setVisible( true );
       m_table.setVisible( true );
       m_tableFrame.add( pane );
+      
+      return composite;
     }
     catch( Exception e )
     {
@@ -463,6 +467,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
       final Text text = new Text( parent, SWT.CENTER );
       text.setText( "Keine Tabelle vorhanden" );
+      
+      return text;
     }
   }
 
@@ -662,11 +668,24 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
     return panel;
   }
+  
+  protected void saveTimeseriesPressed()
+  {
+    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    {
+      protected void execute( final IProgressMonitor monitor )
+      {
+        saveDirtyObservations( false, monitor );
+      }
+    };
+    
+    runAndHandleOperation( op, "Zeitreihen speichern" );
+  }
 
   /**
    * Saves the dirty observations that were edited in the table.
    */
-  protected void saveDirtyObservations( )
+  protected void saveDirtyObservations( final boolean saveFiles, final IProgressMonitor monitor ) 
   {
     final LinkedTableViewTemplate template = m_tableTemplate;
     final ObservationTableModel model = (ObservationTableModel) m_table
@@ -674,52 +693,78 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
     final Collection themes = template.getThemes();
 
+    monitor.beginTask( "Zeitreihen speichern", themes.size() );
+    
     for( final Iterator it = themes.iterator(); it.hasNext(); )
     {
-      final ITableViewTheme theme = (ITableViewTheme) it.next();
-
-      boolean dirty = false;
-
-      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+      try
       {
-        dirty = ((ITableViewColumn) itcol.next()).isDirty();
+        final ITableViewTheme theme = (ITableViewTheme) it.next();
 
-        // at least one col dirty?
-        if( dirty )
-          break;
-      }
+        boolean dirty = false;
 
-      final IObservation obs = theme.getObservation();
-
-      if( dirty && obs instanceof ZmlObservation )
-      {
-        for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-          ((ITableViewColumn) itcol.next()).setDirty( false );
-
-        final ITuppleModel values = model.getValues( theme.getColumns() );
-
-        final Job job = new Job( "" )
+        for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
         {
-          protected IStatus run( IProgressMonitor monitor )
-          {
-            try
-            {
-              obs.setValues( values );
+          dirty = ((ITableViewColumn) itcol.next()).isDirty();
 
-              template.saveObservation( obs, monitor );
-            }
-            catch( Exception e )
-            {
-              e.printStackTrace();
-              return KalypsoGisPlugin.createErrorStatus( "", e );
-            }
+          // at least one col dirty?
+          if( dirty )
+            break;
+        }
 
-            return Status.OK_STATUS;
-          }
-        };
+        final IObservation obs = theme.getObservation();
 
-        job.schedule();
+        if( dirty && obs instanceof ZmlObservation )
+        {
+          for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+            ((ITableViewColumn) itcol.next()).setDirty( false );
+
+          final ITuppleModel values = model.getValues( theme.getColumns() );
+          obs.setValues( values );
+
+          if( saveFiles )
+            template.saveObservation( obs, monitor );
+        }
       }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        
+        // TODO
+        // nichts tun? oder error handling?
+      }
+      
+      monitor.worked( 1 );
+    }
+    
+    monitor.done();
+  }
+  
+  private void runAndHandleOperation( final IRunnableWithProgress op, final String message )
+  {
+    try
+    {
+      getContainer().run( false, false, op );
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+      
+      IStatus status = null;
+      String msg = message;
+      
+      final Throwable targetException = e.getTargetException();
+      if( targetException instanceof CoreException )
+        status = ((CoreException)targetException).getStatus();
+      else
+        msg += "\n" + targetException.getLocalizedMessage();
+      
+      ErrorDialog.openError( getContainer().getShell(), "Hochwasser Vorhersage", message, status );
+    }
+    catch( InterruptedException e )
+    {
+      e.printStackTrace();
     }
   }
+
 }
