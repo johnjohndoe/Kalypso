@@ -4,6 +4,10 @@
     <metadataList>
         <metadata name="Name" value="W_SCHIRG"/>
         <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;99.96&lt;/w1&gt;&lt;lnk1&gt;-8.43382&lt;/lnk1&gt;&lt;k2&gt;2.25920&lt;/k2&gt;&lt;wgr&gt;230.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;89.99&lt;/w1&gt;&lt;lnk1&gt;-7.49066&lt;/lnk1&gt;&lt;k2&gt;2.03671&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+        <metadata name="Alarmstufe 1" value="250"/>
+        <metadata name="Alarmstufe 2" value="310"/>
+        <metadata name="Alarmstufe 3" value="430"/>
+        <metadata name="Alarmstufe 4" value="460"/>
     </metadataList>
     <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm am Pegel">
         <valueArray separator=";">170.0;170.0;170.0;182.0</valueArray>

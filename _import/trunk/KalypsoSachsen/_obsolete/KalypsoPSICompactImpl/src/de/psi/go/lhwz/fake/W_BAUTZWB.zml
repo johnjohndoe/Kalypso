@@ -2,9 +2,12 @@
 <observation editable="false" xmlns="zml.kalypso.org">
     <name>W_BAUTZWB</name>
     <metadataList>
-        <metadata name="StartZeit" value="27.4.2005 12:00"/>
         <metadata name="Name" value="W_BAUTZWB"/>
         <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;17.13&lt;/w1&gt;&lt;lnk1&gt;-18.47535&lt;/lnk1&gt;&lt;k2&gt;4.51546&lt;/k2&gt;&lt;wgr&gt;99.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;41.39&lt;/w1&gt;&lt;lnk1&gt;-5.41732&lt;/lnk1&gt;&lt;k2&gt;1.68578&lt;/k2&gt;&lt;wgr&gt;268.0&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-101.02&lt;/w1&gt;&lt;lnk1&gt;-17.49665&lt;/lnk1&gt;&lt;k2&gt;3.59036&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+        <metadata name="Alarmstufe 1" value="200"/>
+        <metadata name="Alarmstufe 2" value="260"/>
+        <metadata name="Alarmstufe 3" value="320"/>
+        <metadata name="Alarmstufe 4" value="380"/>
     </metadataList>
     <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm am Pegel">
         <valueArray separator=";">110.0;110.0;110.0;110.0</valueArray>

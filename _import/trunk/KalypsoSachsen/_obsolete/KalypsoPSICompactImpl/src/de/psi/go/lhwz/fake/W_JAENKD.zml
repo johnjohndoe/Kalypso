@@ -4,6 +4,10 @@
     <metadataList>
         <metadata name="Name" value="W_JAENKD"/>
         <metadata name="WQ-Parameter" value="&lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot; &gt;&lt;set&gt;&lt;params&gt;&lt;w1&gt;-0.01&lt;/w1&gt;&lt;lnk1&gt;-15.81449&lt;/lnk1&gt;&lt;k2&gt;4.27921&lt;/k2&gt;&lt;wgr&gt;40.9&lt;/wgr&gt;&lt;/params&gt;&lt;params&gt;&lt;w1&gt;-1.01&lt;/w1&gt;&lt;lnk1&gt;-6.31607&lt;/lnk1&gt;&lt;k2&gt;1.70765&lt;/k2&gt;&lt;/params&gt;&lt;/set&gt;&lt;/wechmann&gt;"/>
+        <metadata name="Alarmstufe 1" value="110"/>
+        <metadata name="Alarmstufe 2" value="140"/>
+        <metadata name="Alarmstufe 3" value="170"/>
+        <metadata name="Alarmstufe 4" value="200"/>
     </metadataList>
     <axis datatype="TYPE=double" key="false" name="Wasserstand" type="W" unit="cm am Pegel">
         <valueArray separator=";">35.0;35.0;35.0;35.0</valueArray>
