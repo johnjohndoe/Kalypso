@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -110,6 +111,8 @@ public class ZmlFactory
   private static ParserFactory m_parserFactory = null;
 
   private static Properties m_parserProps = null;
+  
+  private static Logger LOG = Logger.getLogger( ZmlFactory.class.getName() );
 
   private ZmlFactory( )
   {
@@ -540,10 +543,24 @@ public class ZmlFactory
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( model.getElement( i, axis ) ).append( ";" );
+    {
+      final Object elt = model.getElement( i, axis );
+      
+      if( elt == null )
+        LOG.warning( "Element " + i + " is null for Axis: " + axis );
+        
+      sb.append( elt ).append( ";" );
+    }
 
     if( amount > 0 )
-      sb.append( model.getElement( amount, axis ) );
+    {
+      final Object elt = model.getElement( amount, axis );
+      
+      if( elt == null )
+        LOG.warning( "Element " + amount + " is null for Axis: " + axis );
+
+      sb.append( elt );
+    }
   }
 
   public static Marshaller getMarshaller( ) throws JAXBException
