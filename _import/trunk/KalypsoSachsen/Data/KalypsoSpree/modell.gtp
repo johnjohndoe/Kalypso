@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gisview xmlns="gisview.xml.kalypso.org"><extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/><layers><ns1:layer id="urgl" name="Einzugsgebiete" source="modell.gml" type="gml" visible="true" xmlns:ns1="types.xml.kalypso.org"><ns1:style source="x" type="sld"/><ns1:style source="./sld/teilgebiete.sld" type="sld"/><ns1:srs name="gauss"/><ns1:depends layerid="argls"/></ns1:layer><ns2:layer id="argls" name="Pegel" source="modell.gml" type="gml" visible="false" xmlns:ns2="types.xml.kalypso.org"><ns2:style source="./styles/pegel.sld" type="sld"/><ns2:style source="./styles/pegel.sld" type="sld"/></ns2:layer></layers></gisview>
+<gisview xmlns="gisview.xml.kalypso.org">
+<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
+<layers>
+<ns1:layer id="urgl" name="Einzugsgebiete" source="modell.shp" type="shape" visible="true" xmlns:ns1="types.xml.kalypso.org">
+<ns1:style source="x" type="sld"/>
+<ns1:style source="./sld/teilgebiete.sld" type="sld"/>
+<ns1:srs name="gauss"/>
+<ns1:depends layerid="argls"/>
+</ns1:layer>
+<ns2:layer id="argls" name="Pegel" source="pegel.shape" type="shape" visible="false" xmlns:ns2="types.xml.kalypso.org"><ns2:style source="./styles/pegel.sld" type="sld"/><ns2:style source="./styles/pegel.sld" type="sld"/></ns2:layer></layers></gisview>
 
