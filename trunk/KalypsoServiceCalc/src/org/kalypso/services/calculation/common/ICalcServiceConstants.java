@@ -15,4 +15,5 @@ public interface ICalcServiceConstants
 
   public final String INPUT_DIR_NAME = "input";
   public final String OUTPUT_DIR_NAME = "output";
+  public final String RESULT_DIR_NAME = "Ergebnisse";
 }
