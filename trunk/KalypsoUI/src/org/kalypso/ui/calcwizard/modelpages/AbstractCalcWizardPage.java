@@ -62,12 +62,15 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-public abstract class AbstractCalcWizardPage extends WizardPage implements
-    IModelWizardPage, ICommandTarget, ModellEventListener
+public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
+    ICommandTarget, ModellEventListener
 {
   //  public static final int SELECTION_ID = 0x10;
 
   private int m_selectionID = 0x1;
+
+  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
+  public final static String PROP_IGNORETYPE = "ignoreType";
 
   /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
@@ -129,7 +132,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     if( m_mapModell != null )
     {
@@ -150,22 +153,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     }
   }
 
-  public Properties getArguments( )
+  public Properties getArguments()
   {
     return m_arguments;
   }
 
-  public IProject getProject( )
+  public IProject getProject()
   {
     return m_project;
   }
 
-  public IFolder getCalcFolder( )
+  public IFolder getCalcFolder()
   {
     return m_calcFolder;
   }
 
-  public URL getContext( )
+  public URL getContext()
   {
     try
     {
@@ -185,8 +188,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
    *      java.util.Properties, org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
-      final ImageDescriptor imagedesc, final Properties arguments,
-      final IFolder calcFolder )
+      final ImageDescriptor imagedesc, final Properties arguments, final IFolder calcFolder )
   {
     setTitle( pagetitle );
     setImageDescriptor( imagedesc );
@@ -198,8 +200,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
     try
     {
-      m_selectionID = Integer.parseInt( m_arguments.getProperty(
-          PROP_SELECTIONID, "1" ) );
+      m_selectionID = Integer.parseInt( m_arguments.getProperty( PROP_SELECTIONID, "1" ) );
     }
     catch( final NumberFormatException nfe )
     {
@@ -231,7 +232,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
    * 
    * @return properties
    */
-  protected Properties getReplaceProperties( )
+  protected Properties getReplaceProperties()
   {
     return m_replaceProperties;
   }
@@ -247,19 +248,17 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
    * @throws JAXBException
    * @throws CoreException
    */
-  protected Control initMap( final Composite parent, final String widgetID )
-      throws IOException, JAXBException, CoreException
+  protected Control initMap( final Composite parent, final String widgetID ) throws IOException,
+      JAXBException, CoreException
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
-    final IFile mapFile = (IFile) getProject().findMember( mapFileName );
+    final IFile mapFile = (IFile)getProject().findMember( mapFileName );
     if( mapFile == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Vorlagendatei existiert nicht: " + mapFileName, null ) );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,
-        getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault()
-        .getCoordinatesSystem();
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
+    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
     m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs );
 
     m_mapModell.addModellListener( this );
@@ -268,8 +267,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
-    final Composite mapComposite = new Composite( parent, SWT.BORDER
-        | SWT.RIGHT | SWT.EMBEDDED );
+    final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
 
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
@@ -278,8 +276,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     virtualFrame.add( m_mapPanel );
 
     m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel
-        .onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     m_mapPanel.changeWidget( widgetID );
 
@@ -288,12 +285,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     return mapComposite;
   }
 
-  protected IMapModell getMapModell( )
+  protected IMapModell getMapModell()
   {
     return m_mapModell;
   }
 
-  public void maximizeMap( )
+  public void maximizeMap()
   {
     m_mapPanel.setBoundingBox( m_boundingBox );
   }
@@ -305,8 +302,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       // actually creates the template
       m_diagTemplate = new LinkedDiagramTemplate();
 
-      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT
-          | SWT.EMBEDDED );
+      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE, null );
+      m_diagTemplate.setIgnoreType( ignoreType );
+
+      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
 
@@ -321,7 +320,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       m_diagFrame.add( chartPanel );
 
       refreshTimeseries();
-      
+
       return composite;
     }
     catch( Exception e )
@@ -330,19 +329,19 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
       final Text text = new Text( parent, SWT.CENTER );
       text.setText( "Kein Diagram vorhanden" );
-      
+
       return text;
     }
   }
 
   public void clean( final IProgressMonitor monitor )
   {
-    // nix zu tun
+  // nix zu tun
   }
 
   public void doNext( final IProgressMonitor monitor )
   {
-    // nix zu tun
+  // nix zu tun
   }
 
   /**
@@ -350,50 +349,44 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
    */
   public void update( final IProgressMonitor monitor )
   {
-    // nix tun
+  // nix tun
   }
 
-  protected ControlAdapter getControlAdapter( )
+  protected ControlAdapter getControlAdapter()
   {
     return m_controlAdapter;
   }
 
-  public void refreshTimeseries( )
+  public void refreshTimeseries()
   {
     final TSLinkWithName[] obs = getObservationsToShow();
     refreshObservationsForContext( obs, getContext() );
   }
 
-  protected void refreshObservationsForContext( final TSLinkWithName[] obs,
-      final URL context )
+  protected void refreshObservationsForContext( final TSLinkWithName[] obs, final URL context )
   {
     final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
     final LinkedTableViewTemplate tableTemplate = m_tableTemplate;
 
     if( diagTemplate != null )
-      KalypsoWizardHelper.updateDiagramTemplate( diagTemplate, obs, context,
-          true );
+      KalypsoWizardHelper.updateDiagramTemplate( diagTemplate, obs, context, true );
     if( tableTemplate != null )
-      KalypsoWizardHelper.updateTableTemplate( tableTemplate, obs, context,
-          true );
+      KalypsoWizardHelper.updateTableTemplate( tableTemplate, obs, context, true );
   }
 
-  protected abstract TSLinkWithName[] getObservationsToShow( );
+  protected abstract TSLinkWithName[] getObservationsToShow();
 
   protected void initFeatureTable( final Composite parent )
   {
     try
     {
-      final String templateFileName = getArguments().getProperty(
-          PROP_TABLETEMPLATE );
-      final IFile templateFile = (IFile) getProject().findMember(
-          templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview(
-          templateFile, getReplaceProperties() );
+      final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
+      final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
+          getReplaceProperties() );
 
-      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin
-          .getDefault().createFeatureTypeCellEditorFactory(), getSelectionID(),
-          false );
+      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin.getDefault()
+          .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
       m_viewer.applyTableTemplate( template, getContext() );
 
     }
@@ -412,11 +405,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
       m_table = new ObservationTable( m_tableModel );
 
       m_tableTemplate = new LinkedTableViewTemplate();
+      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE, null );
+      m_tableTemplate.setIgnoreType( ignoreType );
+      
       m_tableModel.setRules( m_tableTemplate );
       m_tableTemplate.addTemplateEventListener( m_table );
 
-      final Composite composite = new Composite( parent, SWT.RIGHT
-          | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
@@ -437,7 +432,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     }
   }
 
-  protected List getSelectedFeatures(boolean useTable)
+  protected List getSelectedFeatures( boolean useTable )
   {
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
@@ -452,73 +447,71 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     if( activeTheme == null )
       return new ArrayList();
 
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = kft.getFeatureList();
 
     if( featureList == null )
       return new ArrayList();
 
-    return GetSelectionVisitor.getSelectedFeatures(
-        featureList, m_selectionID );
+    return GetSelectionVisitor.getSelectedFeatures( featureList, m_selectionID );
   }
-  
+
   public TSLinkWithName[] getObservationsFromMap( final boolean useTable )
   {
     final List selectedFeatures = getSelectedFeatures( useTable );
-    
+
     final Collection foundObservations = new ArrayList( selectedFeatures.size() );
 
     for( final Iterator it = selectedFeatures.iterator(); it.hasNext(); )
     {
-      final Feature kf = (Feature) it.next();
+      final Feature kf = (Feature)it.next();
 
       for( int i = 0; i < m_tsProps.length; i++ )
       {
-        final String name = (String) kf.getProperty( m_tsProps[i]
-            .getNameColumn() );
-        final TimeseriesLink obsLink = (TimeseriesLink) kf
+        final String name = (String)kf.getProperty( m_tsProps[i].getNameColumn() );
+        final TimeseriesLink obsLink = (TimeseriesLink)kf
             .getProperty( m_tsProps[i].getLinkColumn() );
         if( obsLink != null )
         {
-          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
-              .getLinktype(), obsLink.getHref(), m_tsProps[i].getFilter() );
+          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
+              obsLink.getHref(), m_tsProps[i].getFilter() );
           foundObservations.add( linkWithName );
         }
       }
     }
 
-    return (TSLinkWithName[]) foundObservations
+    return (TSLinkWithName[])foundObservations
         .toArray( new TSLinkWithName[foundObservations.size()] );
   }
-  
-  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features, final String property, final String filter )
+
+  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features,
+      final String property, final String filter )
   {
     final Collection foundObservations = new ArrayList( features.size() );
 
     for( final Iterator it = features.iterator(); it.hasNext(); )
     {
-      final Feature kf = (Feature) it.next();
+      final Feature kf = (Feature)it.next();
 
-        final TimeseriesLink obsLink = (TimeseriesLink) kf
-            .getProperty( property );
-        if( obsLink != null )
-        {
-          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
-              .getLinktype(), obsLink.getHref(), filter );
-          foundObservations.add( linkWithName );
-        }
+      final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( property );
+      if( obsLink != null )
+      {
+        final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
+            obsLink.getHref(), filter );
+        foundObservations.add( linkWithName );
+      }
     }
 
-    return (TSLinkWithName[]) foundObservations
+    return (TSLinkWithName[])foundObservations
         .toArray( new TSLinkWithName[foundObservations.size()] );
   }
 
-  protected int getSelectionID( )
+  protected int getSelectionID()
   {
     return m_selectionID;
   }
 
-  protected LayerTableViewer getLayerTable( )
+  protected LayerTableViewer getLayerTable()
   {
     return m_viewer;
   }
@@ -531,7 +524,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     refreshTimeseries();
   }
 
-  public TimeserieFeatureProps[] getTsProps( )
+  public TimeserieFeatureProps[] getTsProps()
   {
     return m_tsProps;
   }
@@ -551,11 +544,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
     if( activeTheme == null )
       return new ArrayList();
 
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = kft.getFeatureList();
     if( featureList == null )
       return new ArrayList();
-    
+
     return featureList;
+  }
+
+  protected void setObsIngoreType( final String ignoreType )
+  {
+    if( m_diagTemplate != null )
+      m_diagTemplate.setIgnoreType( ignoreType );
+    if( m_tableTemplate != null )
+      m_tableTemplate.setIgnoreType( ignoreType );
+    
+    refreshTimeseries();
   }
 }

@@ -14,9 +14,17 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class ObservationTableViewTemplate extends DefaultTableViewTemplate
 {
-  public ObservationTableViewTemplate( )
+  /** If set, axises with this type will be ignored */
+  private String m_ignoreType;
+
+  public ObservationTableViewTemplate()
   {
     super();
+  }
+  
+  public void setIgnoreType( final String ignoreType )
+  {
+    m_ignoreType = ignoreType;
   }
 
   /**
@@ -26,8 +34,8 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
    * @param editableColumns
    * @param args
    */
-  public void setObservation( final IObservation obs,
-      final boolean editableColumns, final IVariableArguments args )
+  public void setObservation( final IObservation obs, final boolean editableColumns,
+      final IVariableArguments args )
   {
     removeAllThemes();
 
@@ -41,8 +49,8 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
    * @param editableColumns
    * @param args
    */
-  public void addObservation( final IObservation obs,
-      final boolean editableColumns, final IVariableArguments args )
+  public void addObservation( final IObservation obs, final boolean editableColumns,
+      final IVariableArguments args )
   {
     final IAxis[] axes = obs.getAxisList();
 
@@ -64,18 +72,17 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
     for( int i = 0; i < axes.length; i++ )
     {
       // ignore axis if it is a kalypso status axis
-      if( !KalypsoStatusUtils.isStatusAxis( axes[i] )
-          && !axes[i].equals( keyAxes[0] ) )
+      if( !KalypsoStatusUtils.isStatusAxis( axes[i] ) && !axes[i].equals( keyAxes[0] ) )
       {
-        final IAxis valueAxis = ObservationUtilities.findAxisByName( axes,
-            axes[i].getName() );
+        final IAxis valueAxis = ObservationUtilities.findAxisByName( axes, axes[i].getName() );
 
-        final DefaultTableViewColumn col = new DefaultTableViewColumn( axes[i]
-            .getName()
-            + " - " + axes[i].getUnit(), editableColumns, 50, keyAxes[0],
-            valueAxis, theme );
+        if( !valueAxis.getType().equals( m_ignoreType ) )
+        {
+          final DefaultTableViewColumn col = new DefaultTableViewColumn( axes[i].getName() + " - "
+              + axes[i].getUnit(), editableColumns, 50, keyAxes[0], valueAxis, theme );
 
-        theme.addColumn( col );
+          theme.addColumn( col );
+        }
       }
     }
 

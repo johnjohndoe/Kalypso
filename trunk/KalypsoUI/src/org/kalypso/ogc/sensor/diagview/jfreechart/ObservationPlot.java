@@ -14,6 +14,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.StandardXYItemRenderer;
 import org.jfree.chart.renderer.XYBarRenderer;
 import org.jfree.chart.renderer.XYItemRenderer;
+import org.jfree.ui.Spacer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
@@ -80,6 +81,9 @@ public class ObservationPlot extends XYPlot
   {
     super();
 
+    // space between axes and data area
+    setAxisOffset( new Spacer( Spacer.ABSOLUTE, 5, 5, 5, 5 ) );
+    
     // standard renderer
     setRenderer( LINE_RENDERER );
 

@@ -1,8 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 
@@ -11,7 +9,6 @@ import org.jfree.chart.StandardLegend;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
@@ -45,7 +42,7 @@ public class ObservationChart extends JFreeChart implements
   /**
    * Clears the curves in the chart
    */
-  public void clearChart( )
+  protected void clearChart( )
   {
     ((ObservationPlot) getPlot()).clearCurves();
   }
@@ -66,8 +63,8 @@ public class ObservationChart extends JFreeChart implements
             ((ObservationPlot) getPlot()).addCurve( (IDiagramCurve) evt
                 .getObject() );
 
-//          if( evt.getType() == TemplateEvent.TYPE_REFRESH
-//              && evt.getObject() instanceof Collection )
+//          if( evt.getType() == TemplateEvent.TYPE_REFRESH && 
+//              evt.getObject() instanceof Collection )
 //          {
 //            clearChart();
 //
