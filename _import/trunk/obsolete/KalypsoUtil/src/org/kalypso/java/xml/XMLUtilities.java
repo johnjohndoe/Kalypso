@@ -1,5 +1,10 @@
 package org.kalypso.java.xml;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -44,7 +49,7 @@ package org.kalypso.java.xml;
 public class XMLUtilities
 {
 
-  /*
+ /*
    * 
    *  @author doemming
    */
@@ -61,4 +66,23 @@ public class XMLUtilities
     result = removeXMLHeader( result );
     return "<filter>" + result + "</filter>";
   }
+
+  public static void setTextNode( Document dom, Node node, String value )
+  {
+    NodeList cn = node.getChildNodes();
+    for( int _n = 0; _n < cn.getLength(); _n++ )
+    {
+      Node cnode = cn.item( _n );
+      short nodeType = cnode.getNodeType();
+      if( nodeType == Node.TEXT_NODE )
+        cnode.setNodeValue( value );
+    }
+    if( cn.getLength() == 0 ) // text node does not exist
+    {
+      Text text = dom.createTextNode( value );
+      node.appendChild( text );
+    }
+  
+  }
+
 }
