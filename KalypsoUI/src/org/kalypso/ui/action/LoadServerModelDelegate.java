@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -68,7 +69,7 @@ public class LoadServerModelDelegate implements IWorkbenchWindowActionDelegate
     {
       protected IStatus run( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Modelle vom Server laden", files.length );
+        monitor.beginTask( "Modelle vom Server laden", files.length * 1000 );
 
         for( int i = 0; i < projects.length; i++ )
         {
@@ -84,7 +85,7 @@ public class LoadServerModelDelegate implements IWorkbenchWindowActionDelegate
           
           try
           {
-            synchronizer.updateLocal();
+            synchronizer.updateLocal( new SubProgressMonitor( monitor, 1000 ) );
           }
           catch( final CoreException e )
           {
@@ -92,8 +93,6 @@ public class LoadServerModelDelegate implements IWorkbenchWindowActionDelegate
             
             return e.getStatus();
           }
-
-          monitor.worked(1);
         }
 
         return Status.OK_STATUS;

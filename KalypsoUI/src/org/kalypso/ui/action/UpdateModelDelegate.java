@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -78,7 +79,7 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
     {
       protected IStatus run( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Modelle vom Server laden", 1 );
+        monitor.beginTask( "Modelle vom Server laden", 1000 );
 
         if( monitor.isCanceled() )
           return Status.CANCEL_STATUS;
@@ -88,7 +89,7 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
 
           final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
 
-          synchronizer.updateLocal();
+          synchronizer.updateLocal( new SubProgressMonitor( monitor, 1000 ) );
         }
         catch( final CoreException e )
         {
@@ -96,8 +97,10 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
 
           return e.getStatus();
         }
-
-        monitor.done();
+        finally
+        {
+          monitor.done();
+        }
 
         return Status.OK_STATUS;
       }
