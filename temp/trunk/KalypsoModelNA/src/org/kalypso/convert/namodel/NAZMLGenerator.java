@@ -25,7 +25,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NAZMLGenerator
 {
-  private static boolean DEBUG = true;
+  private static boolean DEBUG = false;
 
   // debug = true skips converting ascii timeseries to zml timeseries while importing ascii
 
@@ -205,6 +205,8 @@ public class NAZMLGenerator
       return col == 1 ? "Datum" : "Niederschlag";
     case NA_ZUFLUSS_EINGABE:
       return col == 1 ? "Datum" : "Abfluss";
+    case NA_ABFLUSS_BERECHNET:
+        return col == 1 ? "Datum" : "Abfluss";
     default:
       break;
     }

@@ -113,11 +113,13 @@ public class NetFileManager extends AbstractManager
         createProperties( propCollector, line, 7 );// nzufPfad
         String nzufPfad = (String)( (FeatureProperty)propCollector.get( "nzufPfad" ) ).getValue();
         // create timeserieslink
-        String zmlPath = "zufluss/Q_N" + knot + ".zml";
+        
+        
+        String zmlPath = "Zufluss/Zufluss_"+fe.getId()+".zml";
         String correctedPath = nzufPfad.replaceAll(
             "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf
                 .getAsciiBaseDir().toString()
-                + "/zufluss/" );
+                + "/Zufluss/" );
         File tsFile = new File( correctedPath );
         TimeseriesLink link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
             NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false );
@@ -149,8 +151,24 @@ public class NetFileManager extends AbstractManager
         System.out.println( element.getKey() + "="
             + ( (FeatureProperty)element.getValue() ).getValue() );
       }
+   
+      // adding Timeseries links
+      
+      final TimeseriesLink pegelLink = NAZMLGenerator
+	    .copyToTimeseriesLink( null, NAZMLGenerator.NA_ABFLUSS_BERECHNET, m_conf // TODO NA_PEGEL
+	        .getGmlBaseDir(),"Pegel/Pegel_"+fe.getId()+".zml", true ,true);
+	    FeatureProperty pegelProp = FeatureFactory.createFeatureProperty( "pegelZR",
+	        pegelLink );
+	    propCollector.put( "pegelZR", pegelProp );
+
+	    final TimeseriesLink resultLink = NAZMLGenerator
+	    .copyToTimeseriesLink( null, NAZMLGenerator.NA_ABFLUSS_BERECHNET, m_conf
+	        .getGmlBaseDir(),"Ergebnis/Berechnet/Abfluss_"+fe.getId()+".zml", true ,true);
+	    FeatureProperty ergProp = FeatureFactory.createFeatureProperty( "qberechnetZR",
+	        resultLink );
+	    propCollector.put( "qberechnetZR", ergProp );
+
       setParsedProperties( fe, propCollector.values() );
-      System.out.println( "debug" );
     }
   }
 
@@ -456,7 +474,7 @@ public class NetFileManager extends AbstractManager
 
   private String getZuflussEingabeDateiString( Feature nodeFE )
   {
-    return "Q_N_" + FeatureHelper.getAsString(nodeFE,"num" ) + ".zufluss";
+    return "Z_" + FeatureHelper.getAsString(nodeFE,"num" ) + ".zufluss";
   }
 
   public class NetElement

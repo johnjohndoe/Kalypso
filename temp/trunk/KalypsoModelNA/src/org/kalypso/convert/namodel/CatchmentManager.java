@@ -146,10 +146,12 @@ public class CatchmentManager extends AbstractManager
     prop = (FeatureProperty)propCollector.get( "inum" );
     int asciiID = Integer.parseInt( (String)prop.getValue() );
 
+    final Feature feature = getFeature( asciiID, m_featureType );
+
     // handle timeseries: convert to zmllink
     FeatureProperty ts = (FeatureProperty)propCollector.get( "kurzzeit" );
     String tsFileString = (String)ts.getValue();
-    String relativeZmlPath="zml/N_C_"+asciiID+".zml";
+    String relativeZmlPath="Niederschlag/Niederschlag_"+feature.getId()+".zml";
     File orgTsFile = new File( m_conf.getAsciiBaseDir(),"klima.dat/"+tsFileString );
     // repository LINK 
     // is absolute
@@ -174,7 +176,6 @@ public class CatchmentManager extends AbstractManager
     // continue reading
 
     
-    Feature feature = getFeature( asciiID, m_featureType );
     Collection collection = propCollector.values();
     setParsedProperties( feature, collection );
     line = reader.readLine();

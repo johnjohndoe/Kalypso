@@ -53,7 +53,7 @@ public class NAModellConverter
       // general
       final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
-//      final File tmpDir = new File( "/tmp/na_tmp" );
+      //      final File tmpDir = new File( "/tmp/na_tmp" );
       ascii2gml(  );
       //      gml2asciil(tmpDir);
     }
