@@ -12,12 +12,12 @@ import java.util.List;
 public interface IRepositoryContainer
 {
   public List getRepositories();
+  
+  public void addRepository( final IRepository rep );
 
-  public void addRepository( IRepository rep );
+  public void removeRepository( final IRepository rep );
 
-  public void removeRepository( IRepository rep );
+  public void addRepositoryContainerListener( final IRepositoryContainerListener l );
 
-  public void addRepositoryContainerListener( IRepositoryContainerListener l );
-
-  public void removeRepositoryContainerListener( IRepositoryContainerListener l );
+  public void removeRepositoryContainerListener( final IRepositoryContainerListener l );
 }
