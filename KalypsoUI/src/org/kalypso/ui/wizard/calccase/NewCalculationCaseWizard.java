@@ -21,6 +21,7 @@ import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -51,7 +52,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false );
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     
     m_createControlPage.setUpdate( true );
 

@@ -46,13 +46,13 @@ public class ModelSynchronizer
     }
 
     // server -> local
-    copy( m_serverRoot, m_resourceRootFile );
+    synchronizeProject( m_serverRoot, m_resourceRootFile );
 
     // local refreshen
     m_resourceRoot.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 
-  private void copy( final File from, final File to )
+  private void synchronizeProject( final File from, final File to )
   {
     final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true,
         ModelNature.CONTROL_NAME );
@@ -62,8 +62,14 @@ public class ModelSynchronizer
     FileUtilities.accept( to, deleteVisitor );
   }
 
+  private void copyAll( final File from, final File to )
+  {
+    final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true );
+    FileUtilities.accept( from, copyVisitor );
+  }
+  
   /**
-   * schreibt ein einzelnes Verzeichnis innerhalb des lokalen Projekts zurück
+   * Schreibt ein einzelnes Verzeichnis innerhalb des lokalen Projekts zurück
    * zum server Das Verzeichnis darf Serverseitig noch nicht existieren
    * 
    * @throws CoreException
@@ -79,7 +85,7 @@ public class ModelSynchronizer
           "Das Verzeichnis existiert bereits auf dem Server: " + projectRelativePath, null ) );
 
     final File localDir = new File( m_resourceRootFile, projectRelativePath );
-    copy( localDir, serverDir );
+    copyAll( localDir, serverDir );
   }
 
   public File getServerRoot()
@@ -90,15 +96,17 @@ public class ModelSynchronizer
   /** Lädt einen Remote Folder vom Server und legt in local ab
    * überschreibt, ist lokal bereits etwas vorhanden, gibts ne Fehlermeldung 
    * @throws CoreException*/
-  public void getFolder( final File dir ) throws CoreException
+  public void getFolder( final File dir, final String localName ) throws CoreException
   {
     final String relativePath = FileUtilities.getRelativePathTo( m_serverRoot , dir );
-    final IFile file = m_resourceRoot.getFile( relativePath );
+    final IFile file = m_resourceRoot.getFile( localName );
     if( file.exists() )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis exisitert lokal bereits: " + relativePath, null ) );
     
-    final File localDir = new File( m_resourceRootFile, relativePath );
-    copy( dir, localDir );
+    final File localDir = new File( m_resourceRootFile, localName );
+    copyAll( dir, localDir );
+    
+    file.getParent().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() ); 
   }
 
 }

@@ -140,7 +140,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
 
   private void createTablePanel( final Composite parent )
   {
-    initDiagramTable( parent );
+    initFeatureTable( parent );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -175,7 +175,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshDiagram();
+    refreshTimeseries();
   }
 
   protected void runCalculation()

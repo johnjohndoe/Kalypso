@@ -39,6 +39,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.createpages.AddCalcCasePage;
 import org.kalypso.ui.calcwizard.createpages.AddNewCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CopyServerCalcCaseChoice;
+import org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage;
 import org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 import org.kalypso.ui.nature.ModelNature;
@@ -78,9 +79,9 @@ public class CalcWizard implements IWizard, IProjectProvider
   public void addPages()
   {
     m_addCalcCasePage = new AddCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen",
-        ImageProvider.IMAGE_ICON_GTT );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
-    m_controlPage = new SteuerparameterWizardPage( this, true );
+    m_controlPage = new SteuerparameterWizardPage( this, true, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
     m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen",
         m_project, m_addCalcCasePage ) );
@@ -404,7 +405,11 @@ public class CalcWizard implements IWizard, IProjectProvider
       // last page or page not found
       return null;
 
-    return (IWizardPage)m_pages.get( index + 1 );
+    final IWizardPage wizardPage = (IWizardPage)m_pages.get( index + 1 );
+    if( wizardPage instanceof AbstractCalcWizardPage )
+      ((AbstractCalcWizardPage)wizardPage).refreshTimeseries();
+    
+    return wizardPage;
   }
 
   public boolean doBack( final IWizardPage page )

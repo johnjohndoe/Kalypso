@@ -6,7 +6,6 @@ import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -30,9 +29,6 @@ import org.kalypso.ui.nature.ModelNature;
 public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
     ModellEventListener
 {
-  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
-  public final static String PROP_TABLETEMPLATE = "tableTemplate";
-
   /** Position des Haupt-Sash: Integer von 0 bis 100 */
   public final static String PROP_MAINSASH = "mainSash";
 
@@ -41,11 +37,9 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
 
   /**
    * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine f?r jede Kurventyp.
+   * geben-Property geben: eine für jeden Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
-
-  private LayerTableViewer m_viewer;
 
   public MapAndTableWizardPage( )
   {
@@ -124,7 +118,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
 
   private void createTablePanel( final Composite parent )
   {
-    initDiagramTable( parent );
+    initFeatureTable( parent );
   }
 
   private void createMapPanel( final Composite parent ) throws Exception,
@@ -144,15 +138,15 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
    */
   public boolean performFinish( )
   {
-    try
-    {
-      m_viewer.saveData( new NullProgressMonitor() );
-    }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
-    }
-
+//    try
+//    {
+//      m_viewer.saveData( new NullProgressMonitor() );
+//    }
+//    catch( CoreException e )
+//    {
+//      e.printStackTrace();
+//    }
+//
     return true;
   }
 
@@ -161,12 +155,12 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshDiagram();
+    refreshTimeseries();
   }
 
   protected void runCalculation( )
   {
-    final LayerTableViewer viewer = m_viewer;
+    final LayerTableViewer viewer = getLayerTable();
     
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {

@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
@@ -42,6 +43,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.MapPanelHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
@@ -49,6 +51,7 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
@@ -63,10 +66,18 @@ import org.opengis.cs.CS_CoordinateSystem;
 public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
     ICommandTarget, ModellEventListener
 {
-  public static final int SELECTION_ID = 0x10;
+  //  public static final int SELECTION_ID = 0x10;
 
+  private int m_selectionID = 0x1;
+
+  /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
+  public final static String PROP_TABLETEMPLATE = "tableTemplate";
+  
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
+
+  /** Pfad auf Vorlage für die Karte (.gmt Datei) */
+  private final static String PROP_SELECTIONID = "selectionID";
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), null );
@@ -100,6 +111,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private ObservationTable m_table = null;
 
   private TimeserieFeatureProps[] m_tsProps;
+  
+  private LayerTableViewer m_viewer;
 
   private final ControlAdapter m_controlAdapter = new ControlAdapter()
   {
@@ -185,12 +198,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     try
     {
+      m_selectionID = Integer.parseInt( m_arguments.getProperty( PROP_SELECTIONID, "1" ) );
+    }
+    catch( final NumberFormatException nfe )
+    {
+      nfe.printStackTrace();
+    }
+
+    try
+    {
       final URL calcURL = ResourceUtilities.createURL( calcFolder );
       m_replaceProperties.setProperty( "calcdir:", calcURL.toString() );
     }
     catch( final MalformedURLException e )
     {
-      // TODO: error handling
       e.printStackTrace();
     }
   }
@@ -229,7 +250,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     m_mapModell.addModellListener( this );
 
-    m_mapPanel = new MapPanel( this, crs, SELECTION_ID );
+    m_mapPanel = new MapPanel( this, crs, m_selectionID );
     MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_boundingBox = GisTemplateHelper.getBoundingBox( gisview );
@@ -266,7 +287,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     try
     {
       // actually creates the template
-// TODO: uncommment
       m_diagTemplate = new LinkedDiagramTemplate();
 
       final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
@@ -282,6 +302,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagFrame.setVisible( true );
       chartPanel.setVisible( true );
       m_diagFrame.add( chartPanel );
+
+      refreshTimeseries();
     }
     catch( Exception e )
     {
@@ -315,11 +337,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return m_controlAdapter;
   }
 
-  protected void refreshDiagram()
+  public void refreshTimeseries()
   {
-    if( !isCurrentPage() )
-      return;
-
+    //    if( !isCurrentPage() )
+    //      return;
     final TSLinkWithName[] obs = getObservationsToShow();
 
     final LinkedDiagramTemplate diagTemplate = m_diagTemplate;
@@ -349,7 +370,28 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected abstract TSLinkWithName[] getObservationsToShow();
 
-  protected void initDiagramTable( Composite parent )
+  protected void initFeatureTable( final Composite parent )
+  {
+    try
+    {
+      final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
+      final IFile templateFile = (IFile)getProject().findMember( templateFileName );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
+          getReplaceProperties() );
+
+      m_viewer = new LayerTableViewer( parent, this, KalypsoGisPlugin.getDefault()
+          .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
+      m_viewer.applyTableTemplate( template, getContext() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final Text text = new Text( parent, SWT.NONE );
+      text.setText( "Fehler beim Laden des TableTemplate" );
+    }
+  }
+
+  protected void initDiagramTable( final Composite parent )
   {
     try
     {
@@ -391,8 +433,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       return new TSLinkWithName[] {};
 
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-    final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(), kft
-        .getFeatureType(), SELECTION_ID );
+    final FeatureList featureList = kft.getFeatureList();
+    if( featureList == null )
+      return new TSLinkWithName[] {};
+
+    final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( featureList,
+        m_selectionID );
 
     final Collection foundObservations = new ArrayList( selectedFeatures.size() );
 
@@ -416,5 +462,15 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     return (TSLinkWithName[])foundObservations
         .toArray( new TSLinkWithName[foundObservations.size()] );
+  }
+
+  protected int getSelectionID()
+  {
+    return m_selectionID;
+  }
+
+  protected LayerTableViewer getLayerTable()
+  {
+    return m_viewer;
   }
 }

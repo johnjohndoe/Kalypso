@@ -143,7 +143,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshDiagram();
+    refreshTimeseries();
   }
 
   /**
