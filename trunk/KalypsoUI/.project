@@ -21,11 +21,6 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>net.sourceforge.metrics.builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>edu.mit.lcs.pag.continuoustester.informer</name>
 			<arguments>
 			</arguments>
@@ -39,6 +34,5 @@
 	<natures>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>net.sourceforge.metrics.nature</nature>
 	</natures>
 </projectDescription>
