@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,9 +77,17 @@ public class PSICompactImpl implements PSICompact
   private final void prepareObjects( final Map mapId, final Map mapZml )
       throws ECommException
   {
-    final BufferedReader reader = new BufferedReader( new InputStreamReader(
-        getClass().getResourceAsStream( "fake/lhwz-ids.csv" ) ) );
-
+    final BufferedReader reader ;
+    try
+    {
+      reader = new BufferedReader( new InputStreamReader(
+          getClass().getResourceAsStream( "fake/lhwz-ids.csv" ), "UTF-8" ) );
+    }
+    catch( final UnsupportedEncodingException e1 )
+    {
+      e1.printStackTrace();
+      throw new ECommException( e1 );
+    }
     try
     {
       String line = reader.readLine();
