@@ -28,10 +28,7 @@ import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.java.io.StreamUtilities;
-import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -291,23 +288,25 @@ public class SpreeInputWorker
       final Map mapping, final String geoName, final String filenameBase )
       throws CalcJobServiceException
   {
-    try
-    {
-      final FeatureType featureType = GMLHelper.getFeatureType( workspace, layerName );
+//    try
+//    {
+      final FeatureType featureType = workspace.getFeatureType( layerName );
       if( featureType == null )
       throw new CalcJobServiceException(
           "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: "
               + layerName, null );
       
       final Feature[] features = workspace.getFeatures(featureType);
-      ShapeSerializer.serialize( features, mapping, geoName, filenameBase );
-    }
-    catch( final GmlSerializeException e )
-    {
-      e.printStackTrace();
-
-      throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
-    }
+      
+      // TODO: restore mapping
+//      ShapeSerializer.serialize( features, mapping, geoName, filenameBase );
+//    }
+//    catch( final GmlSerializeException e )
+//    {
+//      e.printStackTrace();
+//
+//      throw new CalcJobServiceException( "Fehler beim Schreiben der Eingabedateien", e );
+//    }
   }
 
   public static GMLWorkspace loadGML( final File inputdir, final Map map )

@@ -19,16 +19,18 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -496,7 +498,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     final CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:4326" ) );
 
-    final KalypsoFeatureLayer layer = ShapeSerializer.deserialize( tsFilename, crs, crs,
+    final GMLWorkspace workspace = ShapeSerializer.deserialize( tsFilename, crs,
         new NullProgressMonitor() );
 
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
@@ -506,10 +508,10 @@ public class SpreeCalcJob extends AbstractCalcJob
     final Map valuesMap = new HashMap();
     final Collection dates = new ArrayList();
 
-    final Feature[] features = layer.getAllFeatures();
-    for( int i = 0; i < features.length; i++ )
+    final List features = (List)workspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    for( Iterator iter = features.iterator(); iter.hasNext(); )
     {
-      final Feature feature = features[i];
+      final Feature feature = (Feature)iter.next();
 
       final String dateString = (String)feature.getProperty( "DATUM" );
       final Date date = dateFormat.parse( dateString );
