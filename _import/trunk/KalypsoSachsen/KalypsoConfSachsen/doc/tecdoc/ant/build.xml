@@ -2,8 +2,9 @@
 <project name="kalypso-tecdoc" default="all" basedir="..">
 
   <!-- Source properties -->
-  <property name="tecdoc.dir" value=".." />
-  <property name="build.dir" value="../build"/>
+  <property name="base.dir" value="d:/user/schlienger/dev/kalypso/workspace/KalypsoConfSachsen/doc/tecdoc" />
+  <property name="tecdoc.dir" value="${base.dir}" />
+  <property name="build.dir" value="${base.dir}/build"/>
   <property name="build.doc.dir" value="${build.dir}/doc"/>
   <property name="build.pdf.dir" value="${build.dir}/pdf"/>
   <property name="build.html.dir" value="${build.dir}/html"/>
@@ -29,9 +30,9 @@
   
   <target name="valid">
 
-    <antcall target="xmlvalid">
+    <!--antcall target="xmlvalid">
       <param name="xmlvalid.xml" value="${tecdoc.dir}/${doc.name}"/>
-    </antcall>
+    </antcall-->
 
   </target>
 

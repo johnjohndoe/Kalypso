@@ -89,7 +89,6 @@
 	<!ENTITY file_tools SYSTEM "tools.xml">
 	<!ENTITY file_compile SYSTEM "compile.xml">
 	<!ENTITY file_source SYSTEM "source.xml">
-	<!ENTITY file_port SYSTEM "port.xml">
 	<!ENTITY file_install SYSTEM "install.xml">
 	<!ENTITY file_sysreq SYSTEM "sysreq.xml">
 ]>

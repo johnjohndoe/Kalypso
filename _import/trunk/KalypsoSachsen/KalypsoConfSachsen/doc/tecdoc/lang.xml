@@ -6,8 +6,8 @@
 	<para>
 		Die Programmoberfläche von &kalypso; wurde vollständig in der Programmiersprache 
 		&java;&java_ftn; entwickelt. Dabei wurde die &platform; als
-		Basis-Applikation genommen. Alle verwendeten externen Bibliotheken sind in 
-		<xref linkend="tecdoc:libs"/> beschrieben.
+		Basis-Applikation genommen. <!--Alle verwendeten externen Bibliotheken sind in 
+		<xref linkend="tecdoc:libs"/> beschrieben.-->
 	</para>
 	
 	<section>
