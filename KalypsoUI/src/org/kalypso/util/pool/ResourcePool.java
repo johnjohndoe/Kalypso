@@ -1,5 +1,6 @@
 package org.kalypso.util.pool;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ public class ResourcePool implements ILoaderListener
   private final Comparator m_keyComparator = new KeyComparator();
 
   /** key -> Set(IPoolListener) */
-  private Map m_listeners = new TreeMap( m_keyComparator );
+  private Map m_listeners = Collections.synchronizedMap( new TreeMap( m_keyComparator ) );
 
   /** key -> object */
   private Map m_objects = new TreeMap( m_keyComparator );

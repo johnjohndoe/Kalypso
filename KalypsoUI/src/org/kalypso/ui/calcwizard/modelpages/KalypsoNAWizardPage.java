@@ -6,7 +6,6 @@ import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -51,8 +50,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    * geben-Property geben: eine f?r jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
-
-  private LayerTableViewer m_viewer;
 
   public KalypsoNAWizardPage()
   {

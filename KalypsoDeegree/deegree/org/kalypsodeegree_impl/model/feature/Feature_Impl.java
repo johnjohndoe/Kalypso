@@ -121,7 +121,10 @@ public class Feature_Impl implements Feature
    */
   public Object getProperty( String name )
   {
-    int pos = m_featureType.getPropertyPosition( name );
+    final int pos = m_featureType.getPropertyPosition( name );
+    if( pos == -1 )
+      return null;
+    
     return m_properties[pos];
   }
 

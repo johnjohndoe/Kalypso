@@ -55,6 +55,8 @@ public abstract class TimeserieConstants implements ObservationConstants
    */
   public static String getUnit( final String type )
   {
+    // TODO!
+    
     return type;
   }
   
@@ -64,6 +66,8 @@ public abstract class TimeserieConstants implements ObservationConstants
    */
   public static String getName( final String type )
   {
+    // TODO!
+    
     return type;
   }
 }
