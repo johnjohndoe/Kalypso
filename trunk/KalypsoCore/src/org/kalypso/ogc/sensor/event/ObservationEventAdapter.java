@@ -58,4 +58,12 @@ public class ObservationEventAdapter implements IObservationEventProvider
     if( listeners.length == 0 )
       System.out.println( "No listeners for " + this + " " + m_obs );
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
+   */
+  public void clearListeners( )
+  {
+    m_listeners.clear();
+  }
 }

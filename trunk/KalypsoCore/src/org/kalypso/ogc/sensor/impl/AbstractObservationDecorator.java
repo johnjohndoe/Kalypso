@@ -103,4 +103,12 @@ public class AbstractObservationDecorator implements IObservation
   {
     return m_obs.getHref();
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
+   */
+  public void clearListeners( )
+  {
+    m_obs.clearListeners();
+  }
 }

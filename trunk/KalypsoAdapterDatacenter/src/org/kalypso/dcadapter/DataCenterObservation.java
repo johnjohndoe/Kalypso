@@ -120,4 +120,12 @@ public class DataCenterObservation implements IObservation
   {
     // TODO Auto-generated method stub
   }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
+   */
+  public void clearListeners( )
+  {
+    // TODO Auto-generated method stub
+  }
 }
