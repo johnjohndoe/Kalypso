@@ -1,9 +1,13 @@
 package org.kalypso.services.calculation.job.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 
@@ -89,7 +93,35 @@ public abstract class AbstractCalcJob implements ICalcJob
     {
       m_results.add( bean );
     }
-    
-    m_logger.info( "Added result: " + bean.getPath() );
+  }
+
+  /**
+   * Kopiert eine Datei in den Ausgabeordner und f?gt die entsprechende Bean zur
+   * Ausgabe hinzu.
+   * 
+   * Die Pfade werden wie folgt angelegt:
+   * 
+   * Das Resultfile wird relativ zu resultdir aufgel?st und unter dem gleichen
+   * rleativen Pfad unter das Outputdir abgelegt: z.B.: resultdir
+   * C:\tmp\kalypsonatest\exe\ resultfile:
+   * C:\tmp\kalypsonatest\exe\out_we.nat\950901.bof Ablage im utputdir:
+   * C:\tmp\kalypsonatest\output\out_we.nat\950901.bof pfad in der Bean:
+   * .\out_we.nat\950901.bof
+   *  
+   */
+  protected void copyResult( final File resultdir, final File resultfile, final File outputdir, final String id, final String description )
+  {
+    final String relativePathTo = FileUtilities.getRelativePathTo( resultdir, resultfile );
+    final File outputfile = new File( outputdir, relativePathTo );
+  
+    try
+    {
+      FileUtils.copyFile( resultfile, outputfile );
+      addResult( new CalcJobDataBean( id, description, "." + relativePathTo ) );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
   }
 }

@@ -331,5 +331,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
             "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
     }
+    
+    onModellChange( new ModellEvent( null, ModellEvent.SELECTION_CHANGED ) );
+    
   }
 }
