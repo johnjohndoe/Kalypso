@@ -10,7 +10,7 @@
       </Ort>
       <DWDID>4234</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_4234" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430570" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_schleiz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -29,7 +29,7 @@
       </Ort>
       <DWDID>4426</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_4426" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433060" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_plauen.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -48,7 +48,7 @@
       </Ort>
       <DWDID>4435</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_4435" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420130" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_carlsfeld.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -67,7 +67,7 @@
       </Ort>
       <DWDID>3368</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_3368" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...425440" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_leipzig_schkeuditz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -86,7 +86,7 @@
       </Ort>
       <DWDID>3375</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_3375" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...104710" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_leipzig.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -105,7 +105,7 @@
       </Ort>
       <DWDID>4406</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_4406" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433160" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_gera.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -124,7 +124,7 @@
       </Ort>
       <DWDID>4412</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_4412" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...421550" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_chemnitz.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -143,7 +143,7 @@
       </Ort>
       <DWDID>4422</DWDID>
       <NRepository>
-        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:WeisseElster://Niederschlag/Ombrometer_4422" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420300" ns1:type="simple" timeaxis="Datum" valueaxis="N" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
       </NRepository>
       <N>
         <TimeseriesLink linktype="zml" ns1:href="Ombrometer/Ombrometer_aue.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>

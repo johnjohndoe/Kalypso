@@ -140,8 +140,8 @@
 
 	</createTransformations>
 	
-	<updateTransformations  logFile="calcCase.log">	
-	<!-- Ombrometer -->
+	<updateTransformations logFile="calcCase.log">
+		<!-- Ombrometer -->
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":project:ombrometer.gml"/>
 			<argument name="feature" value="Ombrometer"/>
@@ -152,20 +152,7 @@
 			<argument name="startforecast" value=":startforecast:"/>
 			<argument name="endsim" value=":endsim:"/>
 		</transformation>
-
-			<!-- Zufluesse -->
-	<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:calcCase.gml"/>
-			<argument name="feature" value="Node"/>
-			<argument name="sourceObservation1" value="zuflussZRRepository"/>
-			<argument name="sourceObservation2" value="zuflussZRRepositoryVorhersage"/>
-			<argument name="targetObservation" value="zuflussZR"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-			<argument name="startsim" value=":startsim:"/>
-			<argument name="startforecast" value=":startforecast:"/>
-			<argument name="endsim" value=":endsim:"/>
-		</transformation>
-			<!-- Pegel (werden fuer die automatische kallibrierung gebraucht) -->
+		<!-- Pegel (werden zum visuellen vergleich und fuer die automatische optimierung gebraucht) -->
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Node"/>
@@ -176,7 +163,19 @@
 			<argument name="startforecast" value=":startforecast:"/>
 			<argument name="endsim" value=":endsim:"/>
 		</transformation>
-	<!-- Catchments -->
+		<!-- Zufluesse -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Node"/>
+			<argument name="sourceObservation1" value="zuflussZRRepository"/>
+			<argument name="sourceObservation2" value="zuflussZRRepositoryVorhersage"/>
+			<argument name="targetObservation" value="zuflussZR"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+		<!-- Catchments -->
 		<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Catchment"/>
@@ -188,15 +187,14 @@
 			<argument name="startforecast" value=":startforecast:"/>
 			<argument name="endsim" value=":endsim:"/>
 		</transformation>
-
-	<!--	
+		<!--	
 		<transformation className="org.kalypso.util.transformation.ReplaceTransformation">
 			<argument name="protocol0" value="calcdir=:calcdir:"/>
 			<argument name="protocol1" value="localcalc=localcalc:"/>
 			<argument name="file0" value=":calcdir:calcCase.gml"/>
 		</transformation>
--->		
- </updateTransformations>
+-->
+	</updateTransformations>
 
 	<afterCalcTransformations logFile="calcCase.log">
 	<!-- nach optimierung soll optimierte datei uebernommen werden 

@@ -7,5 +7,5 @@
 	<legend title="Legende" visible="true"/>
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="q1" datatype="xs:double" label="Abfluss" unit="m³/s" direction="vertical" position="right" inverted="false" />
-	<axis id="q2" datatype="xs:double" label="Q" unit="m³/s" direction="vertical" position="right" inverted="false" />
+	<axis id="q2" datatype="xs:double" label="W" unit="in cm" direction="vertical" position="right" inverted="false" />
 </obsdiagview>

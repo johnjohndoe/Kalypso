@@ -18,25 +18,31 @@
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=niederschlagZR"/>
     </page>
 
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
-		<arg name="mapTemplate" value=".templates/calcCase/zufluesse.gmt"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="4"/>
-<!--        <arg name="zmlTableShow" value="all"/> -->
-        <arg name="selectFeatureID" value="Node6100"/>
-        
-        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=zuflussZR"/>
-    </page>
-
+		<page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zuflüsse" 
+			imageLocation="icons/calcwizard/kalypso32.gif" >
+			<arg name="mapTemplate" value=".templates/calcCase/zufluesse.gmt"/>
+			<arg name="mainSash" value="50"/>
+			<arg name="rightSash" value="50"/>
+			<arg name="selectionID" value="4"/>
+			<arg name="selectFeatureID" value="Node6100"/>
+			<!--
+        <arg name="ignoreLabel1" value="Status"/>
+	           <arg name="zmlTableShow" value="all"/>
+       <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+				
+        <arg name="ignoreType1" value="Q"/>
+						 -->
+			<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Abfluss#linkColumn=zuflussZR"/>
+		</page>
 <!--
  fuer jedes Teilmodell gibt es eine wizardpage,
  fuer jede wizarpage gibt es eine nacontrol_x.gml.
  die wizardpage ist eine Ansicht auf das rootFeature der nacontrol_x.gml.
  
  die wizardpage ist folgendermassen aufgebaut:
-     die 5 KallibrierungsParameter aus nacontrol_x.gml
+     die 5 optimierungsparameter aus nacontrol_x.gml
   2. Diagrammview auf den Pegel und auf das Ergebnis
      PegelLink und ErgebnisLink ist ebenfalls im nacontrol_x.gml enthalten.
     (oder fuer jede wizardpage auch eine Diagrammvorlage ?)
@@ -59,11 +65,10 @@
 		<arg name="modelspec" value="modelspec_1.xml"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
 		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
-		
 		<arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<page className="org.kalypso.ui.calcwizard.modelpages.KalypsoNAWizardPage" pageTitle="Prognose Pegel Adorf 2/17" 
