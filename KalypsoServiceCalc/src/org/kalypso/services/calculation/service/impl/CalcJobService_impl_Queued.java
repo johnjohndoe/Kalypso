@@ -52,7 +52,6 @@ import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
@@ -65,6 +64,7 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 /**
  * @author Belger
@@ -107,6 +107,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
     try
     {
+      // TODO sollten dies nicht die einzelnen calservices selber tun?
       TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
       TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new DiagramTypeHandler() );
     }
