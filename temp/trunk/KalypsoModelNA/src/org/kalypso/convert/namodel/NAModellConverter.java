@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.opengis.cs.CS_CoordinateSystem;
+import org.w3c.dom.Document;
 
 /**
  * import and export of kalypso rainfall runoff models converts between custom
@@ -132,8 +133,10 @@ public class NAModellConverter
     
     final GMLSchema gmlSchema=new GMLSchema(conf.getSchemaURL());
     // TODO: Andreas: Namespace ok for gml?
-    GMLWorkspace workspace = new GMLWorkspace_Impl( gmlSchema.getFeatureTypes(),rootFeature,
-            null, ":project:.model/schema/namodel.gml", gmlSchema.getSchema().getNamespaceURI());
+    // TODO: Andreas: Namespace ok for gml?
+    final Document schema = gmlSchema.getSchema();
+    final GMLWorkspace workspace = new GMLWorkspace_Impl( gmlSchema.getFeatureTypes(),rootFeature,
+            null, ":project:.model/schema/namodel.gml", schema.getNamespaceURI(), gmlSchema.getNamespaceMap() );
     GmlSerializer.serializeWorkspace(new FileWriter( gmlFile ),workspace);
     final UpdateModell updater=new UpdateModell(gmlFile.toURL());
     updater.updateIt();
