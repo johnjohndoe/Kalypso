@@ -32,8 +32,9 @@ import de.tuhh.wb.javagis.data.GisRelation;
 
 public class GisSingleObjectView1 extends JInternalFrame implements InternalFrameListener
 {
- 	private GisElement myGisElement;
+    private GisElement myGisElement;
     private JScrollPane scrollPane;
+    private GSOViewTableModel tableModel;
     private static GisSingleObjectView1 instance=null;
 
     public GisSingleObjectView1(String frameName)
@@ -43,13 +44,12 @@ public class GisSingleObjectView1 extends JInternalFrame implements InternalFram
 	ViewManager.desktop.add(this);
     }
 	
-	public static void load(String title,GisElement gisElement)
+    public static void load(String title,GisElement gisElement)
     {
 	if(instance!=null && instance.isClosed())
 	    instance=null;
 	if(instance==null)
 	    instance=new GisSingleObjectView1("Kalypso detailed View");
-
 	/*
 	  if(myGisElement!=null)
 	  myGisElement.getGisElementClass().unRegister(this);
@@ -63,7 +63,7 @@ public class GisSingleObjectView1 extends JInternalFrame implements InternalFram
 	instance.show();
     }
 	
-	private void rebuildView()
+    private void rebuildView()
     {
 	getContentPane().removeAll();
 	setTitle(myGisElement.getLabel());//Name()+" #"+myGisElement.getId().toString());
@@ -71,11 +71,11 @@ public class GisSingleObjectView1 extends JInternalFrame implements InternalFram
 		
 	JPanel myPanel = new JPanel(layout);
 		
-	GSOViewTableModel tableModel = new GSOViewTableModel(myGisElement);
+	tableModel = new GSOViewTableModel(myGisElement);
 	JTable singleTable = new JTable(tableModel);
 	myPanel.add(singleTable);
 	singleTable.getColumn("SimplePropertyValue").setCellRenderer(new MultiRenderer());
-    singleTable.getColumn("SimplePropertyValue").setCellEditor(new MultiEditor());
+	singleTable.getColumn("SimplePropertyValue").setCellEditor(new MultiEditor());
 		
 	//scrollPane=new JScrollPane(myPanel);
 		
