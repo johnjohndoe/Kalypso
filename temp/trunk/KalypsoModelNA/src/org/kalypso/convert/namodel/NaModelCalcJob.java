@@ -1,19 +1,23 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.FileUtils;
 import org.deegree.model.feature.GMLWorkspace;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
 import org.kalypso.services.calculation.job.impl.CalcJobHelper;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
@@ -49,29 +53,39 @@ public class NaModelCalcJob extends AbstractCalcJob
 
   private final String TEMPLATE_CONF_FILE = "misc/resourceFile.conf";
 
-  public void run( File basedir, CalcJobDataBean[] input ) throws CalcJobServiceException
+  public void run( final File basedir, final CalcJobDataBean[] input )
+      throws CalcJobServiceException
   {
-    if( !basedir.exists() )
-      basedir.mkdirs();
+    // davon kannst Du ausgehen! TODO: gernot statt basedir erstmal ein
+    // nativedir machen
+    //    if( !basedir.exists() )
+    //      basedir.mkdirs();
+    // erstmal ein Verzeichnis für die generierten Daten erzeugen
+    final File exedir = new File( basedir, "exe" );
+
+    // in diesem Verzeichnis liegen die Input-Dateien
+    final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
+    final File outputdir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+
     try
     {
       setMessage( "richte Berechnungsverzeichnis ein" );
       if( !isCanceled() )
-        prepareBaseDir( basedir );
+        prepareBaseDir( exedir );
       // kopiere template aus resourcen:
       if( !isCanceled() )
-        copyTemplates( basedir );
+        copyTemplates( exedir );
       // generiere ascii-dateien
       setMessage( "generiere ASCII-Dateien (Modelldaten und Zeitreihen)" );
       if( !isCanceled() )
-        generateASCII( basedir, input );
+        generateASCII( exedir, inputdir, input );
       // starte berechnung
       setMessage( "starte Simulationskern" );
       if( !isCanceled() )
-        startCalculation( basedir );
+        startCalculation( exedir );
       // ergebnisse aufbereiten
       setMessage( "lade Ergebnisse" );
-      loadResults( basedir );
+      loadResults( exedir, outputdir );
 
       System.out.println( "fertig" );
     }
@@ -81,16 +95,16 @@ public class NaModelCalcJob extends AbstractCalcJob
     }
   }
 
-  private void generateASCII( File basedir, CalcJobDataBean[] beans ) throws Exception
+  private void generateASCII( final File exedir, final File inputdir, CalcJobDataBean[] beans )
+      throws Exception
   {
-
     final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
-    final URL modellURL = new File( modellBean.getPath() ).toURL();
+    final URL modellURL = new File( inputdir, modellBean.getPath() ).toURL();
 
     final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId( CONTROL_ID, beans );
-    final URL controlURL = new File( controlBean.getPath() ).toURL();
+    final URL controlURL = new File( inputdir, controlBean.getPath() ).toURL();
 
-    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( modellURL, basedir );
+    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( modellURL, exedir );
 
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, conf
         .getControlSchemaURL() );
@@ -102,40 +116,57 @@ public class NaModelCalcJob extends AbstractCalcJob
         "startforecast" ) );
     conf.setSimulationEnd( (Date)controlWorkspace.getRootFeature().getProperty( "endsimulation" ) );
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
-    NAControlConverter.featureToASCII( basedir, controlWorkspace, modellWorkspace );
+    NAControlConverter.featureToASCII( exedir, controlWorkspace, modellWorkspace );
 
     NAModellConverter.featureToAscii( conf, modellWorkspace );
 
     // create temperatur und verdunstung timeseries
     DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf
         .getSimulationEnd() );
-    writer.writeTmpFile( new File( basedir, "klima.dat/std.tmp" ) );
-    writer.writeVerdFile( new File( basedir, "klima.dat/std.ver" ) );
+    writer.writeTmpFile( new File( exedir, "klima.dat/std.tmp" ) );
+    writer.writeVerdFile( new File( exedir, "klima.dat/std.ver" ) );
   }
 
-  private void loadResults( File baseDir )
+  private void loadResults( final File baseDir, final File outdir )
   {
+    outdir.mkdirs();
+
     // ASCII-Files:
-    
+
     // zeitreihen im out Dir
     final File outDir = new File( baseDir, "out_we.nat" );
     final File[] outDirResults = outDir.listFiles();
     for( int i = 0; i < outDirResults.length; i++ )
     {
       final File file = outDirResults[i];
-      addResult( new CalcJobDataBean( FileUtilities.getSuffix( file ), file.getName(), file
-          .getAbsolutePath() ) );
+
+      copyResult( baseDir, file, outdir, FileUtilities.getSuffix( file ), file.getName() );
+      //      addResult( new CalcJobDataBean( FileUtilities.getSuffix( file ),
+      // file.getName(), file
+      //          .getAbsolutePath() ) );
     }
 
+    final File startDir = new File( baseDir, "start" );
+
+    final File outputerr = new File( startDir, "output.err" );
+    if( outputerr.exists() )
+      copyResult( startDir, outputerr, outdir, "outputerr", "output.err" );
+    final File outputres = new File( startDir, "output.res" );
+    if( outputres.exists() )
+      copyResult( startDir, outputres, outdir, "outputres", "output.res" );
+
+    // TODO Andreas: diese beiden Dateien existieren nicht!
     // log und error dateien:
     final File logDir = new File( baseDir, "out_err" );
-    final File logFile=new File(logDir,"");
-    if(logFile.exists())
-      addResult( new CalcJobDataBean( "LOG", "Berich Simulationskern", logFile.getAbsolutePath()));
-      
-    final File errFile=new File(logDir,"");
-    if(errFile.exists())
-      addResult( new CalcJobDataBean( "ERR", "Fehlerberich", errFile.getAbsolutePath()));
+    final File logFile = new File( logDir, "" );
+    if( logFile.exists() )
+      // TODO: 'berich' ?
+      addResult( new CalcJobDataBean( "LOG", "Berich Simulationskern", logFile.getAbsolutePath() ) );
+
+    final File errFile = new File( logDir, "" );
+    if( errFile.exists() )
+      // TODO: 'berich' ?
+      addResult( new CalcJobDataBean( "ERR", "Fehlerberich", errFile.getAbsolutePath() ) );
   }
 
   private void prepareBaseDir( File baseDir )
@@ -160,8 +191,10 @@ public class NaModelCalcJob extends AbstractCalcJob
           FileUtilities.makeFileFromStream( false, destFile, inputStream );
           System.out.println( " ...copied" );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
+          e.printStackTrace();
+
           System.out.println( "ERR: " + resource + " max not exist" );
         }
       }
@@ -197,6 +230,8 @@ public class NaModelCalcJob extends AbstractCalcJob
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
+    PrintWriter outwriter = null;
+    PrintWriter errwriter = null;
 
     try
     {
@@ -206,12 +241,18 @@ public class NaModelCalcJob extends AbstractCalcJob
 
       final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
 
+      outwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
+      errwriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
+
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
       while( true )
       {
-        ReaderUtilities.dumpAllAvailable( inStream );
-        ReaderUtilities.dumpAllAvailable( errStream );
+        CopyUtils.copy( inStream, outwriter );
+        CopyUtils.copy( errStream, errwriter );
+
+        //        ReaderUtilities.dumpAllAvailable( inStream );
+        //        ReaderUtilities.dumpAllAvailable( errStream );
 
         try
         {
@@ -234,17 +275,23 @@ public class NaModelCalcJob extends AbstractCalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausf?hren", e );
+      throw new CalcJobServiceException( "Fehler beim Ausführen", e );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausf?hren", e );
+      throw new CalcJobServiceException( "Fehler beim Ausführen", e );
     }
     finally
     {
       try
       {
+        if( outwriter != null )
+          outwriter.close();
+
+        if( errwriter != null )
+          errwriter.close();
+
         if( inStream != null )
           inStream.close();
 
@@ -255,6 +302,37 @@ public class NaModelCalcJob extends AbstractCalcJob
       {
         e1.printStackTrace();
       }
+    }
+  }
+
+  /**
+   * Kopiert eine Datei in den Ausgabeordner und fügt die entsprechende Bean zur
+   * Ausgabe hinzu.
+   * 
+   * Die Pfade werden wie folgt angelegt:
+   * 
+   * Das Resultfile wird relativ zu resultdir aufgelöst und unter dem gleichen
+   * rleativen Pfad unter das Outputdir abgelegt: z.B.: resultdir
+   * C:\tmp\kalypsonatest\exe\ resultfile:
+   * C:\tmp\kalypsonatest\exe\out_we.nat\950901.bof Ablage im utputdir:
+   * C:\tmp\kalypsonatest\output\out_we.nat\950901.bof pfad in der Bean:
+   * .\out_we.nat\950901.bof
+   *  
+   */
+  private void copyResult( final File resultdir, final File resultfile, final File outputdir,
+      final String id, final String description )
+  {
+    final String relativePathTo = FileUtilities.getRelativePathTo( resultdir, resultfile );
+    final File outputfile = new File( outputdir, relativePathTo );
+
+    try
+    {
+      FileUtils.copyFile( resultfile, outputfile );
+      addResult( new CalcJobDataBean( id, description, "." + relativePathTo ) );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
     }
   }
 
