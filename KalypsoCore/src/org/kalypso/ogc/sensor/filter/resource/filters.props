@@ -4,6 +4,7 @@ ValueFilterImpl=org.kalypso.ogc.sensor.filter.creators.ValueFilterCreator
 NOperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.NOperationFilterCreator
 OperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.OperationFilterCreator
 ZmlFilterImpl=org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator
+IntervallFilterImpl=org.kalypso.ogc.sensor.filter.creators.IntervallFilterCreator
 
 WqFilterImpl=org.kalypso.ogc.sensor.timeseries.wq.WQFilterCreator
 ForecastFilterImpl=org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator

@@ -64,9 +64,9 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class ObservationUtilities
 {
-  private ObservationUtilities( )
+  private ObservationUtilities()
   {
-    //  not intended to be instanciated
+  //  not intended to be instanciated
   }
 
   /**
@@ -101,8 +101,7 @@ public class ObservationUtilities
    * 
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    */
-  public static IAxis findAxisByNameNoEx( final IAxis[] axes,
-      final String axisName )
+  public static IAxis findAxisByNameNoEx( final IAxis[] axes, final String axisName )
   {
     try
     {
@@ -164,9 +163,8 @@ public class ObservationUtilities
    * @return axes which are compatible with specified Class of data
    * @throws NoSuchElementException
    */
-  public static IAxis[] findAxisByClass( final IAxis[] axes,
-      final Class desired, final boolean excludeStatusAxes )
-      throws NoSuchElementException
+  public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired,
+      final boolean excludeStatusAxes ) throws NoSuchElementException
   {
     final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
 
@@ -174,8 +172,7 @@ public class ObservationUtilities
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
       {
-        if( !excludeStatusAxes || excludeStatusAxes
-            && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
           list.add( axes[i] );
       }
     }
@@ -183,7 +180,7 @@ public class ObservationUtilities
     if( list.size() == 0 )
       throw new NoSuchElementException( "No axis found with class: " + desired );
 
-    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -201,7 +198,7 @@ public class ObservationUtilities
         list.add( axes[i] );
     }
 
-    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -212,8 +209,7 @@ public class ObservationUtilities
    * 
    * @throws SensorException
    */
-  public static String dump( final ITuppleModel model, final String sep )
-      throws SensorException
+  public static String dump( final ITuppleModel model, final String sep ) throws SensorException
   {
     final StringWriter writer = new StringWriter();
 
@@ -238,8 +234,8 @@ public class ObservationUtilities
    * @param writer
    * @throws SensorException
    */
-  public static void dump( final ITuppleModel model, final String sep,
-      final Writer writer ) throws SensorException
+  public static void dump( final ITuppleModel model, final String sep, final Writer writer )
+      throws SensorException
   {
     final IAxis[] axes = model.getAxisList();
 
@@ -312,8 +308,8 @@ public class ObservationUtilities
    * @return string representation of the given line (tupple)
    * @throws SensorException
    */
-  public static String dump( final ITuppleModel model, final String sep,
-      final int index, final boolean excludeStatusAxes ) throws SensorException
+  public static String dump( final ITuppleModel model, final String sep, final int index,
+      final boolean excludeStatusAxes ) throws SensorException
   {
     IAxis[] axes = model.getAxisList();
 
@@ -378,9 +374,8 @@ public class ObservationUtilities
    *           when compatibility is wished but could not be guaranteed
    */
   public static ITuppleModel optimisticValuesCopy( final IObservation source,
-      final IObservation dest, final IVariableArguments args,
-      boolean fullCompatibilityExpected ) throws SensorException,
-      IllegalStateException
+      final IObservation dest, final IVariableArguments args, boolean fullCompatibilityExpected )
+      throws SensorException, IllegalStateException
   {
     final IAxis[] srcAxes = source.getAxisList();
     final IAxis[] destAxes = dest.getAxisList();
@@ -394,16 +389,15 @@ public class ObservationUtilities
     {
       try
       {
-        final IAxis A = ObservationUtilities.findAxisByType( srcAxes,
-            destAxes[i].getType() );
+        final IAxis A = ObservationUtilities.findAxisByType( srcAxes, destAxes[i].getType() );
 
         map.put( destAxes[i], A );
       }
       catch( NoSuchElementException e )
       {
         if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
-          throw new IllegalStateException( "Required axis " + destAxes[i]
-              + " from " + dest + " could not be found in " + source );
+          throw new IllegalStateException( "Required axis " + destAxes[i] + " from " + dest
+              + " could not be found in " + source );
 
         // else ignored, try with next one
       }
@@ -420,14 +414,12 @@ public class ObservationUtilities
 
       for( int j = 0; j < destAxes.length; j++ )
       {
-        final IAxis srcAxis = (IAxis) map.get( destAxes[j] );
+        final IAxis srcAxis = (IAxis)map.get( destAxes[j] );
 
         if( srcAxis != null )
-          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i,
-              srcAxis );
+          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i, srcAxis );
         else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
-          tupple[model.getPositionFor( destAxes[j] )] = new Integer(
-              KalypsoStati.BIT_OK );
+          tupple[model.getPositionFor( destAxes[j] )] = new Integer( KalypsoStati.BIT_OK );
       }
 
       model.addTupple( tupple );
@@ -436,6 +428,15 @@ public class ObservationUtilities
     dest.setValues( model );
 
     return model;
+  }
+
+  public static Object[] getElements( final ITuppleModel tuppleModel, final int row,
+      final IAxis[] axisList ) throws SensorException
+  {
+    final Object[] result = new Object[axisList.length];
+    for( int i = 0; i < axisList.length; i++ )
+      result[i] = tuppleModel.getElement( row, axisList[i] );
+    return result;
   }
 
 }

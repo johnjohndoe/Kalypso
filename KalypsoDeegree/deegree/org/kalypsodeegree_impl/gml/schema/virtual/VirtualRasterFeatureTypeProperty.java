@@ -52,7 +52,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualRasterFeatureTypeProperty implements VirtuelFeatureTypeProperty
+public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypeProperty
 {
   private final FeatureTypeProperty m_ftp;
 
@@ -66,7 +66,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtuelFeatureTypePrope
   }
 
   /**
-   * @see org.deegree_impl.gml.schema.virtual.VirtuelFeatureTypeProperty#getVirtuelValue(org.deegree.model.feature.Feature,
+   * @see org.deegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.deegree.model.feature.Feature,
    *      org.deegree.model.feature.GMLWorkspace)
    */
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )

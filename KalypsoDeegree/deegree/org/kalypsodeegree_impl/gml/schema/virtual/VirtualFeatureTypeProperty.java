@@ -45,7 +45,7 @@ import org.deegree.model.feature.GMLWorkspace;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public interface VirtuelFeatureTypeProperty extends FeatureTypeProperty
+public interface VirtualFeatureTypeProperty extends FeatureTypeProperty
 {
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace );
 }

@@ -57,7 +57,7 @@ import org.deegree_impl.model.geometry.GeometryFactory;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualFeatureAssociationTypeProperty implements VirtuelFeatureTypeProperty
+public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureTypeProperty
 {
 
   private final String m_name;
