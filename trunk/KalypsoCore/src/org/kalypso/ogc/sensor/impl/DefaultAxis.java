@@ -173,7 +173,7 @@ public class DefaultAxis implements IAxis
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_label )
+    bf.append( m_dataClass.getName() ).append( m_isKey )
         .append( m_type ).append( m_unit );
 
     return bf.toString().hashCode();
