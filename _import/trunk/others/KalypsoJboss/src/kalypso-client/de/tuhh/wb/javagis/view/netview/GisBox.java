@@ -17,7 +17,7 @@ public class GisBox
     }
 
     public GisBox(double x, double y, double w, double h)
-    {    
+    {
 	p1=new GisPoint(x,y);
 	p2=new GisPoint(x+w,y+h);
     }
@@ -46,7 +46,7 @@ public class GisBox
 		h=p1.y-p2.y;
 	    }
 	this.p1=new GisPoint(x,y);
-	this.p2=new GisPoint(x+w,y+h);	
+	this.p2=new GisPoint(x+w,y+h);
     }
 
     public GisBox getNorthHalf()
@@ -104,4 +104,19 @@ public class GisBox
     {
 	return p2.y-p1.y;
     }
+		public GisPoint getp1()
+
+	{
+
+	return p1;
+
+	}
+
+	public GisPoint getp2()
+
+	{
+
+	return p2;
+
+	}
 }
