@@ -21,15 +21,12 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -44,9 +41,7 @@ import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypso.util.progress.NullProgressMonitor;
 import org.kalypso.zml.ObservationType;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * <p>
@@ -500,12 +495,7 @@ public class SpreeCalcJob extends AbstractCalcJob
   {
     dataMap.getClass();
     
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    final CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault().export(
-        csFac.getCSByName( "EPSG:4326" ) );
-
-    final GMLWorkspace workspace = ShapeSerializer.deserialize( tsFilename, crs,
-        new NullProgressMonitor() );
+    final Collection features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
 
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
     final Calendar calendar = new GregorianCalendar();
@@ -514,8 +504,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     final Map valuesMap = new HashMap();
     final Collection dates = new ArrayList();
 
-    final List features = (List)workspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    for( Iterator iter = features.iterator(); iter.hasNext(); )
+    for( final Iterator iter = features.iterator(); iter.hasNext(); )
     {
       final Feature feature = (Feature)iter.next();
 
@@ -554,9 +543,9 @@ public class SpreeCalcJob extends AbstractCalcJob
       }
     }
 
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
+    final String dateType = TimeserieConstants.TYPE_DATE;
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieConstants.getUnit( dateType ),
         Date.class, 0, true );
-    // TODO: statt wert, die Einheit nehmen!
 
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QV_RLKETTE</name>
+    <metadataList>
+        <metadata name="StartZeit" value="27.4.2005 12:00"/>
+        <metadata name="Name" value="QV_RLKETTE"/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Wert" type="Q" unit="">
+        <valueArray separator=";">0.0;2.0;2.0;2.0;2.0</valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-04-26T22:00:00;2004-04-27T01:00:00;2004-04-27T04:00:00;2004-04-27T07:00:00;2004-04-27T10:00:00</valueArray>
+    </axis>
+</observation>
+
