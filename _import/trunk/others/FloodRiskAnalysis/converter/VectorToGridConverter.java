@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.geometry.GM_Object;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree.model.geometry.GM_Position;
-import org.deegree_impl.model.cv.RangeSet;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import view.LogView;
 

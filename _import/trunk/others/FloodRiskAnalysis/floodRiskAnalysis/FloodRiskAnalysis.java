@@ -4,9 +4,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.deegree_impl.model.cv.RangeSet;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 import tools.Interval;
 import view.LogView;

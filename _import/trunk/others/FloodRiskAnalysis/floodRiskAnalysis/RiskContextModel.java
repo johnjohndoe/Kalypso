@@ -5,9 +5,9 @@ import java.io.FileWriter;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import tools.Interval;
 import view.LogView;

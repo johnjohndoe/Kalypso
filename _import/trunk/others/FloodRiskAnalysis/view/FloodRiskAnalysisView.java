@@ -7,10 +7,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.cv.RangeSetTypeHandler;
-import org.deegree_impl.model.cv.RectifiedGridDomainTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 /**
  * Main class for starting a FloodRiskAnalysis with a user interface

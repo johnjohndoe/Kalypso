@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/backupdeegree"/>
-	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="lib" path="lib/jai_core.jar"/>
-	<classpathentry kind="src" path="/KalypsoUI"/>
+	<classpathentry kind="src" path="/KalypsoDeegree"/>
+	<classpathentry kind="src" path="/KalypsoCore"/>
+	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

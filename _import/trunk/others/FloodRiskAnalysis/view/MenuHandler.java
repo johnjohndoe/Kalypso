@@ -13,12 +13,12 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import tools.Number;

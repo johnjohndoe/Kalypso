@@ -3,7 +3,7 @@ package damageAnalysis;
 import java.io.File;
 import java.util.TreeMap;
 
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 
 import converter.ArcGridConverter;
 

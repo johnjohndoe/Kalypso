@@ -8,10 +8,10 @@ import java.util.Vector;
 
 import mathTool.ParseFunction;
 
-import org.deegree.model.geometry.GM_Point;
-import org.deegree_impl.model.cv.RangeSet;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 import tools.Number;
 import view.LogView;

@@ -10,14 +10,14 @@ import java.math.BigDecimal;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.deegree.model.coverage.GridRange;
-import org.deegree.model.geometry.GM_Point;
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.cv.GridRange_Impl;
-import org.deegree_impl.model.cv.RangeSet;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
-import org.deegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import tools.Number;

@@ -5,12 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
-import org.deegree_impl.model.cv.RectifiedGridCoverageFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverageFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

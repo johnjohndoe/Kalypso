@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.cs.ConvenienceCSFactory;
-import org.deegree_impl.model.cv.RangeSet;
-import org.deegree_impl.model.cv.RangeSetTypeHandler;
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
-import org.deegree_impl.model.cv.RectifiedGridDomain;
-import org.deegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import tools.Number;

@@ -3,7 +3,7 @@ package damageAnalysis;
 import java.util.Hashtable;
 import java.util.TreeMap;
 
-import org.deegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 
 /**
  * Class, which holds the required InputData for a DamageAnalysis
