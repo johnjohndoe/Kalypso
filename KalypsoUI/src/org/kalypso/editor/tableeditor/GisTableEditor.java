@@ -35,6 +35,8 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
+import org.kalypso.util.command.DefaultCommandManager;
+import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
@@ -62,6 +64,12 @@ import org.kalypso.util.pool.ResourcePool;
 public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IPoolListener
 {
   private static final Object DUMMY_OBJECT = new Object();
+  
+  /** leider abhängig von implementation von IEditorPart */
+  public static final int PROP_LAYERDIRTY = 0x1000;
+
+  protected final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
+      KalypsoFeatureLayer.class );
 
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
@@ -75,12 +83,15 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   private String m_type;
 
-  protected final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
-      KalypsoFeatureLayer.class );
-
   private PoolableObjectType m_key = null;
 
-  private Gistableview m_tableview;
+  private Gistableview m_tableview = null;
+
+  private boolean m_isEditing = false;
+  
+  private boolean m_isLayerDirty = false;
+  
+  private ICommandManager m_layerCommandManager = new DefaultCommandManager();
 
   public GisTableEditor()
   {
@@ -98,6 +109,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     }
 
     m_layerPool.addPoolListener( this );
+    m_layerCommandManager.addCommandManagerListener( this );
   }
 
   /**
@@ -106,6 +118,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public void dispose()
   {
     m_layerPool.removePoolListener( this );
+    m_layerCommandManager.removeCommandManagerListener( this );
+    
+    super.dispose();
   }
 
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
@@ -331,5 +346,43 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     
     saveJob.setPriority( Job.LONG );
     saveJob.schedule();
+  }
+
+  public void setEditing( final boolean isEditing )
+  {
+    m_isEditing = isEditing;
+  }
+  
+  public boolean isEditing( )
+  {
+    return m_isEditing;
+  }
+  
+  public boolean isLayerDirty()
+  {
+    return m_isLayerDirty;
+  }
+  
+  public void setLayerDirty( final boolean isDirty )
+  {
+    m_isLayerDirty = isDirty;
+    
+    firePropertyChange( PROP_LAYERDIRTY );
+  }
+
+  public ICommandManager getLayerCommandManager()
+  {
+    return m_layerCommandManager;
+  }
+  
+  /**
+   * @see org.kalypso.editor.AbstractEditorPart#onCommandManagerChanged(org.kalypso.util.command.ICommandManager)
+   */
+  public void onCommandManagerChanged( final ICommandManager source )
+  {
+    super.onCommandManagerChanged( source );
+    
+    if( source == m_layerCommandManager )
+      setLayerDirty( true );
   }
 }

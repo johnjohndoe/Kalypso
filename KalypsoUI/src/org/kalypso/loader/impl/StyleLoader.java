@@ -94,16 +94,6 @@ public class StyleLoader extends AbstractLoader implements IPoolListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.util.Properties,
-   *      java.lang.Object)
-   */
-  public void save( Properties source, Object data ) throws LoaderException
-  {
-    // TODO: support it
-    throw new LoaderException( "Operation not supported" );
-  }
-
-  /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
   public String getDescription()

@@ -128,11 +128,27 @@
          <action
                toolbarPath="tabelle"
                label="Daten speichern"
-               tooltip="Speichert die Daten der Tabelle"
                class="org.kalypso.editor.tableeditor.actions.SaveDataActionDelagate"
+               tooltip="Speichert die Daten der Tabelle"
                style="push"
                menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.editor.tableeditor.SaveDataAction"/>
+               id="org.kalypso.editor.tableeditor.SaveDataAction">
+            <enablement>
+               <objectState
+                     value="true"
+                     name="isLayerDirty"/>
+            </enablement>
+         </action>
+         <action
+               toolbarPath="tabelle"
+               label="Toggle Editing"
+               tooltip="Sartet oder stopt das Editieren der Tabellendaten"
+               class="org.kalypso.editor.tableeditor.actions.StartEditingActionDelagate"
+               style="toggle"
+               state="true"
+               menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
+               id="org.kalypso.editor.tableeditor.StartEditingAction">
+         </action>
          <menu
                label="Spalten"
                path="org.kalypso.editors.tableeditor.menu/spalten"
@@ -143,70 +159,64 @@
       <editorContribution
             targetID="org.kalypso.editor.mapeditor.GisMapEditor"
             id="org.kalypso.ogc.widgets.GisMapEditorActionDelegate">
-                     <action
+         <action
                toolbarPath="karte"
                label="volle Ausdehnung"
-               tooltip="Zoom to fullextent"
+               class="org.kalypso.editor.mapeditor.actiondelegates.FullExtentWidgetDelegate"
                icon="icons/full/elcl16/kde_window_fullscreen.gif"
-               class="org.kalypso.ogc.widgets.FullExtentAction"
+               tooltip="Zoom to fullextent"
                style="push"
                id="org.kalypso.editor.mapeditor.action.FullExtentAction"/>
          <action
                toolbarPath="karte"
                label="Ausschnitt verkleinern"
-               class="org.kalypso.ogc.widgets.ZoomOutAction"
-               icon="icons/full/elcl16/kde_viewmag-.gif"
                tooltip="vergrößert den Kartenausschnitt"
+               icon="icons/full/elcl16/kde_viewmag-.gif"
+               class="org.kalypso.editor.mapeditor.actiondelegates.ZoomOutWidgetDelegate"
                style="push"
                id="org.kalypso.editor.mapeditor.action.ZoomOutAction"/>
-            </editorContribution>
-      <editorContribution
-            targetID="org.kalypso.editor.mapeditor.GisMapEditor"
-            id="org.kalypso.ogc.widget.GisMapEditorWidgetActionDelegate">
-                     <action
+         <action
                disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
                toolbarPath="karte"
                label="Ausschnitt vergrößern"
+               class="org.kalypso.editor.mapeditor.actiondelegates.ZoomInWidgetDelegate"
                tooltip="vergrößert den Kartenausschnitt"
                icon="icons/full/elcl16/kde_viewmag+.gif"
-               class="org.kalypso.ogc.widgets.ZoomInWidget"
                style="radio"
                id="org.kalypso.editor.mapeditor.action.ZoomInAction"/>
          <action
                toolbarPath="karte"
                label="Kartenausschnitt verschieben"
-               tooltip="verschiebt den Kartenausschnitt"
+               class="org.kalypso.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
                icon="icons/full/elcl16/kde_move.gif"
-               class="org.kalypso.ogc.widgets.PanToWidget"
+               tooltip="verschiebt den Kartenausschnitt"
                style="radio"
                id="org.kalypso.editor.mapeditor.action.PanAction"/>
           <action
                 toolbarPath="karte"
                 label="Elemente selektieren"
-                class="org.kalypso.ogc.widgets.SelectWidget"
-                icon="icons/full/elcl16/kde_14_polyline.gif"
+                class="org.kalypso.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
                 tooltip="selektiert dinge"
+                icon="icons/full/elcl16/kde_14_polyline.gif"
                 style="radio"
-                menubarPath="/karte"
                 id="org.kalypso.editor.mapeditor.action.SelectAction"/>
- <action
-                toolbarPath="karte"
-                label="Elemente deselektieren"
-                class="org.kalypso.ogc.widgets.UnSelectWidget"
-                icon="icons/full/elcl16/kde_contents.gif"
-                tooltip="deselektiert dinge"
-                style="radio"
-                menubarPath="/karte"
-                id="org.kalypso.editor.mapeditor.action.UnSelectAction"/>
- <action
-                toolbarPath="karte"
-                label="Selektion umschalten"
-                class="org.kalypso.ogc.widgets.ToggleSelectWidget"
-                icon="icons/full/elcl16/kde_options.gif"
-                tooltip="umschalten"
-                style="radio"
-                menubarPath="/karte"
-                id="org.kalypso.editor.mapeditor.action.ToggleSelectAction"/>            </editorContribution>
+ 	<action
+        toolbarPath="karte"
+        label="Elemente deselektieren"
+        class="org.kalypso.editor.mapeditor.actiondelegates.UnSelectWidgetDelegate"
+        tooltip="deselektiert dinge"
+        icon="icons/full/elcl16/kde_contents.gif"
+        style="radio"
+        id="org.kalypso.editor.mapeditor.action.UnSelectAction"/>
+	 <action
+        toolbarPath="karte"
+        label="Selektion umkehren"
+        class="org.kalypso.editor.mapeditor.actiondelegates.ToggleSelectWidgetDelegate"
+        tooltip="umschalten"
+        icon="icons/full/elcl16/kde_options.gif"
+        style="radio"
+        id="org.kalypso.editor.mapeditor.action.ToggleSelectAction"/>
+	  </editorContribution>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">

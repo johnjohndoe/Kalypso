@@ -8,6 +8,8 @@ import org.kalypso.editor.tableeditor.layerTable.LayerTable;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
 import org.kalypso.editor.tableeditor.layerTable.command.AddRowCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.util.command.CommandJob;
+import org.kalypso.util.command.ICommand;
 
 /**
  * @author belger
@@ -25,7 +27,8 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
     final FeatureType featureType = model.getFeatureType();
     final Object[] properties = new Object[featureType.getProperties().length];
 
-    final KalypsoFeature feature = new KalypsoFeature(FeatureFactory.createFeature( "x", featureType, properties ));
+    final KalypsoFeature feature = new KalypsoFeature( FeatureFactory.createFeature( "x",
+        featureType, properties ) );
 
     final Runnable r = new Runnable()
     {
@@ -35,7 +38,9 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
       }
     };
 
-    getEditor().postCommand( new AddRowCommand( model, feature ), r );
+    final ICommand command = new AddRowCommand( model, feature );
+    new CommandJob( command, getEditor().getLayerCommandManager(), getEditor().getSchedulingRule(),
+        r, CommandJob.POST );
   }
 
   /**
@@ -44,5 +49,13 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
   protected boolean isEnabled( final ISelection selection )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.editor.tableeditor.actions.GisTableAbstractActionDelagate#isChecked()
+   */
+  protected boolean isChecked()
+  {
+    return false;
   }
 }

@@ -47,7 +47,7 @@ public class AddRepositoryAction extends FullAction
     RepositorySpecification spec = (RepositorySpecification)dlg.getResult()[0];
     IRepositoryFactory f = spec.createFactory();
     
-    if( f.configureRepository( m_shell, null ) )
+    if( f.configureRepository( null ) )
       try
       {
         m_cp.addRepository( f.createRepository() );

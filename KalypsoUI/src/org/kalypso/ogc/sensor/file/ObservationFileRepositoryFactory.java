@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.java.io.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.util.repository.IRepository;
@@ -18,11 +19,12 @@ public class ObservationFileRepositoryFactory implements IRepositoryFactory
   private String m_location = null;
   
   /**
-   * @see org.kalypso.util.repository.IRepositoryFactory#configureRepository(org.eclipse.swt.widgets.Shell, org.kalypso.util.repository.IRepository)
+   * @see org.kalypso.util.repository.IRepositoryFactory#configureRepository(org.kalypso.util.repository.IRepository)
    */
-  public boolean configureRepository( final Shell shell, IRepository rep )
+  public boolean configureRepository( IRepository rep )
   {
-    DirectoryDialog fileDlg = new DirectoryDialog( shell, SWT.OPEN );
+    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    final DirectoryDialog fileDlg = new DirectoryDialog( shell, SWT.OPEN );
 
     if( rep != null )
        fileDlg.setFilterPath( rep.getLocation() );
