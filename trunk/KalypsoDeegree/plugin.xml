@@ -123,5 +123,8 @@
       <library name="lib/servlet/servlet.jar">
          <export name="*"/>
       </library>
+      <library name="lib/braju/hb15.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 </plugin>

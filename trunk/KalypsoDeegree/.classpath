@@ -25,7 +25,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jax-qname.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-api.jar"/>
-	<classpathentry exported="true" sourcepath="J:/hyd5309/Development/Java/jwsdp/jaxrpc1.0-scsl/jaxrpc-ri/src" kind="lib" path="lib/jwsdp/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/jaxrpc-spi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jwsdp/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail/mail.jar"/>
@@ -39,6 +39,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/oracle/sdoapi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/postgis/postgis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/servlet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/braju/hb15.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>

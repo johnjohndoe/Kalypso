@@ -45,6 +45,8 @@ package org.deegree_impl.io.shpapi;
 
 import java.util.ArrayList;
 
+import com.braju.format.Format;
+
 /**
  * Class representing a record of the data section of a dBase III/IV file <BR>
  * at the moment only the daata types character ("C") and numeric ("N") are
@@ -148,43 +150,59 @@ public class DBFDataSection
     {
 
       byte[] fddata = this.fieldDesc[i].getFieldDescriptor();
+      final Object recdata = recData.get( i );
       switch( fddata[11] )
       {
 
       // if data type is character
       case (byte)'C':
-        if( recData.get( i ) != null && !( recData.get( i ) instanceof String ) )
+        if( recdata != null && !( recdata instanceof String ) )
           throw new DBaseException( "invalid data type at field: " + i );
-        if( recData.get( i ) == null )
+        if( recdata == null )
         {
           b = new byte[0];
         }
         else
         {
-          b = ( (String)recData.get( i ) ).getBytes();
+          b = ( (String)recdata ).getBytes();
         }
         if( b.length > fddata[16] )
           throw new DBaseException( "string contains too many characters "
-              + (String)recData.get( i ) );
+              + (String)recdata );
         for( int j = 0; j < b.length; j++ )
           datasec.data[offset + j] = b[j];
         for( int j = b.length; j < fddata[16]; j++ )
           datasec.data[offset + j] = 0x20;
         break;
       case (byte)'N':
-        if( recData.get( i ) != null && !( recData.get( i ) instanceof Number ) )
+        if( recdata != null && !( recdata instanceof Number ) )
           throw new DBaseException( "invalid data type at field: " + i );
-        if( recData.get( i ) == null )
+
+        final int fieldLength = fddata[16];
+        if( recdata == null )
         {
-          b = new byte[0];
+          b = new byte[fieldLength];
+          for( int j = 0; j < fieldLength; j++ )
+            b[j] = ' ';
         }
         else
         {
-          b = ( (Number)recData.get( i ) ).toString().getBytes();
+          // todo: performance: would be probably to create the format-string only once
+          // create format:
+          final int decimalcount = fddata[17];
+          
+          String pattern;
+          if( decimalcount == 0 )
+            pattern = "%" + fieldLength + "d";
+          else
+            pattern = "%" + fieldLength + "." + decimalcount +  "f";
+          
+          final String format = Format.sprintf( pattern, new Object[] { recdata } );
+          b = format.getBytes();
         }
         if( b.length > fddata[16] )
           throw new DBaseException( "string contains too many characters "
-              + (String)recData.get( i ) );
+              + recdata );
         for( int j = 0; j < b.length; j++ )
           datasec.data[offset + j] = b[j];
         for( int j = b.length; j < fddata[16]; j++ )
