@@ -74,8 +74,8 @@ $headerDeegreeFork=&readHeader("HeaderDeegreeFork.txt");
 # 
 $defaultHeader="";
 
-#&examine("../../backupdeegree/deegree/org/deegree");
-#&examine("../../backupdeegree/deegree/org/deegree_impl");
+#&examine("../../KalypsoDeegree/deegree/org/deegree");
+#&examine("../../KalypsoDeegree/deegree/org/deegree_impl");
 
 $defaultHeader=$headerKalypso2D;
 &examine("../../Kalypso2d/src/org");
