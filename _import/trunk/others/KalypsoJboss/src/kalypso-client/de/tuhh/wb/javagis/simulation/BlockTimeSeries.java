@@ -31,12 +31,8 @@ import java.text.DecimalFormat;
 import java.text.DateFormat;
 import java.text.ParsePosition;
 import de.tuhh.wb.javagis.view.LogView;
-// Version 1 1
-// Version 1 2
-// Version 1 3
-// Version 1 4
-// Version 1 5
-// Version 1 6
+
+
 public class BlockTimeSeries {
 	//    SortedMap myTable;
 	private DateFormat dateFormat = new SimpleDateFormat("yyMMdd");
