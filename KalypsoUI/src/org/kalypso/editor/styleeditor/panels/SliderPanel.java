@@ -33,22 +33,10 @@ public class SliderPanel {
 	public final static int INTEGER = 1;
 	private int format = 1;
 	private String label = null;
-	private double selection = 0;
+	private double selection = 0.0;
 	
 	
-	public SliderPanel(Composite parent, String label, int min, int maximum, int inc, int format, double value){
-		this.label = label;
-		this.format = format;
-		this.min = min*100; 
-		this.max = maximum*100; 
-		if(inc>=maximum)
-			this.increment = max/10;
-		else
-			this.increment = inc*100;
-		if(value != -1 && value<=maximum)
-			this.selection = value;
-		else if(value>maximum)
-			this.selection = maximum;
+	public SliderPanel(Composite parent, String label, int minimum, int maximum, int inc, int format, double value){
 		this.parent = parent; 		
 		composite = new Composite(parent, SWT.NULL);
 		FormLayout compositeLayout = new FormLayout();
@@ -59,16 +47,32 @@ public class SliderPanel {
 		compositeLayout.marginWidth = 0;
 		compositeLayout.marginHeight = 0;
 		compositeLayout.spacing = 0;
-		composite.layout();			
+		composite.layout();		
+		text = new Text(composite,SWT.READ_ONLY | SWT.BORDER);
+		slider = new Slider(composite, SWT.HORIZONTAL);
+		
+		this.label = label;
+		this.format = format;
+		this.min = minimum*100; 
+		this.max = (maximum-minimum)*100; 
+		if(inc>=maximum)
+			this.increment = max/10;
+		else
+			this.increment = inc*100;
+		if(value != -1 && value<=maximum)
+			setSelection(value);
+		else if(value>maximum)
+			setSelection(maximum);				
 		init();
 	}
-	
+	// selection 1-15
 	public void setSelection(double selection){
+		this.selection = selection;
 		if(format == DECIMAL)
 			text.setText(""+selection);
 		else
 			text.setText(""+(int)selection);
-		slider.setSelection((int)(selection*100));		
+		slider.setSelection((int)(selection*100)-min);		
 	}
 	
 	public void addPanelListener(PanelListener pl) {
@@ -76,9 +80,8 @@ public class SliderPanel {
 	}
 
 	
-	private void init(){
-		
-		text = new Text(composite,SWT.READ_ONLY | SWT.BORDER);		
+	private void init()
+	{		
 		text.setBackground(new Color(null, new RGB(255,255,255)));
 		
 		FormData textData = new FormData();
@@ -86,9 +89,7 @@ public class SliderPanel {
 		textData.width = 20;
 		textData.left =  new FormAttachment(340, 1000, 0);		
 		textData.top =  new FormAttachment(120, 1000, 0);
-		text.setLayoutData(textData);			
-	
-		slider = new Slider(composite, SWT.HORIZONTAL);			
+		text.setLayoutData(textData);									
 		FormData sliderData = new FormData();
 		sliderData.height = 17;
 		sliderData.width = 90;
@@ -96,13 +97,12 @@ public class SliderPanel {
 		sliderData.top =  new FormAttachment(100, 1000, 0);
 		slider.setLayoutData(sliderData);		
 		slider.setIncrement(increment);
-		slider.setMinimum(min);
+		//slider.setMinimum(min);
 		slider.setMaximum(max+slider.getThumb());			
-		if(format == INTEGER)					
-			text.setText(""+slider.getSelection()/100);
+		if(format == INTEGER)	
+			setSelection((slider.getSelection()+min)/100);
 		else
-			text.setText(""+slider.getSelection()/100.0);
-		setSelection(selection);
+			setSelection((slider.getSelection()+min)/100.0);		
 		slider.addMouseListener(new MouseListener() {
 			public void mouseDoubleClick(MouseEvent e) {				
 			}
@@ -110,18 +110,17 @@ public class SliderPanel {
 			public void mouseDown(MouseEvent e) {	
 			}
 
-			public void mouseUp(MouseEvent e) {				
-				selection = ((Slider)e.getSource()).getSelection()/100.00;
+			public void mouseUp(MouseEvent e) {					
+				setSelection((slider.getSelection()+min)/100.00);
 				fire();
 			}
 		});
 		slider.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				int selection = ((Slider)e.getSource()).getSelection();
+			public void widgetSelected(SelectionEvent e) {								
 				if(format == INTEGER)					
-					text.setText(""+((Slider)e.getSource()).getSelection()/100);
+					text.setText(""+(((Slider)e.getSource()).getSelection()+min)/100);
 				else
-					text.setText(""+((Slider)e.getSource()).getSelection()/100.0);					
+					text.setText(""+(((Slider)e.getSource()).getSelection()+min)/100.0);					
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -149,7 +148,7 @@ public class SliderPanel {
         }
     }	
 	
-	public double getSelection(){
+	public double getSelection(){	
 		if(format==DECIMAL)
 			return selection;
 		else
