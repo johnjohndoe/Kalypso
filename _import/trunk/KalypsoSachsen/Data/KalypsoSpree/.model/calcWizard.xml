@@ -2,6 +2,7 @@
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+<!-- KONTROLLE DER ZEITREIHEN -->
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/table1.ott"/>
@@ -59,7 +60,7 @@
         
         <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=z#nameColumn=Name#linkColumn=Zugabe"/>
     </page>
-
+<!-- KALIBRIERUGN -->
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/boden.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
@@ -68,7 +69,6 @@
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
         <arg name="selectionID" value="32"/>
-        
         
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
         <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
