@@ -1,13 +1,14 @@
+package de.tuhh.kalypso.data;
 /**
 * I_Filter.java
 *
 * @author Christoph Küpferle
 */
 
-package de.tuhh.kalypso.data;
 
 import javax.swing.JFileChooser;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
 import javax.swing.JOptionPane;
 import de.tuhh.kalypso.data.timeseries.Timeseries;
 import java.util.HashSet;
+
+import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 
 public class I_FilterImpl implements I_Filter
 {
@@ -138,43 +141,65 @@ public class I_FilterImpl implements I_Filter
 	 */
 	
     public void exportASCIIFiles( String xmlSource, String exportFileName, Integer rootNodeNumber, HashSet allClimateFiles,HashSet allShortTermFiles ) throws Exception
-
     {
+	// HYDROTOP-FILE...
+	try
+	    {
+		//xmlFile:	xmlSource
+		//hydrotopfile: exportFileName+.hyd
+		File xmlFile=new File(xmlSource);
+		File xslFile=new File("xsl/xml2hydrotop.xsl");
+		System.out.println("starting transformation");
+		Runtime.getRuntime().gc();
+		String hydrotopString=ServiceTools.xslTransform(xmlFile,xslFile);
+		System.out.println("  transformation ready");
+
+		File hydrotopFile=new File(exportFileName+".hyd");
+		System.out.println(" writing to file: "+hydrotopFile.toString());
+		FileWriter out=new FileWriter(hydrotopFile);
+		out.write(hydrotopString);
+		out.close();
+	    }
+	catch(Exception e)
+	    {
+		System.out.println("could not write hydrotopfile");
+		e.printStackTrace();
+	    }
+	try
+	    {
+		State wcState=new State();
+		wcState.xmlParser(xmlSource);
+		Node rootNode=wcState.getNodeFromNr( rootNodeNumber.intValue());
+		if( rootNode == null )
+		    {
+			throw new KalypsoFilterException(
+							 "The root node " + rootNodeNumber
+							 + " has not been found!", KalypsoFilterException.INVALID_ELEMENT );
+		    }
+		State subState= wcState.createSubState( rootNode );
+		//subState.m_rbs.writeConRbToRbToFile("c:\\temp\\worked.dat" );
+		subState.writeStateToFile( exportFileName, subState.getStrandFromNodeWc( rootNode ) );
 		
-		try
-	    {
-			State wcState=new State();
-			wcState.xmlParser(xmlSource);
-			Node rootNode=wcState.getNodeFromNr( rootNodeNumber.intValue());
-			if( rootNode == null )
-			{
-				throw new KalypsoFilterException(
-					"The root node " + rootNodeNumber
-						+ " has not been found!", KalypsoFilterException.INVALID_ELEMENT );
-			}
-			State subState= wcState.createSubState( rootNode );
-			//subState.m_rbs.writeConRbToRbToFile("c:\\temp\\worked.dat" );
-			subState.writeStateToFile( exportFileName, subState.getStrandFromNodeWc( rootNode ) );
-
-			
-			allClimateFiles.addAll(subState.getAllFileClimate());
-			allShortTermFiles.addAll(subState.getAllFileShortTerm());
-
-			LogFile.log( "Kalypso-ASCII files have been successfully written to " + exportFileName );
-			subState.stateStatsToLogFile();
-			System.out.println( "END OF PROCESS!" );
+		
+		allClimateFiles.addAll(subState.getAllFileClimate());
+		allShortTermFiles.addAll(subState.getAllFileShortTerm());
+		
+		LogFile.log( "Kalypso-ASCII files have been successfully written to " + exportFileName );
+		subState.stateStatsToLogFile();
+		System.out.println( "END OF PROCESS!" );
 	    }
-		catch(Exception e)
+	catch(Exception e)
 	    {
-			System.out.println( "Sorry, import was not successfull, because: " + e.getMessage());
-			LogFile.log( "Import not successful: " + e.getMessage());
-			throw e;
+		System.out.println( "Sorry, import was not successfull, because: " + e.getMessage());
+		LogFile.log( "Import not successful: " + e.getMessage());
+		throw e;
 	    }
-		finally
-		{
-			closeFilter();
-		}
+	finally
+	    {
+		closeFilter();
+	    }
     }
+
     public static File[] getInputFiles( String title )
     {
 		JFileChooser chooser = new JFileChooser( new File("."));

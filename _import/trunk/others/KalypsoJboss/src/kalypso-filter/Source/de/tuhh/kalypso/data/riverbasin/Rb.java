@@ -808,8 +808,8 @@ public class Rb extends Object implements Comparable
 	{
 		bw.write( " <o ID=\"" + hashCode() + "\">" + " <sp m_rbNumber=\"" + getNumberRb()
 					 + "\" m_comment=\"" + getComment()
-					 + "\" m_sealedAreaRb=\"" + getSealedAreaRb()
-					 + "\" m_natAreaRb=\"" + getNatAreaRb()
+			  // 			  + "\" m_sealedAreaRb=\"" + getSealedAreaRb()
+			  //			  + "\" m_natAreaRb=\"" + getNatAreaRb()
 					 + "\" m_corrRain=\"" + getCorrRain()
 					 + "\" m_corrMaxInter=\"" + getCorrMaxInter()
 					 + "\" m_corrInitInter=\"" + getCorrInitInter()

@@ -297,6 +297,10 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 			LogView.println(I18n.get("LV_SD_simCase1"));
 			controlImport.start();  // model exists as file
 			
+			// model-xml-file exists...now generate hydrotofile with xsl-trafo
+
+
+			
 			LogView.println(I18n.get("LV_SD_simCase2"));
 			modelImport.start();  // controldata is known
 

@@ -150,8 +150,16 @@ public class GisTransferManager implements KalypsoXmlImportListener
 				rb.setStrandRb( s );
 				if ( !gto.getSimpleProperty("m_comment").equals("null"))
 					rb.setComment( gto.getSimpleProperty( "m_comment" ));
-				rb.setSealedAreaRb( Double.parseDouble( gto.getSimpleProperty( "m_sealedAreaRb" )));
-				rb.setNatAreaRb( Double.parseDouble( gto.getSimpleProperty( "m_natAreaRb" )));
+
+
+				// natural and sealed area are now dummies because of some changes:
+				// 1. kalypso.exe does not use this values from catchment file anymore
+				// 2. the are is now stored with the hydrotopes
+				rb.setSealedAreaRb( Double.parseDouble("1111.00"));// gto.getSimpleProperty( "m_sealedAreaRb" )));
+				rb.setNatAreaRb( Double.parseDouble("4444.00"));// gto.getSimpleProperty( "m_natAreaRb" )));
+				
+				
+				
 				if( gto.getSimpleProperty( "m_corrRain") != null )
 					rb.setCorrRain( Double.parseDouble( gto.getSimpleProperty( "m_corrRain" )));
 				rb.setCorrMaxInter( Double.parseDouble( gto.getSimpleProperty( "m_corrMaxInter" )));

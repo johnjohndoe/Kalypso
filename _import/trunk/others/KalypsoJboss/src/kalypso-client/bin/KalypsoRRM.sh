@@ -6,5 +6,5 @@ CLASSPATH=$CLASSPATH:jbcl.jar
 CLASSPATH=$CLASSPATH:jbossall-client.jar:log4j.jar
 echo $CLASSPATH
 
-java de/tuhh/wb/javagis/Main
+java  -Xms100m -Xmx200m -Xss100m de/tuhh/wb/javagis/Main
 #java de/tuhh/wb/javagis/simpleclient/Main

@@ -225,7 +225,7 @@
       </simpleProperty>
     </vectorSet>
 <!--
-    <vectorSet key="m_longTimeSim">
+  <vectorSet key="m_longTimeSim">
       <name>shorttime-simulation-startdates</name>
       <description>Generate results (initial-values) for shorttime-simulation</description>
       <simpleProperty key="v_langDat">

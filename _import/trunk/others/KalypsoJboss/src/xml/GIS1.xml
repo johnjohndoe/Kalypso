@@ -16,6 +16,72 @@
     <name>Channels</name>
     <description>Definition of Strands</description>
   </network>
+  
+  <objectClass ID="hydro">
+    <name>Hydrotop</name>
+    <description>area with constant hydrologic properties</description>
+<!--    <belongsToTopology ref=""/> -->
+    <geometry>Polygon</geometry>
+    <symbol>hydrotop</symbol>
+    <simpleProperty key="m_rbNumber">
+      <name>RiverbasinNo</name>
+      <description>Number of superior river basin</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_areaHy">
+      <name>Area</name>
+      <description>Area of hydrotop</description>
+      <unit>m<sup>3</sup></unit>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_sealFactor">
+      <name>Sealing factor</name>
+      <description>part of sealed area in percent</description>
+      <unit>%</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_sealFactorCor">
+      <name>Correction of SealFact.</name>
+      <description>correct the sealing factor for hydrologic calculation in percent</description>
+      <unit>%</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_landuseALB">
+      <name>Land use</name>
+      <description>german ALB code for landuse</description>
+      <unit>ALB_xxx</unit>
+      <type>java.lang.String</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_soiltype">
+      <name>Soil type</name>
+      <description>reference to profile of soils</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+
+    <simpleProperty key="m_maxPerk">
+      <name>Rate of percolation</name>
+      <description>rate of percolation, use scientific notation eg. 4.94E-12</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+  
+    <simpleProperty key="m_aquiferRate">
+      <name>AquiferRate</name>
+      <description>rate of groundwater that flows to the aquifer, the rest will flow to the deep aquifer (leaves the model)</description>
+      <unit>percent</unit>
+      <type>java.lang.Float</type>
+    </simpleProperty>
+  </objectClass>
+
+
+
+
+
+  
   <objectClass ID="nullStrand">
     <name>Virtual Strand</name>
     <description>Virtual strand transfers flood wave direct from up- to downstream node</description>
@@ -329,18 +395,21 @@
       <name>Comment</name>
       <type>java.lang.String</type>
     </simpleProperty>
+<!--
     <simpleProperty key="m_sealedAreaRb">
       <name>Sealed Area</name>
       <description>No infiltration process, only surface flow</description>
       <unit>m<sup>2</sup></unit>
       <type>java.lang.Float</type>
     </simpleProperty>
+
     <simpleProperty key="m_natAreaRb">
       <name>Natural Area</name>
       <description>Hydrological processes for diacharge formation inj soil moisture regime take place</description>
       <unit>m<sup>2</sup></unit>
       <type>java.lang.Float</type>
     </simpleProperty>
+-->
     <simpleProperty key="m_corrRain">
       <name>Correction Factor Precipitation</name>
       <description>Factor is applied to change rainfall distribution in order to characteristic surface relief</description>
@@ -568,6 +637,7 @@
       <name>File Name</name>
       <type>java.lang.String</type>
     </simpleProperty>
+
     <simpleProperty key="m_mesTableName">
       <name>Table Name Measured</name>
       <format>bce_db</format>
@@ -580,7 +650,15 @@
       <description>Forecasted values</description>
       <type>java.lang.String</type>
     </simpleProperty>
+
+    <simpleProperty key="m_mesTableNameLongTerm">
+      <name>Table Name Measured Long term</name>
+      <format>bce_db</format>
+      <description>Measured values for long term simulation</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
   </objectClass>
+
   <objectClass ID="tempStation">
     <name>Climate Station</name>
     <description>Definition of climate station for database connection, time-series: temperature and evapotranspiration</description>
@@ -604,7 +682,23 @@
       <description>Forecasted values</description>
       <type>java.lang.String</type>
     </simpleProperty>
+
+    <simpleProperty key="m_mesTableNameEvaporation">
+      <name>Table Name Measured Evaporation</name>
+      <format>bce_db</format><!-- bce_db : DBTableName,nicetablename-->
+      <description>Measured values of evaporation</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+<!--
+    <simpleProperty key="m_synTableNameEvaporation">
+      <name>Table Name Synthetic Evaporation</name>
+      <format>bce_db</format>
+      <description>Forecasted values of evaporation</description>
+      <type>java.lang.String</type>
+    </simpleProperty>
+-->
   </objectClass>
+
   <relationClass ID="wc2objects">
     <name>RivernameRelation</name>
     <description></description>
@@ -641,7 +735,7 @@
     <!--    <toObjectClass ref="rht"/> -->
     <forwardLabel>discharges to</forwardLabel>
     <backwardLabel>recieves from</backwardLabel>
-    <fromCardinalityMax>unbound</fromCardinalityMax>
+    <fromCardinalityMax>4</fromCardinalityMax>
     <toCardinalityMax>1</toCardinalityMax>
   </relationClass>
   <relationClass ID="strand2node">
