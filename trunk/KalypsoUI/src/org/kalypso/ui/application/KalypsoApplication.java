@@ -1,5 +1,8 @@
 package org.kalypso.ui.application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
@@ -41,21 +44,28 @@ public class KalypsoApplication implements IPlatformRunnable
     
     rights = chooseRight( rights /*, username */);
     
-    
     if( rights == null )
       return null;
     
     for( int i = 0; i < rights.length; i++ )
       System.out.println( "Rights dump: '" + rights[i] + "'" );
     
-    // TODO REMOVE
-    rights = new String[]{ IUserServiceConstants.RIGHT_ADMIN };
+//    rights = new String[]{ IUserServiceConstants.RIGHT_ADMIN };
     
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }
 
-  private String[] chooseRight( final String[] rights /*, final String username */)
+  private String[] chooseRight( final String[] givenrights /*, final String username */)
   {
+    // leere Rechte rauschmeissen
+    final List rights = new ArrayList( givenrights.length );
+    for( int i = 0; i < givenrights.length; i++ )
+    {
+      final String right = givenrights[i];
+      if( right != null && right.trim().length() != 0 )
+        rights.add( right.trim() );
+    }
+    
     String[] choosenRights = null;
     final Display display = new Display();
     final Shell shell = new Shell( display );
@@ -64,7 +74,7 @@ public class KalypsoApplication implements IPlatformRunnable
     
     shell.setImage( id.createImage() );
     
-    if( rights == null || rights.length == 0 )
+    if( rights.size() == 0 )
     {
       while( true )
       {
@@ -76,40 +86,15 @@ public class KalypsoApplication implements IPlatformRunnable
         if( dialog.open() != Window.OK )
           break;
 
-        if( "arglgargl".equals( dialog.getValue() ) )
+        if( "hochwasser".equals( dialog.getValue() ) )
         {
           choosenRights = new String[] { IUserServiceConstants.RIGHT_ADMIN };
           break;
         }
       }
     }
-//    else if( rights.length == 0 )
-//    {
-//      MessageDialog.openInformation( shell, "Benutzerrechte",
-//          "Es konnten keine Benutzerrechte für Benutzer '" + username
-//              + "' ermittelt werden. Bitte wenden Sie sich an den System-Administrator" );
-//    }
     else /* if( rights.length == 1 ) */
-    {
-//      choosenRights = rights[0];
-//    }
-//    else
-//    {
-//      // auswahldialog
-//      final ListDialog dialog = new ListDialog( shell );
-//      dialog.setTitle( "Kalypso" );
-//      dialog
-//          .setMessage( "Bitte wählen Sie den Modus, in welchem Sie Kalypso starten möchten." );
-//      dialog.setContentProvider( new ArrayContentProvider() );
-//      dialog.setLabelProvider( new LabelProvider() );
-//      dialog.setInput( rights );
-//      dialog.setInitialSelections( new Object[]
-//      { rights[0] } );
-//
-//      if( dialog.open() == Window.OK )
-//        choosenRights = (String)dialog.getResult()[0];
-      choosenRights = rights;
-    }
+      choosenRights = (String[])rights.toArray( new String[] {} );
 
     shell.dispose();
     display.dispose();
