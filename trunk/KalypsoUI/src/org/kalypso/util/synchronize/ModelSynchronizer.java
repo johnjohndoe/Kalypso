@@ -3,6 +3,7 @@ package org.kalypso.util.synchronize;
 import java.io.File;
 
 import org.eclipse.core.internal.resources.Resource;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -79,6 +80,25 @@ public class ModelSynchronizer
 
     final File localDir = new File( m_resourceRootFile, projectRelativePath );
     copy( localDir, serverDir );
+  }
+
+  public File getServerRoot()
+  {
+    return m_serverRoot;
+  }
+
+  /** Lädt einen Remote Folder vom Server und legt in local ab
+   * überschreibt, ist lokal bereits etwas vorhanden, gibts ne Fehlermeldung 
+   * @throws CoreException*/
+  public void getFolder( final File dir ) throws CoreException
+  {
+    final String relativePath = FileUtilities.getRelativePathTo( m_serverRoot , dir );
+    final IFile file = m_resourceRoot.getFile( relativePath );
+    if( file.exists() )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis exisitert lokal bereits: " + relativePath, null ) );
+    
+    final File localDir = new File( m_resourceRootFile, relativePath );
+    copy( dir, localDir );
   }
 
 }

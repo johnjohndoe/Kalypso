@@ -3,7 +3,6 @@ package org.kalypso.ui.calcwizard.createpages;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -28,10 +27,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.eclipse.jface.viewers.FileLabelProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
+import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**
  * Diese Implementierung erzeugt einen völlig neuen Rechenfall im
@@ -51,7 +50,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private ListViewer m_viewer;
 
-  private Collection m_oldDirs = new LinkedList();
+  private Collection m_serverDirs = new LinkedList();
 
   private final AddCalcCasePage m_page;
 
@@ -59,14 +58,15 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private File m_serverPrognoseDir;
 
-  public CopyServerCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
+  private final ModelSynchronizer m_synchronizer;
+
+  public CopyServerCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page, final ModelSynchronizer synchronizer )
   {
     m_label = label;
     m_project = project;
     m_page = page;
-
-    final File serverModelRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
-    m_serverPrognoseDir = new File( serverModelRoot, ModelNature.PROGNOSE_FOLDER );
+    m_synchronizer = synchronizer;
+    m_serverPrognoseDir = new File( m_synchronizer.getServerRoot(), ModelNature.PROGNOSE_FOLDER );
   }
 
   /**
@@ -82,9 +82,9 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
     final ListViewer viewer = new ListViewer( panel, SWT.BORDER );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new WorkbenchLabelProvider() );
+    viewer.setLabelProvider( new FileLabelProvider() );
     
-    viewer.setInput( m_oldDirs );
+    viewer.setInput( m_serverDirs );
     
     final GridData viewerData = new GridData( GridData.FILL_BOTH );
     viewerData.horizontalSpan = 2;
@@ -121,14 +121,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
     m_control = panel;
 
-    try
-    {
-      refresh( new NullProgressMonitor() );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
+    refresh( new NullProgressMonitor() );
   }
 
   protected void setName( final String text )
@@ -145,37 +138,19 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     validateChoice();
   }
 
-  public void refresh( final IProgressMonitor monitor ) throws CoreException
+  public void refresh( final IProgressMonitor monitor )
   {
-    final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
-    final IFolder prognoseFolder = nature.getPrognoseFolder();
-
     // alle Prognosen finden
-    final CalcCaseCollector calcCaseCollector = new CalcCaseCollector();
-    prognoseFolder.accept( calcCaseCollector );
-    final IFolder[] calcCases = calcCaseCollector.getCalcCases();
+    final File[] serverCalcCases = m_serverPrognoseDir.listFiles();
 
-    final List usedCalcCases = m_page.getCalcCases();
-
-    m_oldDirs.clear();
-
-    IFolder newSelect = null;
-    if( usedCalcCases != null )
+    m_serverDirs.clear();
+    if( serverCalcCases != null )
     {
-      for( int i = 0; i < calcCases.length; i++ )
-      {
-        final IFolder folder = calcCases[i];
-
-        if( !usedCalcCases.contains( folder ) )
-        {
-          m_oldCalcCases.add( folder );
-          if( newSelect == null )
-            newSelect = folder;
-        }
-      }
+      for( int i = 0; i < serverCalcCases.length; i++ )
+        m_serverDirs.add( serverCalcCases[i] );
     }
 
-    final IFolder newSelectFinal = newSelect;
+    final File newSelectFinal = ( serverCalcCases == null || serverCalcCases.length == 0 ) ? null : serverCalcCases[0];
     final Viewer viewer = m_viewer;
     if( viewer != null )
     {
@@ -214,12 +189,12 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Eine Vorhersage mit diesem namen existiert bereits: " + m_name, null ) );
 
-    if( m_folder == null )
+    if( m_dir == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
 
     // quellverzeichnis holen
-    m_folder.copy( calcCaseFolder.getFullPath(), false, monitor );
+    m_synchronizer.getFolder( m_dir );
 
     return calcCaseFolder;
   }
@@ -253,7 +228,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
    */
   public void validateChoice()
   {
-    if( m_folder == null )
+    if( m_dir == null )
     {
       m_page.setErrorMessage( "Es muss ein vorhandener Rechenfall ausgewählt werden." );
       m_page.setMessage( null );
