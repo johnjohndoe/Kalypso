@@ -1,8 +1,3 @@
-/*
- * Created on 22.07.2004
- * 
- * Preferences - Java - Code Style - Code Templates
- */
 package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.Rule;
@@ -11,42 +6,42 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 public class RuleTreeObject
 {
-  private Rule rule = null;
-  private KalypsoUserStyle userStyle = null;
-  private FeatureType ft = null;
+  private Rule m_rule = null;
+  private KalypsoUserStyle m_userStyle = null;
+  private FeatureType m_ft = null;
 
-  public RuleTreeObject(Rule rule, KalypsoUserStyle style, FeatureType ft)
+  public RuleTreeObject( final Rule rule, final KalypsoUserStyle style, final FeatureType ft )
   {
-    this.rule = rule;
-    this.userStyle = style;
-    this.ft	= ft;
+    this.m_rule = rule;
+    this.m_userStyle = style;
+    this.m_ft	= ft;
   }
   
   public KalypsoUserStyle getStyle()
   {
-  	return userStyle;
+  	return m_userStyle;
   }
   
   public FeatureType getFeatureType()
   {
-  	return ft;
+  	return m_ft;
   }
  
   public Rule getRule() 
   {
-	return rule;
+	return m_rule;
   }
   
   public String toString()
   {
-    if( rule == null )
+    if( m_rule == null )
       return "<no styles set>";
     
-    if( rule.getName() != null )
-      return rule.getName();
-    else if(rule.getTitle() != null)
-    	return rule.getTitle();
+    if( m_rule.getName() != null )
+      return m_rule.getName();
+    else if(m_rule.getTitle() != null)
+    	return m_rule.getTitle();
     else 
-    	return rule.toString();    
+    	return m_rule.toString();    
   }
 }

@@ -16,7 +16,6 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -35,12 +34,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.java.reflect.ClassUtilities;
-import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.model.transformation.ICalculationCaseTransformation;
 import org.kalypso.model.transformation.TransformationException;
 import org.kalypso.model.transformation.TransformationFactory;
@@ -86,6 +86,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private final Properties m_metadata = new Properties();
 
   private IProject m_project;
+
+  private static final String PROGNOSE_FOLDER = ".prognose";
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -429,7 +431,36 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       final IProject project = (IProject)ResourcesPlugin.getWorkspace().getRoot().findMember( name );
 
-      final Wizard wizard = new CalcWizard();
+      // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden 
+      final IFolder prognoseFolder = project.getFolder( PROGNOSE_FOLDER );
+      final IFolder calcCaseFolder = FolderUtilities.createUnusedFolder( prognoseFolder, "prognose" );
+      
+      final Job createCalcCaseJob = new Job( "neuen Rechenfall anlegen" )
+      {
+        protected IStatus run( final IProgressMonitor monitor )
+        {
+          try
+          {
+            monitor.beginTask( "neuen Rechenfall erzeugen", 2000 );
+            calcCaseFolder.create( false, true, new SubProgressMonitor( monitor, 1000 ) );
+            createCalculationCaseInFolder( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+            
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Der Rechenfall für die Prognoserechnung konnte nicht erzeugt werden", e );
+          }
+          
+          return Status.OK_STATUS;
+        }
+      };
+      createCalcCaseJob.schedule();
+      createCalcCaseJob.join();
+      if( createCalcCaseJob.getResult().getSeverity() != IStatus.OK )
+        return;
+      
+      final Wizard wizard = new CalcWizard( calcCaseFolder );
       wizard.setNeedsProgressMonitor( true );
       wizard.setWindowTitle( "Prognoserechnung für " + project.getName() );
 
@@ -456,50 +487,24 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final String className = page.getClassName();
         final String pageTitle = page.getPageTitle();
         final String imageLocation = page.getImageLocation();
-        final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
+        final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider
+            .id( imageLocation );
 
-        final ICalcWizardPage wizardPage = (ICalcWizardPage)ClassUtilities.newInstance( className, ICalcWizardPage.class, ModelNature.class.getClassLoader(), null, null );
-        wizardPage.init( project, pageTitle, imageDesc, props );
+        final ICalcWizardPage wizardPage = (ICalcWizardPage)ClassUtilities.newInstance( className,
+            ICalcWizardPage.class, ModelNature.class.getClassLoader(), null, null );
+        wizardPage.init( project, pageTitle, imageDesc, props, calcCaseFolder );
         wizard.addPage( wizardPage );
       }
 
       final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
-      
       wizardDialog.create();
-      wizardDialog.getShell().setBounds(shell.getBounds());
+      wizardDialog.getShell().setBounds( shell.getBounds() );
       wizardDialog.open();
     }
-    catch( final ResourceException re )
-    {
-      re.printStackTrace();
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( JAXBException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( SecurityException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( IllegalArgumentException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( ClassUtilityException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-
-    //MessageDialog.openInformation( shell, "Prognoserechnung",
-    // project.getName() );
   }
 
 }
