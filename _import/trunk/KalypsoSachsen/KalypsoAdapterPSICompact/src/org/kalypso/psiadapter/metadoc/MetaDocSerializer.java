@@ -62,12 +62,14 @@ public class MetaDocSerializer
   {
     props.setProperty( TAG_DOKUMENTTYP, "string;"
         + serviceProps.getProperty( TAG_DOKUMENTTYP, "Dokumenttyp" ) );
-    props.setProperty( TAG_REGION, "string;" + serviceProps.getProperty( TAG_REGION, "Region" ) );
+    props.setProperty( TAG_REGION, "string;"
+        + serviceProps.getProperty( TAG_REGION, "Region" ) );
     props.setProperty( TAG_ERSTELLER, "string;"
         + serviceProps.getProperty( TAG_ERSTELLER, "Ersteller" ) );
     props.setProperty( TAG_AUTOR, "string;Autor" );
-    props.setProperty( TAG_ERSTELLUNGSDATUM, "dateTime" );
-    props.setProperty( TAG_ENDEGDATUM, "dateTime" );
+    props.setProperty( TAG_ERSTELLUNGSDATUM, "dateTime;"
+        + DF.format( new Date() ) );
+    props.setProperty( TAG_ENDEGDATUM, "dateTime;" + DF.format( new Date() ) );
   }
 
   /**
@@ -82,7 +84,8 @@ public class MetaDocSerializer
    * @throws IOException
    */
   public static void buildXML( final Properties serviceProps,
-      final Properties mdProps, final Writer writer, final String fileName ) throws IOException
+      final Properties mdProps, final Writer writer, final String fileName )
+      throws IOException
   {
     try
     {
@@ -90,37 +93,41 @@ public class MetaDocSerializer
       writer.write( "<" + TAG_FOLDERDATA + ">" );
       writer.write( "<" + TAG_HEADER + ">" );
       writer.write( "<" + TAG_IMPORTMODE + ">"
-          + serviceProps.getProperty( TAG_IMPORTMODE, "1" ) + "</"
-          + TAG_IMPORTMODE + ">" );
+          + valueOfProperty( serviceProps.getProperty( TAG_IMPORTMODE, "1" ) )
+          + "</" + TAG_IMPORTMODE + ">" );
       writer.write( "</" + TAG_HEADER + ">" );
       writer.write( "<" + TAG_RECORD + ">" );
       writer.write( "<" + TAG_DOKUMENTTYP + ">"
-          + mdProps.getProperty( TAG_DOKUMENTTYP, "" ) + "</" + TAG_DOKUMENTTYP
-          + ">" );
+          + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) )
+          + "</" + TAG_DOKUMENTTYP + ">" );
       writer.write( "<" + TAG_ERSTELLER + ">"
-          + mdProps.getProperty( TAG_ERSTELLER, "" ) + "</" + TAG_ERSTELLER
-          + ">" );
-      writer.write( "<" + TAG_AUTOR + ">" + mdProps.getProperty( TAG_AUTOR, "" )
-          + "</" + TAG_AUTOR + ">" );
-      writer
-          .write( "<" + TAG_REGION + ">"
-              + mdProps.getProperty( TAG_REGION, "ohne" ) + "</" + TAG_REGION
-              + ">" );
+          + valueOfProperty( mdProps.getProperty( TAG_ERSTELLER ) ) + "</"
+          + TAG_ERSTELLER + ">" );
+      writer.write( "<" + TAG_AUTOR + ">"
+          + valueOfProperty( mdProps.getProperty( TAG_AUTOR ) ) + "</"
+          + TAG_AUTOR + ">" );
+      writer.write( "<" + TAG_REGION + ">"
+          + valueOfProperty( mdProps.getProperty( TAG_REGION, "ohne" ) ) + "</"
+          + TAG_REGION + ">" );
 
       final String defaultDate = DF.format( new Date() );
-      writer.write( "<" + TAG_EINGANGSDATUM + ">"
-          + mdProps.getProperty( TAG_EINGANGSDATUM, defaultDate ) + "</"
-          + TAG_EINGANGSDATUM + ">" );
-      writer.write( "<" + TAG_ERSTELLUNGSDATUM + ">"
-          + mdProps.getProperty( TAG_ERSTELLUNGSDATUM, defaultDate ) + "</"
-          + TAG_ERSTELLUNGSDATUM + ">" );
+      writer.write( "<"
+          + TAG_EINGANGSDATUM
+          + ">"
+          + valueOfProperty( mdProps.getProperty( TAG_EINGANGSDATUM,
+              defaultDate ) ) + "</" + TAG_EINGANGSDATUM + ">" );
+      writer.write( "<"
+          + TAG_ERSTELLUNGSDATUM
+          + ">"
+          + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM,
+              defaultDate ) ) + "</" + TAG_ERSTELLUNGSDATUM + ">" );
 
       writer.write( "<" + TAG_ENDEGDATUM + ">"
-          + mdProps.getProperty( TAG_ENDEGDATUM, "" ) + "</" + TAG_ENDEGDATUM
-          + ">" );
+          + valueOfProperty( mdProps.getProperty( TAG_ENDEGDATUM ) ) + "</"
+          + TAG_ENDEGDATUM + ">" );
       writer.write( "<" + TAG_VERSENDEN + ">"
-          + serviceProps.getProperty( TAG_VERSENDEN, "0" ) + "</"
-          + TAG_VERSENDEN + ">" );
+          + valueOfProperty( serviceProps.getProperty( TAG_VERSENDEN, "0" ) )
+          + "</" + TAG_VERSENDEN + ">" );
 
       writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES
           + ">" );
@@ -132,5 +139,25 @@ public class MetaDocSerializer
     {
       IOUtils.closeQuietly( writer );
     }
+  }
+
+  /**
+   * Properties can contain the value type and the value. In that case, just
+   * return the value.
+   * 
+   * @param prop
+   * @return value part of prop
+   */
+  private static String valueOfProperty( final String prop )
+  {
+    if( prop == null )
+      return "";
+    
+    final String[] splits = prop.split( ";" );
+
+    if( splits.length > 1 )
+      return splits[1];
+    else
+      return prop;
   }
 }
