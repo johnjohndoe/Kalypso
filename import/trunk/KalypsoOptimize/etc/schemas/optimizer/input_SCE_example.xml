@@ -2,8 +2,8 @@
 <autoCalibration xmlns="optimizer.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="optimizer.kalypso.org optimizerInput.xsd" >
 	<pegel>                
 		<file>syntetic</file>
-		<startDate>15.07.2002 07:00</startDate> <!--Format: dd.MM.yyyy HH:mm-->
-		<endDate>16.07.2002 07:00</endDate> <!--Format: dd.MM.yyyy HH:mm-->
+		<startDate>2002-07-15T07:00:00</startDate> 
+		<endDate>16.07.2002 07:00</endDate> 
 	</pegel>
     <parameterlist>
         <parameter ID="1" mode="default">

@@ -15,7 +15,7 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
  */
 public class OptimizerCalJob extends AbstractCalcJob
 {
-  private final IOpmizingJob m_optimizingJob;
+  private final IOptimizingJob m_optimizingJob;
 
   private final Logger m_logger;
 
@@ -26,7 +26,7 @@ public class OptimizerCalJob extends AbstractCalcJob
    * @param job
    *          encapsulated job to optimize
    */
-  public OptimizerCalJob( Logger logger, IOpmizingJob job )
+  public OptimizerCalJob( Logger logger, IOptimizingJob job )
   {
     m_logger = logger;
     m_optimizingJob = job;

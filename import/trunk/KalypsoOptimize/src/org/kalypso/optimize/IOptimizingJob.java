@@ -9,11 +9,10 @@ import org.kalypso.optimizer.Parameter;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 
 /**
- * IOpmizingJob
- * 
+ * IOptimizingJob
  * @author doemmig
  */
-public interface IOpmizingJob
+public interface IOptimizingJob
 {
   /**
    * commits population for next calculation run

@@ -39,7 +39,7 @@ public class SceIOHandler
 
   private final Parameter[] m_parameterConf;
 
-  private final IOpmizingJob m_job;
+  private final IOptimizingJob m_job;
 
   private final IErrorFunktion m_errorFunction;
 
@@ -55,7 +55,7 @@ public class SceIOHandler
 
   private double m_bestEvaluation = -1;
 
-  public SceIOHandler( Logger logger, AutoCalibration calibration, IOpmizingJob job )
+  public SceIOHandler( Logger logger, AutoCalibration calibration, IOptimizingJob job )
       throws MalformedURLException, SensorException
   {
     m_logger = logger;
