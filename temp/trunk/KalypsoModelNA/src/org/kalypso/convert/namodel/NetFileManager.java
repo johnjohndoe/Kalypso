@@ -19,7 +19,6 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
-import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
 import org.kalypso.java.net.UrlUtilities;
@@ -32,11 +31,11 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NetFileManager extends AbstractManager
 {
-  static boolean DEBUG=true; //TODO auf false setzen
+  static boolean DEBUG=false;//true; //TODO auf false setzen
   
   final NAConfiguration m_conf;
 
-  public NetFileManager( GMLSchema schema, NAConfiguration conf ) throws IOException
+  public NetFileManager( NAConfiguration conf ) throws IOException
   {
     super( conf.getNetFormatURL() );
     m_conf = conf;
@@ -121,12 +120,12 @@ public class NetFileManager extends AbstractManager
                 + "/zufluss/" );
         File tsFile = new File( correctedPath );
         TimeseriesLink link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false ,m_conf.getTmpDir());
+            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, false, false );
         FeatureProperty linkPropertyRepository = FeatureFactory.createFeatureProperty( "zuflussZRRepository", link1 );
         propCollector.put( "zuflussZRRepository", linkPropertyRepository );
         
         TimeseriesLink link2 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(),
-            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, true ,m_conf.getTmpDir());
+            NAZMLGenerator.NA_ZUFLUSS_EINGABE, m_conf.getGmlBaseDir(), zmlPath, true, true);
         FeatureProperty linkProperty = FeatureFactory.createFeatureProperty( "zuflussZR", link2 );
         propCollector.put( "zuflussZR", linkProperty );        
       }

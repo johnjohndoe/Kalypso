@@ -9,8 +9,6 @@ import java.util.Date;
 
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.io.FileUtils;
-import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -26,7 +24,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NAZMLGenerator
 {
-  private static boolean DEBUG = true;
+  private static boolean DEBUG = false;
 
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
@@ -58,7 +56,7 @@ public class NAZMLGenerator
    *          relative path from basedir to store target zml file
    */
   public static TimeseriesLink copyToTimeseriesLink( URL copySource, int srcType,
-      File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy,File tmpDir )
+      File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy )
       throws Exception
   {
     File targetZmlFile = new File( targetBaseDir, targetRelativePath );
@@ -66,7 +64,7 @@ public class NAZMLGenerator
     if( !dir.exists() )
       dir.mkdirs();
     if( !simulateCopy && !DEBUG )
-      convert(tmpDir, copySource, srcType, targetZmlFile);
+      convert( copySource, srcType, targetZmlFile);
     if( relative )
       return generateobsLink( targetRelativePath, srcType );
     URL targetURL = UrlUtilities.resolveURL( targetBaseDir.toURL(), targetRelativePath );
@@ -109,13 +107,13 @@ public class NAZMLGenerator
     return link;
   }
 
-  public static void convert( File tmpDir, URL sourceURL, int sourceType, File targetZmlFile )
+  public static void convert( URL sourceURL, int sourceType, File targetZmlFile )
       throws Exception
   {
     StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, sourceType, sourceURL );
 
-    File zmlTmpFile = File.createTempFile( "tmp", ".zml", tmpDir );
+    File zmlTmpFile = File.createTempFile( "tmp", ".zml" );
     zmlTmpFile.deleteOnExit();
     Writer tmpWriter = new FileWriter( zmlTmpFile );
     tmpWriter.write( buffer.toString() );
