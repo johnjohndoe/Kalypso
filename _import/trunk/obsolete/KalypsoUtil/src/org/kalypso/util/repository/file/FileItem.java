@@ -62,4 +62,9 @@ public class FileItem implements IRepositoryItem
   {
     return m_file.isDirectory();
   }
+  
+  public String toString()
+  {
+    return getName();
+  }
 }
