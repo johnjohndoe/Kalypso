@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.core"
    name="KalypsoCore Plug-in"
-   version="0.0.3"
+   version="0.0.4"
    provider-name="org.kalypso">
 
    <runtime>
@@ -45,7 +45,7 @@
       </library>
       <library name="kalypsocore.jar">
          <export name="*"/>
-         <packages prefixes="org.kalypso" />
+         <packages prefixes="org.kalypso"/>
       </library>
       <library name="lib/ant.jar">
          <export name="*"/>

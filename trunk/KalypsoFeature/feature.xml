@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.enterprise"
       label="Kalypso Enterprise"
-      version="0.0.3"
+      version="0.0.4"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
       os="win32"
@@ -46,36 +46,42 @@
          id="org.kalypso.core"
          download-size="0"
          install-size="0"
-         version="0.0.2"/>
+         version="0.0.4"/>
 
    <plugin
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
-         version="0.0.2"/>
+         version="0.0.4"/>
 
    <plugin
          id="org.kalypso.manual"
          download-size="0"
          install-size="0"
-         version="0.0.2"/>
+         version="0.0.4"/>
 
    <plugin
          id="org.kalypso.ui"
          download-size="0"
          install-size="0"
-         version="0.0.2"/>
+         version="0.0.4"/>
 
    <plugin
          id="org.kalypso.util"
          download-size="0"
          install-size="0"
-         version="0.0.2"/>
+         version="0.0.4"/>
 
    <plugin
          id="org.kalypso.grafikmanual"
          download-size="0"
          install-size="0"
-         version="0.0.2"/>
+         version="0.0.4"/>
+
+   <plugin
+         id="org.kalypso.repository"
+         download-size="0"
+         install-size="0"
+         version="0.0.4"/>
 
 </feature>
