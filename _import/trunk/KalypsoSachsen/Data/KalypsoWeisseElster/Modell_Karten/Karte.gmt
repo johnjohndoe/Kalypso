@@ -8,21 +8,20 @@
 			<ns2:style linktype="sld" ns1:actuate="onRequest" style="Node" ns1:href="PATH=../.styles/Node.sld" ns1:type="simple" 
 				xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
-	<layer name="Gewaesser" featurePath="ChannelCollectionMember/channelMember" visible="true" id="2" linktype="gml" ns3:actuate="onRequest" 
-			ns3:href="PATH=../modell.gml#XSD=../.model/schema/namodell.xsd" ns3:type="simple" 
-			xmlns:ns3="http://www.w3.org/1999/xlink">
-			<ns4:style linktype="sld" ns3:actuate="onRequest" style="VChannel" ns3:href="PATH=../.styles/VChannel.sld" ns3:type="simple" 
-				xmlns:ns4="types.template.kalypso.org"/>
-		</layer>
-<!--
-		<layer name="KMGewaesser" visible="true" id="3" linktype="gml" ns5:actuate="onRequest" 
-			ns5:href="PATH=../modell.gml#LAYER=KMChannel#SERVICE=RESOURCE#XSD=../.model/schema/namodell.xsd#" ns5:type="simple" 
+	<layer name="Gewaesser" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" visible="true" id="2" linktype="gml" 
+		ns3:actuate="onRequest" ns3:href="PATH=../modell.gml#XSD=../.model/schema/namodell.xsd" ns3:type="simple" 
+		xmlns:ns3="http://www.w3.org/1999/xlink">
+		<ns4:style linktype="sld" ns3:actuate="onRequest" style="VChannel" ns3:href="PATH=../.styles/VChannel.sld" ns3:type="simple" 
+			xmlns:ns4="types.template.kalypso.org"/>
+	</layer>
+
+		<layer name="KMGewaesser" visible="true" id="3" featurePath="ChannelCollectionMember/channelMember[KMChannel]" linktype="gml" 
+			ns5:actuate="onRequest" ns5:href="PATH=../modell.gml#XSD=../.model/schema/namodell.xsd#" ns5:type="simple" 
 			xmlns:ns5="http://www.w3.org/1999/xlink">
-			<ns6:style linktype="style" ns5:actuate="onRequest" ns5:href="PATH=../.styles/KMChannel.sld#STYLE=KMChannel#" ns5:type="simple" 
+			<ns6:style linktype="sld" ns5:actuate="onRequest" style="KMChannel" ns5:href="PATH=../.styles/KMChannel.sld" ns5:type="simple" 
 				xmlns:ns6="types.template.kalypso.org"/>
 		</layer>
 
-	-->
 		<layer name="Teilgebiete" visible="true" id="4" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" ns7:actuate="onRequest" 
 			ns7:href="PATH=../modell.gml#XSD=../.model/schema/namodell.xsd#" ns7:type="simple" 
 			xmlns:ns7="http://www.w3.org/1999/xlink">

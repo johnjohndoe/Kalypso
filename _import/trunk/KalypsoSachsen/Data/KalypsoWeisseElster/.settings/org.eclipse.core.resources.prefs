@@ -1,12 +1,12 @@
-#Sun Oct 31 02:01:01 CEST 2004
+#Sun Oct 31 02:28:32 CEST 2004
 encoding//.templates/calcCase/teilgebiete.ott=UTF-8
 encoding//berechnung/r8/Pegel/.info.txt=UTF-8
 encoding//berechnung/r80/Pegel/.info.txt=UTF-8
+encoding//Modell_Tabellen/Tabelle_Teilgebiete.gtt=UTF-8
 encoding//berechnung/r5/Ergebnis/.info.txt=UTF-8
 encoding//Modell_Karten/Karte.gmt=UTF-8
 encoding//.styles/Node.sld=UTF-8
 encoding//Rechenfaelle/r1/nacontrol.gml=UTF-8
-encoding//Modell/weisseElster.gml=UTF-8
 encoding//berechnung/r5/Zufluss/.info.txt=UTF-8
 encoding//.templates/calcCase/teilgebiete.gmt=UTF-8
 encoding//berechnung/r5/Niederschlag/.info.txt=UTF-8
@@ -14,6 +14,7 @@ encoding//.templates/calcCase/teilgebiete.odt=UTF-8
 encoding//berechnung/r80/calcCase.gml=UTF-8
 encoding//Rechenvarianten/ganzNeu/calcCase.gml=UTF-8
 encoding//.styles/teilgebiete.sld=UTF-8
+encoding//Modell_Tabellen/Tabelle_VGewaesser.gtt=UTF-8
 encoding//Rechenfaelle/r1/zufluss/.info.txt=UTF-8
 encoding//berechnung/r80/Zufluss/.info.txt=UTF-8
 encoding//berechnung/r5/calcCase.gml=UTF-8
@@ -25,7 +26,6 @@ encoding//berechnung/r8/nacontrol.gml=UTF-8
 eclipse.preferences.version=1
 encoding//berechnung/r8/calcCase.gml=UTF-8
 encoding//.styles/KMChannel.sld=UTF-8
-encoding/Karte.gmt=UTF-8
 encoding//berechnung/r80/Niederschlag/.info.txt=UTF-8
 encoding//Rechenvarianten/ganzNeu/zufluss/.info.txt=UTF-8
 encoding//berechnung/r80/nacontrol.gml=UTF-8
