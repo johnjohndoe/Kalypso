@@ -151,11 +151,7 @@ public class ShapeSerializer
     }
 
     final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( "shapeType", null, ftps,
-        occurs, occurs, null, null );
-
-    //    final FeatureType shapeFeatureType = FeatureFactory.createFeatureType(
-    // null, null, featureType
-    //        .getName(), ftps );
+        occurs, occurs, null, new HashMap() );
 
     try
     {
