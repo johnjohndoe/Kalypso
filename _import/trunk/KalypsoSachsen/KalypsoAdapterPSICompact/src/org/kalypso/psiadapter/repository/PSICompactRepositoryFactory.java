@@ -157,7 +157,8 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
     switch( measType )
     {
       case PSICompact.MEAS_RAINFALL:
-        return PSICompact.ARC_HOUR;
+        return PSICompact.ARC_MIN15;
+//      PSICompact.ARC_HOUR;
       default:
         return PSICompact.ARC_MIN15;
     }
