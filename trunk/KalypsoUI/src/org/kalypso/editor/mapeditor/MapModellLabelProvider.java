@@ -1,31 +1,36 @@
-package org.kalypso.editor.tableeditor;
+package org.kalypso.editor.mapeditor;
 
-import org.deegree.model.feature.Feature;
-import org.deegree.model.feature.FeatureProperty;
+import org.deegree.graphics.Theme;
+import org.deegree.graphics.sld.UserStyle;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author bce
  */
-public class LayerTableLabelProvider implements ITableLabelProvider
+public class MapModellLabelProvider implements ILabelProvider
 {
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+   * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
-  public Image getColumnImage( Object element, int columnIndex )
+  public Image getImage( final Object element )
   {
     return null;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  public String getColumnText( Object element, int columnIndex )
+  public String getText( Object element )
   {
-    final Object property = ((Feature)element).getProperty( columnIndex );
-    return property == null ? "" : property.toString();
+    if( element instanceof Theme )
+      return ((Theme)element).getName();
+    
+    if( element instanceof UserStyle )
+      return ((UserStyle)element).getName();
+    
+    return null;
   }
 
   /**
@@ -33,7 +38,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-  //  
+  // unsused  
   }
 
   /**
@@ -41,7 +46,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void dispose()
   {
-  //  
+  // unused  
   }
 
   /**
@@ -57,7 +62,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  //  
+  // unused  
   }
 
 }

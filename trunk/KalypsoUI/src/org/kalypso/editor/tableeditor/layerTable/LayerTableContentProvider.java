@@ -1,4 +1,4 @@
-package org.kalypso.editor.tableeditor;
+package org.kalypso.editor.tableeditor.layerTable;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;

@@ -66,13 +66,13 @@ public class ShapeLoader implements ILoader
       final int count = sf.getRecordNum();
       final FeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
       final String name = source + featureType.getName();
-      final KalypsoFeatureLayer layer = new KalypsoFeatureLayer(name, featureType,KalypsoGisPlugin.getDefault().getCoordinatesSystem());
+      final KalypsoFeatureLayer layer = new KalypsoFeatureLayer( name, featureType,KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher Anpassung hier:
 
-      ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
 
-      CS_CoordinateSystem srcCS = org.deegree_impl.model.cs.Adapters.getDefault().export(
+      final CS_CoordinateSystem srcCS = org.deegree_impl.model.cs.Adapters.getDefault().export(
           csFac.getCSByName( sourceSrs ) );
 
       for( int i = 0; i < count;i++)// TODO undo:count; i++ )

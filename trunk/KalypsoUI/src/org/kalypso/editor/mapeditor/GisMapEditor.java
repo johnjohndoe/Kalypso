@@ -26,10 +26,7 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.editor.mapeditor.commands.FullExtentAction;
-import org.kalypso.editor.mapeditor.commands.ZoomOutAction;
 import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.widgets.PanToWidget;
@@ -61,7 +58,8 @@ import org.kalypso.xml.types.LayerType;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvider, ILayerTypeFactory
+public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvider,
+    ILayerTypeFactory
 {
   private final ObjectFactory m_gisviewObjectFactory = new ObjectFactory();
 
@@ -71,17 +69,19 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
 
   private final Marshaller m_marshaller;
 
-  private GisviewOutlinePage m_outlinePage = null;
+  private GisMapOutlinePage m_outlinePage = null;
 
   private Gisview m_gisview = null;
 
   private final MapPanel myMapPanel;
-  
-   public GisMapEditor()
+
+  private MapModell m_mapModell;
+
+  public GisMapEditor()
   {
-    
-     myMapPanel= new MapPanel( KalypsoGisPlugin.getDefault().getCoordinatesSystem() );  
-     try
+    myMapPanel = new MapPanel( KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+
+    try
     {
       m_unmarshaller = m_gisviewObjectFactory.createUnmarshaller();
       m_marshaller = m_gisviewObjectFactory.createMarshaller();
@@ -95,8 +95,7 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
     }
   }
 
-   
-   protected FullAction[] createFullActions()
+ protected FullAction[] createFullActions()
    {
      final List list = new ArrayList();
 
@@ -105,15 +104,16 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
 
      return (FullAction[])list.toArray(new FullAction[list.size()]);
    }
-   
-  protected WidgetAction[] createWidgetActions(  )
+
+  protected WidgetAction[] createWidgetActions()
   {
     final List list = new ArrayList();
 
-    list.add( new WidgetAction( new ZoomInWidget( myMapPanel, this ), myMapPanel.getWidgetManager(),
-        "ZoomIn", ImageProvider.IMAGE_MAPVIEW_ZOOMIN, "Kartenausschnitt vergr?ssern" ) );
+    list.add( new WidgetAction( new ZoomInWidget( myMapPanel, this ),
+        myMapPanel.getWidgetManager(), "ZoomIn", ImageProvider.IMAGE_MAPVIEW_ZOOMIN,
+        "Kartenausschnitt vergrössern" ) );
     list.add( new WidgetAction( new PanToWidget( myMapPanel, this ), myMapPanel.getWidgetManager(),
-        "PanTo", ImageProvider.IMAGE_MAPVIEW_PAN, "Kartenausschnitt verschieben" ) );
+        "PanTo", ImageProvider.IMAGE_MAPVIEW_ZOOMIN, "Kartenausschnitt verschieben" ) );
 
     return (WidgetAction[])list.toArray( new WidgetAction[list.size()] );
   }
@@ -133,7 +133,9 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      m_outlinePage = new GisviewOutlinePage( this );
+      m_outlinePage = new GisMapOutlinePage( this );
+      
+      m_outlinePage.setMapModell(m_mapModell);
 
       return m_outlinePage;
     }
@@ -145,7 +147,7 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
   {
     if( m_gisview == null )
       return;
-    
+
     try
     {
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -186,14 +188,13 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
     super.createPartControl( parent );
 
     // create MapPanel
-    final Frame virtualFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    final Frame virtualFrame = SWT_AWT
+        .new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
     //     final Frame virtualFrame = new Frame("test");
     virtualFrame.setVisible( true );
     myMapPanel.setVisible( true );
     virtualFrame.add( myMapPanel );
-    fireGisviewChanged();
   }
-
 
   protected void load()
   {
@@ -226,17 +227,19 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
 
     final KeyedObjectPool layerPool = KalypsoGisPlugin.getDefault().getPool( Layer.class );
     final KeyedObjectPool stylePool = KalypsoGisPlugin.getDefault().getPool( UserStyle.class );
-    
-    myMapPanel.setMapModell( new MapModell( gisview, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), layerPool, stylePool, project, myMapPanel ) );
 
+    m_mapModell = new MapModell( gisview, KalypsoGisPlugin.getDefault()
+            .getCoordinatesSystem(), layerPool, stylePool, project, myMapPanel );
+    
+    myMapPanel.setMapModell( m_mapModell );
+    if( m_outlinePage != null )
+      m_outlinePage.setMapModell(m_mapModell);
+    
     setDirty( false );
 
     setContentDescription( input.getFile().getName() );
     setPartName( input.getFile().getName() );
   }
-
- 
-
 
   public void showProperties( final LayerType layer )
   {
@@ -284,6 +287,4 @@ public class GisMapEditor extends AbstractEditorPart implements ILayerlistProvid
 
     return null;
   }
-  
-
 }

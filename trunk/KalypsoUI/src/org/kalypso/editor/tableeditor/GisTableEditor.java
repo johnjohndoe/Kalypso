@@ -4,12 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.deegree.graphics.Layer;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -17,12 +20,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.editor.mapeditor.WidgetAction;
+import org.kalypso.editor.tableeditor.layerTable.LayerTable;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.xml.tableview.ObjectFactory;
 import org.kalypso.xml.tableview.Tableview;
 import org.kalypso.xml.types.TableviewLayerType;
+import org.kalypso.xml.types.TableviewLayerType.ColumnType;
 
 /**
  * <p>
@@ -46,11 +54,17 @@ public class GisTableEditor extends AbstractEditorPart
 {
   private final ObjectFactory m_tableviewObjectFactory = new ObjectFactory();
 
+  private final org.kalypso.xml.types.ObjectFactory m_typeFactory = new org.kalypso.xml.types.ObjectFactory();
+
   private final Unmarshaller m_unmarshaller;
 
   private final Marshaller m_marshaller;
 
   private LayerTable m_layerTable = null;
+
+  private String m_source;
+
+  private String m_type;
 
   public GisTableEditor()
   {
@@ -67,13 +81,6 @@ public class GisTableEditor extends AbstractEditorPart
       throw new RuntimeException( e );
     }
   }
-  
-  protected FullAction[] createFullActions()
-  {
-    final List list = new ArrayList();
-
-    return (FullAction[])list.toArray(new FullAction[list.size()]);
-  }
 
   protected WidgetAction[] createWidgetActions()
   {
@@ -88,10 +95,24 @@ public class GisTableEditor extends AbstractEditorPart
 
     try
     {
-      final TableviewLayerType layerType = m_layerTable.createLayerType();
-      
+      final TableviewLayerType tableviewLayerType = m_typeFactory.createTableviewLayerType();
+      tableviewLayerType.setId( "1" );
+      tableviewLayerType.setSource( m_source );
+      tableviewLayerType.setType( m_type );
+      final List columns = tableviewLayerType.getColumn();
+      final FeatureTypeProperty[] properties = m_layerTable.getModel().getVisibleProperties();
+      for( int i = 0; i < properties.length; i++ )
+      {
+        final ColumnType columnType = m_typeFactory.createTableviewLayerTypeColumnType();
+        columnType.setName( properties[i].getName() );
+        columns.add( columnType );
+      }
+
+      final Tableview tableview = m_tableviewObjectFactory.createTableview();
+      tableview.setLayer( tableviewLayerType );
+
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      m_marshaller.marshal( layerType, bos );
+      m_marshaller.marshal( tableview, bos );
       bos.close();
 
       final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -127,20 +148,20 @@ public class GisTableEditor extends AbstractEditorPart
   {
     super.createPartControl( parent );
 
-    m_layerTable = new LayerTable( parent );
+    m_layerTable = new LayerTable( parent, this );
 
     load();
-  
+
   }
 
   protected void load()
   {
-      if(m_layerTable==null)
-        return;
+    if( m_layerTable == null )
+      return;
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
     Tableview tableview = null;
-    
+
     try
     {
       tableview = (Tableview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
@@ -159,7 +180,37 @@ public class GisTableEditor extends AbstractEditorPart
     }
 
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
-    m_layerTable.setTableview( tableview, project );
+
+    m_layerTable.setModel( null );
+    m_source = null;
+    m_type = null;
+    if( tableview == null )
+      return;
+    
+    final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+
+    final TableviewLayerType layerType = tableview.getLayer();
+
+    m_source = layerType.getSource();
+    m_type = layerType.getType();
+
+    try
+    {
+      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)plugin.getPool( Layer.class )
+          .borrowObject(
+              new PoolableObjectType( m_type, m_source, project ) );
+
+      final List cols = new ArrayList();
+      for( final Iterator iter = layerType.getColumn().iterator(); iter.hasNext(); )
+        cols.add( ( (ColumnType)iter.next() ).getName() );
+
+      m_layerTable.setModel( new LayerTableModel( layer, (String[])cols.toArray( new String[cols
+          .size()] ) ) );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
     setDirty( false );
 
@@ -167,5 +218,8 @@ public class GisTableEditor extends AbstractEditorPart
     setPartName( input.getFile().getName() );
   }
 
-
+  public LayerTable getLayerTable()
+  {
+    return m_layerTable;
+  }
 }

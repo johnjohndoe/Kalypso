@@ -37,9 +37,10 @@
             id="org.kalypso.editor.mapeditor.GisMapEditor"
             extensions="gmt"/>
       <editor
-            class="org.kalypso.editor.tableeditor.GisTableEditor"
             icon="icons/sample.gif"
+            class="org.kalypso.editor.tableeditor.GisTableEditor"
             default="true"
+            contributorClass="org.kalypso.editor.tableeditor.GisTableEditorActionBarContributor"
             name="Kalypso GisTableEditor"
             id="org.kalypso.editor.tableeditor.GisTableEditor"
             extensions="gtt"/>
