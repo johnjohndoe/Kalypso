@@ -80,7 +80,7 @@ import de.tuhh.wb.javagis.view.GisView;
 
 import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 
-import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView1;
+import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 
 import de.tuhh.wb.javagis.data.GisElement;
 
@@ -429,7 +429,7 @@ public class GisTableView extends JInternalFrame implements InternalFrameListene
 
 		String title=getTitle()+"/"+tableModel.getName()+"#"+eId.toString();
 
-		GisSingleObjectView1.load(title,gisElement);
+		GisSingleObjectView.load(title,gisElement);
 
 		/*
 

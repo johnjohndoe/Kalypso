@@ -62,7 +62,6 @@ import java.awt.event.ActionListener;
 
 import timeserieSelection.CTSStruct;
 
-import timeserieSelection.BceBrowser;
 
 import timeserieSelection.CSelectTSFrame;
 

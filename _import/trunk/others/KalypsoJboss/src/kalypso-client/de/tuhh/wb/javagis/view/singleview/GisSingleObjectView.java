@@ -66,7 +66,7 @@ import de.tuhh.wb.javagis.view.tableview.TableCellRendererBce;
 
 
 
-public class GisSingleObjectView1 extends JInternalFrame implements InternalFrameListener, ElementClassListener
+public class GisSingleObjectView extends JInternalFrame implements InternalFrameListener, ElementClassListener
 
 {
 
@@ -80,11 +80,11 @@ public class GisSingleObjectView1 extends JInternalFrame implements InternalFram
 	
 	public static TableCellRendererBce tableCellRendererBce;
 
-    private static GisSingleObjectView1 instance=null;
+    private static GisSingleObjectView instance=null;
 
 
 
-    public GisSingleObjectView1(String frameName)
+    public GisSingleObjectView(String frameName)
 
     {
 
@@ -108,7 +108,7 @@ public class GisSingleObjectView1 extends JInternalFrame implements InternalFram
 
 	if(instance==null)
 
-	    instance=new GisSingleObjectView1("Kalypso detailed View");
+	    instance=new GisSingleObjectView("Kalypso detailed View");
 
 	/*
 
