@@ -6,6 +6,9 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import org.apache.commons.pool.KeyedObjectPool;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -88,6 +91,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       e.printStackTrace();
     }
     
+    try
+    {
+      UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName(  ) );
+    }
+    catch( Exception e1 )
+    {
+      e1.printStackTrace();
+    }
   }
 
   private void prepareRepositoriesSpecifications()
