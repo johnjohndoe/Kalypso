@@ -190,7 +190,9 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
       // actually creates the template
       final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper
           .loadDiagramTemplateXML( diagFile.getContents() );
-      m_diagTemplate = new LinkedDiagramTemplate( obsdiagviewType, ResourceUtilities
+      
+      m_diagTemplate = new LinkedDiagramTemplate( );
+      m_diagTemplate.setBaseTemplate( obsdiagviewType, ResourceUtilities
           .createURL( diagFile ) );
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );

@@ -7,11 +7,13 @@ import java.util.EventObject;
  */
 public class TemplateEvent extends EventObject
 {
-  public final static int TYPE_ADD = 0;
+  public final static int TYPE_ADD = 1;
 
-  public final static int TYPE_REMOVE = 1;
+  public final static int TYPE_REMOVE = 2;
   
-  public final static int TYPE_REMOVE_ALL = 2;
+  public final static int TYPE_REMOVE_ALL = 4;
+  
+  public final static int TYPE_LOADED = 8;
 
   private final Object m_obj;
 
@@ -32,5 +34,10 @@ public class TemplateEvent extends EventObject
   public int getType()
   {
     return m_type;
+  }
+  
+  public boolean isType( int type )
+  {
+    return (m_type & type) == type;
   }
 }

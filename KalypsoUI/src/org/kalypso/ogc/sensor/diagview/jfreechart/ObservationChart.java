@@ -1,10 +1,13 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.util.Iterator;
+
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
@@ -50,6 +53,14 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
     {
       if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof IDiagramCurve )
         ( (ObservationPlot)getPlot() ).addCurve( (IDiagramCurve)evt.getObject() );
+      
+      if( evt.getType() == TemplateEvent.TYPE_LOADED && evt.getObject() instanceof IDiagramTemplateTheme )
+      {
+        final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) evt.getObject();
+        final Iterator it = theme.getCurves().iterator();
+        while( it.hasNext() )
+          ( (ObservationPlot)getPlot() ).addCurve( (IDiagramCurve)it.next() );
+      }
       
       if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
         clearChart();

@@ -19,7 +19,6 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
@@ -32,9 +31,10 @@ import org.kalypso.ui.editor.AbstractEditorPart;
  * 
  * @author schlienger
  */
-public class ObservationDiagramEditor extends AbstractEditorPart implements ITemplateEventListener
+public class ObservationDiagramEditor extends AbstractEditorPart implements
+    ITemplateEventListener
 {
-  protected ObservationDiagramTemplate m_template = null;
+  protected LinkedDiagramTemplate m_template = null;
 
   protected Frame m_diagFrame = null;
 
@@ -43,6 +43,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
   protected ObsDiagOutlinePage m_outline;
 
   private ListenerList m_listener;
+
+  private boolean m_dirty = false;
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -94,6 +96,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
   {
     if( m_template != null )
     {
+      m_template.removeTemplateEventListener( this );
       m_template.removeTemplateEventListener( m_obsChart );
       m_template.dispose();
     }
@@ -119,9 +122,12 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
     {
       protected void write( Writer writer ) throws Throwable
       {
-        final ObsdiagviewType type = ObservationTemplateHelper.buildDiagramTemplateXML( m_template );
-        
+        final ObsdiagviewType type = ObservationTemplateHelper
+            .buildDiagramTemplateXML( m_template );
+
         ObservationTemplateHelper.saveDiagramTemplateXML( type, writer );
+
+        resetDirty();
       }
     };
 
@@ -129,17 +135,19 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
     try
     {
       thread.join();
-      
+
       if( thread.getFileException() != null )
         throw thread.getFileException();
-      
+
       if( thread.getThrown() != null )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Diagrammvorlage speichern", thread.getThrown() ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+            "Diagrammvorlage speichern", thread.getThrown() ) );
     }
     catch( InterruptedException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Diagrammvorlage speichern", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Diagrammvorlage speichern", e ) );
     }
   }
 
@@ -152,6 +160,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
   {
     monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
 
+    m_template = new LinkedDiagramTemplate();
+
     final Runnable runnable = new Runnable()
     {
       public void run( )
@@ -160,9 +170,12 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
         {
           final ObsdiagviewType baseTemplate = ObservationTemplateHelper
               .loadDiagramTemplateXML( input.getFile().getContents() );
-          m_template = new LinkedDiagramTemplate( baseTemplate,
-              ResourceUtilities.createURL( input.getFile() ) );
 
+          m_template.setBaseTemplate( baseTemplate, ResourceUtilities
+              .createURL( input.getFile() ) );
+
+          // call-order is important: first set base template and then create
+          // the chart
           m_obsChart = new ObservationChart( m_template );
           m_template.addTemplateEventListener( m_obsChart );
 
@@ -196,6 +209,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
     {
       monitor.done();
     }
+
+    m_template.addTemplateEventListener( ObservationDiagramEditor.this );
   }
 
   /**
@@ -203,6 +218,31 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements ITem
    */
   public void onTemplateChanged( TemplateEvent evt )
   {
-    // TODO set the dirty flag
+    if( evt.isType( TemplateEvent.TYPE_ADD | TemplateEvent.TYPE_REMOVE
+        | TemplateEvent.TYPE_REMOVE_ALL ) )
+    {
+      m_dirty = true;
+
+      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          fireDirty();
+        }
+      } );
+    }
+  }
+
+  protected void resetDirty( )
+  {
+    m_dirty = false;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#isDirty()
+   */
+  public boolean isDirty( )
+  {
+    return m_dirty;
   }
 }

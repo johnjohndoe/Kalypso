@@ -181,7 +181,9 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements
       // actually creates the template
       final ObsdiagviewType obsdiagviewType = ObservationTemplateHelper
           .loadDiagramTemplateXML( diagFile.getContents() );
-      m_diagTemplate = new LinkedDiagramTemplate( obsdiagviewType,
+      
+      m_diagTemplate = new LinkedDiagramTemplate( );
+      m_diagTemplate.setBaseTemplate( obsdiagviewType,
           ResourceUtilities.createURL( diagFile ) );
 
       final Composite composite = new Composite( parent, SWT.RIGHT
