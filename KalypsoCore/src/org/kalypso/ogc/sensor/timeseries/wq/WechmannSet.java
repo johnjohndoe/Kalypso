@@ -1,12 +1,13 @@
 package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * A Set of WechmannParams ordered by WGR and valid for the given Date.
@@ -15,30 +16,28 @@ import java.util.List;
  */
 public class WechmannSet
 {
-  private final List m_list = new ArrayList();
+  private final SortedMap m_mapW;
+  private final SortedMap m_mapQ;
 
   private final Date m_validity;
 
-  public WechmannSet( final Date validity )
-  {
-    m_validity = validity;
-  }
-  
-  public WechmannSet( final Date validity, WechmannParams[] wps )
-  {
-    this( validity );
-    setParamList( wps );
-  }
 
   /**
    * Sets the WechmannParams, they will be sorted by WGR (ascending). The order
    * is taken into account by the iterator when you call <code>WechmannSet.iterator()</code>.
    */
-  public void setParamList( final WechmannParams[] wp )
+  public WechmannSet( final Date validity, final WechmannParams[] wps )
   {
-    m_list.addAll( Arrays.asList( wp ) );
+    m_validity = validity;
     
-    Collections.sort( m_list, new WechmannParamsComparator() );
+    m_mapW = new TreeMap( );
+    m_mapQ = new TreeMap( );
+    
+    for( int i = 0; i < wps.length; i++ )
+    {
+      m_mapW.put( new Double(wps[i].getWGR()), wps[i] );
+      m_mapQ.put( new Double(wps[i].getQ4WGR()), wps[i] );
+    }
   }
 
   /**
@@ -47,7 +46,7 @@ public class WechmannSet
    */
   public Iterator iterator()
   {
-    return m_list.iterator();
+    return m_mapW.values().iterator();
   }
 
   /**
@@ -56,6 +55,34 @@ public class WechmannSet
   public Date getValidity()
   {
     return m_validity;
+  }
+  
+  /**
+   * Returns the WechmannParams that are relevant for the given Waterlevel.
+   */
+  public WechmannParams getForW( final double W )
+  {
+    final Double[] ds = (Double[])m_mapW.keySet().toArray( new Double[0] );
+    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), W );
+
+    if( i < 0 )
+      i = -i - 1;
+
+    return (WechmannParams)m_mapW.get( ds[i] );
+  }
+  
+  /**
+   * Returns the WechmannParams that are relevant for the given Runoff.
+   */
+  public WechmannParams getForQ( final double Q )
+  {
+    final Double[] ds = (Double[])m_mapQ.keySet().toArray( new Double[0] );
+    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), Q );
+
+    if( i < 0 )
+      i = -i - 1;
+
+    return (WechmannParams)m_mapQ.get( ds[i] );
   }
   
   /**
