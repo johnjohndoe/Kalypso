@@ -56,6 +56,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private ICellEditorFactory m_featureTypeCellEditorFactory; 
 
+  private final SelectionIdProvider mySelectionIdProvider=new SelectionIdProvider();
   
   /**
    * The constructor.
@@ -263,5 +264,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       m_featureTypeCellEditorFactory = new DefaultCellEditorFactory( getFeatureTypeCellEditorProperties(), this.getClass().getClassLoader() );
     
     return m_featureTypeCellEditorFactory;
+  }
+  
+  public SelectionIdProvider getSelectionIdProvider()
+  {
+      return mySelectionIdProvider;
   }
 }
