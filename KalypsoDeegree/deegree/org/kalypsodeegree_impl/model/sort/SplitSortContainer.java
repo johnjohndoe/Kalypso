@@ -1,4 +1,4 @@
-package org.deegree_ext.model.sort;
+package org.deegree_impl.model.sort;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class SplitSortContainer
 	return myEnvelope;
     }
     
-    protected void setParent(SplitSortContainer container)
+    public void setParent(SplitSortContainer container)
     {
 	myParent=container;
     }

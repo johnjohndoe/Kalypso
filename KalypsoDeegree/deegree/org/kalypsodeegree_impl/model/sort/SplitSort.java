@@ -1,4 +1,4 @@
-package org.deegree_ext.model.sort;
+package org.deegree_impl.model.sort;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Position;
+import org.deegree.model.sort.JMSpatialIndex;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree.graphics.transformation.GeoTransform;
 

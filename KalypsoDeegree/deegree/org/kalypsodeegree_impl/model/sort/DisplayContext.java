@@ -1,4 +1,4 @@
-package org.deegree_ext.model.sort;
+package org.deegree_impl.model.sort;
     
 import java.awt.Graphics;
 import org.deegree.graphics.displayelements.DisplayElement;
