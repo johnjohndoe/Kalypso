@@ -68,7 +68,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       m_template.addTemplateEventListener( m_obsChart );
 
       // chart panel without any popup menu
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false,
+          false, false, false );
       chartPanel.setMouseZoomable( true, false );
       m_diagFrame.add( chartPanel );
 
@@ -171,10 +172,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       {
         final TemplateStorage ts = (TemplateStorage) storage;
         m_template.setTitle( ts.getName() );
-        
+
         if( m_useAutoProxy )
           m_template.setProxyFactory( AutoProxyFactory.getInstance() );
-        
+
         m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }

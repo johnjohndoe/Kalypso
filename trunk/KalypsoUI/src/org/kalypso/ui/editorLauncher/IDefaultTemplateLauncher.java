@@ -13,6 +13,8 @@ public interface IDefaultTemplateLauncher
    * Dieser 'Dateiname' dient zur Anzeige im Auswahldialog. Der Prefix (vor dem
    * Punkt) bestimmt den Anzeigenamen, die Extension das Icon = Icon des
    * DefaultEditors für diese Endung.
+   * 
+   * @return filename
    */
   public String getFilename();
 
