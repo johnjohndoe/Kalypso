@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Generated-from: 1092667482000;type=4
+Bundle-Name: Console NL Support
+Bundle-SymbolicName: org.eclipse.ui.console.nl1
+Bundle-Version: 3.0.0
+Bundle-ClassPath: nl1.jar
+Fragment-Host: org.eclipse.ui.console;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: plugin

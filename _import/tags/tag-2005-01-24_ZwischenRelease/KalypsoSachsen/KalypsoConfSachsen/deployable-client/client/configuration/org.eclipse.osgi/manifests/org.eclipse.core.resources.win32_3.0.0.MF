@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Generated-from: 1095333184000;type=4
+Bundle-Name: %win32FragmentName
+Bundle-SymbolicName: org.eclipse.core.resources.win32; singleton=true
+Bundle-Version: 3.0.0
+Bundle-ClassPath: resources-win32.jar
+Bundle-Vendor: %providerName
+Fragment-Host: org.eclipse.core.resources;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.core.internal.resources.refresh.win32

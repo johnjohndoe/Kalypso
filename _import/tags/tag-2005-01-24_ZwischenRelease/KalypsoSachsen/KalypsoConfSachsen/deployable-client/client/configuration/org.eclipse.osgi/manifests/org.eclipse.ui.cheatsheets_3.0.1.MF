@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Generated-from: 1095333192000;type=2
+Bundle-Name: %PLUGIN_NAME
+Bundle-SymbolicName: org.eclipse.ui.cheatsheets; singleton=true
+Bundle-Version: 3.0.1
+Bundle-ClassPath: cheatsheets.jar
+Bundle-Activator: org.eclipse.ui.internal.cheatsheets.CheatSheetPlugin
+Bundle-Vendor: %PROVIDER_NAME
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.ui.internal.cheatsheets.actions,
+ org.eclipse.ui.internal.cheatsheets,
+ org.eclipse.ui.internal.cheatsheets.registry,
+ org.eclipse.ui.cheatsheets,
+ org.eclipse.ui.internal.cheatsheets.data,
+ org.eclipse.ui.internal.cheatsheets.dialogs,
+ org.eclipse.ui.internal.cheatsheets.views
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.help,
+ org.eclipse.core.runtime
+Eclipse-AutoStart: true

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+  <context id="file_selection_dialog_context">
+    <description>In diesem Dialog können Sie eine Datei im Arbeitsbereich auswählen.</description>
+    <topic label="Ant-Unterstützung" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Externe Tools" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="message_with_toggle_dialog_context">
+    <description>In diesem Dialog können Sie das Anzeigen eines Dialogtyps, der das Ergebnis einer bestimmten Aktion ist, umschalten.</description>
+    <topic label="Ant-Unterstützung" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Externe Tools" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="preference_page_context">
+    <description>Auf dieser Seite können Sie die Benutzervorgaben für externe Tools konfigurieren.</description>
+   	<topic label="Benutzervorgaben - Externe Tools" href="reference/ref-exttoolsprefs.htm"/>    
+    <topic label="Ant-Unterstützung" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Externe Tools" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builder_property_page_context">
+    <description>Auf dieser Seite können Sie die Erstellungsprogramme für externe Tools konfigurieren, die bei der Erstellung dieses Projekts ausgeführt werden.</description>
+    <topic label="Ant-Unterstützung" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Externe Tools" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="builders_tab_context">
+    <description>Auf dieser Registerkarte können Sie konfigurieren, wann dieses Projekterstellungsprogramm ausgeführt wird.</description>
+    <topic label="Ant-Unterstützung" href="concepts/concepts-antsupport.htm"/> 
+    <topic label="Externe Tools" href="concepts/concepts-exttools.htm"/>
+  </context>
+
+  <context id="program_main_tab_context">
+    <description>Auf dieser Registerkarte können Sie die Programmposition und andere Attribute dieser Startkonfiguration konfigurieren.</description>
+    <topic label="Externe Tools" href="concepts/concepts-exttools.htm"/>
+  </context>
+</contexts>

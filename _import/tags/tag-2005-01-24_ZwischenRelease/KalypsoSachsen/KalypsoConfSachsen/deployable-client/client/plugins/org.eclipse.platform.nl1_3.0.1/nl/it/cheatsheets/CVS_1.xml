@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="CVS - Unione da una sezione all'altra">
+
+	<intro 
+		href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+		<description>
+Questa pagina di aiuto avvia automaticamente le procedure guidate, esegue le azioni e guida l'utente in tutti i passaggi necessari per unire le modifiche di una sezione CVS ad un'altra sezione oppure a HEAD. Per ulteriori informazioni sull'utilizzo delle pagine di aiuto o per visualizzare un elenco delle pagine di aiuto disponibili, fare clic su ?.
+Per iniziare a lavorare su questa pagina di aiuto, fare clic sul pulsante Inizia.</description>
+	</intro>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Determinazione delle informazioni sulla sezione e la versione">
+		<description>
+In questo passo, è necessario determinare il nome della sezione o della versione che contengono le modifiche e la versione da cui è stata creata la sezione. Si tratta di un'attività manuale, è necessario eseguire il lavoro e fare clic sul pulsante "Completa" per passare
+all'operazione successiva. 
+		</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Caricamento della destinazione nello spazio di lavoro">
+		<description>
+Selezionare il progetto e scegliere Sostituisci con &gt; Un'altra sezione o versione dal menu di scelta rapida. Selezionare quindi la sezione con cui si desidera effettuare la sostituzione. In questo passo, è necessario assicurarsi che la destinazione sia caricata nello spazio di lavoro. Si tratta di un'attività manuale, è necessario eseguire il lavoro e fare clic sul pulsante "Completa" per passare
+all'operazione successiva.</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm" 
+		title="Unione dettagli">
+		<description>
+Selezionare il progetto, scegliere Team &gt; Unisci e completare la procedura guidata come richiesto. Questo passo consente di specificare i dettagli dell'unione. Si tratta di un'attività manuale, è necessario eseguire il lavoro e fare clic sul pulsante "Completa" per passare
+all'operazione successiva.</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Utilizzo dell'editor Unione">
+		<description>
+Nell'editor Unione vengono unite le modifiche manualmente. Questo passo consente di caricare le modifiche richieste nello spazio di lavoro. Si tratta di un'attività manuale, è necessario eseguire il lavoro e fare clic sul pulsante "Completa" per passare
+all'operazione successiva.</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Commit delle modifiche">
+		<description>
+Selezionare Team &gt; Sincronizza con repository ed eseguire il commit di tutte le modifiche nel repository. Questo passo completa il trasferimento delle modifiche dallo spazio di lavoro al repository CVS. Si tratta di un'attività manuale, è necessario eseguire il lavoro e fare clic sul pulsante "Completa" per passare
+all'operazione successiva.</description>
+	</item>
+
+</cheatsheet>

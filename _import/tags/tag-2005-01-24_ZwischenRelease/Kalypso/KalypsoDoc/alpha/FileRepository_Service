@@ -1,0 +1,21 @@
+Kalypso Server: Datei Server.
+
+Diese Aufgabe wird eigentlich vom Betriebssystem vorgenommen. Man braucht hier lediglich
+freigegebene Verzeichnisse, die von jeder Client im Intranet (Extranet oder sogar Internet
+auch denkbar) zugreifbar ist.
+
+Replikationsmechanismus:
+------------------------
+
+Nicht jeder Datei welche vom Server verarbeitet wird soll repliziert werden. Diesbezüglich
+gibt es also unterschiedliche Bereiche (eigentlich freigegebene Verzeichnisse) auf dem Server.
+Der eine aber muss repliziert werden, damit im Ausfall Fall auf dem anderen Server mit dem
+gleichen Datenbestand weiter gearbeitet werden kann.
+
+Das Replikationsmechanismus kann von Dritten unterstützt werden wie es der Fall mit PSICompact
+ist. Der Client sollte aber nichts merken davon. Deswegen braucht er lediglich die Datei
+an einer gegebene Stelle zu kopieren - der Rest wird vom Server unternommen.
+
+Der Server hat also ein DateiListener was in regelmäßige Abstände das zu replizierte Verzeichnis
+prüft. Wenn es eine neue (eventuell Version von) Datei gibt, dann schaltet er das
+Replikationmechanismus ein.

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="einfuehrung">
+  <?dbhh topicname="Allgemeines" topicid="2"?>
+
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Einführung in KALYPSO</primary>
+      </indexterm></date>
+  </chapterinfo>
+
+  <title>Einführung</title>
+
+  <section id="allgemeines_zu_kalypso">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO-Konzept</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Allgemeines zu KALYPSO</title>
+
+    <para id="para1">Das Programm-System KALYPSO Enterprise ist eine Open
+    Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in
+    Kooperation mit dem Arbeitsbereich Wasserbau der Technischen Universität
+    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
+    numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
+    einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
+    Abstraktionsschicht dar mit folgenden Eigenschaften:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>einheitliche Verwaltung und Strukturierung
+        hydrologisch-hydraulischer Modelle</para>
+      </listitem>
+
+      <listitem>
+        <para>zentrale Datenspeicherung (ggf. mit Datenbankanbindung)</para>
+      </listitem>
+
+      <listitem>
+        <para>Integration von hydrologischen und hydraulischen
+        Berechnungsverfahren auf Basis unterschiedlicher Rechenkerne</para>
+      </listitem>
+    </itemizedlist>
+
+    <para></para>
+
+    <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
+    an:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
+        Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
+        info@bjoernsen.de</para>
+      </listitem>
+    </itemizedlist>
+
+    <graphic fileref="img/000_001_bce_sw_300.png" />
+
+    <para>oder</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
+        Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
+      </listitem>
+    </itemizedlist>
+
+    <graphic fileref="img/wasserbau-logo.png" scale="" />
+
+    <para></para>
+
+    <para><emphasis role="bold">Die Nymphe Kalypso</emphasis></para>
+
+    <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
+    genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
+    Namen.</para>
+
+    <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem sein
+    Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel Ogygia
+    gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus Liebe dort
+    gefangen und wollte ihn zu Ihrem unsterblichen Ehemann nehmen. Doch selbst
+    nach Jahren des Umwerbens und Betörens von Kalypso's Seite sehnte sich
+    Odysseus immer noch nach seiner Frau und seinem Sohn.</para>
+
+    <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
+    entsandte, liess Kalypso Odysseus frei, sodass er seine Reise Richtung
+    Heimat fortsetzen konnte.</para>
+  </section>
+
+  <section id="kalypso_installation_lhwz_sachsen">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Installation Sachsen</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>KALYPSO-Installation LHWZ Sachsen</title>
+
+    <para>In der Landeshochwasserwarnzentrale Sachsen ist KALYPSO als
+    Softwarelösung für die Hochwasservorhersage installiert. Mit Hilfe des
+    Programmsystems können primär Wizard-geführte Vorhersageberechnungen
+    durchgeführt werden. Komplexe Operationen der Modellpflege werden
+    ebenfalls durch die Oberfläche unterstützt.</para>
+
+    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
+    serverseitigen Dienste sind in der Landeshochwasserwarnzentrale Sachsen
+    auf dem physisch eigenständigen KALYPSO-Server installiert:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Durchführung von numerischen Modellberechnungen
+        (Rechen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Ablage von Dokumentbausteinen für Hochwasserberichte
+        (Dokumenten-Dienst)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Im Falle der Landeshochwasserwarnzentrale Sachsen wird die
+    modellrelevante zentrale Datenverwaltung durch zwei Systeme administriert.
+    Die eigentlichen Modelldaten - d.h. Geografische Daten, physikalische
+    Parameter, Steuerparameter der numerischen Berechnung, etc. - werden
+    ausschließlich von KALYPSO verwaltet und abgelegt.</para>
+
+    <para>Zeitreihen und Dokumentbausteine für Hochwasserberichte werden durch
+    KALYPSO gelesen bzw. generiert, die Verwaltung und Ablage geschieht aber
+    innerhalb von PSICompact.</para>
+
+    <figure id="_server_client_architektur">
+      <title>KALYPSO Client-Server-Architektur bei der LHWZ Sachsen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Bausteine.png" scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Die in der Landeshochwasserwarnzentrale Sachsen installierte und
+    hier beschriebene KALYPSO-Version beinhaltet zwei Modell-Plugins.</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Spree</emphasis>: Ein kombiniertes
+        Niederschlags-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
+        bzw. der WASY GmbH für das Einzugsgebiet der Spree.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Weiße Elster</emphasis>: Ein
+        hydrologisches Gebietsmodell des Einzugsgebietes der Weißen Elster mit
+        Abbildung der gesamten landbezogenen Wasserbilanz und integriertem
+        Wellenablauf-Modul entwickelt und aufgebaut von Björnsen Beratende
+        Ingenieure GmbH.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche (siehe
+    <xref linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
+    innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
+    zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
+    Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
+    der jeweiligen Modelle leiten (siehe <xref
+    linkend="vorhersage_wizards" />).</para>
+  </section>
+
+  <section id="anwendungsfaelle">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Anwendungsfälle</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Anwendungsfälle</title>
+
+    <para>Die KALYPSO-Installation in der Landeshochwasserwarnzentrale Sachsen
+    unterscheidet grundsätzlich drei Anwendungsfälle:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Administration</emphasis>: Der
+        Fachadministrator nimmt hauptsächlich die Aufgabe wahr, neue Modelle
+        bzw. Modelltypen in KALYPSO zu implementieren.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Modellpflege</emphasis>: Die Modellpflege
+        und -fortschreibung wird durch den Experten (Modellierer) geleistet.
+        Diese Arbeit umfasst u.a. die Nachrechnung historischer Ereignisse zur
+        Nachführung der Modellparameter (Nachkalibrierung), Festlegung und
+        Freischaltung der für die Vorhersage maßgeblichen Modellvariante sowie
+        Bearbeitung und Freischaltung der Visualisierungsvorlagen.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Hochwasserbetrieb</emphasis>: Im
+        Hochwasserfall müssen durch den Anwender schnell und zuverlässig
+        Hochwasservorhersagen durchgeführt werden. Dazu gehört neben der
+        Berechnung von Wasserständen und Abflüssen an definierten
+        Gewässerstationen auch die Generierung von Bausteinen (Texte,
+        Grafiken) für die Anfertigung von Hochwasserberichten.</para>
+      </listitem>
+    </orderedlist>
+
+    <figure id="pic_anwendungsfaelle">
+      <title>KALYPSO Anwendungsfälle LHWZ Sachsen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/anwendungsfaelle.png" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Der Punkt 1 Administration ist gesondert in der Technischen
+    Dokumentation beschrieben. Die Benutzung von KALYPSO in Hinblick auf die
+    Modellpflege (<xref linkend="grafische_oberflaeche" />) und den
+    Hochwasserbetrieb (<xref linkend="vorhersage_wizards" />) ist im
+    vorliegenden Handbuch beschrieben.</para>
+  </section>
+
+  <section id="datenmanagement">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Datenmanagement LHWZ</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Datenmanagement</title>
+
+    <para>Die in <xref linkend="kalypso_installation_lhwz_sachsen" />
+    beschriebene Client-Server-Architektur basiert auf folgendem
+    Datenmanagement-Prinzip:</para>
+
+    <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem
+    KALYPSO-Server gespeicherte Modelle geladen werden. Diese aktuellen
+    Modelle - es können mehrere Modelle parallel geöffnet und bearbeitet
+    werden - werden im lokalen Arbeitsverzeichnis von KALYPSO verwaltet. Alle
+    Änderungen am Modell, das Anlegen neuer Rechenvarianten, etc. sind somit
+    im ersten Schritt nur wirksam für die lokale Modellversion.</para>
+
+    <para>Das Speichern des Modells (einschließlich Modellspezifikation,
+    Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
+    Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels der
+    speziellen Menüs <guilabel>Modell</guilabel> und
+    <guimenu>Rechenvariante</guimenu> (siehe <xref
+    linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
+
+    <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im
+    KALYPSO-Modeler (Expertenmodus), wo der Experte sehr detailliert und
+    gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
+    kann.</para>
+
+    <para>Für den Anwender im Hochwasserbetrieb bleibt das Datenmanagement
+    verborgen, da er automatisch durch den jeweiligen Vorhersage-Wizard
+    geführt wird, die für die Prognose freigeschalteten Modelle vom Server
+    abruft und die Ergebnisse der Hochwasservorhersage-Berechnung in einer
+    vorgegebenen Struktur wieder auf dem Server ablegt.</para>
+  </section>
+</chapter>

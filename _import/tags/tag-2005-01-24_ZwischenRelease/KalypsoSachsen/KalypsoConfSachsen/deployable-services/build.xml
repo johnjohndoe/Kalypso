@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Kalypso-Sachsen: services" default="zip-services-lfug" basedir="..">
+
+	<property name="project.path" value="${workspace}/KalypsoConfSachsen" />
+	<property name="dist" value="${workspace}/KalypsoConfSachsen/deploy/server" />
+	<property name="dist.services" value="${dist}/services" />
+
+	<target name="prepare" description="Creates the build directory">
+		<echo message="Creating the required directories...." />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist.services}"/>
+	</target>
+
+	<target name="clean" description="Removes the build directories">
+		<delete dir="${dist.services}" />
+	</target>
+	
+	<target name="build-services" description="Builds all services" >
+		<echo message="Building all services"/>
+		
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-war" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build-war" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-war" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false" />
+		<antcall target="build-KalypsoConf-war" />
+	</target>
+	
+	<target name="echte-psicompact" depends="prepare">
+		<copy file="${project.path}/deployable-services/echte-psicompact/PSICompact.jar"
+			  tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" 
+		      overwrite="true"/>
+	</target>
+			
+	<target name="zip-services-lfug" depends="prepare,clean,echte-psicompact,build-services" description="copy all services.war to the deploy dir">
+		<echo message="Copying the wars to ${dist.services}" />
+
+		<copy tofile="${dist.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true"/>
+		<copy tofile="${dist.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true"/>
+		<copy tofile="${dist.services}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip" overwrite="true"/>
+		<copy tofile="${dist.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true"/>
+	</target>
+
+	<target name="fake-psicompact" depends="prepare" description="deploy the fake impl of psicompact into the KalypsoPSICompactAdapter libs">
+		<delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
+		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false"/>
+	</target>
+	
+	<target name="redeploy-services-bce" depends="prepare,fake-psicompact,build-services" description="redeploys all services">
+		<echo message="Redeploying all services"/>
+		
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+		<antcall target="redeploy-KalypsoConf" />
+	</target>
+	
+
+	<!-- ### AB HIER KalypsoConf SPEZIFISCH ############################### -->
+	
+	<property name="deployable.war" value="kalypso_conf.zip" />
+	<property name="service.name" value="KalypsoConf" />
+	<property name="war.path" value="file:///${dist.services}/${deployable.war}" />
+
+	<property name="core.path" value="${workspace}/KalypsoCoreServices" />
+	<property file="${core.path}/etc/ant/tomcat.properties" />
+
+	<path id="ant.classpath">
+		<fileset dir="${core.path}/lib" includes="*.jar" />
+		<fileset dir="${core.path}/lib/build" includes="*.jar" />
+	</path>
+
+	<target name="build-KalypsoConf-war" depends="prepare" description="builds the KalypsoConf.war">
+		<jar jarfile="${dist.services}/${deployable.war}">
+			<fileset dir="${project.path}/deployable-services/KalypsoConf" includes="*/**" />
+		</jar>
+	</target>
+
+	<target name="deploy-KalypsoConf" description="Deploys a Web application">
+
+		<echo message="Deploying the web application..." />
+		<echo message="URL: ${tomcat.manager.url}" />
+		<echo message="UNAME: ${tomcat.username}" />
+		<echo message="PWD: ${tomcat.password}" />
+		<echo message="PATH: /${service.name}" />
+		<echo message="WAR: ${war.path}" />
+
+		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" war="${war.path}" />
+	</target>
+
+	<target name="undeploy-KalypsoConf" description="Undeploys a Web application">
+		<echo message="Undeploying the web application..." />
+		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
+	</target>
+
+	<target name="redeploy-KalypsoConf" description="Undeploys and deploys a Web aplication">
+		<antcall target="undeploy" />
+		<antcall target="deploy" />
+	</target>
+
+	<target name="start-KalypsoConf" description="Starts a Web application">
+		<echo message="Starting the application...." />
+		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
+	</target>
+
+	<target name="stop-KalypsoConf" description="Stops a Web application">
+		<echo message="Stopping the application...." />
+		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
+	</target>
+
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="ant.classpath" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="ant.classpath" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpathref="ant.classpath" />
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpathref="ant.classpath" />
+
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="ant.classpath" />
+	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask" classpathref="ant.classpath" />
+
+</project>
