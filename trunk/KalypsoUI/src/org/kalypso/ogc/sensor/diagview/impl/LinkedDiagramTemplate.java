@@ -130,6 +130,9 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   {
     m_key2themes.clear();
 
+    // TODO: auch für einzelne Themen???
+    m_pool.removePoolListener( this );
+    
     super.removeAllThemes();
   }
 
