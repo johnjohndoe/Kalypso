@@ -857,7 +857,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected void runCalculation()
   {
     final IWizard wizard = getWizard();
-
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
       public void run( IProgressMonitor monitor ) throws InvocationTargetException

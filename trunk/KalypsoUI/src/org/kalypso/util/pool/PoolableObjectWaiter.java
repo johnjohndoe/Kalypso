@@ -32,7 +32,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       objectLoaded( key, newValue );
     else
     {
-      // error handling!
+     // TODO error handling! 
     }
 
     dispose();

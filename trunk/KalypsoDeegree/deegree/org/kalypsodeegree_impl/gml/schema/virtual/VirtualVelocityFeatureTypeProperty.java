@@ -65,7 +65,7 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-  private final String m_name="arrow_velocity";
+  private final String m_name = "arrow_velocity";
 
   /*
    * 
@@ -73,7 +73,7 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
    */
   public VirtualVelocityFeatureTypeProperty( FeatureType ft )
   {
-    //
+  //
   }
 
   /**
@@ -94,7 +94,8 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
             .getCoordinateSystem() );
     try
     {
-      return GeometryUtilities.createArrowLineString( srcP, targetP );
+      return GeometryUtilities.createArrowLineString( srcP, targetP);
+//      return GeometryUtilities.createArrowLineString( srcP, targetP, 0.6, 0.1 );
     }
     catch( GM_Exception e )
     {

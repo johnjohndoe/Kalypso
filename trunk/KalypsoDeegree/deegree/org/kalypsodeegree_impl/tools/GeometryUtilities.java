@@ -68,4 +68,35 @@ public class GeometryUtilities
         targetP.getPosition() };
     return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
+
+  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP,
+      double weightLength, double weightWidth ) throws GM_Exception
+  {
+    double dx = targetP.getX() - srcP.getX();
+    double dy = targetP.getY() - srcP.getY();
+
+    final GM_Position p1 = srcP.getPosition();
+    final GM_Position p4 = targetP.getPosition();
+    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1
+        .getY()
+        + weightLength * dy );
+    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2
+        .getY()
+        - weightWidth * dx );
+    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2
+        .getY()
+        + weightWidth * dx );
+
+    final GM_Position[] pos = new GM_Position[]
+    {
+        p1,
+        p2,
+        p3,
+        p4,
+        p5,
+        p2 };
+    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
+  }
+
+  
 }

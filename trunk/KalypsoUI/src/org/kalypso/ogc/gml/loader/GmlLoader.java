@@ -46,10 +46,6 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,6 +59,10 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.url.UrlResolver;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -73,7 +73,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class GmlLoader extends AbstractLoader
 {
   private final IUrlResolver m_urlResolver = new UrlResolver();
-
+  
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
    *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
