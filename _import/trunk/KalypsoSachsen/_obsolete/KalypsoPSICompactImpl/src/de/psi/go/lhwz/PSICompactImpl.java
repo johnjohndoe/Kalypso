@@ -39,6 +39,8 @@ import org.xml.sax.InputSource;
  */
 public class PSICompactImpl implements PSICompact
 {
+  private final static ArchiveData[] EMPTY_DATA = new ArchiveData[0];
+  
   private final Map m_id2obj;
 
   private final Map m_id2zml;
@@ -199,7 +201,7 @@ public class PSICompactImpl implements PSICompact
     testInitDone();
 
     if( from == null || to == null )
-      return new ArchiveData[0];
+      return EMPTY_DATA;
 
     if( m_id2obj.containsKey( id ) )
     {
@@ -212,10 +214,11 @@ public class PSICompactImpl implements PSICompact
         return readFromZml( id, from, to );
 
       // random
-      return randomData( from, to );
+//      return randomData( from, to );
+      return EMPTY_DATA;
     }
 
-    return new ArchiveData[0];
+    return EMPTY_DATA;
   }
 
   /**
