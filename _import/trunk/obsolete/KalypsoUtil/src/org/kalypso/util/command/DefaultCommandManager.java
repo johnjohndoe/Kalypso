@@ -7,7 +7,7 @@ import javax.swing.event.EventListenerList;
 /**
  * Standardimplementierung von {@link ICommandManager}.
 
- * @author von Dömming
+ * @author von D?mming
  */
 public class DefaultCommandManager implements ICommandManager
 {
@@ -46,9 +46,7 @@ public class DefaultCommandManager implements ICommandManager
     }
     catch( Exception e )
     {
-      // TODO: errorMessage
-
-      e.printStackTrace();
+     // e.printStackTrace();
     }
 
     checkStatus();
