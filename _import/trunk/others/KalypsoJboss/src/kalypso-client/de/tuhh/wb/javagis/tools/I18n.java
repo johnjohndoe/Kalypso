@@ -89,7 +89,8 @@ public class I18n
 			{
 				instance=new I18n(language);
 				Object[] options = {get("Dia_Yes"),get("Dia_No")};
-				int n = JOptionPane.showOptionDialog(null,get("LearnDia_Question"),get("LearnDia_Title"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+				//				int n = JOptionPane.showOptionDialog(null,get("LearnDia_Question"),get("LearnDia_Title"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+				int n = JOptionPane.showOptionDialog(null,"Do you want to start in LearnMode ?",get("LearnDia_Title"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
 				switch (n)
 				{
 					case JOptionPane.NO_OPTION:
@@ -169,7 +170,7 @@ public class I18n
 				return value;
 			}
 			else
-				return "...";
+			    return key+"...";
 		}
 		else
 		{
