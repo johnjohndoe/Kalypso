@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
 import java.io.File;
@@ -77,13 +77,14 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class GmlLoader extends AbstractLoader
 {
   private Map m_oldSelectionMap = new HashMap();
-  
+
   private final IUrlResolver m_urlResolver = new UrlResolver();
 
   private CommandableWorkspace m_workspace;
-  
+
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
+   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected Object loadIntern( final String source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException
@@ -95,28 +96,32 @@ public class GmlLoader extends AbstractLoader
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
-      
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
+
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer
+          .createGMLWorkspace( gmlURL, m_urlResolver ) );
 
       try
       {
         final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-        workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
+            FeatureVisitor.DEPTH_INFINITE );
+        workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
+            FeatureVisitor.DEPTH_INFINITE );
       }
       catch( final Throwable e1 )
       {
         e1.printStackTrace();
       }
-      
-      workspace.accept( new SetSelectionVisitor( m_oldSelectionMap ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+      workspace.accept( new SetSelectionVisitor( m_oldSelectionMap ), workspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
       m_oldSelectionMap.clear();
 
       if( gmlFile != null )
         addResource( gmlFile, workspace );
 
       m_workspace = workspace;
-      
+
       return workspace;
     }
     catch( final LoaderException le )
@@ -146,38 +151,39 @@ public class GmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final String source, final URL context,
-      final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor,
+      final Object data ) throws LoaderException
   {
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace)data;
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
-  
+
       // ists im Workspace?
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
       {
-        final SetContentHelper thread = new SetContentHelper(  ) 
+        final SetContentHelper thread = new SetContentHelper()
         {
           protected void write( final Writer writer ) throws Throwable
           {
-            GmlSerializer.serializeWorkspace( writer, workspace);            
+            GmlSerializer.serializeWorkspace( writer, workspace );
           }
         };
 
         // damit der change event nicht kommt
         savingResource( file );
-        
+
         thread.setFileContents( file, false, true, new NullProgressMonitor() );
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )
       {
         final Writer w = new FileWriter( new File( gmlURL.getFile() ) );
-        GmlSerializer.serializeWorkspace( w, workspace);
+        GmlSerializer.serializeWorkspace( w, workspace );
       }
       else
         throw new LoaderException( "Die URL kann nicht beschrieben werden: " + gmlURL );
@@ -185,8 +191,9 @@ public class GmlLoader extends AbstractLoader
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      
-      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
+
+      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n"
+          + e.getLocalizedMessage(), e );
     }
     catch( final Throwable e )
     {
@@ -202,8 +209,9 @@ public class GmlLoader extends AbstractLoader
   {
     // alte selektion wieer setzen
     m_oldSelectionMap.clear();
-    
+
     if( m_workspace != null )
-      m_workspace.accept( new QuerySelectionVisitor( m_oldSelectionMap ), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      m_workspace.accept( new QuerySelectionVisitor( m_oldSelectionMap ), m_workspace
+          .getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
   }
 }

@@ -101,6 +101,7 @@ public class FeatureviewHelper
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       griddata.setWidthHint( 100 );
       editor.setLayoutData( griddata );
+      
 
       return editor;
     }

@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -166,12 +167,13 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     {
       try
       {
+        
         axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL(), true )
             .getAxisList() );
       }
       catch( Exception e )
       {
-        e.printStackTrace();
+        MessageDialog.openInformation(getShell(), "Fehler beim laden der Zieldatei-Datei","Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich");
       }
     }
 

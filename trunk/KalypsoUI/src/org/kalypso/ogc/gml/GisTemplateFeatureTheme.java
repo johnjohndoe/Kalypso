@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.types.LayerType;
@@ -94,9 +95,11 @@ import org.kalypso.util.pool.ResourcePool;
  * @author Belger
  */
 public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener,
-    ICommandTarget, IKalypsoFeatureTheme
+    ICommandTarget, IKalypsoFeatureTheme, IPooledObject
 {
   private JobExclusiveCommandTarget m_commandTarget;
+
+  private boolean m_loaded = false;
 
   private final PoolableObjectType m_layerKey;
 
@@ -323,6 +326,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
+    m_loaded = false;
     if( key == m_layerKey )
     {
       m_theme.removeModellListener( this );
@@ -417,6 +421,23 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( m_theme != null )
       return m_theme.getFeatureListVisible( env );
     return null;
+  }
+
+  /**
+   * @see org.kalypso.loader.IPooledObject#isLoaded()
+   */
+  public boolean isLoaded()
+  {
+    if( m_loaded )
+      return true;
+    // theme not here
+    if( m_theme == null )
+      return false;
+    // wrong number of styles ?
+    if( m_theme.getStyles().length != m_styleKeys.length )
+      return false;
+    m_loaded = true;
+    return m_loaded;
   }
 
 }

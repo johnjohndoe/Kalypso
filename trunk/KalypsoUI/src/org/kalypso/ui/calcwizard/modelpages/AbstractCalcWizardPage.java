@@ -186,6 +186,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   private static final String PROP_PAN_TO_FEATURE_ID = "pantoFeatureId";
 
+  /**
+   * select first feature of acitve layer by default ?<br>
+   * default is "true" <br>
+   * valid values are "true" or "false"
+   */
+  private static final String PROP_SELECT_FIRST_FEATURE_BY_DEFAULT = "selectFirstFeatureByDefault";
+
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), null );
 
@@ -290,7 +297,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#init(org.eclipse.core.resources.IProject, java.lang.String, org.eclipse.jface.resource.ImageDescriptor, org.kalypso.ui.calcwizard.Arguments, org.eclipse.core.resources.IFolder)
+   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#init(org.eclipse.core.resources.IProject,
+   *      java.lang.String, org.eclipse.jface.resource.ImageDescriptor,
+   *      org.kalypso.ui.calcwizard.Arguments,
+   *      org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
       final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder )
@@ -359,7 +369,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected Control initMap( final Composite parent, final String widgetID ) throws IOException,
       JAXBException, CoreException
   {
-    final String mapFileName = (String) getArguments().get( PROP_MAPTEMPLATE );
+    final String mapFileName = (String)getArguments().get( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
     if( mapFile == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
@@ -526,7 +536,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
-      final String templateFileName = (String) getArguments().get( PROP_TABLETEMPLATE );
+      final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
           getReplaceProperties() );
@@ -961,21 +971,37 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           final FeatureList featureList = kft.getFeatureListVisible( null );
           if( featureList != null && featureList.size() != 0 )
           {
-            featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
+            int selectionID = getSelectionID();
+            featureList.accept( new UnselectFeatureVisitor( selectionID ) );
 
             final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
+            final Feature feature;
+            if( fid != null )
+            {
+              feature = workspace.getFeature( fid );
+            }
+            else
+            {
+              if( selectFirstFeatureByDefault() )
+                feature = (Feature)featureList.get( 0 );
+              else
+                feature = null;
+            }
 
-            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace
-                .getFeature( fid );
             if( feature != null )
-              feature.select( getSelectionID() );
+              feature.select( selectionID );
           }
         }
-
         refreshDiagram();
         refreshZMLTable();
         maximizeMap();
       }
     } ).start();
+  }
+
+  boolean selectFirstFeatureByDefault()
+  {
+    return "true"
+        .equals( getArguments().getProperty( PROP_SELECT_FIRST_FEATURE_BY_DEFAULT, "true" ) );
   }
 }

@@ -149,7 +149,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final IObservation targetObservation;
       final ITuppleModel tuppelModelTarget;
       final int countTarget;
-      if( fileTarget.exists() )
+      if( fileTarget.exists() && ( selection.isAppend() || selection.isRetainMetadata() ) )
       {
         targetObservation = m_page2.getTargetObservation( fileTarget.toURL(), true );
         tuppelModelTarget = targetObservation.getValues( null );
