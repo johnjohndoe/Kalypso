@@ -90,7 +90,7 @@ public class HwsSimulation implements KalypsoXmlImportListener
 			myVersionAccess.xmlExport("HWS_Szenario",szenarioVersion,szenarioFile);
 			myVersionAccess.xmlExport("HWS_Logistics",logisticsVersion,logisticsFile);
 			
-			de.tuhh.wb.hws.HwsStart.hwsCalculation(systemFile,szenarioFile,logisticsFile,resultsFile);
+			//de.tuhh.wb.hws.HwsStart.hwsCalculation(systemFile,szenarioFile,logisticsFile,resultsFile);
 			
 			if(resultsFile.exists())
 			    {

@@ -212,7 +212,8 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 		//Check: targetDir exists
 		if(!targetDir.exists())
 		    targetDir.mkdirs();
-		File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
+		//File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
+		File kalypsoTemplate = new File("C://Kalypso//bin//template");
 		System.out.println("copy template from "+kalypsoTemplate.toString());
 
 		LogView.println(I18n.get("LV_SD_runSim1"));

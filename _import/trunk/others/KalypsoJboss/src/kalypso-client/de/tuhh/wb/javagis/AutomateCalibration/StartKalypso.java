@@ -25,7 +25,7 @@ public class StartKalypso implements KalypsoXmlImportListener {
 
 	File modelFile = null;
 	File controlFile = null;
-	File simCaseFile = null;
+	//File simCaseFile = null;
 	File targetDir = null;
 	private File myNaModelDir;
 	public final String OUT_DIR = "results_kalypso";
@@ -50,11 +50,10 @@ public class StartKalypso implements KalypsoXmlImportListener {
 	public StartKalypso(
 		File modelFile,
 		File controlFile,
-		File simCaseFile,
 		File targetDir) {
 		this.modelFile = modelFile;
 		this.controlFile = controlFile;
-		this.simCaseFile = simCaseFile;
+		//this.simCaseFile = simCaseFile;
 		this.targetDir = targetDir;
 		this.rainStations = new HashSet();
 		this.tempStations = new HashSet();
@@ -66,7 +65,7 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			if (!targetDir.exists())
 				targetDir.mkdirs();
 			File kalypsoTemplate = new File("C://Kalypso//bin//template");
-			//Main.props.getProperty("template_simulation"));
+			//File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
 			System.out.println(
 				"copy template from " + kalypsoTemplate.toString());
 			System.out.print(I18n.get("LV_SD_runSim1"));
@@ -83,17 +82,30 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			//File simulationCaseFile=new File(xmlTempDir,"simulationCase.xml");
 			//myVersionAccess.xmlExport(myThemeKey,myVersionId,simulationCaseFile);
 
-			XmlImport simCaseImport = new XmlImport(simCaseFile, this);
+			/*XmlImport simCaseImport = new XmlImport(simCaseFile, this);
 
 			System.out.println("start simulationcase-import");
 			System.out.println(I18n.get("LV_SD_runSim5"));
-			simCaseImport.start();
+			simCaseImport.start();*/
+			
+			XmlImport modelImport = new XmlImport(modelFile, this);
+			System.out.println("start control-import");
+			XmlImport controlImport = new XmlImport(controlFile, this);
+			System.out.println(I18n.get("LV_SD_simCase1"));
+			controlImport.start(); // model exists as file
+			// model-xml-file exists...now generate hydrotofile with xsl-trafo
 
+			System.out.println(I18n.get("LV_SD_simCase2"));
+			modelImport.start(); // controldata is known
+			
 			File resultDir = new File(targetDir, "out_tis.eik");
 			if (!resultDir.exists())
 				resultDir.mkdirs();
 
 			System.out.println(I18n.get("LV_SD_runSim6"));
+			
+			File modelxml = new File(resultDir,"modelData.xml");
+			FileSystemUtils.copyFile(modelFile,modelxml);
 
 			/*if (kalypsoExe != null && kalypsoExe.isAlive()) {
 				kalypsoExe.interrupt();

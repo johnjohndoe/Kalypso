@@ -30,6 +30,7 @@ import de.tuhh.wb.javagis.view.netview.GisNetView;
 import de.tuhh.wb.javagis.view.projectview.ProjectView;
 import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
 import de.tuhh.wb.javagis.view.Tutorial;
+import de.tuhh.wb.javagis.AutomateCalibration.SCE_KALYPSO;
 
 import java.awt.event.*;
 import java.lang.ClassLoader;
@@ -81,6 +82,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 	private JButton removeButton = new JButton();
 	private JButton xmlEDataButton = new JButton();
 	private JButton xmlIButton = new JButton();
+	private JButton calibrationButton = new JButton();
 	
 	public static JDesktopPane desktop = new JDesktopPane();
     //    KalypsoInterface kalypsoInterface;
@@ -285,6 +287,13 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
     // AktionListener:
     public void actionPerformed(ActionEvent e)
     {
+		String action = e.getActionCommand();
+
+		if(action.equals("automateCalibration"))
+		{
+			System.out.println("start AutomateCalibration");
+			SCE_KALYPSO.openSCEView();
+		}
     }
 	
     // WindowListener
@@ -506,6 +515,12 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		xmlIButton.setPreferredSize(new Dimension(35, 35));
 		xmlIButton.setToolTipText(I18n.get("ButtonXMLIDataTT"));
 		xmlIButton.setIcon((new ImageIcon(cl.getResource( "symbols/Import24.gif"))));
+		calibrationButton.setMaximumSize(new Dimension(35, 110));
+		calibrationButton.setPreferredSize(new Dimension(35, 35));
+		calibrationButton.setToolTipText(I18n.get("ButtonAutomateCalibration"));
+		calibrationButton.setIcon((new ImageIcon(cl.getResource( "symbols/calibration.gif"))));
+		calibrationButton.addActionListener(this);
+		calibrationButton.setActionCommand("automateCalibration");
 		menubar.add(jMenu_ProjectManager);
 		menubar.add(jMenu_Preprocessing);
 		menubar.add(jMenu_Postprocessing);
@@ -540,6 +555,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 		toolBar.add(removeButton, null);
 		toolBar.add(xmlEDataButton, null);
 		toolBar.add(xmlIButton, null);
+		toolBar.add(calibrationButton,null);
 		this.getContentPane().add(desktop,  BorderLayout.CENTER);
 		
 		this.setJMenuBar(menubar);

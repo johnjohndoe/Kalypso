@@ -19,29 +19,47 @@ import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
 import java.util.TimeZone;
 
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.JInternalFrame;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.JOptionPane;
+
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
+import de.tuhh.wb.javagis.view.ViewManager;
 //import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 
-public class SCE_KALYPSO {
+public class SCE_KALYPSO
+	extends JInternalFrame
+	implements InternalFrameListener, ActionListener {
 
 	//location SCE-Routine
 	private String myCommand_SCE = "kalypsoMain.exe";
-	private File myWorkingDir_SCE = new File("C://Kalypso//SCE_KALYPSO");
+	private File myWorkingDir_SCE = new File("sce_tool");
 
-	//location Modeldata,Controldata,SimulationCaseData
-	private File xmlDir = new File("C://Kalypso//xml_temp");
-	private File modelFile = new File(xmlDir, "model.xml");
-	private File controlFile = new File(xmlDir, "control.xml");
-	private File simCaseFile = new File(xmlDir, "simulationCase.xml");
-	//location results Kalypso
-	private File targetDir = new File("C://Kalypso//simulation2");
+	//Modeldata,Controldata,SimulationCaseData
+	//private File xmlDir = new File("C://Kalypso//xml_temp");
+	private File modelFile = null; //new File(xmlDir, "model.xml");
+	private File controlFile = null; //new File(xmlDir, "control.xml");
+	//private File simCaseFile = new File(xmlDir, "simulationCase.xml");
+	//results Kalypso
+	private File targetDir = null; //new File("C://Kalypso//simulation1");
 
-	//location xml-input File
-	private File inputFile = new File(xmlDir, "input_SCE.xml");
+	//xml-input File
+	private File inputFile = null; //new File(xmlDir, "input_SCE.xml");
 
 	//location xsl-Transformation
-	private File xslFile = new File(xmlDir, "xml_2_scein.xsl");
+	private File xslFile = new File("xsl", "xml_2_scein.xsl");
 
 	private StartKalypso startKalypso;
 
@@ -60,23 +78,126 @@ public class SCE_KALYPSO {
 	private String gaugeFile = null;
 	private boolean syntetic = true;
 
-	private SCE_KALYPSO() {
+	private static SCE_KALYPSO instance = null;
+
+	//View-Elements
+	//Buttons
+	private JButton btSCEInp = new JButton(I18n.get("SCE_ButtonStarttext"));
+	private JButton btModel = new JButton(I18n.get("SCE_ButtonStarttext"));
+	private JButton btControl = new JButton(I18n.get("SCE_ButtonStarttext"));
+	private JButton btTargetDir = new JButton(I18n.get("SCE_ButtonStarttext"));
+	private JButton btStart = new JButton(I18n.get("SCE_ButtonStart"));
+
+	//Labels
+	private JLabel lbSCEInp = new JLabel(I18n.get("SCE_LabelSCEInp"));
+	private JLabel lbModel = new JLabel(I18n.get("SCE_LabelModelData"));
+	private JLabel lbControl = new JLabel(I18n.get("SCE_LabelControlData"));
+	private JLabel lbTargetDir = new JLabel(I18n.get("SCE_LabelTargetDir"));
+
+	//FileChooser
+	private JFileChooser sceInpFileChooser = new JFileChooser();
+	private JFileChooser modelFileChooser = new JFileChooser();
+	private JFileChooser controlFileChooser = new JFileChooser();
+	private JFileChooser targetDirFileChooser = new JFileChooser();
+
+	//Panels
+	private JPanel buttonPanel = new JPanel();
+	private JPanel startPanel = new JPanel();
+
+	public static void openSCEView() {
+		if (instance == null) {
+			instance = new SCE_KALYPSO(I18n.get("SCE_WindowTitle"));
+		}
+		ViewManager.addToDesktop(instance);
+		instance.show();
+		//	instance.moveToFront();
+	}
+
+	private SCE_KALYPSO(String title) {
+		super(title, true, true, true, true);
+		initView();
+		updateStatus();
+		pack();
+		this.addInternalFrameListener(this);
+		this.moveToFront();
+	}
+
+	private void initView() {
+
+		btSCEInp.setActionCommand("SCEInp");
+		btSCEInp.addActionListener(this);
+		btSCEInp.setBackground(Color.white);
+		btSCEInp.setBorderPainted(false);
+		btSCEInp.setMargin(new Insets(0, 0, 0, 0));
+
+		btModel.setActionCommand("model");
+		btModel.addActionListener(this);
+		btModel.setBackground(Color.white);
+		btModel.setBorderPainted(false);
+		btModel.setMargin(new Insets(0, 0, 0, 0));
+
+		btControl.setActionCommand("control");
+		btControl.addActionListener(this);
+		btControl.setBackground(Color.white);
+		btControl.setBorderPainted(false);
+		btControl.setMargin(new Insets(0, 0, 0, 0));
+
+		btTargetDir.setActionCommand("targetDir");
+		btTargetDir.addActionListener(this);
+		btTargetDir.setBackground(Color.white);
+		btTargetDir.setBorderPainted(false);
+		btTargetDir.setMargin(new Insets(0, 0, 0, 0));
+
+		btStart.setActionCommand("start");
+		btStart.addActionListener(this);
+
+		getContentPane().setLayout(new BorderLayout());
+
+		buttonPanel.setLayout(new GridLayout(4, 2));
+		buttonPanel.add(lbSCEInp);
+		buttonPanel.add(btSCEInp);
+		buttonPanel.add(lbModel);
+		buttonPanel.add(btModel);
+		buttonPanel.add(lbControl);
+		buttonPanel.add(btControl);
+		buttonPanel.add(lbTargetDir);
+		buttonPanel.add(btTargetDir);
+
+		startPanel.setLayout(new BorderLayout());
+		startPanel.add(btStart, BorderLayout.CENTER);
+
+		getContentPane().add(buttonPanel, BorderLayout.CENTER);
+		getContentPane().add(startPanel, BorderLayout.SOUTH);
 
 	}
 
-	public static void main(String[] args) {
+	public void updateStatus() {
+		if (inputFile != null
+			&& modelFile != null
+			&& controlFile != null
+			&& targetDir != null
+			&& inputFile.exists()
+			&& modelFile.exists()
+			&& controlFile.exists()
+			&& targetDir.exists()) {
+			btStart.setEnabled(true);
+		} else {
+			btStart.setEnabled(false);
+		}
+	}
+	/*public static void main(String[] args) {
 		System.out.println("SCE_KALYPSO###");
-
+	
 		I18n.sce_getInstance("de");
 		//System.out.println("\n\n sce_getInstance ausgeführt \n\n");
-
+	
 		SCE_KALYPSO sce_kalypso = new SCE_KALYPSO();
-
+	
 		sce_kalypso.readXMLinput();
 		sce_kalypso.makeinputFiles();
 		sce_kalypso.startSCE();
 		//sce_kalypso.testInputFile();
-	}
+	}*/
 
 	private void startSCE() {
 
@@ -254,17 +375,6 @@ public class SCE_KALYPSO {
 		boolean saveAll) {
 		//write new parameter in xml-files (Kalypso)
 		makeModelxml(valueParam, saveAll);
-		/*try {
-			String result =
-				xmlServiceTools.getParameter(
-					"105",
-					"m_retAquif",
-					xmlServiceTools.postXML(modelFile));
-			System.out.println(
-				"\n Wert von m_retAquifer Gebiet 105: " + result + "!\n");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		Vector resultData = new Vector();
 		//run Kalypso.exe, store discharge results in Vector resultData
 		resultData =
@@ -516,8 +626,9 @@ public class SCE_KALYPSO {
 					doc);
 			}
 			String destName = "newModel";
-			File destFile = new File(xmlDir, destName + ".xml");
-			if (saveAll) {
+			File destFile =
+				new File(modelFile.getParentFile(), destName + ".xml");
+			/*if (saveAll) {
 				int n = 0;
 				try {
 					while (destFile.exists()) {
@@ -530,10 +641,9 @@ public class SCE_KALYPSO {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-			}
+			}*/
 			xmlServiceTools.toFile(destFile, doc);
-			startKalypso =
-				new StartKalypso(destFile, controlFile, simCaseFile, targetDir);
+			startKalypso = new StartKalypso(destFile, controlFile, targetDir);
 			//xmlServiceTools.toFile(modelFile, doc);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -730,7 +840,94 @@ public class SCE_KALYPSO {
 	}
 
 	private Date getStartDate() {
-		Date startDate = (Date)startDate_pegel.clone();
+		Date startDate = (Date) startDate_pegel.clone();
 		return startDate;
+	}
+
+	//  ActionListener
+	public void actionPerformed(ActionEvent e) {
+		
+		String action = e.getActionCommand();
+		
+		if ("SCEInp".equals(action)) {
+			int returnVal =
+				sceInpFileChooser.showDialog(
+					this,
+					I18n.get("sceView.selectSCEInputFile"));
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				inputFile = sceInpFileChooser.getSelectedFile();
+				btSCEInp.setText(inputFile.toString());
+			}
+		}
+
+		if ("model".equals(action)) {
+			int returnVal =
+				modelFileChooser.showDialog(
+					this,
+					I18n.get("sceView.selectModelFile"));
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				modelFile = modelFileChooser.getSelectedFile();
+				btModel.setText(modelFile.toString());
+			}
+		}
+		
+		if ("control".equals(action)) {
+			int returnVal =
+				controlFileChooser.showDialog(
+					this,
+					I18n.get("sceView.selectControlFile"));
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				controlFile = controlFileChooser.getSelectedFile();
+				btControl.setText(controlFile.toString());
+			}
+		}
+		if ("targetDir".equals(action)) {
+			targetDirFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int returnVal =
+				targetDirFileChooser.showDialog(
+					this,
+					I18n.get("sceView.selecttargetDir"));
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				targetDir = targetDirFileChooser.getSelectedFile();
+				btTargetDir.setText(targetDir.toString());
+			}
+		}
+		if ("start".equals(action)) {
+			System.out.println("SCE_KALYPSO###");
+			instance.readXMLinput();
+			instance.makeinputFiles();
+			instance.startSCE();
+			JOptionPane.showMessageDialog(null,I18n.get("sceView.terminationMassage"));
+		}
+		updateStatus();
+	}
+
+	//	internalFrameListener:
+
+	//          Invoked when an internal frame is activated.
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+
+	//          Invoked when an internal frame has been closed.
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+
+	//          Invoked when an internal frame is in the process of being closed.
+	public void internalFrameClosing(InternalFrameEvent e) {
+	}
+
+	//          Invoked when an internal frame is de-activated.
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+
+	//          Invoked when an internal frame is de-iconified.
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+
+	//          Invoked when an internal frame is iconified.
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }
