@@ -219,6 +219,8 @@ public class AddSymbolizerPanel
     symbolizerLabelData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerLabel.setLayoutData( symbolizerLabelData );
     symbolizerLabel.setText( m_label );
+  
+    updateSymbolizerCombo();
   }
 
   protected void updateSymbolizerCombo()
