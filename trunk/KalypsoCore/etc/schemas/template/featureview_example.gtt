@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview xmlns="featureview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
+.\featureview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" style="0" tooltip="TopLevel">
+
+	<gridLayout horizontalSpacing="10"/>
+
+	<composite style="0">
+	</composite>
+
+	<group style="0" text="Gruppe"/>
+	
+	<label text="Name" style="0"/>
+	<editor property="name" style="0">
+		<gridData  grabExcessHorizontalSpace="true"/>
+	</editor>
+</featureview>

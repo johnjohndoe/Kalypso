@@ -249,7 +249,16 @@
                icon="icons/full/elcl16/kde_contexthelp.gif"
                tooltip="erzeugt features mit geometrie"
                style="radio"
-               id="org.kalypso.ui.editor.mapeditor.action.PanAction"/>
+               id="org.kalypso.ui.editor.mapeditor.action.CreateFeatureAction"/>
+
+         <action
+               toolbarPath="karte"
+               label="Edit Feature"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
+               icon="icons/full/elcl16/kde_contexthelp.gif"
+               tooltip="editiert die Daten eines Features"
+               style="radio"
+               id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction"/>
 
           <action
                 toolbarPath="karte"
@@ -314,7 +323,7 @@
             id="org.kalypso.ui.wizardCategory"/>
       <wizard
             icon="icons/sample.gif"
-            class="org.kalypso.ui.wizard.NewCalculationCaseWizard"
+            class="org.kalypso.ui.wizard.calccase.NewCalculationCaseWizard"
             category="org.kalypso.ui.wizardCategory"
             name="Rechenfall"
             id="org.kalypso.wizard.newCalcCase">

@@ -53,7 +53,8 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public void perform()
   {
     final ICommand command = performIntern();
-    m_commandPoster.postCommand( command, null );
+    if( command != null )
+      m_commandPoster.postCommand( command, null );
   }
 
   protected abstract ICommand performIntern();

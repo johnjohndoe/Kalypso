@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.mapactions;
+package org.kalypso.ogc.gml.map.actions;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
@@ -18,7 +18,7 @@ public class ZoomOutMapAction extends AbstractCommandAction
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapactions.AbstractCommandAction#runInternal()
+   * @see org.kalypso.ogc.gml.map.actions.AbstractCommandAction#runInternal()
    */
   public ICommand runInternal()
   {

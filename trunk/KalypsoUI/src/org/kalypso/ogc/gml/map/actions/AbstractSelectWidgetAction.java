@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.mapactions;
+package org.kalypso.ogc.gml.map.actions;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
