@@ -8,6 +8,7 @@ import java.util.List;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -35,6 +36,7 @@ public final class ZmlFilter extends AbstractObservationFilter
   {
     super.initFilter( conf, obs );
 
+    // conf is the href string
     final String href = conf.toString();
 
     // if the href is empty, simply ignore and let the given obs replace this
@@ -48,6 +50,9 @@ public final class ZmlFilter extends AbstractObservationFilter
       // to directly fetch the observation from the repository item.
       if( REPS != null && REPS.size() > 0 )
       {
+        // only take id part since href can contain additional query stuff
+        final String id = ZmlURL.getIdentifierPart( href );
+
         final Iterator it = REPS.iterator();
         
         while( it.hasNext() )
@@ -56,7 +61,7 @@ public final class ZmlFilter extends AbstractObservationFilter
           
           try
           {
-            final IRepositoryItem item = rep.findItem( href );
+            final IRepositoryItem item = rep.findItem( id );
             
             if( item != null )
             {

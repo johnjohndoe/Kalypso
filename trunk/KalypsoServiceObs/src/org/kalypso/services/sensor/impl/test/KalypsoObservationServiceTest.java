@@ -21,7 +21,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class KalypsoObservationServiceTest extends TestCase
 {
-  private final static String KALYPSO_SERVER_BASE = "\\\\pc242\\KalypsoServer";
+  private final static String KALYPSO_SERVER_BASE = "\\\\pc242\\kalypsotemp";
   private KalypsoObservationService m_srv;
 
   /**
@@ -74,17 +74,17 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
   
-  public void testReadData() throws RemoteException, MalformedURLException
-  {
-    System.out.println( "Start Test Read Data:" );
-    
-    final ItemBean[] beans = m_srv.getChildren( null );
-
-    for( int i = 0; i < beans.length; i++ )
-      readData( beans[i], "#" );
-    
-    System.out.println( ":Stop Test Read Data" );
-  }
+//  public void testReadData() throws RemoteException, MalformedURLException
+//  {
+//    System.out.println( "Start Test Read Data:" );
+//    
+//    final ItemBean[] beans = m_srv.getChildren( null );
+//
+//    for( int i = 0; i < beans.length; i++ )
+//      readData( beans[i], "#" );
+//    
+//    System.out.println( ":Stop Test Read Data" );
+//  }
   
   private void readData( final ItemBean bean, final String space ) throws RemoteException, MalformedURLException
   {
@@ -131,7 +131,7 @@ public class KalypsoObservationServiceTest extends TestCase
     assertNotNull( b1 );
     assertFalse( m_srv.hasChildren( b1 ) );
 
-    final ItemBean b2 = m_srv.findItem( "psicompact://PSI-ROOT.LEVEL_1.SUBLEVEL_1.PEGEL_111.m" );
+    final ItemBean b2 = m_srv.findItem( "psicompact://HN.1_ES.02PG...501020.Vorhergesagte" );
     assertNotNull( b2 );
     assertFalse( m_srv.hasChildren( b2 ) );
     
@@ -153,9 +153,22 @@ public class KalypsoObservationServiceTest extends TestCase
     final String rep = "Test";
     final ObservationBean ob1 = new ObservationBean( id, "test", rep, null );
     
-    final String wFile = new File( KALYPSO_SERVER_BASE + "\\data\\tmp\\_test\\W_BAUTZWB.zml").toURL().toExternalForm();
+    final String wFile = new File( KALYPSO_SERVER_BASE + "\\_test\\W_BAUTZWB.zml").toURL().toExternalForm();
     final OCSDataBean db1 = new OCSDataBean( 0, ob1.getId(), wFile );
     
     m_srv.writeData( ob1, db1 );
+  }
+  
+  public void testVirtualRepository() throws RemoteException
+  {
+    final String id = "VirtualRepository://I2.1";
+    
+    ItemBean bean = m_srv.findItem( id );
+    
+    ObservationBean ob = m_srv.adaptItem( bean );
+    
+    OCSDataBean db = m_srv.readData( ob, null );
+    
+    m_srv.clearTempData( db );
   }
 }
