@@ -40,49 +40,46 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
+import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 
 /**
  * @author belger
  */
-public class TextFeatureControl extends AbstractFeatureControl implements ModellEventListener
+public class CheckboxFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
-  private final Color m_errorColor = Display.getCurrent().getSystemColor( SWT.COLOR_RED );
-
-  private Text m_text = null;
-
-  private boolean m_isValid = false;
+  private Button m_checkbox = null;
 
   private final IFeatureModifier m_modifier;
 
-  public TextFeatureControl( final FeatureTypeProperty ftp )
+  private Collection m_modlistener = new ArrayList();
+
+  public CheckboxFeatureControl( final FeatureTypeProperty ftp )
   {
     this( null, ftp );
   }
 
-  public TextFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  public CheckboxFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
   {
     super( feature, ftp );
 
-    m_modifier = new StringModifier( ftp );
+    m_modifier = new BooleanModifier( ftp );
   }
 
   /**
@@ -92,8 +89,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   {
     super.dispose();
 
-    if( m_text != null )
-      m_text.dispose();
+    if( m_checkbox != null )
+      m_checkbox.dispose();
   }
 
   /**
@@ -102,50 +99,40 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_text = new Text( parent, style );
+    m_checkbox = new Button( parent, style | SWT.CHECK );
 
-    m_text.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( final ModifyEvent e )
-      {
-        updateValid();
-      }
-    } );
+    m_checkbox.addSelectionListener( new SelectionListener() {
 
-    m_text.addFocusListener( new FocusAdapter()
-    {
-      public void focusLost( final FocusEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         fireChange( getChange() );
+        fireModified();
       }
-    } );
 
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        fireChange( getChange() );
+        fireModified();
+      }} );
+    
     updateControl();
 
-    return m_text;
-  }
-
-  protected void setValid( final boolean valid )
-  {
-    if( m_isValid != valid )
-    {
-      m_isValid = valid;
-
-      m_text.setForeground( m_isValid ? null : m_errorColor );
-    }
+    return m_checkbox;
   }
 
   /**
+   * Checkbox is always valid
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   public boolean isValid()
   {
-    return m_isValid;
+    return true;
   }
 
   public void setEnabled( final boolean enabled )
   {
-    m_text.setEnabled( enabled );
+    m_checkbox.setEnabled( enabled );
   }
 
   /**
@@ -153,28 +140,18 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
    */
   public void updateControl()
   {
-    if( m_text == null || m_text.isDisposed() )
+    if( m_checkbox == null || m_checkbox.isDisposed() )
       return;
 
     final Feature feature = getFeature();
-
-    if( feature == null || getFeatureTypeProperty() == null )
-      m_text.setText( "<no data>" );
-    else
+    if( feature != null && getFeatureTypeProperty() != null )
     {
       // compare with old to prevent loop
-      final String newText = toString();
-      final String oldText = m_text.getText();
-      if( newText.compareTo( oldText ) != 0 )
-        m_text.setText( newText );
+      final boolean oldValue = m_checkbox.getSelection();
+      final Boolean newvalue = (Boolean)m_modifier.getValue( feature );
+      if( newvalue.booleanValue() != oldValue )
+        m_checkbox.setSelection( newvalue.booleanValue() );
     }
-
-    setValid( true );
-  }
-
-  public String toString()
-  {
-    return m_modifier.getValue( getFeature() ).toString();
   }
 
   /**
@@ -189,15 +166,11 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   protected FeatureChange getChange()
   {
-    updateValid();
-    if( !isValid() )
-      return null;
-
     final Feature feature = getFeature();
 
-    final String text = m_text.getText();
+    final Boolean value = Boolean.valueOf( m_checkbox.getSelection() );
 
-    final Object newData = m_modifier.parseInput( getFeature(), text );
+    final Object newData = m_modifier.parseInput( getFeature(), value );
 
     final String name = getFeatureTypeProperty().getName();
     final Object oldData = feature.getProperty( name );
@@ -207,11 +180,6 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
       return new FeatureChange( feature, name, newData );
 
     return null;
-  }
-
-  protected void updateValid()
-  {
-    setValid( m_modifier.isValid( m_text.getText() ) == null );
   }
 
   /**
@@ -227,7 +195,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
    */
   public void addModifyListener( final ModifyListener l )
   {
-    m_text.addModifyListener( l );
+    m_modlistener.add( l );
   }
 
   /**
@@ -235,6 +203,15 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
    */
   public void removeModifyListener( final ModifyListener l )
   {
-    m_text.removeModifyListener( l );
+    m_modlistener.remove( l );
+  }
+  
+  protected void fireModified()
+  {
+    for( final Iterator modIt = m_modlistener.iterator(); modIt.hasNext(); )
+    {
+      final ModifyListener l = (ModifyListener)modIt.next();
+      l.modifyText( null );
+    }
   }
 }

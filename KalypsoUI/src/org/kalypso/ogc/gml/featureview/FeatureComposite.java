@@ -63,8 +63,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
@@ -289,6 +291,23 @@ public class FeatureComposite implements IFeatureControl
       tfc.setEnabled( editorType.isEditable() );
 
       addFeatureControl( tfc );
+
+      return control;
+    }
+    else if( controlType instanceof CheckboxType )
+    {
+      final CheckboxType checkboxType = (CheckboxType)controlType;
+
+      final String propertyName = checkboxType.getProperty();
+
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty(
+          propertyName );
+      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, ftp );
+
+      final Control control = cfc.createControl( parent, checkboxType.getStyle() );
+      cfc.setEnabled( checkboxType.isEditable() );
+
+      addFeatureControl( cfc );
 
       return control;
     }
