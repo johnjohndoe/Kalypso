@@ -204,6 +204,9 @@ public class TableViewTheme extends AbstractObservationTheme
    */
   public List getColumns( )
   {
+    // TODO Marc: hier besser Array von columns zurückgeben (wgwn thread-safety)
+    // und alle Methoden nach m_columns (oder egal was) synchronisieren
+    
     synchronized( m_columns )
     {
       // still empty columns? look if we got some

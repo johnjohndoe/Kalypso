@@ -194,7 +194,7 @@ public class ExportBerichtWizard extends Wizard
       }
     };
     
-    op.runAndHandleOperation( getShell(), "Berichtsablage", "" );
+    op.runAndHandleOperation( getShell(), true, false, "Berichtsablage", "" );
 
     return true;
   }

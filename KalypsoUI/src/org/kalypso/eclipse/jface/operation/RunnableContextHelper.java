@@ -64,11 +64,11 @@ public abstract class RunnableContextHelper implements IRunnableWithProgress
     m_context = context;
   }
   
-  public void runAndHandleOperation( final Shell shell, final String title, final String message )
+  public void runAndHandleOperation( final Shell shell, final boolean fork, final boolean cancelable, final String title, final String message )
   {
     try
     {
-      m_context.run( true, false, this );
+      m_context.run( fork, cancelable, this );
     }
     catch( final InvocationTargetException e )
     {

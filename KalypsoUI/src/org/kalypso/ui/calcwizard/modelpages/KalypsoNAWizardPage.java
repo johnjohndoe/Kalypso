@@ -84,7 +84,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
 
   public void dispose()
   {
-    LayerTableViewer layerTable = getLayerTable();
+    final LayerTableViewer layerTable = getLayerTable();
     if( layerTable != null )
       layerTable.removeModellListener( this );
     super.dispose();
@@ -152,10 +152,14 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 2, false ) );
+
+    final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
+    ignoreData.horizontalAlignment = GridData.BEGINNING;
+    createIgnoreButtonPanel( panel ).setLayoutData( ignoreData );
     
     final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
     button.setText( "Berechnung durchführen" );
-    
+
     button.addSelectionListener( new SelectionAdapter()
         {
           public void widgetSelected( SelectionEvent e )
@@ -163,8 +167,6 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
             runCalculation();
           }
         } );
-    
-    createIgnoreButtonPanel( panel );
   }
 
   private void createDiagramPanel( final Composite parent )
@@ -195,8 +197,8 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   {
     return getObservationsFromMap( true, onlySelected );
   }
+  
   /**
-   * 
    * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#postCreateControl()
    */
   protected void postCreateControl()

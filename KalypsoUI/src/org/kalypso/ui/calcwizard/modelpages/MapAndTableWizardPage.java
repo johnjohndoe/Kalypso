@@ -131,10 +131,14 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   private void createButtonPanel( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( 2, false ) );
+    panel.setLayout( new GridLayout( 4, false ) );
     panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
+    final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
+    ignoreData.horizontalAlignment = GridData.BEGINNING;
+    createIgnoreButtonPanel( panel ).setLayoutData( ignoreData );
+    
+    final Button button = new Button( panel, SWT.PUSH );
     button.setText( "Berechnung durchführen" );
 
     button.addSelectionListener( new SelectionAdapter()
@@ -144,9 +148,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
         runCalculation();
       }
     } );
-
-    final Composite ignorePanel = createIgnoreButtonPanel( panel );
-    ignorePanel.setLayoutData( new GridData(  GridData.FILL_HORIZONTAL ) );
   }
 
   private void createDiagramPanel( final Composite parent )
