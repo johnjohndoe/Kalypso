@@ -176,6 +176,9 @@ public class RectifiedGridDomain //implements GM_Object
     return geoTrans.transformEnvelope( envelope, origin.getCoordinateSystem() );
   }
 
+  /**
+   * get envelope in real coordinates for the given gridRange
+   */
   public GM_Envelope getGM_Envelope( int lowX, int lowY, int highX, int highY,
       CS_CoordinateSystem cs ) throws Exception
   {
@@ -217,7 +220,10 @@ public class RectifiedGridDomain //implements GM_Object
     GeoTransformer geoTrans = new GeoTransformer( cs );
     return (GM_Surface)geoTrans.transform( rasterBoundaryAsSurface );
   }
-
+  
+  /**
+   * get low and high (GridRange) of the RectifiedGridCoverage for the given envelope
+   */
   public int[] getGridExtent( GM_Envelope env, CS_CoordinateSystem cs ) throws Exception
   {
     int lowX = (int)getGridRange().getLow()[0];
