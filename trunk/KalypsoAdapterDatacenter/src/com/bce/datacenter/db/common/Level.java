@@ -62,8 +62,7 @@ public class Level extends Persistent implements TreeNode
    * @param desc
    * @param parentRef
    */
-  public Level( final Connection con, int id, String name, String desc,
-      int parentRef )
+  public Level( final Connection con, int id, String name, String desc, int parentRef )
   {
     super( con, id, false );
 
@@ -86,8 +85,7 @@ public class Level extends Persistent implements TreeNode
       Statement st = con.createStatement();
 
       // the root has no parent
-      ResultSet rs = st
-          .executeQuery( "SELECT LVLID FROM DC_TREELEVEL WHERE PARENTLEVEL = 0" );
+      ResultSet rs = st.executeQuery( "SELECT LVLID FROM DC_TREELEVEL WHERE PARENTLEVEL = 0" );
 
       boolean b = rs.next();
 
@@ -123,7 +121,7 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getAllowsChildren()
    */
-  public boolean getAllowsChildren( )
+  public boolean getAllowsChildren()
   {
     return false;
   }
@@ -133,18 +131,18 @@ public class Level extends Persistent implements TreeNode
    */
   public TreeNode getChildAt( int childIndex )
   {
-    return (Level) getChildLevels().get( childIndex );
+    return (Level)getChildLevels().get( childIndex );
   }
 
   /**
    * @see javax.swing.tree.TreeNode#getChildCount()
    */
-  public int getChildCount( )
+  public int getChildCount()
   {
     return getChildLevels().size();
   }
 
-  public List getChildLevels( )
+  public List getChildLevels()
   {
     if( m_children != null )
       return m_children;
@@ -161,8 +159,8 @@ public class Level extends Persistent implements TreeNode
 
       while( rs.next() )
       {
-        Level l = new Level( m_con, rs.getInt( 1 ), rs.getString( 2 ), rs
-            .getString( 3 ), rs.getInt( 4 ) );
+        Level l = new Level( m_con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs
+            .getInt( 4 ) );
 
         m_children.add( l );
       }
@@ -187,7 +185,7 @@ public class Level extends Persistent implements TreeNode
     return m_children;
   }
 
-  public String getDescription( )
+  public String getDescription()
   {
     return m_description;
   }
@@ -203,17 +201,17 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#isLeaf()
    */
-  public boolean isLeaf( )
+  public boolean isLeaf()
   {
     return getChildLevels().size() == 0;
   }
 
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
 
-  public List getObjects( )
+  public List getObjects()
   {
     if( m_objects != null )
       return m_objects;
@@ -226,12 +224,12 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#getParent()
    */
-  public TreeNode getParent( )
+  public TreeNode getParent()
   {
     return getParentLevel();
   }
 
-  public Level getParentLevel( )
+  public Level getParentLevel()
   {
     if( m_parentRef == 0 )
       return null;
@@ -247,7 +245,7 @@ public class Level extends Persistent implements TreeNode
    * 
    * @return path of this level,
    */
-  public String getPathName( )
+  public String getPathName()
   {
     Level parent = getParentLevel();
 
@@ -261,7 +259,7 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see javax.swing.tree.TreeNode#children()
    */
-  public Enumeration children( )
+  public Enumeration children()
   {
     return Collections.enumeration( getChildLevels() );
   }
@@ -269,7 +267,7 @@ public class Level extends Persistent implements TreeNode
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return m_name;
   }
@@ -277,7 +275,7 @@ public class Level extends Persistent implements TreeNode
   /**
    * read from db and init members
    */
-  protected void dbRead( )
+  protected void dbRead()
   {
     try
     {
@@ -317,7 +315,7 @@ public class Level extends Persistent implements TreeNode
     }
   }
 
-  public int getParentRef( )
+  public int getParentRef()
   {
     return m_parentRef;
   }
