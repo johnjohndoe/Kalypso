@@ -94,7 +94,7 @@ public class ZmlFactory
   /**
    * ValueFactory um die entsprechende ValuesLoader zu erzeugen.
    */
-  public static IZmlValuesLoader createLoader( final URL baseUrl, final AxisType axisType,
+  public static IZmlValuesLoader createValueLoader( final URL baseUrl, final AxisType axisType,
       final ZmlAxis axis ) throws MalformedURLException
   {
     // loader for inline values, no need to specify where base location is

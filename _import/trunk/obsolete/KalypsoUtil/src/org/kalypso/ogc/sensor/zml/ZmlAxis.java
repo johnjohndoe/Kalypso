@@ -88,7 +88,7 @@ public class ZmlAxis extends DefaultAxis
     IZmlValuesLoader loader;
     try
     {
-      loader = ZmlFactory.createLoader( context, m_axisType, this );
+      loader = ZmlFactory.createValueLoader( context, m_axisType, this );
     }
     catch( MalformedURLException e )
     {
