@@ -4,7 +4,7 @@
   <xsl:output method="text"/>
   
   <xsl:template match="/">
-    <xsl:text>Hydrotope NAM TISZA</xsl:text>
+    <xsl:text>Hydrotopfile</xsl:text>
     <xsl:for-each select="//table[@key='rb']">
 
       <xsl:variable name="num" select="o/sp/@m_rbNumber"/>
