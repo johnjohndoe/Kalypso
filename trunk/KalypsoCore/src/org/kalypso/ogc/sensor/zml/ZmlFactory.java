@@ -17,6 +17,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -55,7 +56,8 @@ public class ZmlFactory
 {
   private final static ObjectFactory m_objectFactory = new ObjectFactory();
 
-  private final static SimpleDateFormat m_df = new SimpleDateFormat( "yyyy.MM.dd HH:mm:ss" );
+  private final static SimpleDateFormat m_df = new SimpleDateFormat(
+      "yyyy.MM.dd HH:mm:ss" );
 
   private final static NumberFormat m_nf = NumberFormat.getInstance();
 
@@ -63,27 +65,34 @@ public class ZmlFactory
 
   private static Properties m_props = null;
 
-  private ZmlFactory()
+  private ZmlFactory( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
-  private static Properties getProperties()
+  private static Properties getProperties( )
   {
     if( m_props == null )
     {
-      m_props = new Properties();
+      InputStream ins = null; 
 
       try
       {
-        m_props.load( ZmlFactory.class.getResourceAsStream( "resource/types2parser.properties" ) );
+        m_props = new Properties();
+        
+        ins = ZmlFactory.class.getResourceAsStream( "resource/types2parser.properties" );
+        
+        m_props.load( ins );
 
         return m_props;
       }
       catch( IOException e )
       {
-        // TODO: logging oder etwas?
         throw new RuntimeException( e );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( ins );
       }
     }
 
@@ -92,18 +101,23 @@ public class ZmlFactory
 
   /**
    * Helper, man sollte es benutzen um auf die ParserFactory zugreifen zu können
+   * 
+   * @return parser factory
    */
-  private static synchronized ParserFactory getParserFactory()
+  private static synchronized ParserFactory getParserFactory( )
   {
     if( m_parserFactory == null )
-      m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class.getClassLoader() );
+      m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class
+          .getClassLoader() );
 
     return m_parserFactory;
   }
 
   /**
-   * Returns the XSD-Type for the given Java-Class. Supported types are listed
-   * in the types2parser.properties file.
+   * Supported types are listed in the types2parser.properties file.
+   * 
+   * @param className
+   * @return the XSD-Type for the given Java-Class
    */
   public static String getXSDTypeFor( final String className )
   {
@@ -113,38 +127,61 @@ public class ZmlFactory
   /**
    * Parses the XML and creates a IObservation object.
    * 
+   * @see ZmlFactory#parseXML(InputSource, String, URL)
+   * 
+   * @param url
+   * @param identifier
+   * @return IObservation object
+   * 
    * @throws SensorException
    */
   public static IObservation parseXML( final URL url, final String identifier )
       throws SensorException
   {
     InputStream inputStream = null;
-    Observation obs = null;
 
     try
     {
       // stream is closed in finally
       inputStream = url.openStream();
-
-      final Unmarshaller u = getUnmarshaller();
-
-      obs = (Observation)u.unmarshal( new InputSource( inputStream ) );
+      
+      return parseXML( new InputSource( inputStream ), identifier, url );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( IOException e )
     {
-      throw new SensorException( "Error while unmarshalling: " + url.toExternalForm(), e );
+      throw new SensorException( "Error while unmarshalling: "
+          + url.toExternalForm(), e );
     }
     finally
     {
-      if( inputStream != null )
-        try
-        {
-          inputStream.close();
-        }
-        catch( IOException e1 )
-        {
-          e1.printStackTrace();
-        }
+      IOUtils.closeQuietly( inputStream );
+    }
+  }
+
+  /**
+   * Parses the XML and creates a IObservation object.
+   * 
+   * @param source
+   * @param identifier
+   * @param context
+   * @return IObservation
+   * 
+   * @throws SensorException
+   */
+  public static IObservation parseXML( final InputSource source,
+      final String identifier, final URL context ) throws SensorException
+  {
+    final Observation obs;
+    
+    try
+    {
+      final Unmarshaller u = getUnmarshaller();
+
+      obs = (Observation) u.unmarshal( source );
+    }
+    catch( JAXBException e )
+    {
+      throw new SensorException( e );
     }
 
     // metadata
@@ -157,7 +194,7 @@ public class ZmlFactory
 
       for( final Iterator it = mdList.iterator(); it.hasNext(); )
       {
-        final MetadataType md = (MetadataType)it.next();
+        final MetadataType md = (MetadataType) it.next();
 
         metadata.put( md.getName(), md.getValue() );
       }
@@ -169,9 +206,10 @@ public class ZmlFactory
 
     for( int i = 0; i < tmpList.size(); i++ )
     {
-      final AxisType tmpAxis = (AxisType)tmpList.get( i );
+      final AxisType tmpAxis = (AxisType) tmpList.get( i );
 
-      final Properties props = PropertiesHelper.parseFromString( tmpAxis.getDatatype(), '#' );
+      final Properties props = PropertiesHelper.parseFromString( tmpAxis
+          .getDatatype(), '#' );
       final String type = props.getProperty( "TYPE" );
       final String format = props.getProperty( "FORMAT" );
 
@@ -181,20 +219,21 @@ public class ZmlFactory
       {
         parser = getParserFactory().createParser( type, format );
 
-        values = createValues( url, tmpAxis, parser );
+        values = createValues( context, tmpAxis, parser );
       }
       catch( Exception e ) // generic exception caught for simplicity
       {
         throw new SensorException( e );
       }
 
-      final IAxis axis = new DefaultAxis( tmpAxis.getName(), tmpAxis.getType(), tmpAxis.getUnit(),
-          parser.getObjectClass(), i, tmpAxis.isKey() );
+      final IAxis axis = new DefaultAxis( tmpAxis.getName(), tmpAxis.getType(),
+          tmpAxis.getUnit(), parser.getObjectClass(), i, tmpAxis.isKey() );
 
       valuesMap.put( axis, values );
     }
 
-    final IAxis[] axes = (IAxis[])valuesMap.keySet().toArray( new IAxis[valuesMap.size()] );
+    final IAxis[] axes = (IAxis[]) valuesMap.keySet().toArray(
+        new IAxis[valuesMap.size()] );
 
     final ZmlTuppleModel model = new ZmlTuppleModel( axes, valuesMap );
 
@@ -202,21 +241,26 @@ public class ZmlFactory
     if( obs.getTarget() != null )
       target = new JAXBXLink( obs.getTarget() );
 
-    final IObservation zmlObs = new SimpleObservation( identifier, obs.getName(), obs.isEditable(),
-        target, metadata, axes, model );
+    final IObservation zmlObs = new SimpleObservation( identifier, obs
+        .getName(), obs.isEditable(), target, metadata, axes, model );
 
     return zmlObs;
   }
 
   /**
    * Parses the values and create the corresponding objects.
+   * @param context
+   * @param axisType
+   * @param parser
+   * @return corresponding values depending on value axis type
    * 
    * @throws ParserException
    * @throws MalformedURLException
    * @throws IOException
    */
-  private static IZmlValues createValues( final URL context, final AxisType axisType,
-      final IParser parser ) throws ParserException, MalformedURLException, IOException
+  private static IZmlValues createValues( final URL context,
+      final AxisType axisType, final IParser parser ) throws ParserException,
+      MalformedURLException, IOException
   {
     final ValueArrayType va = axisType.getValueArray();
     if( va != null )
@@ -227,7 +271,8 @@ public class ZmlFactory
     if( vl != null )
       return new ZmlLinkValues( vl, parser, context );
 
-    throw new IllegalArgumentException( "AxisType is not supported: " + axisType.toString() );
+    throw new IllegalArgumentException( "AxisType is not supported: "
+        + axisType.toString() );
   }
 
   /**
@@ -235,10 +280,14 @@ public class ZmlFactory
    * 
    * TODO: complete for target property, etc..
    * 
+   * @param obs
+   * @param args
+   * @return an ObservationType object, ready for marshalling.
+   * 
    * @throws FactoryException
    */
-  public static ObservationType createXML( final IObservation obs, final IVariableArguments args )
-      throws FactoryException
+  public static ObservationType createXML( final IObservation obs,
+      final IVariableArguments args ) throws FactoryException
   {
     try
     {
@@ -246,15 +295,17 @@ public class ZmlFactory
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
-      final MetadataListType metadataListType = m_objectFactory.createMetadataListType();
+      final MetadataListType metadataListType = m_objectFactory
+          .createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List metadataList = metadataListType.getMetadata();
-      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
+      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it
+          .hasNext(); )
       {
-        final Map.Entry entry = (Entry)it.next();
+        final Map.Entry entry = (Entry) it.next();
 
-        final String mdKey = (String)entry.getKey(); //(String)it.next();
-        final String mdValue = (String)entry.getValue(); //obs.getMetadata().getProperty(
+        final String mdKey = (String) entry.getKey(); //(String)it.next();
+        final String mdValue = (String) entry.getValue(); //obs.getMetadata().getProperty(
         // mdKey );
 
         final MetadataType mdType = m_objectFactory.createMetadataType();
@@ -279,7 +330,8 @@ public class ZmlFactory
         axisType.setType( axes[i].getType() );
         axisType.setKey( axes[i].isKey() );
 
-        final ValueArrayType valueArrayType = m_objectFactory.createAxisTypeValueArrayType();
+        final ValueArrayType valueArrayType = m_objectFactory
+            .createAxisTypeValueArrayType();
 
         valueArrayType.setSeparator( ";" );
         valueArrayType.setValue( buildValueString( values, axes[i] ) );
@@ -299,9 +351,14 @@ public class ZmlFactory
 
   /**
    * TODO: verbessern
+   * 
+   * @param model
+   * @param axis
+   * @return string that contains the serialized values
+   * @throws SensorException
    */
-  private static String buildValueString( final ITuppleModel model, final IAxis axis )
-      throws SensorException
+  private static String buildValueString( final ITuppleModel model,
+      final IAxis axis ) throws SensorException
   {
     StringBuffer sb = new StringBuffer();
 
@@ -317,8 +374,8 @@ public class ZmlFactory
     return sb.toString();
   }
 
-  private static void buildStringAxis( ITuppleModel model, IAxis axis, StringBuffer sb )
-      throws SensorException
+  private static void buildStringAxis( ITuppleModel model, IAxis axis,
+      StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -328,8 +385,8 @@ public class ZmlFactory
       sb.append( model.getElement( amount, axis ) );
   }
 
-  private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis,
-      final StringBuffer sb ) throws SensorException
+  private static void buildStringDateAxis( final ITuppleModel model,
+      final IAxis axis, final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -339,8 +396,8 @@ public class ZmlFactory
       sb.append( m_df.format( model.getElement( amount, axis ) ) );
   }
 
-  private static void buildStringNumberAxis( final ITuppleModel model, final IAxis axis,
-      final StringBuffer sb ) throws SensorException
+  private static void buildStringNumberAxis( final ITuppleModel model,
+      final IAxis axis, final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -350,12 +407,12 @@ public class ZmlFactory
       sb.append( m_nf.format( model.getElement( amount, axis ) ) );
   }
 
-  public static Marshaller getMarshaller() throws JAXBException
+  public static Marshaller getMarshaller( ) throws JAXBException
   {
     return m_objectFactory.createMarshaller();
   }
 
-  private static Unmarshaller getUnmarshaller() throws JAXBException
+  private static Unmarshaller getUnmarshaller( ) throws JAXBException
   {
     return m_objectFactory.createUnmarshaller();
   }

@@ -15,18 +15,21 @@ import java.util.TreeMap;
  */
 public class WechmannGroup
 {
-  // used for persistence
-  private final static String TAG_SET = "set";
-  
   private final SortedMap m_map;
 
+  /**
+   * @param wsets
+   */
   public WechmannGroup( final WechmannSet[] wsets )
   {
-    m_map = new TreeMap( new WechmannSetComparator() );
+    m_map = new TreeMap(  );
     for( int i = 0; i < wsets.length; i++ )
       m_map.put( wsets[i].getValidity(), wsets[i] );
   }
 
+  /**
+   * @return Iterator on the WechmannSet objects
+   */
   public Iterator iterator()
   {
     return m_map.values().iterator();
@@ -34,37 +37,18 @@ public class WechmannGroup
 
   /**
    * Returns the WechmannSet that is valid for the given date.
+   * 
+   * @param d
+   * @return the set
    */
-  public WechmannSet getFor( final Date d )
+  public WechmannSet getFor(final Date d)
   {
-    final Date[] dates = (Date[])m_map.keySet().toArray( new Date[0] );
+    final Date[] dates = (Date[]) m_map.keySet().toArray( new Date[0] );
     int i = Arrays.binarySearch( dates, d );
 
     if( i < 0 )
-      i = -i - 1;
-
-    return (WechmannSet)m_map.get( dates[i] );
-  }
-
-  /**
-   * Returns a simple XML-Representation of this object.
-   * 
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    final StringBuffer bf = new StringBuffer();
-
-    for( final Iterator it = iterator(); it.hasNext(); )
-    {
-      bf.append( "<" ).append( TAG_SET ).append( ">" );
-
-      final WechmannSet ws = (WechmannSet)it.next();
-      bf.append( ws );
-      
-      bf.append( "</" ).append( TAG_SET ).append( ">" );
-    }
-
-    return bf.toString();
+      i = -i - 2;
+    
+    return (WechmannSet) m_map.get( dates[i] );
   }
 }

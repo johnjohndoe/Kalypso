@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.timeseries.wq;
 
-import java.text.NumberFormat;
 
 /**
  * Wechmann Parameters
@@ -32,16 +31,14 @@ public final class WechmannParams
    */
   private final double m_Q4WGR;
 
-  // used for persistence
-  private static final String TAG_W1 = "w1";
-  private static final String TAG_LNK1 = "lnk1";
-  private static final String TAG_K2 = "k2";
-  private static final String TAG_WGR = "wgr";
-
   /**
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this
    * constructor when the WGR value is not defined, thus the parameters are
    * valid for all possible W values.
+   * 
+   * @param W1
+   * @param LNK1
+   * @param K2
    * 
    * @throws WechmannException
    */
@@ -74,62 +71,51 @@ public final class WechmannParams
     m_Q4WGR = WechmannFunction.computeQ( LNK1, WGR, W1, K2 );
   }
 
+  /**
+   * @return K2
+   */
   public double getK2()
   {
     return m_K2;
   }
 
+  /**
+   * @return LN(K1)
+   */
   public double getLNK1()
   {
     return m_LNK1;
   }
 
+  /**
+   * @return W1
+   */
   public double getW1()
   {
     return m_W1;
   }
-
+  
+  /**
+   * @return WGR
+   */
   public double getWGR()
   {
     return m_WGR;
   }
   
+  /**
+   * @return true if WGR was defined once object was constructed
+   */
+  public boolean hasWGR()
+  {
+  	return Double.compare( m_WGR, Double.MAX_VALUE ) != 0;
+  }
+  
+  /**
+   * @return the corresponding Q-value to the WGR
+   */
   public double getQ4WGR()
   {
     return m_Q4WGR;
-  }
-
-  /**
-   * Returns a simple XML-Representation of this object.
-   * 
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    final StringBuffer bf = new StringBuffer();
-    final NumberFormat nf = NumberFormat.getNumberInstance();
-    nf.setMinimumFractionDigits( 5 );
-
-    bf.append( "<" ).append( TAG_W1 ).append( ">" );
-    bf.append( nf.format( m_W1 ) );
-    bf.append( "</" ).append( TAG_W1 ).append( ">" );
-
-    bf.append( "<" ).append( TAG_LNK1 ).append( ">" );
-    bf.append( nf.format( m_LNK1 ) );
-    bf.append( "</" ).append( TAG_LNK1 ).append( ">" );
-
-    bf.append( "<" ).append( TAG_K2 ).append( ">" );
-    bf.append( nf.format( m_K2 ) );
-    bf.append( "</" ).append( TAG_K2 ).append( ">" );
-
-    // only include the WGR value if it is defined
-    if( Double.compare( m_WGR, Double.MAX_VALUE ) != 0 )
-    {
-      bf.append( "<" ).append( TAG_WGR ).append( ">" );
-      bf.append( nf.format( m_WGR ) );
-      bf.append( "</" ).append( TAG_WGR ).append( ">" );
-    }
-
-    return bf.toString();
   }
 }
