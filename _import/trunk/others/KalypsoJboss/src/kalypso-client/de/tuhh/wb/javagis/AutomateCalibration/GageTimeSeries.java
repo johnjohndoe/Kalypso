@@ -65,7 +65,12 @@ public class GageTimeSeries {
 		}
 	}
 	
-	public Vector getData(Date startDate, Date endDate){
+	public TreeMap getObservedData(){
+		TreeMap resultData = (TreeMap)timeSerie;
+		return resultData;
+	}
+	
+	/*public Vector getData(Date startDate, Date endDate){
 		
 		System.out.println("Startdate: " + startDate);
 		System.out.println("Enddate: " + endDate);
@@ -111,7 +116,7 @@ public class GageTimeSeries {
 		
 		return resultData;
 		
-	}
+	}*/
 	
 	public void writeln(FileWriter writer,String line) throws IOException
 	{
@@ -119,7 +124,7 @@ public class GageTimeSeries {
 	writer.write(line,0,line.length());
 	}
 	
-	public void writeDataToFile(File kalypsoInp,Vector data)throws IOException{
+	/*public void writeDataToFile(File kalypsoInp,Vector data)throws IOException{
 		
 		DecimalFormat decimalFormat1=new DecimalFormat("00000.00");
 		DecimalFormat decimalFormat2=new DecimalFormat("00000");
@@ -144,7 +149,7 @@ public class GageTimeSeries {
 		writer.close();
 		//System.out.println("Wrote File");
 		
-	}
+	}*/
 	
 
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.TreeMap;
 import javax.swing.JOptionPane;
 import java.io.FileWriter;
 
@@ -58,11 +59,9 @@ public class StartKalypso implements KalypsoXmlImportListener {
 		this.tempStations = new HashSet();
 		//runSimulation();
 	}
-	public Vector runSimulation(
+	public TreeMap runSimulation(
 		boolean saveAll,
-		int rootNode,
-		Date startDate_pegel,
-		Date endDate_pegel) {
+		int rootNode) {
 		try {
 			//Check: targetDir exists
 			if (!targetDir.exists())
@@ -118,7 +117,8 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			//		kalypsoExe.run();
 			//		kalypsoExe.join();
 
-			Vector resultData = null;
+			//Vector resultData = null;
+			TreeMap resultData = new TreeMap();
 			File kalypsoInp = new File(kalypsoTemplate, "inp.dat");
 			//File kalypsoOut = new File(targetDir, "out_tis.eik");
 			File zftFile = new File(kalypsoInp, "tis_eik.zft");
@@ -134,9 +134,7 @@ public class StartKalypso implements KalypsoXmlImportListener {
 						startCalibration(
 							saveAll,
 							resultDir,
-							rootNode,
-							startDate_pegel,
-							endDate_pegel);
+							rootNode);
 				}
 			}
 			if (!hasZftFile) {
@@ -173,9 +171,7 @@ public class StartKalypso implements KalypsoXmlImportListener {
 							startCalibration(
 								saveAll,
 								resultDir,
-								rootNode,
-								startDate_pegel,
-								endDate_pegel);
+								rootNode);
 					default :
 						break;
 
@@ -185,20 +181,20 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			return resultData;
 
 		} catch (Exception e) {
-			Vector dummyVector = new Vector();
+			//Vector dummyVector = new Vector();
+			TreeMap dummyTreeMap = new TreeMap();
 			e.printStackTrace();
 			System.out.println(
 				"simulation run failed by \"" + e.getMessage() + "\"");
-			return dummyVector;
+			//return dummyVector;
+			return dummyTreeMap;
 		}
 	}
 
-	private Vector startCalibration(
+	private TreeMap startCalibration(
 		boolean saveAll,
 		File resultDir,
-		int rootNode,
-		Date startDate_pegel,
-		Date endDate_pegel) {
+		int rootNode) {
 		FileSystemUtils.execute("kalypso.bat", myNaModelDir);
 		KonfigWrite.renameOutputFiles(resultDir);
 		String myCommand = "node_discharge.dat";
@@ -246,12 +242,14 @@ public class StartKalypso implements KalypsoXmlImportListener {
 		Vector allowedKeys = new Vector();
 		allowedKeys.addElement(String.valueOf(rootNode));
 		blockSerie.importBlockFile(outFile, allowedKeys);
-		Vector resultData = new Vector();
-		resultData =
+		//Vector resultData = new Vector();
+		TreeMap resultData = new TreeMap();
+		/*resultData =
 			blockSerie.getDischarge(
 				String.valueOf(rootNode),
 				startDate_pegel,
-				endDate_pegel);
+				endDate_pegel);*/
+		resultData = blockSerie.getSimulatedDischarge(String.valueOf(rootNode));
 		return resultData;
 		/*StringTokenizer stringTok;
 		Vector data = new Vector();

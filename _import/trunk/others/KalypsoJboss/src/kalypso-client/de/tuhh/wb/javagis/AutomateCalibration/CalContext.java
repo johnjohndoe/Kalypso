@@ -4,7 +4,7 @@ public class CalContext {
 	
 	private double upperBound;
 	private double lowerBound;
-	private double paramValue;
+	private double initialValue;
 	private double synteticValue;
 	private String mode;
 	private String[] xPath;
@@ -25,11 +25,11 @@ public class CalContext {
 	public double getLowerBound(){
 		return lowerBound;
 	}
-	public void setParamValue(double value){
-		paramValue = value;
+	public void setInitialValue(double value){
+		initialValue = value;
 	}
-	public double getParamValue(){
-		return paramValue;
+	public double getInitialValue(){
+		return initialValue;
 	}
 	public void setSynteticValue(double value){
 		synteticValue = value;
