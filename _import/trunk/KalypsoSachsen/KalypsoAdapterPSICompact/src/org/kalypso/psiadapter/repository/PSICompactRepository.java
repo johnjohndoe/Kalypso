@@ -84,9 +84,7 @@ public class PSICompactRepository extends AbstractRepository
           nodes.put( nodeID, n );
 
           parent = n;
-        }
-        
-        System.out.println();
+        }        
       }
     }
 

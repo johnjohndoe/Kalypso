@@ -4,10 +4,12 @@ import java.util.Date;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -54,6 +56,8 @@ public class PSICompactObservationItem implements IObservation
 
   private IValueConverter m_vc;
 
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
+  
   /**
    * Constructor
    * 
@@ -330,6 +334,9 @@ public class PSICompactObservationItem implements IObservation
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(),
             measureTypeToArchiveType(), model.getData()[0].getTimestamp(),
             model.getData() );
+        
+        // this observation has changed
+        m_evtPrv.fireChangedEvent();
       }
       catch( ECommException e )
       {
@@ -345,5 +352,21 @@ public class PSICompactObservationItem implements IObservation
   {
     // only editable when it represents a forecast
     return m_valueType == PSICompact.TYPE_VALUE;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  public void addListener( IObservationListener listener )
+  {
+    m_evtPrv.addListener( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
+  public void removeListener( IObservationListener listener )
+  {
+    m_evtPrv.removeListener( listener );
   }
 }
