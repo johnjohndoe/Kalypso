@@ -225,25 +225,37 @@
           <para>Kartenvorlage (*.gmt)</para>
 
           <para>Diese Vorlage dient zum Visualisieren von Modelldaten in einer
-          Kartendarstellung</para>
+          Kartendarstellung. </para>
         </listitem>
 
         <listitem>
           <para>Tabellenvorlage (*.gtt)</para>
 
-          <para></para>
+          <para>Modelldaten werden in Form von Tabellen dargestellt. </para>
         </listitem>
 
         <listitem>
           <para>Zeitreihendiagramm (*.odt)</para>
 
-          <para></para>
+          <para>Zeitreihen im zml-Format werden in einem Diagramm angezeigt,
+          Optional kann auch die Bearbeitung der Zeitreihe mit Hilfe des
+          Grafikprogramms erfolgen.</para>
         </listitem>
 
         <listitem>
           <para>Zeitreihentabelle (*.ott)</para>
+
+          <para>Die Werte von Zeitreihen im zml-Format werden in Form einer
+          Tabelle dargestellt. Die Werte sind in der Tabelle
+          editierbar.</para>
         </listitem>
       </itemizedlist>
+
+      <para>Die Vorlagen sind durch den Benutzer editierbar. Eine Ausführliche
+      Beschreibung zur Erstellung und Änderung von Formatvorlagen enhält die
+      Technische Dokumentation. In den folgenden Abschnitten sind die
+      Darstellungsmöglichkeiten beschrieben, die sich aus den einzelnen
+      Formatvorlagen ergeben.</para>
     </section>
 
     <section id="menu_karte">
