@@ -26,7 +26,7 @@
   </path>
 
   <path id="ant.classpath">
-  	<!-- Changes by Marc:
+    <!-- Changes by Marc:
   		- no need for full.classpath
   		- just: CoreServices/lib/build and CoreServices/lib -->
     <!--path refid="full.classpath" /-->
@@ -200,9 +200,9 @@
 			Arguments: aproject_jar, aproject_bin, aproject_lib"
   >
     <echo message="packaging ${aproject_jar}..." />
-    <jar destfile="${build.web.lib}/${aproject_jar}"
+    <jar destfile="${build.web.lib}/${aproject_jar}" 
          basedir="${workspace}/${aproject_bin}"
-         includes="**/*"
+         includes="**/*" 
     />
     <copy todir="${build.web.lib}" flatten="true">
       <fileset dir="${workspace}/${aproject_lib}" includes="**/*.jar" />
@@ -220,11 +220,13 @@
       <param name="package_bin" value="backupdeegree/bin" />
       <param name="package_lib" value="backupdeegree/lib" />
     </antcall>
+    
     <antcall target="package-a-plugin">
       <param name="package_jar" value="KalypsoUtil.jar" />
       <param name="package_bin" value="KalypsoUtil/build/bin" />
       <param name="package_lib" value="KalypsoUtil/lib" />
     </antcall>
+    
     <antcall target="package-a-plugin">
       <param name="package_jar" value="KalypsoCore.jar" />
       <param name="package_bin" value="KalypsoCore/build/bin" />
@@ -243,11 +245,18 @@
       <param name="aproject_lib" value="KalypsoSpreePlugin/lib" />
     </antcall>
 
-      <antcall target="package-a-project">
+    <antcall target="package-a-project">
       <param name="aproject_jar" value="KalypsoNA.jar" />
       <param name="aproject_bin" value="KalypsoNA/build/bin" />
       <param name="aproject_lib" value="KalypsoNA/lib" />
     </antcall>
+
+    <antcall target="package-a-project">
+      <param name="aproject_jar" value="KalypsoOptimizePlugin.jar" />
+      <param name="aproject_bin" value="KalypsoOptimizePlugin/build/bin" />
+      <param name="aproject_lib" value="KalypsoOptimizePlugin/lib" />
+    </antcall>
+
   </target>
 
 
@@ -300,11 +309,14 @@
     </wscompile>
 
   </target>
-  
-  <target name="redeploy-all" depends="build,redeploy" description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt">
-    <copy file="${dist}/${client.jar}" todir="${workspace}/KalypsoUI/lib"/>
+
+  <target name="redeploy-all"
+          depends="build,redeploy"
+          description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt"
+  >
+    <copy file="${dist}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
   </target>
-    
+
   <!--target name="javadoc-client"
 	        depends="prepare"
 	        description="Erzeugt die JavaDoc für die client-jar">
