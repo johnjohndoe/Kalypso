@@ -4,7 +4,7 @@
 .\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 
 	<title>Große Röder</title>
-	<legend title="Legend" visible="true"/>
+	<legend title="Legende" visible="true"/>
 
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="w" datatype="xs:double" label="Pegel" unit="m³/s" direction="vertical" position="left" />

@@ -3,11 +3,11 @@
 
 DFormat: 0
 
-1- _XXXX_\vorlagen\grafik\beispieldaten\qgs.dat J  L 1   berechnet 1700
-2- _XXXX_\vorlagen\grafik\beispieldaten\q_adorf.dat J  L 1   gemessen 
-3- _XXXX_\vorlagen\grafik\beispieldaten\pre.dat J  N 1   Niederschlag 1700
-4- _XXXX_\vorlagen\grafik\beispieldaten\alarmstufe1.dat J L 1 Alarmstufe 1 (4 m³/s)
-4- _XXXX_\vorlagen\grafik\beispieldaten\alarmstufe2.dat J L 1 Alarmstufe 2 (8 m³/s)
+1- _XXXX_\Beispielzeitreihen\Daten\qgs.dat J  L 1   berechnet 1700
+2- _XXXX_\Beispielzeitreihen\Daten\q_adorf.dat J  L 1   gemessen 
+3- _XXXX_\Beispielzeitreihen\Daten\pre.dat J  N 1   Niederschlag 1700
+4- _XXXX_\Beispielzeitreihen\Daten\alarmstufe1.dat J L 1 Alarmstufe 1 (4 m³/s)
+4- _XXXX_\Beispielzeitreihen\Daten\alarmstufe2.dat J L 1 Alarmstufe 2 (8 m³/s)
 
 Extend1: 0.000000 0.000000 10075.000000 25.000000 672.000000 2.000000
 Extend2: 0.000000 -1.000000 10075.000000 1.000000 672.000000 0.200000
