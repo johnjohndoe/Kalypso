@@ -41,10 +41,12 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
@@ -54,6 +56,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
+import org.kalypso.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -84,6 +87,10 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   private final boolean m_waitForSwing;
 
+  private final PopupMenu m_popup;
+
+  private ExcelClipboardAdapter m_excelCp;
+
   /**
    * Constructs a table based on the given template
    * 
@@ -93,6 +100,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   {
     this( template, false );
   }
+
   /**
    * Constructs a table based on the given template
    * 
@@ -122,29 +130,41 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
     setDefaultEditor( Double.class, new SelectAllCellEditor(
-        new DoubleCellEditor( nf, true, new Double(0) ) ) );
+        new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
 
     setSelectionForeground( Color.BLACK );
     setSelectionBackground( Color.YELLOW );
 
     getTableHeader().setReorderingAllowed( false );
 
+    m_popup = new PopupMenu( this );
+    m_excelCp = new ExcelClipboardAdapter( this, nf );
+
+    m_popup.add( new JPopupMenu.Separator() );
+    m_popup.add( m_excelCp.getCopyAction() );
+    m_popup.add( m_excelCp.getPasteAction() );
+    
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
-//    for( final Iterator tIt = m_template.getThemes().iterator(); tIt.hasNext(); )
-//      m_template.fireTemplateChanged( new ObsViewEvent( m_template, tIt.next(), ObsViewEvent.TYPE_ADD ) );
-//    for( final Iterator tIt = m_template.getThemes().iterator(); tIt.hasNext(); )
-//    {
-//      TableViewColumnXMLLoader theme = (TableViewColumnXMLLoader)tIt.next();
-//      
-//    }
+    //    for( final Iterator tIt = m_template.getThemes().iterator();
+    // tIt.hasNext(); )
+    //      m_template.fireTemplateChanged( new ObsViewEvent( m_template, tIt.next(),
+    // ObsViewEvent.TYPE_ADD ) );
+    //    for( final Iterator tIt = m_template.getThemes().iterator();
+    // tIt.hasNext(); )
+    //    {
+    //      TableViewColumnXMLLoader theme = (TableViewColumnXMLLoader)tIt.next();
+    //      
+    //    }
   }
 
   public void dispose( )
   {
+    m_excelCp.dispose();
+    
     m_dateRenderer.clearMarkers();
     m_view.removeObsViewListener( this );
-    
+
     m_model.clearColumns();
     m_model.setTable( null );
   }
@@ -166,7 +186,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         if( evt.getType() == ObsViewEvent.TYPE_REFRESH
             && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           model.refreshColumn( column );
 
           checkForecast( column.getObservation(), true );
@@ -260,5 +280,16 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           m_dateRenderer.removeMarker( new ForecastLabelMarker( dr ) );
       }
     }
+  }
+
+  /**
+   * @see java.awt.Component#processMouseEvent(java.awt.event.MouseEvent)
+   */
+  protected void processMouseEvent( MouseEvent e )
+  {
+    if( e.isPopupTrigger() )
+      m_popup.show( this, e.getX(), e.getY() );
+    else
+      super.processMouseEvent( e );
   }
 }
