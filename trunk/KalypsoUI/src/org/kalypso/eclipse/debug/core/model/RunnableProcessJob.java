@@ -3,6 +3,9 @@ package org.kalypso.eclipse.debug.core.model;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -10,17 +13,15 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.debug.core.model.ITerminate;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.kalypso.eclipse.jface.operation.IProgressRunnable;
 
 /**
  * Standard implementation of an <code>IProcess</code> that wrappers a system
  * thread (<code>java.lang.Thread</code>).
  */
-public class RunnableProcess implements IProcess, IAdaptable
+public class RunnableProcessJob extends Job implements IProcess, IAdaptable
 {
   private final ILaunch m_launch;
-
-  private RunnableJob m_monitorJob;
 
   private boolean m_terminated;
 
@@ -28,31 +29,45 @@ public class RunnableProcess implements IProcess, IAdaptable
 
   private final String m_label;
 
-  private IRunnableWithProgress m_runnable;
+  private IProgressRunnable m_runnable;
 
   /**
-   * Constructs a RunnableProcess on the given system thread with the given name,
-   * adding this thread to the given launch.
+   * Constructs a RunnableProcessJob on the given system thread with the given
+   * name, adding this thread to the given launch.
    */
-  public RunnableProcess( final ILaunch launch, final IRunnableWithProgress runnable, final String label,
-      final Properties attribProps )
+  public RunnableProcessJob( final ILaunch launch, final IProgressRunnable runnable,
+      final String label, final Properties attribProps )
   {
+    super( label );
+
+    setPriority( Job.INTERACTIVE );
+
     m_launch = launch;
 
-    if( attribProps != null )
-      m_attribProps.putAll( attribProps );
+    m_attribProps.putAll( attribProps );
 
     m_runnable = runnable;
-
     m_label = label;
-
-    m_monitorJob = new RunnableJob( this, m_runnable );
-    m_monitorJob.getClass(); // suppress warning
 
     launch.addProcess( this );
 
     fireCreationEvent();
+
+    schedule();
   }
+  
+  /**
+   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public IStatus run( final IProgressMonitor monitor )
+  {
+    final IStatus status = m_runnable.run( monitor );
+    
+    onTerminated();
+    
+    return status;
+  }
+
 
   /**
    * @see ITerminate#canTerminate()
@@ -92,11 +107,7 @@ public class RunnableProcess implements IProcess, IAdaptable
   public void terminate()
   {
     if( !isTerminated() )
-    {
-      m_monitorJob.cancel();
-      
-      m_monitorJob = null;
-    }
+      cancel();
   }
 
   /**
@@ -123,7 +134,7 @@ public class RunnableProcess implements IProcess, IAdaptable
    * @param event
    *          debug event to fire
    */
-  protected void fireEvent( DebugEvent event )
+  protected void fireEvent( final DebugEvent event )
   {
     DebugPlugin manager = DebugPlugin.getDefault();
     if( manager != null )

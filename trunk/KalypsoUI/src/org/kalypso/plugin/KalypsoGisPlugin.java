@@ -15,7 +15,9 @@ import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.service.calculation.ICalculationService;
+import org.kalypso.services.calcjob.CalcJobService;
+import org.kalypso.services.factory.ServiceFactory;
+import org.kalypso.services.factory.ServiceFactoryException;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.RepositorySpecification;
@@ -57,6 +59,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private ICellEditorFactory m_featureTypeCellEditorFactory; 
 
   private final SelectionIdProvider mySelectionIdProvider=new SelectionIdProvider();
+
+  private CalcJobService m_calcJobService;
   
   /**
    * The constructor.
@@ -286,11 +290,20 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       return mySelectionIdProvider;
   }
 
-  public ICalculationService getCalcService( final String serviceName )
+  public CalcJobService getCalcService()
   {
+    if( m_calcJobService == null )
+    {
+      try
+      {
+        m_calcJobService = (CalcJobService)ServiceFactory.createService( "CalcJob.Default" );
+      }
+      catch( ServiceFactoryException e )
+      {
+        e.printStackTrace();
+      }
+    }
     
-    // TODO:
-    
-    return null;
+    return m_calcJobService;
   }
 }

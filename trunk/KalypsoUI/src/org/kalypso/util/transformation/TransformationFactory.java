@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.kalypso.java.reflect.ClassUtilities;
 import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
-import org.kalypso.xml.util.TransformationType;
+import org.kalypso.xml.model.TransformationType;
 
 /**
  * Static Helper class for transformations

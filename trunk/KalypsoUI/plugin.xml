@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.kalypso.ui"
-   name="Kalypso UI"
+   name="KalypsoUI"
    version="0.0.1"
    provider-name="org.kalypso"
    class="org.kalypso.plugin.KalypsoGisPlugin">
@@ -29,6 +29,7 @@
       <import plugin="org.kalypso.psiadapter"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.kalypso.services"/>
    </requires>
    <extension
          point="org.eclipse.ui.editors">

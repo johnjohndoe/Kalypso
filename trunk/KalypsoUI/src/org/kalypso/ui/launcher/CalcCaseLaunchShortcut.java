@@ -85,11 +85,13 @@ private void setAttributes( final ILaunchConfigurationWorkingCopy wc, final IFol
       final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
 
       wc.setAttribute( IKalypsoLaunchConfigurationConstants.CALC_TYPE, nature.getCalcType() );
-
+      wc.setAttribute( IKalypsoLaunchConfigurationConstants.CALC_LABEL, folder.getName() );
+      wc.setAttribute( IKalypsoLaunchConfigurationConstants.CALC_PATH, folder.getFullPath().toString() );
+      
       // TODO: den service auswählen lassen und checken, ob der Typ passt
       wc.setAttribute( IKalypsoLaunchConfigurationConstants.SERVICE, "default" );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }

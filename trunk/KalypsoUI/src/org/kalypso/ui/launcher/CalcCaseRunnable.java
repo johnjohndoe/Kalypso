@@ -1,21 +1,24 @@
 package org.kalypso.ui.launcher;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.kalypso.eclipse.jface.operation.IProgressRunnable;
 import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.service.calculation.ICalculationService;
-import org.kalypso.service.calculation.IJobStatus;
+import org.kalypso.services.calcjob.CalcJobDescription;
+import org.kalypso.services.calcjob.CalcJobService;
+import org.kalypso.services.calcjob.CalcJobStatus;
+import org.kalypso.ui.nature.ModelNature;
 
 /**
  * @author belger
  */
-public class CalcCaseRunnable implements IRunnableWithProgress
+public class CalcCaseRunnable implements IProgressRunnable
 {
   private ILaunchConfiguration m_configuration;
 
@@ -25,86 +28,126 @@ public class CalcCaseRunnable implements IRunnableWithProgress
   }
 
   /**
-   * @throws InvocationTargetException
-   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.eclipse.jface.operation.IProgressRunnable#run(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void run( final IProgressMonitor monitor ) throws InvocationTargetException
+  public IStatus run( final IProgressMonitor monitor )
   {
+    String jobID = null;
     try
     {
       monitor.beginTask( "Berechnung durchführen", 200 );
-      
-      final IProgressMonitor subMonitor = new SubProgressMonitor( monitor, 100 );
-      subMonitor.beginTask( "Berechnung starten", 100 );
-      
-      // Configuration auslesen
 
-      final Object adapter = m_configuration.getAdapter( IProject.class );
-      System.out.println( "Projekt - Adapter: " + adapter );
+      jobID = startCalculation( new SubProgressMonitor( monitor, 100 ) );
+    }
+    catch( final Exception e )
+    {
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Starten des Rechendienstes", e );
+    }
 
-      // die ProjektNature bekommen
+    return waitForJob( new SubProgressMonitor( monitor, 100 ), jobID );
+  }
 
-      // von der Nature den Berechnungstyp beziehen
+  private IStatus waitForJob( final IProgressMonitor monitor, final String jobID )
+  {
+    monitor.beginTask( "Berechnung wird durchgeführt", 100 );
 
-      final String calcType = m_configuration.getAttribute( IKalypsoLaunchConfigurationConstants.CALC_TYPE, "" );
-      final String serviceName = m_configuration.getAttribute( IKalypsoLaunchConfigurationConstants.SERVICE, "" );
+    try
+    {
+      final String folderPath = m_configuration.getAttribute(
+          IKalypsoLaunchConfigurationConstants.CALC_PATH, "" );
 
+      final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
+          new Path( folderPath ) );
 
-      final ICalculationService calcService = KalypsoGisPlugin.getDefault().getCalcService( serviceName );
-      final String jobID = calcService.startCalcJob( calcType, null );
-      
-      subMonitor.worked( 100 );
-      
-      // warten, bis der service fertig ist
-      
-      final SubProgressMonitor subMonitor2 = new SubProgressMonitor( monitor, 100 );
-      subMonitor2.beginTask( "Berechnung wird durchgeführt", 100);
+      final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
+
+      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+
+      int lastProgress = 0;
+
       while( true )
       {
-        final IJobStatus jobStatus = calcService.getJobStatus( jobID );
-        
-        if( jobStatus.isFinished() )
-          break;
-        
-        subMonitor2.worked( (int)( jobStatus.progress() * 100 ) );
-        
-        try
+        final CalcJobDescription jobDescription = calcService.getJobDescription( jobID );
+
+        monitor.setTaskName( jobDescription.getDescription() );
+        final int progress = jobDescription.getProgress();
+
+        final int amount = progress - lastProgress;
+
+        monitor.worked( amount );
+
+        lastProgress = progress;
+
+        switch( jobDescription.getState() )
         {
-          Thread.sleep( 100 );
-        }
-        catch( final InterruptedException e1 )
-        {
-          e1.printStackTrace();
-        }
-        
-        if( subMonitor2.isCanceled() )
+        case CalcJobStatus.RUNNING:
+        case CalcJobStatus.UNKNOWN:
           break;
+
+        case CalcJobStatus.ABORTED:
+          return Status.CANCEL_STATUS;
+
+        case CalcJobStatus.FINISHED:
+        {
+          final String[] results = calcService.retrieveResults( jobID );
+          // write results to calccase
+
+          nature.putCalcCaseOutputData( folder, results );
+
+          return Status.OK_STATUS;
+        }
+        }
+
+        Thread.sleep( 100 );
+
+        if( monitor.isCanceled() )
+        {
+          calcService.cancelJob( jobID );
+          calcService.removeJob( jobID );
+          return Status.CANCEL_STATUS;
+        }
       }
-      
-      
-      // alles ok?
-      
-      // ergebnisse abrufen und ablegen
-//
-//      // monitor auf berechnung starten?
-//
-//      final int count = 100000;
-//
-//      monitor.beginTask( "Modellrechnung", count );
-//
-//      for( int i = 0; i < count; i++ )
-//      {
-//        final double blubb = i * i;
-//        new Double( blubb );
-//
-//        monitor.worked( i );
-//      }
-
     }
-    catch( CoreException e )
+    catch( final Exception e )
     {
-      throw new InvocationTargetException( e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Ausführen der Berechnung", e );
     }
+  }
 
+  private String startCalculation( final IProgressMonitor monitor ) throws Exception
+  {
+    monitor.beginTask( "Berechnung starten", 1000 );
+
+    try
+    {
+      final String calcType = m_configuration.getAttribute(
+          IKalypsoLaunchConfigurationConstants.CALC_TYPE, "" );
+      final String description = m_configuration.getAttribute(
+          IKalypsoLaunchConfigurationConstants.CALC_LABEL, "" );
+      final String folderPath = m_configuration.getAttribute(
+          IKalypsoLaunchConfigurationConstants.CALC_PATH, "" );
+
+      // die Dateien suchen und erzeugen
+      final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
+          new Path( folderPath ) );
+
+      final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
+      final String[] input = nature.getCalcCaseInputData( folder, new SubProgressMonitor( monitor,
+          500 ) );
+
+      // start job
+      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
+      final String jobID = calcService.createJob( calcType, description, input );
+
+      monitor.worked( 500 );
+
+      return jobID;
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 }
