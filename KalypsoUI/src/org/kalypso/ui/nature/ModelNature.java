@@ -488,6 +488,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     // ein noch nicht benutztes Unterverzeichnis im Prognoseverzeichnis finden
     final IFolder prognoseFolder = project.getFolder( PROGNOSE_FOLDER );
+    FolderUtilities.mkdirs( prognoseFolder );
     final IFolder calcCaseFolder = FolderUtilities.createUnusedFolder( prognoseFolder, "prognose" );
 
     monitor.beginTask( "neuen Rechenfall erzeugen", 2000 );

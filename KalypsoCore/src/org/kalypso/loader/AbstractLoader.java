@@ -40,6 +40,8 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
    * @see org.kalypso.loader.ILoader#load(java.util.Properties,
    *      org.eclipse.core.resources.IProject,
    *      org.eclipse.core.runtime.IProgressMonitor)
+   * 
+   * @deprecated
    */
   public final Object load( final Properties source, final IProject project,
       final IProgressMonitor monitor ) throws LoaderException

@@ -1,7 +1,9 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
@@ -42,6 +44,9 @@ public class GisTemplateMapModell implements IMapModell
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
 
+    // layer -> theme
+    final Map layerMap = new HashMap();
+    
     for( int i = 0; i < layerList.size(); i++ )
     {
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
@@ -52,12 +57,18 @@ public class GisTemplateMapModell implements IMapModell
       {
         addTheme( theme );
         enableTheme( theme, layerType.isVisible() );
-        String id = layerType.getId();
-        if( id != null && id.startsWith( "active_" ) )
-          activateTheme( theme );
-
+        layerMap.put( layerType, theme );
       }
     }
+    
+    final Layer activeLayer = (Layer)layerListType.getActive();
+    if( activeLayer != null )
+    {
+      final IKalypsoTheme theme = (IKalypsoTheme)layerMap.get( activeLayer );
+      activateTheme( theme );
+    }
+    else
+      activateTheme( null );
 
   }
 
@@ -70,7 +81,6 @@ public class GisTemplateMapModell implements IMapModell
   // Helper
   public Gismapview createGismapTemplate( GM_Envelope bbox ) throws JAXBException
   {
-
     final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
@@ -85,10 +95,9 @@ public class GisTemplateMapModell implements IMapModell
       extentType.setRight( bbox.getMax().getX() );
 
       gismapview.setExtent( extentType );
-
     }
 
-    List layerList = layersType.getLayer();
+    final List layerList = layersType.getLayer();
 
     gismapview.setLayers( layersType );
     IKalypsoTheme[] themes = m_modell.getAllThemes();
@@ -99,11 +108,10 @@ public class GisTemplateMapModell implements IMapModell
         final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
         final PoolableKalypsoFeatureTheme theme = (PoolableKalypsoFeatureTheme)themes[i];
         final PoolableObjectType key = theme.getLayerKey();
-        String id = Integer.toString( i );
-        if( m_modell.isThemeActivated( theme ) )
-          layer.setId( "active_" + id );
-        else
-          layer.setId( id );
+        
+        final String id = Integer.toString( i );
+        
+        layer.setId( id );
         layer.setHref( key.getSourceAsString() );
         layer.setLinktype( key.getType() );
         layer.setActuate( "onRequest" );
@@ -113,7 +121,7 @@ public class GisTemplateMapModell implements IMapModell
         layer.getDepends();
         layerList.add( layer );
 
-        List stylesList = layer.getStyle();
+        final List stylesList = layer.getStyle();
         IPoolableObjectType[] styleKeys = theme.getPoolableStyles();
         for( int j = 0; j < styleKeys.length; j++ )
         {
@@ -125,8 +133,12 @@ public class GisTemplateMapModell implements IMapModell
           styleType.setType( "simple" );
           stylesList.add( styleType );
         }
+        
+        if( m_modell.isThemeActivated( theme ) )
+          layersType.setActive( layer );
       }
     }
+    
     return gismapview;
   }
 

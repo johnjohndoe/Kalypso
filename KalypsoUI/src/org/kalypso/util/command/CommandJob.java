@@ -69,6 +69,8 @@ public final class CommandJob extends Job
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
+      
       LOGGER.warning( "Failed " + m_type + ": " + description );
 
       return new Status( IStatus.ERROR,

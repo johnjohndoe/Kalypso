@@ -12,6 +12,8 @@ import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
@@ -109,7 +111,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
    */
   public void dispose()
   {
-    m_mapModell.removeModellListener( this );
+    if( m_mapModell != null )
+      m_mapModell.removeModellListener( this );
 
     if( m_diagTemplate != null )
       m_diagTemplate.removeTemplateEventListener( m_obsChart );
@@ -167,10 +170,17 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
         }
       } );
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
-      // TODO handling
-      throw new RuntimeException( e );
+      e.printStackTrace();
+
+      IStatus status;
+      if( e instanceof CoreException )
+        status = ((CoreException)e).getStatus();
+      else
+        status = KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
+      
+      ErrorDialog.openError( null, "Fehler", "Fehler beim Erzeugen der Wizard-Seite", status );
     }
   }
 
@@ -253,6 +263,8 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
+    if( mapFile == null )
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Vorlagendatei existiert nicht: " + mapFileName, null ) );
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
@@ -316,9 +328,9 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
     if( selectedFeatures.size() > 0 )
     {
       KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate,
-          m_useResolver, getProject() );
+          m_useResolver, getContext() );
       KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate,
-          m_useResolver, getProject() );
+          m_useResolver, getContext() );
     }
   }
 

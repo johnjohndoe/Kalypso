@@ -50,7 +50,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage );
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false );
     
     addPage( m_createFolderPage );
     addPage( m_createControlPage );

@@ -1,11 +1,14 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -44,6 +47,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   public IFolder getCalcFolder()
   {
     return m_calcFolder;
+  }
+  
+  public URL getContext()
+  {
+    try
+    {
+      return ResourceUtilities.createURL( getCalcFolder() );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      
+      return null;
+    }
   }
 
   /**

@@ -1,17 +1,14 @@
 package org.kalypso.ui.action;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.CalcWizardDialog;
 
@@ -43,32 +40,19 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
    */
   public void run( final IAction action )
   {
-    IProject project = null;
-
     final ISelection selection = m_window.getSelectionService().getSelection(
         IPageLayout.ID_RES_NAV );
 
-    if( !selection.isEmpty() && selection instanceof IStructuredSelection )
-    {
-      final IStructuredSelection ssel = (IStructuredSelection)selection;
-      if( ssel.size() == 1 )
-      {
-        final Object firstElement = ssel.getFirstElement();
-        if( firstElement instanceof IProject )
-          project = (IProject)firstElement;
-        else if( firstElement instanceof IFile || firstElement instanceof IFolder )
-          project = ( (IContainer)firstElement ).getProject();
-      }
-    }
+    final IProject[] projects = ResourceUtilities.findeProjectsFromSelection( selection );
 
-    if( project == null )
+    if( projects == null || projects.length != 1 )
     {
       MessageDialog.openInformation( m_window.getShell(), "Hochwasser Vorhersage durchführen",
           "Bitte wählen Sie genau ein Projekt im Navigator aus" );
       return;
     }
 
-    final CalcWizard wizard = new CalcWizard( project );
+    final CalcWizard wizard = new CalcWizard( projects[0] );
 
     final WizardDialog dialog = new CalcWizardDialog( m_window.getShell(), wizard ); 
     dialog.open();
