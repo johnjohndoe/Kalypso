@@ -19,6 +19,7 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
+					<element ref="gml:boundedBy"/>
 					<element ref="bodepegel:PegelMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</restriction>

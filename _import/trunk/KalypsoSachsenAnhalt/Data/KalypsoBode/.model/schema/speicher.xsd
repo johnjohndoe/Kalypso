@@ -19,6 +19,7 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
+					<element ref="gml:boundedBy"/>
 					<element ref="bodespeicher:SpeicherMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</restriction>
@@ -90,7 +91,17 @@
 	<!-- Stauraum-Parameter, *.sra -->
 	<complexType name="StauraumAssociationType">
 		<complexContent>
-			<extension base="gml:FeatureAssociationType">
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodespeicher:Stauraum"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Stauraum" type="bodespeicher:StauraumType" substitutionGroup="gml:_Feature"/>
+	<complexType name="StauraumType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Totraum" type="double"/>
 					<element name="Reserveraum" type="double"/>
@@ -100,36 +111,70 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<!-- Mindestabgabe-Parameter, *.qmi -->
 	<complexType name="MindestabgabeAssociationType">
 		<complexContent>
-			<extension base="gml:FeatureAssociationType">
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodespeicher:Mindestabgabe"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Mindestabgabe" type="bodespeicher:MindestabgabeType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MindestabgabeType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Mindestabgabe" type="bodecommon:MonatCollectionAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<!-- Maximalabgabe-Parameter, *.qma -->
 	<complexType name="MaximalabgabeAssociationType">
 		<complexContent>
-			<extension base="gml:FeatureAssociationType">
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodespeicher:Maximalabgabe"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Maximalabgabe" type="bodespeicher:MaximalabgabeType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MaximalabgabeType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Maximalabgabe" type="bodecommon:MonatCollectionAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<!-- Trinkwasser-Parameter, *.twa -->
 	<complexType name="TrinkwasserAssociationType">
 		<complexContent>
-			<extension base="gml:FeatureAssociationType">
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bodespeicher:Trinkwasser"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Trinkwasser" type="bodespeicher:TrinkwasserType" substitutionGroup="gml:_Feature"/>
+	<complexType name="TrinkwasserType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Trinkwasser" type="bodecommon:MonatCollectionAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	
 	<!-- EA = Entlastungsanlagen, *.lea -->
 	<complexType name="EACollectionAssociationType">
 		<complexContent>

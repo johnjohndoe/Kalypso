@@ -13,7 +13,7 @@
 		</complexContent>
 	</complexType>
 	<element name="MonatCollectionAssociation" type="bodecommon:MonatCollectionAssociationType"/>
-	<complexType name="MonatCollectionAssociationType">
+	<complexType name="MonatCollectionAssociationType" >
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>

@@ -15,168 +15,10 @@
         </gml:Box>
       </gml:boundedBy>
       <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell7">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell6">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell5">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell4">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell0">
-          <bodepegel:Name>t3</bodepegel:Name>
-          <bodepegel:Ort/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell3">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell2">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
-        <bodepegel:WasserlaufModell fid="WasserlaufModell1">
-          <bodepegel:Name/>
-          <bodepegel:Ort/>
-          <bodepegel:WISKI_Name/>
-          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
-          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
-          <bodepegel:Kommentar/>
-          <bodepegel:XAW>0.0</bodepegel:XAW>
-          <bodepegel:XEW>0.0</bodepegel:XEW>
-          <bodepegel:FK1>0.0</bodepegel:FK1>
-          <bodepegel:FK2>0.0</bodepegel:FK2>
-          <bodepegel:NN1>0.0</bodepegel:NN1>
-          <bodepegel:NN2>0.0</bodepegel:NN2>
-          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
-          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
-          <bodepegel:DM1>0.0</bodepegel:DM1>
-          <bodepegel:DM2>0.0</bodepegel:DM2>
-        </bodepegel:WasserlaufModell>
-      </bodepegel:PegelMember>
-      <bodepegel:PegelMember>
         <bodepegel:Niederschlagsgebiet fid="Niederschlagsgebiet1">
           <bodepegel:Name>Test</bodepegel:Name>
           <bodepegel:Ort/>
+          <bodepegel:WISKI_Name/>
           <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
           <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
           <bodepegel:Gebiet/>
@@ -189,14 +31,36 @@
         <bodepegel:Pegel fid="Pegel0">
           <bodepegel:Name>t2</bodepegel:Name>
           <bodepegel:Ort/>
+          <bodepegel:WISKI_Name/>
           <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
           <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
         </bodepegel:Pegel>
       </bodepegel:PegelMember>
       <bodepegel:PegelMember>
+        <bodepegel:WasserlaufModell fid="WasserlaufModell0">
+          <bodepegel:Name>t3</bodepegel:Name>
+          <bodepegel:Ort/>
+          <bodepegel:WISKI_Name/>
+          <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
+          <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
+          <bodepegel:Kommentar/>
+          <bodepegel:XAW>0.0</bodepegel:XAW>
+          <bodepegel:XEW>0.0</bodepegel:XEW>
+          <bodepegel:FK1>0.0</bodepegel:FK1>
+          <bodepegel:FK2>0.0</bodepegel:FK2>
+          <bodepegel:NN1>0.0</bodepegel:NN1>
+          <bodepegel:NN2>0.0</bodepegel:NN2>
+          <bodepegel:Laufzeit>0</bodepegel:Laufzeit>
+          <bodepegel:LaufzeitDefault>0.0</bodepegel:LaufzeitDefault>
+          <bodepegel:DM1>0.0</bodepegel:DM1>
+          <bodepegel:DM2>0.0</bodepegel:DM2>
+        </bodepegel:WasserlaufModell>
+      </bodepegel:PegelMember>
+      <bodepegel:PegelMember>
         <bodepegel:Niederschlagsgebiet fid="Niederschlagsgebiet0">
           <bodepegel:Name>t4</bodepegel:Name>
           <bodepegel:Ort/>
+          <bodepegel:WISKI_Name/>
           <bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
           <bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
           <bodepegel:Gebiet/>
@@ -225,6 +89,7 @@
         <bodeombrometer:Ombrometer fid="Ombrometer0">
           <bodeombrometer:Name/>
           <bodeombrometer:Ort/>
+          <bodeombrometer:WISKI_Name/>
         </bodeombrometer:Ombrometer>
       </bodeombrometer:OmbrometerMember>
     </bodeombrometer:OmbrometerCollection>
@@ -247,6 +112,7 @@
         <bodespeicher:Speicher fid="Speicher0">
           <bodespeicher:Name/>
           <bodespeicher:Ort/>
+          <bodespeicher:WISKI_Name/>
           <bodespeicher:Abgabe_Eingang/>
           <bodespeicher:Abgabe/>
           <bodespeicher:Ganglinie_gemessenEingang/>
@@ -655,6 +521,7 @@
         <bodespeicher:Überleitung fid="Überleitung0">
           <bodespeicher:Name/>
           <bodespeicher:Ort/>
+          <bodespeicher:WISKI_Name/>
           <bodespeicher:Abgabe_Eingang/>
           <bodespeicher:Abgabe/>
         </bodespeicher:Überleitung>
