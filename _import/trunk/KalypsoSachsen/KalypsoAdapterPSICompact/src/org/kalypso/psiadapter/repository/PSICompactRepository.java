@@ -97,6 +97,10 @@ public class PSICompactRepository extends AbstractRepository
       }
     }
 
+    // abnormal case...
+    if( parent == null )
+      return new PSICompactItem( null, "Keine Struktur in PSICompact...", new PSICompact.ObjectInfo() );
+    
     while( parent.getParent() != null )
       parent = (PSICompactItem)parent.getParent();
 

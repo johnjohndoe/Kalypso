@@ -1,87 +1,89 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Kalypso Test-Implementation von PSICompact" default="compile" basedir=".">
+<project name="KalypsoPSICompactImpl" default="compile" basedir=".">
 
-  <property name="src.dir" value="${basedir}/src"/>
-  
-  <property name="build.dir" value="${basedir}/build/bin"/>
-  <property name="javadoc.dir" value="${basedir}/build/javadoc"/>
-  <property name="deploy.dir" value="${basedir}/build/deploy"/>
+	<property name="src.dir" value="${basedir}/src" />
 
-  <property name="jarname" value="PSICompact.jar"/>
-    
-  
-  <!-- put here all libraries project needs -->
-  <path id="classpath">
-  	<pathelement path="${build.dir}"/>
-  </path>
+	<property name="build.dir" value="${basedir}/build/bin" />
+	<property name="javadoc.dir" value="${basedir}/build/javadoc" />
+	<property name="deploy.dir" value="${basedir}/build/deploy" />
 
-<!-- INIT -->
-  <target name="init">
-    <mkdir dir="${build.dir}"/>
-    <mkdir dir="${javadoc.dir}"/>
-    <mkdir dir="${deploy.dir}"/>
-  </target>
+	<property name="jarname" value="PSICompact.jar" />
 
-<!-- CLEANUP -->
-  <target name="cleanup" description="cleans generated stuff">
-    <delete>
-    	<fileset dir="${build.dir}" includes="*/**"/>
-    	<fileset dir="${javadoc.dir}" includes="*/**"/>
-    	<fileset dir="${deploy.dir}" includes="*/**"/>
-    </delete>
-  </target>
-  
-<!-- COMPILE -->
-  <target name="compile" depends="init" description="compile code">
-    <javac srcdir="${src.dir}"
-    	   source="1.4"
-           destdir="${build.dir}"
-           excludes="**/*Test*"
-           debug="off"
-           deprecation="off"
-           optimize="on">
-        <classpath refid="classpath"/>
-    </javac>
-  </target>
-  
-<!-- JAR -->
-  <target name="jar" depends="compile">
 
-	  <pathconvert property="jar-cp" pathsep=" " refid="classpath" dirsep="/" >
-	  	<map from="${basedir}" to="." />
-	  </pathconvert>
+	<!-- put here all libraries project needs -->
+	<path id="classpath">
+		<pathelement path="${build.dir}" />
+		<pathelement path="${deploy.dir}" />
+	</path>
 
-      <jar jarfile="${deploy.dir}/${jarname}" >
-	     
-	     <fileset dir="${build.dir}" includes="**/*" />
-		 
-		 <manifest>
-		    <attribute name="Class-Path" value="${jar-cp}"/>
-		 </manifest>
-      </jar>
-      
-  </target>
-  
-<!-- JAVADOC
+	<!-- INIT -->
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${javadoc.dir}" />
+		<mkdir dir="${deploy.dir}" />
+	</target>
+
+	<!-- CLEANUP -->
+	<target name="cleanup" description="cleans generated stuff">
+		<delete>
+			<fileset dir="${build.dir}" includes="*/**" />
+			<fileset dir="${javadoc.dir}" includes="*/**" />
+			<fileset dir="${deploy.dir}" includes="*/**" />
+		</delete>
+	</target>
+
+	<!-- COMPILE -->
+	<target name="compile" depends="init" description="compile code">
+		<javac srcdir="${src.dir}" source="1.4" destdir="${build.dir}" excludes="**/*Test*" debug="off" deprecation="off" optimize="on">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<!-- JAR -->
+	<target name="jar" depends="compile">
+
+		<pathconvert property="jar-cp" pathsep=" " refid="classpath" dirsep="/">
+			<map from="${basedir}" to="." />
+		</pathconvert>
+
+		<jar jarfile="${deploy.dir}/${jarname}">
+
+			<fileset dir="${build.dir}" includes="**/*" />
+
+			<manifest>
+				<attribute name="Class-Path" value="${jar-cp}" />
+			</manifest>
+		</jar>
+
+	</target>
+
+	<!-- DEPLOY -->
+	<target name="deploy" depends="jar">
+
+		<copy todir="../KalypsoPSICompactAdapterCore/lib">
+			<fileset dir="${deploy.dir}" includes="*.jar" />
+		</copy>
+
+		<copy todir="../KalypsoPSICompactAdapter/lib">
+			<fileset dir="${deploy.dir}" includes="*.jar" />
+		</copy>
+
+		<copy todir="../PSICompactTest/lib">
+			<fileset dir="${deploy.dir}" includes="*.jar" />
+		</copy>
+	</target>
+
+	<!-- JAVADOC
 NOTE: be sure to have javadoc.exe in the path when run under Eclipse -->
-  <target name="javadoc" depends="init" description="Erzeugt die Quellcode-Documentation">
-    <javadoc 
-    	     destdir="${javadoc.dir}"
-    	     excludepackagenames="*Test*"
-    	     classpathref="classpath"
-    	     private="yes"
-    	     author="true"
-    	     version="true"
-    	     use="true"
-    	     packagenames="*"
-    	     defaultexcludes="yes">
-    	     
-    	     <fileset dir="${src.dir}" defaultexcludes="yes">
-		     	<include name="*/**" />
-      			<exclude name="**/*Test*"/>
-			 </fileset>
-   	</javadoc>
-     
-  </target>
+	<target name="javadoc" depends="init" description="Erzeugt die Quellcode-Documentation">
+		<javadoc destdir="${javadoc.dir}" excludepackagenames="*Test*" classpathref="classpath" private="yes" author="true" version="true" use="true" packagenames="*" defaultexcludes="yes">
+
+			<fileset dir="${src.dir}" defaultexcludes="yes">
+				<include name="*/**" />
+				<exclude name="**/*Test*" />
+			</fileset>
+		</javadoc>
+
+	</target>
 
 </project>
