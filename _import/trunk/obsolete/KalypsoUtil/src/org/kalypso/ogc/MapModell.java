@@ -143,9 +143,10 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
     fireModellEvent( null );
   }
 
-  public void addTheme( Theme arg0 ) throws Exception
+  public void addTheme( Theme theme ) throws Exception
   {
-    myModell.addTheme( arg0 );
+    myModell.addTheme( theme );
+    ((KalypsoTheme)theme).addModellListener(this);
     fireModellEvent( null );
   }
 
@@ -284,7 +285,7 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
 
   public void removeTheme( Theme arg0 )
   {
-    myModell.removeTheme( arg0 );
+  	myModell.removeTheme( arg0 );
     fireModellEvent( null );
   }
 

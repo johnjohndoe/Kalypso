@@ -13,19 +13,20 @@ import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.deegree_impl.model.sort.DisplayContext;
-import org.deegree_impl.model.sort.DisplayContextSort;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.event.ModellEventProvider;
 import org.kalypso.ogc.event.ModellEventProviderAdapter;
+import org.kalypso.ogc.sort.DisplayContext;
+import org.kalypso.ogc.sort.DisplayContextSort;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author vdoemming
  */
-public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider
+public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider, ModellEventListener
 {
+	
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
   
   // TODO hier kann die performance stark verbessert werden, wenn es einen
@@ -42,6 +43,7 @@ public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider
     myName = name;
     myFeatureType = featureType;
     mySort = new DisplayContextSort( crs );
+    mySort.addModellListener(this);
   }
   
   public DisplayContextSort getSort()
@@ -229,8 +231,9 @@ public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider
         e.printStackTrace();
       }
     }
+    mySort.removeModellListener(this);
     mySort = newSort;
-    
+    mySort.addModellListener(this);        
     fireModellEvent(null);
   }
 
@@ -307,5 +310,14 @@ public class KalypsoFeatureLayer implements FeatureLayer, ModellEventProvider
   {
     myEventProvider.removeModellListener( listener );
   }
+
+/* (non-Javadoc)
+ * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
+ */
+public void onModellChange(ModellEvent modellEvent) {
+
+fireModellEvent(modellEvent);
+	
+}
 
 }

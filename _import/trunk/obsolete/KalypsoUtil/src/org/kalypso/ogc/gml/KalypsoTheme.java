@@ -89,7 +89,7 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
     for( int i = 0; i < myStyles.length; i++ )
     {
       myLayer.getSort().removeStyle( myStyles[i] );
-      myStyles[i].removeModellListener( this );
+    //  myStyles[i].removeModellListener( this );
     }
 
     myStyles = (KalypsoUserStyle[])styles;
@@ -97,7 +97,7 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
     for( int i = 0; i < myStyles.length; i++ )
     {
       final KalypsoUserStyle kus = (KalypsoUserStyle)styles[i];
-      kus.addModellListener(this );
+   //   kus.addModellListener(this );
       myLayer.getSort().addStyle( kus );
     }
   }
@@ -219,7 +219,7 @@ public class KalypsoTheme implements Theme, ModellEventProvider, ModellEventList
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    fireModellEvent(modellEvent);
+  	fireModellEvent(modellEvent);
   }
 
   public void addModellListener( ModellEventListener listener )
