@@ -42,8 +42,21 @@ public class DateChooser
 		{
         //Set up renderer and editor for the Favorite Date column.
         setUpDateRenderer(table);
-        setUpDateEditor(table);
-
+		
+		final JButton button = new JButton("");
+        button.setBackground(Color.white);
+        button.setBorderPainted(false);
+        button.setMargin(new Insets(0,0,0,0));
+		final DateEditor dateEditor = new DateEditor(button);
+        table.setDefaultEditor(Date.class, dateEditor);
+        setUpDateEditor(dateEditor, button);
+		
+       //First, set up the button that brings up the dialog.
+		/** final JButton button = new JButton("");
+        button.setBackground(Color.white);
+        button.setBorderPainted(false);
+        button.setMargin(new Insets(0,0,0,0));
+		 final DateEditor dateEditor = new DateEditor(button,table);*/
 	}
     
     private static void setUpDateRenderer(JTable table) {
@@ -51,18 +64,18 @@ public class DateChooser
                                  new DateRenderer());
     }
 
-    private static void setUpDateEditor(JTable table) {
+    public static void setUpDateEditor(final DateEditor dateEditor, final JButton button) {
 		
         //First, set up the button that brings up the dialog.
-        final JButton button = new JButton("");
+		/**final JButton button = new JButton("");
         button.setBackground(Color.white);
         button.setBorderPainted(false);
-        button.setMargin(new Insets(0,0,0,0));
+		 button.setMargin(new Insets(0,0,0,0));*/
 
         //Now create an editor to encapsulate the button, and
         //set it up as the editor for all Date cells.
-        final DateEditor dateEditor = new DateEditor(button);
-        table.setDefaultEditor(Date.class, dateEditor);
+        //final DateEditor dateEditor = new DateEditor(button);
+        //table.setDefaultEditor(Date.class, dateEditor);
 
         //Set up the dialog that the button brings up.
 		final JCalendar calendar = new JCalendar(JMonthChooser.NO_SPINNER);
@@ -123,7 +136,7 @@ public class DateChooser
 				dialog.toFront();
             }
         });
-    }
+	 }
 
 	
 	/**static class DateRenderer extends JLabel
