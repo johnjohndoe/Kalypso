@@ -81,6 +81,32 @@ public class xmlServiceTools {
 
 	}
 
+	public static void setParameter_Factor(
+		String query,
+		double value,
+		Document myDom) {
+		NodeList nl = getXPath(query, myDom);
+
+		for (int i = 0; i < nl.getLength(); i++) {
+			String nodeValue = (nl.item(i)).getNodeValue();
+			double setValue = value*Double.parseDouble(nodeValue);
+			(nl.item(i)).setNodeValue(String.valueOf(setValue));
+		}
+	}
+
+	public static void setParameter_Offset(
+		String query,
+		double value,
+		Document myDom) {
+		NodeList nl = getXPath(query, myDom);
+
+		for (int i = 0; i < nl.getLength(); i++) {
+			String nodeValue = (nl.item(i)).getNodeValue();
+			double setValue = value+Double.parseDouble(nodeValue);
+			(nl.item(i)).setNodeValue(String.valueOf(setValue));
+		}
+	}
+	
 	public static Document getXML(String file) throws Exception {
 		return getXML(new File(file));
 	}

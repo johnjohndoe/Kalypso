@@ -34,7 +34,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JOptionPane;
 
-
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 import de.tuhh.wb.javagis.view.ViewManager;
@@ -55,7 +54,7 @@ public class SCE_KALYPSO
 
 	//location SCE-Routine
 	private String myCommand_SCE = "kalypsoMain.exe";
-	private File myWorkingDir_SCE = null;//new File("sce_tool");
+	private File myWorkingDir_SCE = null; //new File("sce_tool");
 
 	//xml-input File
 	private File inputFile = null; //new File(xmlDir, "input_SCE.xml");
@@ -71,6 +70,8 @@ public class SCE_KALYPSO
 	//private double[] initialParamValues;
 	private double[] synteticParamValues;
 	private String[] xPaths;
+	//private double[] startValues;
+	private String[] modes;
 
 	private int anzKalypso = 1;
 	private int rootNode = 0;
@@ -441,15 +442,15 @@ public class SCE_KALYPSO
 	//method prepares the files kalypsoInp.dat und scein.dat
 	private void makeinputFiles() {
 		//copy sce-tool to targetDir
-		try{
-		if (!targetDir.exists())
-			targetDir.mkdirs();
-		File sceTemplate = new File("sce_tool");
-		System.out.println("copy template from " + sceTemplate.toString());
-		File sceTargetDir = new File(targetDir,"sce_Tool");
-		FileSystemUtils.copyRecursiveDir(sceTemplate, sceTargetDir);
-		myWorkingDir_SCE=sceTargetDir;
-		}catch (Exception e){
+		try {
+			if (!targetDir.exists())
+				targetDir.mkdirs();
+			File sceTemplate = new File("sce_tool");
+			System.out.println("copy template from " + sceTemplate.toString());
+			File sceTargetDir = new File(targetDir, "sce_Tool");
+			FileSystemUtils.copyRecursiveDir(sceTemplate, sceTargetDir);
+			myWorkingDir_SCE = sceTargetDir;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//prepare scein.dat
@@ -522,7 +523,7 @@ public class SCE_KALYPSO
 				for (int n = 0; n < data.size(); n++) {
 					System.out.println((String) data.elementAt(n));
 				}
-
+				
 			} catch (Exception e) {
 				System.out.println("InterruptedException: " + e.getMessage());
 				return;
@@ -608,7 +609,7 @@ public class SCE_KALYPSO
 					endDate_pegel);
 
 			}
-
+	ps.close();
 		}
 	}
 
@@ -634,11 +635,26 @@ public class SCE_KALYPSO
 	private void makeModelxml(Double[] valueParam, boolean saveAll) {
 		try {
 			Document doc = xmlServiceTools.getXML(modelFile);
+
 			for (int i = 0; i < valueParam.length; i++) {
-				xmlServiceTools.setParameter(
-					xPaths[i],
-					(valueParam[i]).toString(),
-					doc);
+				//check, ob Parameter als Faktor oder normal, dann zwei Möglichkeiten
+				String mode = modes[i];
+				if (mode.equals("factor")) {
+					xmlServiceTools.setParameter_Factor(
+						xPaths[i],
+						valueParam[i].doubleValue(),
+						doc);
+				} else if (mode.equals("offset")) {
+					xmlServiceTools.setParameter_Offset(
+						xPaths[i],
+						valueParam[i].doubleValue(),
+						doc);
+				} else {
+					xmlServiceTools.setParameter(
+						xPaths[i],
+						(valueParam[i]).toString(),
+						doc);
+				}
 			}
 			String destName = "newModel";
 			File destFile =
@@ -762,10 +778,13 @@ public class SCE_KALYPSO
 				"/autoCalibration/parameterlist/parameter/upperBound";
 			String queryLoBound =
 				"/autoCalibration/parameterlist/parameter/lowerBound";
+			String queryFactor =
+				"/autoCalibration/parameterlist/parameter/@mode";
 
 			NodeList nlXPath = xmlServiceTools.getXPath(queryXPath, doc);
 			NodeList nlUpBound = xmlServiceTools.getXPath(queryUpBound, doc);
 			NodeList nlLoBound = xmlServiceTools.getXPath(queryLoBound, doc);
+			NodeList nlMode = xmlServiceTools.getXPath(queryFactor, doc);
 
 			int anzParam = nlXPath.getLength();
 			System.out.println("Anzahl Parameter: " + anzParam);
@@ -773,6 +792,7 @@ public class SCE_KALYPSO
 			xPaths = new String[anzParam];
 			paramUpperBounds = new double[anzParam];
 			paramLowerBounds = new double[anzParam];
+			modes = new String[anzParam];
 
 			for (int i = 0; i < anzParam; i++) {
 				Node n = (nlXPath.item(i)).getFirstChild();
@@ -795,10 +815,49 @@ public class SCE_KALYPSO
 			/*for(int n=0;n<anzParam;n++){
 				System.out.println(paramLowerBounds[n]);
 			}*/
+			for (int i = 0; i < anzParam; i++) {
+				Node n = nlMode.item(i);
+				String nodeValue = n.getNodeValue();
+				//System.out.println(nodeValue);
+				modes[i] = nodeValue;
+			}
+			for (int n = 0; n < anzParam; n++) {
+				System.out.println(modes[n]);
+			}
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		//read startValues from modelFile
+		/*try {
+			Document doc = xmlServiceTools.getXML(modelFile);
+			Vector nodes = new Vector();
+			//System.out.println("Startwerte: ");
+			for (int i = 0; i < xPaths.length; i++) {
+				NodeList nlStartValues =
+					xmlServiceTools.getXPath(xPaths[i], doc);
+				for (int n = 0; n < nlStartValues.getLength(); n++) {
+					nodes.add(nlStartValues.item(n));
+					//String output = (nlStartValues.item(n)).getNodeValue();
+					//System.out.println(output);
+					//startValues[i]=Double.parseDouble(output);
+				}
+			}
+			startValues = new double[nodes.size()];
+			for (int k = 0; k < nodes.size(); k++) {
+				Node actualNode = (Node) nodes.elementAt(k);
+				//System.out.println("Node: "+actualNode);
+				String output = actualNode.getNodeValue();
+				startValues[k]=Double.parseDouble(output);
+				//System.out.println(output);
+			}
+			for (int m = 0; m < startValues.length; m++){
+				System.out.println(startValues[m]);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}*/
+
 	}
 
 	private void writeSynteticDataToFile(File kalypsoInp) throws IOException {
@@ -911,6 +970,16 @@ public class SCE_KALYPSO
 		if ("start".equals(action)) {
 			System.out.println("SCE_KALYPSO###");
 			instance.readXMLinput();
+			/*Double[] param =
+				{
+					new Double(10.0),
+					new Double(20.0),
+					new Double(30.0),
+					new Double(40.0),
+					new Double(50.0),
+					new Double(60.0),
+					new Double(70.0)};
+			instance.makeModelxml(param, true);*/
 			instance.makeinputFiles();
 			instance.startSCE();
 			JOptionPane.showMessageDialog(
