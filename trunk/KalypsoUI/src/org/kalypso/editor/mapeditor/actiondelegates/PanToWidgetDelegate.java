@@ -10,6 +10,6 @@ public class PanToWidgetDelegate extends GisMapEditorWidgetActionDelegate
 {
   public PanToWidgetDelegate(  )
   {
-    super( new PanToWidget() );
+    super( new PanToWidget(  ) );
   }
 }

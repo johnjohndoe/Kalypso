@@ -1,4 +1,4 @@
-package org.kalypso.editor.mapeditor;
+package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -57,7 +57,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   public Object[] getElements( final Object inputElement )
   {
     final IMapModell mm = (IMapModell)inputElement;
-    return mm.getAllThemes();
+    return mm == null ? null : mm.getAllThemes();
   }
 
   /**

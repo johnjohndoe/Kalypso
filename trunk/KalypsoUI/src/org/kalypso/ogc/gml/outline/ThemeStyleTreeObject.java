@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-package org.kalypso.editor.mapeditor;
+package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.UserStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;

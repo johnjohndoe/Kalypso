@@ -2,16 +2,16 @@ package org.kalypso.editor.mapeditor.views;
 
 import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.editor.mapeditor.GisMapOutlinePage;
-import org.kalypso.editor.mapeditor.ThemeStyleTreeObject;
 import org.kalypso.editor.styleeditor.SLDEditorGuiBuilder;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
 
 /**
  * 
@@ -20,16 +20,15 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 public class StyleEditorViewPart extends ViewPart implements ISelectionChangedListener
 {
-
-  private GisMapOutlinePage gmop = null;
+  private ISelectionProvider gmop = null;
 
   private SLDEditorGuiBuilder guiBuilder = null;
 
-  public void setSelectionChangedProvider( GisMapOutlinePage page )
+  public void setSelectionChangedProvider( final ISelectionProvider selectionProvider )
   {
-    if( this.gmop != page )
+    if( this.gmop != selectionProvider )
     {
-      this.gmop = page;
+      this.gmop = selectionProvider;
       gmop.addSelectionChangedListener( this );
     }
   }
