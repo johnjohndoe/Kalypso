@@ -40,12 +40,12 @@ public class RepositoryConfigUtils
 
       final List items = new Vector( list.size() );
 
-      for( Iterator it = list.iterator(); it.hasNext(); )
+      for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        RepconfType.RepType elt = (RepconfType.RepType)it.next();
+        final RepconfType.RepType elt = (RepconfType.RepType)it.next();
 
-        RepositoryConfigItem item = new RepositoryConfigItem( elt.getClassName(), elt
-            .getConfString() );
+        final RepositoryConfigItem item = new RepositoryConfigItem( elt.getClassName(), elt
+            .getConfString(), elt.isReadOnly() );
         items.add( item );
       }
 

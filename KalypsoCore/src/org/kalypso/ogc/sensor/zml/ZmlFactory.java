@@ -34,6 +34,7 @@ import org.kalypso.util.parser.IParser;
 import org.kalypso.util.parser.ParserException;
 import org.kalypso.util.parser.ParserFactory;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataListType;
@@ -198,10 +199,14 @@ public class ZmlFactory
     final IAxis[] axes = (IAxis[])valuesMap.keySet().toArray( new IAxis[valuesMap.size()] );
 
     final ZmlTuppleModel model = new ZmlTuppleModel( axes, valuesMap );
-    
+
+    IXlink target = null;
+    if( obs.getTarget() != null )
+      target = new JAXBXLink( obs.getTarget() );
+
     final IObservation zmlObs = new SimpleObservation( identifier, obs.getName(), obs.isEditable(),
-        new JAXBXLink( obs.getTarget() ), metadata, axes, model );
-    
+        target, metadata, axes, model );
+
     return zmlObs;
   }
 

@@ -15,7 +15,7 @@ import org.kalypso.repository.file.FileRepository;
  */
 public class ZmlObservationItem extends FileItem
 {
-  private IObservation m_zmlFile = null;
+  private IObservation m_zml = null;
 
   public ZmlObservationItem( final FileRepository rep, final File file )
   {
@@ -25,7 +25,7 @@ public class ZmlObservationItem extends FileItem
   /**
    * @see org.kalypso.repository.file.FileItem#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     try
     {
@@ -51,15 +51,15 @@ public class ZmlObservationItem extends FileItem
     try
     {
       // check against the filter
-      if( m_zmlFile == null && getRep().getFilter().accept( getFile() ) )
+      if( m_zml == null && getRep().getFilter().accept( getFile() ) )
       {
         final File f = getFile();
-        m_zmlFile = ZmlFactory.parseXML( f.toURL(), f.getAbsolutePath() );
+        m_zml = ZmlFactory.parseXML( f.toURL(), f.getAbsolutePath() );
       }
 
-      return m_zmlFile;
+      return m_zml;
     }
-    catch( Exception e )
+    catch( Exception e ) // generic Exception caught for simplicity
     {
       throw new SensorException( e );
     }

@@ -13,9 +13,11 @@ import org.kalypso.repository.IRepositoryFactory;
  */
 public class RepositoryConfigItem
 {
-  private String m_className;
+  private final String m_className;
 
-  private String m_conf;
+  private final String m_conf;
+
+  private final boolean m_readOnly;
 
   /**
    * Constructor with:
@@ -24,11 +26,15 @@ public class RepositoryConfigItem
    *          name of the IRepositoryFactory class
    * @param conf
    *          configuration used when instanciating the factory class
+   * @param readOnly
+   *          when true repository should be read only
+   *  
    */
-  public RepositoryConfigItem( final String className, final String conf )
+  public RepositoryConfigItem( final String className, final String conf, final boolean readOnly )
   {
     m_className = className;
     m_conf = conf;
+    m_readOnly = readOnly;
   }
 
   /**
@@ -36,11 +42,13 @@ public class RepositoryConfigItem
    */
   public IRepositoryFactory createFactory() throws ClassUtilityException
   {
-    IRepositoryFactory rf = (IRepositoryFactory)ClassUtilities.newInstance( m_className, IRepositoryFactory.class,
-        getClass().getClassLoader() );
+    final IRepositoryFactory rf = (IRepositoryFactory)ClassUtilities.newInstance( m_className,
+        IRepositoryFactory.class, getClass().getClassLoader() );
+
+    rf.setReadOnly( m_readOnly );
     
     if( rf instanceof AbstractRepositoryFactory )
-      ((AbstractRepositoryFactory)rf).setConfiguration( m_conf );
+      ( (AbstractRepositoryFactory)rf ).setConfiguration( m_conf );
     
     return rf;
   }
