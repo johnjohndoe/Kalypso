@@ -10,6 +10,7 @@ import java.net.URL;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
@@ -43,7 +44,7 @@ public class ModelManager extends AbstractManager {
 	/* (non-Javadoc)
 	 * @see org.kalypso.convert.AbstractManager#writeFile(java.io.Writer)
 	 */
-	public void writeFile(Writer writer,Feature rootFeature) throws IOException
+	public void writeFile(Writer writer,GMLWorkspace workspace) throws IOException
 	{
 	// nothing to do
 	}

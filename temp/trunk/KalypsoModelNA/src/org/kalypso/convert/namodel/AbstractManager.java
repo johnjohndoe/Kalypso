@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -51,31 +52,6 @@ public abstract class AbstractManager
         return (Feature) m_allFeatures.get(stringID);
     }
 
-    // public ExtFeature getFeature( String id, FeatureType ft )
-    //  {
-    //    if( !exists( id ) )
-    //      createFeature( id, ft );
-    //    return (ExtFeature)m_managedFeatures.get( id );
-    //  }
-
-    //  private boolean exists( int id )
-    //  {
-    //    Integer key = new Integer( id );
-    //    return m_map.containsKey( key );
-    //  }
-
-    //  private boolean exists( String id )
-    //  {
-    //    return m_map.containsKey( id );
-    //  }
-    //
-    //  private void createFeature( String id, FeatureType ft )
-    //  {
-    //    createMapping( id );
-    //    ExtFeature feature = ExtFeatureFactory.createFeature( ft, id );
-    //    m_allFeatures.put( id, feature );
-    //  }
-
     private static int count = 0;
 
     public Feature createFeature(FeatureType ft)
@@ -89,26 +65,19 @@ public abstract class AbstractManager
     {
         createMapping(intID);
         String stringID = (String) m_map.get(intID);
-        Feature feature = null;//= FeatureFactory.createFeature( stringID,
-        // m_featureType,
-        //    new Object[m_featureType.getProperties().length] );
-        try {
+        Feature feature = null;
+        try
+        {
             feature = FeatureFactory.createFeature(stringID, intID
                     .getFeatureType());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
         if (m_allFeatures.containsKey(stringID))
             throw new UnsupportedOperationException("IDs are not unique");
         m_allFeatures.put(stringID, feature);
     }
-
-    //  private void createMapping( String id )
-    //  {
-    //    Integer intID = new Integer( getID( id ) );
-    //    m_map.put( id, intID );
-    //    m_map.put( intID, id );
-    //  }
 
     public abstract String mapID(int id, FeatureType ft);
 
@@ -118,30 +87,6 @@ public abstract class AbstractManager
         m_map.put(stringID, intID);
         m_map.put(intID, stringID);
     }
-
-    //  public final int getID( String id )
-    //  {
-    //    return Integer.parseInt(id);
-    //  }
-
-    //  private int getMappedID( String id )
-    //  {
-    //    if( m_map.containsKey( id ) )
-    //    {
-    //      Integer value = (Integer)m_map.get( id );
-    //      return value.intValue();
-    //    }
-    //    return -1;
-    //  }
-
-    //// TODO make abstract and implement by parent
-    //  private final String getMappedID( int id )
-    //  {
-    //    Integer key = new Integer( id );
-    //    if( m_map.containsKey( key ) )
-    //      return (String)m_map.get( key );
-    //    return null;
-    //  }
 
     private void readParseDefinition(URL formatURL) throws IOException
     {
@@ -157,8 +102,8 @@ public abstract class AbstractManager
 
     public abstract Feature[] parseFile(URL url) throws Exception;
 
-    public abstract void writeFile(Writer writer, Feature rootFeature)
-            throws IOException;
+    public abstract void writeFile(Writer writer, GMLWorkspace workspace)
+            throws Exception;
 
     private final static Pattern patternBrackets = Pattern.compile("[\\(|\\)]");
 
@@ -175,7 +120,8 @@ public abstract class AbstractManager
         List nameCollector = new ArrayList();
         StringBuffer pattern = new StringBuffer("^");
         String[] formats = patternBrackets.split(formatLine);
-        for (int i = 0; i < formats.length; i++) {
+        for (int i = 0; i < formats.length; i++)
+        {
             String format = formats[i];
             String regExp = getRegExp(format, nameCollector);
             pattern.append(regExp);
@@ -183,12 +129,15 @@ public abstract class AbstractManager
         pattern.append("\\s*$");
         Pattern linePattern = Pattern.compile(pattern.toString());
         Matcher m = linePattern.matcher(line);
-        if (!m.matches()) {
+        if (!m.matches())
+        {
             throw new Exception("NA-ASCII parsingexception " + "\n format:"
                     + formatLine + "\nline:" + line + "\nregExp:"
                     + pattern.toString() + "\n  does not match n");
-        } else {
-            for (int i = 0; i < m.groupCount(); i++) {
+        } else
+        {
+            for (int i = 0; i < m.groupCount(); i++)
+            {
                 String name = (String) nameCollector.get(i);
                 String value = m.group(i + 1).trim();
                 //System.out.println( 1 + ". " + name + "=" + value );
@@ -219,7 +168,8 @@ public abstract class AbstractManager
         if (m.matches())
             return "(" + getPairRegExp(string, nameCollector) + ")";
         m = pSpaceFormat.matcher(string);
-        if (m.matches()) {
+        if (m.matches())
+        {
             return string.replace('_', ' ');
         }
         throw new UnsupportedOperationException();
@@ -237,7 +187,8 @@ public abstract class AbstractManager
         if ("*".equals(format) || "a".equals(format) || "A".equals(format))
             return freeFormat;
         Matcher m = pFortranFormat.matcher(format);
-        if (m.matches()) {
+        if (m.matches())
+        {
             String type = m.group(1);
             String regExpChar = "";
             if ("aA".indexOf(type) >= 0)
@@ -248,7 +199,8 @@ public abstract class AbstractManager
             String charMax = m.group(2); // gesamt anzahl stellen
             String decimalPlace = m.group(3); // Nachkommastellen
 
-            if ("".equals(decimalPlace)) {
+            if ("".equals(decimalPlace))
+            {
                 return regExpChar + "{1," + charMax + "}";
             }
             int max = Integer.parseInt(charMax);
@@ -264,7 +216,8 @@ public abstract class AbstractManager
         StringBuffer result = new StringBuffer("");
 
         String[] formats = patternBrackets.split(m_asciiFormat[formatLine]);
-        for (int i = 0; i < formats.length; i++) {
+        for (int i = 0; i < formats.length; i++)
+        {
             String format = formats[i];
             Matcher m = pPairFormat.matcher(format);
             if (m.matches())
@@ -286,6 +239,7 @@ public abstract class AbstractManager
             return "(TODO:" + s[0] + ")";
         if ("IGNORE".equals(s[0]))
             return "";
+        System.out.println(s[0]);
         Object property = feature.getProperty(s[0]);
         if (property == null)
             return "(" + s[0] + "==NULL ?)";
@@ -296,7 +250,8 @@ public abstract class AbstractManager
         if ("*".equals(format) || "a".equals(format) || "A".equals(format))
             return value;
         Matcher m = pFortranFormat.matcher(format);
-        if (m.matches()) {
+        if (m.matches())
+        {
             String type = m.group(1);
 
             String charMax = m.group(2); // gesamt anzahl stellen
@@ -310,7 +265,8 @@ public abstract class AbstractManager
                 return result.toString();
             if (!"".equals(decimalPlace))
                 decimal = Integer.parseInt(decimalPlace);
-            else {
+            else
+            {
                 if ("aA".indexOf(type) >= 0) //TEXT
                 {
                     return (result.replace(0, value.length(), value))
@@ -320,19 +276,22 @@ public abstract class AbstractManager
             }
 
             boolean found = false;
-            while (!found) {
+            while (!found)
+            {
                 int pointPos = value.indexOf('.');
                 if (pointPos < 0 && decimal > 0) // da fehlt ein Komma
                 {
                     value = value + ".0";
                     continue;
                 }
-                if (pointPos < 0 && decimal == 0) {
+                if (pointPos < 0 && decimal == 0)
+                {
                     found = true;
                     continue;
                 }
                 int points = value.length() - pointPos - 1;
-                if (points == decimal) {
+                if (points == decimal)
+                {
                     found = true;
                     continue;
                 }
@@ -363,7 +322,8 @@ public abstract class AbstractManager
         FeatureType ft = feature.getFeatureType();
 
         Iterator it = collection.iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             FeatureProperty feProp = (FeatureProperty) it.next();
             if (ft.getProperty(feProp.getName()) != null)
                 feature.setProperty(feProp);
@@ -381,8 +341,10 @@ public abstract class AbstractManager
             return "";
         StringBuffer b = new StringBuffer("(" + name + "" + 0 + "," + format
                 + ")");
-        if (count > 1) {
-            for (int i = 1; i < count; i++) {
+        if (count > 1)
+        {
+            for (int i = 1; i < count; i++)
+            {
                 b.append(separator + "(" + name + "" + i + "," + format + ")");
             }
         }

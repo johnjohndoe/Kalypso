@@ -15,6 +15,7 @@ import java.util.List;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
 
@@ -118,9 +119,9 @@ public class ChannelManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( Writer writer,Feature rootFeature ) throws IOException
+  public void writeFile( Writer writer,GMLWorkspace workspace) throws IOException
   {
-
+      Feature rootFeature=workspace.getRootFeature();
     Feature kmChannelCol = (Feature)rootFeature.getProperty( "KMChannelCollectionMember" );
     List kmChannelList = (List)kmChannelCol.getProperty( "kmChannelMember" );
     Iterator iter = kmChannelList.iterator();

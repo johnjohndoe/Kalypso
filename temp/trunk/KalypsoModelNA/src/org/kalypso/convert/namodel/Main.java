@@ -2,11 +2,7 @@ package org.kalypso.convert.namodel;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,28 +39,16 @@ public class Main
 //            Configuration conf = new Configuration(new File("test"));
             Configuration conf = new Configuration(new File("/tmp/weisseElster"));
             Feature fe = asciiToFeature(conf);
+//            insertGeometries(fe);
+
             File gmlFile = File.createTempFile("namodell_test", ".gml");
-            insertGeometries(fe);
             GmlSerializer.serializeFeature(new FileWriter(gmlFile), fe, null);
 
             GMLWorkspace workspace = GmlSerializer.createGMLWorkspace(gmlFile
                     .toURL(), conf.getSchemaURL());
             Configuration conf2 = new Configuration(new File("/tmp"));
-            //    	writeGML(conf2);// fe1,
-            // "../../../../../data/out/out.xml",schemaLocation);
-            featureToAscii(conf2, workspace.getRootFeature());//fe3,schemaLocation);
+            featureToAscii(conf2, workspace);//fe3,schemaLocation);
 
-            //    	Configuration conf3=new Configuration("test/output/",null);
-            //    	Feature fe3=readGML(conf3);
-            //  
-            //    	
-            //    	Configuration conf4=new Configuration("test/output2/",fe3);
-            //    	featureToAscii(conf4);//fe3,schemaLocation);
-            //    	writeGML( conf4);//fe2,
-            // "../../../../../data/out/out2.xml",schemaLocation );
-            //    	Feature fe4 = readGML(conf4);//
-            // "../../../../../data/out/out2.xml",schemaLocation );
-            //      
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,7 +102,6 @@ public class Main
     public Main(Configuration conf) throws Exception
     {
         m_conf = conf;
-        //    m_schemaURL=getClass().getResource(schemaLocation);
         m_schema = new GMLSchema(conf.getSchemaURL());
 
         m_catchmentManager = new CatchmentManager(m_schema, m_conf);
@@ -127,90 +110,25 @@ public class Main
                 m_gerinneManager);
     }
 
-    //  public Main( String schemaLocation,Feature feature ) throws Exception
-    //  {
-    //  	 m_schemaURL=getClass().getResource(schemaLocation);
-    //     m_schema = new GMLSchema(m_schemaURL );
-    //  
-    //     m_catchmentManager = new CatchmentManager( m_schema, new File(
-    // "src/WernerCatchment.txt" ),
-    //        feature );
-    //     m_gerinneManager = new ChannelManager( m_schema, new File(
-    // "src/gerinne.txt" ), feature );
-    //     m_parseManager = new ParseManager( m_schema, m_catchmentManager,
-    // m_gerinneManager );
-    //  }
+   
 
     public ParseManager getParseManager()
     {
         return m_parseManager;
     }
 
-    public void write(Feature rootFeature) throws IOException
+    public void write(GMLWorkspace workspace) throws Exception
     {
 
-        Writer writer = new FileWriter(m_conf.getCatchmentFile());// new File(
-                                                                  // "data/out/we_nat.geb_out"
-                                                                  // ) );
-        m_catchmentManager.writeFile(writer, rootFeature);
+        Writer writer = new FileWriter(m_conf.getCatchmentFile());
+        m_catchmentManager.writeFile(writer, workspace);
         writer.close();
         Writer writer2 = new FileWriter(m_conf.getChannelFile());
-        m_gerinneManager.writeFile(writer2, rootFeature);
+        m_gerinneManager.writeFile(writer2, workspace);
         writer2.close();
     }
 
-    //  public void toGML( )
-    //  {
-    //  	Writer writer = null;
-    //    try
-    //    {
-    //    	URLConnection connection = m_conf.getModellURL().openConnection();
-    //		connection.setDoOutput(true);
-    //		connection.getOutputStream();
-    //		 writer=new OutputStreamWriter(connection.getOutputStream());
-    //  	
-    //      GmlSerializer.serializeFeature( writer, m_conf.getRootFeature(), null );
-    //    }
-    //    catch( Exception e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-    //    finally
-    //    {
-    //      try
-    //      {
-    //        writer.close();
-    //      }
-    //      catch( IOException e1 )
-    //      {
-    //        e1.printStackTrace();
-    //      }
-    //    }
-    //  }
-
-    //  public Feature loadGML()
-    //  {
-    //    Feature feature = null;
-    //    Reader reader;
-    //    try
-    //    {
-    //      feature =
-    // GmlSerializer.deserializeFeature(m_conf.getModellURL(),m_conf.getSchemaURL()
-    // );
-    //      System.out.println( " loaded GML " );
-    //    }
-    //    catch( Exception e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-    //    return feature;
-    //  }
-
-    //  public static Feature readGML( Configuration conf ) throws Exception
-    //  {
-    //    Main main = new Main(conf);
-    //    return main.loadGML();
-    //  }
+   
 
     public static Feature asciiToFeature(Configuration conf) throws Exception
     {
@@ -218,28 +136,21 @@ public class Main
         return main.getParseManager().asciiToFeature();
     }
 
-    public static void featureToAscii(Configuration conf, Feature rootFeature)
+    public static void featureToAscii(Configuration conf, GMLWorkspace workspace)
             throws Exception
     {
         Main main = new Main(conf);
-        main.write(rootFeature);
+        main.write(workspace);
     }
 
-    //  public static void writeGML(Configuration conf) throws Exception//f
-    // Feature feature, String gmlLocation,String schemaLocation ) throws
-    // Exception
-    //  {
-    //    Main main = new Main( conf );
-    //    main.toGML();
-    //  }
-
-    public static Writer getWriter(URL url) throws IOException
-    {
-        URLConnection connection = url.openConnection();
-        connection.setDoOutput(true);
-
-        connection.getOutputStream();
-        return new OutputStreamWriter(connection.getOutputStream());
-
-    }
+    
+//    public static Writer getWriter(URL url) throws IOException
+//    {
+//        URLConnection connection = url.openConnection();
+//        connection.setDoOutput(true);
+//
+//        connection.getOutputStream();
+//        return new OutputStreamWriter(connection.getOutputStream());
+//
+//    }
 }
