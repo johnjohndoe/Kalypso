@@ -3,6 +3,7 @@ package org.kalypso.ui.editor.obstableeditor.actions;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.sensor.commands.RemoveRowCommand;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**
  * RemoveRowAction
@@ -16,16 +17,17 @@ public class RemoveRowAction extends AbstractEditorActionDelegate
    */
   public void run( IAction action )
   {
-    final ObservationTableModel model = getEditor().getModel();
+    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
+    final ObservationTableModel model = editor.getModel();
     
     if( model.getRowCount() == 0 )
       return;
     
-    final int rowIndex = getEditor().getTable().getSelectedRow();
+    final int rowIndex = editor.getTable().getSelectedRow();
     
     if( rowIndex < 0 )
       return;
     
-    getEditor().postCommand( new RemoveRowCommand( model, rowIndex), null );
+    editor.postCommand( new RemoveRowCommand( model, rowIndex), null );
   }
 }

@@ -4,7 +4,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**
  * AbstractEditorActionDelegate
@@ -35,8 +34,8 @@ public abstract class AbstractEditorActionDelegate implements
   /**
    * @return editor
    */
-  public ObservationTableEditor getEditor()
+  public IEditorPart getEditor()
   {
-    return (ObservationTableEditor) m_editor;
+    return m_editor;
   }
 }

@@ -15,10 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
@@ -62,28 +64,24 @@ public class GrafikLauncher
    * 
    * @param odtFile
    * @param dest
+   * @param monitor
    * @return the created tpl file
    * 
    * @throws SensorException
    */
-  public static IFile startGrafikODT( final IFile odtFile, final IFolder dest )
-      throws SensorException
+  public static IFile startGrafikODT( final IFile odtFile, final IFolder dest,
+      final IProgressMonitor monitor ) throws SensorException
   {
     try
     {
-      // remove spaces because grafik cannot open a Vorlage when name
-      // contains spaces. Note: this will have no effect when the rest
-      // of the path still contains spaces. In that case grafik just won't
-      // find the vorlage.
-      // I called Jörg to solve this problem. We are waiting for a new version...
       final IFile tplFile = dest.getFile( FileUtilities
-          .nameWithoutExtension( odtFile.getName() ).replaceAll( " ", "-")
+          .nameWithoutExtension( odtFile.getName() )
           + ".tpl" );
-      
+
       final StringWriter strWriter = new StringWriter();
-      
-      odt2tpl( odtFile, dest, strWriter );
-      
+
+      odt2tpl( odtFile, dest, strWriter, monitor );
+
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
       SetContentThread thread = new SetContentThread( tplFile, !tplFile
@@ -142,6 +140,7 @@ public class GrafikLauncher
   {
     try
     {
+      // create the grafik exe
       final File grafikExe = FileUtilities
           .makeFileFromStream(
               false,
@@ -151,8 +150,28 @@ public class GrafikLauncher
                   .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ),
               true );
 
+      // also create the help file if not already existing
+      final File grafikHelp = new File( grafikExe.getParentFile(),
+          FileUtilities.nameWithoutExtension( grafikExe.getName() ) + ".hlp" );
+      if( !grafikHelp.exists() )
+      {
+        final File tmp = FileUtilities
+            .makeFileFromStream(
+                false,
+                "grafik",
+                ".hlp",
+                ObservationTemplateHelper.class
+                    .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ),
+                true );
+
+        // the help must have the same name as the exe (except file-extension)
+        FileUtils.copyFile( tmp, grafikHelp );
+        tmp.delete();
+      }
+
       Runtime.getRuntime().exec(
-          grafikExe.getAbsolutePath() + " /V" + tplFile.getAbsolutePath() );
+          grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath()
+              + '"' );
     }
     catch( IOException e )
     {
@@ -166,10 +185,12 @@ public class GrafikLauncher
    * @param odtFile
    * @param dest
    * @param writer
+   * @param monitor
    * @throws SensorException
    */
   public static void odt2tpl( final IFile odtFile, final IFolder dest,
-      final Writer writer ) throws SensorException
+      final Writer writer, final IProgressMonitor monitor )
+      throws SensorException
   {
     InputStream ins = null;
 
@@ -189,6 +210,9 @@ public class GrafikLauncher
       final List tobsList = odt.getObservation();
       for( final Iterator ito = tobsList.iterator(); ito.hasNext(); )
       {
+        if( monitor.isCanceled() )
+          return;
+
         final TypeObservation tobs = (TypeObservation) ito.next();
 
         // maps obs axis to diag axis
@@ -240,7 +264,7 @@ public class GrafikLauncher
         final IFile datFile = dest.getFile( FileUtilities
             .nameWithoutExtension( zmlFile.getName() )
             + ".dat" );
-        zml2dat( obs, datFile, dateAxis, numberAxes, axisNames );
+        zml2dat( obs, datFile, dateAxis, numberAxes, axisNames, monitor );
 
         // adapt grafik-axis type according to real axis type (mapping)
         final String grafikType = GrafikYAchsen.axis2grafikType( numberAxes[0]
@@ -252,8 +276,8 @@ public class GrafikLauncher
         if( achse != null )
           grafikAxis = String.valueOf( achse.getId() );
 
-        final String title = zmlFile.getName() + (tobs.getTitle() != null ? tobs
-            .getTitle() : "");
+        final String title = zmlFile.getName()
+            + (tobs.getTitle() != null ? tobs.getTitle() : "");
 
         writer.write( ixObs++ + "- " + datFile.getName() + " J " + grafikType
             + " " + grafikAxis + " " + title + "\n" );
@@ -284,11 +308,12 @@ public class GrafikLauncher
    * @param dateAxis
    * @param numberAxes
    * @param axisNames
+   * @param monitor
    * @throws SensorException
    */
   private static void zml2dat( final IObservation obs, final IFile datFile,
-      final IAxis dateAxis, final IAxis[] numberAxes, final Map axisNames )
-      throws SensorException
+      final IAxis dateAxis, final IAxis[] numberAxes, final Map axisNames,
+      final IProgressMonitor monitor ) throws SensorException
   {
     try
     {
@@ -300,9 +325,9 @@ public class GrafikLauncher
           final ITuppleModel values = obs.getValues( null );
           for( int i = 0; i < values.getCount(); i++ )
           {
-            if( i == 305 )
-              System.out.println("foo");
-            
+            if( monitor.isCanceled() )
+              return;
+
             final Object elt = values.getElement( i, dateAxis );
             final String text = GRAFIK_DF.format( elt );
             writer.write( text );

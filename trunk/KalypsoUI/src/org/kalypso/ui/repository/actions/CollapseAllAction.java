@@ -12,7 +12,7 @@ public class CollapseAllAction extends AbstractRepositoryExplorerAction
   {
     super( explorer, "Alles reduzieren",
         ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE,
-        "Reduziert alle Zweige der Baum" );
+        "Reduziert alle Zweige des Baums" );
   }
 
   /**

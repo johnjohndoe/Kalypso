@@ -21,6 +21,12 @@ public interface IKalypsoPreferences
 
   /** name of the property where the client conf files can be found */
   public static final String CLIENT_CONF_URLS = "kalypso.client.conf";
+
+  /** width of the Observation chart when exporting as image */
+  public static final String CHART_EXPORT_WIDTH = "kalypso.chart.export.width";
+  
+  /** height of the Observation chart when exporting as image */
+  public static final String CHART_EXPORT_HEIGHT = "kalypso.chart.export.height";
   
   public static final String HTTP_PROXY_USE = "kalypso.http.proxy.use";
   public static final String HTTP_PROXY_HOST = "kalypso.http.proxy.host";

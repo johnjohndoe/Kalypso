@@ -62,6 +62,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
       protected void execute( IProgressMonitor monitor ) throws CoreException,
           InvocationTargetException, InterruptedException
       {
+        monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
         try
         {
           if( currentFile.getFileExtension().equalsIgnoreCase(
@@ -73,7 +74,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
             if( !folder.exists() )
               folder.create( true, true, new NullProgressMonitor() );
 
-            GrafikLauncher.startGrafikODT( currentFile, folder );
+            GrafikLauncher.startGrafikODT( currentFile, folder, monitor );
           }
           else if( currentFile.getFileExtension().equalsIgnoreCase(
               GrafikLauncher.TPL_FILE_EXTENSION ) )
@@ -86,6 +87,10 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
           e.printStackTrace();
           throw new CoreException( KalypsoGisPlugin.createErrorStatus(
               "Grafik konnte nicht gestartet werden", e ) );
+        }
+        finally
+        {
+          monitor.done();
         }
       }
     };

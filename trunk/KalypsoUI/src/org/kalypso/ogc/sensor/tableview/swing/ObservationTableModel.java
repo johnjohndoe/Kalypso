@@ -70,7 +70,8 @@ public class ObservationTableModel extends AbstractTableModel
       }
 
       // values of observation of the column
-      final ITuppleModel tupModel = col.getTheme().getObservation().getValues( col.getTheme().getArguments() );
+      final ITuppleModel tupModel = col.getTheme().getObservation().getValues(
+          col.getTheme().getArguments() );
 
       // fill shared column values
       for( int r = 0; r < tupModel.getCount(); r++ )
@@ -112,7 +113,7 @@ public class ObservationTableModel extends AbstractTableModel
     {
       if( m_columns.size() == 0 )
         return String.class;
-      
+
       if( columnIndex == 0 )
         return m_sharedAxis.getDataClass();
 
@@ -130,7 +131,7 @@ public class ObservationTableModel extends AbstractTableModel
     {
       if( m_columns.size() == 0 )
         return "Keine Daten vorhaden";
-      
+
       if( columnIndex == 0 )
         return m_sharedAxis.getName();
 
@@ -188,7 +189,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       rowIndex++; // fake, just to remove compile warnings
-      
+
       if( columnIndex == 0 )
         return false;
 
@@ -354,50 +355,89 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Creates a new ITuppleModel with the values for the given columns.
+   * Creates an ITuppleModel with the values of all columns and all rows.
    * 
-   * @param cols list of columns for which to create a tupple model.
+   * @return new model
+   */
+  public ITuppleModel getValues( )
+  {
+    return getValues( m_columns, null );
+  }
+
+  /**
+   * Creates an ITuppleModel with the values of the given columns and all rows.
    * 
+   * @param cols
    * @return new model
    */
   public ITuppleModel getValues( final List cols )
   {
+    return getValues( cols, null );
+  }
+
+  /**
+   * Creates an ITuppleModel with the values of all columns and the given rows.
+   * 
+   * @param rows
+   * @return new model
+   */
+  public ITuppleModel getValues( final int[] rows )
+  {
+    return getValues( m_columns, rows );
+  }
+
+  /**
+   * Creates an ITuppleModel with the values for the given columns and rows.
+   * 
+   * @param cols
+   *          list of columns for which to create a tupple model.
+   * @param rows
+   *          indices of rows to export
+   * 
+   * @return new model
+   */
+  public ITuppleModel getValues( final List cols, final int[] rows )
+  {
     final List axes = new ArrayList();
-    
+
     axes.add( m_sharedAxis );
-    
+
     final Iterator it = cols.iterator();
     while( it.hasNext() )
     {
       final ITableViewColumn col = (ITableViewColumn) it.next();
       axes.add( col.getAxis() );
     }
-    
+
     final SimpleTuppleModel model = new SimpleTuppleModel( axes );
 
     int rowIndex = 0;
     for( final Iterator ite = m_sharedModel.iterator(); ite.hasNext(); )
     {
-      final Object keyObj = ite.next();      
-      
-      final Vector tupple = new Vector( axes.size() );
-      
-      tupple.add( keyObj );
-      
-      for( final Iterator ita = cols.iterator(); ita.hasNext(); )
+      if( rows == null
+          || (rows != null && Arrays.binarySearch( rows, rowIndex ) >= 0) )
       {
-        final ITableViewColumn col= (ITableViewColumn) ita.next();
-        
-        final int colIndex = m_valuesModel.findColumn( col.getName() );
-        
-        tupple.add( m_valuesModel.getValueAt( rowIndex, colIndex ) );
+        final Object keyObj = ite.next();
+
+        final Vector tupple = new Vector( axes.size() );
+
+        tupple.add( keyObj );
+
+        for( final Iterator ita = cols.iterator(); ita.hasNext(); )
+        {
+          final ITableViewColumn col = (ITableViewColumn) ita.next();
+
+          final int colIndex = m_valuesModel.findColumn( col.getName() );
+
+          tupple.add( m_valuesModel.getValueAt( rowIndex, colIndex ) );
+        }
+
+        model.addTupple( tupple );
       }
-      
-      model.addTupple( tupple );
       
       rowIndex++;
     }
-    
+
     return model;
   }
 }

@@ -239,4 +239,12 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   {
     return m_dirty;
   }
+
+  /**
+   * @return chart
+   */
+  public ObservationChart getChart( )
+  {
+    return m_obsChart;
+  }
 }

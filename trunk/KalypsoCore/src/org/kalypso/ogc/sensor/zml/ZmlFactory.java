@@ -491,4 +491,16 @@ public class ZmlFactory
   {
     return OF.createUnmarshaller();
   }
+
+  /**
+   * @param axis
+   * @return valid parser for the given axis
+   * @throws FactoryException
+   */
+  public static IParser createParser( final IAxis axis ) throws FactoryException
+  {
+    final ParserFactory pf = getParserFactory();
+    
+    return pf.createParser( "JAVA_" + axis.getDataClass().getName(), null );
+  }
 }

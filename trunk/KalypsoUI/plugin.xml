@@ -350,6 +350,26 @@
                class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
                style="push"
                id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"/>
+         <action
+               toolbarPath="table"
+               label="Tabelle exportieren"
+               class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
+               icon="icons/gistable/export_wiz.gif"
+               tooltip="Exportiert die Tabelle"
+               style="push"
+               id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"/>
+      </editorContribution>
+      <editorContribution
+            targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
+            id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
+         <action
+               toolbarPath="diagram"
+               label="Diagramm exportieren"
+               class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
+               icon="icons/gistable/export_wiz.gif"
+               tooltip="Exportiert den aktuellen Diagramm als Bild"
+               style="push"
+               id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"/>
       </editorContribution>
    </extension>
    <extension
