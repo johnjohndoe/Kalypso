@@ -256,8 +256,8 @@ public class SpreeInputWorker
 
       try
       {
-        final IAxis dateAxis = ObservationUtilities.findAxis( axisList, Date.class )[0];
-        final IAxis valueAxis = ObservationUtilities.findAxis( axisList, Double.class )[0];
+        final IAxis dateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class )[0];
+        final IAxis valueAxis = ObservationUtilities.findAxisByClass( axisList, Double.class )[0];
 
         final Map dateToValueMap = new HashMap();
 
