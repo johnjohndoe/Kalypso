@@ -13,7 +13,6 @@
 	<property file="../KalypsoCoreServices/etc/ant/tomcat.properties" />
 
 	<path id="full.classpath">
-	    <fileset dir="./lib/" includes="*.jar" />
 	    <fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
 		<pathelement location="${build.proxy}" />
 		<pathelement location="${build}" />
@@ -33,7 +32,7 @@
 		<!-- schon in full.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
 	</path>
 
-	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
+	<fileset id="compile.jars" dir="../KalypsoCoreServices/lib" includes="*.jar" />
 
 	<taskdef name="wscompile"
 	         classpathref="ant.classpath"
@@ -211,6 +210,11 @@
 			<param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
 			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
 			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
+		</antcall>
+		<antcall target="package-a-project">
+			<param name="aproject_jar" value="KalypsoPSICompactAdapterCore.jar" />
+			<param name="aproject_bin" value="KalypsoPSICompactAdapterCore/build/bin" />
+			<param name="aproject_lib" value="KalypsoPSICompactAdapterCore/lib" />
 		</antcall>
 		<antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoCoreServices.jar" />

@@ -2,16 +2,19 @@ package org.kalypso.services.metadoc.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.metadoc.DocBean;
+import org.kalypso.services.metadoc.IMetaDocCommiter;
 import org.kalypso.services.metadoc.IMetaDocService;
 
 /**
@@ -22,10 +25,15 @@ import org.kalypso.services.metadoc.IMetaDocService;
 public class KalypsoMetaDocService implements IMetaDocService
 {
   private final static String PROP_PUBLISH_DIR = "PUBLISH_DIR";
+  private final static String PROP_COMMITER = "COMMITER";
 
+  private final File m_tmpDir;
+  
   private final Logger m_logger;
 
   private File m_publishDir;
+  
+  private IMetaDocCommiter m_commiter;
 
   /**
    * Constructs service instance
@@ -47,6 +55,9 @@ public class KalypsoMetaDocService implements IMetaDocService
       throw new RemoteException(
           "Exception in KalypsoMetaDocService.constructor()", e );
     }
+
+    m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
+    m_tmpDir.deleteOnExit();
 
     init();
   }
@@ -74,6 +85,7 @@ public class KalypsoMetaDocService implements IMetaDocService
       if( path == null )
         throw new IllegalStateException("Invalid configuration: publish-directory is null");
       
+      // look for the publish-directory
       m_publishDir = new File( path );
       if( !m_publishDir.exists() )
       {
@@ -85,6 +97,10 @@ public class KalypsoMetaDocService implements IMetaDocService
         
         m_logger.info( "Publish-directory <" + path + "> successfully created." );
       }
+
+      // try to instanciate our commiter
+      final String className = props.getProperty( PROP_COMMITER );
+      m_commiter = (IMetaDocCommiter) ClassUtilities.newInstance( className, IMetaDocCommiter.class, getClass().getClassLoader() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
@@ -109,13 +125,15 @@ public class KalypsoMetaDocService implements IMetaDocService
     final File f;
     try
     {
-      f = File.createTempFile( "doc", extension, m_publishDir );
+      f = File.createTempFile( "doc", extension, m_tmpDir );
 
       final DocBean db = new DocBean( f.getAbsolutePath() );
       
+      m_commiter.prepareMetainf( db );
+      
       return db;
     }
-    catch( IOException e )
+    catch( Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoMetaDocService", "prepareNewDocument", e );
 
@@ -124,11 +142,38 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
 
   /**
+   * @see org.kalypso.services.metadoc.IMetaDocService#rollbackNewDocument(org.kalypso.services.metadoc.DocBean)
+   */
+  public void rollbackNewDocument( final DocBean mdb ) throws RemoteException
+  {
+    final File f = new File( mdb.getLocation() );
+    
+    if( f.exists() )
+      f.delete();
+  }
+  
+  /**
    * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(org.kalypso.services.metadoc.DocBean)
    */
   public void commitNewDocument( final DocBean mdb ) throws RemoteException
   {
-    // TODO Auto-generated method stub
+    try
+    {
+      final File src = new File( mdb.getLocation() );
+      final File dest = new File( m_publishDir + File.separator + src.getName() );
+      
+      FileUtils.copyFileToDirectory( src, m_publishDir );
+      
+      // overwrite location
+      mdb.setLocation( dest.getAbsolutePath() );
+      
+      m_commiter.commitDocument( mdb );
+    }
+    catch( Exception e ) // generic exception caught for simplicity
+    {
+      m_logger.throwing( "KalypsoMetaDocService", "commitNewDocument", e );
 
+      throw new RemoteException( "commitNewDocument", e );
+    }
   }
 }

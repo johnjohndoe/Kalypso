@@ -4,17 +4,17 @@
 
 	<!-- this Project full path -->
 	<property name="project.path" value="${workspace}/KalypsoMetaDocService" />
-	
+
 	<!-- this Project properties -->
 	<property file="${project.path}/etc/ant/service.properties" />
-	
+
 	<!-- KalypsoCoreServices properties -->
 	<property file="../KalypsoCoreServices/etc/ant/build.properties" />
 	<property file="../KalypsoCoreServices/etc/ant/tomcat.properties" />
 
 	<path id="full.classpath">
-	    <fileset dir="./lib/" includes="*.jar" />
-	    <fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
+		<fileset dir="./lib/" includes="*.jar" />
+		<fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
 		<pathelement location="${build.proxy}" />
 		<pathelement location="${build}" />
 		<pathelement location="${workspace}/KalypsoCore/build/bin" />
@@ -23,26 +23,22 @@
 	</path>
 
 	<path id="ant.classpath">
-	    <fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
-	    <fileset dir="../KalypsoCoreServices/lib/build" includes="*.jar" />
+		<fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
+		<fileset dir="../KalypsoCoreServices/lib/build" includes="*.jar" />
 	</path>
 
 	<path id="compile.classpath">
-		<path refid="full.classpath"/>
+		<path refid="full.classpath" />
 		<!-- schon in build.properties pathelement location="${project.path}/build/bin" /-->
 		<!-- schon in full.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
 	</path>
 
 	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
 
-	<taskdef name="wscompile"
-	         classpathref="ant.classpath"
-	         classname="com.sun.xml.rpc.tools.ant.Wscompile">
+	<taskdef name="wscompile" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wscompile">
 	</taskdef>
 
-	<taskdef name="wsdeploy"
-	         classpathref="ant.classpath"
-	         classname="com.sun.xml.rpc.tools.ant.Wsdeploy">
+	<taskdef name="wsdeploy" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wsdeploy">
 	</taskdef>
 
 	<target name="prepare" description="Creates the build directory">
@@ -72,15 +68,11 @@
 	</target>
 
 	<!--  HIER GEHTS LOS -->
-	<target name="build"
-	        depends="build-client,build-war"
-	        description="Executes the targets needed to build the webservice and the client jar.">
+	<target name="build" depends="build-client,build-war" description="Executes the targets needed to build the webservice and the client jar.">
 	</target>
 
 	<!-- BUILD-WAR -->
-	<target name="build-war"
-	        depends="prepare,generate-wsdl"
-	        description="Runs wsdeploy to generate the ties and 
+	<target name="build-war" depends="prepare,generate-wsdl" description="Runs wsdeploy to generate the ties and 
                      create a deployable WAR file">
 
 		<echo message="Creating web.xml and jaxrpc.ri.xml..." />
@@ -91,13 +83,9 @@
 			</fileset>
 		</delete>
 
-		<echo message="${war.xml}"
-		      file="${build.web.inf}/web.xml"
-		      append="false" />
+		<echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
 
-		<echo message="${jaxrpc-ri.xml}"
-		      file="${build.web.inf}/jaxrpc-ri.xml"
-		      append="false" />
+		<echo message="${jaxrpc-ri.xml}" file="${build.web.inf}/jaxrpc-ri.xml" append="false" />
 
 		<!-- delete existing .wsdl file -->
 		<delete>
@@ -122,18 +110,14 @@
 
 		<!--delete file="${dist}/${deployable.war}" /-->
 
-		<wsdeploy verbose="true"
-		          outwarfile="${dist}/${deployable.war}"
-		          inwarfile="${java.io.tmpdir}/${portable.war}">
+		<wsdeploy verbose="true" outwarfile="${dist}/${deployable.war}" inwarfile="${java.io.tmpdir}/${portable.war}">
 			<classpath refid="compile.classpath" />
 		</wsdeploy>
-	  
+
 		<delete file="${java.io.tmpdir}/${portable.war}" />
 	</target>
 
-	<target name="generate-wsdl"
-	        depends="prepare,compile-services"
-	        description="Erzegt das wsld File aus dem Service-Interface">
+	<target name="generate-wsdl" depends="prepare,compile-services" description="Erzegt das wsld File aus dem Service-Interface">
 		<delete verbose="true" failonerror="false">
 			<fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
 		</delete>
@@ -144,15 +128,9 @@
 		<echo message="header: ${config.interface.header}" />
 		<echo message="body: ${config.interface.body}" />
 
-		<echo message="${config.interface.header}${config.interface.body}"
-		      file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
+		<echo message="${config.interface.header}${config.interface.body}" file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
 
-		<wscompile define="true"
-		           model="${build.web.inf}/${model.file}"
-		           base="${build.web.inf}"
-		           nonClassDir="${build.web.inf}"
-		           verbose="true"
-		           config="${java.io.tmpdir}config-interface/${config.interface.file}">
+		<wscompile define="true" model="${build.web.inf}/${model.file}" base="${build.web.inf}" nonClassDir="${build.web.inf}" verbose="true" config="${java.io.tmpdir}config-interface/${config.interface.file}">
 			<classpath refid="compile.classpath" />
 		</wscompile>
 
@@ -160,35 +138,25 @@
 
 	</target>
 
-	<target name="package-a-plugin"
-	        depends="prepare"
-	        description="Packt ein Plugin in ein jar und kopiert alle benötigten jars">
+	<target name="package-a-plugin" depends="prepare" description="Packt ein Plugin in ein jar und kopiert alle benötigten jars">
 		<echo message="packaging ${package_jar}..." />
-		<jar destfile="${build.web.lib}/${package_jar}"
-		     basedir="${workspace}/${package_bin}"
-		     includes="**/*" />
-	  
+		<jar destfile="${build.web.lib}/${package_jar}" basedir="${workspace}/${package_bin}" includes="**/*" />
+
 		<copy todir="${build.web.lib}" flatten="true">
 			<fileset dir="${workspace}/${package_lib}" includes="**/*.jar" />
 		</copy>
 	</target>
-	
-	<target name="package-a-project"
-		depends="prepare"
-		description="Packt ein Java-Project in ein Jar und kopiert die libs
+
+	<target name="package-a-project" depends="prepare" description="Packt ein Java-Project in ein Jar und kopiert die libs
 			Arguments: aproject_jar, aproject_bin, aproject_lib">
 		<echo message="packaging ${aproject_jar}..." />
-		<jar destfile="${build.web.lib}/${aproject_jar}"
-			basedir="${workspace}/${aproject_bin}"
-			includes="**/*"/>
+		<jar destfile="${build.web.lib}/${aproject_jar}" basedir="${workspace}/${aproject_bin}" includes="**/*" />
 		<copy todir="${build.web.lib}" flatten="true">
 			<fileset dir="${workspace}/${aproject_lib}" includes="**/*.jar" />
 		</copy>
 	</target>
 
-	<target name="compile-services"
-	        depends="prepare"
-	        description="Compiles the basic-source code">
+	<target name="compile-services" depends="prepare" description="Compiles the basic-source code">
 		<echo message="Compiling the source code...." />
 
 		<antcall target="package-a-plugin">
@@ -208,28 +176,28 @@
 			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
 		</antcall>
 		<antcall target="package-a-project">
+			<param name="aproject_jar" value="KalypsoPSICompactAdapterCore.jar" />
+			<param name="aproject_bin" value="KalypsoPSICompactAdapterCore/build/bin" />
+			<param name="aproject_lib" value="KalypsoPSICompactAdapterCore/lib" />
+		</antcall>
+		<antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoCoreServices.jar" />
 			<param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
 			<param name="aproject_lib" value="KalypsoCoreServices/lib" />
 		</antcall>
 
-</target>
+	</target>
 
 
 	<!-- BUILD-CLIENT -->
 
-	<target name="build-client"
-	        depends="generate-proxy"
-	        description="Erzegt die Bibliothek fuer den Client">
+	<target name="build-client" depends="generate-proxy" description="Erzegt die Bibliothek fuer den Client">
 
 		<tstamp>
 			<format property="TODAY_DE" pattern="d.M.yyyy" locale="de" />
 		</tstamp>
 
-		<pathconvert property="clientjar_cp"
-		             pathsep=" "
-		             refid="full.classpath"
-		             dirsep="/">
+		<pathconvert property="clientjar_cp" pathsep=" " refid="full.classpath" dirsep="/">
 			<map from="${basedir}" to="." />
 		</pathconvert>
 
@@ -245,17 +213,11 @@
 
 	</target>
 
-	<target name="generate-proxy"
-	        depends="generate-wsdl"
-	        description="Erzeugt die Proxy-Klassen aus der WSDL">
+	<target name="generate-proxy" depends="generate-wsdl" description="Erzeugt die Proxy-Klassen aus der WSDL">
 
-		<echo message="${config.wsdl.header}${config.wsdl.body}"
-		      file="${java.io.tmpdir}/${config.wsdl.file}" />
+		<echo message="${config.wsdl.header}${config.wsdl.body}" file="${java.io.tmpdir}/${config.wsdl.file}" />
 
-		<wscompile client="true"
-		           base="${build.proxy}"
-		           nonclassdir="${build.proxy}"
-		           config="${java.io.tmpdir}/${config.wsdl.file}">
+		<wscompile client="true" base="${build.proxy}" nonclassdir="${build.proxy}" config="${java.io.tmpdir}/${config.wsdl.file}">
 			<classpath refid="compile.classpath" />
 		</wscompile>
 
@@ -279,27 +241,13 @@
 	</target-->
 
 	<!-- Build and (re-)deploy service -->
-	<taskdef name="deploy"
-	         classname="org.apache.catalina.ant.DeployTask"
-	         classpathref="ant.classpath" />
-	<taskdef name="undeploy"
-	         classname="org.apache.catalina.ant.UndeployTask"
-	         classpathref="ant.classpath" />
-	<taskdef name="list"
-	         classname="org.apache.catalina.ant.ListTask"
-	         classpathref="ant.classpath" />
-	<taskdef name="start"
-	         classname="org.apache.catalina.ant.StartTask"
-	         classpathref="ant.classpath" />
-	<taskdef name="stop"
-	         classname="org.apache.catalina.ant.StopTask"
-	         classpathref="ant.classpath" />
-	<taskdef name="reload"
-	         classname="org.apache.catalina.ant.ReloadTask"
-	         classpathref="ant.classpath" />
-	<taskdef name="remove"
-	         classname="org.apache.catalina.ant.RemoveTask"
-	         classpathref="ant.classpath" />
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="ant.classpath" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="ant.classpath" />
+	<taskdef name="list" classname="org.apache.catalina.ant.ListTask" classpathref="ant.classpath" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpathref="ant.classpath" />
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpathref="ant.classpath" />
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="ant.classpath" />
+	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask" classpathref="ant.classpath" />
 
 
 	<target name="deploy" description="Deploys a Web application">
@@ -311,50 +259,34 @@
 		<echo message="PATH: /${service.name}" />
 		<echo message="WAR: ${war.path}" />
 
-		<deploy url="${tomcat.manager.url}"
-		        username="${tomcat.username}"
-		        password="${tomcat.password}"
-		        path="/${service.name}"
-		        war="${war.path}" />
+		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" war="${war.path}" />
 	</target>
 
 	<target name="undeploy" description="Undeploys a Web application">
 
 		<echo message="Undeploying the web application..." />
 
-		<undeploy url="${tomcat.manager.url}"
-		          username="${tomcat.username}"
-		          password="${tomcat.password}"
-		          path="/${service.name}" />
+		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
 	</target>
 
-	<target name="redeploy"
-	        description="Undeploys and deploys a Web aplication">
+	<target name="redeploy" description="Undeploys and deploys a Web aplication">
 		<antcall target="undeploy" />
 		<antcall target="deploy" />
 	</target>
 
 	<target name="list" description="Lists Web applications">
 		<echo message="Listing the applications...." />
-		<list url="${tomcat.manager.url}"
-		      username="${tomcat.username}"
-		      password="${tomcat.password}" />
+		<list url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" />
 	</target>
 
 	<target name="start" description="Starts a Web application">
 		<echo message="Starting the application...." />
-		<start url="${tomcat.manager.url}"
-		       username="${tomcat.username}"
-		       password="${tomcat.password}"
-		       path="/${service.name}" />
+		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
 	</target>
 
 	<target name="stop" description="Stops a Web application">
 		<echo message="Stopping the application...." />
-		<stop url="${tomcat.manager.url}"
-		      username="${tomcat.username}"
-		      password="${tomcat.password}"
-		      path="/${service.name}" />
+		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
 	</target>
 
 </project>
