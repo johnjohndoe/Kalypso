@@ -26,16 +26,26 @@
 		<ant antfile="${project.path}/deployable-services/build-KalypsoConf.xml" target="build-war" inheritAll="true" />
 	</target>
 	
-	<target name="zip-services-lfug" depends="prepare,echte-psicompact" description="copy all services.war to the deploy dir">
+	<target name="echte-psicompact" depends="prepare">
+		<copy file="${project.path}/deployable-services/echte-psicompact/PSICompact.jar"
+			  tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" 
+		      overwrite="true"/>
+	</target>
+			
+	<target name="zip-services-lfug" depends="prepare,echte-psicompact,build-services" description="copy all services.war to the deploy dir">
 		<echo message="Copying the wars to ${dist.services}" />
 
-		<copy tofile="${dist.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip"/>
-		<copy tofile="${dist.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"/>
-		<copy tofile="${dist.services}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip"/>
-		<copy tofile="${dist.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip"/>
+		<copy tofile="${dist.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true"/>
+		<copy tofile="${dist.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true"/>
+		<copy tofile="${dist.services}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip" overwrite="true"/>
+		<copy tofile="${dist.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true"/>
 	</target>
 
-	<target name="redeploy-services-bce" depends="prepare,build-services" description="redeploys all services">
+	<target name="fake-psicompact" depends="prepare" description="deploy the fake impl of psicompact into the KalypsoPSICompactAdapter libs">
+		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false"/>
+	</target>
+	
+	<target name="redeploy-services-bce" depends="prepare,fake-psicompact,build-services" description="redeploys all services">
 		<echo message="Redeploying all services"/>
 		
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
@@ -43,11 +53,5 @@
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
 		<ant antfile="${project.path}/deployable-services/build-KalypsoConf.xml" target="redeploy" inheritAll="true" />
-	</target>
-	
-	<target name="echte-psicompact" depends="prepare,build-services">
-		<echo message="Integriert die echte PSICompact.jar"/>
-		
-		<zip destfile="${dist.services}/Kalypso_CalculationService.war" update="true" basedir="${project.path}/deployable-services/echte-psicompact" includes="WEB-INF/lib/PSICompact.jar" />
 	</target>
 </project>
