@@ -89,7 +89,6 @@ public class Arrays
    * @param array
    * @param type
    * 
-   * @return
    */
   public static Object[] castArray( Object[] array, Object[] type )
   {
@@ -111,7 +110,6 @@ public class Arrays
    * 
    * @param ds
    * 
-   * @return
    */
   public static int indexOfMin( double[] ds )
   {
@@ -139,7 +137,6 @@ public class Arrays
    * 
    * @param is
    * 
-   * @return
    */
   public static int indexOfMin( int[] is )
   {
@@ -167,7 +164,6 @@ public class Arrays
    * 
    * @param is
    * 
-   * @return
    */
   public static int indexOfMax( int[] is )
   {
@@ -261,7 +257,6 @@ public class Arrays
    *          the value that will serve as upper bound when truncating. It will
    *          be added into the resulting array if it is not already inside
    * 
-   * @return
    */
   public static double[] truncSmaller( double[] arr, double value )
   {
@@ -304,7 +299,6 @@ public class Arrays
    *          the value that will serve as lower bound when truncating. It will
    *          be added into the resulting array if it is not already inside
    * 
-   * @return
    */
   public static double[] truncBigger( double[] arr, double value )
   {
@@ -338,11 +332,6 @@ public class Arrays
    * elements with separator. You can restrict the elements to fetch from the
    * array by setting from and to.
    * 
-   * @param array
-   * @param separator
-   * @param from
-   * @param to
-   * @return
    */
   public static String implode( String[] array, String separator, int from, int to )
   {
@@ -363,10 +352,6 @@ public class Arrays
    * If you call this method on a potentially unsorted array, it might not
    * change anything.
    * 
-   * @param da
-   * @param delta
-   * 
-   * @return
    */
   public static double[] removeDupicates( double[] da, double delta )
   {

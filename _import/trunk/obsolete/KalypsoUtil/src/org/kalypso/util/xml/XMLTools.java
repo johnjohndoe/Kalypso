@@ -6,7 +6,6 @@ package org.kalypso.util.xml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -166,98 +165,6 @@ public class XMLTools
      
     }
 
-    /*
-          public Post()
-          {
-          try
-          {
-          //                perform(getCapabilitiesURL,getCapabilitiesString);
-
-          //                perform(describeFeatureTypeURL,describeFeatureTypeString);
-
-          String transactionString=
-          transactionLeft
-          //                    + insertFeatureString
-          + updateFeatureString
-          //      + deleteFeatureString
-          +transactionRight;
-          perform(transactionURL,transactionString);
-
-          perform(getFeatureURL,getFeatureString);
-          }
-          catch(Exception e)
-          {
-          e.printStackTrace();
-          }
-          }
-    */
-    public static Document post( String url, String data )
-        throws Exception
-    {
-        return post( new URL( url ), data );
-    }
-
-    public static Document post( URL url, String data )
-        throws Exception
-    {
-        //	System.out.println("\n\n<!--\n "+url+"\n-->");
-        //	System.out.println("<!--\n"+data+"\n-->\n");
-        URLConnection connect = url.openConnection(  );
-
-        if( connect instanceof HttpURLConnection )
-        {
-            HttpURLConnection uc = (HttpURLConnection)connect;
-            uc.setRequestMethod( "POST" );
-            uc.setDoInput( true );
-            uc.setDoOutput( true );
-            uc.setUseCaches( false );
-
-            PrintWriter pw = new PrintWriter( uc.getOutputStream(  ) );
-            pw.print( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + data );
-            pw.flush(  );
-            pw.close(  );
-
-            /*                BufferedReader br=new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            String line;
-            while((line=br.readLine()) != null)
-                {
-                    System.out.println(line);
-                }
-            br.close();
-            */
-            /*
-              DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
-              DocumentBuilder docuBuilder=factory.newDocumentBuilder();
-              Document dom=docuBuilder.parse(uc.getInputStream());
-            */
-            return getAsDOM( uc.getInputStream(  ) );
-        }
-
-            throw new Exception( "uups, no http connection" );
-    }
-/*
-    public static NodeList reduceByAttribute( NodeList nl, String attributeName, String attributeValue )
-    {
-        NodeList result = new NodeList_Impl();
-
-        for( int i = 0; i < nl.getLength(  ); i++ )
-        {
-            try
-            {
-                NamedNodeMap nodeMap = nl.item( i ).getAttributes(  );
-
-                if( attributeValue.equals( nodeMap.getNamedItem( attributeName ).getNodeValue(  ) ) )
-                    result.add( nl.item( i ) );
-            }
-            catch( Exception e )
-            {
-                // nothing to do
-            }
-        }
-
-        return result;
-    }
-*/
     public static String toString( NodeList nl )
     {
         StringBuffer result = new StringBuffer(  );

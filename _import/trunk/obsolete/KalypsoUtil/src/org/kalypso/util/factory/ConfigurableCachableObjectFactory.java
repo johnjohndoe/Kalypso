@@ -66,6 +66,11 @@ public class ConfigurableCachableObjectFactory
   {
     return getObjectInstance( type, expected, null );
   }
+  
+  public boolean isTypeKnown( final String type )
+  {
+    return m_props.getProperty( type ) != null;
+  }
 
   /**
    * Erzeugt eine neue Instanz oder benutzt die bestehende Instanz aus dem
