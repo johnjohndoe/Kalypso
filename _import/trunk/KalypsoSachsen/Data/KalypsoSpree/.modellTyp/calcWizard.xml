@@ -8,7 +8,10 @@
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=nied#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=wsp#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=abgabe#nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=zugabe#nameColumn=Name#linkColumn=Zugabe"/>
     </page>
 
     <page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/boden.gif" >

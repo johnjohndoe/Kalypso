@@ -2,7 +2,7 @@
 <gismapview xmlns="gismapview.template.kalypso.org">
 	<extent bottom="50.99678799998588" left="14.340792728726877" right="14.986512202195462" top="51.53907066733935"/>
 	<layers>
-		<layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+		<layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="active_0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
 			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=styles/flusslaufmodelle.sld#STYLE=Flusslaufmodelle#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
 		<layer name="Gewässerverlauf" visible="true" id="1" linktype="shape" ns3:actuate="onRequest" ns3:href="SRS=EPSG:31469#PATH=shapes/schoeps_loebauer_wasser#SERVICE=RESOURCE#" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
