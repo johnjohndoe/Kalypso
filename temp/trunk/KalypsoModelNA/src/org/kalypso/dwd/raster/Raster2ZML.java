@@ -200,8 +200,8 @@ public class Raster2ZML
                 .getDefaultGeometryProperty().getCoordinateSystem());
         final DWDRaster bbox_GK_Raster = transformRaster(bbox_4326_Raster,
                 transformer);
-        final DWDRaster point_GK_Raster = transformRaster(point_4326_Raster,
-                transformer);
+//        final DWDRaster point_GK_Raster = transformRaster(point_4326_Raster,
+//                transformer);
         final DWDRaster fake_GK_Raster = createFakeRaster(point_4326_Raster,
                 FAKE_DENSITY, transformer);
 
@@ -242,8 +242,8 @@ public class Raster2ZML
     private DWDRaster createFakeRaster(DWDRaster pointGeoRaster, int max,
             GeoTransformer transformer) throws Exception
     {
-        double dx = rasterDX / (2d * ((double) max));
-        double dy = rasterDY / (2d * ((double) max));
+        double dx = rasterDX / (2d *  max);
+        double dy = rasterDY / (2d * max);
         final DWDRaster result = new DWDRaster(pointGeoRaster.getDate(),
                 KEY_HIGH_RESOTUTION);
         for (int i = 0; i < pointGeoRaster.size(); i++)
@@ -296,7 +296,7 @@ public class Raster2ZML
     }
 
     private void createTimserie(SortedMap timeserie, List posList, int rasterKey)
-            throws IOException
+            
     {
 
         final List rasters = (List) m_store.get(new Integer(rasterKey));
@@ -312,7 +312,7 @@ public class Raster2ZML
                 value += d;
             }
             final Date date = raster.getDate();
-            final double niederschlag = value / ((double) posList.size());
+            final double niederschlag = value /  posList.size();
             if (timeserie.containsKey(date))
             {
                 double newValue = niederschlag
@@ -339,8 +339,6 @@ public class Raster2ZML
     {
         DWDRaster rLat = (DWDRaster) m_store.get(new Integer(KEY_100000_LAT));
         DWDRaster rLon = (DWDRaster) m_store.get(new Integer(KEY_100000_LON));
-        List rRain = (List) m_store.get(new Integer(KEY_RAIN));
-        List rSnow = (List) m_store.get(new Integer(KEY_SNOW));
         int size = rLat.size();
 
         final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
