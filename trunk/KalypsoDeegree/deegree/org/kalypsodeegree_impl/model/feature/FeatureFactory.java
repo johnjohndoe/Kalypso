@@ -51,6 +51,8 @@ import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree_impl.model.feature.xlink.XLinkArc;
+import org.deegree_impl.model.feature.xlink.XLinkResource;
 import org.deegree_impl.model.geometry.GMLAdapter;
 import org.deegree_impl.tools.Debug;
 
@@ -160,7 +162,7 @@ public class FeatureFactory
       FeatureProperty[] properties )
   {
     Debug.debugMethodBegin();//this, "createFeature(String , FeatureType ,
-                             // FeatureProperty[])" );
+    // FeatureProperty[])" );
 
     Object[] o = new Object[properties.length];
     FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -228,7 +230,7 @@ public class FeatureFactory
     return feature;
   }
 
-  // todo: suggest to deegree-mailinglist
+  // TODO: suggest to deegree-mailinglist
   public static Feature createFeature( GMLFeature gmlFeature, FeatureType featureTypes[] )
       throws Exception
   {
@@ -264,16 +266,13 @@ public class FeatureFactory
     for( int p = 0; p < gmlProps.length; p++ )
     {
       GMLProperty gmlProp = gmlProps[p];
-      //		System.out.println("property["+p+"].getName(): "+gmlProp.getName());
+
       FeatureTypeProperty ftp = featureType.getProperty( gmlProp.getName() );
       if( ftp == null )
         throw new Exception( "property '" + gmlProp.getName() + "' not defined in schema" );
-      Object o = gmlProp.getPropertyValue();
-      //		System.out.println("created FeatureTypeProperty of class before
-      // wrap:"+o.getClass().toString());
-      o = wrap( ftp, o );
-      //		System.out.println("created FeatureTypeProperty of
-      // class"+o.getClass().toString());
+
+      Object o = wrap( ftp, gmlProp );
+
       fp[p] = createFeatureProperty( gmlProp.getName(), o );
     }
     String id = gmlFeature.getId();
@@ -282,8 +281,47 @@ public class FeatureFactory
     return feature;
   }
 
-  private static Object wrap( FeatureTypeProperty ftp, Object o ) throws Exception
+  private static Object wrap( FeatureTypeProperty ftp, GMLProperty gmlProperty ) throws Exception
   {
+    if( ftp instanceof XLinkFeatureTypeProperty )
+      return wrapXLink( (XLinkFeatureTypeProperty)ftp, gmlProperty );
+     return wrapNOXLink( ftp, gmlProperty );
+  }
+
+  private static Object wrapXLink( XLinkFeatureTypeProperty propType, GMLProperty gmlProperty )
+  {
+    Object value = null;
+    // TODO support xlink:actuate=onLoad
+    switch( propType.getXLinkType() )
+    {
+    case XLinkFeatureTypeProperty.XLINK_SIMPLE:
+    case XLinkFeatureTypeProperty.XLINK_LOCATOR:
+      //
+      value = gmlProperty.getAttributeValue("http://www.w3.org/1999/xlink","href");
+    break;
+    case XLinkFeatureTypeProperty.XLINK_EXTENDED:
+      //TODO
+      break;
+    case XLinkFeatureTypeProperty.XLINK_RESOURCE:
+      value = new XLinkResource();
+      //TODO
+      break;
+    case XLinkFeatureTypeProperty.XLINK_ARC:
+      value = new XLinkArc( propType.getLabelFrom(), propType.getLabelTo() );
+      break;
+    default:
+      break;
+    }
+    
+    return value;
+
+  }
+
+  private static Object wrapNOXLink( FeatureTypeProperty ftp, GMLProperty gmlProperty )
+      throws Exception
+  {
+
+    Object o = gmlProperty.getPropertyValue();
     if( o == null )
     {
       if( ftp.isNullable() )

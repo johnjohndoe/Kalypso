@@ -269,6 +269,7 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
         //    	if ( feature.getId() != null ) {
         //    		removeFeature( feature.getId() );
         //    	}
+     
         Element elem = element.getOwnerDocument()
                               .createElementNS( GMLGeometricMapping.GMLNS, "gml:featureMember" );
         element.appendChild( elem );
@@ -364,8 +365,11 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
  * Changes to this class. What the people haven been up to:
  *
  * $Log$
- * Revision 1.1  2004/05/11 16:43:24  doemming
- * Initial revision
+ * Revision 1.2  2004/08/11 11:20:16  doemming
+ * *** empty log message ***
+ *
+ * Revision 1.1.1.1  2004/05/11 16:43:24  doemming
+ * backup of local modified deegree sources
  *
  * Revision 1.6  2004/02/23 07:47:48  poth
  * no message
