@@ -53,6 +53,8 @@ public class FileRepository extends AbstractRepository
     if( !m_root.exists() )
       throw new IllegalArgumentException(
           "Location existiert nicht! (Location: " + location + ")" );
+    
+    
   }
 
   /**

@@ -83,7 +83,7 @@ public class FileUtilities
       catch( final FileNotFoundException ignored )
       {
         // ignored
-        ignored.printStackTrace();
+        //ignored.printStackTrace();
       }
     }
 

@@ -25,6 +25,8 @@ public interface ICommandManager
 {
   /**
    * Fügt ein Kommando zum Manager hinzu. Ruft {@link ICommand#process()}auf.
+   * @param command
+   * @throws Exception
    */
   public void postCommand( final ICommand command ) throws Exception;
 
