@@ -287,6 +287,26 @@ public class ViewManager
 		//WaitingThread waitThread = new WaitingThread();
 		//waitThread.start();
 
+		final Component gp_Component = this.getGlassPane();
+		gp_Component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		gp_Component.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				//System.out.println("GlassPane: MouseClicked");
+			}
+			public void mouseEntered(MouseEvent e) {
+			}
+			public void mouseExited(MouseEvent e) {
+			}
+			public void mousePressed(MouseEvent e) {
+			}
+			public void mouseMoved(MouseEvent e) {
+			}
+			public void mouseDragged(MouseEvent e) {
+			}
+			public void mouseReleased(MouseEvent e) {
+			}
+		});
+
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -301,17 +321,18 @@ public class ViewManager
 					}
 				} catch (Exception error) {
 					WaitingDialog.waitingDialogDispose();
-					setCursor(Cursor.getDefaultCursor());
+					gp_Component.setVisible(false);
 				}
 				WaitingDialog.waitingDialogDispose();
-				setCursor(Cursor.getDefaultCursor());
+				gp_Component.setVisible(false);
 			}
 		});
 		t.start();
 		WaitingDialog waitDialog = WaitingDialog.getInstance();
 		//desktop.add(waitDialog);
 		//waitDialog.moveToFront();
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		gp_Component.setVisible(true);
 		/*System.out.println("New ProjectView."); 
 		String title = I18n.get("windowTitlePV");
 		boolean open = isViewOpen(title);
@@ -326,7 +347,7 @@ public class ViewManager
 		//setCursor(Cursor.getDefaultCursor());
 		//repaint();
 		//waitThread.cancel();
-	
+
 	}
 
 	public void xmlImport(String themeKey, Object vId, File file) {
