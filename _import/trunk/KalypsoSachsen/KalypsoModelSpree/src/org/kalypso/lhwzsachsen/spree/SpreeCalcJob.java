@@ -364,9 +364,9 @@ public class SpreeCalcJob extends AbstractCalcJob
     {
       final Feature napFeature = (Feature)iter.next();
       final Feature gmlFeature = gmlFeatures[i];
-      
+
       final Double gmlValue = (Double)gmlFeature.getProperty( FEATURE_PROP_BODENFEUCHTE );
-      if( Math.abs( gmlValue.doubleValue() ) < 0.01 )
+      if( gmlValue == null || Math.abs( gmlValue.doubleValue() ) < 0.01 )
       {
         final double optimalValue = ((Double)napFeature.getProperty( "VORFEUCHTE" )).doubleValue();
 

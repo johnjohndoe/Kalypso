@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.pegel" version="0.1" xmlns:obslink="obslink.zml.kalypso.org" xmlns:pegel="org.kalypso.saale.pegel" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="basis/obslink.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+	<element name="PegelCollectionAssociation" type="pegel:PegelCollectionAssociationType"/>
+	<complexType name="PegelCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="pegel:PegelCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="PegelCollection" type="pegel:PegelCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<complexType name="PegelCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element ref="gml:boundedBy"/>
+					<element ref="pegel:PegelMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="PegelMember" type="pegel:PegelAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="PegelAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="pegel:Pegel"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Pegel" abstract="false" type="pegel:PegelType" substitutionGroup="gml:_Feature"/>
+	<complexType name="PegelType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Messstellennummer" type="string"/>
+					<element name="Name" type="string"/>
+					<element name="Gewässer" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Lage</label>
+								<tooltip>Lage des Pegels</tooltip>
+								<description>Die geografische Lage des Pegels.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="gml:location"/>
+					<element name="Durchfluss_eingabe" type="obslink:TimeseriesLinkType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
