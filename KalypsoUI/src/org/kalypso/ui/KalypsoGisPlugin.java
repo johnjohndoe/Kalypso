@@ -101,9 +101,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
 
   private String[] m_userRights;
 
-  //  private static final String DEFAULT_CRS = "EPSG:4326";
+//    private static final String DEFAULT_CRS = "EPSG:4326";
   private static final String DEFAULT_CRS = "EPSG:31469";
-
+// TODO put definition in preferences dialog
+  // TODO add crs attribute in boundingbox of *.gmt files 
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
