@@ -42,9 +42,6 @@ public class UrlResolver implements IUrlResolver
       return new URL( projectURL + "/" + relPath );      
     }
     
-//    if( relativeURL.startsWith( "?" ) )
-//      return new URL( relativeURL );
-    
     return new URL( baseURL, relativeURL );
   }
 
