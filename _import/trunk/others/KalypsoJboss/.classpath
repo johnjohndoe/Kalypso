@@ -13,9 +13,7 @@
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwslogistics-ejb.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwssystem-ejb.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/hwsszenario-ejb.jar"/>
-	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/javaGis1-ejb.jar"/>
-	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/javaGis2-ejb.jar"/>
-	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/javaGis3-ejb.jar"/>
+	<classpathentry kind="lib" path="src/kalypso-client/bin/ejb_NA_SimulationCase-ejb.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/jbcl.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/jbossall-client.jar"/>
 	<classpathentry kind="lib" path="src/kalypso-client/bin/kalypsoSymbols.jar"/>
@@ -23,12 +21,14 @@
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/openroad.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/kalypso-client/bin/deegree/lib/deegree109.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xdoclet.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xercesSamples.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xmlParserAPIs.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xt.jar"/>
 	<classpathentry sourcepath="/home/sbad0205/api/apache-ant-1.6.2-src.zip" kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/j2ee.jar"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
+	<classpathentry kind="lib" path="src/kalypso-client/bin/ejb_NA_Modell-ejb.jar"/>
+	<classpathentry kind="lib" path="src/kalypso-client/bin/ejb_NA_Control-ejb.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/xercesSamples.jar"/>
+	<classpathentry kind="lib" path="lib/xmlParserAPIs.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>
