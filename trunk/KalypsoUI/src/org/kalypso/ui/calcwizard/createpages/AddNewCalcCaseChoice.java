@@ -136,7 +136,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
 
-    ModelNature.createCalculationCaseInFolder( calcCaseFolder, monitor );
+    nature.createCalculationCaseInFolder( calcCaseFolder, monitor );
 
     return calcCaseFolder;
   }

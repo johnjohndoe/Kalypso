@@ -25,6 +25,7 @@ import javax.xml.rpc.ServiceException;
 import org.apache.commons.io.CopyUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
+import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.gml.schema.Mapper;
 import org.eclipse.core.resources.IContainer;
@@ -233,9 +234,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return ( calcFile != null && calcFile.exists() && calcFile instanceof IFile );
   }
 
-  public static CalcCaseConfigType readCalcCaseConfig( final IFolder folder ) throws CoreException
+  public CalcCaseConfigType readCalcCaseConfig( final IFolder folder ) throws CoreException
   {
-    final IProject project = folder.getProject();
+    final IProject project = getProject();
 
     final IFile tranformerConfigFile = project.getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
     try
@@ -267,8 +268,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   }
 
   /** Erzeugt einen neuen Rechenfall im angegebenen Ordner */
-  public static void createCalculationCaseInFolder( final IFolder folder,
-      final IProgressMonitor monitor ) throws CoreException
+  public void createCalculationCaseInFolder( final IFolder folder, final IProgressMonitor monitor )
+      throws CoreException
   {
     monitor.beginTask( "Rechenfall erzeugen", 2000 );
 
@@ -307,7 +308,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * 
    * @throws CoreException
    */
-  public static void updateCalcCase( final IFolder folder, final IProgressMonitor monitor )
+  public void updateCalcCase( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
     monitor.beginTask( "Rechenfall aktualisieren", 2000 );
@@ -319,7 +320,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       monitor.worked( 1000 );
 
-      // daten transformieren
+      // Daten transformieren
       TransformationHelper.doTranformations( trans.getUpdateTransformations(),
           new SubProgressMonitor( monitor, 1000 ) );
     }
@@ -340,8 +341,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     monitor.done();
   }
 
-  private static void configureReplaceTokensForCalcCase( final IFolder calcFolder,
-      final ReplaceTokens replaceTokens )
+  /**
+   * fügt eine Reihe von Tokens zum ReplaceToken hinzu. Unter anderem für
+   * :project: etc Ausserdem werden die Start, Mittel und Endzeit der Simulation
+   * aus dem Rechenfall Verzeichnis ausgelesen (.calculation) und als Token
+   * hinzugefgügt.
+   */
+  private void configureReplaceTokensForCalcCase( final IFolder calcFolder,
+      final ReplaceTokens replaceTokens ) throws CoreException
   {
     replaceTokens.setBeginToken( ':' );
     replaceTokens.setEndToken( ':' );
@@ -364,6 +371,42 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     projectToken.setValue( calcFolder.getProject().getFullPath().toString() + "/" );
 
     replaceTokens.addConfiguredToken( projectToken );
+
+    // jetzt werte aus der .calculation des aktuellen Rechenfalls lesen und
+    // bestimmte Werte
+    // zum Ersetzen auslesen
+
+    final GMLWorkspace workspace = loadOrCreateControl( calcFolder );
+    if( workspace != null )
+    {
+      final Feature rootFeature = workspace.getRootFeature();
+      final Date startSim = (Date)rootFeature.getProperty( "startsimulation" );
+      final String startSimString = Mapper.mapJavaValueToXml( startSim, "dateTime" );
+      final Token startSimToken = new ReplaceTokens.Token();
+      startSimToken.setKey( "startsim" );
+      startSimToken.setValue( startSimString );
+      replaceTokens.addConfiguredToken( startSimToken );
+
+      final Date startForecast = (Date)rootFeature.getProperty( "startforecast" );
+      final String startForecastString = Mapper.mapJavaValueToXml( startForecast, "dateTime" );
+      final Token startForecastToken = new ReplaceTokens.Token();
+      startForecastToken.setKey( "startforecast" );
+      startForecastToken.setValue( startForecastString );
+      replaceTokens.addConfiguredToken( startForecastToken );
+
+      // TODO: ziemlicher hack für den Endzeitpunkt: er ist immer fix
+      // 48 Stunden nach dem startzeitpunkt
+      final Calendar cal = Calendar.getInstance();
+      cal.setTime( startForecast );
+      cal.add( Calendar.HOUR_OF_DAY, 48 );
+
+      final Date endSim = cal.getTime();
+      final String endSimString = Mapper.mapJavaValueToXml( endSim, "dateTime" );
+      final Token endSimToken = new ReplaceTokens.Token();
+      endSimToken.setKey( "endsim" );
+      endSimToken.setValue( endSimString );
+      replaceTokens.addConfiguredToken( endSimToken );
+    }
   }
 
   public String getCalcType() throws CoreException
@@ -513,8 +556,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IFile targetfile = targetfolder.getFile( beanPath );
       FolderUtilities.mkdirs( targetfile.getParent() );
-      if(targetfile.exists()) // loeschen, auch wenn er gerade geladen ist
-        targetfile.delete(true, false, new NullProgressMonitor() );
+      if( targetfile.exists() ) // loeschen, auch wenn er gerade geladen ist
+        targetfile.delete( true, false, new NullProgressMonitor() );
       System.out.println( "Write: " + serverfile.getAbsolutePath() );
       final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
           new NullProgressMonitor() )
@@ -602,12 +645,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IUrlResolver configureTokensForcontrol() throws CoreException
   {
     final IUrlResolver urlResolver = new UrlResolver();
-    
-    final String user = System.getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
+
+    final String user = System
+        .getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
     urlResolver.addReplaceToken( "user", user );
 
     final Date now = new Date();
-    
+
     urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now, "dateTime" ) );
 
     // auf x stunden vorher runden! hängt von der Modellspec ab
@@ -617,51 +661,59 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     cal.set( Calendar.MINUTE, 0 );
     cal.set( Calendar.SECOND, 0 );
     cal.set( Calendar.MILLISECOND, 0 );
-    
-    // jetzt solange ganze stunden abziehen, bis der Wert ins Zeitvalidierungsschema passt
+
+    // jetzt solange ganze stunden abziehen, bis der Wert ins
+    // Zeitvalidierungsschema passt
     int count = 0;
     while( !validateTime( cal ) )
     {
       cal.add( Calendar.HOUR_OF_DAY, -1 );
-      
+
       // nach 24h spätestens abbrechen!
       count++;
       if( count == 24 )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal, null ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+            "Zeit konnte nicht vailidiert werden: " + cal, null ) );
     }
-    
+
     final Date forecastTime = cal.getTime();
-    urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml( forecastTime, "dateTime" ) );
+    urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml( forecastTime,
+        "dateTime" ) );
 
     // standardzeit abziehen
-    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
+    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) )
+        .intValue();
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
     final Date simTime = cal.getTime();
     urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime, "dateTime" ) );
-    
+
     return urlResolver;
   }
 
-  /** stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt */
+  /**
+   * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der
+   * Prognose handelt
+   */
   private boolean validateTime( final Calendar cal )
   {
     // todo: wäre schöner, wenn das besser parametrisiert werden könnte
     // z.B. ein Groovy-Skript aus der Modelspec o.ä.
-    final String validHours = m_metadata.getProperty( META_PROP_VALID_HOURS, "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" );
-    
+    final String validHours = m_metadata.getProperty( META_PROP_VALID_HOURS,
+        "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" );
+
     final int hour = cal.get( Calendar.HOUR_OF_DAY );
-    
-    return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1 ;
+
+    return ( " " + validHours + " " ).indexOf( " " + hour + " " ) != -1;
   }
 
-  public void runCalculation( final IFolder folder, final IProgressMonitor monitor)
+  public void runCalculation( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true  );
+    runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true );
   }
 
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor,
-      final String modelSpec,boolean clearResults ) throws CoreException
+      final String modelSpec, boolean clearResults ) throws CoreException
   {
     if( modelSpec == null )
     {
@@ -787,7 +839,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         // Ergebniss abholen
         final CalcJobDataBean[] results = jobBean.getResults();
         final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
-        if(clearResults && outputfolder.exists() ) 
+        if( clearResults && outputfolder.exists() )
           outputfolder.delete( false, false, new NullProgressMonitor() );
 
         final File serveroutputdir = new File( jobBean.getBasedir(),
