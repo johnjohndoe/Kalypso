@@ -1,103 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Andreas (TU) -->
-<schema targetNamespace="http://www.tuhh.de/kalypsoSpree" version="0.9" xmlns:na="http://www.tuhh.de/kalypsoSpree"
-    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema">
-    <import namespace="http://www.opengis.net/gml" schemaLocation="..\gml\2\feature.xsd"/>
-    <element name="SpreeModell" type="na:_SpreeModellType" substitutionGroup="gml:_FeatureCollection"/>
-    <element name="Einzugsgebiet" type="na:_EinzugsgebietType" substitutionGroup="gml:_Feature"/>
-   
-    <complexType name="_EinzugsgebietType">
-        <complexContent>
-            <extension base="gml:AbstractFeatureType">
-                <sequence>
-                    <element ref="na:Name"/>
-                    <element ref="na:Ort"/> 
-                    <element ref="na:BodenfeuchteMin"/>
-                    <element ref="na:Bodenfeuchte"/>
-                    <element ref="na:BodenfeuchteMax"/>
-                    <element ref="na:Ausdehnung"/>
-                    <element ref="na:Niederschlagsprognose"/>
-                </sequence>
-            </extension>
-        </complexContent>
-    </complexType>
-
-    <element name="Name" type="string"/>
-    <element name="BodenfeuchteMin" type="double"/>
-    <element name="Bodenfeuchte" type="double"/>
-    <element name="BodenfeuchteMax" type="double"/>
-    <element name="Niederschlagsprognose" type="string"/> <!-- TODO link auf Zeitreihe-->
-    <element name="Ausdehnung" type="gml:PolygonPropertyType" substitutionGroup="gml:polygonProperty"/>
-
-    <element name="Flusslaufmodell" type="na:_FlusslaufModellType" substitutionGroup="gml:_Feature"/>
-    <complexType name="_FlusslaufModellType">
-        <complexContent>
-            <extension base="gml:AbstractFeatureType">
-                <sequence>
-                    <element ref="na:Name"/>
-                    <element ref="na:Ort"/>
-                    <element ref="na:Korrektur_Faktor"/>
-                    <element ref="na:Korrektur_Niveau"/>
-                    <element ref="na:Korrektur_Laufzeit"/>
-                    <element ref="na:KorrekturEmpfehlungLaufzeit"/>
-                    <element ref="na:Wasserstand"/>
-                </sequence>
-            </extension>
-        </complexContent>
-    </complexType>
-   
-
-    <element name="Korrektur_Faktor" type="double"/>
-    <element name="Korrektur_Niveau" type="double"/>
-    <element name="Korrektur_Laufzeit" type="double"/>
-    <element name="KorrekturEmpfehlungLaufzeit" type="double"/>
-    <element name="Wasserstand" type="string"/> <!-- TODO link auf Zeitreihe-->
-    <element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
-
-
-    <element name="Talsperre" type="na:_TalsperrenType" substitutionGroup="gml:_Feature"/>
-    <complexType name="_TalsperrenType">
-        <complexContent>
-            <extension base="gml:AbstractFeatureType">
-                <sequence>
-                    <element ref="na:Name"/>
-                    <element ref="na:Anfangsvolumen"/>
-                    <element ref="na:Abgabe"/>
-                    <element ref="na:Ort"/> 
-                 </sequence>
-        </extension>
-        </complexContent>
-     </complexType>
-    <element name="Anfangsvolumen" type="double"/>
-    <element name="Abgabe" type="string"/> <!-- TODO link auf Zeitreihe-->
-   
-   
- 
-    <element name="Flutung" type="na:_FlutungType" substitutionGroup="gml:_Feature"/>
-    <complexType name="_FlutungType">
-        <complexContent>
-            <extension base="gml:AbstractFeatureType">
-                <sequence>
-                    <element ref="na:Name"/>
-                    <element ref="na:Abgabe"/>
-                    <element ref="na:Ort"/> 
-                 </sequence>
-        </extension>
-     </complexContent>
-     </complexType>
-   
-    <element name="Zufluss" type="na:_ZuflussType" substitutionGroup="gml:_Feature"/>
-    <complexType name="_ZuflussType">
-        <complexContent>
-            <extension base="gml:AbstractFeatureType">
-                <sequence>
-                    <element ref="na:Name"/>
-                    <element ref="na:Zugabe"/>
-                    <element ref="na:Ort"/> 
-                 </sequence>
-        </extension>
-     </complexContent>
-     </complexType>
- 
-    <element name="Zugabe" type="string"/> <!-- TODO link auf Zeitreihe-->
-  </schema>
+<schema targetNamespace="http://www.tuhh.de/kalypsoSpree" version="0.9" xmlns:na="http://www.tuhh.de/kalypsoSpree" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="..\gml\2\feature.xsd"/>
+	<element name="SpreeModell" type="na:_SpreeModellType" substitutionGroup="gml:_FeatureCollection"/>
+	<element name="Einzugsgebiet" type="na:_EinzugsgebietType" substitutionGroup="gml:_Feature"/>
+	<complexType name="_EinzugsgebietType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="na:Name"/>
+					<element ref="na:Ort"/>
+					<element ref="na:BodenfeuchteMin"/>
+					<element ref="na:Bodenfeuchte"/>
+					<element ref="na:BodenfeuchteMax"/>
+					<element ref="na:Ausdehnung"/>
+					<element ref="na:Niederschlagsprognose"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Name" type="string"/>
+	<element name="BodenfeuchteMin" type="double"/>
+	<element name="Bodenfeuchte" type="double"/>
+	<element name="BodenfeuchteMax" type="double"/>
+	<element name="Niederschlagsprognose" type="string"/>
+	<!-- TODO link auf Zeitreihe-->
+	<element name="Ausdehnung" type="gml:PolygonPropertyType" substitutionGroup="gml:polygonProperty"/>
+	<element name="Flusslaufmodell" type="na:_FlusslaufModellType" substitutionGroup="gml:_Feature"/>
+	<complexType name="_FlusslaufModellType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="na:Name"/>
+					<element ref="na:Ort"/>
+					<element ref="na:Korrektur_Faktor"/>
+					<element ref="na:Korrektur_Niveau"/>
+					<element ref="na:Korrektur_Laufzeit"/>
+					<element ref="na:KorrekturEmpfehlungLaufzeit"/>
+					<element ref="na:Wasserstand"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Korrektur_Faktor" type="double"/>
+	<element name="Korrektur_Niveau" type="double"/>
+	<element name="Korrektur_Laufzeit" type="double"/>
+	<element name="KorrekturEmpfehlungLaufzeit" type="double"/>
+	<element name="Wasserstand" type="string"/>
+	<!-- TODO link auf Zeitreihe-->
+	<element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
+	<element name="Talsperre" type="na:_TalsperrenType" substitutionGroup="gml:_Feature"/>
+	<complexType name="_TalsperrenType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="na:Name"/>
+					<element ref="na:Anfangsvolumen"/>
+					<element ref="na:Abgabe"/>
+					<element ref="na:Ort"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Anfangsvolumen" type="double"/>
+	<element name="Abgabe" type="string"/>
+	<!-- TODO link auf Zeitreihe-->
+	<element name="Flutung" type="na:_FlutungType" substitutionGroup="gml:_Feature"/>
+	<complexType name="_FlutungType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="na:Name"/>
+					<element ref="na:Abgabe"/>
+					<element ref="na:Ort"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Zufluss" type="na:_ZuflussType" substitutionGroup="gml:_Feature"/>
+	<complexType name="_ZuflussType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="na:Name"/>
+					<element ref="na:Zugabe"/>
+					<element ref="na:Ort"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Zugabe" type="string"/>
+	<!-- TODO link auf Zeitreihe-->
+</schema>
