@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   WMS Client Configuration XML configuration document for the
+   deegree WMS client. One client instance can use more than
+   one configuration to realize different options to different
+   users. On one hand this offeres the possibilits of user/right
+   depending client creation on the other hand it is possible to
+   offer the option to each user to define its 'own' client that
+   can be store at the server. Each time the user request the client,
+   his last configuration will be recalled.
+   TODO: have a at the OGC client specs/discussion paper
+   author: Andreas Poth	poth@lat-lon.de
+   version: 2003-06-21
+-->
+<WMSClientConfiguration>
+  <!-- list of OGC WebMapServices known by the client -->
+  <KnownWMS>
+    <WMS>
+      <ID>deegree</ID>
+      <CapabilitiesURL><![CDATA[http://127.0.0.1:8080/deegreewms/wms?service=WMS&version=1.1.1&request=GetCapabilities]]></CapabilitiesURL>
+    </WMS>
+  </KnownWMS>
+  <!-- configuration options that may be offered to the user -->
+  <!-- -->
+  <!-- map sizes offered to the user by the client. A value = '*' indicates
+       that a field shall be presented to the user to enter any value that
+       is > 0 and <= the maximum map size the WMS accepts
+       default = 600x400
+  -->
+  <OfferedMapSize>
+    <MapSize width="200" height="200" />
+      <MapSize width="600" height="400"/>
+	<MapSize width="450" height="450" selected="true"/>
+	  <MapSize width="1000" height="600"/>
+	    <MapSize width="*" height="*"/>
+  </OfferedMapSize>
+  <!--
+  list of images formats offered to the user. the administrator of the WMS
+  client have make sure that each WMS that is registered to the client is
+  able the serve the offered formats
+  default = image/jpg
+  -->
+  <OfferedMapFormats>
+    <Format>image/jpg</Format>
+    <Format>image/gif</Format>
+    <Format selected="true">image/png</Format>
+    <Format>image/tif</Format>
+  </OfferedMapFormats>
+  <!--
+  list of formats offered to the user for GetFeatureInfo requests. The
+  administrator of the WMS client have make sure that each WMS that is
+  registered to the client is able the serve the offered formats
+  default =  text/html
+  -->
+  <OfferedInfoFormats>
+    <Format>application/vnd.ogc.gml</Format>
+    <Format selected="true">text/html</Format>
+  </OfferedInfoFormats>
+  <!-- operations offerd to the user, the orde of the list below defines
+       the order of the GUI elements at the client/browser
+  default = zoomin, zoomout, pan, recenter, refresh, info -->
+  <OfferedMapOperations>
+    <Operation selected="true">ZOOMIN</Operation>
+    <Operation>ZOOMOUT</Operation>
+    <Operation>PAN</Operation>
+    <Operation>RECENTER</Operation>
+    <Operation>INFO</Operation>
+    <Operation>REFRESH</Operation>
+    <Operation>RESET</Operation>
+  </OfferedMapOperations>
+  <!--
+  list of available factors (%) a map will be increased, descreased by a
+  zoom operation. The value '*' indicates that the user will have the
+  option to choose any value he likes
+  default = 5,15,25
+  -->
+  <OfferedZoomFactor>
+    <Factor>5</Factor>
+    <Factor>15</Factor>
+    <Factor selected="true">25</Factor>
+    <Factor>*</Factor>
+  </OfferedZoomFactor>
+  <!--
+  list of available factors (%) a map will be moved by a pan operation 
+  The value '*' indicates that the user will have the option to choose
+  any value he likes
+  default = 5,15,25
+  -->
+  <OfferedPanFactor>
+    <Factor>5</Factor>
+    <Factor selected="true">15</Factor>
+    <Factor>25</Factor>
+    <Factor>*</Factor>
+  </OfferedPanFactor>
+  <!--
+  minimum scale (as defined by the WMS spec) to which the map can be
+  zoomed in
+  deafult = 1 m
+  -->
+  <MinScale>0</MinScale>
+  <!--
+  maximum scale (as defined by the WMS spec) to which the map can be
+  zoomed out
+  deafult = 100000 m
+  -->
+  <MaxScale>100000</MaxScale>
+  <!-- 
+  the initial initial GetMap request (first map the user sees)
+  <InitialGetMapRequest><![CDATA[SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=cite:Forests,cite:Lakes,cite:Ponds,cite:NamedPlaces,cite:RoadSegments,cite:MapNeatline,cite:Streams,cite:DividedRoutes,cite:Buildings,cite:BuildingCenters,cite:Bridges&STYLES=&SRS=EPSG:4326&BBOX=-0.0050,-0.0050,0.0050,0.0050&WIDTH=450&HEIGHT=450&FORMAT=image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=true&EXCEPTIONS=application/vnd.ogc.se_inimage]]></InitialGetMapRequest>
+  -->
+  <InitialGetMapRequest><![CDATA[SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=cite:Forests,cite:Lakes,cite:MapNeatline&STYLES=&SRS=EPSG:4326&BBOX=-0.0050,-0.0050,0.0050,0.0050&WIDTH=450&HEIGHT=450&FORMAT=image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=true&EXCEPTIONS=application/vnd.ogc.se_inimage]]></InitialGetMapRequest>
+  <!--
+  a project has a unique name and defines a map request with an 
+  initializing GetMap request.
+  Future versions of the client frame may define addtional parameter like
+  a list of valid layers or allowed map extension.
+  The client will present a link to each project in the browser.
+  -->
+  <Projects>
+    <Project name="cite">
+      <InitialGetMapRequest><![CDATA[SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=cite:Forests,cite:Lakes,cite:Ponds,cite:NamedPlaces,cite:RoadSegments,cite:MapNeatline,cite:Streams,cite:DividedRoutes,cite:Buildings,cite:BuildingCenters,cite:Bridges&STYLES=&SRS=EPSG:4326&BBOX=-0.0050,-0.0050,0.0050,0.0050&WIDTH=450&HEIGHT=450&FORMAT=image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=true&EXCEPTIONS=application/vnd.ogc.se_inimage]]></InitialGetMapRequest>
+    </Project>
+    <Project name="europe">
+      <InitialGetMapRequest><![CDATA[SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=europe:country,europe:major_rivers&STYLES=default,default&SRS=EPSG:4326&BBOX=-10,40,12,60&WIDTH=450&HEIGHT=450&FORMAT=image/png&BGCOLOR=0x0000b5&TRANSPARENT=true&EXCEPTIONS=application/vnd.ogc.se_inimage]]></InitialGetMapRequest>
+    </Project>
+    <Project name="osnabrueck">
+      <InitialGetMapRequest><![CDATA[SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=osnabrueck:gewaessepoly,osnabrueck:gewaesserlinien&STYLES=default,default&SRS=EPSG:31467&BBOX=3426602.4498886415,5785408.797327395,3443602.4498886415,5802408.797327395&WIDTH=450&HEIGHT=450&FORMAT=image/png&BGCOLOR=0xfff8ff&TRANSPARENT=true&EXCEPTIONS=application/vnd.ogc.se_inimage]]>osnabrueck:gewaessepoly mit Styles</InitialGetMapRequest>
+    </Project>
+  </Projects>
+</WMSClientConfiguration>

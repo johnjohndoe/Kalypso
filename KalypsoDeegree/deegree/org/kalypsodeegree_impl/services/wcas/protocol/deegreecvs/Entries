@@ -1,0 +1,19 @@
+/CASGetCapabilitiesRequest_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/CASGetCapabilitiesResponse_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/CASGetRecordResponse_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/CASOperation_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/CASSearchResponse_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/CASSearchResult_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/CASTransactionRequest_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/CASTransactionResponse_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/CASDelete_Impl.java/1.5/Tue Mar 30 07:06:25 2004//
+/CASDescribeRecordTypeRequest_Impl.java/1.5/Tue Mar 30 07:06:25 2004//
+/CASDescribeRecordTypeResponse_Impl.java/1.6/Tue Mar 30 07:06:26 2004//
+/CASGetRecordRequest_Impl.java/1.4/Tue Mar 30 07:06:26 2004//
+/CASInsertResult_Impl.java/1.5/Tue Mar 30 07:06:26 2004//
+/CASInsert_Impl.java/1.5/Tue Mar 30 07:06:26 2004//
+/CASProtocolFactory.java/1.16/Tue Mar 30 07:06:26 2004//
+/CASQuery_Impl.java/1.3/Tue Mar 30 07:06:26 2004//
+/CASRegisterServiceRequest_Impl.java/1.5/Tue Mar 30 07:06:26 2004//
+/CASUpdate_Impl.java/1.5/Tue Mar 30 07:06:26 2004//
+D

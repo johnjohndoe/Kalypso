@@ -1,0 +1,22 @@
+D/capabilities////
+D/gazetteer////
+D/wcas////
+D/wcs////
+D/wcts////
+D/wfs////
+D/wms////
+D/wts////
+/DoubleExtent.java/1.3/Thu Mar 25 14:24:18 2004//
+/Extent.java/1.2/Thu Mar 25 14:24:18 2004//
+/Handler.java/1.4/Thu Mar 25 14:24:18 2004//
+/InconsistentRequestException.java/1.2/Thu Mar 25 14:24:18 2004//
+/OGCWebService.java/1.5/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceClient.java/1.4/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceEvent.java/1.3/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceException.java/1.4/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceRequest.java/1.4/Thu Mar 25 14:24:18 2004//
+/OGCWebServiceResponse.java/1.2/Thu Mar 25 14:24:18 2004//
+/RangeParamList.java/1.1/Thu Mar 25 14:24:18 2004//
+/RequestController.java/1.4/Thu Mar 25 14:24:18 2004//
+/TimeExtent.java/1.2/Thu Mar 25 14:24:18 2004//
+/WebServiceException.java/1.1/Thu Mar 25 14:24:18 2004//

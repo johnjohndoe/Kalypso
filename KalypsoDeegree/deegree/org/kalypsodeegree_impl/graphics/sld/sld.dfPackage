@@ -1,0 +1,288 @@
+package id2ct05d1buac80d1buhtjm;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Stroke_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Graphic_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference15 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Fill_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference16 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.FeatureTypeStyle_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference17 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.NamedLayer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference18 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Font_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference19 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Halo_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference20 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference21 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.CssParameter_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference22 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Mark_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference23 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.LineSymbolizer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference24 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference25 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.UserStyle_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference26 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.LegendGraphic_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference27 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.RasterSymbolizer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference28 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.PointSymbolizer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference29 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.UserLayer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference30 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Rule_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference31 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Geometry_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference32 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.GraphicStroke_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference33 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.FeatureTypeConstraint_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference34 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Drawing_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference35 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.LabelPlacement_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference36 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.StyledLayerDescriptor_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference37 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.TextSymbolizer_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference38 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Extent_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference39 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.LayerFeatureConstraints_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference40 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.GraphicFill_Impl:oiref><oihard>
+@__modelType reference 
+@hideAll
+*/
+class reference41 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.SLDFactory:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference42 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Layer_Impl:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference43 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.NamedStyle_Impl:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference44 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.Style_Impl:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference45 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.RemoteOWS_Impl:oiref><oihard>
+@__modelType reference 
+*/
+class reference1 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.ExternalGraphic_Impl:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.ParameterValueType_Impl:oiref><oihard>
+@__modelType reference 
+*/
+class reference46 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.PointPlacement_Impl:oiref><oihard>
+@__modelType reference 
+*/
+class reference47 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.LinePlacement_Impl:oiref><oihard>
+@__modelType reference 
+*/
+class reference3 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.graphics.sld.StyleFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Mark_Impl:oiref>=844,230,65,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.LayerFeatureConstraints_Impl:oiref>=428,230,177,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.UserStyle_Impl#org.deegree_impl.graphics.sld.Style_Impl:oiref>=298,148,350,61:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.Stroke_Impl#org.deegree_impl.graphics.sld.Drawing_Impl:oiref>=640,147,640,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.FeatureTypeStyle_Impl:oiref>=1299,10,134,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Extent_Impl:oiref>=10,230,72,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Font_Impl:oiref>=929,230,60,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.NamedStyle_Impl#org.deegree_impl.graphics.sld.Style_Impl:oiref>=376,148,376,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.SLDFactory:oiref>=1205,10,74,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.LineSymbolizer_Impl:oiref>=765,147,139,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.PointSymbolizer_Impl:oiref>=1209,147,144,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.UserLayer_Impl#org.deegree_impl.graphics.sld.Layer_Impl:oiref>=185,145,131,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.NamedStyle_Impl:oiref>=364,148,104,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.ExternalGraphic_Impl:oiref>=4,400,203,222,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.LabelPlacement_Impl:oiref>=230,330,128,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.UserStyle_Impl:oiref>=253,148,91,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Style_Impl:oiref>=325,10,64,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Rule_Impl:oiref>=10,330,61,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.NamedLayer_Impl#org.deegree_impl.graphics.sld.Layer_Impl:oiref>=104,145,104,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.CssParameter_Impl:oiref>=91,330,119,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Fill_Impl:oiref>=692,147,53,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Graphic_Impl:oiref>=328,230,80,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.GraphicFill_Impl:oiref>=213,230,95,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Drawing_Impl:oiref>=608,10,83,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.RemoteOWS_Impl:oiref>=374,300,203,184,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.NamedLayer_Impl:oiref>=10,145,108,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Halo_Impl:oiref>=763,230,61,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.UserLayer_Impl:oiref>=138,145,95,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Layer_Impl:oiref>=90,10,68,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Stroke_Impl:oiref>=488,147,184,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.TextSymbolizer_Impl:oiref>=1065,147,124,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.RasterSymbolizer_Impl:oiref>=908,147,137,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.Fill_Impl#org.deegree_impl.graphics.sld.Drawing_Impl:oiref>=718,147,665,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.LegendGraphic_Impl:oiref>=1009,230,122,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref>=1076,10,99,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.LineSymbolizer_Impl#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref>=826,147,1086,61:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.RasterSymbolizer_Impl#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref>=976,147,1105,61:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.PointSymbolizer_Impl#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref>=1273,147,1145,61:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref>=1429,147,1165,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.FeatureTypeConstraint_Impl:oiref>=1151,230,165,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.StyledLayerDescriptor_Impl:oiref>=1336,230,163,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.graphics.sld.TextSymbolizer_Impl#org.deegree_impl.graphics.sld.Symbolizer_Impl:oiref>=1125,147,1125,61:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl:oiref>=1357,147,160,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.GraphicStroke_Impl:oiref>=625,230,118,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.graphics.sld.Geometry_Impl:oiref>=102,230,91,51,1:oigroup>
+*/
+class __positions {
+}

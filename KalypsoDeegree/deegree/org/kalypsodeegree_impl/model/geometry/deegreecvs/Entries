@@ -1,0 +1,35 @@
+/GM_Curve_Impl.java/1.7/Result of merge//
+/GM_Object_Impl.java/1.12/Result of merge//
+/GM_Point_Impl.java/1.8/Result of merge+Thu Mar 25 13:02:41 2004//
+/GM_Polygon_Impl.java/1.9/Result of merge+Thu Mar 25 13:02:42 2004//
+/GM_Position_Impl.java/1.8/Result of merge+Thu Mar 25 13:02:42 2004//
+/GM_Primitive_Impl.java/1.4/Result of merge+Thu Mar 25 13:02:42 2004//
+/GM_SurfacePatch_Impl.java/1.9/Result of merge//
+/GM_Surface_Impl.java/1.14/Result of merge//
+/GMLAdapter.java/1.16/Thu Mar 25 14:24:18 2004//
+/GM_Aggregate_Impl.java/1.7/Thu Mar 25 14:24:18 2004//
+/GM_Boundary_Impl.java/1.3/Thu Mar 25 14:24:18 2004//
+/GM_CurveBoundary_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/GM_CurveSegment_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/GM_Envelope_Impl.java/1.13/Thu Mar 25 14:24:18 2004//
+/GM_LineString_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/GM_MultiCurve_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/GM_MultiPoint_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/GM_MultiPrimitive_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/GM_MultiSurface_Impl.java/1.6/Thu Mar 25 14:24:18 2004//
+/GM_OrientableCurve_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/GM_OrientablePrimitive_Impl.java/1.5/Thu Mar 25 14:24:18 2004//
+/GM_OrientableSurface_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/GM_PrimitiveBoundary_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/GM_Ring_Impl.java/1.8/Thu Mar 25 14:24:18 2004//
+/GM_SurfaceBoundary_Impl.java/1.7/Thu Mar 25 14:24:18 2004//
+/GM_SurfaceInterpolation_Impl.java/1.4/Thu Mar 25 14:24:18 2004//
+/GeometryFactory.java/1.20/Thu Mar 25 14:24:18 2004//
+/JTSAdapter.java/1.10/Thu Mar 25 14:24:18 2004//
+/LinearContains.java/1.6/Thu Mar 25 14:24:18 2004//
+/LinearIntersects.java/1.6/Thu Mar 25 14:24:18 2004//
+/OracleAdapter.java/1.5/Thu Mar 25 14:24:18 2004//
+/PostGISAdapter.java/1.9/Thu Mar 25 14:24:18 2004//
+/SDEAdapter.java/1.4/Thu Mar 25 14:24:18 2004//
+/WKTAdapter.java/1.9/Thu Mar 25 14:24:18 2004//
+D

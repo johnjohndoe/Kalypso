@@ -1,0 +1,192 @@
+package id2r7u3cyhgw4thcyhgyncc;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.ScaleHint:oiref><oihard>
+@__modelType reference 
+*/
+class reference32 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.WMSCapabilities:oiref><oihard>
+@__modelType reference 
+*/
+class reference33 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.StyleURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference34 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.ServiceClass:oiref><oihard>
+@__modelType reference 
+*/
+class reference36 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.FilterService:oiref><oihard>
+@__modelType reference 
+*/
+class reference37 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Identifier:oiref><oihard>
+@__modelType reference 
+*/
+class reference38 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Style:oiref><oihard>
+@__modelType reference 
+*/
+class reference39 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.LogoURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference40 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.DataSource:oiref><oihard>
+@__modelType reference 
+*/
+class reference41 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.DataURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference42 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.LegendGraphicService:oiref><oihard>
+@__modelType reference 
+*/
+class reference43 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.AuthorityURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference44 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Extent:oiref><oihard>
+@__modelType reference 
+*/
+class reference45 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.UserDefinedSymbolization:oiref><oihard>
+@__modelType reference 
+*/
+class reference46 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Attribution:oiref><oihard>
+@__modelType reference 
+*/
+class reference47 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.StyleSheetURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference48 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Request:oiref><oihard>
+@__modelType reference 
+*/
+class reference50 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Dimension:oiref><oihard>
+@__modelType reference 
+*/
+class reference51 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Capability:oiref><oihard>
+@__modelType reference 
+*/
+class reference52 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.FeatureListURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference53 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.LegendURL:oiref><oihard>
+@__modelType reference 
+*/
+class reference54 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.LayerBoundingBox:oiref><oihard>
+@__modelType reference 
+*/
+class reference55 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Operation:oiref><oihard>
+@__modelType reference 
+*/
+class reference56 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.DEGService:oiref><oihard>
+@__modelType reference 
+*/
+class reference57 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.RenderService:oiref><oihard>
+@__modelType reference 
+*/
+class reference58 {
+}/**
+@__ref <oiref:java#Class#org.deegree.services.wms.capabilities.Layer:oiref><oihard>
+@__modelType reference 
+*/
+class reference59 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Request:oiref>=657,490,203,99,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.RenderService#org.deegree.services.wms.capabilities.ServiceClass:oiref>=187,196,187,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.LogoURL:oiref>=486,230,115,118,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.ScaleHint:oiref>=324,10,115,99,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.ServiceClass:oiref>=131,10,173,99,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.capabilities.BaseURL:oiref>=807,10,168,99,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.DEGService#org.deegree.services.wms.capabilities.ServiceClass:oiref>=252,196,252,109:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.StyleSheetURL#org.deegree.services.capabilities.BaseURL:oiref>=880,196,880,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.LegendGraphicService:oiref>=326,196,140,77,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.FilterService:oiref>=10,196,82,77,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.WMSCapabilities:oiref>=10,310,167,99,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.WMSCapabilities#org.deegree.services.capabilities.OGCWebServiceCapabilities:oiref>=101,215,101,128:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.StyleURL#org.deegree.services.capabilities.BaseURL:oiref>=455,196,817,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Operation:oiref>=932,10,203,431,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Layer:oiref>=880,490,203,498,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.DataURL:oiref>=621,230,63,96,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.FilterService#org.deegree.services.wms.capabilities.ServiceClass:oiref>=51,196,159,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Style:oiref>=486,10,203,175,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.DataSource:oiref>=434,390,203,156,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Attribution:oiref>=709,190,168,118,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Capability:oiref>=390,630,203,156,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.FeatureListURL#org.deegree.services.capabilities.BaseURL:oiref>=1188,196,944,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.DEGService:oiref>=227,196,79,77,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.UserDefinedSymbolization:oiref>=709,10,203,137,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.LogoURL#org.deegree.services.capabilities.BaseURL:oiref>=1309,196,963,109:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.LegendURL#org.deegree.services.capabilities.BaseURL:oiref>=558,196,837,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.StyleURL:oiref>=197,310,63,96,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.LayerBoundingBox:oiref>=10,910,121,137,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.StyleSheetURL:oiref>=704,350,96,96,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.AuthorityURL:oiref>=10,610,120,99,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.MetadataURL#org.deegree.services.capabilities.BaseURL:oiref>=705,196,858,109:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.AuthorityURL#org.deegree.services.capabilities.BaseURL:oiref>=976,196,902,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Extent:oiref>=192,590,178,118,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Dimension:oiref>=10,750,151,118,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.DataURL#org.deegree.services.capabilities.BaseURL:oiref>=1087,196,924,109:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.wms.capabilities.LegendGraphicService#org.deegree.services.wms.capabilities.ServiceClass:oiref>=396,196,278,109:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.Identifier:oiref>=280,310,134,99,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.LegendURL:oiref>=732,630,115,118,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree.services.capabilities.HTTP#org.deegree.services.capabilities.Protocol:oiref>=307,170,307,87:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.RenderService:oiref>=112,196,95,77,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.services.wms.capabilities.FeatureListURL:oiref>=613,630,99,96,1:oigroup>
+*/
+class __positions {
+}

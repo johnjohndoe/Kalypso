@@ -1,0 +1,63 @@
+package id2oxtjcye8mjuscye8sbb0;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id36bv4cyhb6xq7cyhe3m8x.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis.cs:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#idwh0wcyhb6xq7cyhe3mbf.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis.pt:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:design#Class#id3fs0ycyhb6xq7cyhe3mal.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis.ct:oiref> 
+*/
+class reference4 {
+}/**
+@__ref <oiref:design#Class#id1plg7cyivh26ucyiwyjqx.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis.cv:oiref> 
+*/
+class reference61 {
+}/**
+@__ref <oiref:design#Class#id34r0mcyivh26ucyiwyr4b.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis.gc:oiref> 
+*/
+class reference62 {
+}/**
+@__ref <oiref:design#Class#id3jt5tcyivh26ucyiwyzi5.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis.gp:oiref> 
+*/
+class reference63 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#idwh0wcyhb6xq7cyhe3mbf.diagram:oiref>=233,10,133,110,1:oigroup>
+<oigroup:<oiref:design#Class#id34r0mcyivh26ucyiwyr4b.diagram:oiref>=232,443,203,452,1:oigroup>
+<oigroup:<oiref:design#Class#id1plg7cyivh26ucyiwyjqx.diagram:oiref>=231,219,183,205,1:oigroup>
+<oigroup:<oiref:design#Class#id36bv4cyhb6xq7cyhe3m8x.diagram:oiref>=10,10,203,566,1:oigroup>
+<oigroup:<oiref:design#Class#id3jt5tcyivh26ucyiwyzi5.diagram:oiref>=467,222,203,376,1:oigroup>
+<oigroup:<oiref:design#Class#id3fs0ycyhb6xq7cyhe3mal.diagram:oiref>=386,10,203,205,1:oigroup> 
+*/
+class __positions {
+}

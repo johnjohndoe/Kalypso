@@ -1,0 +1,157 @@
+package id36bv4cyhb6xq7cyhe3m8x;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_ProjectedCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_VerticalDatum:oiref><oihard>
+@__modelType reference 
+*/
+class reference107 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_CoordinateSystemFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference108 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_AxisInfo:oiref><oihard>
+@__modelType reference 
+*/
+class reference109 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_Unit:oiref><oihard>
+@__modelType reference 
+*/
+class reference110 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_Datum:oiref><oihard>
+@__modelType reference 
+*/
+class reference111 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_Ellipsoid:oiref><oihard>
+@__modelType reference 
+*/
+class reference112 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_WGS84ConversionInfo:oiref><oihard>
+@__modelType reference 
+*/
+class reference113 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_ProjectionParameter:oiref><oihard>
+@__modelType reference 
+*/
+class reference114 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_LocalDatum:oiref><oihard>
+@__modelType reference 
+*/
+class reference115 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_LocalCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference116 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_AngularUnit:oiref><oihard>
+@__modelType reference 
+*/
+class reference117 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_FittedCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference118 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_CoordinateSystemAuthorityFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference119 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_CompoundCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference120 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_Projection:oiref><oihard>
+@__modelType reference 
+*/
+class reference121 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_LinearUnit:oiref><oihard>
+@__modelType reference 
+*/
+class reference122 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_HorizontalCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference123 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_DatumType:oiref><oihard>
+@__modelType reference 
+*/
+class reference124 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_VerticalCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference125 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_PrimeMeridian:oiref><oihard>
+@__modelType reference 
+*/
+class reference126 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_Info:oiref><oihard>
+@__modelType reference 
+*/
+class reference127 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_CoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference128 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_HorizontalDatum:oiref><oihard>
+@__modelType reference 
+*/
+class reference129 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_AxisOrientationEnum:oiref><oihard>
+@__modelType reference 
+*/
+class reference130 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_GeographicCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference131 {
+}/**
+@__ref <oiref:java#Class#org.opengis.cs.CS_GeocentricCoordinateSystem:oiref><oihard>
+@__modelType reference 
+*/
+class reference132 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

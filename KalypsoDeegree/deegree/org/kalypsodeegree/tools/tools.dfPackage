@@ -1,0 +1,39 @@
+package id3pzspcyhgw4thcyhgyphe;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.deegree.tools.Cache:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.deegree.tools.ParameterList:oiref><oihard>
+@__modelType reference 
+*/
+class reference1 {
+}/**
+@__ref <oiref:java#Class#org.deegree.tools.Parameter:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.deegree.tools.Cache:oiref>=10,10,203,232,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.tools.Parameter:oiref>=484,125,152,149,0:oigroup>
+<oigroup:<oiref:java#Class#org.deegree.tools.ParameterList:oiref>=320,110,125,151,0:oigroup>
+*/
+class __positions {
+}

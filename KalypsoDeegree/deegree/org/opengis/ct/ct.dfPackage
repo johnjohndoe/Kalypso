@@ -1,0 +1,62 @@
+package id3fs0ycyhb6xq7cyhe3mal;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_MathTransform:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_CoordinateTransformation:oiref><oihard>
+@__modelType reference 
+*/
+class reference135 {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_Parameter:oiref><oihard>
+@__modelType reference 
+*/
+class reference136 {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_MathTransformFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference137 {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_CoordinateTransformationAuthorityFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference138 {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_DomainFlags:oiref><oihard>
+@__modelType reference 
+*/
+class reference139 {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_TransformType:oiref><oihard>
+@__modelType reference 
+*/
+class reference140 {
+}/**
+@__ref <oiref:java#Class#org.opengis.ct.CT_CoordinateTransformationFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference141 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

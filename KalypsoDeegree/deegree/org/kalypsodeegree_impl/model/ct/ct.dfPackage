@@ -1,0 +1,334 @@
+package id3sf6bd26hc72jd26hdxqa;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.AbstractMathTransform:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.LambertConformalProjection:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference1 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.GeoTransformer:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference2 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransform:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference3 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.CylindricalProjection:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.CoordinateTransformationFactory:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference5 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MercatorProjection:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference6 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransformProvider:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference7 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransform2D:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference8 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.GeocentricTransform:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference9 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.TransformException:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference10 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.CannotCreateTransformException:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference11 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MissingParameterException:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference12 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MapProjection:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference13 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransformFactory:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference14 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.PlanarProjection:oiref><oihard>
+@__modelType reference 
+*/
+class reference15 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.Adapters:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference16 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransform2D:oiref><oihard>
+@__modelType reference 
+*/
+class reference17 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransformAdapter:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference18 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.ConvenienceTransformFactory:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference19 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.TransverseMercatorProjection:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference20 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransformDirect:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference21 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.AffineTransform2D:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference22 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.CoordinateTransformation:oiref><oihard>
+@__modelType reference
+@hideAll*/
+class reference23 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransformDirect2D:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference24 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.PassThroughTransform:oiref><oihard>
+@__modelType reference
+@hideAll*/
+class reference25 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.TransformType:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference26 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.StereographicProjection:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference27 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.ConicProjection:oiref><oihard>
+@__modelType reference 
+*/
+class reference28 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.NoninvertibleTransformException:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference29 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MatrixTransform:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference30 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransformExport:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference31 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransform:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference32 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.DomainFlags:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference33 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.MathTransformAdapter2D:oiref><oihard>
+@__modelType reference 
+*/
+class reference34 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.AbridgedMolodenskiTransform:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference35 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.ct.PlateCarreeProjection:oiref><oihard>
+@__modelType reference
+@hideAll 
+*/
+class reference36 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.TransformType#CONVERSION:oiref>=234,366,234,410,324,410,324,332,274,332:oigroup>
+<oigroup:<oiref:java#Implements#org.deegree_impl.model.ct.AffineTransform2D#org.deegree_impl.model.ct.MathTransform2D:oiref>=1553,526,1435,366:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.TransformType:oiref>=139,315,135,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.TransverseMercatorProjection:oiref>=831,860,184,33,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.TransformType#ENUMS:oiref>=264,366,264,385,294,385,294,357,274,357:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.MapProjection#inverse:oiref>=970,526,906,211:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.PassThroughTransform:oiref>=10,526,145,51,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.CoordinateTransformation#inverse:oiref>=284,211,284,231,314,231,314,201,294,201:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.PlanarProjection:oiref>=987,689,203,62,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransformProvider:oiref>=374,689,147,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.Adapters:oiref>=1084,10,61,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransformDirect2D:oiref>=1643,858,186,33,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.ConcatenedTransform#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=1318,526,854,348:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.DomainFlags#INSIDE:oiref>=1504,72,1504,112,1574,112,1574,42,1534,42:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.ConicProjection#org.deegree_impl.model.ct.MapProjection:oiref>=642,689,966,559:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransform:oiref>=1291,526,137,51,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConvenienceTransformFactory#tfFactory:oiref>=351,974,351,994,381,994,381,964,361,964:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.GeocentricTransform#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=302,526,749,348:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.CoordinateTransformationFactory#DEFAULT:oiref>=308,722,308,742,338,742,338,712,318,712:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MercatorProjection:oiref>=699,860,119,33,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConcatenedTransform#transform1:oiref>=1372,526,939,211:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConcatenedTransform#provider:oiref>=1291,567,1211,621,866,621,851,538:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.ConcatenedTransformDirect#org.deegree_impl.model.ct.ConcatenedTransform:oiref>=1336,689,1336,577:oigroup>
+<oigroup:<oiref:java#Implements#org.deegree_impl.model.ct.MapProjection#org.deegree_impl.model.ct.MathTransform2D:oiref>=1016,526,1389,366:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.CoordinateTransformation:oiref>=119,160,175,51,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.MathTransformFactory#providers:oiref>=792,559,792,579,447,689:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.MathTransformAdapter#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=1130,526,832,348:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MapProjection:oiref>=947,526,92,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.LambertConformalProjection:oiref>=533,858,174,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.DomainFlags:oiref>=1399,21,135,51,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConcatenedTransformDirect2D#transform1:oiref>=1717,858,1847,785,1847,685,1450,366:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.AffineTransform2D#inverse:oiref>=1602,577,1602,597,1632,597,1632,567,1612,567:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConcatenedTransform#inverse:oiref>=1400,526,950,211:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.CylindricalProjection#org.deegree_impl.model.ct.MapProjection:oiref>=865,689,990,559:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.GeocentricTransform:oiref>=215,526,131,51,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConvenienceTransformFactory#trFactory:oiref>=245,941,245,722:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransform:oiref>=873,160,98,51,1:oigroup>
+<oigroup:<oiref:java#Implements#org.deegree_impl.model.ct.MathTransformAdapter2D#org.deegree_impl.model.ct.MathTransform2D:oiref>=1455,689,1455,551,1404,366:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MissingParameterException:oiref>=1494,190,186,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.StereographicProjection:oiref>=1183,858,148,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MatrixTransform:oiref>=571,526,105,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.MapProjection#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=993,526,812,348:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.PassThroughTransform#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=106,526,728,348:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.GeocentricTransform#inverse:oiref>=258,526,894,211:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.GeoTransformer:oiref>=1714,10,103,33,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.MathTransformAdapter2D#org.deegree_impl.model.ct.MathTransformAdapter:oiref>=1428,689,1428,679,1125,633,1125,577:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.Adapters#DEFAULT:oiref>=1135,43,1135,63,1165,63,1165,33,1145,33:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.CoordinateTransformationFactory:oiref>=101,689,217,33,1:oigroup>
+<oigroup:<oiref:java#Implements#org.deegree_impl.model.ct.ConcatenedTransformDirect2D#org.deegree_impl.model.ct.MathTransform2D:oiref>=1754,858,1867,790,1867,681,1465,366:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.PassThroughTransform#transform:oiref>=58,526,494,380,883,211:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.MercatorProjection#org.deegree_impl.model.ct.CylindricalProjection:oiref>=791,860,791,751:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.ConcatenedTransformDirect2D#org.deegree_impl.model.ct.ConcatenedTransformDirect:oiref>=1680,858,1295,793,1295,722:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransformFactory:oiref>=696,526,155,33,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.ConcatenedTransform2D#org.deegree_impl.model.ct.ConcatenedTransform:oiref>=1691,689,1382,577:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.MathTransformExport#transform:oiref>=922,80,922,160:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.PlateCarreeProjection:oiref>=1029,858,135,33,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.NoninvertibleTransformException#org.deegree_impl.model.ct.TransformException:oiref>=1300,144,1300,61:oigroup>
+<oigroup:<oiref:java#Implements#org.deegree_impl.model.ct.AbstractMathTransform#org.deegree_impl.model.ct.MathTransform:oiref>=792,315,917,211:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransform2D:oiref>=1376,315,114,51,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.MathTransformFactory#DEFAULT:oiref>=841,559,841,579,871,579,871,549,851,549:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.PassThroughTransform#inverse:oiref>=145,577,145,597,175,597,175,567,155,567:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.CylindricalProjection:oiref>=764,689,203,62,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.PlanarProjection#org.deegree_impl.model.ct.MapProjection:oiref>=1013,689,1013,559:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.NoninvertibleTransformException:oiref>=1275,144,199,33,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.CoordinateTransformationFactory#factory:oiref>=209,689,744,580,744,559:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.AbridgedMolodenskiTransform:oiref>=366,526,185,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.TransformException:oiref>=1201,10,125,51,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.LambertConformalProjection#org.deegree_impl.model.ct.ConicProjection:oiref>=624,858,624,751:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.DomainFlags#OUTSIDE:oiref>=1514,72,1514,102,1564,102,1564,52,1534,52:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.MatrixTransform#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=623,526,792,348:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.TransformType#TRANSFORMATION:oiref>=244,366,244,402,314,402,314,340,274,340:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransform2D:oiref>=1624,689,203,90,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.MathTransform2D#org.deegree_impl.model.ct.MathTransform:oiref>=1433,315,961,211:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransformAdapter2D:oiref>=1401,689,203,109,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.StereographicProjection#org.deegree_impl.model.ct.PlanarProjection:oiref>=1257,858,1088,751:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.TransformType#CONVERSION_AND_TRANSFORMATION:oiref>=254,366,254,394,304,394,304,348,274,348:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.TransformType#OTHER:oiref>=224,366,224,419,334,419,334,323,274,323:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConcatenedTransformDirect2D#transform2:oiref>=1791,858,1887,795,1887,677,1480,366:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.ConvenienceTransformFactory:oiref>=177,941,184,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransformExport:oiref>=855,10,134,70,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.CannotCreateTransformException#org.deegree_impl.model.ct.TransformException:oiref>=1228,144,1228,61:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.ConcatenedTransform#transform2:oiref>=1345,526,928,211:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.CannotCreateTransformException:oiref>=1052,144,203,33,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.TransverseMercatorProjection#org.deegree_impl.model.ct.CylindricalProjection:oiref>=899,860,899,751:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=718,315,148,33,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.DomainFlags#ENUMS:oiref>=1494,72,1494,123,1584,123,1584,31,1534,31:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.CoordinateTransformation#type:oiref>=206,211,206,315:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.MathTransformAdapter#inverse:oiref>=1191,577,1191,597,1221,597,1221,567,1201,567:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.CoordinateTransformation#transform:oiref>=294,185,873,185:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.AffineTransform2D:oiref>=1495,526,117,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.ConcatenedTransformDirect:oiref>=1210,689,171,33,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.MathTransformAdapter:oiref>=1059,526,142,51,1:oigroup>
+<oigroup:<oiref:java#Class#org.deegree_impl.model.ct.ConicProjection:oiref>=541,689,203,62,1:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.PlateCarreeProjection#org.deegree_impl.model.ct.CylindricalProjection:oiref>=1096,858,933,751:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.DomainFlags#DISCONTINUOUS:oiref>=1524,72,1524,92,1554,92,1554,62,1534,62:oigroup>
+<oigroup:<oiref:java#Implements#org.deegree_impl.model.ct.ConcatenedTransform2D#org.deegree_impl.model.ct.MathTransform2D:oiref>=1759,689,1475,585,1420,366:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.deegree_impl.model.ct.MathTransformExport#adapters:oiref>=989,26,1084,26:oigroup>
+<oigroup:<oiref:java#Extends#org.deegree_impl.model.ct.AbridgedMolodenskiTransform#org.deegree_impl.model.ct.AbstractMathTransform:oiref>=458,526,771,348:oigroup>
+*/
+class __positions {
+}
