@@ -65,7 +65,7 @@ public class GisInnerVectorSetTableView extends JInternalFrame implements Intern
 	for (int index=0;index<tableModels.size();index++)
 	    {
 		GisInterfaceTableModel tableModel=(GisInterfaceTableModel)tableModels.elementAt(index);
-		JTable jTable=new JTable(new DummyTableModel((GisInterfaceTableModel)tableModels.elementAt(index)),null);
+		JTable jTable=new JTable(new DummyTableModel((GisInterfaceTableModel)tableModels.elementAt(index),myGisElementClass),null);
 		cards.add(jTable);
 		JScrollPane scroller=new JScrollPane(jTable);
 		scroller.setBounds(10,10,(getSize().width-30),(getSize().height-120));

@@ -30,30 +30,28 @@ import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 import de.tuhh.wb.javagis.data.GisElement;
 import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.data.Version;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 import de.tuhh.wb.javagis.tools.I18n;
-
+import de.tuhh.wb.tools.event.ActionManager;
 public class GisVectorSetTableView
 	extends JInternalFrame
-	implements InternalFrameListener, ActionListener, MouseListener, ItemListener {
+	implements InternalFrameListener, ActionListener, MouseListener {
 	private GisElementClass myGisElementClass;
 	private Object myId;
 	private Vector cards;
 	private Vector tableModels;
+	private Vector dummyTableModels;
 	private JTabbedPane tabbedPane;
 	private GisTableModel myGisTableModel;
 	private Point selectedPoint = null;
 	private int selectedCol = -1;
 	private int selectedRow = -1;
 	private Object selectedValue = null;
-	private JCheckBoxMenuItem cbMenuItem;
-	private DummyTableModel tableModel;
-	private boolean isEditable = true;
-	private JMenuItem mi_new1;
-	private JMenuItem mi_new2;
-	private JMenuItem mi_remove1;
-	private JMenuItem mi_insert1;
-	
+	//private JCheckBoxMenuItem cbMenuItem;
+	private DummyTableModel dummyTableModel;
+	private String topicName = null;
+	private String topicName_newObject = null;
 	public GisVectorSetTableView(
 		GisTableModel gisTableModel,
 		String frameName,
@@ -66,12 +64,15 @@ public class GisVectorSetTableView
 		this.myGisElementClass = gisElementClass;
 		this.cards = new Vector();
 		this.tableModels = tableModels;
+		this.dummyTableModels = new Vector();
 		this.tabbedPane = new JTabbedPane();
 		for (int index = 0; index < tableModels.size(); index++) {
-			tableModel =
+			dummyTableModel =
 				new DummyTableModel(
-					(GisInterfaceTableModel) tableModels.elementAt(index));
-			JTable jTable = new JTable(tableModel, null);
+					(GisInterfaceTableModel) tableModels.elementAt(index),
+					myGisElementClass);
+			dummyTableModels.addElement(dummyTableModel);
+			JTable jTable = new JTable(dummyTableModel, null);
 			/*
 			GisInterfaceTableModel tableModel=(GisInterfaceTableModel)tableModels.elementAt(index);
 			JTable jTable=new JTable(new DummyTableModel((GisInterfaceTableModel)tableModels.elementAt(index)),null);
@@ -83,13 +84,31 @@ public class GisVectorSetTableView
 				10,
 				(getSize().width - 30),
 				(getSize().height - 120));
-			tabbedPane.addTab(tableModel.getName(), scroller);
+			tabbedPane.addTab(dummyTableModel.getName(), scroller);
 			tabbedPane.setToolTipTextAt(
 				index,
-				Main.toHtml(tableModel.getDescription(), 50));
+				Main.toHtml(dummyTableModel.getDescription(), 50));
 			jTable.addMouseListener(this);
 		}
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		topicName_newObject = "NewObject" + frameName;
+		Version version = myGisElementClass.getVersion();
+		topicName = version.getTopicName();
+		if (version.isEditable()) {
+			ActionManager.getInstance().register(
+				topicName,
+				"setUnEditable",
+				this);
+			ActionManager.getInstance().register(
+				topicName_newObject,
+				"new",
+				this);
+		} else {
+			ActionManager.getInstance().register(
+				topicName,
+				"setEditable",
+				this);
+		}
 		createFileMenu();
 		this.addInternalFrameListener(this);
 		//	myGisElementClass.register(this);
@@ -121,6 +140,12 @@ public class GisVectorSetTableView
 		}
 		if (action.equals("new")) {
 			tableModel.createNewObject();
+			refreshTable();
+		}
+		if (action.equals(topicName_newObject + ".new")) {
+			if ((myGisElementClass.getVersion()).isEditable()) {
+			tableModel.createNewObject();
+			}
 			refreshTable();
 		}
 		if (action.equals("insert")) {
@@ -175,6 +200,34 @@ public class GisVectorSetTableView
 		if (action.equals("save")) {
 			store();
 		}
+		if (action.equals(topicName + ".setEditable")) {
+			ActionManager.getInstance().unregister(
+				topicName,
+				"setEditable",
+				this);
+			ActionManager.getInstance().register(
+				topicName,
+				"setUnEditable",
+				this);
+			ActionManager.getInstance().register(
+				topicName_newObject,
+				"new",
+				this);
+		}
+		if (action.equals(topicName + ".setUnEditable")) {
+			ActionManager.getInstance().register(
+				topicName,
+				"setEditable",
+				this);
+			ActionManager.getInstance().unregister(
+				topicName,
+				"setUnEditable",
+				this);
+			ActionManager.getInstance().unregister(
+				topicName_newObject,
+				"new",
+				this);
+		}
 	}
 	public void store() {
 		myGisElementClass.setVectorSets(myId, tableModels);
@@ -199,9 +252,15 @@ public class GisVectorSetTableView
 	public void createFileMenu() {
 		JMenu edit = new JMenu(I18n.get("TV_GVectorTV_jMenu_edit"));
 		JMenuItem mi;
-		mi_new1 = new JMenuItem(I18n.get("TV_GVectorTV_jMenuItem_new"));
+		/*JMenuItem mi_new1 =
+			new JMenuItem(I18n.get("TV_GVectorTV_jMenuItem_new"));
 		mi_new1.setActionCommand("new");
-		mi_new1.addActionListener(this);
+		mi_new1.addActionListener(this);*/
+		JMenuItem mi_new1 =
+			ActionManager.getInstance().getJMenuItem(
+				topicName_newObject,
+				"new");
+		mi_new1.setText(I18n.get("TV_GTV_jMenuItem_new"));
 		edit.add(mi_new1);
 		/* mi = new JMenuItem(I18n.get("TV_GVectorTV_jMenuItem_insert"));
 		mi.setActionCommand("insert");
@@ -215,11 +274,21 @@ public class GisVectorSetTableView
 		mi.setActionCommand("save");
 		mi.addActionListener(this);
 		edit.add(mi);
-		cbMenuItem =
+		/*cbMenuItem =
 			new JCheckBoxMenuItem(I18n.get("TV_GTV_jMenuItem_editable"));
 		cbMenuItem.setSelected(true);
 		cbMenuItem.addItemListener(this);
-		edit.add(cbMenuItem);
+		edit.add(cbMenuItem);*/
+		JMenuItem mi_editable =
+			ActionManager.getInstance().getJMenuItem(topicName, "setEditable");
+		mi_editable.setText(I18n.get("TV_GTV_jMenuItem_editable"));
+		edit.add(mi_editable);
+		JMenuItem mi_uneditable =
+			ActionManager.getInstance().getJMenuItem(
+				topicName,
+				"setUnEditable");
+		mi_uneditable.setText(I18n.get("TV_GTV_jMenuItem_uneditable"));
+		edit.add(mi_uneditable);
 		//create.addSeparator();
 		edit.addSeparator();
 		/*
@@ -237,8 +306,10 @@ public class GisVectorSetTableView
 	}
 	private void maybeShowPopup(MouseEvent e) {
 		int selectedTab = tabbedPane.getSelectedIndex();
-		GisInterfaceTableModel tableModel =
-			(GisInterfaceTableModel) tableModels.elementAt(selectedTab);
+		/*GisInterfaceTableModel tableModel =
+			(GisInterfaceTableModel) tableModels.elementAt(selectedTab);*/
+		DummyTableModel tableModel =
+			(DummyTableModel) dummyTableModels.elementAt(selectedTab);
 		JTable table = (JTable) cards.elementAt(selectedTab);
 		if (e.isPopupTrigger()) {
 			selectedPoint = e.getPoint();
@@ -249,20 +320,22 @@ public class GisVectorSetTableView
 			selectedValue = tableModel.getValueAt(selectedRow, selectedCol);
 			JMenuItem mi;
 			JPopupMenu popup = new JPopupMenu();
-			mi_new2 = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_new"));
+			JMenuItem mi_new2 =
+				new JMenuItem(I18n.get("TV_GVectorTV_PopMen_new"));
 			mi_new2.setActionCommand("new");
 			mi_new2.addActionListener(this);
 			popup.add(mi_new2);
-			mi_remove1 = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_remove"));
+			JMenuItem mi_remove1 =
+				new JMenuItem(I18n.get("TV_GVectorTV_PopMen_remove"));
 			mi_remove1.setActionCommand("remove");
 			mi_remove1.addActionListener(this);
 			popup.add(mi_remove1);
-			mi_insert1 = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_insert"));
+			JMenuItem mi_insert1 =
+				new JMenuItem(I18n.get("TV_GVectorTV_PopMen_insert"));
 			mi_insert1.setActionCommand("insert");
 			mi_insert1.addActionListener(this);
 			popup.add(mi_insert1);
-			
-			if (isEditable) {
+			if ((myGisElementClass.getVersion()).isEditable()) {
 				mi_new2.setEnabled(true);
 				mi_remove1.setEnabled(true);
 				mi_insert1.setEnabled(true);
@@ -295,9 +368,28 @@ public class GisVectorSetTableView
 							+ I18n.get("TV_GVectorTV_PopMen_set5")
 							+ selectedValue
 							+ "<html>");
+				/*mi =
+					new JMenuItem(
+						I18n.get("TV_GVectorTV_PopMen_set1")
+							+ myGisTableModel.getName()
+							+ " ("
+							+ myGisTableModel.getRowCount()
+							+ ") "
+							+ I18n.get("TV_GVectorTV_PopMen_set2")
+							+ tableModel.getName()
+							+ " "
+							+ I18n.get("TV_GVectorTV_PopMen_set3")
+							+ selectedRow
+							+ " "
+							+ I18n.get("TV_GVectorTV_PopMen_set4")
+							+ tableModel.getColumnName(selectedCol)
+							+ I18n.get("TV_GVectorTV_PopMen_set5")
+							+ selectedValue);*/
 				mi.setActionCommand("setPropertyInSelectedObject");
 				mi.addActionListener(this);
-				popup.add(mi);
+				if ((myGisElementClass.getVersion()).isEditable()) {
+					popup.add(mi);
+				}
 			}
 			if (tableModel.hasVectorSets()) {
 				mi = new JMenuItem(I18n.get("TV_GVectorTV_PopMen_vector"));
@@ -330,6 +422,17 @@ public class GisVectorSetTableView
 	}
 	//          Invoked when an internal frame has been closed.
 	public void internalFrameClosed(InternalFrameEvent e) {
+
+		ActionManager.getInstance().unregister(
+			topicName,
+			"setUnEditable",
+			this);
+		ActionManager.getInstance().unregister(topicName, "setEditable", this);
+		ActionManager.getInstance().unregister(
+			topicName_newObject,
+			"new",
+			this);
+
 		ViewManager.removeViewFromList(e);
 		//	myGisElementClass.unRegister(this);
 	}
@@ -349,7 +452,7 @@ public class GisVectorSetTableView
 	public void internalFrameOpened(InternalFrameEvent e) {
 		ViewManager.addViewToList(e);
 	}
-	public void itemStateChanged(ItemEvent e) {
+	/*public void itemStateChanged(ItemEvent e) {
 		Object source = e.getItemSelectable();
 		if (source == cbMenuItem) {
 			if (e.getStateChange() == ItemEvent.DESELECTED) {
@@ -363,7 +466,7 @@ public class GisVectorSetTableView
 					mi_new1.setEnabled(true);
 			}
 		}
-	}
+	}*/
 	/*
 	//GisElementListener
 	public void onGisElementChanged(GisElementEvent event)

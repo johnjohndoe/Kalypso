@@ -27,7 +27,7 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
     private Vector myIdList;
     private GisElementClass myGisElementClass;
     private GisView myGisView;
-    private boolean isEditable = true;
+    //private boolean isEditable = true;
     
     public Icon getIcon()
     {
@@ -245,22 +245,32 @@ public class GisTableModel extends AbstractTableModel implements GisInterfaceTab
 
     public boolean isCellEditable(int row,int col)
     {
+    	//Version myVersion = Version.getVersion(myGisElementClass.getKey(),myGisElementClass.getVersionId());
+    	Version myVersion = myGisElementClass.getVersion();
+    	boolean isEditable = myVersion.isEditable();
+		
 	if(col==0){
 	    return false;
 	}
 	else{
 		if(isEditable){
+
 			return true;
 		}
 		else{
+			/*Class propClass=myGisElementClass.getSimplePropertyClass(col-1);
+			System.out.println("propClass: "+propClass);
+			if(propClass==TSLink.class){
+				return true;
+			}*/
 			return false;
 		}
 	}
     }
     
-    public void setEditable(boolean editable){
+    /*public void setEditable(boolean editable){
     	isEditable = editable;
-    }
+    }*/
     public Object getId(int row)
     {
 	return myIdList.elementAt(row);

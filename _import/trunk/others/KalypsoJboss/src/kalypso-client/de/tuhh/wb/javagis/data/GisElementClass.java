@@ -88,6 +88,11 @@ public abstract class GisElementClass implements TableListener
     {
 		return myVersion.getVersionId();
     }
+    
+    public Version getVersion(){
+    	return myVersion;
+    }
+    
     public String getLabel()
     {
 		return myVersion.getLabel()+"/"+getName();

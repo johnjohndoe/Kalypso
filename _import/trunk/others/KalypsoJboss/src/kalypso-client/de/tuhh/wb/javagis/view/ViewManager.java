@@ -672,15 +672,15 @@ public class ViewManager
 		processingFlag = false;
 		int index = -1;
 		JInternalFrame frame = e.getInternalFrame();
-		String closedFrame = frame.getTitle();
+		//String closedFrame = frame.getTitle();
 		//System.out.println("Event: " + e + ", Title: " + frame.getTitle());
 		//System.out.println("Title: " + closedFrame);
 		for (int i = 0; i < comboBox.getItemCount(); i++) {
 			Object comboItemObject = comboBox.getItemAt(i);
-			String comboItemString =
-				((JInternalFrame) comboItemObject).getTitle();
+			/*String comboItemString =
+				((JInternalFrame) comboItemObject).getTitle();*/
 			//System.out.println("Actual Title: "+comboItemString);
-			if (closedFrame.equals(comboItemString)) {
+			if (frame.equals(comboItemObject)) {
 				index = i;
 			}
 		}

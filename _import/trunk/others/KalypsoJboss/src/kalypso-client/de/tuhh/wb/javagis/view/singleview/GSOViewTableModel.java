@@ -142,14 +142,17 @@ public class GSOViewTableModel extends AbstractTableModel
     {
 
 	if(col==0)
-
 	    return false;
 
 	else if(row==0)
-
 	    return false;
 
-	return true;
+	GisElementClass myGisElementClass = myGisElement.getGisElementClass();
+	if(myGisElementClass.getVersion().isEditable()){
+		return true;
+	}else{
+		return false;
+	}
 
     }
 

@@ -13,6 +13,7 @@ import java.util.Vector;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.data.GisElementClass;
 
 
 
@@ -21,15 +22,18 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
 {
 
     private GisInterfaceTableModel model;
+    
+    private GisElementClass myGisElementClass;
 
 //	String language = I18n.getLanguage();
-	private boolean isEditable = true;
+	//private boolean isEditable = true;
 
-    public DummyTableModel(GisInterfaceTableModel model)
+    public DummyTableModel(GisInterfaceTableModel model,GisElementClass gisElementClass)
 
     {
 
 	this.model=model;
+	this.myGisElementClass = gisElementClass;
 
     }
 
@@ -83,11 +87,12 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
     {
 
 	//return model.isCellEditable(row, col);
+
 	if(col==0){
 		return false;
 	}
 	else{
-		if(isEditable){
+		if((myGisElementClass.getVersion()).isEditable()){
 			return true;
 		}
 		else{
@@ -97,9 +102,9 @@ public class DummyTableModel extends AbstractTableModel implements GisInterfaceT
 
     }
     
-	public void setEditable(boolean editable){
+	/*public void setEditable(boolean editable){
 			isEditable = editable;
-		}
+		}*/
 
     public Object getValueAt(int row,int col)
 

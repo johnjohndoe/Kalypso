@@ -68,6 +68,7 @@ public class CSelectTSFrame extends JDialog implements ActionListener
 		getContentPane().setLayout(new BorderLayout());
 		
 		JPanel buttonPanel = new JPanel();
+		
 
 		ActionListener okListener1 = new ActionListener() {
            	 public void actionPerformed(ActionEvent e) {
@@ -142,6 +143,7 @@ public class CSelectTSFrame extends JDialog implements ActionListener
 
 
 		fillInTree(Level.GetRootLevel(), null);
+		//System.out.println("RootLevel: "+Level.GetRootLevel());
 
 
 

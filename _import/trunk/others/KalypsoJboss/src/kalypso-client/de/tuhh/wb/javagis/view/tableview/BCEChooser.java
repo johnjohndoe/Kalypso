@@ -1,4 +1,3 @@
-
 package de.tuhh.wb.javagis.view.tableview;
 
 import javax.swing.JTable;
@@ -10,133 +9,122 @@ import java.awt.event.*;
 import de.tuhh.wb.javagis.data.TSLink;
 import timeserieSelection.CSelectTSFrame;
 
-public class BCEChooser
-{
-	public BCEChooser(){
-		
+import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.data.Version;
+
+public class BCEChooser {
+
+	public BCEChooser() {
+
 	}
-	
-	public static void setUpBCEChooser(JTable table)
 
-		{
+	public static void setUpBCEChooser(JTable table) {
 
-        //Set up renderer and editor for the Favorite Date column.
+		//Set up renderer and editor for the Favorite Date column.
 
-        setUpBCERenderer(table);
-
-		
+		setUpBCERenderer(table);
 
 		final JButton button = new JButton("");
 
-        button.setBackground(Color.white);
+		button.setBackground(Color.white);
 
-        button.setBorderPainted(false);
+		button.setBorderPainted(false);
 
-        button.setMargin(new Insets(0,0,0,0));
+		button.setMargin(new Insets(0, 0, 0, 0));
 
 		final TableCellEditorBCE bceEditor = new TableCellEditorBCE(button);
 
-        table.setDefaultEditor(TSLink.class, bceEditor);
+		table.setDefaultEditor(TSLink.class, bceEditor);
 
-        setUpBCEEditor(bceEditor, button);
+		setUpBCEEditor(bceEditor, button);
 
 	}
-	
+
 	private static void setUpBCERenderer(JTable table) {
 
-        table.setDefaultRenderer(TSLink.class,
+		table.setDefaultRenderer(TSLink.class, new TableCellRendererBce());
 
-                                 new TableCellRendererBce());
+	}
 
-    }
-	
-	
-    private static CSelectTSFrame tsFrameDialog = new CSelectTSFrame();
+	private static CSelectTSFrame tsFrameDialog =
+		new CSelectTSFrame();
 
-    public static void setUpBCEEditor(final TableCellEditorBCE bceEditor, final JButton button) {
-	
-	ActionListener okListener = new ActionListener() {
+	public static void setUpBCEEditor(
+		final TableCellEditorBCE bceEditor,
+		final JButton button) {
 
-            public void actionPerformed(ActionEvent e) {
+		ActionListener okListener = new ActionListener() {
 
-			bceEditor.selectedLink=tsFrameDialog.getSelectedNode();
-			bceEditor.stopCellEditing();
-			System.out.println("selectedNode: "+bceEditor.selectedLink.toString());
-            }
+			public void actionPerformed(ActionEvent e) {
 
-        };
+				bceEditor.selectedLink = tsFrameDialog.getSelectedNode();
+				bceEditor.stopCellEditing();
+				System.out.println(
+					"selectedNode: " + bceEditor.selectedLink.toString());
+			}
 
-		
+		};
 
 		ActionListener cancelListener = new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 
 				bceEditor.cancelCellEditing();
 
 			}
 
 		};
-		
+
 		ActionListener clearListener = new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
-				
-				bceEditor.selectedLink=new TSLink(null);
+			public void actionPerformed(ActionEvent e) {
+
+				bceEditor.selectedLink = new TSLink(null);
 				bceEditor.stopCellEditing();
 
 			}
 
 		};
 
-		tsFrameDialog.setActionListener(okListener,cancelListener,clearListener);
-
+		tsFrameDialog.setActionListener(
+			okListener,
+			cancelListener,
+			clearListener);
 
 		tsFrameDialog.addWindowListener(new WindowAdapter() {
 
-            public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {
 
 				bceEditor.cancelCellEditing();
 
-                tsFrameDialog.hide();
-
-            }
-
-		});
-
-        //Here's the code that brings up the dialog.
-
-        button.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-				if(bceEditor.selectedLink!=null)
-
-			{
-
-				button.setText(bceEditor.selectedLink.toString());
+				tsFrameDialog.hide();
 
 			}
 
-			else
-				button.setText("");
+		});
 
-			
+		//Here's the code that brings up the dialog.
 
-                tsFrameDialog.setLocationRelativeTo(button);
-			tsFrameDialog.prepareWindow(bceEditor.selectedLink);
-			tsFrameDialog.show();
+		button.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				if (bceEditor.selectedLink != null) {
+
+					button.setText(bceEditor.selectedLink.toString());
+
+				} else
+					button.setText("");
+
+				tsFrameDialog.setLocationRelativeTo(button);
+				tsFrameDialog.prepareWindow(bceEditor.selectedLink);
+				tsFrameDialog.show();
 				tsFrameDialog.toFront();
-			
-  
-            }
 
-        });
+			}
 
-	 }
-	
-	
+		});
 
-	
+	}
+
 }
-
