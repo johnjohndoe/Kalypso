@@ -1,15 +1,24 @@
 package org.kalypso.ogc.gml.test;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.Writer;
+
+import junit.framework.TestCase;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.kalypso.ogc.gml.EnumerationFeatureTypeProperty;
 import org.kalypso.ogc.gml.JMSchema;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.util.xml.XMLTools;
-
-import junit.framework.TestCase;
+import org.opengis.cs.CS_CoordinateSystem;
+import org.xml.sax.InputSource;
 
 /**
  * @author doemming
@@ -26,13 +35,15 @@ public class JMSchemaTest extends TestCase
           XMLTools.getAsDOM(
         //      getClass().getResourceAsStream("point.xsd")));
               
-              getClass().getResourceAsStream("kalypsoNA.xsd")));
-   //           getClass().getResourceAsStream("KalypsoSpree.xsd")));
+     //         getClass().getResourceAsStream("kalypsoNA.xsd")));
+              getClass().getResourceAsStream("SpreeModell.xsd")));
               
               FeatureType[] ftps = jmSchema.getFeatureTypes();
       String result = toString(0,ftps);
       System.out.println(result);
-      BufferedReader reader=new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("kalypsoNA.txt")));
+//      String schemaTxtFile = "kalypsoNA.txt";
+      String schemaTxtFile = "SpreeModell.txt";
+      BufferedReader reader=new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(schemaTxtFile)));
       String goal="";
       String buffer;
       while((buffer=reader.readLine())!=null)
@@ -47,6 +58,36 @@ public class JMSchemaTest extends TestCase
       fail(e.getMessage());
     }
   }
+  
+  public void testGMLParsing()
+  {
+  try
+  {
+    JMSchema jmSchema =
+      new JMSchema(XMLTools.getAsDOM(
+            getClass().getResourceAsStream("SpreeModell.xsd")));
+ FeatureType[] ftps = jmSchema.getFeatureTypes();
+ InputSource schemaSource=new InputSource(getClass().getResourceAsStream("SpreeModell.xsd"));
+ InputSource gmlSource=new InputSource(getClass().getResourceAsStream("SpreeModell.gml"));
+ ConvenienceCSFactoryFull csFac=new ConvenienceCSFactoryFull();
+ CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault(  ).export(csFac.getCSByName("EPSG:4326"));
+
+ KalypsoFeatureLayer[] layers=GmlSerializer.deserialize(schemaSource, gmlSource, crs, null );
+ 
+   System.out.println("GML loaded");
+   File outFile=File.createTempFile("test_parse", "gml");
+   final Writer writer=new FileWriter(outFile );//OutputStreamWriter osw = new OutputStreamWriter( pos );
+   GmlSerializer.serialize( writer, layers, null );
+  System.out.println("GML saved in "+outFile.getPath());
+
+  }
+  catch(Exception e)
+  {
+    e.printStackTrace();
+   fail(e.getMessage());  
+  }
+  }
+  
   private String toString(int indent, FeatureType[] fts)
   {
     String result = "";
@@ -97,6 +138,11 @@ public class JMSchemaTest extends TestCase
         indent+40)
         + ftp.getType();
 
+    if (ftp instanceof XLinkFeatureTypeProperty)
+      result =
+        result
+          + toString(indent + 1, (XLinkFeatureTypeProperty) ftp);
+
     if (ftp instanceof EnumerationFeatureTypeProperty)
       result =
         result
@@ -104,7 +150,11 @@ public class JMSchemaTest extends TestCase
 
     return result;
   }
-
+  private String toString(int indent, XLinkFeatureTypeProperty xlinkftp)
+  {
+    return " ["+xlinkftp.toString()+"]";
+    
+  }
   private String toString(int indent, EnumerationFeatureTypeProperty eftp)
   {
     String result = "  Enumeration [";

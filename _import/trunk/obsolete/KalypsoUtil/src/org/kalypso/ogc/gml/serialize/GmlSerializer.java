@@ -13,11 +13,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.deegree.gml.GMLDocument;
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
+import org.deegree.gml.GMLNameSpace;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.gml.GMLFactory;
+import org.deegree_impl.gml.GMLNameSpace_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.GMLHelper;
 import org.kalypso.ogc.gml.JMSchema;
@@ -45,17 +47,20 @@ public final class GmlSerializer
       final InputSource gmlSource, final CS_CoordinateSystem targetCrs,
       final IProgressMonitor monitor ) throws GmlSerializeException
   {
-    monitor.beginTask( "GML wird geladen", 5000 );
+    if(monitor!=null)
+      monitor.beginTask( "GML wird geladen", 5000 );
 
     try
     {
       // load gml
       final GMLDocument gml = new GMLDocument_Impl( XMLTools.getAsDOM( gmlSource ) );
-      monitor.worked( 1000 );
+      if(monitor!=null)
+          monitor.worked( 1000 );
 
       // load schema
       final JMSchema schema = new JMSchema( XMLTools.getAsDOM( schemaSource ) );
-      monitor.worked( 1000 );
+      if(monitor!=null)
+            monitor.worked( 1000 );
 
       // create layers
       final HashMap layerMap = new HashMap();
@@ -65,7 +70,8 @@ public final class GmlSerializer
         final FeatureType type = types[i];
         layerMap.put( type, new KalypsoFeatureLayer( type.getName(), type, targetCrs ) );
       }
-      monitor.worked( 1000 );
+      if(monitor!=null)
+           monitor.worked( 1000 );
 
       // collect features
       final GMLFeatureCollection gmlFC = gml.getRoot();
@@ -78,7 +84,8 @@ public final class GmlSerializer
         final KalypsoFeatureLayer fl = (KalypsoFeatureLayer)layerMap.get( feature.getFeatureType() );
         fl.addFeature( new KalypsoFeature( feature ) );
       }
-      monitor.worked( 1000 );
+      if(monitor!=null)
+             monitor.worked( 1000 );
 
       // optimize layers
       for( final Iterator iter = layerMap.values().iterator(); iter.hasNext(); )
@@ -86,7 +93,8 @@ public final class GmlSerializer
         final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)iter.next();
         layer.optimize();
       }
-      monitor.worked( 1000 );
+      if(monitor!=null)
+              monitor.worked( 1000 );
 
       return (KalypsoFeatureLayer[])layerMap.values().toArray(
           new KalypsoFeatureLayer[layerMap.size()] );
@@ -107,7 +115,8 @@ public final class GmlSerializer
   public static void serialize( final Writer writer, final KalypsoFeatureLayer[] layers,
       final IProgressMonitor monitor ) throws GmlSerializeException
   {
-    monitor.beginTask( "GML wird geschrieben", 2000 );
+    if(monitor!=null)
+      monitor.beginTask( "GML wird geschrieben", 2000 );
 
     try
     {
@@ -118,24 +127,25 @@ public final class GmlSerializer
 
       final GMLFeatureCollection gmlCollection = GMLFactory
           .createGMLFeatureCollection( "collection" );
-      final GMLDocument gmlDoc = new GMLDocument_Impl();
+      final GMLDocument gmlDoc = getGmlDocument(gmlCollection);
 
       GM_Envelope boundingBox = null;
       for( int i = 0; i < layers.length; i++ )
       {
         final KalypsoFeatureLayer layer = layers[i];
-        final GM_Envelope layerBox = layer.getBoundingBox();
 
         if( boundingBox == null )
           boundingBox = layer.getBoundingBox();
-        else if( layerBox != null )
-          boundingBox.merge( layerBox );
-
+        else
+        {
+          
+          boundingBox.merge(layer.getBoundingBox());
+        }
         final KalypsoFeature[] features = layer.getAllFeatures();
         for( int j = 0; j < features.length; j++ )
         {
           GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc.getDocument(), features[j] );
-          gmlFeature.setId( features[j].getId() );
+          gmlFeature.setId( features[j].getId() );        
           gmlCollection.addFeature( gmlFeature );
         }
       }
@@ -153,7 +163,8 @@ public final class GmlSerializer
       // passieren
       gmlDoc.setRoot( gmlCollection );
 
-      monitor.worked( 1000 );
+      if(monitor!=null)
+           monitor.worked( 1000 );
 
       // DOM als GML schreiben
       final Document xmlDOM = gmlDoc.getDocument();
@@ -166,6 +177,17 @@ public final class GmlSerializer
       throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream", e );
     }
 
+  }
+  
+ private static GMLDocument getGmlDocument(GMLFeatureCollection col)
+  {
+    GMLDocument result=new GMLDocument_Impl();
+    result.setRoot(col);
+    GMLNameSpace gmlNameSpace=new GMLNameSpace_Impl("xmlns:gml=http://www.opengis.net/gml");
+    GMLNameSpace xlinkNameSpace=new GMLNameSpace_Impl("xmlns:xlink=http://www.w3.org/1999/xlink");    
+    result.addNameSpace(gmlNameSpace);
+    result.addNameSpace(xlinkNameSpace);   
+    return result;
   }
 
 }

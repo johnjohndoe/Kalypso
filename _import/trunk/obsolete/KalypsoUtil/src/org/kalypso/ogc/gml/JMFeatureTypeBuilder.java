@@ -7,6 +7,7 @@ import java.util.List;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
 import org.kalypso.util.xml.XMLTools;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,13 +26,12 @@ public class JMFeatureTypeBuilder
 	private List myFeatureProtoTypes = new ArrayList();
 	private String myName = null;
 	private String myTypeName = null;
-
 	private String mySubstitutionGroup = null;
 	private boolean myIsNullable = true;
-
+  private XLinkFeatureTypeProperty myXLinkProp=null;
+  
 	/**
 	 * @param schema 
-	 * @param typeName
 	 * @param node elementNode
 	 * 	<element name="NAModell" type="na:_NAModellType" substitutionGroup="gml:_FeatureCollection">
 	
@@ -159,14 +159,19 @@ public class JMFeatureTypeBuilder
 
 	public FeatureTypeProperty toFeatureTypeProperty()
 	{
-		if (myEnumeration.size() > 0)
+    if (myEnumeration.size() > 0)
 			return new EnumerationFeatureTypeProperty(
 				myName,
 				myTypeName,
 				true,
 				myEnumeration.toArray());
 
-			return FeatureFactory.createFeatureTypeProperty(
+    if(isXLink())
+    {
+      return myXLinkProp;
+    }
+    
+    return FeatureFactory.createFeatureTypeProperty(
 				myName,
 				myTypeName,
 				true);
@@ -174,10 +179,9 @@ public class JMFeatureTypeBuilder
 
 	public FeatureType toFeatureType()
 	{
-
 		List featureTypeList = new ArrayList();
 		List featureTypePropertyList = new ArrayList();
-
+		
 		for (int i = 0; i < myFeatureProtoTypes.size(); i++)
 		{
 			JMFeatureTypeBuilder builder =
@@ -216,4 +220,36 @@ public class JMFeatureTypeBuilder
 		return myFeatureProtoTypes.size() > 0;
 	}
 
+  private boolean isXLink()
+  {
+    return myXLinkProp!=null;
+  }
+  
+  public void setXLinkType( int xlink_type )
+  {
+    switch(xlink_type)
+    {
+      case JMSchemaFactory.XLINK_TYPE_SIMPLE:
+      {
+//        <attributeGroup name="simpleLink">
+//        <attribute name="type" type="string" fixed="simple" form="qualified"/>
+myXLinkProp =new XLinkFeatureTypeProperty(myName,XLinkFeatureTypeProperty.XLINK_SIMPLE,true);
+      
+//        <attribute ref="xlink:href" use="optional"/>
+//        <attribute ref="xlink:role" use="optional"/>  
+//        <attribute ref="xlink:arcrole" use="optional"/>    
+//        <attribute ref="xlink:title" use="optional"/>  
+//        <attribute ref="xlink:show" use="optional"/>    
+//        <attribute ref="xlink:actuate" use="optional"/>
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+//  private void addAttribute(XLinkAttribute att)
+//  {
+//      myAttributes.put(att.getLocalName(),att);
+//  }
 }
