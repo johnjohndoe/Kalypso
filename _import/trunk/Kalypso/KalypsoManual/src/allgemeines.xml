@@ -1,114 +1,274 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<chapter id="einfuehrung">
+  <?dbhh topicname="Allgemeines" topicid="2"?>
 
-  <chapter id="inf_intro">
-    <?dbhh topicname="Einleitung" topicid="2"?>
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Einführung in KALYPSO</primary>
+      </indexterm></date>
+  </chapterinfo>
 
-    <chapterinfo>
+  <title>Einführung</title>
+
+  <section id="allgemeines_zu_kalypso">
+    <sectioninfo>
       <date><indexterm>
-          <primary>Einführung in INFORM</primary>
+          <primary>KALYPSO-Konzept</primary>
         </indexterm></date>
-    </chapterinfo>
+    </sectioninfo>
 
-    <title>Einführung in INFORM</title>
+    <title>Allgemeines zu KALYPSO</title>
 
-    <section id="inf_intro_oeko1">
-      <sectioninfo>
-        <date><indexterm>
-            <primary>Gründe für ökologische Modellierung</primary>
-          </indexterm></date>
-      </sectioninfo>
+    <para id="para1">Das Programm-System KALYPSO Enterprise ist eine Open
+    Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in
+    Kooperation mit dem Arbeitsbereich Wasserbau der Technischen Universität
+    Hamburg-Harburg. KALYPSO erlaubt die Integration und Verwaltung von
+    numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
+    einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
+    Abstraktionsschicht dar mit folgenden Eigenschaften:</para>
 
-      <title>Gründe für ökologische Modellierung</title>
+    <itemizedlist>
+      <listitem>
+        <para>einheitliche Verwaltung und Strukturierung hydrologisch
+        hydraulischer Modelle</para>
+      </listitem>
 
-      <para>Ein Modell ist eine vereinfachte Darstellung eines komplexen
-      Realsystem. Ein Modell darf so einfach sein, dass die wesentlichen
-      Merkmale eines Systems in Abhängigkeit vom Verwendungszweck erkennbar
-      sind. Wie genau ein Modell das Realsystem letztlich abbildet, wird durch
-      die Güte des Modells bestimmt. Modelle können umfangreiche Sachverhalte
-      vereinfache und zugänglich machen, die aufgrund ihrer Komplexität
-      ansonsten nur schwer gedanklich durchdrungen werden können. In
-      Entscheidungsprozessen bieten Modelle somit für den Menschen eine
-      wesentliche Hilfe. Ein ökologisches Modell ist analog zur allgemeinen
-      Modelldefinition die vereinfachte Darstellung eines Ökosystems. Da
-      Ökosysteme zumeist sehr komplex sind, können oftmals nur Teile davon in
-      Submodellen abgebildet werden. In ökologischen Modellen wird die
-      umfangreiche Datenmenge, welche das Ökosystem beschreibt, auf wenige
-      charakteristische, systemsteuernde und damit modellrelevante Parameter
-      reduziert. Deutlich wird dies am Beispiel der <quote>Liebigtonne</quote>
-      (siehe <xref linkend="_001_001_tonne" />) . Die Gesamtheit aller
-      Fassdauben definiert das <quote>System Tonne</quote>, ihr Inhalt wird
-      jedoch durch nur wenige Dauben gesteuert. In der Ökosystemforschung
-      können beispielsweise aus einerAnforderunge Die Anwendung INFORM
-      benötigt die folgenden Mindestanforderungen Vielzahl von
-      Standortfaktoren mit Hilfe multivariater statistischer Methoden die
-      standort-differenzierenden Umweltparameter selektiert werden, die dann
-      für ökologische Modelle verwendet werden können.</para>
+      <listitem>
+        <para>zentrale Datenspeicherung (ggf. mit Datenbankanbindung)</para>
+      </listitem>
 
-      <figure id="_001_001_tonne">
-        <title>Reales Modell - Ökologisches Modell</title>
+      <listitem>
+        <para>Integration von hydrologischen und hydraulischen
+        Berechnungsverfahren auf Basis unterschiedlicher Rechenkerne</para>
+      </listitem>
+    </itemizedlist>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/001_001_tonne.png" scale="50" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
+    <para></para>
 
-    <section id="inf_intro_oeko2">
-      <sectioninfo>
-        <date><indexterm>
-            <primary>Grundlagen des ökologischen Modells</primary>
-          </indexterm></date>
-      </sectioninfo>
+    <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
+    an:</para>
 
-      <title>Grundlagen des ökologischen Modells</title>
+    <itemizedlist>
+      <listitem>
+        <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
+        Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
+        info@bjoernsen.de</para>
+      </listitem>
+    </itemizedlist>
 
-      <para>Das integrierte Flussauenmodell INFORM ist ein in knapp 10
-      Entwicklungsjahren entstandenes Modellsystem zur Bearbeitung
-      ökologischer Fragestellungen in Flussauen. Im Zusammenhang mit der
-      Untersuchung der Austauschvorgänge zwischen Fluss und Grundwasser
-      entstand die Idee, die ökologischen Vorgänge in der Flussaue mit
-      Modellen zu untersuchen. In einer Machbarkeitsstudie (BERTSCH und GIEBEL
-      1992) wurde das Grundkonzept der Vorgehensweise für ökologische
-      Modellierungen entworfen. Daraufhin erfolgte von der Wasser- und
-      Schifffahrtsdirektion West in Münster der Auftrag an die BfG, in einem
-      vierjährigen Pilotprojekt am Niederrhein bei Rees eine einfache
-      Modellmethodik zu entwickeln, mit deren Hilfe aufgrund nur weniger, mit
-      geringem Aufwand zu erhebender Leitparameter die ökologischen
-      Auswirkungen von Flusswasserstandsänderungen beurteilt werden können
-      (FUCHS ET AL. 1995). Die Bearbeitung erfolgte von 1993 bis 1996. In
-      diesen vier Jahren stellte sich heraus, dass unter Vorgabe eines
-      geringen Erhebungsaufwandes und einfacher Modellalgorithmen in der
-      ökologischen Modellierung der sehr komplexen Vorgänge in der Flussaue
-      nur wenig befriedigende Ergebnisse zu erzielen sind. Folglich wurde als
-      neues Ziel die <quote>Erstellung einer leicht anzuwendenden Methodik
-      unter Berücksichtigung der komplexen Grundlagen</quote> definiert. Die
-      Bearbeitungen führten zu einem anwendungsbezogenen und menügeführten
-      Modellsystem, das zu einem wesentlichen Teil auf Regelsätzen, die durch
-      Auswertung von Naturerhebungen, Literaturangaben und eigenen
-      Modelluntersuchungen erstellt wurden, aufbaut (BERTSCH ET AL. 1998). Bei
-      der Aufstellung und Kalibrierung des Modells wird Expertenwissen
-      benötigt, das zur Auswahl von Teilmethoden und Regelsätzen für den zu
-      bearbeitenden Untersuchungsraum herangezogen wird. Erforderlichenfalls
-      ist eine Auswertung von Naturerhebungen im Vergleich zu früheren
-      Erhebungen in anderen Untersuchungsgebieten vonnöten und ggf. sogar eine
-      Anpassung der Regelsätze an die neuen Randbedingungen. Die Bearbeitungen
-      wurden deshalb 1997 als angewandte BfG-Forschung fortgesetzt. Nachdem im
-      Laufe der Jahre immer mehr Teilprogramme entstanden, die umständlich von
-      Hand zu bedienen waren und deren Ergebnisse innerhalb eines Rechenganges
-      jeweils in die für das Folgeprogramm erforderliche Form umgewandelt
-      werden mussten, wurde 1999 die Erstellung einer einheitlichen
-      Benutzerplattform beschlossen. Das zu erstellende System sollte alle
-      vorhandenen Teilprogramme in der erforderlichen Weise miteinander
-      verknüpfen und es sollten die für die jeweilige Problemstellung
-      relevanten Programmteile ausgewählt werden können. Oberstes Prinzip
-      dieser Plattform sollte ein modularer Aufbau sein, damit das System
-      jederzeit erweitert oder auf neuere Versionen der Teilprogramme
-      angepasst werden kann. Das so entstandene Modell erhielt den Namen
-      INFORM (INtegrated FlOodplain Response Model), da mit ihm in Zukunft
-      sämtliche relevanten Fragestellungen in der Flussaue integrierend
-      betrachtet werden können. INFORM liegt derzeit in der Version 2.0
-      vor.</para>
-    </section>
-  </chapter>
+    <graphic fileref="img/000_001_bce_sw_300.png" />
+
+    <para>oder</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
+        Hamburg - Tel. 040 / 42878-3761 - www.tuhh/wb.de</para>
+      </listitem>
+    </itemizedlist>
+
+    <graphic fileref="img/wasserbau-logo.png" />
+
+    <para><emphasis role="bold">Die Nymphe Kalypso</emphasis></para>
+
+    <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
+    genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
+    Namen.</para>
+
+    <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem sein
+    Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel Ogygia
+    gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus Liebe dort
+    gefangen und wollte ihn zu Ihrem unsterblichen Ehemann nehmen. Doch selbst
+    nach Jahren des Umwerbens und Betörens von Kalypso's Seite sehnte sich
+    Odysseus immer noch nach seiner Frau und seinem Sohn.</para>
+
+    <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
+    entsandte, liess Kalypso Odysseus frei, sodass er seine Reise Richtung
+    Heimat fortsetzen konnte.</para>
+  </section>
+
+  <section id="kalypso_installation_lhwz_sachsen">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Installation Sachsen</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>KALYPSO-Installation LHWZ Sachsen</title>
+
+    <para>In der Landeshochwasserwarnzentrale Sachsen ist KALYPSO als
+    Softwarelösung für die Hochwasservorhersage installiert. Mit Hilfe des
+    Programmsystems können primär Wizard-geführte Vorhersageberechnungen
+    durchgeführt werden. Komplexe Operationen der Modellpflege werden
+    ebenfalls durch die Oberfläche unterstützt.</para>
+
+    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
+    serverseitigen Dienste sind in der Landeshochwasserwarnzentrale Sachsen
+    auf dem physisch eigenständigen KALYPSO-Server installiert:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Durchführung von numerischen Modellberechnungen
+        (Rechen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Ablage von Dokumentbausteinen für Hochwasserberichte
+        (Dokumenten-Dienst)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Im Falle der Landeshochwasserwarnzentrale Sachsen wird die
+    modellrelevante zentrale Datenverwaltung durch zwei Systeme administriert.
+    Die eigentlichen Modelldaten - d.h. Geografische Daten, physikalische
+    Parameter, Steuerparameter der numerischen Berechnung, etc. - werden
+    ausschließlich von KALYPSO verwaltet und abgelegt.</para>
+
+    <para>Zeitreihen und Dokumentbausteine für Hochwasserberichte werden durch
+    KALYPSO gelesen bzw. generiert, die Verwaltung und Ablage geschieht aber
+    innerhalb von PSICompact.</para>
+
+    <figure id="_server_client_architektur">
+      <title>KALYPSO Client-Server-Architektur bei der LHWZ Sachsen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Bausteine.png" scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Die in der Landeshochwasserwarnzentrale Sachsen installierte und
+    hier beschriebene KALYPSO-Version beinhaltet zwei Modell-Plugins.</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Spree</emphasis>: Ein kombiniertes
+        Niederschlags-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
+        bzw. der WASY GmbH für das Einzugsgebiet der Spree.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Weiße Elster</emphasis>: Ein
+        hydrologisches Gebietsmodell des Einzugsgebietes der Weißen Elster mit
+        Abbildung der gesamten landbezogenen Wasserbilanz und integriertem
+        Wellenablauf-Modul entwickelt und aufgebaut von Björnsen Beratende
+        Ingenieure GmbH.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Beide Modelle werden durch die KALYPSO Modeler Oberfläche <xref
+    linkend="grafische_oberflaeche" /> unterstützt. Gleichzeitig sind
+    innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
+    zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
+    Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
+    der jeweiligen Modelle leiten <xref
+    linkend="vorhersage_wizards" />.</para>
+  </section>
+
+  <section id="anwendungsfaelle">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Anwendungsfälle</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Anwendungsfälle</title>
+
+    <para>Die KALYPSO-Installation in der Landeshochwasserwarnzentrale Sachsen
+    unterscheidet grundsätzlich drei Anwendungsfälle:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Administration</emphasis>: Der
+        Fachadministrator nimmt hauptsächlich die Aufgabe wahr, neu Modelle
+        bzw. Modelltypen in KALYPSO zu implementieren.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Modellpflege</emphasis>: Die Modellpflege
+        und -fortschreibung wird durch den Experten (Modellierer) geleistet.
+        Diese Arbeit umfasst u.a. die Nachrechnung historischer Ereignisse zur
+        Nachführung der Modellparameter (Nachkalibrierung), Festlegung und
+        Freischaltung der für die Vorhersage maßgeblichen Modellvariante sowie
+        Bearbeitung und Freischaltung der Visualisierungsvorlagen.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Hochwasserbetrieb</emphasis>: Im
+        Hochwasserfall müssen durch den Anwender schnell und zuverlässig
+        Hochwasservorhersagen durchgeführt werden. Dazu gehört neben der
+        Berechnung von Wasserständen und Abflüssen an definierten
+        Gewässerstationen auch die Generierung von Bausteinen (Texte,
+        Grafiken) für die Anfertigung von Hochwasserberichten.</para>
+      </listitem>
+    </orderedlist>
+
+    <figure id="anwendungsfaelle">
+      <title>KALYPSO Anwendungsfälle LHWZ Sachsen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/anwendungsfaelle.png" scale="75" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Der Punkt 1 Administration ist gesondert in der Technischen
+    Dokumentation beschrieben. Die Benutzung von KALYPSO in Hinblick auf die
+    Modellpflege <xref linkend="grafische_oberflaeche" /> und den
+    Hochwasserbetrieb <xref linkend="vorhersage_wizards" /> ist im
+    vorliegenden Handbuch beschrieben.</para>
+  </section>
+
+  <section id="datenmanagement">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Datenmanagement LHWZ</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Datenmanagement</title>
+
+    <para>Die in <xref linkend="kalypso_installation_lhwz_sachsen" />
+    beschriebene Client-Server-Architektur basiert auf folgendem
+    Datenmanagement-Prinzip:</para>
+
+    <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem
+    KALYPSO-Server gespeicherte Modelle geladen werden. Diese aktuellen
+    Modelle - es können mehrere Modelle parallel geöffnet und bearbeitet
+    werden - werden im lokalen Arbeitsverzeichnis von KALYPSO verwaltet. Alle
+    Änderungen am Modell, das Anlegen neuer Rechenvarianten, etc. sind somit
+    im ersten Schritt nur wirksam für die lokale Modellversion.</para>
+
+    <para>Das Speichern des Modells (einschließlich Modellspezifikation,
+    Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
+    Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels eines
+    speziellen Menüs <guilabel>Modell</guilabel> <xref
+    linkend="grundfunktionen" /> im Hauptmenü von KALYPSO angesteuert.</para>
+
+    <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent in
+    KALYPSO Modeler (Expertenmodus), wo der Experte sehr detailliert und
+    gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
+    kann.</para>
+
+    <para>Für den Anwender im Hochwasserbetrieb bleibt das Datenmanagement
+    verborgen, da er automatisch und durch den jeweiligen Vorhersage-Wizard
+    geführt die für die Prognose freigeschalteten Modelle vom Server abruft
+    und die Ergebnisse der Hochwasservorhersage-Berechnung in einer
+    vorgegebenen Struktur wieder auf dem Server ablegt.</para>
+  </section>
+</chapter>

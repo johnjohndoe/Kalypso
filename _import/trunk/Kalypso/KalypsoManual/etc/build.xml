@@ -9,6 +9,7 @@
   <property name="build.html.dir" value="${build.dir}/html"/>
   <property name="build.tex.dir" value="${build.dir}/tex"/>
   <property name="build.eclipse.dir" value="${build.dir}/eclipse"/>
+  <property name="doc.name" value="main_driver.xml"/>
 
   <!-- Doc properties -->
 <!--  <property name="manual.dir" value="../manual" />
@@ -33,7 +34,7 @@
   
   <target name="valid">
     <antcall target="xmlvalid">
-      <param name="xmlvalid.xml" value="${help.dir}/manual.xml"/>
+      <param name="xmlvalid.xml" value="${help.dir}/${doc.name}"/>
     </antcall>
   </target>
 
@@ -47,7 +48,7 @@
       <param name="xslproc.out.dir" value="${build.html.dir}" />
       <param name="xslproc.out.name" value="manual.html" />
       <param name="xslproc.xsl" value="${help.dir}/manual-html.xsl" />
-      <param name="xslproc.xml" value="${help.dir}/manual.xml" />
+      <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
     </antcall>
   </target>
 
@@ -60,7 +61,7 @@
       <param name="xslproc.out.dir" value="${build.eclipse.dir}" />
       <param name="xslproc.out.name" value="manual.html" />
       <param name="xslproc.xsl" value="${help.dir}/manual-eclipse.xsl" />
-      <param name="xslproc.xml" value="${help.dir}/manual.xml" />
+      <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
     </antcall>
     
     <copy todir="." file="${build.eclipse.dir}/toc.xml"/>
@@ -91,7 +92,7 @@
       <param name="pdfproc.out.dir" value="${build.pdf.dir}" />
       <param name="pdfproc.out.name" value="manual" />
       <param name="pdfproc.xsl" value="${help.dir}/manual-tex.xsl" />
-      <param name="pdfproc.xml" value="${help.dir}/manual.xml" />
+      <param name="pdfproc.xml" value="${help.dir}/${doc.name}" />
     </antcall>
 
   </target>
