@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tableview xmlns="tableview.xml.kalypso.org"><layer id="1" source="SERVICE=RESOURCE#XSD=schema/KalypsoSpree.xsd#PATH=gml/KalypsoSpree.gml#LAYER=Einzugsgebiet" type="gml"><ns1:column name="BodenfeuchteMin" xmlns:ns1="types.xml.kalypso.org"/><ns2:column name="Name" xmlns:ns2="types.xml.kalypso.org"/><ns3:column name="Bodenfeuchte" xmlns:ns3="types.xml.kalypso.org"/><ns4:column name="Ausdehnung" xmlns:ns4="types.xml.kalypso.org"/><ns5:column name="Ort" xmlns:ns5="types.xml.kalypso.org"/></layer></tableview>
+

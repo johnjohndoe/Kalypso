@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tableview xmlns="tableview.xml.kalypso.org">
+	<layer id="1" source="SERVICE=RESOURCE#XSD=test/point.xsd#PATH=test/point.gml#LAYER=point" type="gml">
+	</layer>
+</tableview>
+

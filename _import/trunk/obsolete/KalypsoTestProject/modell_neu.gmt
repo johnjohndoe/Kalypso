@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gisview xmlns="gisview.xml.kalypso.org"><extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/><layers><layer name="Fluesse" visible="true" id="layer1" source="SERVICE=RESOURCE#PATH=shapes/major_rivers#SRS=EPSG:4326" type="shape"><ns1:style source="PATH=styles/styles.sld#STYLE=default:europe:major_rivers" type="style" xmlns:ns1="types.xml.kalypso.org"/></layer></layers></gisview>
+
