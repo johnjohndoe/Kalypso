@@ -12,7 +12,7 @@ public class ExpandAllAction extends AbstractRepositoryExplorerAction
   {
     super( explorer, "Alles erweitern",
         ImageProvider.IMAGE_ZML_REPOSITORY_EXPAND,
-        "Erweitert alle Zweige der Baum" );
+        "Erweitert alle Zweige des Baums" );
   }
 
   /**

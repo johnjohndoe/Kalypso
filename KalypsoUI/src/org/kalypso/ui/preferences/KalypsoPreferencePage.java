@@ -42,6 +42,9 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
     addField( new StringFieldEditor( IKalypsoPreferences.DATE_TO, "Bis-Datum:", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.NUMBER_OF_DAYS, "&Tagesanzahl (Zeitreihenbrowser):", getFieldEditorParent() ) );
 
+    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH, "Breite des Exportbildes (Diagramm):", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT, "Höhe des Exportbildes (Diagramm):", getFieldEditorParent() ) );
+    
     addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );

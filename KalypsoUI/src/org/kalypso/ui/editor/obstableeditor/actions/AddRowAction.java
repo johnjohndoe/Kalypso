@@ -6,6 +6,7 @@ import org.eclipse.jface.window.Window;
 import org.kalypso.eclipse.jface.dialogs.TypeBasedInputValidator;
 import org.kalypso.ogc.sensor.commands.AddRowCommand;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**
  * AddRow
@@ -19,7 +20,8 @@ public class AddRowAction extends AbstractEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    final ObservationTableModel model = getEditor().getModel();
+    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
+    final ObservationTableModel model = editor.getModel();
     
     if( model.getColumnCount() <= 0 )
       return;
@@ -36,9 +38,9 @@ public class AddRowAction extends AbstractEditorActionDelegate
 
     if( dlg.open() == Window.OK )
     {
-      AddRowCommand command = new AddRowCommand( getEditor().getModel(), inpv.toValue( dlg.getValue() ) );
+      AddRowCommand command = new AddRowCommand( editor.getModel(), inpv.toValue( dlg.getValue() ) );
       
-      getEditor().postCommand( command, null );
+      editor.postCommand( command, null );
     }
   }
 }

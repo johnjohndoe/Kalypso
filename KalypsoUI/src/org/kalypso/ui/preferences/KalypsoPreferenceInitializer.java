@@ -29,5 +29,9 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     final String defDate = DateFormat.getDateTimeInstance().format( new Date() );
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.DATE_FROM, defDate );
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.DATE_TO, defDate );
+    
+    // size of the image export for the observation chart
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_WIDTH, 600 );
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_HEIGHT, 500 );
   }
 }
