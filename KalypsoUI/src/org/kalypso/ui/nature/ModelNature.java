@@ -565,8 +565,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         }
         catch( Exception e )
         {
+          // TODO hier tritt manchmal eine exception auf, testen...
           System.out.println( "could not delete File: " + targetfile.getFullPath() );
           e.printStackTrace();
+          continue;
         }
       }
       System.out.println( "Write: " + serverfile.getAbsolutePath() );
