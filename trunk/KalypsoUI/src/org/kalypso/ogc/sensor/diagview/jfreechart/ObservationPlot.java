@@ -124,6 +124,8 @@ public class ObservationPlot extends XYPlot
       final Object diagramCurve = it.next();
       addCurve( (IDiagramCurve) diagramCurve );
     }
+    
+    setNoDataMessage( "Keine Daten vorhanden" );
   }
 
   /**

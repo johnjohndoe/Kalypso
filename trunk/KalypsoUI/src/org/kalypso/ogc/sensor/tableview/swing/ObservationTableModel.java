@@ -110,6 +110,9 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
+      if( m_columns.size() == 0 )
+        return String.class;
+      
       if( columnIndex == 0 )
         return m_sharedAxis.getDataClass();
 
@@ -125,6 +128,9 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
+      if( m_columns.size() == 0 )
+        return "Keine Daten vorhaden";
+      
       if( columnIndex == 0 )
         return m_sharedAxis.getName();
 
@@ -140,7 +146,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       if( m_columns.size() == 0 )
-        return 0;
+        return 1;
 
       return m_columns.size() + 1;
     }
