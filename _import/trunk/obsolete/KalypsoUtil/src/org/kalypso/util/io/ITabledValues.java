@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
 /**
@@ -46,17 +46,27 @@ package org.kalypso.util.io;
 public interface ITabledValues
 {
   /**
-   * Returns the number of lines fetched from the CSV-File.
+   * Returns the number of lines fetched from the CSV-File
+   * 
+   * @return the number of lines fetched from the CSV-File
    */
-  public int getLines();
+  public int getLines( );
 
   /**
-   * Returns the item at the given position in the CSV-File.
+   * Returns the item at the given position in the CSV-File
+   * 
+   * @param row
+   * @param col
+   * @return the item at the given position in the CSV-File
    */
   public String getItem( final int row, final int col );
-  
+
   /**
    * Sets the element in the mem representation of the CSV file
+   * 
+   * @param row
+   * @param col
+   * @param str
    */
   public void setItem( final int row, final int col, final String str );
 }

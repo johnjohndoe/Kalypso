@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
 import java.io.BufferedReader;
@@ -92,6 +92,8 @@ public class CSV implements ITabledValues
 
   /**
    * Fetches the CSV-File. Closes the reader once finished.
+   * 
+   * @throws IOException
    */
   private void fetchFile( ) throws IOException
   {
@@ -138,7 +140,7 @@ public class CSV implements ITabledValues
   }
 
   /**
-   * Returns the number of lines fetched from the CSV-File.
+   * @see org.kalypso.util.io.ITabledValues#getLines()
    */
   public int getLines( )
   {
@@ -146,7 +148,7 @@ public class CSV implements ITabledValues
   }
 
   /**
-   * Returns the item at the given position in the CSV-File.
+   * @see org.kalypso.util.io.ITabledValues#getItem(int, int)
    */
   public String getItem( final int row, final int col )
   {
@@ -154,7 +156,7 @@ public class CSV implements ITabledValues
   }
 
   /**
-   * Sets the item at the given position.
+   * @see org.kalypso.util.io.ITabledValues#setItem(int, int, java.lang.String)
    */
   public void setItem( final int row, final int col, String element )
   {
@@ -163,6 +165,8 @@ public class CSV implements ITabledValues
 
   /**
    * Saves the contents in the given Writer.
+   * 
+   * @param writer
    * 
    * @throws IOException
    */
@@ -191,7 +195,10 @@ public class CSV implements ITabledValues
 
   /**
    * Writes an two-dimensional Array of Strings as CSV into a writer. The Writer
-   * will NOT be closes after this operation.
+   * will NOT be closed after this operation
+   * 
+   * @param data
+   * @param pw
    */
   public static void writeCSV( final String[][] data, final PrintWriter pw )
   {

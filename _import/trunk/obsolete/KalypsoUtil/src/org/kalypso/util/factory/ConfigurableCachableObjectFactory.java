@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.java.lang.reflect.ClassUtilityException;
 
 /**
  * <p>
@@ -88,6 +88,7 @@ public class ConfigurableCachableObjectFactory
    * @param cache
    *          falls true, werden die erzeugten Objekte gecached, sonst wird
    *          immer ein neues Objekt erzeugt
+   * @param cl the class loader to use
    */
   public ConfigurableCachableObjectFactory( final Properties props, final boolean cache,
       final ClassLoader cl )
@@ -98,6 +99,11 @@ public class ConfigurableCachableObjectFactory
   }
 
   /**
+   * @param type
+   * @param expected
+   * @return object instance
+   * @throws FactoryException
+   * 
    * @see ConfigurableCachableObjectFactory#getObjectInstance(String, Class,
    *      Object[])
    */
@@ -123,6 +129,12 @@ public class ConfigurableCachableObjectFactory
    * <p>
    * WICHTIG: Dies bedeutet dass man also Argumente benutzen sollte nur wenn der
    * Cache nicht aktiviert ist.
+   * 
+   * @param type
+   * @param expected
+   * @param arguments
+   * @return object instance
+   * @throws FactoryException
    */
   public Object getObjectInstance( final String type, final Class expected, final Object[] arguments )
       throws FactoryException
@@ -161,6 +173,8 @@ public class ConfigurableCachableObjectFactory
 
   /**
    * Inserts the given properties in the main properties of this factory.
+   * 
+   * @param props
    */
   public void addProperties( Properties props )
   {

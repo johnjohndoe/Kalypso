@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
 import java.io.BufferedReader;
@@ -93,6 +93,8 @@ public class RegexCSV implements ITabledValues
 
   /**
    * Fetches the CSV-File. Closes the reader once finished.
+   * 
+   * @throws IOException
    */
   private void fetchFile( ) throws IOException
   {
@@ -119,7 +121,7 @@ public class RegexCSV implements ITabledValues
           line = r.readLine();
           continue;
         }
-        
+
         Matcher m = m_pattern.matcher( line );
         if( m.matches() )
         {
@@ -147,7 +149,7 @@ public class RegexCSV implements ITabledValues
   }
 
   /**
-   * Returns the number of lines fetched from the CSV-File.
+   * @see org.kalypso.util.io.ITabledValues#getLines()
    */
   public int getLines( )
   {
@@ -155,7 +157,7 @@ public class RegexCSV implements ITabledValues
   }
 
   /**
-   * Returns the item at the given position in the CSV-File.
+   * @see org.kalypso.util.io.ITabledValues#getItem(int, int)
    */
   public String getItem( final int row, final int col )
   {
@@ -163,7 +165,7 @@ public class RegexCSV implements ITabledValues
   }
 
   /**
-   * Sets the item at the given position.
+   * @see org.kalypso.util.io.ITabledValues#setItem(int, int, java.lang.String)
    */
   public void setItem( final int row, final int col, String element )
   {
@@ -171,7 +173,9 @@ public class RegexCSV implements ITabledValues
   }
 
   /**
-   * Saves the contents in the given Writer.
+   * Saves the contents in the given Writer
+   * 
+   * @param writer
    * 
    * @throws IOException
    */

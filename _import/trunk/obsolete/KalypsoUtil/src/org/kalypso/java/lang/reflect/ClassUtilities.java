@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.lang.reflect;
 
 import java.lang.reflect.Constructor;
@@ -54,6 +54,9 @@ public class ClassUtilities
    * Returns the classname of the given class without package part.
    * <p>
    * Example: org.foo.bar.FooBar will return FooBar
+   * 
+   * @param someClass
+   * @return the classname of the given class without package part.
    */
   public static String getOnlyClassName( final Class someClass )
   {
@@ -64,11 +67,17 @@ public class ClassUtilities
   }
 
   /**
+   * @param classname
+   * @param target
+   * @param cl
+   * @return new instance
+   * @throws ClassUtilityException
+   * 
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[],
    *      Object[])
    */
-  public static Object newInstance( final String classname, final Class target, final ClassLoader cl )
-      throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class target,
+      final ClassLoader cl ) throws ClassUtilityException
   {
     return newInstance( classname, target, cl, null, null );
   }
@@ -80,11 +89,19 @@ public class ClassUtilities
    * constructor might not be found. In these cases, use the full version of
    * this method where you can exactly specify the classes of the arguments.
    * 
+   * @param classname
+   * @param target
+   * @param cl
+   * @param arguments
+   * @return new instance
+   * @throws ClassUtilityException
+   * 
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[],
    *      Object[])
    */
   public static Object newInstance( final String classname, final Class target,
-      final ClassLoader cl, final Object[] arguments ) throws ClassUtilityException
+      final ClassLoader cl, final Object[] arguments )
+      throws ClassUtilityException
   {
     Class[] argClasses = null;
     if( arguments != null )
@@ -132,7 +149,7 @@ public class ClassUtilities
     {
       final Class c = Class.forName( classname, true, cl );
 
-      if( ( target == null ) || target.isAssignableFrom( c ) )
+      if( (target == null) || target.isAssignableFrom( c ) )
       {
         if( arguments == null )
           return c.newInstance();
@@ -142,8 +159,8 @@ public class ClassUtilities
         return cons.newInstance( arguments );
       }
 
-      throw new ClassUtilityException( "Class " + classname + " not assignable from "
-          + target.getName() );
+      throw new ClassUtilityException( "Class " + classname
+          + " not assignable from " + target.getName() );
     }
     catch( ClassNotFoundException e )
     {
@@ -172,34 +189,6 @@ public class ClassUtilities
     catch( InvocationTargetException e )
     {
       throw new ClassUtilityException( e );
-    }
-  }
-
-  /**
-   * An Exception that can occur using the upper class
-   * 
-   * @author schlienger
-   */
-  public static class ClassUtilityException extends Exception
-  {
-    public ClassUtilityException()
-    {
-      super();
-    }
-
-    public ClassUtilityException( String message )
-    {
-      super( message );
-    }
-
-    public ClassUtilityException( String message, Throwable cause )
-    {
-      super( message, cause );
-    }
-
-    public ClassUtilityException( Throwable cause )
-    {
-      super( cause );
     }
   }
 }

@@ -7,7 +7,6 @@ import org.kalypso.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.repository.AbstractRepository;
-import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
@@ -24,10 +23,10 @@ public class PSICompactRepository extends AbstractRepository
 {
   private PSICompactItem m_psiRoot = null;
 
-  public PSICompactRepository( final IRepositoryFactory factory,
-      final boolean readOnly ) throws RepositoryException
+  public PSICompactRepository( String name, boolean readOnly )
+      throws RepositoryException
   {
-    super( factory, "PSICompact", readOnly );
+    super( name, PSICompactRepositoryFactory.class.getName(), "", readOnly );
 
     reload();
   }
@@ -45,12 +44,11 @@ public class PSICompactRepository extends AbstractRepository
       throws ECommException
   {
     final PSICompact psi = PSICompactFactory.getConnection();
-    
-    final ObjectInfo[] objInfos = psi.getInfo(
-        valueType );
+
+    final ObjectInfo[] objInfos = psi.getInfo( valueType );
 
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
-    
+
     PSICompactItem parent = null;
 
     for( int k = 0; k < objInfos.length; k++ )
@@ -64,7 +62,7 @@ public class PSICompactRepository extends AbstractRepository
       {
         if( path[i].length() == 0 )
           continue;
-        
+
         final String nodeID = Arrays.implode( path, ".", 0, i ).trim();
 
         if( nodeID.length() == 0 )
@@ -74,7 +72,8 @@ public class PSICompactRepository extends AbstractRepository
           parent = (PSICompactItem) nodes.get( nodeID );
         else
         {
-          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info, valueType );
+          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID,
+              info, valueType );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
           // deswegen hier)
@@ -84,14 +83,14 @@ public class PSICompactRepository extends AbstractRepository
           nodes.put( nodeID, n );
 
           parent = n;
-        }        
+        }
       }
     }
 
     // abnormal case...
     if( parent == null )
-      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>",
-          new PSICompact.ObjectInfo(), 0 );
+      return new PSICompactItem( null, "Keine Struktur in PSICompact...",
+          "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
 
     while( parent.getParent() != null )
       parent = (PSICompactItem) parent.getParent();
@@ -119,7 +118,9 @@ public class PSICompactRepository extends AbstractRepository
    * Always returns
    * 
    * <pre>
-   * psicompact://
+   * 
+   *  psicompact://
+   *  
    * </pre>
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()

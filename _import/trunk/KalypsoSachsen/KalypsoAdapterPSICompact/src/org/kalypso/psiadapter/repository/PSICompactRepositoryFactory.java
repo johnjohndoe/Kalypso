@@ -10,9 +10,9 @@ import org.kalypso.psiadapter.repository.conversion.IValueConverter;
 import org.kalypso.psiadapter.repository.conversion.KelvinCelsiusConverter;
 import org.kalypso.psiadapter.repository.conversion.NoConverter;
 import org.kalypso.psiadapter.repository.conversion.SIConverter;
-import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.factory.AbstractRepositoryFactory;
 
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.WQData;
@@ -30,7 +30,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   /**
    * Does nothing.
    * 
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
   public boolean configureRepository( )
   {
@@ -38,8 +38,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   }
 
   /**
-   * @throws RepositoryException
-   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
   public IRepository createRepository( ) throws RepositoryException
   {
@@ -59,8 +58,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
     if( m_psiCompactRep == null )
     {
       // PSICompact Repository is always in read/write mode
-      m_psiCompactRep = new PSICompactRepository(
-          new PSICompactRepositoryFactory(), false );
+      m_psiCompactRep = new PSICompactRepository( "PSICompact", false );
     }
 
     return m_psiCompactRep;
