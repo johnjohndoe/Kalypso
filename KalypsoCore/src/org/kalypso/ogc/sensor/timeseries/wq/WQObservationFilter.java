@@ -18,8 +18,16 @@ import org.xml.sax.InputSource;
 
 /**
  * WQObservationFilter
+ * <p>
+ * The configuration string has following syntax:
  * 
- * Conf: (one of TimeserieConstants.TYPE_*) denotes the type of the model
+ * <pre>
+ * filter( wq * type )
+ * </pre>
+ * 
+ * with type one of TimeserieConstants.TYPE_*, denotes the type of the value
+ * axis of the model that is transformed. Thus, if the type is W, then this
+ * filter generates Q.
  * 
  * @author schlienger
  */

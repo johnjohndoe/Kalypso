@@ -139,7 +139,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     // try to laod conf file
     final String[] locs = getPluginPreferences().getString(
-        IKalypsoPreferences.CLIENT_CONF_URLS ).split( ";" );
+        IKalypsoPreferences.CLIENT_CONF_URLS ).split( "," );
 
     final Properties conf = new Properties();
 
@@ -179,21 +179,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       }
       finally
       {
-        try
-        {
-          if( stream != null )
-            stream.close();
-        }
-        catch( IOException e1 )
-        {
-          e1.printStackTrace();
-        }
+        IOUtils.closeQuietly( stream );
       }
     }
   }
 
   /**
    * Loads the pool configuration
+   * @throws IOException
    */
   private void configurePool( ) throws IOException
   {
