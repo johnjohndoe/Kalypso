@@ -1,7 +1,10 @@
 package org.kalypso.ui.repository.action;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.repository.dialog.NumberOfDaysInputDialog;
 
 /**
  * @author schlienger
@@ -12,7 +15,7 @@ public class ConfigurePreviewAction extends FullAction
 
   public ConfigurePreviewAction( final Shell shell )
   {
-    super( "Einstellungen", null, "Einstellungen von der Zeitreihen-Vorschau setzen" );
+    super( "Einstellungen", ImageProvider.IMAGE_ZML_REPOSITORY_CONF, "Einstellungen der Zeitreihen-Vorschau setzen" );
     
     m_shell = shell;
   }
@@ -22,6 +25,11 @@ public class ConfigurePreviewAction extends FullAction
    */
   public void run()
   {
-    super.run();
+    final NumberOfDaysInputDialog dlg = new NumberOfDaysInputDialog( m_shell, 30 );
+    
+    if( dlg.open() == Window.OK )
+    {
+      dlg.getDays();
+    }
   }
 }

@@ -10,6 +10,7 @@ import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
+import org.kalypso.ui.repository.dialog.ZmlRepositoryConfigDialog;
 
 /**
  * A GUI oriented ZmlRepository factory.

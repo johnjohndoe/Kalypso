@@ -9,6 +9,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryFactory;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.RepositorySpecification;
 
@@ -26,7 +27,7 @@ public class AddRepositoryAction extends FullAction
 
   public AddRepositoryAction( final Shell shell, final IRepositoryContainer cp )
   {
-    super( "Repository hinzufügen", null, "Fügt ein Repository hinzu..." );
+    super( "Repository hinzufügen", ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );
 
     m_cp = cp;
     m_shell = shell;
