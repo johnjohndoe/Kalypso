@@ -1,0 +1,831 @@
+
+     a b f l u s s b i l a n z  
+
+ simulationszeitraum:   von  950831   0 uhr   bis  950915   0 uhr            0.250
+
+
+
+
+***************************************************************
+
+
+ gesamtbilanz des einzugsgebietes: 
+
+
+
+
+ jahreszyklus:  1
+
+
+
+ gesamtflaeche:                      549.694
+
+ aufgeteilt in:
+ versiegelte Flaeche:                 19.273 qkm
+ natuerliche Flaeche:                530.422 qkm
+
+ davon:
+ mit aktivem Grundwasserspeicher:    530.422 qkm
+ mit Entwaesserung zum Tiefen-GWS:     0.000 qkm
+
+ Bilanz natuerliche Flaechen:         
+
+ Niederschlag:                       163.071 qbm/d    42.500 mm
+
+ pot. Grasreferenzverd.:              45.871 qbm/d    11.955 mm
+ pot. Verd. n. Nutzungskorr.:         44.827 qbm/d    11.683 mm
+
+ Interzeptionsverdunstung:             6.864 qbm/d     1.789 mm
+ Verdunstung aus Bodenspeicher:       37.024 qbm/d     9.649 mm
+ Verdunstung gesamt:                  43.888 qbm/d    11.438 mm
+ Overlandflow:                        27.942 qbm/d     7.282 mm
+ Interflow:                           60.150 qbm/d    15.677 mm
+ Perkolation:                         90.178 qbm/d    23.502 mm
+ Aenderung Bodenspeicher:            131.733 qbm/d    34.333 mm
+
+ Zufluss TGWS:                         0.000 qbm/d     0.000 mm
+ Zufluss GWS:                         90.178 qbm/d    23.502 mm
+
+ Grundwasserspeicher      
+ Gesamtabfluss Basisabfluss:          12.491 qbm/d     3.255 mm
+ Kapilarer Aufstieg aus GWS:           0.000 qbm/d     0.000 mm
+ Entnahme GWS:                         0.000 qbm/d     0.000 mm
+
+ Tiefengrundwasserspeicher:                    
+ Verlust TGWS:                         0.000 qbm/d     0.000 mm
+
+ Abfluss versiegelte Flaechen:         4.629 qbm/d
+
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1800
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                 1.997 qkm
+   vers. flaeche:                    1.690 qkm
+
+   grundwasserleiter:                1.997 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1700
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:               114.165 qkm
+   vers. flaeche:                    4.115 qkm
+
+   grundwasserleiter:              114.165 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1600
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:               100.561 qkm
+   vers. flaeche:                    5.167 qkm
+
+   grundwasserleiter:              100.561 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1601
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                45.945 qkm
+   vers. flaeche:                    0.000 qkm
+
+   grundwasserleiter:               45.945 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1500
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                41.778 qkm
+   vers. flaeche:                    6.682 qkm
+
+   grundwasserleiter:               41.778 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1403
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                39.365 qkm
+   vers. flaeche:                    0.000 qkm
+
+   grundwasserleiter:               39.365 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1404
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                36.648 qkm
+   vers. flaeche:                    0.000 qkm
+
+   grundwasserleiter:               36.648 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        6100
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                47.997 qkm
+   vers. flaeche:                    0.000 qkm
+
+   grundwasserleiter:               47.997 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        6000
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                 5.286 qkm
+   vers. flaeche:                    1.619 qkm
+
+   grundwasserleiter:                5.286 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1401
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                21.916 qkm
+   vers. flaeche:                    0.000 qkm
+
+   grundwasserleiter:               21.916 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+
+-----------------------------------------
+
+
+
+ z u s a m m e n f a s s u n g  
+
+ bilanz fuer teilgebiet:        1402
+
+ bilanzierungszeitraum:         1 jahre
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)       0.0 mm
+ interz.verd.:                       0.0 mm
+ bestandsniederschlag:               0.0 mm
+ fehler(diff.interz.speicher):       0.0 mm
+
+ pot.grasref.verdunstung:            0.0 mm
+ pot.verdunst. (nutzungskor.):       0.0 mm
+ aktuelle verdunstung:               0.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:               0.0 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                      0.0 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.0 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                        0.0 mm
+ fehler (dif. bodenspeicher):        0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  0.0 mm
+        grundw. unterh.l.TG:           0.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+ diff. speicherinhalt:                 0.0 mm
+ fehler:                               0.0 mm
+
+ flaechenanteile: 
+
+   natuerl. flaeche:                74.763 qkm
+   vers. flaeche:                    0.000 qkm
+
+   grundwasserleiter:               74.763 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+
+
+
+***************************************************************
+
+
+ gesamtbilanz des einzugsgebietes: 
+
+
+
+ Kein vollstaendiger jahreszyklus durchlaufen 
+ Mittelwertberechnung sinnlos
+
+
