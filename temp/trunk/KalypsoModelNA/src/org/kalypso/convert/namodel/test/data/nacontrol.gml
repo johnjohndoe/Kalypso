@@ -40,4 +40,16 @@ F:\kalypso\nacontrol.xsd" fid="ID000000">
 	<spv>0</spv>
 	<spn>0</spn>
 	<vep>0</vep>
+	<automaticCallibration>0</automaticCallibration>
+	<Catchments>Catchment1800,Catchment1700,Catchment1600,Catchment1601</Catchments>
+	<CatchmentsBianf>1</CatchmentsBianf>
+	<CatchmentsFaktorRetobTetint>1</CatchmentsFaktorRetobTetint>
+	<CatchmentsFaktn>1</CatchmentsFaktn>
+	<CatchmentsFaktorAigw>1</CatchmentsFaktorAigw>
+	<KMChannels>KMChannel1800,KMChannel1700,KMChannel1600,KMChannel1601</KMChannels>
+	<KMChannelsFaktorRkf>1</KMChannelsFaktorRkf>
+	<KMChannelsFaktorRnf>1</KMChannelsFaktorRnf>
+	<rootNode>Node1600</rootNode>
+	<pegelZR/>
+	<qberechnetZR/>
 </NAModellControl>
