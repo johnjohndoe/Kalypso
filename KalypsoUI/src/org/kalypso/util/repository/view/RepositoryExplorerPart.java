@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.IRepositoryContainer;
@@ -22,7 +23,7 @@ import org.kalypso.util.repository.action.AddRepositoryAction;
 import org.kalypso.util.repository.action.RemoveRepositoryAction;
 
 /**
- * 
+ * Wird als ZeitreihenBrowser benutzt.
  * 
  * @author schlienger
  */
@@ -39,8 +40,6 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
   public RepositoryExplorerPart()
   {
-    super();
-
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
 
     m_repContainer.addRepositoryContainerListener( this );
@@ -75,7 +74,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     m_repViewer.setInput( m_repContainer );
 
     m_metaViewer = new Label( split, SWT.CENTER );
-    m_metaViewer.setText( "Metadata..." );
+    m_metaViewer.setText( "" );
 
     final Shell shell = getSite().getShell();
     m_removeAction = new RemoveRepositoryAction( shell, this );
@@ -85,7 +84,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     toolBarManager.add( m_removeAction );
 
     getViewSite().getActionBars().updateActionBars();
-    
+
     addSelectionChangedListener( this );
   }
 
@@ -159,7 +158,13 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     String text = "<Kein Element selektiert>";
     if( !selection.isEmpty() )
-      text = selection.getFirstElement().toString();
+    {
+      Object obj = selection.getFirstElement();
+
+      if( obj instanceof IObservation )
+        text = ( (IObservation)obj ).getMetadata().toString();
+    }
+
     m_metaViewer.setText( text );
   }
 }
