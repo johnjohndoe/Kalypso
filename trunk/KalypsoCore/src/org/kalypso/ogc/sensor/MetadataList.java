@@ -9,9 +9,6 @@ import java.util.Properties;
  */
 public class MetadataList extends Properties
 {
-  public final static String MD_NAME = "Name";
-  public final static String MD_DESCRIPTION = "Beschreibung";
-
   public MetadataList()
   {
     super();

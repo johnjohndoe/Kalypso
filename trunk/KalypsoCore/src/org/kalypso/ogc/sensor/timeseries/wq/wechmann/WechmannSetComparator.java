@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.timeseries.wq;
+package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 import java.util.Comparator;
 

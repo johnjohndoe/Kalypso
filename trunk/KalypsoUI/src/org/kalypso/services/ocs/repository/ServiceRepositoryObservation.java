@@ -8,8 +8,8 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.IServicesConstants;
 import org.kalypso.services.ProxyFactory;
+import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
@@ -37,6 +37,8 @@ public class ServiceRepositoryObservation implements IObservation
   
   /**
    * Lazy loading.
+   * @param args
+   * @return IObservation loaded from the server
    * 
    * @throws SensorException
    */
@@ -50,6 +52,8 @@ public class ServiceRepositoryObservation implements IObservation
   
   /**
    * Uses the webservice to request the observation.
+   * @param args
+   * @return IObservation loaded from the server
    * 
    * @throws SensorException
    */
@@ -85,7 +89,7 @@ public class ServiceRepositoryObservation implements IObservation
    */
   public String getIdentifier()
   {
-    return IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE + ":" + m_ob.getId();
+    return OcsURLStreamHandler.SCHEME_OCS + ":" + m_ob.getId();
   }
 
   /**

@@ -23,7 +23,9 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
@@ -186,7 +188,7 @@ public class ZmlFactory
 
     // metadata
     final MetadataList metadata = new MetadataList();
-    metadata.put( MetadataList.MD_NAME, obs.getName() );
+    metadata.put( ObservationConstants.MD_NAME, obs.getName() );
 
     if( obs.getMetadataList() != null )
     {
@@ -243,8 +245,9 @@ public class ZmlFactory
 
     final IObservation zmlObs = new SimpleObservation( identifier, obs
         .getName(), obs.isEditable(), target, metadata, axes, model );
-
-    return zmlObs;
+    
+    // tricky: maybe make a filtered observation out of this one
+    return FilterFactory.createFilterFrom( context, zmlObs );
   }
 
   /**

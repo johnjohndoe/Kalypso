@@ -1,9 +1,9 @@
-package org.kalypso.ogc.sensor.timeseries.wq.test;
+package org.kalypso.ogc.sensor.timeseries.wq.wechmann.test;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 
 /**
  * @author schlienger

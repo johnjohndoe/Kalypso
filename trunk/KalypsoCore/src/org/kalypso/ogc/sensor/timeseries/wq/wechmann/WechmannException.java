@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.timeseries.wq;
+package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 /**
  * Exception while using the Wechmann function.

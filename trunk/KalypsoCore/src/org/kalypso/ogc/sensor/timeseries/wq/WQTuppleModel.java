@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.timeseries;
+package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -6,13 +6,12 @@ import java.util.Map;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannFunction;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannGroup;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 
 /**
  * @author schlienger
@@ -22,8 +21,6 @@ public class WQTuppleModel implements ITuppleModel
   private final ITuppleModel m_model;
 
   private final IAxis[] m_axes;
-
-  private final String m_type;
 
   private final IAxis m_srcAxis;
 
@@ -45,54 +42,27 @@ public class WQTuppleModel implements ITuppleModel
    * 
    * @param model
    *          base model delivering values of the given type
-   * @param type
-   *          (one of TimeserieConstants.TYPE_*) denotes the type of the model
+   * @param axes
+   *          axes of this WQ-model, usually the same as model plus destAxis
+   * @param dateAxis
+   * @param srcAxis
+   *          source axis from which values are read
+   * @param destAxis
+   *          destination axis for which values are computed
    * @param wsets
    *          parameters used to perform the conversion
    */
-  public WQTuppleModel( final ITuppleModel model, final String type,
+  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes,
+      final IAxis dateAxis, final IAxis srcAxis, final IAxis destAxis,
       final WechmannGroup wsets )
   {
-    m_type = type;
     m_model = model;
+    m_axes = axes;
     m_wsets = wsets;
 
-    final IAxis[] axes = model.getAxisList();
-    m_axes = new IAxis[axes.length + 1];
-    for( int i = 0; i < axes.length; i++ )
-      m_axes[i] = axes[i];
-
-    m_dateAxis = ObservationUtilities.findAxisByType( axes,
-        TimeserieConstants.TYPE_DATE );
-
-    if( TimeserieConstants.TYPE_RUNOFF.equals( type ) )
-    {
-      m_srcAxis = ObservationUtilities.findAxisByType( axes,
-          TimeserieConstants.TYPE_RUNOFF );
-      m_destAxis = new DefaultAxis( "W", TimeserieConstants.TYPE_WATERLEVEL,
-          "cm", Double.class, m_axes.length - 1, false );
-      m_axes[m_axes.length - 1] = m_destAxis;
-    }
-    else if( TimeserieConstants.TYPE_WATERLEVEL.equals( type ) )
-    {
-      m_srcAxis = ObservationUtilities.findAxisByType( axes,
-          TimeserieConstants.TYPE_WATERLEVEL );
-      m_destAxis = new DefaultAxis( "Q", TimeserieConstants.TYPE_RUNOFF, "m^3",
-          Double.class, m_axes.length - 1, false );
-      m_axes[m_axes.length - 1] = m_destAxis;
-    }
-    else
-      throw new IllegalArgumentException(
-          "Type is not supported. Must one of W_AVAILABLE or Q_AVAILABE." );
-  }
-
-  /**
-   * @param type
-   * @return true if the model is of the given type
-   */
-  public boolean isType( final String type )
-  {
-    return m_type.equals( type );
+    m_dateAxis = dateAxis;
+    m_srcAxis = srcAxis;
+    m_destAxis = destAxis;
   }
 
   /**
@@ -121,11 +91,11 @@ public class WQTuppleModel implements ITuppleModel
     if( axis.equals( m_destAxis ) )
     {
       final Integer objIndex = new Integer( index );
-      
+
       if( !m_values.containsKey( objIndex ) )
       {
         Object value = null;
-        
+
         final Date d = (Date) m_model.getElement( index, m_dateAxis );
 
         final WechmannSet set = m_wsets.getFor( d );
@@ -158,7 +128,7 @@ public class WQTuppleModel implements ITuppleModel
         }
 
         m_values.put( objIndex, value );
-        
+
         return value;
       }
 
@@ -212,7 +182,7 @@ public class WQTuppleModel implements ITuppleModel
         m_model.setElement( index, new Double( q ), m_srcAxis );
       }
 
-      m_values.put( new Integer(index), element );
+      m_values.put( new Integer( index ), element );
     }
 
     m_model.setElement( index, element, axis );
@@ -226,7 +196,8 @@ public class WQTuppleModel implements ITuppleModel
       throws SensorException
   {
     if( axis.equals( m_destAxis ) )
-      return -1; // TODO: check if ok, always returning -1 here. Should be ok, since indexOf only makes sensor for key axes
+      return -1; // TODO: check if ok, always returning -1 here. Should be ok,
+                 // since indexOf only makes sensor for key axes
 
     return m_model.indexOf( element, axis );
   }

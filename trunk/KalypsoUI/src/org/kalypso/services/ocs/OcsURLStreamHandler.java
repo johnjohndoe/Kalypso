@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.services.IServicesConstants;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
@@ -14,15 +13,19 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 
 /**
- * Observation Collection Service URL Stream Handler. It extends the
- * <code>AbstractURLStreamHandlerService</code> of the OSGI-Platform in order
- * to be registered as a URLStreamHandler since Eclipse manages the handlers
- * this way.
+ * Observation Collection Service URL Stream Handler.
+ * <p>
+ * It extends the <code>AbstractURLStreamHandlerService</code> of the
+ * OSGI-Platform in order to be registered as a URLStreamHandler since Eclipse
+ * manages the handlers this way.
  * 
  * @author schlienger
  */
 public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 {
+  /** the protocol that identifies the observation service */
+  public final static String SCHEME_OCS = "kalypso-ocs";
+
   /**
    * @see java.net.URLStreamHandler#openConnection(java.net.URL)
    */
@@ -31,17 +34,17 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     final String strUrl = u.toExternalForm();
 
     // kalypso observation service protocol?
-    if( !strUrl.startsWith( IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE ) )
+    if( !strUrl.startsWith( SCHEME_OCS ) )
       return u.openConnection();
 
     try
     {
-      final String id = strUrl.replaceFirst( IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE
-          + ":", "" );
+      final String id = strUrl.replaceFirst( SCHEME_OCS + ":", "" );
 
       final ObservationBean ob = new ObservationBean( id, "", "", null );
 
-      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+      final IObservationService srv = KalypsoGisPlugin.getDefault()
+          .getObservationServiceProxy();
 
       final OCSDataBean db = srv.readData( ob, null );
 
@@ -56,7 +59,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      throw new IOException( "URL could not be resolved: " + e.getLocalizedMessage() );
+      throw new IOException( "URL could not be resolved: "
+          + e.getLocalizedMessage() );
     }
   }
 }

@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.timeseries.wq.test;
+package org.kalypso.ogc.sensor.timeseries.wq.wechmann.test;
 
 import java.io.StringReader;
 import java.util.Date;
@@ -7,11 +7,11 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannGroup;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.xml.sax.InputSource;
 
 /**

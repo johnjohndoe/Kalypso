@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.timeseries.wq;
+package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 /**
  * The Wechmann Function. Performs conversion from W to Q and from Q to W

@@ -1,11 +1,13 @@
 package org.kalypso.ogc.sensor.timeseries;
 
+import org.kalypso.ogc.sensor.ObservationConstants;
+
 /**
  * Constants used within the sensor package.
  * 
  * @author schlienger
  */
-public interface TimeserieConstants
+public interface TimeserieConstants extends ObservationConstants
 {
   /** Niederschlag */
   public final static String TYPE_RAINFALL = "N";

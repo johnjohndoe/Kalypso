@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
@@ -31,6 +32,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.widgets.ToggleSelectWidget;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
@@ -327,10 +329,24 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage im
 
     if( selectedFeatures.size() > 0 )
     {
-      KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures, m_diagTemplate,
-          m_useResolver, getContext() );
-      KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures, m_tableTemplate,
-          m_useResolver, getContext() );
+      try
+      {
+        KalypsoWizardHelper.updateDiagramTemplate( m_tsProps, selectedFeatures,
+            m_diagTemplate, m_useResolver, getContext() );
+        KalypsoWizardHelper.updateTableTemplate( m_tsProps, selectedFeatures,
+            m_tableTemplate, m_useResolver, getContext() );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+        getShell().getDisplay().asyncExec( new Runnable()
+            {
+              public void run( )
+              {
+                MessageDialog.openError( getShell(), "Aktualisierungsfehler", e.getLocalizedMessage() );
+              }
+            });
+      }
     }
   }
 

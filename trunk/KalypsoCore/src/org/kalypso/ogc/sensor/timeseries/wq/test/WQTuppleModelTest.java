@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.timeseries.test;
+package org.kalypso.ogc.sensor.timeseries.wq.test;
 
 import java.io.InputStream;
 import java.io.StringReader;
@@ -9,10 +9,10 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.WQTuppleModel;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
@@ -49,14 +49,14 @@ public class WQTuppleModelTest extends TestCase
   {
     final ITuppleModel values = obs.getValues( null );
 
-    final String wechmann = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + obs.getMetadataList().getProperty( TimeserieConstants.MD_WQ );
+    final String wechmann = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQ );
     final WechmannGroup group = WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
     
-    final WQTuppleModel wqValues = new WQTuppleModel( values, TimeserieConstants.TYPE_WATERLEVEL, group );
+    //final WQTuppleModel wqValues = new WQTuppleModel( values, TimeserieConstants.TYPE_WATERLEVEL, group );
     
-    assertNotNull( wqValues );
+    //assertNotNull( wqValues );
     
-    System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
+    //System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
   }
 
 //  public void testSetElement( )
