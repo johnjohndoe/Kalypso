@@ -2,7 +2,7 @@
 <NAModellControl fid="ID000000" xmlns="org.kalypso.namodell.control" xmlns:gml="http://www.opengis.net/gml" 
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
 	xs:schemaLocation="org.kalypso.namodell.control project:/.model/schema/nacontrol.xsd" >
-<name>Elsterberg</name>
+    <name>Berechnung im Experten-Modus</name>
 	<description>Beschreibung</description>
 	<editor>Editor</editor>
 	<comment>Kommentar</comment>
@@ -10,7 +10,7 @@
 	<startsimulation>1995-09-01T01:00:00</startsimulation>
 	<startforecast>1995-09-04T12:00:00</startforecast>
 	<endsimulation>1995-09-09T01:00:00</endsimulation>
-	<timeStep>0.25</timeStep>
+	<timeStep>1.0</timeStep>
 	<tmp>true</tmp>
 	<pre>true</pre>
 	<sch>false</sch>

@@ -7,14 +7,6 @@
 			<argument name="output" value=":calcdir:calcCase.gml"/>
 		</transformation>
 		<!-- controls kopieren ... -->
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.model/expertControl.gml"/>
-			<argument name="output" value=":calcdir:expertControl.gml"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/calcCase/expertControl.gtt"/>
-			<argument name="output" value=":calcdir:expertControl.gtt"/>
-		</transformation>
 
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/calcCase/.nacontrol_1.gml"/>
@@ -107,6 +99,32 @@
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/.info.txt"/>
 			<argument name="output" value=":calcdir:Pegel/.info.txt"/>
+		</transformation>
+
+    <!-- Transformationen fuer den ExpertenModus -->
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/expertControl.gml"/>
+			<argument name="output" value=":calcdir:expertControl.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertControl.gtt"/>
+			<argument name="output" value=":calcdir:expertControl.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertKarte.gmt"/>
+			<argument name="output" value=":calcdir:expertKarte.gmt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertTabelleKnoten.gtt"/>
+			<argument name="output" value=":calcdir:expertTabelleKnoten.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertTabelleGewaesser.gtt"/>
+			<argument name="output" value=":calcdir:expertTabelleGewaesser.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/calcCase/expertTabelleTeilgebiete.gtt"/>
+			<argument name="output" value=":calcdir:expertTabelleTeilgebiete.gtt"/>
 		</transformation>
 
 	</createTransformations>
