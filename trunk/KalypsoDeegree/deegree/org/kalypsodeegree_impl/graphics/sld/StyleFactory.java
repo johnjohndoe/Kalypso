@@ -1085,11 +1085,11 @@ public class StyleFactory
   public static LineSymbolizer createLineSymbolizer( Stroke stroke, String geometryPropertyName,
       double min, double max )
   {
-    Geometry geom = null;
+    Geometry geom = null;    
     if( geometryPropertyName != null )
     {
-      new Geometry_Impl( geometryPropertyName, null );
-    }
+    	geom = new Geometry_Impl( geometryPropertyName, null );
+    }   
     return new LineSymbolizer_Impl( stroke, geom, min, max );
   }
 
@@ -1248,7 +1248,7 @@ public class StyleFactory
   public static PointSymbolizer createPointSymbolizer( Graphic graphic, String geometryPropertyName )
   {
     // TODO evaluate geometry from geometryPropertyName
-    return createPointSymbolizer( graphic, null, 0, Double.MAX_VALUE );
+    return createPointSymbolizer( graphic, geometryPropertyName, 0, Double.MAX_VALUE );
   }
 
   /**
@@ -1268,10 +1268,10 @@ public class StyleFactory
   public static PointSymbolizer createPointSymbolizer( Graphic graphic,
       String geometryPropertyName, double min, double max )
   {
-    Geometry geom = null;
+    Geometry geom = null;    
     if( geometryPropertyName != null )
     {
-      new Geometry_Impl( geometryPropertyName, null );
+    	geom = new Geometry_Impl( geometryPropertyName, null );    	
     }
     return new PointSymbolizer_Impl( graphic, geom, min, max );
   }
