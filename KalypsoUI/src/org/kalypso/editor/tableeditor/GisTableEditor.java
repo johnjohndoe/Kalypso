@@ -65,7 +65,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   private final Marshaller m_marshaller;
 
-  private LayerTable m_layerTable = null;
+  protected LayerTable m_layerTable = null;
 
   private Gistableview m_tableview = null;
 

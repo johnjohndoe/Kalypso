@@ -56,7 +56,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
   private boolean m_isSaving = false;
 
-  private JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
+  protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       m_dirtyRunnable );
 
   public AbstractEditorPart()
@@ -262,8 +262,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
         {
           public void run()
           {
-            setContentDescription( input.getFile().getName() );
-            setPartName( input.getFile().getName() );
+            setDocumentTitle( input.getFile().getName() );
           }
         } );
 
@@ -334,5 +333,11 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   public JobExclusiveCommandTarget getCommandTarget()
   {
     return m_commandTarget;
+  }
+
+  protected void setDocumentTitle( final String name )
+  {
+    setContentDescription( name );
+    setPartName( name );
   }
 }
