@@ -3,7 +3,7 @@ package org.kalypso.editor.mapeditor;
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -56,7 +56,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public Object[] getElements( final Object inputElement )
   {
-    final MapModell mm = (MapModell)inputElement;
+    final IMapModell mm = (IMapModell)inputElement;
     return mm.getAllThemes();
   }
 
@@ -67,7 +67,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( m_viewer != null )
     {
-      final MapModell input = (MapModell)m_viewer.getInput();
+      final IMapModell input = (IMapModell)m_viewer.getInput();
       if( input != null )
         input.removeModellListener( this );
     }
@@ -80,12 +80,12 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput != null )
-      ( (MapModell)oldInput ).removeModellListener( this );
+      ( (IMapModell)oldInput ).removeModellListener( this );
 
     m_viewer = viewer;
 
     if( newInput != null )
-      ( (MapModell)newInput ).addModellListener( this );
+      ( (IMapModell)newInput ).addModellListener( this );
   }
 
   /**

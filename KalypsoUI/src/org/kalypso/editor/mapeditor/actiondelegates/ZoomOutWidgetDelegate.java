@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.editor.mapeditor.GisMapEditor;
-import org.kalypso.ogc.MapModell;
+import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.widgets.ChangeExtentCommand;
 
 /**
@@ -33,12 +33,12 @@ public class ZoomOutWidgetDelegate implements IEditorActionDelegate
     if( m_editor == null )
       return;
 
-    final MapModell modell = m_editor.getMapModell();
-    if( modell == null )
+    final MapPanel mapPanel = m_editor.getMapPanel();
+    if( mapPanel == null )
       return;
 
-    final GM_Envelope zoomBox = modell.getZoomOutBoundingBox();
-    m_editor.postCommand( new ChangeExtentCommand( modell, zoomBox ), null );
+    final GM_Envelope zoomBox = mapPanel.getZoomOutBoundingBox();
+    m_editor.postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
   }
 
   /**

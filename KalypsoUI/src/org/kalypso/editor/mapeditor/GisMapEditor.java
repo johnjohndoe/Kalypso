@@ -1,10 +1,6 @@
 package org.kalypso.editor.mapeditor;
 
 import java.awt.Frame;
-import java.util.List;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -16,18 +12,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.editor.AbstractEditorPart;
-import org.kalypso.ogc.IMapModellProvider;
+import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.IMapPanelProvider;
-import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.MapPanel;
-import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.GismapviewType;
-import org.kalypso.template.gismapview.ObjectFactory;
-import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 
 /**
@@ -48,35 +39,17 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider,
-    IMapModellProvider, ModellEventListener
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider
 {
-  private final ObjectFactory m_gisviewObjectFactory = new ObjectFactory();
-
-  private final Unmarshaller m_unmarshaller;
-
   private GisMapOutlinePage m_outlinePage = null;
 
   private final MapPanel myMapPanel;
 
-  private MapModell m_mapModell;
+  private IMapModell m_mapModell;
 
   public GisMapEditor()
   {
     myMapPanel = new MapPanel( KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
-
-    try
-    {
-      m_unmarshaller = m_gisviewObjectFactory.createUnmarshaller();
-      //      m_marshaller = m_gisviewObjectFactory.createMarshaller();
-    }
-    catch( JAXBException e )
-    {
-      // sollte nie passieren
-      e.printStackTrace();
-
-      throw new RuntimeException( e );
-    }
   }
 
   public void dispose()
@@ -149,16 +122,13 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
     // create MapPanel
     final Frame virtualFrame = SWT_AWT
         .new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
-
-    //    final Frame virtualFrame = new Frame();
-
     virtualFrame.setVisible( true );
     myMapPanel.setVisible( true );
     virtualFrame.add( myMapPanel );
@@ -172,46 +142,22 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     monitor.beginTask( "Kartenvorlage laden", 2000 );
 
-    final Gismapview gisview = (Gismapview)m_unmarshaller.unmarshal( input.getStorage()
-        .getContents() );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( input.getFile() );
 
     monitor.worked( 1000 );
 
-    final MapModell mapModell = new MapModell( myMapPanel, KalypsoGisPlugin.getDefault()
-        .getCoordinatesSystem() );
-    setMapModell( mapModell );
-
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
 
-    final LayersType layerListType = gisview.getLayers();
-    final List layerList = layerListType.getLayer();
-
-    for( int i = 0; i < layerList.size(); i++ )
-    {
-      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
-          .get( i );
-
-      final PoolableKalypsoFeatureTheme theme = new PoolableKalypsoFeatureTheme( layerType, project );
-
-      // falls jetzt schon geladen, gleich hinzufügen, sonst erst wenn
-      // fertig geladen
-      m_mapModell.addTheme( theme );
-
-      monitor.worked( 1000 / layerList.size() );
-    }
+    final IMapModell mapModell = new GisTemplateMapModell( gisview, project, KalypsoGisPlugin
+        .getDefault().getCoordinatesSystem() );
+    setMapModell( mapModell );
 
     monitor.done();
   }
 
-  private void setMapModell( final MapModell mapModell )
+  private void setMapModell( final IMapModell mapModell )
   {
-    if( m_mapModell != null )
-      m_mapModell.removeModellListener( this );
-
     m_mapModell = mapModell;
-
-    if( m_mapModell != null )
-      m_mapModell.addModellListener( this );
 
     myMapPanel.setMapModell( m_mapModell );
     if( m_outlinePage != null )
@@ -226,11 +172,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     layer.getClass();
   }
 
-  public MapModell getMapModell()
-  {
-    return m_mapModell;
-  }
-
   /**
    * @see org.kalypso.ogc.IMapPanelProvider#getMapPanel()
    */
@@ -238,13 +179,4 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     return myMapPanel;
   }
-
-  /**
-   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-  //
-  }
-
 }

@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.util.List;
 
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -11,7 +13,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.ogc.MapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
@@ -63,8 +64,6 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   private KalypsoFeatureTheme m_theme = null;
 
   private boolean m_isEditing = false;
-
-  private MapModell m_parent = null;
 
   private PoolableObjectType[] m_styleKeys;
 
@@ -157,7 +156,6 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
             new NullProgressMonitor() );
 
         m_theme = new KalypsoFeatureTheme( layer, getName() );
-        m_theme.setParent( m_parent );
         m_theme.addModellListener( this );
 
         // styles laden
@@ -167,7 +165,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
             startStyleLoading( m_styleKeys[i] );
         }
 
-        fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
+        fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
       }
       else if( m_theme != null && oldValue == m_theme.getLayer() )
       {
@@ -190,7 +188,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
         m_theme.addStyle( userStyle );
         
-        fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
+        fireModellEvent( null );
       }
       else if( oldValue instanceof KalypsoUserStyle )
       {
@@ -220,24 +218,14 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
     styleJob.schedule();
   }
 
-
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics, org.deegree.graphics.transformation.GeoTransform, double, org.deegree.model.geometry.GM_Envelope, int)
    */
-  public void paint( final Graphics g )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
+      int selectionId )
   {
     if( m_theme != null )
-      m_theme.paint( g );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-   *      int)
-   */
-  public void paintSelected( final Graphics g, final int selectionId )
-  {
-    if( m_theme != null )
-      m_theme.paintSelected( g, selectionId );
+      m_theme.paintSelected( g, p, scale, bbox, selectionId );
   }
 
   /**
@@ -278,17 +266,6 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
       return null;
 
     return m_theme.getLayer();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setParent(org.kalypso.ogc.MapModell)
-   */
-  public void setParent( final MapModell parent )
-  {
-    m_parent = parent;
-    
-    if( m_theme != null )
-      m_theme.setParent( parent );
   }
 
   public void saveFeatures()
