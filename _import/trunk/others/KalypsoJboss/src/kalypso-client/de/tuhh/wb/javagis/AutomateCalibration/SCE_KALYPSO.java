@@ -1491,7 +1491,7 @@ public class SCE_KALYPSO
 		TreeMap resultData_sim =
 			blockSerie.getSimulatedDischarge(String.valueOf(rootNode));
 		Iterator it_all = resultData_sim.keySet().iterator();
-		/*while (it_all.hasNext()) {
+		while (it_all.hasNext()) {
 			Object dateKey = it_all.next();
 			Date actualDate = (Date) dateKey;
 			Object value = (String) resultData_sim.get(dateKey);
@@ -1502,7 +1502,7 @@ public class SCE_KALYPSO
 					+ dateformat.format(actualDate)
 					+ "   Value: "
 					+ value);
-		}*/
+		}
 		GageTimeSeries gageSerie = new GageTimeSeries();
 		outFile = new File("C://Kalypso//temp//Test_Bewertung//pegel.dat");
 		gageSerie.importPegelDat(outFile);
@@ -1520,15 +1520,15 @@ public class SCE_KALYPSO
 					+ "   Value: "
 					+ value);
 		}*/
-		boolean[] functions = { false, false, true, true };
-		double[] trafoConstants = { 0.0, 0.0, 0, 2.0};
+		boolean[] functions = { true, true, true, true };
+		double[] trafoConstants = { 0.0, 0.0, 0, 2.0 };
 		DateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		dateformat.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
 		Date startDate = new Date();
 		Date endDate = new Date();
 		try {
 			startDate = dateformat.parse("01.11.2001 00:00");
-			endDate = dateformat.parse("01.04.2002 00:00");
+			endDate = dateformat.parse("21.12.2001 00:00");
 		} catch (Exception e) {
 			System.out.println("Cannot parse start- or endDate.");
 		}
@@ -1539,12 +1539,12 @@ public class SCE_KALYPSO
 			new ObjectiveFunction(
 				resultData_obs,
 				functions,
-				trafoConstants,
 				peakFlowLevel,
 				lowFlowLevel,
 				startDate,
 				endDate,
-				timeStep);
+				timeStep,
+				resultData_sim);
 		//double erg = oFunction.getObjectiveFunctionValue(resultData_sim);
 		//System.out.println("Objective function Value: " + erg + "!");
 		//openSCEView();

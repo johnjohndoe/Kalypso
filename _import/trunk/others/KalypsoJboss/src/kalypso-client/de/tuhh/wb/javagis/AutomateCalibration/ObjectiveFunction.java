@@ -34,7 +34,7 @@ public class ObjectiveFunction {
 
 	double peakFlowLevel;
 	double lowFlowLevel;
-	
+
 	int numPeakFlowEvents;
 	int numLowFlowEvents;
 
@@ -67,11 +67,9 @@ public class ObjectiveFunction {
 		this.qObs_calibration = getDischarge(qObs_all);
 		if (flagRootMeanSquareError_peakFlows) {
 			this.qObs_calPeakFlows = getDischarge_peakFlows(qObs_calibration);
-			this.numPeakFlowEvents = countEvents(qObs_calPeakFlows);
 		}
 		if (flagRootMeanSquareError_lowFlows) {
 			this.qObs_calLowFlows = getDischarge_lowFlows(qObs_calibration);
-			this.numLowFlowEvents = countEvents(qObs_calLowFlows);
 		}
 
 		calculateEqualWeights(qSim_Initial);
@@ -123,7 +121,6 @@ public class ObjectiveFunction {
 		}
 		if (flagRootMeanSquareError_peakFlows) {
 			this.qObs_calPeakFlows = getDischarge_peakFlows(qObs_calibration);
-			this.numPeakFlowEvents = countEvents(qObs_calPeakFlows);
 			System.out.println("***Observed Discharge (PeakFlows)***");
 			it_all = qObs_calPeakFlows.keySet().iterator();
 			while (it_all.hasNext()) {
@@ -142,7 +139,6 @@ public class ObjectiveFunction {
 		}
 		if (flagRootMeanSquareError_lowFlows) {
 			this.qObs_calLowFlows = getDischarge_lowFlows(qObs_calibration);
-			this.numLowFlowEvents = countEvents(qObs_calLowFlows);
 			System.out.println("***Observed Discharge (LowFlows)***");
 			it_all = qObs_calLowFlows.keySet().iterator();
 			while (it_all.hasNext()) {
@@ -165,13 +161,30 @@ public class ObjectiveFunction {
 	public double getObjectiveFunctionValue(TreeMap qSim_all) {
 		double functionValue = 0;
 
-		double volumeError = calculateVolumeError(qObs_calibration, qSim_all);
-		double rootMeanSquareError =
-			calculateRootMeanSquareError(qObs_calibration, qSim_all);
-		double rootMeanSquareError_peakFlows =
-			calculateRootMeanSquareError_peakFlows(qObs_calPeakFlows, qSim_all);
-		double rootMeanSquareError_lowFlows =
-			calculateRootMeanSquareError_lowFlows(qObs_calLowFlows, qSim_all);
+		double volumeError = 0;
+		if (flagVolumeError) {
+			volumeError = calculateVolumeError(qObs_calibration, qSim_all);
+		}
+		double rootMeanSquareError = 0;
+		if (flagRootMeanSquareError) {
+			rootMeanSquareError =
+				calculateRootMeanSquareError(qObs_calibration, qSim_all);
+		}
+		double rootMeanSquareError_peakFlows = 0;
+		if (flagRootMeanSquareError_peakFlows
+			&& qObs_calPeakFlows.size() != 0) {
+			rootMeanSquareError_peakFlows =
+				calculateRootMeanSquareError_PeakAndLowFlows(
+					qObs_calPeakFlows,
+					qSim_all);
+		}
+		double rootMeanSquareError_lowFlows = 0;
+		if (flagRootMeanSquareError_lowFlows && qObs_calLowFlows.size() != 0) {
+			rootMeanSquareError_lowFlows =
+				calculateRootMeanSquareError_PeakAndLowFlows(
+					qObs_calLowFlows,
+					qSim_all);
+		}
 
 		int numFunctions = 4;
 		double[] functionValues = new double[numFunctions];
@@ -195,47 +208,41 @@ public class ObjectiveFunction {
 		TreeMap qObs_calibration,
 		TreeMap qSim_all) {
 		double volumeError = 0;
-		if (flagVolumeError) {
-			Iterator it_all = qObs_calibration.keySet().iterator();
-			while (it_all.hasNext()) {
-				Object dateKey = it_all.next();
-				double dischargeValue_obs =
-					Double.parseDouble((String) qObs_calibration.get(dateKey));
-				double dischargeValue_sim =
-					Double.parseDouble((String) qSim_all.get(dateKey));
-				double x = dischargeValue_obs - dischargeValue_sim;
-				volumeError = volumeError + x;
-			}
-			volumeError = volumeError / qObs_calibration.size();
-		} else {
-			volumeError = 0;
+		Iterator it_all = qObs_calibration.keySet().iterator();
+		while (it_all.hasNext()) {
+			Object dateKey = it_all.next();
+			double dischargeValue_obs =
+				Double.parseDouble((String) qObs_calibration.get(dateKey));
+			double dischargeValue_sim =
+				Double.parseDouble((String) qSim_all.get(dateKey));
+			double x = dischargeValue_obs - dischargeValue_sim;
+			volumeError = volumeError + x;
 		}
+		volumeError = volumeError / qObs_calibration.size();
+
 		return volumeError;
 	}
 	private double calculateRootMeanSquareError(
 		TreeMap qObs_calibration,
 		TreeMap qSim_all) {
 		double rootMeanSquareError = 0;
-		if (flagRootMeanSquareError) {
-			Iterator it_all = qObs_calibration.keySet().iterator();
-			while (it_all.hasNext()) {
-				Object dateKey = it_all.next();
-				double dischargeValue_obs =
-					Double.parseDouble((String) qObs_calibration.get(dateKey));
-				double dischargeValue_sim =
-					Double.parseDouble((String) qSim_all.get(dateKey));
-				double x = dischargeValue_obs - dischargeValue_sim;
-				double pow = Math.pow(x, 2);
-				rootMeanSquareError = rootMeanSquareError + pow;
-			}
-			rootMeanSquareError = rootMeanSquareError / qObs_calibration.size();
-			rootMeanSquareError = Math.sqrt(rootMeanSquareError);
-		} else {
-			rootMeanSquareError = 0;
+		Iterator it_all = qObs_calibration.keySet().iterator();
+		while (it_all.hasNext()) {
+			Object dateKey = it_all.next();
+			double dischargeValue_obs =
+				Double.parseDouble((String) qObs_calibration.get(dateKey));
+			double dischargeValue_sim =
+				Double.parseDouble((String) qSim_all.get(dateKey));
+			double x = dischargeValue_obs - dischargeValue_sim;
+			double pow = Math.pow(x, 2);
+			rootMeanSquareError = rootMeanSquareError + pow;
 		}
+		rootMeanSquareError = rootMeanSquareError / qObs_calibration.size();
+		rootMeanSquareError = Math.sqrt(rootMeanSquareError);
+
 		return rootMeanSquareError;
 	}
-	private double calculateRootMeanSquareError_peakFlows(
+	/*private double calculateRootMeanSquareError_peakFlows(
 		TreeMap qObs_calPeakFlows,
 		TreeMap qSim_all) {
 		double rootMeanSquareError_peakFlows = 0;
@@ -262,8 +269,8 @@ public class ObjectiveFunction {
 			rootMeanSquareError_peakFlows = 0;
 		}
 		return rootMeanSquareError_peakFlows;
-	}
-	private double calculateRootMeanSquareError_lowFlows(
+	}*/
+	/*private double calculateRootMeanSquareError_lowFlows(
 		TreeMap qObs_calLowFlows,
 		TreeMap qSim_all) {
 		double rootMeanSquareError_lowFlows = 0;
@@ -289,7 +296,7 @@ public class ObjectiveFunction {
 			rootMeanSquareError_lowFlows = 0;
 		}
 		return rootMeanSquareError_lowFlows;
-	}
+	}*/
 
 	// Ermittlung aller Ablussdaten für den Kalibrierungszeitraum
 	private TreeMap getDischarge(TreeMap data) {
@@ -313,11 +320,11 @@ public class ObjectiveFunction {
 			index = index + 1;
 			try {
 				Object dischargeValue = data.get(tempDate);
-				System.out.println(
+				/*System.out.println(
 					"Temp Date: "
 						+ dateformat.format(tempDate)
 						+ ", Discharge: "
-						+ dischargeValue);
+						+ dischargeValue);*/
 				Date storeDate = new Date(tempDate.getTime());
 				resultData.put(storeDate, dischargeValue);
 			} catch (Exception e) {
@@ -362,9 +369,12 @@ public class ObjectiveFunction {
 		return qObs_lowFlows;
 	}
 
-	private int countEvents(TreeMap discharge) {
+	private double calculateRootMeanSquareError_PeakAndLowFlows(
+		TreeMap qObs_calFlows,
+		TreeMap qSim_all) {
 		int numEvents = 0;
-		if (discharge.size() > 0) {
+		double rmse = 0;
+		if (qObs_calFlows.size() > 0) {
 			numEvents = 1;
 		}
 		long timeStepAsLong;
@@ -375,20 +385,70 @@ public class ObjectiveFunction {
 			timeStepAsLong =
 				((long) ((float) timeStep_calibration * 1000f)) * 3600l;
 		}
-		Object[] keys = new Object[discharge.size()];
-		keys = (discharge.keySet()).toArray();
-		for (int i = 0; i < keys.length-1; i++) {
-			System.out.println("i="+i);
-			long date_i = ((Date)keys[i]).getTime();
-			long date_ii = ((Date)keys[i+1]).getTime();
-			System.out.println("date i: "+(Date)keys[i]+", date i+1: "+(Date)keys[i+1]);
-			long tempTimeStep = date_ii-date_i;
-			if(tempTimeStep!=timeStepAsLong){
-				numEvents = numEvents+1;
+		Object[] keys = new Object[qObs_calFlows.size()];
+		keys = (qObs_calFlows.keySet()).toArray();
+		double sum_discharge = 0;
+		int count_discharge = 0;
+		double sum_events = 0;
+		System.out.println("Number keys: " + keys.length);
+		for (int i = 0; i < keys.length - 1; i++) {
+			System.out.println("i=" + i);
+			long date_i = ((Date) keys[i]).getTime();
+			long date_ii = ((Date) keys[i + 1]).getTime();
+			System.out.println(
+				"date i: "
+					+ (Date) keys[i]
+					+ ", date i+1: "
+					+ (Date) keys[i
+					+ 1]);
+			double dischargeValue_obs =
+				Double.parseDouble((String) qObs_calFlows.get((Date) keys[i]));
+			double dischargeValue_sim =
+				Double.parseDouble((String) qSim_all.get((Date) keys[i]));
+			double diff = dischargeValue_obs - dischargeValue_sim;
+			double pow = Math.pow(diff, 2);
+			sum_discharge = sum_discharge + pow;
+			count_discharge = count_discharge + 1;
+			long tempTimeStep = date_ii - date_i;
+			if (tempTimeStep != timeStepAsLong) {
+				numEvents = numEvents + 1;
+				System.out.println("Number of Events: " + numEvents);
+				double quot = sum_discharge / count_discharge;
+				System.out.println(
+					"sum_discharge: "
+						+ sum_discharge
+						+ ", count_discharge: "
+						+ count_discharge);
+				double sqrt = Math.sqrt(quot);
+				sum_events = sum_events + sqrt;
+				System.out.println("sum_events: " + sum_events);
+				
+					sum_discharge = 0;
+					count_discharge = 0;
 			}
 		}
-		System.out.println("Number of Events: "+numEvents);
-		return numEvents;
+		double dischargeValue_obs =
+			Double.parseDouble(
+				(String) qObs_calFlows.get((Date) keys[keys.length - 1]));
+		double dischargeValue_sim =
+			Double.parseDouble(
+				(String) qSim_all.get((Date) keys[keys.length - 1]));
+		double diff = dischargeValue_obs - dischargeValue_sim;
+		double pow = Math.pow(diff, 2);
+		sum_discharge = sum_discharge + pow;
+		count_discharge = count_discharge + 1;
+		System.out.println(
+			"sum_discharge: "
+				+ sum_discharge
+				+ ", count_discharge: "
+				+ count_discharge);
+		double quot = sum_discharge / count_discharge;
+		double sqrt = Math.sqrt(quot);
+		sum_events = sum_events + sqrt;
+		rmse = sum_events / numEvents;
+		System.out.println("RMSE: " + rmse);
+
+		return rmse;
 	}
 
 	private void calculateEqualWeights(TreeMap qSim_Initial) {
@@ -459,7 +519,7 @@ public class ObjectiveFunction {
 
 			Double functionValue =
 				new Double(
-					calculateRootMeanSquareError_peakFlows(
+					calculateRootMeanSquareError_PeakAndLowFlows(
 						qObs_calPeakFlows,
 						qSim_Initial));
 			minFunctionValues[2] = functionValue;
@@ -484,7 +544,7 @@ public class ObjectiveFunction {
 
 			Double functionValue =
 				new Double(
-					calculateRootMeanSquareError_lowFlows(
+					calculateRootMeanSquareError_PeakAndLowFlows(
 						qObs_calLowFlows,
 						qSim_Initial));
 			minFunctionValues[3] = functionValue;
