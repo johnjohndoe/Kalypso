@@ -19,11 +19,11 @@ public class ClassUtilities
    * 
    * @throws ClassUtilityException
    */
-  public static Object newInstance( String classname, Class target ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class target, final ClassLoader cl ) throws ClassUtilityException
   {
     try
     {
-      Class c = Class.forName( classname );
+      final Class c = Class.forName( classname, true, cl );
 
       if( ( target == null ) || target.isAssignableFrom( c ) )
         return c.newInstance();

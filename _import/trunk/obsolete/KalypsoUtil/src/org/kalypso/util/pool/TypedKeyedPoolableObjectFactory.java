@@ -28,7 +28,7 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
   {
     IPoolableObjectType objType = testTypeOfKey( key );
     
-    ILoader loader = m_factory.getLoaderInstance( objType.getType() );
+    ILoader loader = m_factory.getLoaderInstance( objType.getType(), getClass().getClassLoader() );
     
     return loader.load( objType.getSource() );
   }

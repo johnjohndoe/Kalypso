@@ -2,40 +2,30 @@ package org.kalypso.util.loader;
 
 import java.util.Properties;
 
-import org.kalypso.util.factory.ConfigurableCachedObjectFactory;
+import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
 
 /**
  * @author schlienger
  *  
  */
-public class DefaultLoaderFactory extends ConfigurableCachedObjectFactory implements ILoaderFactory
+public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory implements ILoaderFactory
 {
-  public DefaultLoaderFactory( Properties props )
+  public DefaultLoaderFactory( final Properties props )
   {
-    super( props );
+    super( props, false );
   }
 
-  public ILoader getLoaderInstance( String type ) throws FactoryException
+  public ILoader getLoaderInstance( final String type, final ClassLoader cl ) throws FactoryException
   {
-    return (ILoader)getObjectInstance( type, ILoader.class );
+    return (ILoader)getObjectInstance( type, ILoader.class, cl );
   }
 
   /**
-   * @see org.kalypso.util.loader.ILoaderFactory#getLoaderControl(java.lang.String)
+   * @see org.kalypso.util.loader.ILoaderFactory#getTypes()
    */
-  public ILoaderUI getLoaderControl( final String type ) throws LoaderException
+  public String[] getTypes()
   {
-//    TODO GERNOT final String className = m_props.getProperty( type + "_ui" );
-//    
-//    try
-//    {
-//      return (ILoaderUI)ClassUtilities.newInstance( className, ILoaderUI.class );
-//    }
-//    catch( ClassUtilityException e )
-//    {
-//      throw new LoaderException( e );
-//    }
-    return null;
+    return (String[])getProperties().keySet().toArray( new String[] {} );
   }
 }
