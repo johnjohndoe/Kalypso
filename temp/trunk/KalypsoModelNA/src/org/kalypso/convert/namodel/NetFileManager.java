@@ -408,9 +408,11 @@ public class NetFileManager extends AbstractManager
       }
     }
     final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
-    final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty("generateResult", new Boolean(true));
-    // fuer root node soll immer ein result generiert werden und fuer das ergebnis auch in eine zml geschrieben werden.
-    rootNodeFE.setProperty(createResultProp);
+    final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty(
+        "generateResult", new Boolean( true ) );
+    // fuer root node soll immer ein result generiert werden und fuer das
+    // ergebnis auch in eine zml geschrieben werden.
+    rootNodeFE.setProperty( createResultProp );
     //    rootNodeFE;
     // select netelement from root element
     final Feature rootChannel = workspace.resolveLink( rootNodeFE, "downStreamChannelMember" );
@@ -435,7 +437,7 @@ public class NetFileManager extends AbstractManager
     for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
     {
       NetElement rootElement = (NetElement)iter.next();
-      rootElement.berechne( workspace, buffer, nodeCollector );
+      rootElement.berechne( workspace, buffer, nodeCollector ,false);
     }
     buffer.append( "99999\n" );
     appendNodeList( workspace, nodeCollector, buffer );
@@ -548,8 +550,10 @@ public class NetFileManager extends AbstractManager
     {
       return m_channelFE;
     }
-
-    public void berechne( GMLWorkspace workspace, StringBuffer buffer, List nodeList )
+/**
+ * @param upstream upstream from root node, only first channel is not upstream from rootnode 
+ */
+    public void berechne( GMLWorkspace workspace, StringBuffer buffer, List nodeList, boolean upstream)
         throws IOException, Exception
     {
       if( m_status == CALCULATED )
@@ -559,15 +563,15 @@ public class NetFileManager extends AbstractManager
       // strangID 9001 notenID
       final Feature knotU = workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
       final boolean resultExists = resultExists( knotU );
-      // berechne oberlauf
-      if( !resultExists )
+      if( !resultExists || !upstream )
         for( Iterator iter = m_upStreamDepends.iterator(); iter.hasNext(); )
         {
+          // berechne oberlauf
           NetElement element = (NetElement)iter.next();
-          element.berechne( workspace, buffer, nodeList );
+          element.berechne( workspace, buffer, nodeList,true );
         }
       // berechne mich
-      write( workspace, buffer, nodeList, resultExists );
+      write( workspace, buffer, nodeList, resultExists,upstream );
       generateTimeSeries( workspace );
       m_status = CALCULATED;
     }
@@ -612,7 +616,7 @@ public class NetFileManager extends AbstractManager
     }
 
     public void write( GMLWorkspace workspace, StringBuffer buffer, List nodeList,
-        boolean resultExists )
+        boolean resultExists,boolean upstream )
     {
       //      System.out.println( "calculate: " + m_channelFE.getId() );
       //   obererknoten:
@@ -620,7 +624,7 @@ public class NetFileManager extends AbstractManager
 
       final Feature knotU = workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
 
-      if( !resultExists )
+      if( !resultExists || !upstream)
       {
         Feature[] features = workspace.getFeatures( m_conf.getNodeFT() );
         Feature knotO = null;

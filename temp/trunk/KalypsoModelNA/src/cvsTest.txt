@@ -1,3 +1,0 @@
-Test Kalypso CVS SERVER
-
-test2

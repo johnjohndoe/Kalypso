@@ -24,11 +24,11 @@ public class NaModelCalcJobTest extends TestCase
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
     //    File baseDir = new File( "C:\\simulation\\test" );
-    final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\CalcJob-0-1099844834217" );
+    final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST2" );
     final File simDir = new File( baseDir, "sim" );
     final File ergDir = new File( baseDir, "output" );
     if( simDir.exists() )
-      FileUtils.cleanDirectory( simDir );
+      FileUtils.cleanDirectory( simDir ); 
     if( ergDir.exists() )
       FileUtils.cleanDirectory( ergDir );
 
