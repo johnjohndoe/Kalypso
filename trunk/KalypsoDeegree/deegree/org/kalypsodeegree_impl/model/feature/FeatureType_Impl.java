@@ -106,7 +106,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
       int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
-    m_annotationsMap = annotationMap;
+    m_annotationsMap = annotationMap == null ? new HashMap() : annotationMap;    
     m_substitutionGroup = substitutionGroup;
     this.m_name = name;
     m_namespace = namespace;
