@@ -18,10 +18,12 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
+import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 
 /**
  * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable
@@ -31,7 +33,8 @@ import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
  */
 public class ObservationTableModel extends AbstractTableModel
 {
-  private ITableViewRules m_rules = null;
+  private static final Integer STATUS_USERMOD = new Integer( KalypsoStati.BIT_USER_MODIFIED );
+  private ITableViewRules m_rules = RulesFactory.getDefaultRules();
 
   private final DefaultTableModel m_valuesModel = new DefaultTableModel();
   private final DefaultTableModel m_statusModel = new DefaultTableModel();
@@ -41,6 +44,7 @@ public class ObservationTableModel extends AbstractTableModel
   private final List m_columns = new ArrayList();
 
   private IAxis m_sharedAxis = null;
+
 
   /**
    * @see javax.swing.table.AbstractTableModel#addTableModelListener(javax.swing.event.TableModelListener)
@@ -263,10 +267,9 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
+      m_statusModel.setValueAt( STATUS_USERMOD, rowIndex, columnIndex - 1 );
 
       ((ITableViewColumn) m_columns.get( columnIndex - 1 )).setDirty( true );
-      
-      // TODO user changed the value, so modify statux if available
     }
   }
 
@@ -290,13 +293,13 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public RenderingRule[] findRules( int row, int column )
   {
-    final Object status = m_statusModel.getValueAt( row, column - 1 );
+    final Number status = (Number) m_statusModel.getValueAt( row, column - 1 );
     if( status == null )
       return new RenderingRule[0];
 
-    return m_rules.findRules( ((Integer) status ).intValue() );
+    return m_rules.findRules( status.intValue() );
   }
-
+  
   /**
    * Clears the columns of the model.
    */

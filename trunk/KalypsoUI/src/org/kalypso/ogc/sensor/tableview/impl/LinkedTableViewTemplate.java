@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
-import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
+import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
@@ -61,7 +61,7 @@ public class LinkedTableViewTemplate extends ObservationTableViewTemplate implem
     {
       for( final Iterator it = trules.getRenderingrule().iterator(); it
           .hasNext(); )
-        addRule( RenderingRule.createRenderingRule( (TypeRenderingRule) it
+        addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) it
             .next() ) );
     }
 

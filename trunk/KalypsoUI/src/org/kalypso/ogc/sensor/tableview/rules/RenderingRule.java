@@ -3,8 +3,7 @@ package org.kalypso.ogc.sensor.tableview.rules;
 import java.awt.Color;
 import java.awt.Font;
 
-import org.kalypso.java.util.StringUtilities;
-import org.kalypso.template.obstableview.TypeRenderingRule;
+import javax.swing.Icon;
 
 /**
  * Stores information on how to render something. Its primary purpose is to be
@@ -25,33 +24,18 @@ public class RenderingRule
   private final int m_mask;
 
   private final Font m_ft;
+  
+  private final Icon m_icon;
 
   public RenderingRule( final int mask, final Color fg, final Color bg, final Font font,
-      final String tt )
+      final String tt, final Icon icon )
   {
     m_mask = mask;
     m_fg = fg;
     m_bg = bg;
     m_ft = font;
     m_tt = tt;
-  }
-
-  /**
-   * Factory method for creating a RenderingRule object with a binding object.
-   * @param rr
-   * @return RenderingRule
-   */
-  public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
-  {
-    int mask = rr.getMask();
-    String fg = rr.getForegroundcolor();
-    String bg = rr.getBackgroundcolor();
-    String font = rr.getFont();
-    String tt = rr.getTooltip();
-
-    return new RenderingRule( mask, fg == null ? null : StringUtilities.stringToColor( fg ),
-        bg == null ? null : StringUtilities.stringToColor( bg ), font == null ? null
-            : StringUtilities.stringToFont( font ), tt );
+    m_icon = icon;
   }
 
   public Color getForegroundColor()
@@ -77,6 +61,11 @@ public class RenderingRule
   public int getMask()
   {
     return m_mask;
+  }
+  
+  public Icon getIcon( )
+  {
+    return m_icon;
   }
 
   /**

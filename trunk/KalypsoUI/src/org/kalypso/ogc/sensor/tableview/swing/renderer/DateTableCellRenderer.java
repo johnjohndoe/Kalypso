@@ -1,16 +1,16 @@
 package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
-import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker;
 
 /**
  * Helper: formatiert das Datum auf eine richtige Art und Weise
@@ -20,16 +20,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class DateTableCellRenderer extends DefaultTableCellRenderer
 {
   /** maps dates to markers */
-  private final Map m_markers = new HashMap();
+  private final Set m_markers = new TreeSet();
 
   // TODO: Wenn die Daten keine Zeit-Information haben, dann wird die aktuelle
   // Systemzeit
   // im TableView angezeit!!!
   private final static DateFormat df = DateFormat.getDateTimeInstance();//new
-                                                                        // SimpleDateFormat(
-                                                                        // "dd.MM.yyyy
-                                                                        // HH:mm:ss"
-                                                                        // );
+
+  // SimpleDateFormat(
+  // "dd.MM.yyyy
+  // HH:mm:ss"
+  // );
 
   /**
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
@@ -43,45 +44,36 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
 
     label.setText( df.format( value ) );
 
-    // maybe mark this item
-    if( m_markers.containsKey( value ) )
+    if( !isSelected )
     {
-      final Marker m = (Marker) m_markers.get( value );
-      label.setBackground( m.m_bg );
-      label.setForeground( m.m_fg );
-      label.setToolTipText( m.m_ttext );
-      label.setIcon( m.m_icon );
+      // maybe mark this item
+      for( final Iterator it = m_markers.iterator(); it.hasNext(); )
+      {
+        final ILabelMarker marker = (ILabelMarker) it.next();
+        if( marker.validates( value ) )
+          marker.apply( label );
+        else
+          marker.reset( label );
+      }
     }
     else
     {
-      label.setBackground( null );
-      label.setForeground( null );
-      label.setToolTipText( "" );
       label.setIcon( null );
+//      label.setBackground( null );
+//      label.setToolTipText( null );
     }
 
     return label;
   }
 
   /**
-   * Adds a marker that this renderer will show using the given background color
-   * and outline paint.
+   * Adds a marker that modifies this renderer.
    * 
-   * @param date
-   *          for which to add marker
-   * @param bg
-   *          background color, nullable
-   * @param fg
-   *          foreground color, nullable
-   * @param icon
-   *          icon, nullable
-   * @param ttext
-   *          tooltip text, nullable
+   * @param marker
    */
-  public void addMarker( final Date date, final Color bg, final Color fg,
-      final Icon icon, final String ttext )
+  public void addMarker( final ILabelMarker marker )
   {
-    m_markers.put( date, new Marker( bg, fg, icon, ttext ) );
+    m_markers.add( marker );
   }
 
   /**
@@ -90,29 +82,5 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   public void clearMarkers( )
   {
     m_markers.clear();
-  }
-
-  /**
-   * Internal class used as structure containing marker information.
-   * 
-   * @author schlienger
-   */
-  private final static class Marker
-  {
-    protected final Color m_bg;
-
-    protected final Color m_fg;
-
-    protected final Icon m_icon;
-
-    protected final String m_ttext;
-
-    public Marker( Color bg, Color fg, Icon icon, String ttext )
-    {
-      m_bg = bg;
-      m_fg = fg;
-      m_icon = icon;
-      m_ttext = ttext;
-    }
   }
 }
