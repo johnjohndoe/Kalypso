@@ -19,7 +19,6 @@ import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.deegree_impl.tools.NetWorker;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.eclipse.jface.viewers.DefaultCellEditorFactory;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
@@ -34,8 +33,6 @@ import org.kalypso.util.repository.DefaultRepositoryContainer;
 import org.kalypso.util.repository.RepositorySpecification;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -61,12 +58,21 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private Properties m_ftpProperties;
 
+  /**
+   * Contains the list of available repositories that can be selected by the user.
+   * For each available repository, the IRepositoryFactory is provided.
+   */
   private final Properties m_zmlRepositoriesProperties = new Properties();
 
+  /**
+   * Location of the properties file.
+   */
   private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties";
 
+  /** Manages the list of repositories. */
   private DefaultRepositoryContainer m_tsRepositoryContainer = null;
 
+  /** The list of specifications for each repositories. */
   private RepositorySpecification[] m_repositoriesSpecification = null;
 
   private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
