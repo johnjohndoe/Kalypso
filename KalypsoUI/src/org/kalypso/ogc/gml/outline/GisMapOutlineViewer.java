@@ -156,17 +156,26 @@ public class GisMapOutlineViewer implements ISelectionProvider,
    */
   public void widgetSelected( final SelectionEvent e )
   {
-    if( ( e.detail & SWT.CHECK ) != 0 )
-    {
+
       final TableTreeItem ti = (TableTreeItem)e.item;
       final Object data = ti.getData();
+      if( data instanceof IKalypsoTheme )
+      {
+        if(m_mapModel.getActiveTheme()!=(IKalypsoTheme)data)
+         m_mapModel.activateTheme((IKalypsoTheme)data);   
+        // TODO 1. create command for this
+        // TODO 2. create MultiCommand (eg. activate and enable) 
+      }    
+    
+    if( ( e.detail & SWT.CHECK ) != 0 )
+    {
       if( data instanceof IKalypsoTheme )
       {
         final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme)data, ti
             .getChecked() );
         m_commandTarget.postCommand( command, null );
       }
-    }
+    }    
   }
 
   /**

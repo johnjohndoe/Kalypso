@@ -194,6 +194,17 @@
                tooltip="verschiebt den Kartenausschnitt"
                style="radio"
                id="org.kalypso.editor.mapeditor.action.PanAction"/>
+
+         <action
+               toolbarPath="karte"
+               label="Create Geometry Feature"
+               class="org.kalypso.editor.mapeditor.actiondelegates.CreateGeometryFeatureWidgetDelegate"
+               icon="icons/full/elcl16/kde_contexthelp.gif"
+               tooltip="erzeugt features mit geometrie"
+               style="radio"
+               id="org.kalypso.editor.mapeditor.action.PanAction"/>
+
+
           <action
                 toolbarPath="karte"
                 label="Elemente selektieren"
