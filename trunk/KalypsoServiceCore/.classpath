@@ -2,17 +2,17 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/activation.jar"/>
-	<classpathentry kind="lib" path="lib/dom.jar"/>
-	<classpathentry kind="lib" path="lib/jaxp-api.jar"/>
-	<classpathentry kind="lib" path="lib/jax-qname.jar"/>
-	<classpathentry kind="lib" path="lib/jaxrpc-api.jar"/>
-	<classpathentry kind="lib" path="lib/jaxrpc-impl.jar"/>
-	<classpathentry kind="lib" path="lib/jaxrpc-spi.jar"/>
-	<classpathentry kind="lib" path="lib/mail.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-api.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-impl.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
-	<classpathentry kind="src" path="/KalypsoUtil"/>
+	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-qname.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

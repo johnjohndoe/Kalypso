@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="KalypsoCoreServices" default="build" basedir="../..">
+<project name="KalypsoObsService" default="build" basedir="../..">
 
-	<!-- Project full path -->
-	<property name="project.path" value="${workspace}${project}" />
+	<!-- this Project full path -->
+	<property name="project.path" value="${workspace}/KalypsoObsService" />
 	
-	<!-- 1. Projekt abhängig (benutzt das aktive Projekt) -->
+	<!-- this Project properties -->
 	<property file="${project.path}/etc/ant/service.properties" />
 	
-	<!-- 2. dann allgemeine eigenschaften -->
-	<property file="etc/ant/build.properties" />
-	<property file="etc/ant/tomcat.properties" />
+	<!-- KalypsoCoreServices properties -->
+	<property file="../KalypsoCoreServices/etc/ant/build.properties" />
+	<property file="../KalypsoCoreServices/etc/ant/tomcat.properties" />
 
-	<path id="generate.classpath">
-		<fileset dir="./lib/" includes="*.jar" />
+	<path id="full.classpath">
+	    <fileset dir="./lib/" includes="*.jar" />
+	    <fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
 		<pathelement location="${build.proxy}" />
 		<pathelement location="${build}" />
 		<pathelement location="${workspace}/KalypsoCore/build/bin" />
@@ -22,14 +23,14 @@
 	</path>
 
 	<path id="ant.classpath">
-		<fileset dir="./lib/build/" includes="*.jar" />
-		<fileset dir="./lib/" includes="*.jar" />
+	    <fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
+	    <fileset dir="../KalypsoCoreServices/lib/build" includes="*.jar" />
 	</path>
 
 	<path id="compile.classpath">
-		<path refid="generate.classpath"/>
-		<!--schon in build.properties pathelement location="${project.path}/build/bin" /-->
-		<!-- schon in generate.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
+		<path refid="full.classpath"/>
+		<!-- schon in build.properties pathelement location="${project.path}/build/bin" /-->
+		<!-- schon in full.classpath pathelement location="${workspace}/KalypsoCoreServices/build/bin" /-->
 	</path>
 
 	<fileset id="compile.jars" dir="./lib/" includes="*.jar" />
@@ -190,11 +191,11 @@
 	        description="Compiles the basic-source code">
 		<echo message="Compiling the source code...." />
 
-		<antcall target="package-a-plugin">
+		<!--antcall target="package-a-plugin">
 			<param name="package_jar" value="deegree.jar" />
 			<param name="package_bin" value="backupdeegree/bin" />
 			<param name="package_lib" value="backupdeegree/lib" />
-		</antcall>
+		</antcall-->
 		<antcall target="package-a-plugin">
 			<param name="package_jar" value="KalypsoUtil.jar" />
 			<param name="package_bin" value="KalypsoUtil/build/bin" />
@@ -205,19 +206,19 @@
 			<param name="package_bin" value="KalypsoCore/build/bin" />
 			<param name="package_lib" value="KalypsoCore/lib" />
 		</antcall>
-		<antcall target="package-a-plugin">
-			<param name="package_jar" value="KalypsoPSICompactAdapter.jar" />
-			<param name="package_bin" value="KalypsoPSICompactAdapter/build/bin" />
-			<param name="package_lib" value="KalypsoPSICompactAdapter/lib" />
+
+		<antcall target="package-a-project">
+			<param name="aproject_jar" value="KalypsoPSICompactAdapter.jar" />
+			<param name="aproject_bin" value="KalypsoPSICompactAdapter/build/bin" />
+			<param name="aproject_lib" value="KalypsoPSICompactAdapter/lib" />
 		</antcall>
-	
 		<antcall target="package-a-project">
 			<param name="aproject_jar" value="KalypsoCoreServices.jar" />
 			<param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
 			<param name="aproject_lib" value="KalypsoCoreServices/lib" />
 		</antcall>
 
-	</target>
+</target>
 
 
 	<!-- BUILD-CLIENT -->
@@ -232,7 +233,7 @@
 
 		<pathconvert property="clientjar_cp"
 		             pathsep=" "
-		             refid="generate.classpath"
+		             refid="full.classpath"
 		             dirsep="/">
 			<map from="${basedir}" to="." />
 		</pathconvert>
@@ -241,25 +242,6 @@
 		<jar jarfile="${dist}/${client.jar}">
 			<fileset dir="${build}" includes="**/*" />
 			<fileset dir="${build.proxy}" includes="**/*" />
-<!--
-			<manifest>
-				<attribute name="Main-Class" value="${main.class}" />
-				<attribute name="Class-Path" value="${clientjar_cp}" />
-				<section name="org/bce/services/calcjob">
-					<attribute name="Specification-Title"
-					           value="CalcJobService" />
-					<attribute name="Specification-Version" value="0.1" />
-					<attribute name="Specification-Vendor"
-					           value="Bjöernsen Beratende Ingenieure" />
-					<attribute name="Implementation-Title"
-					           value="CalcJobService 0.1" />
-					<attribute name="Implementation-Version"
-					           value="${TODAY_DE}" />
-					<attribute name="Implementation-Vendor"
-					           value="Björnsen Beratende Ingenieure GmbH" />
-				</section>
-			</manifest>
-			-->
 		</jar>
 
 		<copy todir="${dist}/libs">
@@ -317,7 +299,6 @@
 	<taskdef name="stop"
 	         classname="org.apache.catalina.ant.StopTask"
 	         classpathref="ant.classpath" />
-	<!--taskdef name="install" classname="org.apache.catalina.ant.InstallTask" classpathref="ant.classpath" /-->
 	<taskdef name="reload"
 	         classname="org.apache.catalina.ant.ReloadTask"
 	         classpathref="ant.classpath" />

@@ -26,7 +26,12 @@
   </path>
 
   <path id="ant.classpath">
-    <path refid="full.classpath" />
+  	<!-- Changes by Marc:
+  		- no need for full.classpath
+  		- just: CoreServices/lib/build and CoreServices/lib -->
+    <!--path refid="full.classpath" /-->
+    <fileset dir="../KalypsoCoreServices/lib" includes="*.jar" />
+    <fileset dir="../KalypsoCoreServices/lib/build" includes="*.jar" />
   </path>
 
   <path id="generate.classpath">
@@ -225,11 +230,13 @@
       <param name="package_bin" value="KalypsoCore/build/bin" />
       <param name="package_lib" value="KalypsoCore/lib" />
     </antcall>
-    <antcall target="package-a-plugin">
+
+  	<!-- Changes by Marc: PSICompactAdapter brauchst du wahrscheinlich nicht -->
+  	<!--antcall target="package-a-plugin">
       <param name="package_jar" value="KalypsoPSICompactAdapter.jar" />
       <param name="package_bin" value="KalypsoPSICompactAdapter/build/bin" />
       <param name="package_lib" value="KalypsoPSICompactAdapter/lib" />
-    </antcall>
+    </antcall-->
 
     <antcall target="package-a-project">
       <param name="aproject_jar" value="KalypsoCoreServices.jar" />
@@ -269,25 +276,6 @@
     <jar jarfile="${dist}/${client.jar}">
       <fileset dir="${build}" includes="**/*" />
       <fileset dir="${build.proxy}" includes="**/*" />
-      <!--
-			<manifest>
-				<attribute name="Main-Class" value="${main.class}" />
-				<attribute name="Class-Path" value="${clientjar_cp}" />
-				<section name="org/bce/services/calcjob">
-					<attribute name="Specification-Title"
-					           value="CalcJobService" />
-					<attribute name="Specification-Version" value="0.1" />
-					<attribute name="Specification-Vendor"
-					           value="Bjöernsen Beratende Ingenieure" />
-					<attribute name="Implementation-Title"
-					           value="CalcJobService 0.1" />
-					<attribute name="Implementation-Version"
-					           value="${TODAY_DE}" />
-					<attribute name="Implementation-Vendor"
-					           value="Björnsen Beratende Ingenieure GmbH" />
-				</section>
-			</manifest>
-			-->
     </jar>
 
     <copy todir="${dist}/libs">
