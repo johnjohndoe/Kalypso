@@ -10,17 +10,16 @@ import org.kalypso.zml.filters.OperationFilterType;
 
 public class OperationFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs )
+      throws SensorException
   {
-    OperationFilterType filter = (OperationFilterType) aft;
+    OperationFilterType filter = (OperationFilterType)aft;
     OperationFilter operationFilter = new OperationFilter( filter );
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter
-        .getFilter(), baseObs );
-    
-    operationFilter.initFilter( null, filteredObs );
-    
+    final IObservation filteredObs = FilterCreatorHelper
+        .resolveFilter( filter.getFilter(), baseObs );
+    operationFilter.initFilter( filteredObs, filteredObs );
     return operationFilter;
   }
+
 }

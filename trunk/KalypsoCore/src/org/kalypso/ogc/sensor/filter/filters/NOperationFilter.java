@@ -21,13 +21,11 @@ public class NOperationFilter extends AbstractObservationFilter
 
   public final static int OPERATION_DURCH = 4;
 
-  private NOperationFilterType m_baseFilter = null;
-
   private final int m_operation;
 
   private IObservation[] m_innerObservations = null;
 
-  public NOperationFilter( final NOperationFilterType filter )
+  public NOperationFilter( NOperationFilterType filter )
   {
     final String operator = filter.getOperator();
     if( operator.equals( "+" ) )
@@ -39,41 +37,26 @@ public class NOperationFilter extends AbstractObservationFilter
     else if( operator.equals( "/" ) )
       m_operation = OPERATION_DURCH;
     else
-      throw new IllegalArgumentException( "unknown operator '" + operator
-          + "' in filter" );
+      throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation)
-   */
-  public void initFilter( final Object conf, final IObservation baseObs )
-      throws SensorException
+  public void initFilter( Object conf, IObservation baseObs ) throws SensorException
   {
     super.initFilter( null, baseObs );
-    
-    m_innerObservations = (IObservation[]) conf;
+    m_innerObservations = (IObservation[])conf;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
-   */
-  public ITuppleModel getValues( final IVariableArguments args )
-      throws SensorException
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
-    final ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
-    
+    ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
     for( int i = 0; i < models.length; i++ )
       models[i] = m_innerObservations[i].getValues( args );
-    
     return new NOperationTupplemodel( models, m_operation );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
-   */
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName()
-        + ".setValues() wird zur Zeit nicht unterstuetzt." );
+        + " setValues() wird zur Zeit nicht unterstuetzt ." );
   }
 }
