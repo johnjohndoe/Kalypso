@@ -282,9 +282,8 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
 public GM_Envelope getFullExtentBoundingBox()
   {
-    IKalypsoTheme[] themes = getAllThemes();
+    final IKalypsoTheme[] themes = getAllThemes();
     GM_Envelope result = null;
-    
     for( int i = 0; i < themes.length; i++ )
     {
       if( isThemeEnabled( themes[i] ) )

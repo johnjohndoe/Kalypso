@@ -216,6 +216,7 @@ public class FeatureEditor extends EditorPart
       }
     };
 
+    
     final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     try
     {
@@ -225,9 +226,19 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      final CoreException ce = (CoreException)e.getTargetException();
-      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht",
-          ce.getStatus() );
+      final Throwable targetException = e.getTargetException();
+
+      final IStatus status;
+      if( targetException instanceof CoreException )
+        status = ( (CoreException)targetException ).getStatus();
+      else
+      {
+        final String locmsg = targetException.getLocalizedMessage();
+        final String msg = locmsg == null ? "" : locmsg; 
+        status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
+      }
+
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht", status );
     }
     catch( final InterruptedException e )
     {

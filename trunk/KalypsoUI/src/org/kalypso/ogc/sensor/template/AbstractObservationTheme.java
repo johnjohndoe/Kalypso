@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -315,5 +316,49 @@ public abstract class AbstractObservationTheme implements IThemeEventProvider,
       return super.toString();
 
     return bf.toString();
+  }
+
+  /** Replace tokens in Format-String
+   * 
+   * <dl>
+   * <dt>%obsname%</dt><dd>Name der Observation: obs.getName()</dd>
+   * <dt>%axisname%</dt><dd>Name der Wert-Achse: axis.getName()</dd>
+   * <dt>%axistype%</dt><dd>Typ der Wert-Achse: axis.getType()</dd>
+   * <dt>%axisunit%</dt><dd>Einheit der Wert-Achse: axis.getUnit()</dd>
+   * </dl>
+   * 
+   * */
+  protected String createCurveName( final String formatString, final IObservation obs, final IAxis axis )
+  {
+    String result = formatString;
+    result = result.replaceAll( "%obsname%", obs.getName() );
+    result = result.replaceAll( "%axisname%", axis.getName() );
+    result = result.replaceAll( "%axistype%", axis.getType() );
+    result = result.replaceAll( "%axisunit%", axis.getUnit() );
+    
+    // Metadaten
+    int index = 0;
+    while( index < result.length() - 1 )
+    {
+      final int start = result.indexOf( "%metadata-", index );
+      if( start == -1 )
+        break;
+      
+      final int stop = result.indexOf( '%', start + 1 );
+      if( stop != -1 )
+      {
+        final String metaname = result.substring( start + "%metadata-".length(), stop );
+        final StringBuffer sb = new StringBuffer( result );
+        
+        final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" );
+        sb.replace( start, stop + 1, metaval );
+        
+        result = sb.toString();
+      }
+      
+      index = stop + 1;
+    }
+    
+    return result;
   }
 }

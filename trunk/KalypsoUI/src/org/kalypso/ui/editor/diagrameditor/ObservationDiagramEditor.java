@@ -75,7 +75,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   protected ObservationChart m_obsChart = null;
 
   // TODO: maybe set a preference for this flag. It is currently always true.
-  private boolean m_useAutoProxy = true;
+//  private boolean m_useAutoProxy = true;
 
   public ObservationDiagramEditor()
   {

@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -273,11 +274,21 @@ public class DiagViewTemplate extends AbstractViewTemplate
       final String href, final String linktype, final boolean ignoreExceptions,
       final IVariableArguments args )
   {
+    return addObservation( themeName, context, href, linktype, ignoreExceptions, args, null );
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.template.AbstractViewTemplate#addObservation(java.lang.String, java.net.URL, java.lang.String, java.lang.String, boolean, org.kalypso.util.runtime.IVariableArguments)
+   */
+  public AbstractObservationTheme addObservation( final String themeName, final URL context,
+      final String href, final String linktype, final boolean ignoreExceptions,
+      final IVariableArguments args, final Color defaultcolor )
+  {
     // create key according to observation link
     final PoolableObjectType key = new PoolableObjectType( linktype, href,
         context, ignoreExceptions );
 
-    final DiagViewTheme theme = new DiagViewTheme( this, themeName, args );
+    final DiagViewTheme theme = new DiagViewTheme( this, themeName, null, args, defaultcolor );
 
     // the theme should be created using the default properties of the obs
     theme.setUseDefault( true );

@@ -42,7 +42,6 @@ package org.kalypso.ui.editor.abstractobseditor.actions;
 
 import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
 
 /**
  * SwitchAxisTypePulldownActionDelegate
@@ -51,18 +50,18 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
  */
 public class FilterAxesAction extends FullAction
 {
-  private static final String TITLE = "Achsentyp ignorieren";
-
-  private final static String MSG = "Wählen Sie der Achsentyp welche nicht dargestellt werden soll";
-
-  private ObservationEditorOutlinePage m_page;
-
-  public FilterAxesAction( ObservationEditorOutlinePage page )
+//  private static final String TITLE = "Achsentyp ignorieren";
+//
+//  private final static String MSG = "Wählen Sie der Achsentyp welche nicht dargestellt werden soll";
+//
+//  private ObservationEditorOutlinePage m_page;
+//
+  public FilterAxesAction( /* ObservationEditorOutlinePage page */ )
   {
     super( "Achsen filtern", ImageProvider.IMAGE_UTIL_FILTER,
         "Erlaubt die Deaktivierung einer Achsentyp" );
 
-    m_page = page;
+//    m_page = page;
   }
 
   /**

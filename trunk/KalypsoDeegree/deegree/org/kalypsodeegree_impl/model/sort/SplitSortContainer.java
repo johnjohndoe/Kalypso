@@ -274,8 +274,9 @@ public class SplitSortContainer
 
   public void query( GM_Envelope env, List result )
   {
-    if(result==null)
-      result=new ArrayList();
+    if( result == null || env == null )
+      result = new ArrayList();
+    
     for( int i = 0; i < myObjects.size(); i++ )
     {
       GM_Envelope envObject = SplitSort.getEnvelope( myObjects.get( i ) );
