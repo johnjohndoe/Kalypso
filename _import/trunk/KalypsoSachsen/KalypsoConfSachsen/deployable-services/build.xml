@@ -56,7 +56,24 @@
 		<antcall target="redeploy-KalypsoConf" />
 	</target>
 	
+  <target name="redeploy-services-tuhh-andreas" depends="prepare,fake-psicompact,build-services" description="redeploys all services">
+<!--
+wichtig:
+1. fake-psicompact ant-run
+2. KalypsoPSICompactAdapter refresh
+3. KalypsoPSICompactAdapter clean
+4. diese task starten
+ -->
+    <echo message="Redeploying all services"/>  		
+  		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+  		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+  		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+  		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
+  		<antcall target="redeploy-KalypsoConf" />
+  	</target>
+  	
 
+  
 	<!-- ### AB HIER KalypsoConf SPEZIFISCH ############################### -->
 	
 	<property name="deployable.war" value="kalypso_conf.zip" />
