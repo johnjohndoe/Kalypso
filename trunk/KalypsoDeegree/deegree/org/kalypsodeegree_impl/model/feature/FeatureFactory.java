@@ -135,7 +135,7 @@ public class FeatureFactory
    * @param properties
    *          properties containing the <CODE>FeatureType</CODE> s content
    * @return instance of a <CODE>FeatureType</CODE>
-   * 
+   * @deprecated
    *  
    */
   public static FeatureType createFeatureType( String name, FeatureTypeProperty[] properties )
