@@ -49,6 +49,7 @@ import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 
@@ -63,8 +64,7 @@ public class NaModelCalcJobTest extends TestCase
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
-
-    //    File baseDir = new File( "C:\\simulation\\test" );
+    registry.registerTypeHandler( new DiagramTypeHandler() );
     final File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST" );
     final File simDir = new File( baseDir, "sim" );
     final File ergDir = new File( baseDir, "output" );
@@ -72,27 +72,16 @@ public class NaModelCalcJobTest extends TestCase
       FileUtils.cleanDirectory( simDir );
     if( ergDir.exists() )
       FileUtils.cleanDirectory( ergDir );
-
-    //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
-    //    baseDir.mkdirs();
-
-    //    final File inputdir = new File( baseDir,
-    // ICalcServiceConstants.INPUT_DIR_NAME );
-    //    inputdir.mkdirs();
-    //    final File modellGML = new File( inputdir, "calcCase.gml" );
-    //    final File controlGML = new File( inputdir, "nacontrol.gml" );
-    //
-    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
-    // modellGMLResource ),
-    //        new FileOutputStream( modellGML ) );
-    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
-    // controlGMLResource ),
-    //        new FileOutputStream( controlGML ) );
+ 
 
     final CalcJobDataBean[] beans = new CalcJobDataBean[]
     {
         new CalcJobDataBean( NaModelConstants.MODELL_ID, "Modelldaten", "calc/calcCase.gml" ),
-        new CalcJobDataBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/.nacontrol.gml" ),
+
+//        new CalcJobDataBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/.nacontrol.gml" ),
+        new CalcJobDataBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/expertControl.gml" ),
+
+        new CalcJobDataBean( NaModelConstants.OPTIMIZECONF_ID, "optimizefile", "calc/.sce.xml" ),     
         new CalcJobDataBean( NaModelConstants.META_ID, "MetaSteuerdaten", "calc/.calculation" ),
         new CalcJobDataBean( "NiederschlagDir", "niederschlag", "calc/Niederschlag/" ),
         new CalcJobDataBean( "ZuflussDir", "zufluesse", "calc/Zufluss/" ),
@@ -101,6 +90,10 @@ public class NaModelCalcJobTest extends TestCase
     {
       final NaModelCalcJob job = new NaModelCalcJob();
       job.run( baseDir, beans );
+      if(job.isSucceeded())
+        System.out.println("berechnung ohne Fehler beendet :-)");
+      else
+        System.out.println(":-( fehler irgendwo");
     }
     catch( Exception e )
     {
