@@ -39,7 +39,8 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
   }
   
   /**
-   * Sets the intial contents of the "Show View" menu.
+   * Sets the intial contents of the "Show View" menu
+   * @param layout
    */
   protected void setContentsOfShowViewMenu( IPageLayout layout )
   {

@@ -164,7 +164,7 @@
             id="Kalypso">
       </category>
       <view
-            name="Zeitreihen Repository"
+            name="Zeitreihenbrowser"
             icon="icons/repository/repository.gif"
             category="Kalypso"
             class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
