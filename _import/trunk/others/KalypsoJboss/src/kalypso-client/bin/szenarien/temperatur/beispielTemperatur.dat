@@ -1,0 +1,37 @@
+#
+# english:
+#
+# This is a example scenario file 
+#
+# notice:
+# all lines beginning with "#" will be ignored,
+# so you can add comments wherever you want 
+#
+# The format is "D , v"
+# with
+# D: days
+# do not forget the separator ","
+# v: value
+#
+# deutsch:
+#
+# Dies ist eine Beispiel-Szenario-Datei 
+#
+# Achtung:
+# Alle mit "#" beginnenden Zeilen werden ignoriert,
+# so lassen sich Kommentare einfuegen 
+#
+# Das Format ist folgendermassen: "t , w"
+# mit
+# t: Tage
+# Der Trenner "," darf nicht vergessen werden,
+# w: Wert
+#
+#
+#
+1, 12.0
+2, 14.0
+3, 6.0
+4 ,0.0
+5 ,-2.3
+6, -8.09
