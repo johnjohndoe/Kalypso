@@ -13,9 +13,11 @@ import java.util.Properties;
 public class UrlUtilities implements IUrlResolver
 {
   private Properties m_replaceTokenMap = new Properties();
-  
+
   /**
-   * <p>Resolves a (potential) relative URL to a base URL.</p>
+   * <p>
+   * Resolves a (potential) relative URL to a base URL.
+   * </p>
    * 
    * @param baseURL
    *          URL, to which the relative url will be resolved
@@ -25,8 +27,7 @@ public class UrlUtilities implements IUrlResolver
    *         else return new URL( relativeURL )
    * @throws MalformedURLException
    */
-  public URL resolveURL( final URL baseURL, final String relativeURL )
-      throws MalformedURLException
+  public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
     try
     {
@@ -38,7 +39,7 @@ public class UrlUtilities implements IUrlResolver
       throw new MalformedURLException( e.getLocalizedMessage() );
     }
   }
-  
+
   /**
    * @see org.kalypso.java.net.IUrlResolver#getReplaceEntries()
    */
@@ -48,7 +49,8 @@ public class UrlUtilities implements IUrlResolver
   }
 
   /**
-   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
+   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String,
+   *      java.lang.String)
    */
   public void addReplaceToken( final String key, final String value )
   {

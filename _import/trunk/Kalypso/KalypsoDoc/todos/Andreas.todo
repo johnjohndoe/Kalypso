@@ -1,5 +1,17 @@
 Sammlung von mehr oder weniger wichtigen TODOS
 
+
+
+
+19. Januar
+Lizenzen...
+readme...
+ Doc:
+ - Optimierungsverfahren 
+ - alles zum NA-Modell
+
+
+
  NA-Modell:
 * Ombrometer Filter
 * im Filter default status setzen: Werte auf gueltigkeit pruefen (2)
@@ -39,7 +51,7 @@ GUI:
   standard CRS als property in kalypso-preferences uebernehmen
 
  
- Editor f?r Verknuepfungen zur zeitreihenDB
+ Editor fuer Verknuepfungen zur zeitreihenDB
  tabellen besser editieren
  elemente hinzufuegen
  elemente in tabelle importieren (z.B. aus shapefile)
