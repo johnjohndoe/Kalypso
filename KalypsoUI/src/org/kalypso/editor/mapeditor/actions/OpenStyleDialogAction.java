@@ -1,7 +1,6 @@
 package org.kalypso.editor.mapeditor.actions;
 
 import org.deegree.model.feature.FeatureType;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -13,8 +12,8 @@ import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.editor.mapeditor.ThemeStyleTreeObject;
 import org.kalypso.editor.mapeditor.views.StyleEditorViewPart;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 /**
@@ -72,7 +71,7 @@ public class OpenStyleDialogAction extends FullAction implements ISelectionChang
 						part.initStyleEditor(null, null);
 				}
 			}	
-			else if(o instanceof KalypsoTheme)
+			else if(o instanceof IKalypsoTheme)
 				part.initStyleEditor(null, null);
 		} catch (Exception e) {			
 			e.printStackTrace();

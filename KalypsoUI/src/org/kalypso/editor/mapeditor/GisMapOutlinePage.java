@@ -38,7 +38,8 @@ import org.kalypso.ogc.command.MoveThemeDownCommand;
 import org.kalypso.ogc.command.MoveThemeUpCommand;
 import org.kalypso.ogc.command.RemoveThemeCommand;
 import org.kalypso.ogc.event.ModellEvent;
-import org.kalypso.ogc.gml.KalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.plugin.ImageProvider;
 import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.ICommand;
@@ -293,7 +294,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
           public void run()
           {
             if( !item.isDisposed() )
-              item.setChecked( mm.isThemeEnabled( (KalypsoTheme)item.getData() ) );
+              item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
           }
         } );
       }
@@ -309,9 +310,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     {
       final TableTreeItem ti = (TableTreeItem)e.item;
       final Object data = ti.getData();
-      if( data instanceof KalypsoTheme )
+      if( data instanceof KalypsoFeatureTheme )
       {
-        final ICommand command = new EnableThemeCommand( m_mapModell, (KalypsoTheme)data, ti
+        final ICommand command = new EnableThemeCommand( m_mapModell, (IKalypsoTheme)data, ti
             .getChecked() );
         postCommand( command, null );
       }
@@ -333,8 +334,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   public void moveElementDown( final Object element )
   {
     final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( m_mapModell,
-        (KalypsoTheme)element );
-    postCommand( moveThemeUpCommand, new SelectThemeRunner( (KalypsoTheme)element ) );
+        (IKalypsoTheme)element );
+    postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   private void postCommand( final ICommand command, final Runnable runner )
@@ -348,8 +349,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    postCommand( new MoveThemeDownCommand( m_mapModell, (KalypsoTheme)element ),
-        new SelectThemeRunner( (KalypsoTheme)element ) );
+    postCommand( new MoveThemeDownCommand( m_mapModell, (IKalypsoTheme)element ),
+        new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
@@ -357,8 +358,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    postCommand( new RemoveThemeCommand( m_mapModell, (KalypsoTheme)element ),
-        new SelectThemeRunner( (KalypsoTheme)element ) );
+    postCommand( new RemoveThemeCommand( m_mapModell, (IKalypsoTheme)element ),
+        new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
@@ -371,9 +372,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private final class SelectThemeRunner implements Runnable
   {
-    public final KalypsoTheme m_theme;
+    public final IKalypsoTheme m_theme;
 
-    public SelectThemeRunner( final KalypsoTheme theme )
+    public SelectThemeRunner( final IKalypsoTheme theme )
     {
       m_theme = theme;
     }

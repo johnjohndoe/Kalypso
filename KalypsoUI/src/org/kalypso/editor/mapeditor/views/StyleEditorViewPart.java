@@ -9,8 +9,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.editor.mapeditor.ThemeStyleTreeObject;
 import org.kalypso.editor.styleeditor.SLDEditorGuiBuilder;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.KalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 /**
@@ -86,7 +86,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 	  			initStyleEditor(kalypsoStyle, ft);							  		
 	  		}
 	  	} 
-		else if(o instanceof KalypsoTheme)
+		else if(o instanceof IKalypsoTheme)
 			initStyleEditor(null, null); 
 	}
 }
