@@ -14,7 +14,7 @@ import org.kalypso.util.command.ICommandManager;
 
 /**
  *
- * @author von Dömming
+ * @author von DÃ¶mming
  */
 public class ZoomInWidget extends Widget implements TemporaryActionWidget //, ActionListener
 {

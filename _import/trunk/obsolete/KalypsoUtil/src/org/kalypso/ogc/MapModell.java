@@ -309,12 +309,16 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
     myModell.swapThemes( arg0, arg1 );
   }
 
+  private double getRatio()
+  {
+   return ( (double)myComponent.getHeight() ) / ( (double)myComponent.getWidth() );
+  }
+  
   private GM_Envelope adjustBoundingBox( GM_Envelope env )
   {
     if( env == null )
       env = getFullExtentBoundingBox();
-    double ratio = ( (double)myComponent.getHeight() ) / ( (double)myComponent.getWidth() );
-
+    double ratio = getRatio();
     double minX = env.getMin().getX();
     double minY = env.getMin().getY();
 
@@ -335,6 +339,24 @@ public class MapModell implements MapView, ModellEventProvider, ModellEventListe
     return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
 
+  public GM_Envelope getZoomOutBoundingBox(  )
+  {
+      GeoTransform transform = getProjection(  );
+      double ratio = getRatio();
+      double gisMX = transform.getSourceX( myComponent.getWidth() / 2d );
+      double gisMY = transform.getSourceY( myComponent.getHeight() / 2d);
+
+      double gisDX = 2 * ( gisMX - transform.getSourceX( 0 ) );
+      double gisDY = gisDX * ratio;
+      double gisX1 = gisMX - gisDX;
+      double gisX2 = gisMX + gisDX;
+      double gisY1 = gisMY - gisDY;
+      double gisY2 = gisMY + gisDY;
+
+      return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+  }
+
+  
   public GM_Envelope getFullExtentBoundingBox()
   {
     Theme[] themes = myModell.getAllThemes();
