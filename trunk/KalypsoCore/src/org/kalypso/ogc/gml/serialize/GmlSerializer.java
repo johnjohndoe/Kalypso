@@ -53,7 +53,7 @@ public final class GmlSerializer
           "xmlns:gml=http://www.opengis.net/gml" );
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
           "xmlns:xlink=http://www.w3.org/1999/xlink" );
-      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
+      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl( "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance"
            );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
