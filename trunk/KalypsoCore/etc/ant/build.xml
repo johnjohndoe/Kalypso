@@ -1,18 +1,23 @@
 <?xml version="1.0"?>
-<project name="KalypsoRepositoryBuild" default="deploy" basedir="../..">
+<project name="KalypsoCoreBuild" default="deploy">
 
-  <!-- Propertys aus einer Datei laden -->
-  <property file="../projectbuild.properties" />
+  <!-- Pfad zum Workspace -->
+  <property name="workspace" value="D:\Kalypso" />
 
-  <property name="project" value="${workspace}/KalypsoRepository" />
-  <property name="project.build" value="${project}/build" />
-  <property name="project.bin" value="${project.build}/bin" />
+  <!-- eclipse Abhaenigkeiten -->
+  <property name="eclipse.path" value="C:\Programme/eclipse3" />
+  <property name="eclipse.plugins" value="${eclipse.path}/plugins" />
+
+  <property name="project" value="${workspace}/KalypsoCore" />
+  <property name="project.bin" value="${project}/build/bin" />
   <property name="project.src" value="${project}/src" />
   <property name="project.lib" value="${project}/lib" />
 
   <path id="project.classpath">
     <fileset dir="${project.lib}" includes="**/*.jar" />
-    <fileset dir="${workspace}/KalypsoUtil/build" includes="**/*.jar" />
+    <pathelement path="${workspace}/KalypsoDeegree/build/bin" />
+    <pathelement path="${workspace}/KalypsoUtil/build/bin" />
+    <pathelement path="${eclipse.plugins}" />
   </path>
 
 
@@ -21,10 +26,10 @@
   </target>
 
   <target name="wsdp">
-    <ant antfile="${project}/etc/xmlbinding/build.xml"
+    <ant antfile="${project}/etc/schemas/build.xml"
          inheritall="true"
          target="deploy"
-         dir="${project}/etc/xmlbinding"
+         dir="${project}/etc/schemas"
     />
   </target>
 
@@ -57,30 +62,7 @@
   </target>
 
   <target name="deploy" depends="compile">
-    <jar destfile="${project.build}/KalypsoRepository.jar">
-      <fileset dir="${project.bin}" includes="**/*" />
-    </jar>
-  </target>
-
-  <target name="deploy.plugin" depends="wsdp">
-    <eclipse.buildScript  elements="plugin@org.kalypso.repository"
-                         install="${project}"
-                         children="true"
-                         recursivegeneration="true"
-    />
-
-    <ant antfile="${project}/build.xml"
-         inheritall="false"
-         target="zip.plugin"
-    />
-    <move todir="${project.build}">
-      <fileset dir="${project}">
-        <include name="**/org.kalypso*.zip" />
-        <include name="**/kalypso*.zip" />
-        <include name="**/kalypso*.jar" />
-      </fileset>
-    </move>
-    <delete file="${project}/build.xml" />
+    <jar basedir="${project.bin}" destfile="${project}/build/KalypsoCore.jar" />
   </target>
 
   <target name="javadoc" depends="prepare">
@@ -97,13 +79,5 @@
   </target>
 
 
-  <target name="clean">
-    <echo message="Raeume auf ..." />
-    <delete dir="${project.build}" />
-    <ant antfile="${project}/etc/xmlbinding/build.xml"
-         target="clean"
-         dir="${project}/etc/xmlbinding/"
-    />
-  </target>
-
 </project>
+

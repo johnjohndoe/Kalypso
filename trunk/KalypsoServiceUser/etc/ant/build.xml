@@ -61,6 +61,7 @@
     <mkdir dir="${javadoc.dir}" />
     <mkdir dir="${dist.server}" />
     <mkdir dir="${project.path}/build/bin" />
+    <mkdir dir="${project.path}/build/doc"/>
 
     <echo message="${project.path}" />
     <echo message="${interface.package}" />
@@ -75,6 +76,7 @@
     <delete dir="${build.proxy}" />
     <delete dir="${build}" />
     <delete dir="${dist.server}" />
+    <delete dir="${project.path}/build/doc" />
   </target>
 
   <!--  HIER GEHTS LOS -->
@@ -317,6 +319,19 @@
         </fileset>
       </batchtest>
     </junit>
+  </target>
+  
+  <target name="javadoc" depends="prepare" description="Erzeugt die Javadoc">
+    <echo message="Generating Javadoc ..." />
+    <javadoc access="protected"
+             classpathref="full.classpath"
+             destdir="${project.path}/build/doc"
+    >
+      <fileset dir="${project.path}/src" casesensitive="no">
+        <include name="**/*.java" />
+        <exclude name="**/*test*.java" />
+      </fileset>
+    </javadoc>
   </target>
 
   <!--target name="javadoc-client"

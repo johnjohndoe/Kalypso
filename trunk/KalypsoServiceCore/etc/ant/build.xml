@@ -7,6 +7,7 @@
   <property name="project" value="${workspace}/KalypsoCoreServices" />
   <property name="project.build" value="${project}/build" />
   <property name="project.bin" value="${project.build}/bin" />
+  <property name="project.doc" value="${project.build}/doc" />
   <property name="project.src" value="${project}/src" />
   <property name="project.lib" value="${project}/lib" />
 
@@ -22,9 +23,9 @@
   <target name="compile" depends="prepare">
     <echo message="Compiliere Sourcen ..." />
     <javac srcdir="${project.src}"
-             destdir="${project.bin}"
-             classpathref="project.classpath"
-      >
+           destdir="${project.bin}"
+           classpathref="project.classpath"
+    >
     </javac>
   </target>
 
@@ -51,6 +52,19 @@
     <!--jar destfile="${project.build}/KalypsoDeegree.jar">
       <fileset dir="${project.bin}" includes="**/*" />
     </jar-->
+  </target>
+
+  <target name="javadoc" depends="prepare">
+    <echo message="Generating Javadoc ..." />
+    <javadoc access="protected"
+             classpathref="projekt.classpath"
+             destdir="${project.doc}"
+    >
+      <fileset dir="${project.src}" casesensitive="no">
+        <include name="**/*.java" />
+        <exclude name="**/*test*.java" />
+      </fileset>
+    </javadoc>
   </target>
 
   <target name="clean">
