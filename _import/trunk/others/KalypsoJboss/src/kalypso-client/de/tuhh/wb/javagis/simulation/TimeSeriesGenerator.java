@@ -20,6 +20,13 @@ import de.tuhh.wb.javagis.simpleclient.StationFileDialog;
 
 public class TimeSeriesGenerator implements KalypsoXmlImportListener
 {
+    private boolean useLongTerm=false;
+
+    public void useLongtermData(boolean status)
+    {
+	this.useLongTerm=status;
+    }
+    
     private Date myStartDate;
     private Date myEndDate;
     private static Date myForecastDate;
@@ -153,13 +160,20 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 	myForecastDate=null;
     }
     
+    public static String name2FileName(String name)
+    {
+	if(name==null)
+	    name="default";
+	return name.toLowerCase().replace(' ', '_');
+    }
+
     public void importObject(GisTransferObject gto)
     {
 	final int RAIN=1;
 	final int WATERLEVEL=2;
 	final int TEMP=3;
 	final int UNKNOWN=4;
-	String stationName=gto.getSimpleProperty("m_fileName");
+	String stationName=name2FileName(gto.getSimpleProperty("m_stationName"));
 	System.out.println("stationName:"+stationName);
 	if(stationName==null || "null".equals(stationName) || "".equals(stationName))
 	    return;
@@ -175,27 +189,37 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 		if(status!=UNKNOWN)
 		    {
 			Date endDate=myEndDate;
+			File timeSeriesFile=null;
 			switch(status)
 			    {
 			    case RAIN:
+				String extension;
+				if(useLongTerm)
+				    extension=".lz";
+				else
+				    extension=".kz";
+				timeSeriesFile=new File(myDestinationDir,stationName+extension);
 				if(rainStations.containsKey(stationName))
 				    endDate=myForecastDate;
 				break;
 			    case TEMP:
+				timeSeriesFile=new File(myDestinationDir,stationName+".tem");
 				if(tempStations.containsKey(stationName))
 				    endDate=myForecastDate;
+				break;
+			    case WATERLEVEL:
+				timeSeriesFile=new File(myDestinationDir,stationName+".dat");
 				break;
 			    default:
 				break;
 			    }
 			
 			String text;
-			File timeSeriesFile=new File(myDestinationDir,stationName);
+
 			System.out.println("station-file: "+timeSeriesFile.getPath());
 			
 			//measured:
-			
-			
+
 			SimpleTimeSeries sequence=null;
 			switch(status)
 			    {
@@ -211,7 +235,12 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 			}
 			Date measuredEndDate=myStartDate;
 			String tableName=null;
-			if((text=gto.getSimpleProperty("m_mesTableName"))!=null)
+			String longTermExtension;
+			if(useLongTerm && (status==RAIN))
+			    longTermExtension="LongTerm";
+			else
+			    longTermExtension="";
+			if((text=gto.getSimpleProperty("m_mesTableName"+longTermExtension))!=null)
 			    {
 				int trim=text.indexOf(",");
 				tableName=text.substring(trim+1,text.length());
@@ -220,47 +249,122 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 					System.out.println("dbTableName:"+tableName);
 					System.out.println("load measured");
 					measuredEndDate=sequence.loadFromWadas(tableName,null,null,null,myStartDate,endDate);
-					
-				}
-			}	    
-		    if(endDate.after(measuredEndDate))
-			{
-			    // synthetic:
-			    tableName=null;
-			    if((text=gto.getSimpleProperty("m_synTableName"))!=null)
-				{
-				    int trim=text.indexOf(",");
-				    tableName=text.substring(trim+1,text.length());
-				    if(!(tableName==null || "".equals(tableName)||"null".equals(tableName)))
-					{
-					    System.out.println("dbTableName:"+tableName);
-					    System.out.println("load synthetic");
-					    Date syntheticEndDate=sequence.loadFromWadas(tableName,null,null,null,measuredEndDate,endDate);
-					    System.out.println("last synthetic date from wadas: "+syntheticEndDate);
-					}
-				}	    
-			}
-		    switch(status)
-			{
-			case RAIN:
-			    if(rainStations.containsKey(stationName))
-				{
-				    sequence.loadFromRelativASCII(myForecastDate,(File)rainStations.get(stationName));
-				    rainStations.remove(stationName);
-				}
-			    break;
-			case TEMP:
-			    if(tempStations.containsKey(stationName))
-				{
-				    sequence.loadFromRelativASCII(myForecastDate,(File)tempStations.get(stationName));
-				    tempStations.remove(stationName);
-				}
-			    break;
-			default:
-			    break;
-			}
-		    sequence.toAsciiFile(timeSeriesFile);		    
+				    }
+			    }	    
+			if(endDate.after(measuredEndDate))
+			    {
+				// synthetic:
+				tableName=null;
+				if((text=gto.getSimpleProperty("m_synTableName"+longTermExtension))!=null)
+				    {
+					int trim=text.indexOf(",");
+					tableName=text.substring(trim+1,text.length());
+					if(!(tableName==null || "".equals(tableName)||"null".equals(tableName)))
+					    {
+						System.out.println("dbTableName:"+tableName);
+						System.out.println("load synthetic");
+						Date syntheticEndDate=sequence.loadFromWadas(tableName,null,null,null,measuredEndDate,endDate);
+						System.out.println("last synthetic date from wadas: "+syntheticEndDate);
+					    }
+				    }	    
+			    }
+			switch(status)
+			    {
+			    case RAIN:
+				if(rainStations.containsKey(stationName))
+				    {
+					sequence.loadFromRelativASCII(myForecastDate,(File)(rainStations.get(stationName)));
+					rainStations.remove(stationName);
+				    }
+				break;
+			    case TEMP:
+				if(tempStations.containsKey(stationName))
+				    {
+					sequence.loadFromRelativASCII(myForecastDate,(File)(tempStations.get(stationName)));
+					// tempStations.remove(stationName);
+				    }
+				break;
+			    default:
+				break;
+			    }
+			sequence.toAsciiFile(timeSeriesFile);		    
 		    }
+
+		//-------
+		// Verdundstung...
+		if(status==TEMP)
+		    {
+			Date endDate=myEndDate;
+			if(tempStations.containsKey(stationName))
+			    endDate=myForecastDate;			
+			String text;
+			File timeSeriesFile=new File(myDestinationDir,stationName+".ver");
+			System.out.println("station-file: "+timeSeriesFile.getPath());
+			
+			//measured:
+
+			SimpleTimeSeries sequence=new TempTimeSeries(myStartDate,myEndDate);
+		
+			Date measuredEndDate=myStartDate;
+			String tableName=null;
+			String longTermExtension;
+			if(useLongTerm && (status==RAIN))
+			    longTermExtension="LongTerm";
+			else
+			    longTermExtension="";
+			if((text=gto.getSimpleProperty("m_mesTableNameEvaporation"+longTermExtension))!=null)
+			    {
+				int trim=text.indexOf(",");
+				tableName=text.substring(trim+1,text.length());
+				if(!(tableName==null || "".equals(tableName)||"null".equals(tableName)))
+				    {
+					System.out.println("dbTableName:"+tableName);
+					System.out.println("load measured");
+					measuredEndDate=sequence.loadFromWadas(tableName,null,null,null,myStartDate,endDate);
+				    }
+			    }	    
+			if(endDate.after(measuredEndDate))
+			    {
+				// synthetic:
+				tableName=null;
+				if((text=gto.getSimpleProperty("m_synTableNameEvaporation"+longTermExtension))!=null)
+				    {
+					int trim=text.indexOf(",");
+					tableName=text.substring(trim+1,text.length());
+					if(!(tableName==null || "".equals(tableName)||"null".equals(tableName)))
+					    {
+						System.out.println("dbTableName:"+tableName);
+						System.out.println("load synthetic");
+						Date syntheticEndDate=sequence.loadFromWadas(tableName,null,null,null,measuredEndDate,endDate);
+						System.out.println("last synthetic date from wadas: "+syntheticEndDate);
+					    }
+				    }	    
+			    }
+			switch(status)
+			    {
+			    case RAIN:
+				if(rainStations.containsKey(stationName))
+				    {
+					sequence.loadFromRelativASCII(myForecastDate,(File)rainStations.get(stationName));
+					rainStations.remove(stationName);
+				    }
+				break;
+			    case TEMP:
+				if(tempStations.containsKey(stationName))
+				    {
+					sequence.loadFromRelativASCII(myForecastDate,(File)tempStations.get(stationName));
+					tempStations.remove(stationName);
+				    }
+				break;
+			    default:
+				break;
+			    }
+			sequence.toAsciiFile(timeSeriesFile);		    
+		    }
+
+		//-------
+
+
 	    }
 	catch(Exception e)
 	    {

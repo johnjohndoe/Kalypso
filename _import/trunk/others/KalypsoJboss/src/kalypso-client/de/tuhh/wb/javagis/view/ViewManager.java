@@ -38,7 +38,7 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
 {
     //  public Version version;
     VersionAccess versionAccess;
-       int selectedVersion;
+    int selectedVersion;
 
     //ToolBars:
 
@@ -81,23 +81,27 @@ public class ViewManager extends JFrame implements WindowListener,ActionListener
   public static JDesktopPane desktop = new JDesktopPane();
     //    KalypsoInterface kalypsoInterface;
 
-
+    
+    public static void addToDesktop(JInternalFrame frame)
+    {
+	desktop.add(frame);
+    }
     public ViewManager()
     {
 	JOptionPane.setRootFrame(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-
-		desktop.setPreferredSize(new Dimension(600,500));
+	
+	desktop.setPreferredSize(new Dimension(600,500));
         getContentPane().add(desktop,BorderLayout.CENTER);
 
-		I18n.setLanguage("deu");
-		UIDefaults defaults = UIManager.getDefaults();
-		defaults.put("OptionPane.yesButtonText",I18n.get("Dia_Yes"));
-		defaults.put("OptionPane.noButtonText",I18n.get("Dia_No"));
-		defaults.put("OptionPane.cancelButtonText",I18n.get("Dia_Cancel"));
-		defaults.put("OptionPane.okButtonText",I18n.get("Dia_OK"));
+	I18n.setLanguage("deu");
+	UIDefaults defaults = UIManager.getDefaults();
+	defaults.put("OptionPane.yesButtonText",I18n.get("Dia_Yes"));
+	defaults.put("OptionPane.noButtonText",I18n.get("Dia_No"));
+	defaults.put("OptionPane.cancelButtonText",I18n.get("Dia_Cancel"));
+	defaults.put("OptionPane.okButtonText",I18n.get("Dia_OK"));
         setTitle(I18n.get("windowTitle"));
         setVisible(true);
 

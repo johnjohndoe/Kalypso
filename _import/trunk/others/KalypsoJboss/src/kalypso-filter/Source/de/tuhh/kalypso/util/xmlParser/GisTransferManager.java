@@ -1,5 +1,6 @@
 package de.tuhh.kalypso.util.xmlParser;
 
+import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
 import java.util.HashMap;
 import java.util.Set;
 import de.tuhh.kalypso.data.StrandTable;
@@ -172,10 +173,15 @@ public class GisTransferManager implements KalypsoXmlImportListener
 					rb.setFileLongTerm( gto.getSimpleProperty( "m_fileLongTermSim" ));
 				if( !gto.getSimpleProperty( "m_fileShortTermSim" ).equals("null" ))
 					rb.setFileShortTerm( gto.getSimpleProperty( "m_fileShortTermSim" ));
-				if( !gto.getSimpleProperty( "m_fileTimeAreaFunct" ).equals("null" ))
-					rb.setFileTimeAreaFunct( gto.getSimpleProperty( "m_fileTimeAreaFunct" ));
-				if( !gto.getSimpleProperty( "m_fileHydrotop" ).equals("null" ))
-					rb.setFileHydrotop( gto.getSimpleProperty( "m_fileHydrotop" ));
+				// if( !gto.getSimpleProperty( "m_fileTimeAreaFunct" ).equals("null" ))
+				//   rb.setFileTimeAreaFunct( gto.getSimpleProperty( "m_fileTimeAreaFunct" ));
+
+				rb.setFileTimeAreaFunct(SimulationDialog.InputFilesPrefix+".zft");
+				
+				// if( !gto.getSimpleProperty( "m_fileHydrotop" ).equals("null" ))
+				//   rb.setFileHydrotop( gto.getSimpleProperty( "m_fileHydrotop" ));
+				rb.setFileHydrotop(SimulationDialog.InputFilesPrefix+".hyd");
+
 				rb.setSnowWaterCont( Double.parseDouble( gto.getSimpleProperty( "m_snowWaterCont" )));
 				rb.setSnowMaxWaterCont( Double.parseDouble( gto.getSimpleProperty( "m_snowMaxWaterCont" )));
 				rb.setSnowMeltingRateTemp( Double.parseDouble( gto.getSimpleProperty( "m_snowMeltingRateTemp" )));

@@ -380,36 +380,44 @@ public class RbTable extends TreeSet
 			bw.write( Printf.format("%11.3f", String.valueOf( rb.getTotAreaRb() ) ) );
 			bw.newLine();
 			bw.write( rb.getKey() );
-			if( ( rb.getFileShortTerm() != null ) && ( rb.getFileLongTerm() != null ) )
+
+			String kurzZeit=null;
+			if(rb.getFileShortTerm()!=null)
+			    kurzZeit=String.valueOf(rb.getFileShortTerm())+".kz";
+			String langZeit=null;
+			if(rb.getFileLongTerm()!=null)
+			    langZeit=String.valueOf(rb.getFileLongTerm())+".lz";
+
+			if( ( langZeit != null ) && ( langZeit != null ) )
 			    {
-				bw.write( Printf.format( " %s %s", new String[] { String.valueOf( rb.getFileLongTerm() ), String.valueOf( rb.getFileShortTerm() ) } ) );
+				bw.write( Printf.format( " %s %s", new String[] { langZeit,kurzZeit } ) );
 				if( rb.getCorrRain() > 0 )
 				    {
-					int length = rb.getFileLongTerm().getName().length() +
-					    rb.getFileShortTerm().getName().length() + 3;
+					int length = langZeit.length() +
+					    kurzZeit.length() + 3;
 					bw.write( Printf.format( " %" + length + ".2f", String.valueOf( rb.getCorrRain() )));
 				    }
 			    }
-			if( ( rb.getFileShortTerm() != null ) && ( rb.getFileLongTerm() == null ) )
+			if( ( kurzZeit != null ) && ( langZeit == null ) )
 			    {
-				bw.write( Printf.format( " %s", new String[] { String.valueOf( rb.getFileShortTerm() )}));
+				bw.write( Printf.format( " %s", new String[] { kurzZeit}));
 				if( rb.getCorrRain() > 0 )
 				    {
-					int length = rb.getFileShortTerm().getName().length() + 2;
+					int length = kurzZeit.length() + 2;
 					bw.write( Printf.format( " %" + length + ".2f", String.valueOf( rb.getCorrRain() )));
 				    }
 			    }
-			if( ( rb.getFileLongTerm() != null ) && ( rb.getFileShortTerm() == null ) )
+			if( ( langZeit!= null ) && (kurzZeit == null ) )
 			    {
-				bw.write( Printf.format( " %s", new String[] { String.valueOf( rb.getFileLongTerm() )}));
+				bw.write( Printf.format( " %s", new String[] { langZeit}));
 				if( rb.getCorrRain() > 0 )
 				    {
-					int length = rb.getFileLongTerm().getName().length() + 2;
+					int length = langZeit.length() + 2;
 					bw.write( Printf.format( " %" + length + ".2f", String.valueOf( rb.getCorrRain() )));
 				    }
 			    }
 			bw.newLine();
-			bw.write( rb.getFileClimate().getName() );
+			bw.write(rb.getFileClimate().getName()+".tem "+rb.getFileClimate().getName()+".ver");
 			bw.newLine();
 			bw.write( rb.getFileTimeAreaFunct().getName() );
 			bw.newLine();
@@ -657,6 +665,17 @@ public class RbTable extends TreeSet
 	    {
 		Rb rb = ( Rb )itRbs.next();
 		results.add(rb.getFileShortTerm().toString());
+	    }// while
+	return results;
+    }
+    public HashSet getAllFileLongTerm()
+    {
+	HashSet results=new HashSet();
+	Iterator itRbs = iterator();
+	while( itRbs.hasNext() )
+	    {
+		Rb rb = ( Rb )itRbs.next();
+		results.add(rb.getFileLongTerm().toString());
 	    }// while
 	return results;
     }

@@ -1367,5 +1367,12 @@ public class State //implements I_Filter
 	    return ribs.getAllFileShortTerm();
 	return new HashSet();
     }
+    public HashSet getAllFileLongTerm()
+    {
+	RbTable ribs=getRibs();
+	if(ribs!=null)
+	    return ribs.getAllFileLongTerm();
+	return new HashSet();
+    }
 } // WcState
 

@@ -1,5 +1,6 @@
 package de.tuhh.kalypso.data.riverbasin;
 
+import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
 import de.tuhh.kalypso.data.strand.Strand;
 import de.tuhh.kalypso.data.RbTable;
 import de.tuhh.kalypso.data.node.Node;
@@ -284,26 +285,42 @@ public class Rb extends Object implements Comparable
 	/** Creates an new instant of File ( for long term simulation data file )with
 	 * the filename as String and assigns it to m_longTermSimFile varaible.
 	 * @param filename The parsed filename. */
-	public void setFileLongTerm( String filename ) { m_fileLongTermSim = new File( filename); }
-	/** Creates an new instant of File ( for short term simulation data file )with
-	 * the filename as String and assigns it to m_shortTermSimFile varaible.
-	 * @param filename The parsed filename. */
-	public void setFileShortTerm( String filename ) { m_fileShortTermSim = new File( filename); }
-	/** Creates an new instant of File ( for time area function data file )with
-	 * the filename as String and assigns it to m_timeAreaFunctionFile varaible.
-	 * @param filename The parsed filename. */
-	public void setFileTimeAreaFunct( String filename ) { m_fileTimeAreaFunct = new File( filename); }
-	/** Creates an new instant of File ( for hydrotope data file )with
-	 * the filename as String and assigns it to m_hydrotopFile varaible.
-	 * @param filename The parsed filename. */
-	public void setFileHydrotop( String filename ) { m_fileHydrotop = new File( filename );}
-	/** Creates an new instant of File ( for climate data file )with
-	 * the filename as String and assigns it to m_climateFile varaible.
-	 * @param filename The parsed filename. */
-	public void setFileClimate( String filename ) { m_fileClimate = new File( filename );}
-	/** Returns the file for long term simulation data.
-	 * @return m_longTermSimFile */
-	public File getFileLongTerm() { return m_fileLongTermSim; }
+
+
+    public void setFileLongTerm( String filename ) 
+    {
+	m_fileLongTermSim = new File(TimeSeriesGenerator.name2FileName(filename)); 
+    }
+    /** Creates an new instant of File ( for short term simulation data file )with
+     * the filename as String and assigns it to m_shortTermSimFile varaible.
+     * @param filename The parsed filename. */
+    public void setFileShortTerm( String filename ) 
+    {
+	m_fileShortTermSim = new File(TimeSeriesGenerator.name2FileName(filename)); 
+    }
+    /** Creates an new instant of File ( for time area function data file )with
+     * the filename as String and assigns it to m_timeAreaFunctionFile varaible.
+     * @param filename The parsed filename. */
+    public void setFileTimeAreaFunct( String filename ) 
+    {
+	m_fileTimeAreaFunct = new File( filename); 
+    }
+    /** Creates an new instant of File ( for hydrotope data file )with
+     * the filename as String and assigns it to m_hydrotopFile varaible.
+     * @param filename The parsed filename. */
+    public void setFileHydrotop( String filename ) { m_fileHydrotop = new File( filename );}
+    /** Creates an new instant of File ( for climate data file )with
+     * the filename as String and assigns it to m_climateFile varaible.
+     * @param filename The parsed filename. */
+
+    public void setFileClimate( String filename )
+    {
+	m_fileClimate = new File(TimeSeriesGenerator.name2FileName(filename)); 
+    }
+    /** Returns the file for long term simulation data.
+     * @return m_longTermSimFile */
+
+        public File getFileLongTerm() { return m_fileLongTermSim; }
 	/** Returns the file for short term simulation data.
 	 * @return m_shortTermSimFile */
 	public File getFileShortTerm() { return m_fileShortTermSim; }

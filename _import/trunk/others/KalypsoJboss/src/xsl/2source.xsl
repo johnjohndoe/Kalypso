@@ -1090,13 +1090,19 @@
             <xsl:with-param name="word" select="@key"/>
           </xsl:call-template>
         </xsl:variable>          
-
-        <xsl:if test="type='java.lang.Boolean'">
-          set<xsl:value-of select="$propName"/>(new java.lang.Boolean(false));
-        </xsl:if>
-        <xsl:if test="default">
-          set<xsl:value-of select="$propName"/>(new <xsl:value-of select="type"/>(<xsl:value-of select="default"/>));
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="default">
+            set<xsl:value-of select="$propName"/>(new <xsl:value-of select="type"/>("<xsl:value-of select="default"/>"));
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="type='java.lang.Boolean'">
+              set<xsl:value-of select="$propName"/>(new java.lang.Boolean(false));
+            </xsl:if>
+            <xsl:if test="default">
+              set<xsl:value-of select="$propName"/>(new <xsl:value-of select="type"/>(<xsl:value-of select="default"/>));
+            </xsl:if>            
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:for-each>
 
       // initialize VectorSets

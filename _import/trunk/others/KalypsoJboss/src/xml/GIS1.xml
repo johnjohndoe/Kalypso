@@ -34,6 +34,7 @@
       <description>Area of hydrotop</description>
       <unit>m<sup>3</sup></unit>
       <type>java.lang.Integer</type>
+      <default>1000</default>
     </simpleProperty>
 
     <simpleProperty key="m_sealFactor">
@@ -41,6 +42,7 @@
       <description>part of sealed area in percent</description>
       <unit>%</unit>
       <type>java.lang.Float</type>
+      <default>0.5</default>
     </simpleProperty>
 
     <simpleProperty key="m_sealFactorCor">
@@ -48,6 +50,7 @@
       <description>correct the sealing factor for hydrologic calculation in percent</description>
       <unit>%</unit>
       <type>java.lang.Float</type>
+      <default>0.3</default>
     </simpleProperty>
 
     <simpleProperty key="m_landuseALB">
@@ -55,18 +58,21 @@
       <description>german ALB code for landuse</description>
       <unit>ALB_xxx</unit>
       <type>java.lang.String</type>
+      <default>default</default>
     </simpleProperty>
 
     <simpleProperty key="m_soiltype">
       <name>Soil type</name>
       <description>reference to profile of soils</description>
       <type>java.lang.String</type>
+      <default>default</default>
     </simpleProperty>
 
     <simpleProperty key="m_maxPerk">
       <name>Rate of percolation</name>
       <description>rate of percolation, use scientific notation eg. 4.94E-12</description>
       <type>java.lang.String</type>
+      <default>7.00E-12</default>
     </simpleProperty>
   
     <simpleProperty key="m_aquiferRate">
@@ -74,14 +80,10 @@
       <description>rate of groundwater that flows to the aquifer, the rest will flow to the deep aquifer (leaves the model)</description>
       <unit>percent</unit>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
   </objectClass>
 
-
-
-
-
-  
   <objectClass ID="nullStrand">
     <name>Virtual Strand</name>
     <description>Virtual strand transfers flood wave direct from up- to downstream node</description>
@@ -414,20 +416,24 @@
       <name>Correction Factor Precipitation</name>
       <description>Factor is applied to change rainfall distribution in order to characteristic surface relief</description>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
     <simpleProperty key="m_corrMaxInter">
       <name>Correction Factor Maximal Interception Storage</name>
       <description>Maximal interception storage mm, is plant dependent, fixed in model for specific landuse</description>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
     <simpleProperty key="m_corrInitInter">
       <name>Correction Factor Initial Interception Storage</name>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
     <simpleProperty key="m_corrUsage">
       <name>Correction Vaporization</name>
       <description>Fixed in Model</description>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
     <simpleProperty key="m_key">
       <name>Type of Rain</name>
@@ -440,15 +446,17 @@
       <type>java.lang.String</type>
     </simpleProperty>
     <simpleProperty key="m_fileLongTermSim">
-      <name>Precipitation Time-Series Longterm</name>
+      <name>Precipitation Stattion Longterm</name>
       <description>Filename for precipitation time-series used for langterm simulation</description>
       <type>java.lang.String</type>
     </simpleProperty>
     <simpleProperty key="m_fileShortTermSim">
-      <name>Precipitation Time-Series Shortterm</name>
-      <description>Filename for precipitation time-series used for shortterm simulation</description>
+      <name>Precipitation Station Shortterm</name>
+      <description>Stationname for precipitation time-series used for shortterm simulation</description>
       <type>java.lang.String</type>
     </simpleProperty>
+
+<!--
     <simpleProperty key="m_fileTimeAreaFunct">
       <name>Time-Area-Function</name>
       <description>Filename for time-area-functions of catchments</description>
@@ -459,6 +467,8 @@
       <description>Filename for hydrotopes of each catchment</description>
       <type>java.lang.String</type>
     </simpleProperty>
+-->
+
     <simpleProperty key="m_flagHydrotop">
       <name>Hydrotop Flag</name>
       <description>Default value for calculation with hydrotopes: 7</description>
@@ -492,6 +502,7 @@
       <unit>0..1</unit>
       <type>java.lang.Double</type>
     </simpleProperty>
+<!--
     <simpleProperty key="m_fInit">
       <name>fInit</name>
       <description>not used in kalypso</description>
@@ -502,6 +513,7 @@
       <description>not used in kalypso</description>
       <type>java.lang.Float</type>
     </simpleProperty>
+-->
     <simpleProperty key="m_initAquif">
       <name>Initial Groundwater Height</name>
       <description>Initial height of watertable in groundwater storage</description>
@@ -545,12 +557,14 @@
     </simpleProperty>
     <simpleProperty key="m_corrEvap">
       <name>Correction Factor Evapotranspiration</name>
-      <description>Factor is multipied by time-series values (fixed in Model 1 mm per day)</description>
+      <description>Factor is multipied by time-series values</description>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
     <simpleProperty key="m_corrTemp">
       <name>Correction Factor Temperature</name>
       <type>java.lang.Float</type>
+      <default>1.0</default>
     </simpleProperty>
     <simpleProperty key="m_initSnowHeight">
       <name>Initial Snow Height</name>
@@ -593,6 +607,7 @@
 	<name>Infiltration Rate Longterm</name>
 	<description>Proportional Factor for infiltration, depending on characteristic soil properties</description>
 	<type>java.lang.Float</type>
+	<default>1.0</default>
       </simpleProperty>
       <simpleProperty key="v_perkForLayer">
 	<name>Percolation Rate</name>
@@ -603,6 +618,7 @@
       <simpleProperty key="v_maxPoreVolume">
 	<name>Correction Factor Maximum Pore Volume</name>
 	<type>java.lang.Float</type>
+      <default>1.0</default>
       </simpleProperty>
       <simpleProperty key="v_initialMoisture">
 	<name>Initial Moisture</name>
@@ -612,12 +628,14 @@
       <simpleProperty key="v_usableFieldCap">
 	<name>Correction Factor Usable Field Capcity</name>
 	<type>java.lang.Float</type>
+	      <default>1.0</default>
       </simpleProperty>
       <!--			<simpleProperty key="v_retLayer">
       -->			
       <simpleProperty key="v_retLayerInterflow">
  	<name>Correction Factor Interflow</name>
 	<type>java.lang.Float</type>
+      <default>1.0</default>
       </simpleProperty>
       <simpleProperty key="v_evapLayer">
 	<name>evaporation layer</name>
@@ -629,15 +647,18 @@
   <objectClass ID="rainStation">
     <name>Rain Station</name>
     <description>Definition of rain station for database connection</description>
+
     <simpleProperty key="m_stationName">
       <name>Station Name</name>
       <type>java.lang.String</type>
     </simpleProperty>
+
+<!--
     <simpleProperty key="m_fileName">
       <name>File Name</name>
       <type>java.lang.String</type>
     </simpleProperty>
-
+-->
     <simpleProperty key="m_mesTableName">
       <name>Table Name Measured</name>
       <format>bce_db</format>
@@ -650,7 +671,6 @@
       <description>Forecasted values</description>
       <type>java.lang.String</type>
     </simpleProperty>
-
     <simpleProperty key="m_mesTableNameLongTerm">
       <name>Table Name Measured Long term</name>
       <format>bce_db</format>
@@ -666,10 +686,13 @@
       <name>Station Name</name>
       <type>java.lang.String</type>
     </simpleProperty>
+
+<!--
     <simpleProperty key="m_fileName">
       <name>File Name</name>
       <type>java.lang.String</type>
     </simpleProperty>
+-->
     <simpleProperty key="m_mesTableName">
       <name>Table Name Measured</name>
       <format>bce_db</format><!-- bce_db : DBTableName,nicetablename-->

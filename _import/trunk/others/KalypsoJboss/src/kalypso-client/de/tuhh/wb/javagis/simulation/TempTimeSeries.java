@@ -102,6 +102,7 @@ public class TempTimeSeries extends SimpleTimeSeries
 	fileEndDate.set(Calendar.DAY_OF_YEAR,1);
 	fileEndDate.add(Calendar.YEAR,2);
 	Number number;
+	writeln(writer,"ex2");
 	while(fileDate.before(fileEndDate))
 	    {
 		Date date=fileDate.getTime();
@@ -109,15 +110,21 @@ public class TempTimeSeries extends SimpleTimeSeries
 		
 		if(fileDate.get(Calendar.DAY_OF_YEAR)==1)
 		    {
-			writeln(writer,"#kalypso evaporation temperature file");
-			writeln(writer,"                    "+fileDate.getActualMaximum(Calendar.DAY_OF_YEAR));
-			writeln(writer,"# block of year "+fileDate.get(Calendar.YEAR));
+			/*
+			  writeln(writer,"#kalypso evaporation temperature file");
+			  writeln(writer,"                    "+fileDate.getActualMaximum(Calendar.DAY_OF_YEAR));
+			  writeln(writer,"# block of year "+fileDate.get(Calendar.YEAR));
+			*/
 		    }
 		if(myTable.containsKey(date))
 		    number=(Number)myTable.get(date);
 		else
 		    number=DEFAULT_TEMP;
-		line=dateFormat.format(date)+separator+format(6,2,decimalFormat.format(number));
+//	        if(number.doubleValue()>0)
+line=dateFormat.format(date)+formatKoma(decimalFormat.format(number)) ;//format(6,2,decimalFormat.format(number));
+// 	  	else
+//                 line=dateFormat.format(date)+separator+decimalFormat.format(number) ;//format(6,2,decimalFormat.format(number));
+
 		//		line=dateFormat.format(date)+separator+decimalFormat.format(number);
 		writeln(writer,line);
 		//		System.out.println(line);
@@ -129,6 +136,10 @@ public class TempTimeSeries extends SimpleTimeSeries
 	//	System.out.println("wrote temperatue-file: "+outputFile.getPath());
     }
 
+	public String formatKoma(String text)
+{
+return text.replace(',','.');
+}
     public String format(int max,int right,String text)
     {
 	//	System.out.println("vorher:"+text);
@@ -143,6 +154,7 @@ public class TempTimeSeries extends SimpleTimeSeries
     public void toAsciiFile(File outputFile)
 	throws IOException
     {
-	toAsciiFile(outputFile," "," yy MM dd   1.00 ","##############0.00");
+	//	toAsciiFile(outputFile," "," yy MM dd   1.00 ","##############0.00");
+	toAsciiFile(outputFile," ","dd MM yyyy hh ","##0.00");
     }
 }

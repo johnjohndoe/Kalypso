@@ -22,6 +22,8 @@ import ejb.event.EJBEvent;
 import javax.swing.*;
 import java.awt.*;
 
+import de.tuhh.wb.javagis.view.trafoview.TrafoView;
+
 public class ProjectView extends JInternalFrame implements ActionListener, MouseListener, VersionListener
 {
     VersionAccess versionAccess;
@@ -89,6 +91,13 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
         mi.setActionCommand("updateProjectTree");
         mi.addActionListener(this);
         edit.add(mi);
+
+	mi = new JMenuItem(I18n.get("PVJMenuItem_OpenTrafoView"));
+	//	mi.setIcon((new ImageIcon( "symbols/Refresh16.gif")));
+	mi.setActionCommand("openTrafoView");
+	mi.addActionListener(this);
+	edit.add(mi);
+
     /*    mi = new JMenuItem("View Log File");
         mi.setIcon((new ImageIcon("symbols/View16.gif")));
         mi.setActionCommand("viewLog");
@@ -327,6 +336,11 @@ public class ProjectView extends JInternalFrame implements ActionListener, Mouse
 	    {
 		reloadProjectTree();
 
+	    }
+
+	if("openTrafoView".equals(e.getActionCommand()))
+	    {
+		TrafoView.openTrafoView();
 	    }
 
 	if("viewLog".equals(e.getActionCommand()))

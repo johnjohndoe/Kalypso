@@ -67,13 +67,13 @@
           <xsl:with-param name="digits" select="10"/>
           <xsl:with-param name="format" select="'0'"/>
         </xsl:call-template>
-        <xsl:text> </xsl:text>
+        <xsl:text></xsl:text>
         
         <xsl:call-template name="text_format">
           <xsl:with-param name="value" select="$nutz"/>
           <xsl:with-param name="digits" select="10"/>
         </xsl:call-template>
-        <xsl:text> </xsl:text>
+        <xsl:text></xsl:text>
         
         <xsl:call-template name="text_format">
           <xsl:with-param name="value" select="$boden"/>

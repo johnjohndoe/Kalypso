@@ -46,6 +46,18 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 //, VersionListener
 {
     public final String OUT_DIR="results_kalypso";
+    private final boolean SHORTTERM=true;;
+    private final boolean LONGTERM=false;
+    private boolean simulationType=SHORTTERM; //shortterm is default
+
+    public boolean isLongTermSimulation()
+    {
+	if(simulationType==LONGTERM)
+	    return true;
+	else
+	    return false;
+    }
+
     private VersionAccess myVersionAccess;
     private String myThemeKey;
     private Object myVersionId;
@@ -272,7 +284,7 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 	    }
     }
 
-    private static final String InputFilesPrefix="tis_eik";
+    public static final String InputFilesPrefix="tis_eik";
 
     public void importObject(GisTransferObject gto)
     {
@@ -309,7 +321,14 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 		    {
 			this.myStartDate=gto.getSimplePropertyAsDate("m_startDate");
 			this.myEndDate=gto.getSimplePropertyAsDate("m_endDate");
-			
+
+			if(Float.parseFloat(gto.getSimpleProperty("m_timeStep"))>23.9)
+			    {
+				this.simulationType=LONGTERM;
+				LogView.println("es wird eine LANGzeitsimulation durchgefuert");
+			    }
+			else
+			    LogView.println("es wird eine KURZzeitsimulation durchgefuert");
 			File startDir=new File(targetDir,"start");
 			File naModelDir=new File(targetDir,"na-modell");
 			this.myNaModelDir=naModelDir;
@@ -332,15 +351,23 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 			// generate ASCII-kalypso-Files
 			I_FilterImpl filter=new I_FilterImpl();
 			(new File(targetDir,"inp.dat")).mkdirs();
-			File inpFiles=new File(targetDir,"inp.dat"+File.separator+InputFilesPrefix);
-			
-			Integer rootNode=new Integer(gto.getSimpleProperty("m_rootNode"));
-			LogView.println(I18n.get("LV_SD_controlData1"));
-			rainStations.clear();
-			tempStations.clear();
-			filter.exportASCIIFiles(myModelXmlFile.toString(),inpFiles.getPath(),rootNode,tempStations,rainStations);
-		        LogView.println(I18n.get("LV_SD_controlData2")+rainStations.toString());
-			LogView.println(I18n.get("LV_SD_controlData3")+tempStations.toString());
+			   File inpFiles=new File(targetDir,"inp.dat"+File.separator+InputFilesPrefix);
+			   
+			   Integer rootNode=new Integer(gto.getSimpleProperty("m_rootNode"));
+			   LogView.println(I18n.get("LV_SD_controlData1"));
+			   HashSet rainStationsLongTerm=new HashSet();
+			   HashSet rainStationsShortTerm=new HashSet();
+			   rainStations.clear();
+			   tempStations.clear();
+			   filter.exportASCIIFiles(myModelXmlFile.toString(),inpFiles.getPath(),rootNode,tempStations,rainStationsShortTerm,rainStationsLongTerm);
+			   if(isLongTermSimulation())
+			       rainStations=rainStationsLongTerm;
+			   else
+			       rainStations=rainStationsShortTerm;
+			   
+
+			   LogView.println(I18n.get("LV_SD_controlData2")+rainStations.toString());
+			   LogView.println(I18n.get("LV_SD_controlData3")+tempStations.toString());
 		    }
 		if("node".equals(gto.getTableName()))
 		    {
@@ -358,13 +385,15 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 			File klimadatDir = new File(targetDir,"klima.dat");
 			if(!klimadatDir.exists())
 			    klimadatDir.mkdirs();
-			String fileName=new String(gto.getSimpleProperty("m_fileName"));
+			String fileName=TimeSeriesGenerator.name2FileName(new String(gto.getSimpleProperty("m_stationName")));
 			//			if(intersectsString(rainStations,fileName))
 			if(fileName!=null && rainStations.contains(fileName))
 			    {
 				//				LogView.println(fileName+" IS part of network");
 				//
 				TimeSeriesGenerator rainSeries=new TimeSeriesGenerator(klimadatDir,myStartDate,myEndDate);
+				if(simulationType==LONGTERM)
+				    rainSeries.useLongtermData(true);
 				rainSeries.importObject(gto);
 				//
 			    }
@@ -378,7 +407,7 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 			File klimadatDir = new File(targetDir,"klima.dat");
 			if(!klimadatDir.exists())
 			    klimadatDir.mkdirs();
-			String fileName=new String(gto.getSimpleProperty("m_fileName"));
+			String fileName=TimeSeriesGenerator.name2FileName(new String(gto.getSimpleProperty("m_stationName")));
 			
 			//			if(intersectsString(tempStations,fileName))
 			if(fileName!=null && tempStations.contains(fileName))

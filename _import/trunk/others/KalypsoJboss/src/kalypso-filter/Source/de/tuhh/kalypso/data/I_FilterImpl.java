@@ -46,7 +46,7 @@ public class I_FilterImpl implements I_Filter
 						String xmlSource=args[0];
 						String exportFileName=args[1];
 						Integer rootNodeNumber=new Integer(args[2]);
-						filter.exportASCIIFiles( xmlSource,exportFileName,rootNodeNumber,new HashSet(),new HashSet() );
+						filter.exportASCIIFiles( xmlSource,exportFileName,rootNodeNumber,new HashSet(),new HashSet(),new HashSet());
 					}
 					break;
 				case 4:
@@ -140,7 +140,7 @@ public class I_FilterImpl implements I_Filter
 	 * @param rootNodeNumber The number of the root node of the system. To select the whole system choose the last node in the system.
 	 */
 	
-    public void exportASCIIFiles( String xmlSource, String exportFileName, Integer rootNodeNumber, HashSet allClimateFiles,HashSet allShortTermFiles ) throws Exception
+    public void exportASCIIFiles( String xmlSource, String exportFileName, Integer rootNodeNumber, HashSet allClimateFiles,HashSet allShortTermFiles,HashSet allLongTermFiles ) throws Exception
     {
 	// HYDROTOP-FILE...
 	try
@@ -183,7 +183,7 @@ public class I_FilterImpl implements I_Filter
 		
 		allClimateFiles.addAll(subState.getAllFileClimate());
 		allShortTermFiles.addAll(subState.getAllFileShortTerm());
-		
+		allLongTermFiles.addAll(subState.getAllFileLongTerm());
 		LogFile.log( "Kalypso-ASCII files have been successfully written to " + exportFileName );
 		subState.stateStatsToLogFile();
 		System.out.println( "END OF PROCESS!" );
