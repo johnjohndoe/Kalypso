@@ -123,3 +123,8 @@ Version ...
 - Diverse korrigierte Bugs:
 	* SetContentThread: bessere handhabung der Thread. Die Klasse heisst jetzt
 	SetContentHelper.
+	
+-Weisse-Elster-Modell:
+   für Zufluesse und Pegel wird jetzt ein InterpolationFilter (1h) verwendet. 
+   Die Zufluss-Vorhersage-Zeitreihe ist ebenfalls auf die gemessene ZuflussZR verlinkt. Durch den Filter 
+   werden bei einer prognoserechnung default-werte erzeugt, die manuell verändert werden können.
