@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Vector;
+import javax.swing.JOptionPane;
+import java.io.FileWriter;
 
 import de.tuhh.kalypso.data.I_FilterImpl;
 import de.tuhh.wb.javagis.FileSystemUtils;
@@ -15,6 +17,7 @@ import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.XmlImport;
+import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 //import java.io.FileInputStream;
 //import java.io.BufferedReader;
 //import java.io.FileReader;
@@ -46,10 +49,7 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			return false;
 	}
 
-	public StartKalypso(
-		File modelFile,
-		File controlFile,
-		File targetDir) {
+	public StartKalypso(File modelFile, File controlFile, File targetDir) {
 		this.modelFile = modelFile;
 		this.controlFile = controlFile;
 		//this.simCaseFile = simCaseFile;
@@ -58,12 +58,17 @@ public class StartKalypso implements KalypsoXmlImportListener {
 		this.tempStations = new HashSet();
 		//runSimulation();
 	}
-	public Vector runSimulation(boolean saveAll,int rootNode,Date startDate_pegel,Date endDate_pegel) {
+	public Vector runSimulation(
+		boolean saveAll,
+		int rootNode,
+		Date startDate_pegel,
+		Date endDate_pegel) {
 		try {
 			//Check: targetDir exists
 			if (!targetDir.exists())
 				targetDir.mkdirs();
-			File kalypsoTemplate=new File(Main.props.getProperty("template_simulation"));
+			File kalypsoTemplate =
+				new File(Main.props.getProperty("template_simulation"));
 			System.out.println(
 				"copy template from " + kalypsoTemplate.toString());
 			System.out.print(I18n.get("LV_SD_runSim1"));
@@ -81,11 +86,11 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			//myVersionAccess.xmlExport(myThemeKey,myVersionId,simulationCaseFile);
 
 			/*XmlImport simCaseImport = new XmlImport(simCaseFile, this);
-
+			
 			System.out.println("start simulationcase-import");
 			System.out.println(I18n.get("LV_SD_runSim5"));
 			simCaseImport.start();*/
-			
+
 			XmlImport modelImport = new XmlImport(modelFile, this);
 			System.out.println("start control-import");
 			XmlImport controlImport = new XmlImport(controlFile, this);
@@ -95,13 +100,13 @@ public class StartKalypso implements KalypsoXmlImportListener {
 
 			System.out.println(I18n.get("LV_SD_simCase2"));
 			modelImport.start(); // controldata is known
-			
+
 			File resultDir = new File(targetDir, "out_tis.eik");
 			if (!resultDir.exists())
 				resultDir.mkdirs();
 
 			System.out.println(I18n.get("LV_SD_runSim6"));
-			
+
 			//modelxml = new File(resultDir,"modelData.xml");
 			//FileSystemUtils.copyFile(modelFile,modelxml);
 
@@ -113,111 +118,72 @@ public class StartKalypso implements KalypsoXmlImportListener {
 			//		kalypsoExe.run();
 			//		kalypsoExe.join();
 
-			FileSystemUtils.execute("kalypso.bat", myNaModelDir);
-			KonfigWrite.renameOutputFiles(resultDir);
-			String myCommand = "node_discharge.dat";
-			String commandLine = null;
-			if (saveAll) {
-				File resultsDir =
-					KonfigWrite.moveOutputDir(
-						targetDir,
-						"out_tis.eik",
-						OUT_DIR);
-				modelxml = new File(resultsDir,"modelData.xml");
-				FileSystemUtils.copyFile(modelFile,modelxml);
-				commandLine =
-					resultsDir.getPath()
-						+ System.getProperty("file.separator")
-						+ myCommand;
-				System.out.println(
-					"results are stored to \n" + resultsDir.toString());
-			} else {
-				//JOptionPane.showMessageDialog(null,"results are stored to \n"+resultsDir.toString());
-				commandLine =
-					resultDir.getPath()
-						+ System.getProperty("file.separator")
-						+ myCommand;
-				System.out.println(
-					"results are stored to \n" + resultDir.toString());
-			}
-			//byte[] bufferInp = new byte[100];
-			//int cInp = 0;
-
-			/*FileInputStream inputStream = new FileInputStream(commandLine);
-			while ((cInp = inputStream.read(bufferInp)) != -1) {
-				System.out.println("\n\n cInp:" + cInp + "\n------------");
-				if (cInp > 0) {
-					String outInp = null;
-					outInp = new String(bufferInp, 0, cInp);
-					System.out.println(outInp);
+			Vector resultData = null;
+			File kalypsoInp = new File(kalypsoTemplate, "inp.dat");
+			//File kalypsoOut = new File(targetDir, "out_tis.eik");
+			File zftFile = new File(kalypsoInp, "tis_eik.zft");
+			//File modelFile = new File(kalypsoOut, "model.xml");
+			File[] inpFiles = kalypsoInp.listFiles();
+			boolean hasZftFile = false;
+			for (int i = 0; i < inpFiles.length; i++) {
+				//System.out.println(inpFiles[i]);
+				if (inpFiles[i].equals(zftFile)) {
+					hasZftFile = true;
+					System.out.println("tis_eik.zft vorhanden");
+					resultData =
+						startCalibration(
+							saveAll,
+							resultDir,
+							rootNode,
+							startDate_pegel,
+							endDate_pegel);
 				}
-			}*/
-			//read Kalypso output from results file Kalypso
-			File outFile = new File(commandLine);
-			BlockTimeSeries blockSerie = new BlockTimeSeries();
-			Vector allowedKeys = new Vector();
-			allowedKeys.addElement(String.valueOf(rootNode));
-			blockSerie.importBlockFile(outFile,allowedKeys);
-			Vector resultData = new Vector();
-			resultData = blockSerie.getDischarge(String.valueOf(rootNode),startDate_pegel,endDate_pegel);
+			}
+			if (!hasZftFile) {
+				System.out.println("tis_eik.zft nicht vorhanden");
+				//File[] outFiles = kalypsoOut.listFiles();
+				/*for (int i = 0; i < outFiles.length; i++) {
+					System.out.println(outFiles[i]);
+				}*/
+				Object[] options = { I18n.get("Dia_Yes"), I18n.get("Dia_No")};
+				int n =
+					JOptionPane.showOptionDialog(
+						null,
+						I18n.get("SD_zft_Question"),
+						I18n.get("SD_zft_Title"),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						options,
+						options[0]);
+
+				switch (n) {
+					case JOptionPane.NO_OPTION :
+						System.out.println(I18n.get("LV_SD_missZft"));
+						break;
+					case JOptionPane.YES_OPTION :
+						File xslFile = new File("xsl", "xml_2_zft.xsl");
+						String result =
+							ServiceTools.xslTransform(modelFile, xslFile);
+						// zft-Datei wird in template-Ordner geschrieben!!
+						FileWriter out = new FileWriter(zftFile);
+						out.write(result);
+						out.close();
+						resultData =
+							startCalibration(
+								saveAll,
+								resultDir,
+								rootNode,
+								startDate_pegel,
+								endDate_pegel);
+					default :
+						break;
+
+				}
+			}
+
 			return resultData;
-			/*StringTokenizer stringTok;
-			Vector data = new Vector();
-			Vector resultData = new Vector();
-			//only for this example...
-			int searchNode = 103;
-			BufferedReader lineReader =
-				new BufferedReader(new FileReader(commandLine));
-			String line;
-			while ((line = lineReader.readLine()) != null) {
-				stringTok = new StringTokenizer(line);
-				while (stringTok.hasMoreTokens()) {
-					data.addElement(stringTok.nextToken());
-					//System.out.println(stringTok.nextToken());
-				}
-			}
-			//all information stored in Vector data
-			//filter data, in resultData only discharge of node 103 and year 2001
-			int dataLength = data.size();
-			String actualString = null;
-			//only for this example...
-			int searchPoint = 5; // Jahr 2001
-			for (int n = 0; n < dataLength; n++) {
-				actualString = (String) data.elementAt(n);
-				if (actualString.equals(Integer.toString(searchNode))) {
-					System.out.println("Knoten: " + actualString);
-					String numData = (String) data.elementAt(n + 2);
-					String numYear = (String) data.elementAt(n + 1);
-					int int_numData = Integer.parseInt(numData);
-					int int_numYear = Integer.parseInt(numYear);
-					System.out.println("Anzahl Daten: " + int_numData);
-					System.out.println("Jahr: " + int_numYear);
-					System.out.println("Wert von n: " + n);
-					if (int_numYear == searchPoint) {
-						int index_startData = n + 3;
-						resultData.addElement((String) data.elementAt(n + 2));
-						for (int i = index_startData;
-							i < index_startData + int_numData;
-							i++) {
-							System.out.println((String) data.elementAt(i));
-							resultData.addElement(data.elementAt(i));
-						}
-					}
-				}
-			}
-			return resultData;*/
 
-			/*
-			  try
-			  {
-			  File dir=new File(targetDir,OUT_DIR);
-			  if(dir.exists())
-			  FileSystemUtils.recursiveDelete(dir);
-			  }
-			  catch(Exception e)
-			  {}// nothing
-			  FileSystemUtils.move(targetDir,"out_tis.eik",OUT_DIR);
-			*/
 		} catch (Exception e) {
 			Vector dummyVector = new Vector();
 			e.printStackTrace();
@@ -225,6 +191,125 @@ public class StartKalypso implements KalypsoXmlImportListener {
 				"simulation run failed by \"" + e.getMessage() + "\"");
 			return dummyVector;
 		}
+	}
+
+	private Vector startCalibration(
+		boolean saveAll,
+		File resultDir,
+		int rootNode,
+		Date startDate_pegel,
+		Date endDate_pegel) {
+		FileSystemUtils.execute("kalypso.bat", myNaModelDir);
+		KonfigWrite.renameOutputFiles(resultDir);
+		String myCommand = "node_discharge.dat";
+		String commandLine = null;
+		if (saveAll) {
+			File resultsDir =
+				KonfigWrite.moveOutputDir(targetDir, "out_tis.eik", OUT_DIR);
+			modelxml = new File(resultsDir, "modelData.xml");
+			try {
+				FileSystemUtils.copyFile(modelFile, modelxml);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Can´t copy modelFile");
+			}
+			commandLine =
+				resultsDir.getPath()
+					+ System.getProperty("file.separator")
+					+ myCommand;
+			System.out.println(
+				"results are stored to \n" + resultsDir.toString());
+		} else {
+			//JOptionPane.showMessageDialog(null,"results are stored to \n"+resultsDir.toString());
+			commandLine =
+				resultDir.getPath()
+					+ System.getProperty("file.separator")
+					+ myCommand;
+			System.out.println(
+				"results are stored to \n" + resultDir.toString());
+		}
+		//byte[] bufferInp = new byte[100];
+		//int cInp = 0;
+
+		/*FileInputStream inputStream = new FileInputStream(commandLine);
+		while ((cInp = inputStream.read(bufferInp)) != -1) {
+			System.out.println("\n\n cInp:" + cInp + "\n------------");
+			if (cInp > 0) {
+				String outInp = null;
+				outInp = new String(bufferInp, 0, cInp);
+				System.out.println(outInp);
+			}
+		}*/
+		//read Kalypso output from results file Kalypso
+		File outFile = new File(commandLine);
+		BlockTimeSeries blockSerie = new BlockTimeSeries();
+		Vector allowedKeys = new Vector();
+		allowedKeys.addElement(String.valueOf(rootNode));
+		blockSerie.importBlockFile(outFile, allowedKeys);
+		Vector resultData = new Vector();
+		resultData =
+			blockSerie.getDischarge(
+				String.valueOf(rootNode),
+				startDate_pegel,
+				endDate_pegel);
+		return resultData;
+		/*StringTokenizer stringTok;
+		Vector data = new Vector();
+		Vector resultData = new Vector();
+		//only for this example...
+		int searchNode = 103;
+		BufferedReader lineReader =
+			new BufferedReader(new FileReader(commandLine));
+		String line;
+		while ((line = lineReader.readLine()) != null) {
+			stringTok = new StringTokenizer(line);
+			while (stringTok.hasMoreTokens()) {
+				data.addElement(stringTok.nextToken());
+				//System.out.println(stringTok.nextToken());
+			}
+		}
+		//all information stored in Vector data
+		//filter data, in resultData only discharge of node 103 and year 2001
+		int dataLength = data.size();
+		String actualString = null;
+		//only for this example...
+		int searchPoint = 5; // Jahr 2001
+		for (int n = 0; n < dataLength; n++) {
+			actualString = (String) data.elementAt(n);
+			if (actualString.equals(Integer.toString(searchNode))) {
+				System.out.println("Knoten: " + actualString);
+				String numData = (String) data.elementAt(n + 2);
+				String numYear = (String) data.elementAt(n + 1);
+				int int_numData = Integer.parseInt(numData);
+				int int_numYear = Integer.parseInt(numYear);
+				System.out.println("Anzahl Daten: " + int_numData);
+				System.out.println("Jahr: " + int_numYear);
+				System.out.println("Wert von n: " + n);
+				if (int_numYear == searchPoint) {
+					int index_startData = n + 3;
+					resultData.addElement((String) data.elementAt(n + 2));
+					for (int i = index_startData;
+						i < index_startData + int_numData;
+						i++) {
+						System.out.println((String) data.elementAt(i));
+						resultData.addElement(data.elementAt(i));
+					}
+				}
+			}
+		}
+		return resultData;*/
+
+		/*
+		  try
+		  {
+		  File dir=new File(targetDir,OUT_DIR);
+		  if(dir.exists())
+		  FileSystemUtils.recursiveDelete(dir);
+		  }
+		  catch(Exception e)
+		  {}// nothing
+		  FileSystemUtils.move(targetDir,"out_tis.eik",OUT_DIR);
+		*/
 	}
 
 	public static final String InputFilesPrefix = "tis_eik";

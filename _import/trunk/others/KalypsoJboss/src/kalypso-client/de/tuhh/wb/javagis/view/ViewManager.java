@@ -47,6 +47,7 @@ import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
 import de.tuhh.wb.javagis.view.projectview.ProjectView;
 import de.tuhh.wb.javagis.view.tableview.GisTableView;
+//import de.tuhh.wb.javagis.tools.WaitingThread;
 
 public class ViewManager
 	extends JFrame
@@ -168,7 +169,7 @@ public class ViewManager
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Toolkit.getDefaultToolkit().sync();
 		repaint();
-		
+
 		/*WaitingDialog waitDialog = new WaitingDialog();
 		waitDialog.setVisible(true);
 		waitDialog.setSize(150, 150);
@@ -280,15 +281,38 @@ public class ViewManager
 	}
 
 	public void showProjectView() {
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		repaint();
-		/*WaitingDialog waitDialog = new WaitingDialog();
-		waitDialog.setVisible(true);
-		waitDialog.setSize(150,150);
-		desktop.add(waitDialog);
-		waitDialog.moveToFront();
-		repaint();*/
+		//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		//repaint();
 
+		//WaitingThread waitThread = new WaitingThread();
+		//waitThread.start();
+
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					String title = I18n.get("windowTitlePV");
+					boolean open = isViewOpen(title);
+					if (!open) {
+						projectView = new ProjectView(title);
+						projectView.setVisible(true);
+						projectView.setSize(400, 300);
+						desktop.add(projectView);
+						projectView.moveToFront();
+					}
+				} catch (Exception error) {
+					WaitingDialog.waitingDialogDispose();
+					setCursor(Cursor.getDefaultCursor());
+				}
+				WaitingDialog.waitingDialogDispose();
+				setCursor(Cursor.getDefaultCursor());
+			}
+		});
+		t.start();
+		WaitingDialog waitDialog = WaitingDialog.getInstance();
+		//desktop.add(waitDialog);
+		//waitDialog.moveToFront();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		/*System.out.println("New ProjectView."); 
 		String title = I18n.get("windowTitlePV");
 		boolean open = isViewOpen(title);
 		if (!open) {
@@ -297,11 +321,12 @@ public class ViewManager
 			projectView.setSize(400, 300);
 			desktop.add(projectView);
 			projectView.moveToFront();
-		}
+		}*/
 
-		setCursor(Cursor.getDefaultCursor());
-		repaint();
-		//waitDialog.dispose();
+		//setCursor(Cursor.getDefaultCursor());
+		//repaint();
+		//waitThread.cancel();
+	
 	}
 
 	public void xmlImport(String themeKey, Object vId, File file) {
@@ -799,5 +824,5 @@ class MyCellRenderer extends JLabel implements ListCellRenderer {
 		return this;
 
 	}
-	
+
 }

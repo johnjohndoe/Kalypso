@@ -24,6 +24,9 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.Cursor;
+//import javax.swing.SwingUtilities;
+import java.awt.Component;
 
 import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.data.VersionAccess;
@@ -35,10 +38,11 @@ import de.tuhh.wb.javagis.view.LogView;
 import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.view.trafoview.TrafoView;
 import ejb.event.EJBEvent;
+import de.tuhh.wb.javagis.view.WaitingDialog;
 
 public class ProjectView
 	extends JInternalFrame
-	implements ActionListener, MouseListener, VersionListener,InternalFrameListener {
+	implements ActionListener, MouseListener, VersionListener, InternalFrameListener {
 	VersionAccess versionAccess;
 	int selectedVersion;
 	Hashtable versionHash;
@@ -284,22 +288,22 @@ public class ProjectView
 
 				if ("Modell".equals(theme)) {
 					menuItem = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
-									menuItem.setActionCommand(
-										"openObjectTableViewFromSelectedVersion");
-									menuItem.addActionListener(this);
-									popup.add(menuItem);
-									
+					menuItem.setActionCommand(
+						"openObjectTableViewFromSelectedVersion");
+					menuItem.addActionListener(this);
+					popup.add(menuItem);
+
 					menuItem = new JMenuItem(I18n.get("PV_PopMen_TblRel"));
 					menuItem.setActionCommand(
 						"openRelationTableViewFromSelectedVersion");
 					menuItem.addActionListener(this);
 					popup.add(menuItem);
-				}else{
+				} else {
 					menuItem = new JMenuItem(I18n.get("PV_PopMen_Tbl"));
-									menuItem.setActionCommand(
-										"openObjectTableViewFromSelectedVersion");
-									menuItem.addActionListener(this);
-									popup.add(menuItem);
+					menuItem.setActionCommand(
+						"openObjectTableViewFromSelectedVersion");
+					menuItem.addActionListener(this);
+					popup.add(menuItem);
 				}
 
 				if ("Modell".equals(theme)) {
@@ -368,10 +372,41 @@ public class ProjectView
 	// ActionListener
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println("ActionCommand: "+e.getActionCommand());
+		final Component gp = Main.viewManager.getGlassPane();
+		gp.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 		if ("updateProjectTree".equals(e.getActionCommand())
 			|| "connectToServer".equals(e.getActionCommand())) {
-			reloadProjectTree();
 
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					try {
+						System.out.println("reloadProjectTree");
+						reloadProjectTree();
+					} catch (Exception error) {
+						WaitingDialog.waitingDialogDispose();
+						//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+						gp.setVisible(false);
+					}
+					WaitingDialog.waitingDialogDispose();
+					//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+					gp.setVisible(false);
+				}
+			});
+			t.start();
+			/*SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					WaitingDialog.getInstance();
+				}
+			});*/
+			WaitingDialog waitDialog = WaitingDialog.getInstance();
+			//this.getContentPane().add(waitDialog);
+			//waitDialog.moveToFront();
+			//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			gp.setVisible(true);
+			//Main.viewManager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		}
 
 		if ("openTrafoView".equals(e.getActionCommand())) {
@@ -459,47 +494,145 @@ public class ProjectView
 		if ("openObjectTableViewFromSelectedVersion"
 			.equals(e.getActionCommand())) {
 			if (selectedVersion != -1) {
-				versionAccess.openObjectTableView(selectedVersion);
+				Thread t = new Thread(new Runnable() {
+					public void run() {
+						try {
+							versionAccess.openObjectTableView(selectedVersion);
+						} catch (Exception error) {
+							WaitingDialog.waitingDialogDispose();
+							//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+							gp.setVisible(false);
+						}
+						WaitingDialog.waitingDialogDispose();
+						//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+						gp.setVisible(false);
+					}
+				});
+				t.start();
+				WaitingDialog waitDialog = WaitingDialog.getInstance();
+				gp.setVisible(true);
+
 				//menuItem_ObjectTableView.setEnabled(false);
 			}
 		}
 		if ("openRelationTableViewFromSelectedVersion"
 			.equals(e.getActionCommand())) {
 			if (selectedVersion != -1) {
-				versionAccess.openRelationTableView(selectedVersion);
+				Thread t = new Thread(new Runnable() {
+					public void run() {
+						try {
+							versionAccess.openRelationTableView(
+								selectedVersion);
+						} catch (Exception error) {
+							WaitingDialog.waitingDialogDispose();
+							//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+							gp.setVisible(false);
+						}
+						WaitingDialog.waitingDialogDispose();
+						//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+						gp.setVisible(false);
+					}
+				});
+				t.start();
+				WaitingDialog waitDialog = WaitingDialog.getInstance();
+				gp.setVisible(true);
+
 				//menuItem_RelationTableView.setEnabled(false);
 			}
 		}
 		if ("openNetViewFromSelectedVersion".equals(e.getActionCommand())) {
 			if (selectedVersion != -1) {
-				versionAccess.openNetView(selectedVersion);
+				Thread t = new Thread(new Runnable() {
+					public void run() {
+						try {
+							versionAccess.openNetView(selectedVersion);
+						} catch (Exception error) {
+							WaitingDialog.waitingDialogDispose();
+							//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+							gp.setVisible(false);
+						}
+						WaitingDialog.waitingDialogDispose();
+						//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+						gp.setVisible(false);
+					}
+				});
+				t.start();
+				WaitingDialog waitDialog = WaitingDialog.getInstance();
+				gp.setVisible(true);
+
 				//menuItem_NetView.setEnabled(false);
 			}
 		}
 		if ("xml-import".equals(e.getActionCommand())) {
 			if (selectedVersion != -1) {
-				String themeKey = versionAccess.getThemeKey(selectedVersion);
-				Object vId = versionAccess.getVersionId(selectedVersion);
+				final String themeKey =
+					versionAccess.getThemeKey(selectedVersion);
+				final Object vId = versionAccess.getVersionId(selectedVersion);
 
 				int returnVal = fileChooser.showDialog(this, "import xml");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
+					final File file = fileChooser.getSelectedFile();
 					LogView.print(I18n.get("LV_PV_XML_im1"));
-					versionAccess.xmlImport(themeKey, vId, file);
+
+					Thread t = new Thread(new Runnable() {
+						public void run() {
+							try {
+								versionAccess.xmlImport(themeKey, vId, file);
+							} catch (Exception error) {
+								WaitingDialog.waitingDialogDispose();
+								//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+								//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+								gp.setVisible(false);
+							}
+							WaitingDialog.waitingDialogDispose();
+							//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+							gp.setVisible(false);
+						}
+					});
+					t.start();
+					WaitingDialog waitDialog = WaitingDialog.getInstance();
+					gp.setVisible(true);
+
 					LogView.println(I18n.get("LV_PV_XML_im2"));
 				}
 			}
 		}
 		if ("xml-export".equals(e.getActionCommand())) {
 			if (selectedVersion != -1) {
-				String themeKey = versionAccess.getThemeKey(selectedVersion);
-				Object vId = versionAccess.getVersionId(selectedVersion);
+				final String themeKey = versionAccess.getThemeKey(selectedVersion);
+				final Object vId = versionAccess.getVersionId(selectedVersion);
 
 				int returnVal = fileChooser.showDialog(this, "export xml");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
+					final File file = fileChooser.getSelectedFile();
 					LogView.print(I18n.get("LV_PV_XML_ex1"));
-					versionAccess.xmlExport(themeKey, vId, file);
+					Thread t = new Thread(new Runnable() {
+						public void run() {
+							try {
+								versionAccess.xmlExport(themeKey, vId, file);
+							} catch (Exception error) {
+								WaitingDialog.waitingDialogDispose();
+								//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+								//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+								gp.setVisible(false);
+							}
+							WaitingDialog.waitingDialogDispose();
+							//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							//Main.viewManager.setCursor(Cursor.getDefaultCursor());
+							gp.setVisible(false);
+						}
+					});
+					t.start();
+					WaitingDialog waitDialog = WaitingDialog.getInstance();
+					gp.setVisible(true);
+					
 					LogView.println(I18n.get("LV_PV_XML_ex2"));
 				}
 			}
@@ -571,4 +704,3 @@ public class ProjectView
 	}
 
 }
-
