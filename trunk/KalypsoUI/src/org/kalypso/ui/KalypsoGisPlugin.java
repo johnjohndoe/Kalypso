@@ -101,9 +101,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   /** location of the pool properties file */
   private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
 
-  /** location of the observation properties file */
-  private static final String OBSERVATION_REPOSITORIES_PROPERTIES = "resources/repositories.properties"; //$NON-NLS-N$
-
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
   private ResourceBundle m_resourceBundle = null;

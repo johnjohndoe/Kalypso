@@ -201,7 +201,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   protected void postCreateControl()
   {
-    new GisTemplateLoadedThread( m_mapModell, new Runnable()
+    new GisTemplateLoadedThread( getMapModell(), new Runnable()
     {
       public void run()
       {

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Frame;
@@ -50,7 +50,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
@@ -130,8 +129,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     ICommandTarget, ModellEventListener
 {
   private int m_selectionID = 0x1;
-  
-  private Logger m_logger = Logger.getLogger( this.getClass().getName() );
+
+//  private Logger m_logger = Logger.getLogger( this.getClass().getName() );
 
   /** name der modelspec datei, die verwendet wird */
   public final static String PROP_MODELSPEC = "modelspec";
@@ -180,7 +179,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private Properties m_replaceProperties = new Properties();
 
-  IMapModell m_mapModell = null;
+  private IMapModell m_mapModell = null;
 
   private MapPanel m_mapPanel;
 
@@ -213,6 +212,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private boolean m_showZmlTableOnlySelected = true;
 
+  /**
+   * Hack, um den Button-Event auf dem Ingore-RadioButton zu blocken, wenn auf
+   * den Berechnungsknopf gedrückt wird
+   */
+  protected String m_blockradio = null;
+
+  private Button m_radioQ;
+
+  private Button m_radioW;
+
   public AbstractCalcWizardPage( final String name )
   {
     super( name );
@@ -233,11 +242,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_table.dispose();
     if( m_tableTemplate != null )
       m_tableTemplate.dispose();
-    
+
     if( m_obsChart != null )
       m_obsChart.dispose();
     if( m_diagTemplate != null )
       m_diagTemplate.dispose();
+    
+    if( m_radioQ != null )
+      m_radioQ.dispose();
+    if( m_radioW != null )
+      m_radioW.dispose();
   }
 
   public Properties getArguments()
@@ -517,13 +531,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_table.setVisible( true );
       m_tableFrame.add( pane );
 
-      //      refreshZMLTable();
-
       return composite;
     }
     catch( Exception e )
     {
-      // TODO error handling
+      // todo error handling?
       e.printStackTrace();
 
       final Text text = new Text( parent, SWT.CENTER );
@@ -632,7 +644,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         // Save the observations before refreshing else
         // changes are lost
         saveDirtyObservations( true, new NullProgressMonitor() );
-        
+
         refreshZMLTable();
       }
     }
@@ -711,21 +723,33 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     label.setLayoutData( gridData );
 
     final Button radioQ = new Button( panel, SWT.RADIO );
+    m_radioQ = radioQ;
     radioQ.setText( ignoreLabel1 );
+    
+    final Button radioW = new Button( panel, SWT.RADIO );
+    m_radioW = radioW;
+    radioW.setText( ignoreLabel2 );
+    
     radioQ.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        if( radioQ.getSelection() )
+       System.out.println( "Q selected: " + m_blockradio ); 
+
+       if( "Q".equals( m_blockradio )  )
+       {
+         if( !radioQ.getSelection() )
+           radioQ.setSelection( true );
+         if( radioW.getSelection() )
+           radioW.setSelection( false );
+       }
+        else if( radioQ.getSelection() )
           setObsIgnoreType( ignoreType1 );
       }
     } );
-
-    final Button radioW = new Button( panel, SWT.RADIO );
-    radioW.setText( ignoreLabel2 );
 
     radioW.addSelectionListener( new SelectionAdapter()
     {
@@ -734,12 +758,21 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
        */
       public void widgetSelected( SelectionEvent e )
       {
-        if( radioW.getSelection() )
+       System.out.println( "W selected: " + m_blockradio ); 
+        
+       if( "W".equals( m_blockradio )  )
+       {
+         if( !radioW.getSelection() )
+           radioW.setSelection( true );
+         if( radioQ.getSelection() )
+           radioQ.setSelection( false );
+       }
+        else if( radioW.getSelection() )
           setObsIgnoreType( ignoreType2 );
       }
     } );
 
-    radioQ.setSelection( true );
+    m_radioQ.setSelection( true );
 
     return panel;
   }
@@ -789,7 +822,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
         if( saveFiles )
           tableTemplate.saveObservation( obs, monitor );
-        
+
         for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
           ( (TableViewColumn)itcol.next() ).setDirty( false );
       }
@@ -882,17 +915,31 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
     };
 
-    op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Berechnung" );
+    try
+    {
+      // aus irgendeinem Druck loest das Ausführen dieser Operation
+      // einen WdigetSelect Event auf einem der beiden RadioButtons zur Auswahl der Ansicht (W/Q)
+      // aus -> diesen Blocken
+      if( m_radioQ.getSelection() )
+        m_blockradio = "Q";
+      else
+        m_blockradio = "W";
+      op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Berechnung" );
+    }
+    finally
+    {
+      m_blockradio = null;
+    }
   }
 
   protected void postCreateControl()
   {
-    new GisTemplateLoadedThread( m_mapModell, new Runnable()
+    new GisTemplateLoadedThread( getMapModell(), new Runnable()
     {
       public void run()
       {
         // erstes feature des aktiven themas selektieren
-        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+        final IKalypsoTheme activeTheme = getMapModell().getActiveTheme();
         if( activeTheme instanceof IKalypsoFeatureTheme )
         {
           final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
@@ -905,7 +952,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
             final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
 
-            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace.getFeature(fid); 
+            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace
+                .getFeature( fid );
             if( feature != null )
               feature.select( getSelectionID() );
           }
