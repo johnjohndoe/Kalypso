@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
-    <observation linktype="zml" ns1:href="Zeitreihen/Niederschlag_Station/Weferlingen.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns1:href="Niederschlag_Station/Weferlingen.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c1" name="Weferlingen" width="50"/>
     </observation>
-    <observation linktype="zml" ns2:href="Zeitreihen/Niederschlag_Station/Hasselfelde.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns2:href="Niederschlag_Station/Hasselfelde.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c2" name="Hasselfelde" width="50"/>
     </observation>
-    <observation linktype="zml" ns3:href="Zeitreihen/Niederschlag_Station/Elend.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns3:href="Niederschlag_Station/Elend.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c3" name="Elend" width="50"/>
     </observation>
-    <observation linktype="zml" ns4:href="Zeitreihen/Niederschlag_Station/Ditfurt.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns4:href="Niederschlag_Station/Ditfurt.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c4" name="Ditfurt" width="50"/>
     </observation>
-    <observation linktype="zml" ns5:href="Zeitreihen/Niederschlag_Station/Mahndorf.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns5:href="Niederschlag_Station/Mahndorf.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c5" name="Mahndorf" width="50"/>
     </observation>
-    <observation linktype="zml" ns6:href="Zeitreihen/Niederschlag_Station/Silberhütte.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns6:href="Niederschlag_Station/Silberhütte.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c6" name="Silberhütte" width="50"/>
     </observation>
     <rules>
