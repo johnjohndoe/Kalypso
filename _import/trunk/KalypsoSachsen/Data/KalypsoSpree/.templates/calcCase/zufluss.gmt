@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="50.97127443877715" left="14.295643595240865" right="14.954722583628214" top="51.571865622897015"/>
+    <extent bottom="5650006.91697641" left="5440167.1075641345" right="5510340.107542794" top="5712133.956144744"/>
     <layers active="ID_1">
         <layer name="Eingabepegel (Zuflusse)" visible="true" featurePath="ZuflussCollectionAssociation/ZuflussMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Zufluesse" ns1:actuate="onRequest" ns1:href="project:/.styles/zufluesse.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

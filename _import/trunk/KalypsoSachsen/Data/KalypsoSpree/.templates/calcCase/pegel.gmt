@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="50.97127443877715" left="14.295643595240865" right="14.954722583628214" top="51.571865622897015"/>
+    <extent bottom="5650006.91697641" left="5439710.761485275" right="5510796.453621654" top="5712941.99999991"/>
     <layers active="ID_1">
         <layer name="Vorhersagepegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember[_Pegel]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Pegel" ns1:actuate="onRequest" ns1:href="project:/.styles/pegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
-        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns11:actuate="onRequest" ns11:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
-            <ns12:style linktype="sld" style="sachsenrivers" ns11:actuate="onRequest" ns11:href="project:/.styles/styles.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
+        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="sachsenrivers" ns3:actuate="onRequest" ns3:href="project:/.styles/styles.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
     </layers>
 </gismapview>

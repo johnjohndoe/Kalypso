@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="50.97127443877715" left="14.295643595240865" right="14.954722583628214" top="51.571865622897015"/>
+    <extent bottom="5650006.91697641" left="5439710.761485275" right="5510796.453621654" top="5712941.99999991"/>
     <layers active="ID_1">
         <layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[FlusslaufModell]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="./calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Flusslaufmodelle" ns1:actuate="onRequest" ns1:href="project:/.styles/flusslaufmodelle.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
