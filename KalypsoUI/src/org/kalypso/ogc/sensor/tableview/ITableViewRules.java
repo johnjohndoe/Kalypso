@@ -12,4 +12,5 @@ public interface ITableViewRules
   public void addRule( RenderingRule rule );
   public void removeRule( RenderingRule rule );
   public RenderingRule[] findRules( int mask );
+  public boolean isEmpty();
 }

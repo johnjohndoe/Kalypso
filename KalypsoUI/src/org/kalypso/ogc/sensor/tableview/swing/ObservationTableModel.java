@@ -33,6 +33,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
  */
 public class ObservationTableModel extends AbstractTableModel
 {
+  private static final RenderingRule[] EMPTY_RENDERING_RULES = new RenderingRule[0];
   private static final Integer STATUS_USERMOD = new Integer( KalypsoStati.BIT_USER_MODIFIED );
   private ITableViewRules m_rules = RulesFactory.getDefaultRules();
 
@@ -295,7 +296,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     final Number status = (Number) m_statusModel.getValueAt( row, column - 1 );
     if( status == null )
-      return new RenderingRule[0];
+      return EMPTY_RENDERING_RULES;
 
     return m_rules.findRules( status.intValue() );
   }

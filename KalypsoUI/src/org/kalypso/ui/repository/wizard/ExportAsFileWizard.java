@@ -5,6 +5,12 @@ import java.io.FileOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
@@ -26,7 +32,9 @@ public class ExportAsFileWizard extends Wizard
   private FileSelectWizardPage m_page2;
   
   private static String DEFAULT_FILE = "";
+  
   private final IObservation m_obs;
+  protected IProject m_project = null;
 
   public ExportAsFileWizard( final IObservation obs )
   {
@@ -53,7 +61,10 @@ public class ExportAsFileWizard extends Wizard
     final String fileName;
     
     if( projects.length > 0 )
-      fileName = projects[0].getFullPath().toOSString();
+    {
+      m_project = projects[0];
+      fileName = m_project.getFullPath().toOSString();
+    }
     else
       fileName = DEFAULT_FILE;
     
@@ -101,6 +112,30 @@ public class ExportAsFileWizard extends Wizard
     finally
     {
       IOUtils.closeQuietly( outs );
+    }
+
+    if( m_project != null )
+    {
+      final Job refreshJob = new Job( "Projekt " + m_project.getName() + " aktualisieren" )
+      {
+        protected IStatus run( IProgressMonitor monitor )
+        {
+          try
+          {
+            m_project.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+          }
+          catch( CoreException e )
+          {
+            e.printStackTrace();
+            
+            return KalypsoGisPlugin.createErrorStatus( "", e );
+          }
+          
+          return Status.OK_STATUS;
+        }
+      };
+      
+      refreshJob.schedule();
     }
     
     return true;

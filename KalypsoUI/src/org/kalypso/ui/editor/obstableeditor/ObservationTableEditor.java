@@ -79,7 +79,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
         | SWT.EMBEDDED ) );
 
     m_model = new ObservationTableModel();
-    m_model.setRules( m_template );
+    m_model.setRules( m_template.getRules() );
     m_table = new ObservationTable( m_model );
 
     m_template.addTemplateEventListener( m_table );
