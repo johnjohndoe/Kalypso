@@ -6,7 +6,7 @@ import javax.swing.event.EventListenerList;
 
 /**
  * Standardimplementierung von {@link ICommandManager}.
-
+ * 
  * @author von D?mming
  */
 public class DefaultCommandManager implements ICommandManager
@@ -22,6 +22,8 @@ public class DefaultCommandManager implements ICommandManager
   /** points to last processed command */
   private int stackPos = -1;
 
+  private boolean m_dirty;
+
   public void postCommand( final ICommand command ) throws Exception
   {
     if( command instanceof InvisibleCommand )
@@ -29,24 +31,38 @@ public class DefaultCommandManager implements ICommandManager
       checkStatus();
       return;
     }
+
+    if( command.isUndoable() )
+    {
+      while( stack.size() - 1 > stackPos )
+        stack.removeElementAt( stackPos + 1 );
+
+      stack.add( command );
+      stackPos++;
+    }
+    else
+    {
+      stack.clear();
+      stackPos = -1;
+    }
     
-      command.process();
-
-      if( command.isUndoable() )
-      {
-        while( stack.size() - 1 > stackPos )
-          stack.removeElementAt( stackPos + 1 );
-
-        stack.add( command );
-        stackPos++;
-      }
-      else
-      {
-        stack.clear();
-        stackPos = -1;
-      }
-
     checkStatus();
+
+    try
+    {
+      command.process();
+    }
+    catch( final Exception e )
+    {
+      // das letzte wieder löschen 
+      stack.remove( stack.size() - 1 );
+      stackPos--;
+      
+      checkStatus();
+      
+      throw e;
+    }
+
   }
 
   public void redo() throws Exception
@@ -54,6 +70,7 @@ public class DefaultCommandManager implements ICommandManager
     if( stackPos < stack.size() - 1 )
     {
       stackPos++;
+      checkStatus();
 
       try
       {
@@ -74,9 +91,21 @@ public class DefaultCommandManager implements ICommandManager
   {
     if( stackPos >= 0 )
     {
-        ( (ICommand)stack.elementAt( stackPos ) ).undo();
+      stackPos--;
+      checkStatus();
 
-        stackPos--;
+      try
+      {
+      ( (ICommand)stack.elementAt( stackPos + 1 ) ).undo();
+      }
+      catch( final Exception e )
+      {
+        stackPos++;
+        
+        checkStatus();
+        
+        throw e;
+      }
     }
 
     checkStatus();
@@ -86,6 +115,7 @@ public class DefaultCommandManager implements ICommandManager
   {
     undoable = ( stackPos >= 0 );
     doable = ( stackPos < stack.size() - 1 );
+    m_dirty = true;
 
     fireCommandManagerChanged();
   }
@@ -146,4 +176,15 @@ public class DefaultCommandManager implements ICommandManager
     return "<cannot redo>";
   }
 
+  public boolean isDirty()
+  {
+    return m_dirty;
+  }
+
+  public void resetDirty( )
+  {
+    m_dirty = false;
+    
+    fireCommandManagerChanged();
+  }
 }

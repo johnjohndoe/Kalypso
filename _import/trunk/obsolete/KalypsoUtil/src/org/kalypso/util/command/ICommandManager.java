@@ -45,4 +45,8 @@ public interface ICommandManager
   public void addCommandManagerListener( final ICommandManagerListener l );
 
   public void removeCommandManagerListener( final ICommandManagerListener l );
+  
+  public boolean isDirty();
+
+  public void resetDirty();
 }
