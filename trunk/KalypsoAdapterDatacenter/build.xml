@@ -43,9 +43,9 @@
 	<!-- JAR -->
 	<target name="jar" depends="compile">
 
-		<pathconvert property="jar-cp" pathsep=" " refid="classpath" dirsep="/">
+		<!--pathconvert property="jar-cp" pathsep=" " refid="classpath" dirsep="/">
 			<map from="${basedir}" to="." />
-		</pathconvert>
+		</pathconvert-->
 
 		<copy todir="${deploy.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar" />
@@ -55,9 +55,9 @@
 
 			<fileset dir="${build.dir}" includes="**/*" />
 
-			<manifest>
+			<!--manifest>
 				<attribute name="Class-Path" value="${jar-cp}" />
-			</manifest>
+			</manifest-->
 		</jar>
 
 	</target>
