@@ -89,7 +89,8 @@ public class NaModelCalcJob extends AbstractCalcJob
 
   private final String TEMPLATE_CONF_FILE = "misc/resourceFile.conf";
 
-  public void run( final File basedir, final CalcJobDataBean[] input ) throws CalcJobServiceException
+  public void run( final File basedir, final CalcJobDataBean[] input )
+      throws CalcJobServiceException
   {
     final File outDir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
     outDir.mkdirs();
@@ -97,9 +98,10 @@ public class NaModelCalcJob extends AbstractCalcJob
     if( !basedir.exists() )
       basedir.mkdirs();
     final File inputDir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
-//    final File calcDir = new File( inputDir, ICalcServiceConstants.CALC_DIR_NAME );
+    //    final File calcDir = new File( inputDir,
+    // ICalcServiceConstants.CALC_DIR_NAME );
     final File exeDir = new File( basedir, "sim" );
-    
+
     try
     {
       setMessage( "richte Berechnungsverzeichnis ein" );
@@ -133,13 +135,13 @@ public class NaModelCalcJob extends AbstractCalcJob
     }
   }
 
-  private GMLWorkspace generateASCII( final File exeDir, final File inputDir, final CalcJobDataBean[] beans, File outDir )
-      throws Exception
+  private GMLWorkspace generateASCII( final File exeDir, final File inputDir,
+      final CalcJobDataBean[] beans, File outDir ) throws Exception
   {
     // input model
     final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
     final File modelFile = new File( inputDir, modellBean.getPath() );
-    
+
     final URL inputModellURL = modelFile.toURL();
     final File modellFile = new File( modelFile.getParentFile(), "namodellBerechnung.gml" );
 
@@ -190,16 +192,16 @@ public class NaModelCalcJob extends AbstractCalcJob
   {
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
-    
-    Document modelDoc = XMLHelper.getAsDOM(inputModellURL);
-    
+
+    Document modelDoc = XMLHelper.getAsDOM( inputModellURL );
+
     ModelVary.initializeModel( modelDoc, config.getCalContexts() );
 
     // TODO: take charset from Document
     final String charset = "UTF-8";
     final Writer writer = new OutputStreamWriter( new FileOutputStream( outputMOdelFile ), charset );
     final Transformer t = TransformerFactory.newInstance().newTransformer();
-    t.transform(new DOMSource( modelDoc),new StreamResult( writer) );
+    t.transform( new DOMSource( modelDoc ), new StreamResult( writer ) );
     writer.close();
   }
 
@@ -408,29 +410,52 @@ public class NaModelCalcJob extends AbstractCalcJob
     }
   }
 
+  private void addDirToResults( File inputbaseDir, String inputDirName, File outputFolder )
+  {
+    final File inpDir = new File( inputbaseDir, inputDirName );
+    // inputdateien
+    final File[] inpDirResults = inpDir.listFiles();
+    for( int i = 0; i < inpDirResults.length; i++ )
+    {
+      final File file = inpDirResults[i];
+      copyResult( inputbaseDir, file, outputFolder, file.getName(), file.getName() );
+    }
+  }
+
   private void loadLogs( final File simDir, final File outputdir, final StringBuffer log )
   {
     // TODO: use it, or REMOVE it
     log.getClass();
 
-    final File inpDir = new File( simDir, "inp.dat" );
-    // zeitreihen im out Dir
-    final File[] inpDirResults = inpDir.listFiles();
-    for( int i = 0; i < inpDirResults.length; i++ )
-    {
-      final File file = inpDirResults[i];
-      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
-    }
+    addDirToResults(simDir,"inp.dat" , outputdir);
+    addDirToResults(simDir,"klima.dat" , outputdir);
+    addDirToResults(simDir,"out_we.nat" , outputdir);
+//    final File inpDir = new File( simDir, "inp.dat" );
+//    // inputdateien
+//    final File[] inpDirResults = inpDir.listFiles();
+//    for( int i = 0; i < inpDirResults.length; i++ )
+//    {
+//      final File file = inpDirResults[i];
+//      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
+//    }
 
-    
-    final File outDir = new File( simDir, "out_we.nat" );
-    // zeitreihen im out Dir
-    final File[] outDirResults = outDir.listFiles();
-    for( int i = 0; i < outDirResults.length; i++ )
-    {
-      final File file = outDirResults[i];
-      copyResult( simDir, file, outputdir, FileUtilities.getSuffix( file ), file.getName() );
-    }
+//    final File klimaDir = new File( simDir, "klima.dat" );
+//    // klimadateien
+//    final File[] klimaDirResults = klimaDir.listFiles();
+//    for( int i = 0; i < klimaDirResults.length; i++ )
+//    {
+//      final File file = klimaDirResults[i];
+//      copyResult( simDir, file, outputdir, file.getName(), file.getName() );
+//    }
+
+//    final File outDir = new File( simDir, "out_we.nat" );
+//    // outputdateien
+//    final File[] outDirResults = outDir.listFiles();
+//    for( int i = 0; i < outDirResults.length; i++ )
+//    {
+//      final File file = outDirResults[i];
+//      copyResult( simDir, file, outputdir, FileUtilities.getSuffix( file ), file.getName() );
+//    }
 
     // log und error dateien:
     final File logDir = new File( simDir, "start" );

@@ -74,6 +74,8 @@ public class CalibarationConfig
     for( int i = 0; i < n; i++ )
     {
       final String value = FeatureHelper.getAsString(rootFeature, propNames[i] );
+      if(value==null || value.length()==0)
+        return;
       final double initialValue = Double.parseDouble( value );
       final String[] xPaths = queryStrings[i];
       addContext( new CalContext( initialValue, 1, 0, 2, CalContext.MODE_DIRECT, xPaths ) );
