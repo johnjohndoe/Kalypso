@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcwizard xmlns="xml.model.kalypso.org" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/teilgebiete.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/teilgebiete.ott"/>
+        <arg name="diagTemplate" value=".templates/calcCase/teilgebiete.odt"/>
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="1"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
+    </page>
+<!--
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/table1.ott"/>
+        <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="4"/>
+        
+        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=Abgabe"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/table1.ott"/>
+        <arg name="diagTemplate" value=".templates/calcCase/wsp.odt"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel (Flusslaufmodelle)" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/table1.ott"/>
+        <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="8"/>
+        
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Zuflüsse" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/zufluss.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/table1.ott"/>
+        <arg name="diagTemplate" value=".templates/calcCase/zufluss.odt"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="16"/>
+        
+        <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=z#nameColumn=Name#linkColumn=Zugabe"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
+
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="30"/>
+        <arg name="selectionID" value="32"/>
+        
+        
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_eingabe"/>
+        <arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w2#nameColumn=Name#linkColumn=Wasserstand_gerechnet"/>
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
+
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=Abgabe_eingang"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="40"/>
+        <arg name="selectionID" value="64"/>
+        
+    </page>
+
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/boden.gif" >
+        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
+        <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
+
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
+
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="40"/>
+        <arg name="selectionID" value="128"/>
+        
+    </page>
+		-->
+	<!-- Ergebniskontrolle NA-Modelle-->
+	<!--
+	<page className="org.kalypso.ui.calcwizard.ExportResultsWizardPage"
+	   pageTitle="Ergebniskontrolle Pegel"
+	   imageLocation="icons/calcwizard/boden.gif" >
+	   	<arg name="mapTemplate" value="project:.templates/calcCase/ergebniskontrollePegel.gmt"/>
+	   	<arg name="tableTemplate"  value="project:.templates/calcCase/ergebniskontrollePegel.gtt"/>
+		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
+	
+		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=PegelBerechnung"/>
+		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=NiederschlagMessung"/>
+	
+	   	<arg name="mainSash" value="50"/>
+	   	<arg name="rightSash" value="40"/>
+	   	<arg name="selectionID" value="256"/>
+	</page>
+-->
+	<!--
+	<page className="org.kalypso.ui.calcwizard.MapAndTableWizardPage" pageTitle="Bodenfeuchte" imageLocation="icons/calcwizard/boden.gif" >
+	   <arg name="mapTemplate" value=".templates/calcCase/karte1.gmt"/>
+	   <arg name="tableTemplate" value=".templates/calcCase/table1.gtt"/>
+	</page>
+-->
+</calcwizard>
