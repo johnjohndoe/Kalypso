@@ -1,21 +1,25 @@
-Sammlung von mehr oder weniger wichtigen TODOS
+persoenliche Notitz Datei von Andreas.
+mit mehr oder weniger oder ganz wichtigen TODOS
 
+Montag 24.1.05
+ DWD-Deploy
+ BUG: speichern der veränderten zeitreihen wizard
+ Wizard-konfiguration Ergebnisablage
+ BUG: Metadaten double statt integer
 
-
-
-19. Januar
-Lizenzen
+Lizenzen: zum großen Teil OK
 readme...updaten
  Doc:
- - Optimierungsverfahren beschreiben
- - alles zum NA-Modell beschreiben
-
+ - Optimierungsverfahren beschreiben, OK
+ - NA-Modell beschreiben, OK
+ - NA-Modell Zeitreihenmanagement beschreiben
+ - DWD-Raster-VorhersageKonzept beschreiben
+ - GML-Doku
+ - alles in Gliederung einfuegen.
 
 
  NA-Modell:
-* Ombrometer Filter
-* im Filter default status setzen: Werte auf gueltigkeit pruefen (2)
-* export verknuepfung setzen fuer die ergebniss zurueckschreibung
+* Ombrometer Filter (momentan einfacher interpolationsfilter)
 
 * temperatur zeitreihen 
    - aus DWD-Raster einlesen
@@ -44,9 +48,11 @@ readme...updaten
 NA-Optimiertung:
  - in sce.conf die bewertungsfunktionen den jeweiligen parametern zuordnen.
  - nur die parameter optimieren, die "null" sind.
+ - skalierung von faktor auf additiv umstellen
 
 GUI:
-* Selekt fuer zufluesse fluessiger
+* BUG: Selekt fuer zufluesse fluessiger
+* BUG: selekt auf teilgebiete (wird warscheinlich bbox aus template übernommen, anstatt aktuelle)
 * dokument annotations aus schema als tabellenueberschriften benutzen
   standard CRS als property in kalypso-preferences uebernehmen
 
