@@ -66,7 +66,7 @@ public class ProxyFactoryTest extends TestCase
     super.setUp();
     
     m_conf = new Properties();
-    m_conf.setProperty( "Kalypso_ObservationService" + "_URL", "http://pc242:8080" );
+    m_conf.setProperty( "Kalypso_ObservationService" + "_URL", "http://LFUG-KV-01:8080" );
     m_conf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
   }
 
