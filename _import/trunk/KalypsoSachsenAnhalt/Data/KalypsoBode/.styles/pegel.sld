@@ -20,7 +20,7 @@
 							<Mark>
 								<WellKnownName>triangle</WellKnownName>
 								<Fill>
-									<CssParameter name="fill">#ffcf03</CssParameter>
+									<CssParameter name="fill">#c850ef</CssParameter>
 								</Fill>
 								<Stroke>
 									<CssParameter name="stroke">#111111</CssParameter>
@@ -52,7 +52,20 @@
 								</Displacement>
 							</PointPlacement>
 						</LabelPlacement>
-					</TextSymbolizer>
+			            <Halo>
+			              <Fill>
+			                <CssParameter name="fill-opacity">1.0</CssParameter>
+			                <CssParameter name="fill">#ffffcc</CssParameter>
+			              </Fill>
+			              <Stroke>
+			                <CssParameter name="stroke">#000000</CssParameter>
+			                <CssParameter name="stroke-width">1.0</CssParameter>
+			                <CssParameter name="stroke-linejoin">round</CssParameter>
+			                <CssParameter name="stroke-opacity">1.0</CssParameter>
+			                <CssParameter name="stroke-linecap">square</CssParameter>
+			              </Stroke>
+			            </Halo>
+ 					</TextSymbolizer>
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>

@@ -757,7 +757,7 @@
 							<ogc:PropertyName>GEOM</ogc:PropertyName>
 						</Geometry>
 						<Stroke>
-							<CssParameter name="stroke">#000088</CssParameter>
+							<CssParameter name="stroke">#0000d4</CssParameter>
 							<CssParameter name="stroke-width">2</CssParameter>
 						</Stroke>
 					</LineSymbolizer>

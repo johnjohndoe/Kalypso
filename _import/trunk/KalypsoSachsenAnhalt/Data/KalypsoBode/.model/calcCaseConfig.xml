@@ -2,7 +2,7 @@
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<createTransformations>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:modell.gml"/>
+			<argument name="input" value=":project:bodemodell.gml"/>
 			<argument name="output" value=":calcdir:calcCase.gml"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">

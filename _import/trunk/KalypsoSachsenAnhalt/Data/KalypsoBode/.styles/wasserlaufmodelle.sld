@@ -52,6 +52,19 @@
                 </Displacement>
               </PointPlacement>
             </LabelPlacement>
+			<Halo>
+			  <Fill>
+			    <CssParameter name="fill-opacity">1.0</CssParameter>
+			    <CssParameter name="fill">#ffffcc</CssParameter>
+			  </Fill>
+			  <Stroke>
+			    <CssParameter name="stroke">#000000</CssParameter>
+			    <CssParameter name="stroke-width">1.0</CssParameter>
+			    <CssParameter name="stroke-linejoin">round</CssParameter>
+			    <CssParameter name="stroke-opacity">1.0</CssParameter>
+			    <CssParameter name="stroke-linecap">square</CssParameter>
+			  </Stroke>
+			</Halo>
           </TextSymbolizer>
         </Rule>
       </FeatureTypeStyle>
