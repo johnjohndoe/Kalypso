@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NAModellControl fid="ID000000" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/nacontrol.xsd">
   <description>Beschreibung</description>
-  <name>Neunkirchen</name>
+  <name>Goessnitz</name>
   <editor>Editor</editor>
   <comment>Kommentar</comment>
   <calctime>2001-12-17T09:30:47</calctime>
@@ -44,7 +44,7 @@
   <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1800" or @fid="KMChannel1700" or @fid="KMChannel1600" or @fid="KMChannel1601"]]]></KMChannels>
   <KMChannelsFaktorRkf>0.5</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>0.5</KMChannelsFaktorRnf>
-  <rootNode>Node7300</rootNode>
+  <rootNode>Node7200</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
     <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node7300.zml" ns1:type="simple"/>

@@ -2,7 +2,8 @@
 <modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
     <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
     <input id="Control" path=".nacontrol_10.gml" relativeToCalcCase="true"/>
-<!-- Zeitreihen als Verzeichnisse -->
+    <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
+	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>
     <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
     <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>

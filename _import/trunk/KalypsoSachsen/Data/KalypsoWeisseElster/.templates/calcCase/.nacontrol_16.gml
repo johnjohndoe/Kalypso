@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NAModellControl fid="ID000000" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/nacontrol.xsd">
   <description>Beschreibung</description>
-  <name>Goessnitz</name>
+  <name>Neukirchen</name>
   <editor>Editor</editor>
   <comment>Kommentar</comment>
   <calctime>2001-12-17T09:30:47</calctime>
@@ -36,7 +36,7 @@
   <spn>false</spn>
   <vep>false</vep>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//Catchment[@fid="Catchment1302" or @fid="Catchment1304" or @fid="Catchment1301" or @fid="Catchment1300" or @fid="Catchment1303"]]]></Catchments>
+  <Catchments><![CDATA[//Catchment[@fid="Catchment7306" or @fid="Catchment7305" or @fid="Catchment7302" or @fid="Catchment7303" or @fid="Catchment7304" or @fid="Catchment7300"]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
@@ -47,9 +47,9 @@
   <rootNode>Node7200</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node7200.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node7300.zml" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7200.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7300.zml" ns1:type="simple"/>
   </qberechnetZR>
 </NAModellControl>

@@ -36,12 +36,12 @@
   <spn>false</spn>
   <vep>false</vep>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//Catchment[@fid="Catchment1302" or @fid="Catchment1304" or @fid="Catchment1301" or @fid="Catchment1300" or @fid="Catchment1303"]]]></Catchments>
+  <Catchments><![CDATA[//Catchment[@fid="Catchment1700"]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1800" or @fid="KMChannel1700" or @fid="KMChannel1600" or @fid="KMChannel1601"]]]></KMChannels>
+  <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1700"]]]></KMChannels>
   <KMChannelsFaktorRkf>0.5</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>0.5</KMChannelsFaktorRnf>
   <rootNode>Node1700</rootNode>

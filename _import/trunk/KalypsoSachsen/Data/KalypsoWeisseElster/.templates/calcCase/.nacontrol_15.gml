@@ -36,7 +36,7 @@
   <spn>false</spn>
   <vep>false</vep>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//Catchment[@fid="Catchment1302" or @fid="Catchment1304" or @fid="Catchment1301" or @fid="Catchment1300" or @fid="Catchment1303"]]]></Catchments>
+  <Catchments><![CDATA[//Catchment[@fid="Catchment1007" or @fid="Catchment7008" or @fid="Catchment1008" or @fid="Catchment3004" or @fid="Catchment3003" or @fid="Catchment3002" @fid="Catchment7007" or @fid="Catchment3001" or @fid="Catchment1013" or @fid="Catchment1011" or @fid="Catchment1014" or @fid="Catchment1005" @fid="Catchment1004" or @fid="Catchment1010" or @fid="Catchment1003" or @fid="Catchment7006" @fid="Catchment7005" or @fid="Catchment7004" or @fid="Catchment7003" or @fid="Catchment7002" @fid="Catchment7001" or @fid="Catchment1002" or @fid="Catchment1009" or @fid="Catchment1001"]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
