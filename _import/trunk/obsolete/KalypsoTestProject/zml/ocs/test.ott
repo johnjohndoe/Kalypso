@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obstableview.template.kalypso.org
-.\obstableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-	<observation linktype="zml" xlink:href="LOCATION=kalypso-ocs:Spree://2004/QV_BWALDE.zml" >
+	<observation linktype="zml" xlink:href="kalypso-ocs:Spree://2004/QV_BWALDE.zml" >
 		<column id="c1" axis="Wert" editable="true" width="50" />
 	</observation>
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-	<observation linktype="zml" xlink:href="LOCATION=nauwalde.zml">
+	<observation linktype="zml" xlink:href="nauwalde.zml">
 		<column id="c1" axis="Pegel-Nauwalde" />
 	</observation>
 
-	<observation linktype="zml" xlink:href="LOCATION=grossenhain.zml">
+	<observation linktype="zml" xlink:href="grossenhain.zml">
 		<column id="c2" axis="Pegel-Grossenhain" />
 	</observation>
 
