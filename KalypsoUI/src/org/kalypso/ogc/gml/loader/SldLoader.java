@@ -7,9 +7,10 @@ import java.util.Properties;
 
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree_impl.graphics.sld.SLDFactory;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 
@@ -30,29 +31,25 @@ public class SldLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
-  {
-    // TODO: currently unsupported, remove deprecated one and implement this one
-    throw new UnsupportedOperationException();
-  }
-
-  
-  /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
-   */
-  protected Object loadIntern( final Properties source, final IProject project, final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final Properties source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
+      monitor.beginTask( "Lade SLD", 1000 );
       final String sourcePath = source.getProperty( "PATH", "" );
-      final IFile file = project.getFile( sourcePath );
+      
+      final URL url = UrlUtilities.resolveURL( context, sourcePath );
+      
 
-      final Reader reader = new InputStreamReader( file.getContents() );
+      final Reader reader = new InputStreamReader( url.openStream() );
       final StyledLayerDescriptor myStyledLayerDescriptor = SLDFactory.createSLD( reader );
       reader.close();
       
-      addResource( file, project );
+      final IResource resource = ResourceUtilities.findFileFromURL( url );
+      addResource( resource, myStyledLayerDescriptor );
 
+      monitor.done();
+      
       return myStyledLayerDescriptor;
     }
     catch( final Exception e )

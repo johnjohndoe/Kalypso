@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
-import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.template.gismapview.Gismapview;
@@ -32,7 +32,7 @@ public class GisTemplateMapModell implements IMapModell
 {
   private final IMapModell m_modell;
 
-  public GisTemplateMapModell( final Gismapview gisview, final IProject project,
+  public GisTemplateMapModell( final Gismapview gisview, final URL context,
       final CS_CoordinateSystem crs )
   {
     m_modell = new MapModell( crs );
@@ -52,7 +52,7 @@ public class GisTemplateMapModell implements IMapModell
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
           .get( i );
 
-      final IKalypsoTheme theme = loadTheme( layerType, project );
+      final IKalypsoTheme theme = loadTheme( layerType, context );
       if( theme != null )
       {
         addTheme( theme );
@@ -72,10 +72,9 @@ public class GisTemplateMapModell implements IMapModell
 
   }
 
-  private IKalypsoTheme loadTheme( final Layer layerType, final IProject project )
+  private IKalypsoTheme loadTheme( final Layer layerType, final URL context )
   {
-
-    return new PoolableKalypsoFeatureTheme( layerType, project );
+    return new PoolableKalypsoFeatureTheme( layerType, context );
   }
 
   // Helper

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
@@ -133,11 +135,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     super.createPartControl( parent );
 
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
-    
+
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    final ICellEditorFactory factory = plugin
-        .createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, this, project, factory, plugin.getDefaultMapSelectionID(), false );
+    final ICellEditorFactory factory = plugin.createFeatureTypeCellEditorFactory();
+    m_layerTable = new LayerTableViewer( parent, this, project, factory, plugin
+        .getDefaultMapSelectionID(), false );
 
     final MenuManager menuMgr = createSpaltenMenu( "spalten" );
     final Control viewerControl = m_layerTable.getControl();
@@ -157,13 +159,15 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( input.getFile() );
 
-    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+    final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
+    final URL context = ResourceUtilities.createURL( inputFile );
+
     final LayerTableViewer viewer = m_layerTable;
     getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
     {
       public void run()
       {
-        viewer.applyTableTemplate( tableTemplate, project );
+        viewer.applyTableTemplate( tableTemplate, context );
       }
     } );
 

@@ -1,13 +1,13 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.URL;
 import java.util.List;
 
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -54,7 +54,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 {
   protected final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
       KalypsoFeatureLayer.class );
-  
+
   private final ResourcePool m_stylePool = KalypsoGisPlugin.getDefault().getPool( UserStyle.class );
 
   private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
@@ -69,39 +69,39 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
 
   private final LayerType m_layerType;
 
-  public PoolableKalypsoFeatureTheme( final LayerType layerType, final IProject project )
+  public PoolableKalypsoFeatureTheme( final LayerType layerType, final URL context )
   {
     super( "<no name>" );
-    m_layerType=layerType;
+    m_layerType = layerType;
     m_layerPool.addPoolListener( this );
     m_stylePool.addPoolListener( this );
-    
+
     final String source = layerType.getHref();
     final String type = layerType.getLinktype();
 
-    m_layerKey = new PoolableObjectType( type, source, project );
+    m_layerKey = new PoolableObjectType( type, source, context );
 
     if( layerType instanceof Layer )
     {
       final Layer mapLayerType = (Layer)layerType;
-      
+
       setName( mapLayerType.getName() );
-      
+
       final List stylesList = mapLayerType.getStyle();
 
       m_styleKeys = new PoolableObjectType[stylesList.size()];
       for( int i = 0; i < stylesList.size(); i++ )
       {
-        final StyleType styleType = (StyleType)stylesList.get(i);
-  
-        m_styleKeys[i] = new PoolableObjectType( styleType.getLinktype(),
-            styleType.getHref(), project );
+        final StyleType styleType = (StyleType)stylesList.get( i );
+
+        m_styleKeys[i] = new PoolableObjectType( styleType.getLinktype(), styleType.getHref(),
+            context );
       }
     }
-    if("wms".equals(type))
-      startWMSLayerLoading(m_layerKey, project);
+    if( "wms".equals( type ) )
+      startWMSLayerLoading( m_layerKey, context );
     else
-    startLayerLoading( m_layerKey );
+      startLayerLoading( m_layerKey );
   }
 
   /**
@@ -118,7 +118,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
       for( int i = 0; i < m_styleKeys.length; i++ )
         m_stylePool.releaseKey( m_styleKeys[i] );
     }
-    
+
     m_commandTarget.dispose();
 
     if( m_theme != null )
@@ -128,7 +128,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
       m_theme = null;
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
    */
@@ -138,9 +138,11 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool, org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool,
+   *      org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
    */
-  public synchronized void onObjectInvalid( final ResourcePool source, final IPoolableObjectType key, final Object oldValue, final boolean bCannotReload )
+  public synchronized void onObjectInvalid( final ResourcePool source,
+      final IPoolableObjectType key, final Object oldValue, final boolean bCannotReload )
       throws Exception
   {
     if( source == m_layerPool )
@@ -149,11 +151,11 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
       {
         if( m_theme != null )
         {
-          m_theme.removeModellListener(this);
+          m_theme.removeModellListener( this );
           m_theme.dispose();
           m_theme = null;
         }
-        
+
         // diesmal gehts vermutlich schnell, deshalb keinen job oder
         // progress-monitor
         final IKalypsoLayer layer = (IKalypsoLayer)m_layerPool.getObject( key,
@@ -180,7 +182,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
         fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
       }
     }
-    
+
     if( source == m_stylePool )
     {
       if( oldValue == this )
@@ -191,61 +193,67 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
             new NullProgressMonitor() );
 
         m_theme.addStyle( userStyle );
-        
+
         fireModellEvent( null );
       }
       else if( oldValue instanceof KalypsoUserStyle )
       {
         m_theme.removeStyle( (KalypsoUserStyle)oldValue );
-        
+
         startStyleLoading( key );
       }
     }
   }
-  
-  private void startWMSLayerLoading( final IPoolableObjectType layerKey, IProject project )
-  {
-      ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
 
-      final ILoader loaderInstance;
-      try
-      {
-        loaderInstance = loaderFactory.getLoaderInstance(layerKey.getType());
-        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(layerKey.getSource(), project, null);
-        m_theme=new KalypsoWMSTheme( getName(), layer );
-      }
-      catch( FactoryException e )
-      {
-        e.printStackTrace();
-      }
-      catch( LoaderException e )
-      {
-        e.printStackTrace();
-      }
-      
+  private void startWMSLayerLoading( final IPoolableObjectType layerKey, final URL context )
+  {
+    ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(
+        KalypsoWMSLayer.class );
+
+    final ILoader loaderInstance;
+    try
+    {
+      loaderInstance = loaderFactory.getLoaderInstance( layerKey.getType() );
+      final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load( layerKey.getSource(),
+          context, null );
+      m_theme = new KalypsoWMSTheme( getName(), layer );
+    }
+    catch( FactoryException e )
+    {
+      e.printStackTrace();
+    }
+    catch( LoaderException e )
+    {
+      e.printStackTrace();
     }
 
+  }
+
   private void startLayerLoading( final IPoolableObjectType layerKey )
-          {
-    final String path = layerKey.getSource().getProperty( "PATH" ,"");
-    final Job layerJob = new BorrowObjectJob( "Thema laden: " + path, m_layerPool, this, layerKey, this );
+  {
+    final String path = layerKey.getSource().getProperty( "PATH", "" );
+    final Job layerJob = new BorrowObjectJob( "Thema laden: " + path, m_layerPool, this, layerKey,
+        this );
     final LayerRule layerRule = new LayerRule();
     layerJob.setRule( layerRule );
     layerJob.schedule();
-    
-    }
-  
+
+  }
+
   private void startStyleLoading( final IPoolableObjectType styleKey )
   {
     final String path = styleKey.getSource().getProperty( "PATH" );
-    
-    final Job styleJob = new BorrowObjectJob( "Style geladen: " + path, m_stylePool, this, styleKey, this );
+
+    final Job styleJob = new BorrowObjectJob( "Style geladen: " + path, m_stylePool, this,
+        styleKey, this );
     styleJob.setRule( new StyleRule() );
     styleJob.schedule();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics, org.deegree.graphics.transformation.GeoTransform, double, org.deegree.model.geometry.GM_Envelope, int)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
+   *      org.deegree.graphics.transformation.GeoTransform, double,
+   *      org.deegree.model.geometry.GM_Envelope, int)
    */
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
       int selectionId )
@@ -269,6 +277,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   {
     return m_styleKeys;
   }
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
@@ -298,36 +307,9 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
     return m_theme.getLayer();
   }
 
-  public void saveFeatures()
+  public void saveFeatures() throws FactoryException
   {
-//    final Job saveJob = new Job( "Daten speichern" )
-//    {
-//      protected IStatus run( final IProgressMonitor monitor )
-//      {
-//        try
-//        {
-//          m_layerPool.saveObject( getLayer(), monitor );
-//        }
-//        catch( final FactoryException e )
-//        {
-//          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-//              "Fehler beim Speichern der Daten", e );
-//        }
-//
-//        return Status.OK_STATUS;
-//      }
-//    };
-
-    try
-    {
-      m_layerPool.saveObject( getLayer(), new NullProgressMonitor() );
-//    saveJob.setPriority( Job.LONG );
-//    saveJob.schedule();
-    }
-    catch( final FactoryException e )
-    {
-      e.printStackTrace();
-    }
+    m_layerPool.saveObject( getLayer(), new NullProgressMonitor() );
   }
 
   public void setEditing( final boolean isEditing )
@@ -380,7 +362,7 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
       // und alle Styles nacheinander, da Deegree hier nicht Thread Save ist
       return ( rule instanceof StyleRule );
     }
-    
+
     public boolean contains( final ISchedulingRule rule )
     {
       return rule == this;
@@ -391,9 +373,9 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
   {
     return m_layerKey;
   }
-  
+
   public LayerType getLayertype()
   {
-      return m_layerType;
+    return m_layerType;
   }
 }

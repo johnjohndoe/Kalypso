@@ -39,7 +39,7 @@ public class GMLArrayLoaderTest extends TestCase
       for( int i = 0; i < types.length; i++ )
       {
         FeatureType type = types[i];
-        layerMap.put( type, new KalypsoFeatureLayer( type.getName(), type, layerCrs ) );
+        layerMap.put( type, new KalypsoFeatureLayer( type.getName(), type, layerCrs, null ) );
       }
 
       //final InputStreamReader reader = new InputStreamReader(

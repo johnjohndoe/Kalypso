@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.feature.event.ModellEventProviderAdapter;
@@ -24,11 +25,14 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
 
   private FeatureType myFeatureType = null;
 
+  private final GMLWorkspace m_workspace;
+
   public KalypsoFeatureLayer( final String name, final FeatureType featureType,
-      final CS_CoordinateSystem crs )
+      final CS_CoordinateSystem crs, final GMLWorkspace workspace )
   {
     myName = name;
     myFeatureType = featureType;
+    m_workspace = workspace;
     mySort = new KalypsoFeatureSort( crs );
     mySort.addModellListener( this );
   }
@@ -183,4 +187,8 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
     fireModellEvent( modellEvent );
   }
 
+  public GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
 }

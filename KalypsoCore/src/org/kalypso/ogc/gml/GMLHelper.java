@@ -1,7 +1,9 @@
 package org.kalypso.ogc.gml;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.GMLWorkspace;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree_impl.model.geometry.GM_Object_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -46,4 +48,19 @@ public class GMLHelper
       }
     }
   }
+  
+  /** Returns the {@link FeatureType} with the given name within a {@link GMLWorkspace}*/
+  public static FeatureType getFeatureType( final GMLWorkspace workspace, final String name )
+  {
+    final FeatureType[] featureTypes = workspace.getFeatureTypes();
+    for( int i = 0; i < featureTypes.length; i++ )
+    {
+      final FeatureType type = featureTypes[i];
+      if( type.getName().equals( name ) )
+        return type;
+    }
+    
+    return null;
+  }
+
 }

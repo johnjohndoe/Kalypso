@@ -172,7 +172,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
 
       m_viewer = new LayerTableViewer( parent, this, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
-      m_viewer.applyTableTemplate( template, getProject() );
+      m_viewer.applyTableTemplate( template, getContext() );
     }
     catch( final Exception e )
     {
@@ -192,9 +192,9 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,   getReplaceProperties()  );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties()  );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
+    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs );
     m_mapModell.addModellListener( this );
 
     //////////////

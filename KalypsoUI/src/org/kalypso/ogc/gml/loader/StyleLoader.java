@@ -8,7 +8,6 @@ import org.deegree.graphics.sld.Style;
 import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.UserLayer;
 import org.deegree.graphics.sld.UserStyle;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -48,18 +47,7 @@ public class StyleLoader extends AbstractLoader implements IPoolListener
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( Properties source, URL context, IProgressMonitor monitor ) throws LoaderException
-  {
-    // TODO: currently unsupported, remove deprecated one and implement this one
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.util.Properties,
-   *      org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
-  protected final Object loadIntern( final Properties source, final IProject project,
+  protected final Object loadIntern( final Properties source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException
   {
     try
@@ -67,7 +55,7 @@ public class StyleLoader extends AbstractLoader implements IPoolListener
       final String name = source.getProperty( "STYLE", "" );
 
       final StyledLayerDescriptor sld = (StyledLayerDescriptor)m_sldPool.getObject(
-          new PoolableObjectType( "sld", source, project ), monitor );
+          new PoolableObjectType( "sld", source, context ), monitor );
 
       final NamedLayer[] namedLayers = sld.getNamedLayers();
       for( int i = 0; i < namedLayers.length; i++ )
