@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -30,6 +31,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
   private final Map m_axesMap = new Hashtable();
 
   private final Map m_themesMap = new Hashtable();
+  
+  private final Logger m_logger = Logger.getLogger( this.getClass().getName() );
 
   /**
    * Constructor
@@ -155,6 +158,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     // register as listener on the observation
     theme.getObservation().addListener( this );
     
+    //m_logger.info( "ADDED obs listener: " + this + " for obs: " + theme.getObservation() );
+    
     final Iterator it = theme.getCurves().iterator();
     while( it.hasNext() )
       fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_ADD) );
@@ -168,6 +173,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     
     // unregister listener
     theme.getObservation().removeListener( this );
+    
+    //m_logger.info( "REMOVED obs listener: " + this + " for obs: " + theme.getObservation() );
     
     m_themesMap.remove( theme );
   }
@@ -219,6 +226,8 @@ public class DefaultDiagramTemplate extends AbstractTemplateEventProvider implem
     {
       final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) it.next();
       theme.getObservation().removeListener( this );
+      
+      //m_logger.info( "REMOVED obs listener: " + this + " for obs: " + theme.getObservation() );
     }
   }
 

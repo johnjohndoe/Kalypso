@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
@@ -91,6 +92,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     ICommandTarget, ModellEventListener
 {
   private int m_selectionID = 0x1;
+  
+  private Logger m_logger = Logger.getLogger( this.getClass().getName() );
 
   /** name der modelspec datei, die verwendet wird */
   public final static String PROP_MODELSPEC = "modelspec";
@@ -205,7 +208,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     }
 
     if( m_tableModel != null )
+    {
+      m_logger.info("Removing TableModel Listener");
+      
       m_tableModel.removeTableModelListener( m_listener );
+    }
   }
 
   public Properties getArguments()
@@ -507,6 +514,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void registerObservationTableModelChangeListener()
   {
+    m_logger.info( "Registering TableModel Listener" );
+    
     final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable( m_tableTemplate,
         m_tableModel );
     m_listener = new ObservationModelChangeListener( rwp );

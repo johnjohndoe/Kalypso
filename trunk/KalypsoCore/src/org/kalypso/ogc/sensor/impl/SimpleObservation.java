@@ -164,7 +164,7 @@ public class SimpleObservation implements IObservation
       }
       catch( NoSuchElementException e )
       {
-        throw new SensorException( "Values Models are not compatible", e );
+        throw new SensorException( "Values Models are not compatible. Current Observation: " + this.toString(), e );
       }
     }
 
@@ -284,5 +284,13 @@ public class SimpleObservation implements IObservation
   public void setHref( final String href )
   {
     m_href = href;
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return "Obs: " + m_name + " - Id:" + m_identifier + " - Href:" + m_href;
   }
 }

@@ -166,7 +166,7 @@ public class ZmlFactory
 
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
-      // url handling.      
+      // url handling.
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )
@@ -267,8 +267,9 @@ public class ZmlFactory
     if( obs.getTarget() != null )
       target = new JAXBXLink( obs.getTarget() );
 
-    final SimpleObservation zmlObs = new SimpleObservation( context.toExternalForm(), identifier, obs.getName(), obs.isEditable(), target, metadata, model
-            .getAxisList(), model );
+    final SimpleObservation zmlObs = new SimpleObservation( context
+        .toExternalForm(), identifier, obs.getName(), obs.isEditable(), target,
+        metadata, model.getAxisList(), model );
 
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( context,
@@ -375,24 +376,29 @@ public class ZmlFactory
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
-        final AxisType axisType = OF.createAxisType();
+        if( axes[i].isPersistable() )
+        {
+          final AxisType axisType = OF.createAxisType();
 
-        final String xsdType = getXSDTypeFor( axes[i].getDataClass().getName() );
+          final String xsdType = getXSDTypeFor( axes[i].getDataClass()
+              .getName() );
 
-        axisType.setDatatype( xsdType );
-        axisType.setName( axes[i].getName() );
-        axisType.setUnit( axes[i].getUnit() );
-        axisType.setType( axes[i].getType() );
-        axisType.setKey( axes[i].isKey() );
+          axisType.setDatatype( xsdType );
+          axisType.setName( axes[i].getName() );
+          axisType.setUnit( axes[i].getUnit() );
+          axisType.setType( axes[i].getType() );
+          axisType.setKey( axes[i].isKey() );
 
-        final ValueArrayType valueArrayType = OF.createAxisTypeValueArrayType();
+          final ValueArrayType valueArrayType = OF
+              .createAxisTypeValueArrayType();
 
-        valueArrayType.setSeparator( ";" );
-        valueArrayType.setValue( buildValueString( values, axes[i] ) );
+          valueArrayType.setSeparator( ";" );
+          valueArrayType.setValue( buildValueString( values, axes[i] ) );
 
-        axisType.setValueArray( valueArrayType );
+          axisType.setValueArray( valueArrayType );
 
-        axisList.add( axisType );
+          axisList.add( axisType );
+        }
       }
 
       return obsType;
@@ -497,10 +503,11 @@ public class ZmlFactory
    * @return valid parser for the given axis
    * @throws FactoryException
    */
-  public static IParser createParser( final IAxis axis ) throws FactoryException
+  public static IParser createParser( final IAxis axis )
+      throws FactoryException
   {
     final ParserFactory pf = getParserFactory();
-    
+
     return pf.createParser( "JAVA_" + axis.getDataClass().getName(), null );
   }
 }

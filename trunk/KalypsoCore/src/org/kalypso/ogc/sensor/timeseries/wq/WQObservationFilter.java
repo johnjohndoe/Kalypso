@@ -67,7 +67,7 @@ public class WQObservationFilter extends AbstractObservationFilter
       m_srcAxis = ObservationUtilities.findAxisByType( axes,
           TimeserieConstants.TYPE_RUNOFF );
       m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_WATERLEVEL,
-          unit, Double.class, false );
+          unit, Double.class, false, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else if( TimeserieConstants.TYPE_WATERLEVEL.equals( type ) )
@@ -80,7 +80,7 @@ public class WQObservationFilter extends AbstractObservationFilter
       m_srcAxis = ObservationUtilities.findAxisByType( axes,
           TimeserieConstants.TYPE_WATERLEVEL );
       m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_RUNOFF, unit,
-          Double.class, false );
+          Double.class, false, false );
       m_axes[m_axes.length - 1] = m_destAxis;
     }
     else
@@ -131,8 +131,6 @@ public class WQObservationFilter extends AbstractObservationFilter
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
-    // TODO: only take the W or the Q depending on which type we are
-
     super.setValues( values );
   }
 
