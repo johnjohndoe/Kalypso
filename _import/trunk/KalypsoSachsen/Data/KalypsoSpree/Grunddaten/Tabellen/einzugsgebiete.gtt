@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-	<layer id="1" featurePath="EZCollectionAssociation/EZMember" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=project:/modell.gml#XSD=project:/.model/schema/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+	<layer id="1" featurePath="EZCollectionAssociation/EZMember" linktype="gml" 
+	ns1:actuate="onRequest" 
+	ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
 		<column editable="true" name="Name" width="104"/>
 		<column editable="true" name="BodenfeuchteMin" width="120"/>
 		<column editable="true" name="Bodenfeuchte" width="44"/>

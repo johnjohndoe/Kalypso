@@ -3,7 +3,10 @@
 <!-- BROKEN featurePath nicht möglich -->
 
 <gistableview xmlns="gistableview.template.kalypso.org">
-	<layer id="1" linktype="gml" ns1:actuate="onRequest" featurePath="ChannelCollectionMember/channelMember[KMChannel]" ns1:href="PATH=project:/modell.gml#XSD=project:/.model/schema/namodell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+	<layer id="1" linktype="gml" ns1:actuate="onRequest" 
+	featurePath="ChannelCollectionMember/channelMember[KMChannel]" 
+	ns1:href="project:/modell.gml" ns1:type="simple" 
+	xmlns:ns1="http://www.w3.org/1999/xlink">
 		<column editable="false" name="inum" width="100"/>
 		<column editable="false" name="qfmax" width="100"/>
 		<column editable="false" name="c" width="100"/>

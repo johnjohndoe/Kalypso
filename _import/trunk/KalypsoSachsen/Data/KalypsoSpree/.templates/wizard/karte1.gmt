@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+	<extent bottom="50.98591108875483" left="14.31838695865089" 
+		right="14.96970819341928" top="51.5434279065593"/>
+	<layers>
+		<layer name="Vorhersagepegel (N-A Modell)" visible="true" id="1" 
+			linktype="gml" ns1:actuate="onRequest" featurePath="#LAYER=Einzugsgebiet" 
+			ns1:href="./calcCase.gml" 
+			ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+			<ns2:style linktype="sld" ns1:actuate="onRequest" style="NA-Modelle"
+				ns1:href="project:/.styles/namodelle.sld" 
+				ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="2" 
+			linktype="gml" ns3:actuate="onRequest" featurePath="FlusslaufModell"
+			ns3:href="./calcCase.gml" 
+			ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+			<ns4:style linktype="sld" ns3:actuate="onRequest" style="Flusslaufmodelle" 
+				ns3:href="project:/.styles/flusslaufmodelle.sld" 
+				ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Eingabepegel (Talsperre)" visible="true" id="3" 
+			linktype="gml" ns5:actuate="onRequest" featurePath="LAYER=Talsperre"
+			ns5:href="./calcCase.gml" 
+			ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+			<ns6:style linktype="sld" ns5:actuate="onRequest" style="Talsperren"
+				ns5:href="project:/.styles/talsperren.sld" 
+				ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Eingabepegel (Zuflusse)" visible="true" id="4" 
+			linktype="gml" ns7:actuate="onRequest" featurePath="#LAYER=Zufluss"
+			ns7:href="./calcCase.gml" 
+			ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+			<ns8:style linktype="sld" ns7:actuate="onRequest" style="Zufluesse"
+				ns7:href="project:/.styles/zufluesse.sld" 
+				ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Gewässerverlauf" visible="true" id="5" linktype="shape" 
+			ns9:actuate="onRequest" 
+			ns9:href="project:/Grunddaten/Shapes/gewässer#SRS=EPSG:31469#" 
+			ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+			<ns10:style linktype="sld" ns9:actuate="onRequest" style="sachsenrivers"
+				ns9:href="project:/.styles/styles.sld" 
+				ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
+		</layer>
+	</layers>
+</gismapview>

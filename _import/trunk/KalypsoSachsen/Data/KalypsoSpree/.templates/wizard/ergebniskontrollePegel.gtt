@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+	<layer linktype="gml" id="pegel1" ns1:actuate="onRequest" featurePath="Pegel"
+		ns1:href="./results.gml" 
+		ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+		<column name="Name" width="100" editable="false"/>
+		<column name="Art" width="100" editable="false"/>
+		<column name="NiederschlagMessung" width="100" editable="false"/>
+		<column name="PegelBerechnung" width="100" editable="false"/>
+	</layer>
+</gistableview>

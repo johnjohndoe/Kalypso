@@ -1,7 +1,5 @@
 package org.kalypso.util.parser.impl;
 
-import java.text.DecimalFormat;
-
 import org.kalypso.util.parser.AbstractParser;
 import org.kalypso.util.parser.ParserException;
 
@@ -24,7 +22,7 @@ public class DoubleParser extends AbstractParser
   /**
    * @param format
    *          siehe Spezifikation in DecimalFormat
-   * @see DecimalFormat
+   * @see java.text.DecimalFormat
    */
   public DoubleParser( String format )
   {

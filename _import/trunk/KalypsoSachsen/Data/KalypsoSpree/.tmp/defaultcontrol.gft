@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
 D:\Kalypso\KalypsoCore\etc\schemas\template\featureview.xsd">
-	<layer id="foo" featurePath="" linktype="gml" xlink:href="PATH=./.calculation#XSD=project:/.model/schema/control.xsd"/>
+	<layer id="foo" featurePath="" linktype="gml" xlink:href="./.calculation"/>
 </featuretemplate>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-	<layer id="1" linktype="shape" ns1:actuate="onRequest" featurePath="featureMember" ns1:href="SRS=EPSG:31468#PATH=project:/shapes/pegel_sa_thuer" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+	<layer id="1" linktype="shape" ns1:actuate="onRequest" featurePath="featureMember" 
+	ns1:href="project:/shapes/pegel_sa_thuer#EPSG:31468" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
 		<column editable="false" name="ANZEIGE" width="186"/>
 		<column editable="false" name="PEG_NAME" width="488"/>
 	</layer>

@@ -5,6 +5,10 @@
 			<argument name="input" value=":project:modell.gml"/>
 			<argument name="output" value=":calcdir:calcCase.gml"/>
 		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/steuerparameter.gft"/>
+			<argument name="output" value=":calcdir:steuerparameter.gft"/>
+		</transformation>
 	</createTransformations>
 	
 	<!-- TODO: Results.xml erzeugen/kopieren? -->

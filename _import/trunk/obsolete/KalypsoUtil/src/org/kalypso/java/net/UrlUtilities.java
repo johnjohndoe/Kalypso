@@ -8,9 +8,9 @@ import java.net.URL;
 /**
  * @author belger
  */
-public class UrlUtilities
+public class UrlUtilities implements IUrlResolver
 {
-  private UrlUtilities()
+  public UrlUtilities()
   {
   // do not instantiate
   }
@@ -26,7 +26,7 @@ public class UrlUtilities
    *         else return new URL( relativeURL )
    * @throws MalformedURLException
    */
-  public static URL resolveURL( final URL baseURL, final String relativeURL )
+  public URL resolveURL( final URL baseURL, final String relativeURL )
       throws MalformedURLException
   {
     try
