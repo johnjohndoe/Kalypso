@@ -6,9 +6,13 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -25,6 +29,7 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -225,14 +230,51 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
   protected final void load()
   {
-    // TODO: mit ProgressMonitor!!! und errorhandling -> Job??
-    
-    loadInternal();
-    
-    m_commandTarget.setDirty( false );
+    new Job( "Dokument laden" )
+    {
+      protected IStatus run( IProgressMonitor monitor )
+      {
+        final IFileEditorInput input = (IFileEditorInput)getEditorInput();
+
+        try
+        {
+          loadInternal( monitor, input );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+
+          monitor.done();
+          return e.getStatus();
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+
+          monitor.done();
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+              "Fehler beim Laden der Tabellenvorlage", e );
+        }
+
+        m_commandTarget.setDirty( false );
+
+        getEditorSite().getShell().getDisplay().syncExec( new Runnable()
+        {
+          public void run()
+          {
+            setContentDescription( input.getFile().getName() );
+            setPartName( input.getFile().getName() );
+          }
+        } );
+
+        monitor.done();
+        return Status.OK_STATUS;
+      }
+    }.schedule();
   }
 
-  protected abstract void loadInternal();
+  protected abstract void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+      throws Exception, CoreException;
 
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
@@ -247,8 +289,9 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
       {
         // TODO: ask user?
-        if( !m_isSaving && MessageDialog.openQuestion( getSite().getShell(), "GisTableEditor",
-            "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
+        if( !m_isSaving
+            && MessageDialog.openQuestion( getSite().getShell(), "GisTableEditor",
+                "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
           load();
       }
     }

@@ -77,48 +77,51 @@ public class ObservationTableEditor extends AbstractEditorPart implements IPoolL
    */
   protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
   {
-  // TODO: implement it  
+  // TODO: implement it
   }
 
   /**
    * @see org.kalypso.editor.AbstractEditorPart#load()
    */
-  protected void loadInternal()
+  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
-    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
-
     m_tableview = new TableViewTemplate( input.getFile() );
 
     m_cols = m_tableview.getColumns();
 
-    for( int i = 0; i < m_cols.length; i++ )
-      m_cols[i].startBorrowObjectJob( m_pool, this );
+    monitor.beginTask( "Spalten initialisieren", m_cols.length );
 
-    setContentDescription( input.getFile().getName() );
-    setPartName( input.getFile().getName() );
+    for( int i = 0; i < m_cols.length; i++ )
+    {
+      m_cols[i].startBorrowObjectJob( m_pool, this );
+      monitor.worked( 1 );
+    }
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool, org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool,
+   *      org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
    */
-  public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key, final Object oldObject, boolean bCannotReload ) throws Exception
+  public void onObjectInvalid( final ResourcePool pool, final IPoolableObjectType key,
+      final Object oldObject, boolean bCannotReload ) throws Exception
   {
     boolean changed = false;
-    
+
     for( int i = 0; i < m_cols.length; i++ )
     {
       if( m_cols[i].isInvalid( oldObject ) )
       {
-        IObservationProvider p = (IObservationProvider)m_pool.getObject( m_cols[i].getKey(), new NullProgressMonitor() );
-        
+        IObservationProvider p = (IObservationProvider)m_pool.getObject( m_cols[i].getKey(),
+            new NullProgressMonitor() );
+
         m_cols[i].setProvider( p );
-        
+
         m_providers.put( m_cols[i], p );
-        
+
         changed = true;
       }
     }
-    
+
     if( changed && m_providers.size() == m_cols.length )
     {
       m_model.setColumns( m_cols, null );

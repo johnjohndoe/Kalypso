@@ -64,6 +64,22 @@ public class ResourcePool implements ILoaderListener
     destroyObject( key, cObj.getObject() );
   }
 
+  public void releaseKey( final IPoolableObjectType key )
+  {
+    final CountableObject cObj = (CountableObject)myPool.get( key );
+    if( cObj == null )
+      return;
+
+    cObj.decrement();
+
+    if( cObj.isUnused() )
+      myPool.remove( key );
+
+    // TODO evt. statt aus dem pool werfen einen IDLE-state setzen?
+
+    destroyObject( key, cObj.getObject() );
+  }
+
   private void addObject( final IPoolableObjectType key, final IProgressMonitor monitor )
       throws Exception
   {
@@ -122,7 +138,8 @@ public class ResourcePool implements ILoaderListener
   public void fireOnObjectInvalid( final Object oldObject, final boolean bCannotReload )
       throws Exception
   {
-    m_objectChangeProvider.fireOnObjectInvalid( this, findKey( oldObject ), oldObject, bCannotReload );
+    m_objectChangeProvider.fireOnObjectInvalid( this, findKey( oldObject ), oldObject,
+        bCannotReload );
   }
 
   public void removePoolListener( final IPoolListener l )
@@ -189,19 +206,28 @@ public class ResourcePool implements ILoaderListener
     return loader;
   }
 
-  private void destroyObject( final IPoolableObjectType key, final Object object ) throws Exception
+  private void destroyObject( final IPoolableObjectType key, final Object object )
   {
-    final ILoader loader = getLoader( key.getType() );
-    loader.release( object );
+    try
+    {
+      final ILoader loader = getLoader( key.getType() );
+      loader.release( object );
+    }
+    catch( final FactoryException e )
+    {
+      e.printStackTrace();
+      return;
+    }
   }
 
-  public void saveObject( final Object object, final IProgressMonitor monitor ) throws FactoryException
+  public void saveObject( final Object object, final IProgressMonitor monitor )
+      throws FactoryException
   {
     final IPoolableObjectType key = findKey( object );
-    
+
     if( key != null )
     {
-      final ILoader loader = getLoader( key.getType() ); 
+      final ILoader loader = getLoader( key.getType() );
 
       try
       {
