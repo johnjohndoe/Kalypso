@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -13,6 +14,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
@@ -21,14 +23,17 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * @author Belger
  */
-public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener, MouseListener
+public class ExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener,
+    MouseListener
 {
   protected final TableViewer m_viewer;
 
   private final Color m_cannotEditColor;
+
   private final Color m_canEditColor;
 
-  private final ICellEditorListener m_editorListener = new ICellEditorListener() {
+  private final ICellEditorListener m_editorListener = new ICellEditorListener()
+  {
     public void applyEditorValue()
     {
       stopEditing();
@@ -41,8 +46,9 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
 
     public void editorValueChanged( boolean oldValidState, boolean newValidState )
     {
-    // nix  
-    }};
+    // nix
+    }
+  };
 
   public ExcelLikeTableCursor( final TableViewer tableViewer, final int style )
   {
@@ -55,8 +61,29 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
     addMouseListener( this );
 
     m_cannotEditColor = getDisplay().getSystemColor( SWT.COLOR_GRAY );
-    
+
     m_canEditColor = getBackground();
+
+    // Show the TableCursor when the user releases the "MOD2" or "MOD1" key.
+    // This signals the end of the multiple selection task.
+    final Table table = tableViewer.getTable();
+    table.addKeyListener( new KeyAdapter()
+    {
+      public void keyReleased( KeyEvent e )
+      {
+        if( e.keyCode == SWT.MOD1 && ( e.stateMask & SWT.MOD2 ) != 0 )
+          return;
+        if( e.keyCode == SWT.MOD2 && ( e.stateMask & SWT.MOD1 ) != 0 )
+          return;
+        if( e.keyCode != SWT.MOD1 && ( e.stateMask & SWT.MOD1 ) != 0 )
+          return;
+        if( e.keyCode != SWT.MOD2 && ( e.stateMask & SWT.MOD2 ) != 0 )
+          return;
+
+        setVisible( true );
+        setFocus();
+      }
+    } );
   }
 
   private void startEditing( final KeyEvent ke )
@@ -64,7 +91,7 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
     final int column = getColumn();
     final TableItem tableRow = getRow();
     final Object element = tableRow.getData();
-    
+
     if( !checkCanModify( tableRow, column ) )
       return;
 
@@ -72,11 +99,13 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
 
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
     cellEditor.addListener( m_editorListener );
-    
+
     m_viewer.editElement( element, column );
 
     if( ke != null )
     {
+      final Widget editorControl = cellEditor.getControl();
+
       // eigentlich würde ich gerne direkt den event weiterschicken, das klappt
       // aber nicht
       //        final Event event = new Event();
@@ -88,15 +117,14 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
       //        // wäre schön, jetzt ein KeyPressed abzusetzen
       //        editorControl.notifyListeners( SWT.KeyDown, event );
 
-      // deshalb einfach den text setzen
-      final Widget editorControl = cellEditor.getControl();
+      // stattdessen einfach den text setzen
       if( editorControl instanceof Text )
       {
         final Text text = (Text)editorControl;
-        
-        text.setText( "" + ke.character );
-        
-        //text.insert( "" + ke.character );
+
+        //text.setText( "" + ke.character );
+
+        text.insert( "" + ke.character );
       }
     }
 
@@ -126,12 +154,12 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   {
     if( m_viewer == null )
       return false;
-    
+
     final String property = m_viewer.getColumnProperties()[column].toString();
     final ICellModifier modifier = m_viewer.getCellModifier();
     if( modifier == null )
       return false;
-    
+
     return modifier.canModify( row.getData(), property );
   }
 
@@ -152,6 +180,12 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
       startEditing( null );
     else if( e.character >= '0' && e.character <= 'z' )
       startEditing( e );
+
+    // Hide the TableCursor when the user hits the "MOD1" or "MOD2" key.
+    // This alows the user to select multiple items in the table.
+    if( e.keyCode == SWT.MOD1 || e.keyCode == SWT.MOD2 || ( e.stateMask & SWT.MOD1 ) != 0
+        || ( e.stateMask & SWT.MOD2 ) != 0 )
+      setVisible( false );
   }
 
   /**

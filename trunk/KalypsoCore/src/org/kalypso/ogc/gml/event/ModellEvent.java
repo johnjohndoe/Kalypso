@@ -20,9 +20,12 @@ public class ModellEvent
 
   public static final int LEGEND_UPDATED = 6;
 
+  public static final int SELECTION_CHANGED = 7;
+
   private final int myType;
 
   private final ModellEventProvider m_eventSource;
+
 
 
   public ModellEvent( final ModellEventProvider eventSource, final int type )

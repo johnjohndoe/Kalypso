@@ -21,6 +21,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -48,7 +49,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-
 public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   // Beispiel:
@@ -166,26 +166,35 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     }
 
     final Composite composite = new Composite( parent, SWT.NONE );
-    composite.setLayout( new GridLayout() );
+    composite.setLayout( new GridLayout( 2, false ) );
 
     final Button button = new Button( composite, SWT.PUSH );
     button.setText( "Zeitreihe bearbeiten" );
     button.addSelectionListener( new GraficToolStarter() );
+    //button.setLayoutData( new GridData(  ) );
+    
+    final Button doItButton = new Button( composite ,SWT.PUSH );
+    doItButton.setText( "Bericht(e) ablegen" );
+
+    new Label( composite, SWT.NONE );
     
     final Button exportQDiagramm = new Button( composite, SWT.CHECK );
     exportQDiagramm.setText( "Durchflussgrafik" );
+    
+    new Label( composite, SWT.NONE );
 
     final Button exportWRadio = new Button( composite, SWT.CHECK );
     exportWRadio.setText( "Wasserstandsgrafik" );
     
+    new Label( composite, SWT.NONE );
+    
     final Button exportTableRadio = new Button( composite, SWT.CHECK );
     exportTableRadio.setText( "Tabelle" );
+    
+    new Label( composite, SWT.NONE );
 
     final Button exportMap = new Button( composite, SWT.CHECK );
     exportMap.setText( "Kartenansicht" );
-    
-    final Button doItButton = new Button( composite ,SWT.PUSH );
-    doItButton.setText( "Bericht(e) ablegen" );
   }
 
   private void createTablePanel( final Composite parent )
@@ -198,7 +207,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
           getReplaceProperties() );
 
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), SELECTION_ID );
+          .createFeatureTypeCellEditorFactory(), SELECTION_ID, true );
       m_viewer.applyTableTemplate( template, getProject() );
     }
     catch( final Exception e )
@@ -280,7 +289,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-  //
+    //
   }
 
   private class GraficToolStarter implements SelectionListener
@@ -343,7 +352,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
      */
     public void widgetDefaultSelected( SelectionEvent e )
     {
-    // empty
+      // empty
     }
   }
 }
