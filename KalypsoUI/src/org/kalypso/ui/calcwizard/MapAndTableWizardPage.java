@@ -4,16 +4,12 @@ import java.awt.Frame;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -23,18 +19,9 @@ import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoLayer;
-import org.kalypso.ogc.gml.KalypsoFeature;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.mapactions.FullExtentMapAction;
-import org.kalypso.ogc.gml.mapactions.PanToWidgetAction;
-import org.kalypso.ogc.gml.mapactions.SelectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ToggleSelectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.UnselectWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ZoomInWidgetAction;
-import org.kalypso.ogc.gml.mapactions.ZoomOutMapAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.widgets.ToggleSelectWidget;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
@@ -185,26 +172,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     mapPanel.setMapModell( m_mapModell );
     mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
-    /////////////
-    // Toolbar //
-    /////////////
-    final ToolBarManager tbm = new ToolBarManager();
-
-    tbm.add( new GroupMarker( "radio_group" ) );
-
-    tbm.appendToGroup( "radio_group", new ZoomInWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new PanToWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new ToggleSelectWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new SelectWidgetAction( mapPanel ) );
-    tbm.appendToGroup( "radio_group", new UnselectWidgetAction( mapPanel ) );
-
-    tbm.add( new Separator() );
-
-    tbm.add( new FullExtentMapAction( this, mapPanel ) );
-    tbm.add( new ZoomOutMapAction( this, mapPanel ) );
-
-    final ToolBar toolBar = tbm.createControl( mapView );
-
+    mapPanel.changeWidget( new ToggleSelectWidget() );
+    
     /////////////
     // Legende //
     /////////////
@@ -212,7 +181,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     outlineViewer.createControl( mapView );
 
     mapView.setContent( mapComposite );
-    mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );
   }
 
@@ -232,21 +200,22 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    final String propNames = getArguments().getProperty(  PROP_TIMEPROPNAME, "" );
-    final String[] timeNames = propNames.split( "#" );
-
-    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
-    if( !( layer instanceof KalypsoFeatureLayer ) )
-      return;
-    
-    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
-    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
-    for( int i = 0; i < allFeatures.length; i++ )
-    {
-      if( allFeatures[i].isSelected( SELECTION_ID ) )
-      {
-        // do something
-      }
-    }
+    // TODO: Marc will do it
+//    final String propNames = getArguments().getProperty(  PROP_TIMEPROPNAME, "" );
+//    final String[] timeNames = propNames.split( "#" );
+//
+//    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+//    if( !( layer instanceof KalypsoFeatureLayer ) )
+//      return;
+//    
+//    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
+//    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+//    for( int i = 0; i < allFeatures.length; i++ )
+//    {
+//      if( allFeatures[i].isSelected( SELECTION_ID ) )
+//      {
+//        // do something
+//      }
+//    }
   }
 }

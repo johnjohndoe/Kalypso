@@ -14,8 +14,11 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -74,8 +77,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final IProject m_project;
 
-  public LayerTableViewer( final Composite parent, final IProject project, final ICellEditorFactory cellEditorFactory,
-      final int selectionID )
+  private boolean m_bSynchronizeSelect = false;
+
+  private final TableCursor m_tableCursor;
+
+  public LayerTableViewer( final Composite parent, final IProject project,
+      final ICellEditorFactory cellEditorFactory, final int selectionID )
   {
     super( parent, SWT.BORDER | SWT.HIDE_SELECTION );
 
@@ -92,7 +99,17 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    new ExcelLikeTableCursor( this, SWT.NONE );
+    final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE ); 
+    m_tableCursor = tc;
+    m_tableCursor.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( final SelectionEvent e )
+      {
+        selectFeature( (KalypsoFeature)tc.getRow().getData() );
+      }
+//      public void widgetDefaultSelected( SelectionEvent e )
+//      {}
+    } );
 
     m_unselectColor = table.getBackground();
     m_selectColor = table.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
@@ -101,6 +118,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   public void dispose()
   {
     applyTableTemplate( null, null );
+
+    m_tableCursor.dispose();
   }
 
   /**
@@ -122,6 +141,20 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   protected void handleDispose( final DisposeEvent event )
   {
     super.handleDispose( event );
+  }
+
+  /**
+   * Falls true, wird die Selektion in der Tabelle (=Cursor-Position) auf die
+   * selektion im Gis-Modell übertragen
+   */
+  public void setSynchronizeSelect( final boolean synchronize )
+  {
+    m_bSynchronizeSelect = synchronize;
+  }
+
+  public boolean isSelectSynchronized()
+  {
+    return m_bSynchronizeSelect;
   }
 
   public void applyTableTemplate( final Gistableview tableView, final IProject project )
@@ -164,7 +197,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( !isDisposed() )
       setInput( theme );
   }
-  
+
   public void clearColumns()
   {
     final Table table = getTable();
@@ -240,15 +273,18 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
           oldEditors[i].dispose();
       }
     }
-    
+
     final Table table = getTable();
+    if( table.isDisposed() )
+      return;
+    
     final TableColumn[] columns = table.getColumns();
     final CellEditor[] editors = new CellEditor[columns.length];
 
     final IKalypsoTheme theme = (IKalypsoTheme)getInput();
     if( theme == null || theme.getLayer() == null )
     {
-      setCellEditors(editors);
+      setCellEditors( editors );
       return;
     }
 
@@ -272,7 +308,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       }
     }
 
-    setCellEditors(editors);
+    setCellEditors( editors );
   }
 
   /**
@@ -290,6 +326,18 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     return properties;
   }
 
+  public void selectFeature( final KalypsoFeature feature )
+  {
+    final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)getTheme().getLayer();
+    final KalypsoFeature[] features = layer.getAllFeatures();
+    for( int i = 0; i < features.length; i++ )
+      features[i].unselect( m_selectionID );
+    
+    feature.select( m_selectionID );
+
+    layer.fireModellEvent( null );
+  }
+  
   public void selectRow( final KalypsoFeature feature )
   {
     getControl().getDisplay().asyncExec( new Runnable()
