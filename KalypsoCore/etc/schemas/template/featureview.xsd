@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="featureview.template.kalypso.org">
+	<xs:element name="featureview" type="ns1:compositeType"/>
+	<xs:complexType name="compositeType">
+		<xs:sequence>
+			<xs:element ref="ns1:layout" minOccurs="0"/>
+			<xs:element ref="ns1:layoutData" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ns1:composite"/>
+				<xs:element ref="ns1:control"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="style" type="xs:int" use="required"/>
+		<xs:attribute name="tooltip" type="xs:string" use="optional" default=""/>
+	</xs:complexType>
+	<xs:complexType name="controlType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ns1:layoutData"/>
+		</xs:sequence>
+		<xs:attribute name="style" type="xs:int" use="required"/>
+		<xs:attribute name="tooltip" type="xs:string" use="optional" default=""/>
+		<xs:attribute name="visible" type="xs:boolean" use="optional" default="true"/>
+	</xs:complexType>
+	<xs:complexType name="layoutType"/>
+	<xs:complexType name="layoutDataType"/>
+	<xs:element name="composite" type="ns1:compositeType"/>
+	<xs:element name="group" substitutionGroup="ns1:composite">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ns1:compositeType">
+					<xs:attribute name="text" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="control" type="ns1:controlType"/>
+	<xs:element name="label" substitutionGroup="ns1:control">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ns1:controlType">
+					<xs:attribute name="text" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="editor" substitutionGroup="ns1:control">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ns1:controlType">
+					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true"/>
+					<xs:attribute name="property" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="layout" type="ns1:layoutType" abstract="true"/>
+	<xs:element name="gridLayout" substitutionGroup="ns1:layout">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ns1:layoutType">
+					<xs:attribute name="horizontalSpacing" type="xs:int" use="optional" default="5"/>
+					<xs:attribute name="verticalSpacing" type="xs:int" use="optional" default="5"/>
+					<xs:attribute name="marginWidth" type="xs:int" use="optional" default="5"/>
+					<xs:attribute name="marginHeight" type="xs:int" use="optional" default="5"/>
+					<xs:attribute name="numColumns" type="xs:int" use="optional" default="2"/>
+					<xs:attribute name="makeColumnsEqualWidth" type="xs:boolean" use="optional" default="false"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="layoutData" type="ns1:layoutDataType" abstract="true"/>
+	<xs:element name="gridData" substitutionGroup="ns1:layoutData">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ns1:layoutDataType">
+					<xs:attribute name="verticalAlignment" type="xs:int" use="optional" default="2"/>
+					<xs:attribute name="horizontalAlignment" type="xs:int" use="optional" default="2"/>
+					<xs:attribute name="widthHint" type="xs:int" use="optional" default="-1"/>
+					<xs:attribute name="heightHint" type="xs:int" use="optional" default="-1"/>
+					<xs:attribute name="horizontalIndent" type="xs:int" use="optional" default="0"/>
+					<xs:attribute name="horizontalSpan" type="xs:int" use="optional" default="1"/>
+					<xs:attribute name="verticalSpan" type="xs:int" use="optional" default="1"/>
+					<xs:attribute name="grabExcessHorizontalSpace" type="xs:boolean" use="optional" default="false"/>
+					<xs:attribute name="grabExcessVerticalSpace" type="xs:boolean" use="optional" default="false"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -9,13 +9,12 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.SingleSelectCommand;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.util.command.ICommand;
 
@@ -81,19 +80,15 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   private void select()
   {
     // TODO: sollte diese ganze umrechnerei nicht einfach die view machen???
-
     final MapPanel mapPanel = getMapPanel();
-    final IMapModell mapModell = mapPanel.getMapModell();
-    GeoTransform transform = mapPanel.getProjection();
-    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    KalypsoFeatureLayer activeLayer;
-    if( activeTheme == null || !( activeTheme.getLayer() instanceof KalypsoFeatureLayer ) )
+    final GeoTransform transform = mapPanel.getProjection();
+    final IKalypsoLayer activeLayer = getActiveLayer();    
+    if( activeLayer == null || !( activeLayer instanceof KalypsoFeatureLayer ) )
     {
       myStartPoint = null;
       myEndPoint = null;
       return;
     }
-    activeLayer = (KalypsoFeatureLayer)activeTheme.getLayer();
     if( myStartPoint != null )
     {
       double g1x = transform.getSourceX( myStartPoint.getX() );
@@ -108,7 +103,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         JMSelector selector = new JMSelector( getSelectionMode() );
         GM_Position pointSelect = GeometryFactory.createGM_Position( g1x, g1y );
 
-        KalypsoFeature fe = selector.selectNearest( pointSelect, gisRadius, activeTheme, false,
+        KalypsoFeature fe = selector.selectNearest( pointSelect, gisRadius, (KalypsoFeatureLayer)activeLayer, false,
             mapPanel.getSelectionID() );
         List listFe = new ArrayList();
         if( fe != null )
@@ -117,7 +112,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         // mapPanel.getSelectionID() );
         if( !listFe.isEmpty() )
         {
-          fireCommand( listFe, activeLayer, mapPanel.getSelectionID() );
+          fireCommand( listFe, (KalypsoFeatureLayer)activeLayer, mapPanel.getSelectionID() );
         }
       }
       else
@@ -137,12 +132,12 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
         if( minX != maxX && minY != maxY )
         {
-          JMSelector selector = new JMSelector( getSelectionMode() );
+          final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          List listFe = selector.select( envSelect, activeTheme, withinStatus, mapPanel
+          List listFe = selector.select( envSelect, (KalypsoFeatureLayer)activeLayer, withinStatus, mapPanel
               .getSelectionID() );
           if( !listFe.isEmpty() )
-            fireCommand( listFe, activeLayer, mapPanel.getSelectionID() );
+            fireCommand( listFe, (KalypsoFeatureLayer)activeLayer, mapPanel.getSelectionID() );
         }
       }
     }

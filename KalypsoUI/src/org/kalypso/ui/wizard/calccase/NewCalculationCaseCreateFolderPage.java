@@ -9,7 +9,7 @@
  * Contributors: IBM Corporation - initial API and implementation Leon J.
  * Breedt: Added multiple folder creation support
  ******************************************************************************/
-package org.kalypso.ui.wizard;
+package org.kalypso.ui.wizard.calccase;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -63,9 +63,9 @@ import org.kalypso.ui.nature.ModelNature;
  * </ul>
  * </p>
  */
-public class NewCalculationCaseWizardMainPage extends WizardPage implements Listener
+public class NewCalculationCaseCreateFolderPage extends WizardPage implements Listener
 {
-  protected static final Logger LOGGER = Logger.getLogger( NewCalculationCaseWizardMainPage.class.getName() );
+  protected static final Logger LOGGER = Logger.getLogger( NewCalculationCaseCreateFolderPage.class.getName() );
   
   private static final int SIZING_CONTAINER_GROUP_HEIGHT = 250;
 
@@ -86,7 +86,7 @@ public class NewCalculationCaseWizardMainPage extends WizardPage implements List
    * @param selection
    *          the current resource selection
    */
-  public NewCalculationCaseWizardMainPage( String pageName, IStructuredSelection selection )
+  public NewCalculationCaseCreateFolderPage( String pageName, IStructuredSelection selection )
   {
     super( "newFolderPage1" );//$NON-NLS-1$
     setTitle( pageName );

@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizard;
+package org.kalypso.ui.wizard.calccase;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -12,8 +12,10 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
  */
 public class NewCalculationCaseWizard extends BasicNewResourceWizard
 {
-  private NewCalculationCaseWizardMainPage m_mainPage;
+  private NewCalculationCaseCreateFolderPage m_createFolderPage;
 
+  
+  
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
@@ -30,6 +32,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
    */
   protected void initializeDefaultPageImageDescriptor()
   {
+    super.initializeDefaultPageImageDescriptor();
   //    String iconPath = "icons/full/";//$NON-NLS-1$
 
   // TODO: set Icon
@@ -54,8 +57,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void addPages()
   {
     super.addPages();
-    m_mainPage = new NewCalculationCaseWizardMainPage( "Rechenfall", getSelection() );
-    addPage( m_mainPage );
+    m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
+    addPage( m_createFolderPage );
   }
 
   /**
@@ -63,14 +66,18 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
    */
   public boolean performFinish()
   {
-    // zuerst den Ordner erzeugen
-    final IFolder folder = m_mainPage.createCalculationCase();
+    // zuerst die Grunddaten erzeugen erzeugen
+    final IFolder folder = m_createFolderPage.createCalculationCase();
     if( folder == null )
       return false;
+    
+    // jetzt die Zeitreihen aktualisieren
+    // TODO: 
 
     // im Navigator zeigen
     selectAndReveal( folder );
 
     return true;
   }
+  
 }

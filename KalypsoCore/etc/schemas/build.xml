@@ -3,7 +3,6 @@
 <project name="KalypsoCore-binding" default="deploy">
   <description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
-
   <property environment="ENV"/>
 
   <property name="build" value="${java.io.tmpdir}/KalypsoCoreBindingTmpDir" />
@@ -50,7 +49,7 @@
 
   <target name="generate" depends="init" description="erzeugt die sourcen">
     <echo message="Generating binding sources..." />
-    <xjc target="${build.source}">
+    <xjc target="${build.source}" extension="true">
       <!-- TODO: check if depends/produces really do work - I'm in doubt! (Gernot) -->
       <schema dir=".">
         <include name="**/*.xsd" />
