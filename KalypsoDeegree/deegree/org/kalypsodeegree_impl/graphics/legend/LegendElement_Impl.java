@@ -44,6 +44,7 @@ package org.deegree_impl.graphics.legend;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.FontMetrics;
@@ -280,7 +281,7 @@ public class LegendElement_Impl implements LegendElement {
 	 * gets the height of the LegendSymbol (in pixels)
 	 */
 	public int getHeight() {
-		return this.width;
+		return this.height;
 	}
 
 	/**
@@ -311,7 +312,7 @@ public class LegendElement_Impl implements LegendElement {
 		Debug.debugMethodBegin("LegendElement_Impl", "drawPointLegend()");
 		org.deegree.graphics.sld.Graphic deegreegraphic = c.getGraphic();
 		try {
-			BufferedImage buffi = ((org.deegree_impl.graphics.sld.Graphic_Impl)deegreegraphic).getAsImage(null);
+			BufferedImage buffi = ((org.deegree_impl.graphics.sld.Graphic_Impl)deegreegraphic).getAsImage(null);			
 			int w = buffi.getWidth();
 			int h = buffi.getHeight();
 			g.drawImage(buffi, width / 2 - w / 2, height / 2 - h / 2, null);
@@ -320,6 +321,30 @@ public class LegendElement_Impl implements LegendElement {
 		}
 		Debug.debugMethodEnd();
 	}
+	
+	
+	public void drawTextLegend(Graphics g, TextSymbolizer c, int width, int height) throws LegendException {
+		Debug.debugMethodBegin("LegendElement_Impl", "drawTexttLegend()");
+			
+		org.deegree.graphics.sld.Font font = c.getFont();		
+		java.awt.Font awtFont = null;
+		Color color = null;
+		try 
+		{
+			int style = font.getStyle(null);		
+			int weight = font.getWeight(null);
+			color = font.getColor(null);
+			awtFont = new Font(font.getFamily(null),font.getStyle(null), font.getSize(null));
+		} catch (FilterEvaluationException e) {		
+			e.printStackTrace();
+		} 
+		g.setColor(color);
+		g.setFont(awtFont);
+		g.drawString("abc",(width/8),height-(height/8));
+		
+		Debug.debugMethodEnd();
+	}	
+	
 
 	/**
 	 * draws a legendsymbol, if the SLD defines a line
@@ -619,7 +644,8 @@ public class LegendElement_Impl implements LegendElement {
 				if (symbolizer[b] instanceof RasterSymbolizer) {
 					// throw new LegendException("RasterSymbolizer is not implemented yet!");
 				}
-				if (symbolizer[b] instanceof TextSymbolizer) {
+				if (symbolizer[b] instanceof TextSymbolizer) {					
+					drawTextLegend((Graphics2D)g, (TextSymbolizer)symbolizer[b], width, height);
 					// throw new LegendException("TextSymbolizer is not implemented yet!");
 				}
 			}

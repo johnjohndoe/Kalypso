@@ -69,7 +69,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
     /**
      * constructor initializing the class with the <UserStyle>
      */
-    UserStyle_Impl( String name, String title, String abstract_, boolean default_, 
+    public UserStyle_Impl( String name, String title, String abstract_, boolean default_, 
                     FeatureTypeStyle[] featureTypeStyles ) {
         super( name );
 

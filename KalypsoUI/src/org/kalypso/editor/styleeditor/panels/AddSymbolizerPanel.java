@@ -127,8 +127,7 @@ public class AddSymbolizerPanel {
 	
 	public Symbolizer getSelection()
 	{				
-		String symbolizerString = getItemsByFeatureType(featureType)[selectionIndex]; 
-		System.out.println(featureType.toString());
+		String symbolizerString = getItemsByFeatureType(featureType)[selectionIndex]; 		
 		if(symbolizerString.equals("Point"))
 		{
 			Mark mark = StyleFactory.createMark("square");

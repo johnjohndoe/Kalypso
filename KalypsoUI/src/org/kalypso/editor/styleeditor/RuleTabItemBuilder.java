@@ -4,61 +4,23 @@
  */
 package org.kalypso.editor.styleeditor;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.awt.image.DirectColorModel;
-import java.awt.image.IndexColorModel;
-import java.awt.image.WritableRaster;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.StringReader;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.deegree.graphics.Encoders;
-import org.deegree.graphics.legend.LegendElement;
 import org.deegree.graphics.sld.Rule;
-import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.xml.XMLTools;
-import org.deegree_impl.graphics.legend.LegendFactory;
-import org.deegree_impl.graphics.sld.Rule_Impl;
-import org.deegree_impl.graphics.sld.SLDFactory;
-import org.deegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
-import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
-import org.deegree_impl.services.wfs.filterencoding.Literal;
-import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
-import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.editor.styleeditor.dialogs.FilterDialog;
 import org.kalypso.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.editor.styleeditor.panels.EditSymbolizerPanel;
+import org.kalypso.editor.styleeditor.panels.LegendLabel;
 import org.kalypso.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.editor.styleeditor.panels.PanelListener;
 import org.kalypso.editor.styleeditor.panels.SliderPanel;
@@ -66,7 +28,6 @@ import org.kalypso.editor.styleeditor.panels.TextInputPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
-import org.w3c.dom.Document;
 
 /**
  * @author Administrator
@@ -111,7 +72,7 @@ public class RuleTabItemBuilder {
 		
 		ruleTabFolder = new TabFolder(tabFolderComposite,SWT.NULL);		
 		FormData RuleTableFolderLData = new FormData();
-		RuleTableFolderLData.height = 500;
+		RuleTableFolderLData.height = 550;
 		RuleTableFolderLData.width = 235;
 		RuleTableFolderLData.top =  new FormAttachment(10, 1000, 0);						
 		ruleTabFolder.setLayoutData(RuleTableFolderLData);				
@@ -155,16 +116,7 @@ public class RuleTabItemBuilder {
 			nameInputPanel.addPanelListener(new PanelListener() {				
 				public void valueChanged(PanelEvent event) {
 					rule.setName(((TextInputPanel)event.getSource()).getLabelText());
-				
-					
-					
-					  PropertyIsLikeOperation operation = new PropertyIsLikeOperation(new PropertyName("GEOM"),new Literal("test"),'*','a','b');
-					  ComplexFilter filter = new ComplexFilter(operation);
-					  rule.setFilter(filter);
-					 
-						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
-						System.out.println(((Rule_Impl)rule).exportAsXML());
-					
+					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
 					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
 				}
 			});
@@ -187,18 +139,21 @@ public class RuleTabItemBuilder {
 						symbolizers[i].setMaxScaleDenominator(max);
 					}					
 					focuedRuleItem = ruleTabFolder.getSelectionIndex();
+					
 //					PropertyIsLikeOperation operation = new PropertyIsLikeOperation(new PropertyName("NAME"),new Literal("E*"),'*','?','/');
 //					ComplexFilter filter = new ComplexFilter(operation);
-//					rule.setFilter(filter);
+//					rule.setFilter(filter);					
+//					System.out.println(((Rule_Impl)rule).exportAsXML());
 					
-					System.out.println(((Rule_Impl)rule).exportAsXML());
 					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));						
 				}
 			});
 			
 			AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel(composite,"Symbolizer:",featureType);
-			EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel(composite,rule.getSymbolizers().length);
-									
+			EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel(composite,rule.getSymbolizers().length);			
+						
+			LegendLabel legendLabel = new LegendLabel(composite, userStyle, i);							
+
 			symbolizerTabFolder = new TabFolder(composite,SWT.NULL);
 			
 			editSymbolizerPanel.addPanelListener(new PanelListener() {
@@ -294,12 +249,11 @@ public class RuleTabItemBuilder {
 //			});
 			
 			// ******* SAVING THE SLD-STYLE
-			Button saveButton = new Button(composite,SWT.NULL);
-			final Label label = new Label(composite, SWT.NULL);
+			final Button saveButton = new Button(composite,SWT.NULL);			
 			saveButton.setText("Save");						
 			saveButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {						 
-					SaveStyleAction.saveUserStyle(userStyle, composite.getShell());							
+					SaveStyleAction.saveUserStyle(userStyle, composite.getShell());									
 				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					widgetSelected(e);
@@ -335,52 +289,4 @@ public class RuleTabItemBuilder {
 	{
 		ruleTabFolder.setSelection(index);		
 	}	
-	
-	// transforms AWT-BufferedImage into SWT ImageData
-	// Copyright (c) 2000, 2004 IBM Corporation and others.
-	//* All rights reserved. This program and the accompanying 
-	static ImageData convertToSWT(BufferedImage bufferedImage) {
-		if (bufferedImage.getColorModel() instanceof DirectColorModel) {
-			DirectColorModel colorModel = (DirectColorModel)bufferedImage.getColorModel();
-			PaletteData palette = new PaletteData(colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask());
-			ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette);
-			WritableRaster raster = bufferedImage.getRaster();
-			int[] pixelArray = new int[3];
-			for (int y = 0; y < data.height; y++) {
-				for (int x = 0; x < data.width; x++) {
-					raster.getPixel(x, y, pixelArray);
-					int pixel = palette.getPixel(new RGB(pixelArray[0], pixelArray[1], pixelArray[2]));
-					data.setPixel(x, y, pixel);
-				}
-			}		
-			return data;		
-		} else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
-			IndexColorModel colorModel = (IndexColorModel)bufferedImage.getColorModel();
-			int size = colorModel.getMapSize();
-			byte[] reds = new byte[size];
-			byte[] greens = new byte[size];
-			byte[] blues = new byte[size];
-			colorModel.getReds(reds);
-			colorModel.getGreens(greens);
-			colorModel.getBlues(blues);
-			RGB[] rgbs = new RGB[size];
-			for (int i = 0; i < rgbs.length; i++) {
-				rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF, blues[i] & 0xFF);
-			}
-			PaletteData palette = new PaletteData(rgbs);
-			ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette);
-			data.transparentPixel = colorModel.getTransparentPixel();
-			WritableRaster raster = bufferedImage.getRaster();
-			int[] pixelArray = new int[1];
-			for (int y = 0; y < data.height; y++) {
-				for (int x = 0; x < data.width; x++) {
-					raster.getPixel(x, y, pixelArray);
-					data.setPixel(x, y, pixelArray[0]);
-				}
-			}
-			return data;
-		}
-		return null;
-	}
-	
 }
