@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.Random;
 
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
 
@@ -71,11 +72,10 @@ public class FileUtilities
     {
       try
       {
-        File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( "java.io.tmpdir" ) );
-
+        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( "java.io.tmpdir" ) );
         return existingFile;
       }
-      catch( FileNotFoundException ignored )
+      catch( final FileNotFoundException ignored )
       {
         // ignored
       }
@@ -84,44 +84,58 @@ public class FileUtilities
     File tmp = File.createTempFile( prefix, suffix );
     tmp.deleteOnExit();
 
+    makeFileFromStream( charMode, tmp, ins );
+    
+    return tmp;
+
+  }
+  
+  /**
+   * Wie {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)}, benutzt aber
+   * eine vorgegebene Dateiposition 
+   */
+  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
+  {
     if( charMode )
     {
       final BufferedReader br = new BufferedReader( new InputStreamReader( ins ) );
-      final PrintWriter pw = new PrintWriter( new FileOutputStream( tmp ) );
-
-      while( br.ready() )
-      {
-        final String str = br.readLine();
-
-        if( str == null )
-          break;
-
-        pw.println( str );
-      }
-
-      br.close();
-      pw.close();
+      final PrintWriter pw = new PrintWriter( new FileOutputStream( file ) );
+      
+      ReaderUtilities.readerCopy(br, pw);
+//      while( br.ready() )
+//      {
+//        final String str = br.readLine();
+//
+//        if( str == null )
+//          break;
+//
+//        pw.println( str );
+//      }
+//
+//      br.close();
+//      pw.close();
     }
     else
     {
       final BufferedInputStream in = new BufferedInputStream( ins );
-      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( tmp ) );
+      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      int b = in.read();
-
-      while( b != -1 )
-      {
-        out.write( b );
-
-        b = in.read();
-      }
-
-      in.close();
-      out.close();
+      StreamUtilities.streamCopy(in, out);
+//      int b = in.read();
+//
+//      while( b != -1 )
+//      {
+//        out.write( b );
+//
+//        b = in.read();
+//      }
+//
+//      in.close();
+//      out.close();
     }
 
-    return tmp;
   }
+  
 
   /**
    * Looks in the given path if a file with the given prefix and suffix exists.
@@ -176,7 +190,25 @@ public class FileUtilities
       for( int i = 0; i < files.length; i++ )
         deleteRecursive( files[i] );
     }
-    
+
     file.delete();
+  }
+
+  public static File createRandomTmpDir( final String prefix )
+  {
+    final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );
+    File dataDir = null;
+
+    int count = 0;
+    while( dataDir == null && count < 100 )
+    {
+      final File tmpDataDir = new File( tmpDir, prefix + new Random().nextInt() );
+      if( tmpDataDir.mkdir() )
+        return tmpDataDir;
+
+      count++;
+    }
+
+    return null;
   }
 }

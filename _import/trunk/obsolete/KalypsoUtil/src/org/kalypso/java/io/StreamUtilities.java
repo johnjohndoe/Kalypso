@@ -34,4 +34,17 @@ public class StreamUtilities
     is.close();
     os.close();
   }
+
+  public static void dumpAllAvailable( final InputStream is ) throws IOException
+  {
+    while( true )
+    {
+      final int avail = is.available();
+      if( avail == 0 )
+        return;
+      
+      final byte[] inBuffer = new byte[avail];
+      is.read( inBuffer );
+    }
+  }
 }

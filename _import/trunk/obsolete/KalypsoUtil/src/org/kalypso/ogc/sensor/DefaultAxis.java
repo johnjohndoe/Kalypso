@@ -96,7 +96,7 @@ public class DefaultAxis implements IAxis
   {
     if( getUnit().length() == 0 )
       return getLabel();
-    else
-      return getLabel() + " - " + getUnit();
+
+    return getLabel() + " - " + getUnit();
   }
 }
