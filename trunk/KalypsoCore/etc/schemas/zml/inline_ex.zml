@@ -15,11 +15,11 @@
 	</axis>
 	
 	<axis name="Pegel1" type="W" unit="m" datatype="TYPE=double">
-		<valueLink separator=" " column="2" xlink:href="#data"/>
+		<valueLink separator=" " column="2" xlink:href=""/>
 	</axis>
 
 	<axis name="Pegel2" type="S" unit="" datatype="TYPE=double">
-		<valueLink separator=" " column="3" xlink:href="#data"/>
+		<valueLink separator=" " column="3" />
 	</axis>
 
 	<data><![CDATA[

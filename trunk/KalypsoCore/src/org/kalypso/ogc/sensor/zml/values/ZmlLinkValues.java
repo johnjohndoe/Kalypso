@@ -89,7 +89,8 @@ public class ZmlLinkValues implements IZmlValues
    *          context into which original file was loaded
    * @param data
    *          [optional] contains the values in a block format within CDATA tags
-   *          if the values are linked ZML-internally
+   *          if the values are linked ZML-internally. This will be used if Href
+   *          is not specified, is empty, or contains "#data"
    * @throws MalformedURLException
    * @throws IOException
    */
@@ -104,7 +105,11 @@ public class ZmlLinkValues implements IZmlValues
 
     // stream is closed in either CSV() or RegexCsv()
     final Reader reader;
-    if( vl.getHref() == null || vl.getHref().equalsIgnoreCase( DATA_REF ) )
+
+    // if the Href is not specified, is empty, or contains "#data" we
+    // use the data element provided.
+    if( vl.getHref() == null || vl.getHref().length() == 0
+        || vl.getHref().equalsIgnoreCase( DATA_REF ) )
       reader = new StringReader( data );
     else
     {
@@ -186,7 +191,7 @@ public class ZmlLinkValues implements IZmlValues
       for( int i = 0; i < getCount(); i++ )
         if( getElement( i ).equals( obj ) )
           return i;
-        
+
       return -1;
     }
 
