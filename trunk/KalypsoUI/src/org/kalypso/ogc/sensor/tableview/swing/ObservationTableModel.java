@@ -177,75 +177,75 @@ public class ObservationTableModel extends AbstractTableModel
    * @param col
    * @throws SensorException
    */
-  public synchronized void addColumn( final TableViewColumn col ) throws SensorException
+  public synchronized void addColumn( final TableViewColumn col )
+      throws SensorException
   {
-      if( col == null )
-        return;
+    if( col == null )
+      return;
 
-      final IAxis keyAxis = col.getKeyAxis();
+    final IAxis keyAxis = col.getKeyAxis();
 
-      if( m_sharedAxis == null )
-        m_sharedAxis = keyAxis;
+    if( m_sharedAxis == null )
+      m_sharedAxis = keyAxis;
+    else
+    {
+      // verify compatibility of the axes. We do not use IAxis.equals()
+      // since the position is not relevant here
+      if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
+          || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
+          || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
+      {
+        throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis
+            + " kompatibel." );
+      }
+    }
+
+    // values of observation of the column
+    final IObservation obs = col.getTheme().getObservation();
+    if( obs == null )
+      return;
+
+    if( !m_columns.contains( col ) )
+    {
+      m_columns.add( col );
+
+      // add tablecolumn to tablemodel
+      m_valuesModel.addColumn( col.getName() );
+
+      // adapt width of column
+      // TODO: listen for column width changes (initiated by the user) and
+      // store it in the template when saving it
+      final int colIx = m_valuesModel.findColumn( col.getName() );
+      final TableColumn tableColumn = m_table.getColumnModel()
+          .getColumn( colIx );
+      tableColumn.setPreferredWidth( col.getWidth() );
+
+      // add tablecolumn to status model
+      final IAxis statusAxis = getStatusAxis( col );
+      if( statusAxis != null )
+        m_statusModel.addColumn( statusAxis.getName() );
       else
-      {
-        // verify compatibility of the axes. We do not use IAxis.equals()
-        // since the position is not relevant here
-        if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
-            || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
-            || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
-        {
-          throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis
-              + " kompatibel." );
-        }
-      }
+        m_statusModel.addColumn( "no-status" );
+    }
 
-      // values of observation of the column
-      final IObservation obs = col.getTheme().getObservation();
-      if( obs == null )
-        return;
+    final ITuppleModel tupModel = obs.getValues( col.getTheme().getArguments() );
 
-      if( !m_columns.contains( col ) )
-      {
-        m_columns.add( col );
+    // fill shared column values
+    for( int r = 0; r < tupModel.getCount(); r++ )
+    {
+      final Object elt = tupModel.getElement( r, keyAxis );
+      m_sharedModel.add( elt );
+    }
 
-        // add tablecolumn to tablemodel
-        m_valuesModel.addColumn( col.getName() );
+    if( m_sharedModel.size() > m_valuesModel.getRowCount() )
+    {
+      m_valuesModel.setRowCount( m_sharedModel.size() );
+      m_statusModel.setRowCount( m_sharedModel.size() );
+    }
 
-        // adapt width of column
-        // TODO: listen for column width changes (initiated by the user) and
-        // store it in the template when saving it
-        final int colIx = m_valuesModel.findColumn( col.getName() );
-        final TableColumn tableColumn = m_table.getColumnModel().getColumn(
-            colIx );
-        tableColumn.setPreferredWidth( col.getWidth() );
+    fillValues();
 
-        // add tablecolumn to status model
-        final IAxis statusAxis = getStatusAxis( col );
-        if( statusAxis != null )
-          m_statusModel.addColumn( statusAxis.getName() );
-        else
-          m_statusModel.addColumn( "no-status" );
-      }
-
-      final ITuppleModel tupModel = obs.getValues( col.getTheme()
-          .getArguments() );
-
-      // fill shared column values
-      for( int r = 0; r < tupModel.getCount(); r++ )
-      {
-        final Object elt = tupModel.getElement( r, keyAxis );
-        m_sharedModel.add( elt );
-      }
-
-      if( m_sharedModel.size() > m_valuesModel.getRowCount() )
-      {
-        m_valuesModel.setRowCount( m_sharedModel.size() );
-        m_statusModel.setRowCount( m_sharedModel.size() );
-      }
-
-      fillValues();
-
-      fireTableStructureChanged();
+    fireTableStructureChanged();
   }
 
   /**
@@ -327,26 +327,26 @@ public class ObservationTableModel extends AbstractTableModel
   public synchronized void refreshColumns( final TableViewTheme theme )
       throws SensorException
   {
-      if( m_savedThemes.containsKey( theme ) )
-      {
-        m_savedThemes.remove( theme );
-        return;
-      }
+    if( m_savedThemes.containsKey( theme ) )
+    {
+      m_savedThemes.remove( theme );
+      return;
+    }
 
-      for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
-      {
-        final TableViewColumn col = (TableViewColumn) it.next();
+    for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
+    {
+      final TableViewColumn col = (TableViewColumn) it.next();
 
-        if( m_columns.contains( col ) )
-          removeColumn( col );
-      }
-      
-      for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
-      {
-        final TableViewColumn col = (TableViewColumn) it.next();
+      if( m_columns.contains( col ) )
+        removeColumn( col );
+    }
 
-        addColumn( col );
-      }
+    for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
+    {
+      final TableViewColumn col = (TableViewColumn) it.next();
+
+      addColumn( col );
+    }
   }
 
   /**
@@ -371,14 +371,14 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized Class getColumnClass( int columnIndex )
   {
-      if( m_columns.size() == 0 )
-        return String.class;
+    if( m_columns.size() == 0 )
+      return String.class;
 
-      if( columnIndex == 0 )
-        return m_sharedAxis.getDataClass();
+    if( columnIndex == 0 )
+      return m_sharedAxis.getDataClass();
 
-      return ((TableViewColumn) m_columns.get( columnIndex - 1 ))
-          .getColumnClass();
+    return ((TableViewColumn) m_columns.get( columnIndex - 1 ))
+        .getColumnClass();
   }
 
   /**
@@ -386,13 +386,13 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized String getColumnName( int columnIndex )
   {
-      if( m_columns.size() == 0 )
-        return "Keine Daten vorhanden";
+    if( m_columns.size() == 0 )
+      return "Keine Daten vorhanden";
 
-      if( columnIndex == 0 )
-        return m_sharedAxis.getName();
+    if( columnIndex == 0 )
+      return m_sharedAxis.getName();
 
-      return m_valuesModel.getColumnName( columnIndex - 1 );
+    return m_valuesModel.getColumnName( columnIndex - 1 );
   }
 
   /**
@@ -400,10 +400,10 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized int getColumnCount( )
   {
-      if( m_columns.size() == 0 )
-        return 1;
+    if( m_columns.size() == 0 )
+      return 1;
 
-      return m_columns.size() + 1;
+    return m_columns.size() + 1;
   }
 
   /**
@@ -411,10 +411,10 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized int getRowCount( )
   {
-      if( m_columns.size() == 0 )
-        return 0;
+    if( m_columns.size() == 0 )
+      return 0;
 
-      return m_sharedModel.size();
+    return m_sharedModel.size();
   }
 
   /**
@@ -422,24 +422,24 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized Object getValueAt( int rowIndex, int columnIndex )
   {
-      if( columnIndex == 0 )
-        return m_sharedModel.toArray()[rowIndex];
+    if( columnIndex == 0 )
+      return m_sharedModel.toArray()[rowIndex];
 
-      try
-      {
-        return m_valuesModel.getValueAt( rowIndex, columnIndex - 1 );
-      }
-      catch( ArrayIndexOutOfBoundsException e )
-      {
-        // TRICKY: Ich weiss nicht warum, diese Exception taucht auf wenn die
-        // Berechnung im Wizard gestartet wird. Ich denke, es liegt daran, dass
-        // im Hintergrund die Zeitreihen aktualisiert werden, der Pool schickt
-        // das Event, und die Tabelle versucht sich zu aktualisieren: dabei
-        // ist der Model nicht mehr genau in Sync mit die Daten
-        // WORKAROUND: wir ignorieren die Exception ganz leise und geben
-        // einfach null zurück.
-        return null;
-      }
+    try
+    {
+      return m_valuesModel.getValueAt( rowIndex, columnIndex - 1 );
+    }
+    catch( ArrayIndexOutOfBoundsException e )
+    {
+      // TRICKY: Ich weiss nicht warum, diese Exception taucht auf wenn die
+      // Berechnung im Wizard gestartet wird. Ich denke, es liegt daran, dass
+      // im Hintergrund die Zeitreihen aktualisiert werden, der Pool schickt
+      // das Event, und die Tabelle versucht sich zu aktualisieren: dabei
+      // ist der Model nicht mehr genau in Sync mit die Daten
+      // WORKAROUND: wir ignorieren die Exception ganz leise und geben
+      // einfach null zurück.
+      return null;
+    }
   }
 
   /**
@@ -447,36 +447,39 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized boolean isCellEditable( int rowIndex, int columnIndex )
   {
-      rowIndex++; // fake, just to remove compile warnings
+    rowIndex++; // fake, just to remove compile warnings
 
-      if( columnIndex == 0 )
-        return false;
+    if( columnIndex == 0 )
+      return false;
 
-      return ((TableViewColumn) m_columns.get( columnIndex - 1 )).isEditable();
+    return ((TableViewColumn) m_columns.get( columnIndex - 1 )).isEditable();
   }
 
   /**
    * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int,
    *      int)
    */
-  public synchronized void setValueAt( Object aValue, int rowIndex, int columnIndex )
+  public synchronized void setValueAt( Object aValue, int rowIndex,
+      int columnIndex )
   {
-      final TableViewColumn col = (TableViewColumn) m_columns
-          .get( columnIndex - 1 );
-      col.setDirty( true );
+    final TableViewColumn col = (TableViewColumn) m_columns
+        .get( columnIndex - 1 );
+    col.setDirty( true );
 
-      m_statusModel.setValueAt( STATUS_USERMOD, rowIndex, columnIndex - 1 );
-      m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
+    m_statusModel.setValueAt( STATUS_USERMOD, rowIndex, columnIndex - 1 );
+    m_valuesModel.setValueAt( aValue, rowIndex, columnIndex - 1 );
 
-      if( m_syncObservation )
-        try
-        {
-          saveToObservations();
-        }
-        catch( SensorException e )
-        {
-          e.printStackTrace();
-        }
+    if( m_syncObservation )
+    {
+      try
+      {
+        saveToObservations();
+      }
+      catch( SensorException e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**
@@ -514,13 +517,13 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized void clearColumns( )
   {
-      m_columns.clear();
-      m_sharedModel.clear();
-      m_sharedAxis = null;
-      m_valuesModel.setColumnCount( 0 );
-      m_statusModel.setColumnCount( 0 );
+    m_columns.clear();
+    m_sharedModel.clear();
+    m_sharedAxis = null;
+    m_valuesModel.setColumnCount( 0 );
+    m_statusModel.setColumnCount( 0 );
 
-      fireTableStructureChanged();
+    fireTableStructureChanged();
   }
 
   /**
@@ -532,18 +535,18 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized int addRow( final Object sharedElement )
   {
-      m_sharedModel.add( sharedElement );
+    m_sharedModel.add( sharedElement );
 
-      final int index = Arrays.binarySearch( m_sharedModel.toArray(),
-          sharedElement );
+    final int index = Arrays.binarySearch( m_sharedModel.toArray(),
+        sharedElement );
 
-      m_valuesModel.insertRow( index, new Object[m_columns.size()] );
+    m_valuesModel.insertRow( index, new Object[m_columns.size()] );
 
-      m_statusModel.insertRow( index, new Object[m_columns.size()] );
+    m_statusModel.insertRow( index, new Object[m_columns.size()] );
 
-      fireTableDataChanged();
+    fireTableDataChanged();
 
-      return index;
+    return index;
   }
 
   /**
@@ -555,14 +558,14 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized int addRow( final List row )
   {
-      // first insert shared element (first in the row)
-      final int index = addRow( row.get( 0 ) );
+    // first insert shared element (first in the row)
+    final int index = addRow( row.get( 0 ) );
 
-      // insert values
-      for( int i = 1; i < row.size(); i++ )
-        setValueAt( row.get( i ), index, i );
+    // insert values
+    for( int i = 1; i < row.size(); i++ )
+      setValueAt( row.get( i ), index, i );
 
-      return index;
+    return index;
   }
 
   /**
@@ -573,28 +576,28 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized List removeRow( int index )
   {
-      final ArrayList row = new ArrayList( m_columns.size() + 1 );
+    final ArrayList row = new ArrayList( m_columns.size() + 1 );
 
-      row.add( m_sharedModel.toArray()[index] );
+    row.add( m_sharedModel.toArray()[index] );
 
-      int colIndex = 0;
-      for( final Iterator it = m_columns.iterator(); it.hasNext(); )
-      {
-        final TableViewColumn col = (TableViewColumn) it.next();
+    int colIndex = 0;
+    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
+    {
+      final TableViewColumn col = (TableViewColumn) it.next();
 
-        row.add( m_valuesModel.getValueAt( index, colIndex ) );
-        col.setDirty( true );
+      row.add( m_valuesModel.getValueAt( index, colIndex ) );
+      col.setDirty( true );
 
-        colIndex++;
-      }
+      colIndex++;
+    }
 
-      m_valuesModel.removeRow( index );
-      m_statusModel.removeRow( index );
-      m_sharedModel.remove( row.get( 0 ) );
+    m_valuesModel.removeRow( index );
+    m_statusModel.removeRow( index );
+    m_sharedModel.remove( row.get( 0 ) );
 
-      fireTableDataChanged();
+    fireTableDataChanged();
 
-      return row;
+    return row;
   }
 
   /**
@@ -606,32 +609,32 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public synchronized void saveToObservations( ) throws SensorException
   {
-      for( final Iterator it = m_columns.iterator(); it.hasNext(); )
+    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
+    {
+      final TableViewColumn column = (TableViewColumn) it.next();
+
+      if( column.isDirty() )
       {
-        final TableViewColumn column = (TableViewColumn) it.next();
+        final TableViewTheme theme = column.getTheme();
 
-        if( column.isDirty() )
-        {
-          final TableViewTheme theme = column.getTheme();
+        for( final Iterator itcol = theme.getColumns().iterator(); itcol
+            .hasNext(); )
+          ((TableViewColumn) itcol.next()).setDirty( false );
 
-          for( final Iterator itcol = theme.getColumns().iterator(); itcol
-              .hasNext(); )
-            ((TableViewColumn) itcol.next()).setDirty( false );
+        final ITuppleModel values = getValues( theme );
 
-          final ITuppleModel values = getValues( theme );
-
-          m_savedThemes.put( theme, values );
-        }
+        m_savedThemes.put( theme, values );
       }
+    }
 
-      // iterate over the modified themes and save the observations
-      for( final Iterator it = m_savedThemes.keySet().iterator(); it.hasNext(); )
-      {
-        final TableViewTheme theme = (TableViewTheme) it.next();
-        final ITuppleModel values = (ITuppleModel) m_savedThemes.get( theme );
+    // iterate over the modified themes and save the observations
+    for( final Iterator it = m_savedThemes.keySet().iterator(); it.hasNext(); )
+    {
+      final TableViewTheme theme = (TableViewTheme) it.next();
+      final ITuppleModel values = (ITuppleModel) m_savedThemes.get( theme );
 
-        theme.getObservation().setValues( values );
-      }
+      theme.getObservation().setValues( values );
+    }
   }
 
   /**
@@ -654,7 +657,8 @@ public class ObservationTableModel extends AbstractTableModel
    * @return new model
    * @throws SensorException
    */
-  public synchronized ITuppleModel getValues( final int[] rows ) throws SensorException
+  public synchronized ITuppleModel getValues( final int[] rows )
+      throws SensorException
   {
     return getValues( m_columns, rows );
   }
@@ -766,7 +770,8 @@ public class ObservationTableModel extends AbstractTableModel
    * @return position of the column that has just been removed
    * @throws SensorException
    */
-  public synchronized int removeColumn( final TableViewColumn col ) throws SensorException
+  public synchronized int removeColumn( final TableViewColumn col )
+      throws SensorException
   {
     int pos = m_columns.indexOf( col );
 
