@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.editor;
 
 import java.awt.Color;
@@ -54,10 +54,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 /**
- * DoubleCellEditor, uses a NumberFormat that you can configure according
- * to your needs. In the constructor, there is also the possibility to 
- * force the use of the grouping symbol as decimal symbol. In that case, both
- * decimal and grouping symbols will denote a decimal symbol.
+ * DoubleCellEditor, uses a NumberFormat that you can configure according to
+ * your needs. In the constructor, there is also the possibility to force the
+ * use of the grouping symbol as decimal symbol. In that case, both decimal and
+ * grouping symbols will denote a decimal symbol.
  * 
  * @author schlienger
  */
@@ -68,29 +68,38 @@ public class DoubleCellEditor extends DefaultCellEditor
   private final NumberFormat m_nf;
 
   private final boolean m_useGroupingAsDecimalSymbol;
-  
+
   private char m_replaceWhat = ' ';
+
   private char m_replaceWith = ' ';
-  
+
+  private final Double m_replacementWhenNull;
+
   /**
-   * Constructor. If useGroupingAsDecimalSymbol is true and nf is a DecimalFormat,
-   * it tries to fetch the grouping and decimal symbols to be replaced.
+   * Constructor. If useGroupingAsDecimalSymbol is true and nf is a
+   * DecimalFormat, it tries to fetch the grouping and decimal symbols to be
+   * replaced.
    * 
    * @param nf
    * @param useGroupingAsDecimalSymbol
+   * @param replacementWhenNull
+   *          [optional, ignored if null] if specified, null values are not
+   *          allowed and they are replaced by this number
    */
-  public DoubleCellEditor( final NumberFormat nf, final boolean useGroupingAsDecimalSymbol )
+  public DoubleCellEditor( final NumberFormat nf,
+      final boolean useGroupingAsDecimalSymbol, final Double replacementWhenNull )
   {
     super( new JTextField() );
 
     m_nf = nf;
     m_useGroupingAsDecimalSymbol = useGroupingAsDecimalSymbol;
-    
+    m_replacementWhenNull = replacementWhenNull;
+
     if( useGroupingAsDecimalSymbol && nf instanceof DecimalFormat )
     {
       final DecimalFormat df = (DecimalFormat) nf;
       final DecimalFormatSymbols bols = df.getDecimalFormatSymbols();
-      
+
       m_replaceWhat = bols.getGroupingSeparator();
       m_replaceWith = bols.getDecimalSeparator();
     }
@@ -103,7 +112,7 @@ public class DoubleCellEditor extends DefaultCellEditor
   {
     m_value = null;
     ((JComponent) getComponent()).setBorder( new LineBorder( Color.black ) );
-    
+
     try
     {
       value = m_nf.format( value );
@@ -112,17 +121,18 @@ public class DoubleCellEditor extends DefaultCellEditor
     {
       // ignored
     }
-    
-    return super.getTableCellEditorComponent( table, value, isSelected, row, column  );
+
+    return super.getTableCellEditorComponent( table, value, isSelected, row,
+        column );
   }
-  
+
   public boolean stopCellEditing( )
   {
     String s = (String) super.getCellEditorValue();
 
     if( s == null || "".equals( s ) )
     {
-      m_value = null;
+      m_value = m_replacementWhenNull != null ? m_replacementWhenNull : null;
       super.stopCellEditing();
     }
     else

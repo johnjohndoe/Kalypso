@@ -57,7 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.java.lang.reflect.ClassUtilityException;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.model.xml.TransformationType;
 

@@ -36,75 +36,30 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.FileFilter;
 
-import org.kalypso.java.io.filter.AcceptAllFileFilter;
-import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.repository.AbstractRepositoryFactory;
-import org.kalypso.repository.IRepository;
-import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.file.FileRepository;
+import org.kalypso.repository.file.FileRepositoryFactory;
 
 /**
  * A simple (and headless) RepositoryFactory for ZmlObservations.
  * 
  * @author schlienger
  */
-public class HeadlessZmlRepositoryFactory extends AbstractRepositoryFactory
+public class HeadlessZmlRepositoryFactory extends FileRepositoryFactory
 {
   /**
-   * Does nothing.
-   * 
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
+   * @see org.kalypso.repository.file.FileRepositoryFactory#createRepository(java.lang.String,
+   *      java.lang.String, java.lang.String, boolean, java.io.FileFilter)
    */
-  public boolean configureRepository(  )
+  public FileRepository createRepository( String conf, String location,
+      String id, boolean ro, FileFilter filter )
   {
-    return true;
-  }
-
-  /**
-   * The configuration string should be build in the following way:
-   * 
-   * <pre>
-   * root_location#identifier[#filter_spec]
-   * </pre>
-   * 
-   * <p>
-   * root_location: the location of the root directory
-   * <p>
-   * identifier: the identifier of the repository
-   * <p>
-   * filter_spec: [optional] the filter specification as used in
-   * <code>MultipleWildCardFileFilter</code>
-   * 
-   * <p>
-   * Beispiel:
-   * <p>
-   * c:/temp#temp#*.txt,*.ini
-   * <p>
-   * 
-   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
-   */
-  public IRepository createRepository() throws RepositoryException
-  {
-    final String[] conf = getConfiguration().split( "#" );
-
-    if( conf.length < 2 )
-      throw new RepositoryException( "Invalid configuration in RepositoryFactory: " + getConfiguration() );
-
-    final FileFilter filter;
-
-    if( conf.length == 3 )
-    {
-      final String[] ZML_FILES = conf[2].split( "," );
-      filter = new MultipleWildCardFileFilter( ZML_FILES, false, true, false );
-    }
-    else
-      filter = new AcceptAllFileFilter();
-
-    return new ZmlObservationRepository( this, conf[0], conf[1], isReadOnly(), filter );
+    return new ZmlObservationRepository( getClass().getName(), conf, location,
+        id, ro, filter );
   }
 }

@@ -86,4 +86,9 @@ public class IngresDatabase
       return false;
     }
   }
+
+  public String getUrl( )
+  {
+    return m_url;
+  }
 }

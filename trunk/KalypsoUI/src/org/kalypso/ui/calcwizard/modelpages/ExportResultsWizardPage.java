@@ -95,7 +95,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.java.lang.reflect.ClassUtilityException;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;

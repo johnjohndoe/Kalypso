@@ -43,7 +43,7 @@ package org.kalypso.ui.repository.actions;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.repository.IRepositoryContainer;
+import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**

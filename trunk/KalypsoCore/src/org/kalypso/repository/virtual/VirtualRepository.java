@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
 import java.io.File;
@@ -52,7 +52,6 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.kalypso.repository.AbstractRepository;
-import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.zml.repository.virtual.ItemType;
@@ -73,31 +72,37 @@ public class VirtualRepository extends AbstractRepository
 
   /** child items */
   private IRepositoryItem[] m_children;
-  
+
   /** stores the mapping between ids and items */
   private final Map m_idMap = new Hashtable();
 
   private final String m_identifier;
 
+  private final String m_location;
+
   /**
    * Constructor
    * 
    * @param factory
-   * @param location location of the specification file (xml)
-   * @param identifier uniquely identifies this repository among the list of repositories used in a given context
+   * @param identifier
+   *          uniquely identifies this repository among the list of repositories
+   *          used in a given context. The identifier is also used as name.
+   * @param location
+   *          location of the specification file (xml)
    * @param readOnly
    * @throws RepositoryException
    */
-  public VirtualRepository( final IRepositoryFactory factory, final String location, final String identifier,
+  public VirtualRepository( String factory, String identifier, String location,
       boolean readOnly ) throws RepositoryException
   {
-    super( factory, location, readOnly );
+    super( identifier, factory, location, readOnly );
 
     m_identifier = identifier;
-    
+    m_location = location;
+
     try
     {
-      buildRepository( );
+      buildRepository();
     }
     catch( Exception e )
     {
@@ -107,12 +112,12 @@ public class VirtualRepository extends AbstractRepository
     }
   }
 
-  private final void buildRepository( )
-      throws JAXBException, FileNotFoundException
+  private final void buildRepository( ) throws JAXBException,
+      FileNotFoundException
   {
     final InputSource specSource = new InputSource( new FileInputStream(
         new File( m_location ) ) );
-    
+
     final VirtualRepositoryType vrt = (VirtualRepositoryType) OF
         .createUnmarshaller().unmarshal( specSource );
 
@@ -131,13 +136,13 @@ public class VirtualRepository extends AbstractRepository
 
       final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this,
           level.getName(), level.getId(), parent );
-      
+
       final List children = new ArrayList();
       children.addAll( buildStructure( rItem, level.getLevel() ) );
       children.addAll( buildItems( rItem, level.getItem() ) );
 
       rItem.setChildren( children );
-      
+
       m_idMap.put( rItem.getIdentifier(), rItem );
 
       rItems.add( rItem );
@@ -156,9 +161,9 @@ public class VirtualRepository extends AbstractRepository
 
       final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, item
           .getName(), item.getId(), parent );
-      
+
       rItem.setFilterType( item.getFilter() );
-      
+
       m_idMap.put( rItem.getIdentifier(), rItem );
 
       rItems.add( rItem );
@@ -168,13 +173,13 @@ public class VirtualRepository extends AbstractRepository
   }
 
   /**
-   * @see org.kalypso.repository.AbstractRepository#getName()
+   * @see org.kalypso.repository.IRepository#getDescription()
    */
-  public String getName( )
+  public String getDescription( )
   {
-    return getIdentifier() + " (Virtual-Repository)";
+    return m_location;
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
@@ -190,10 +195,10 @@ public class VirtualRepository extends AbstractRepository
   {
     m_children = null;
     m_idMap.clear();
-    
+
     try
     {
-      buildRepository( );
+      buildRepository();
     }
     catch( Exception e )
     {
@@ -222,7 +227,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) 
+  public IRepositoryItem[] getChildren( )
   {
     return m_children;
   }

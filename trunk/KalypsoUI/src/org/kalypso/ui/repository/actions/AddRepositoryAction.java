@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,9 +52,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryFactory;
+import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.RepositorySpecification;
+import org.kalypso.repository.conf.RepositoryFactoryConfig;
+import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -81,18 +82,18 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
     dlg.setLabelProvider( new LabelProvider() );
     dlg.setContentProvider( new ArrayContentProvider() );
     dlg.setTitle( "Repository Typ auswählen" );
-    dlg
-        .setInput( KalypsoGisPlugin.getDefault()
-            .getRepositoriesSpecifications() );
-    if( dlg.open() != Window.OK )
-      return;
-
-    final RepositorySpecification spec = (RepositorySpecification) dlg
-        .getResult()[0];
 
     try
     {
-      final IRepositoryFactory f = spec.createFactory( getClass()
+      dlg.setInput( RepositoriesExtensions.retrieveExtensions() );
+
+      if( dlg.open() != Window.OK )
+        return;
+
+      final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig) dlg
+          .getResult()[0];
+
+      final IRepositoryFactory f = cfg.createFactory( getClass()
           .getClassLoader() );
 
       if( f.configureRepository() )
@@ -101,7 +102,8 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
             .getProgressService();
         progressService.busyCursorWhile( new IRunnableWithProgress()
         {
-          public void run( IProgressMonitor monitor ) throws InvocationTargetException
+          public void run( IProgressMonitor monitor )
+              throws InvocationTargetException
           {
             monitor.beginTask( "Repository hinzufügen", 2 );
 
@@ -109,14 +111,15 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
             try
             {
               rep = f.createRepository();
-              
-              monitor.worked(1);
-              
-              rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
-              
+
+              monitor.worked( 1 );
+
+              rep.setProperties( KalypsoGisPlugin.getDefault()
+                  .getDefaultRepositoryProperties() );
+
               getRepositoryContainer().addRepository( rep );
-              
-              monitor.worked(1);
+
+              monitor.worked( 1 );
             }
             catch( RepositoryException e )
             {

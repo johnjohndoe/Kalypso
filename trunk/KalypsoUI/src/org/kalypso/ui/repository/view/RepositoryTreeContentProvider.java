@@ -44,9 +44,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.container.IRepositoryContainer;
 
 /**
  * Tree Content provider for contents of the RepositoryExplorer.

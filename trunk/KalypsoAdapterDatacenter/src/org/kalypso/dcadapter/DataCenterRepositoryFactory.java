@@ -1,8 +1,8 @@
 package org.kalypso.dcadapter;
 
-import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.factory.AbstractRepositoryFactory;
 
 /**
  * DataCenterRepositoryFactory
@@ -12,7 +12,7 @@ import org.kalypso.repository.RepositoryException;
 public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 {
   /**
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
   public boolean configureRepository( ) throws RepositoryException
   {
@@ -37,7 +37,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
    * <p>
    * password: the password for that user
    * 
-   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
   public IRepository createRepository( ) throws RepositoryException
   {
@@ -50,6 +50,6 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
     final String userName = conf[1];
     final String password = conf[2];
 
-    return new DataCenterRepository( this, url, userName, password );
+    return new DataCenterRepository( getRepositoryName(), getClass().getName(), getConfiguration(), isReadOnly(), url, userName, password );
   }
 }

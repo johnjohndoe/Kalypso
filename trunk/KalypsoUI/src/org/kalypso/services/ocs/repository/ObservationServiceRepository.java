@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
 import java.rmi.RemoteException;
@@ -45,7 +45,6 @@ import java.rmi.RemoteException;
 import javax.xml.rpc.ServiceException;
 
 import org.kalypso.repository.AbstractRepository;
-import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.proxy.IObservationService;
@@ -61,36 +60,31 @@ public class ObservationServiceRepository extends AbstractRepository
 {
   /** root item is identified by the null bean */
   private final ItemBean ROOT_ITEM = null;
-  
+
   private final IObservationService m_srv;
 
   /**
    * Constructor
+   * 
+   * @param name
    * @param factory
    * @param readOnly
    * 
-   * @throws ServiceException when the underlying service is not available
+   * @throws ServiceException
+   *           when the underlying service is not available
    */
-  public ObservationServiceRepository( final IRepositoryFactory factory, final boolean readOnly ) throws ServiceException
+  public ObservationServiceRepository( String name, String factory,
+      boolean readOnly ) throws ServiceException
   {
-    super( factory, "", readOnly );
-    
+    super( name, factory, "", readOnly );
+
     m_srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-    
-    try
-    {
-      m_location = m_srv.getDescription();
-    }
-    catch( RemoteException e )
-    {
-      throw new ServiceException( e );
-    }
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren( ) throws RepositoryException
   {
     try
     {
@@ -105,17 +99,17 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException
+  public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
     {
       final ItemBean[] beans = m_srv.getChildren( ROOT_ITEM );
-      
-      final IRepositoryItem[] items = new IRepositoryItem[ beans.length ];
-      
+
+      final IRepositoryItem[] items = new IRepositoryItem[beans.length];
+
       for( int i = 0; i < items.length; i++ )
         items[i] = new ServiceRepositoryItem( m_srv, beans[i], null, this );
-      
+
       return items;
     }
     catch( RemoteException e )
@@ -127,7 +121,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return "observation-service-repository";
   }
@@ -135,7 +129,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload() throws RepositoryException
+  public void reload( ) throws RepositoryException
   {
     try
     {
@@ -153,33 +147,34 @@ public class ObservationServiceRepository extends AbstractRepository
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
     final IRepositoryItem item = findItemRecursive( id, this );
-    
+
     return item;
   }
 
   /**
-   * Helper: finds item using recursion
-   * TODO: better performance by caching items that were already found? do not forget
-   * to clear the cache in reload()
+   * Helper: finds item using recursion TODO: better performance by caching
+   * items that were already found? do not forget to clear the cache in reload()
+   * 
    * @param id
    * @param item
    * @return item if found, otherwise null.
    * @throws RepositoryException
    */
-  private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
+  private IRepositoryItem findItemRecursive( final String id,
+      final IRepositoryItem item ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;
-    
+
     final IRepositoryItem[] items = item.getChildren();
     for( int i = 0; i < items.length; i++ )
     {
       final IRepositoryItem item2 = findItemRecursive( id, items[i] );
-      
+
       if( item2 != null )
         return item2;
     }
-    
+
     return null;
   }
 }
