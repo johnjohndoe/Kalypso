@@ -37,10 +37,12 @@ public class CalcJobBean implements Serializable
   /** Die vom Client übergebenen/erwarteten Input-Dateien */
   private CalcJobDataBean[] m_inputData = null;
   
-  /** aktuelle Ergebnisse */
+  /** <p>aktuelle Ergebnisse</p>
+   * <p>alle Pfade sind relativ zu <m_basedir>/<OUTPUT_DIR_NAME>/ 
+   */
   private CalcJobDataBean[] m_results = null;
   
-  /** Das Basis-Verzeichnis, an welcher die temporären Daten stehen */
+  /** Das Basis-Verzeichnis, welches zum Übertragen der input/output Dateien zur Verfügung steht */
   private String m_basedir = null;
   
   public CalcJobBean()

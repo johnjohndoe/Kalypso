@@ -1,6 +1,7 @@
 package org.kalypso.eclipse.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -21,26 +22,29 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public abstract class SetContentThread extends CatchThread
 {
-  private final PipedOutputStream m_pos;
+  private final PipedOutputStream m_pos = new PipedOutputStream();
+  private final PipedInputStream m_pis;
 
   private CatchRunnable m_catchRunnable;
+
 
   public SetContentThread( final IFile file, final boolean create, final boolean force,
       final boolean keepHistory, final IProgressMonitor monitor ) throws CoreException
   {
-    m_pos = new PipedOutputStream();
     try
     {
-      final PipedInputStream m_pis = new PipedInputStream( m_pos );
-
+      m_pis = new PipedInputStream( m_pos );
+      
+      final InputStream is = m_pis;
       m_catchRunnable = new CatchRunnable()
             {
               protected void runIntern() throws Throwable
               {
                 if( create )
-                  file.create( m_pis, force, monitor );
+                  file.create( is, force, monitor );
                 else
-                  file.setContents( m_pis, force, keepHistory, monitor );
+                  file.setContents( is, force, keepHistory, monitor );
+                is.close();
               }
             };
       new Thread( m_catchRunnable ).start();

@@ -22,10 +22,10 @@ import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
-import org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ui.navigator.GrafikViewActionDelegate;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 
 /**

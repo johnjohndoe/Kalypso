@@ -428,7 +428,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private CalcJobDataBean[] prepareCalcCaseInput( final Modelspec modelspec, final IFolder folder,
       final File targetdir, final IProgressMonitor monitor ) throws CoreException
   {
-    final File serverInputDir = new File( targetdir, "input" );
+    final File serverInputDir = new File( targetdir, ICalcServiceConstants.INPUT_DIR_NAME );
     final File serverCalcDir = new File( serverInputDir, "calc" );
     final File serverBaseDir = new File( serverInputDir, "base" );
 
@@ -453,7 +453,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
                 + MODELLTYP_MODELSPEC_XML, null ) );
 
       final File basedir = input.isRelativeToCalcCase() ? serverCalcDir : serverBaseDir;
-      final String reldir = ( input.isRelativeToCalcCase() ? "input/calc" : "input/base" ) + "/"
+      final String reldir = ( input.isRelativeToCalcCase() ? "calc" : "base" ) + "/"
           + inputPath;
 
       final IResourceVisitor copyVisitor = new CopyResourceToFileVisitor( baseresource, basedir );
@@ -577,19 +577,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  private void retrieveOutput( final String serverpath, final IFolder targetfolder,
+  private void retrieveOutput( final File serveroutputdir, final IFolder targetfolder,
       final CalcJobDataBean[] results, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Berechnungsergebniss abrufen", results.length );
-
-    final File serverdir = new File( serverpath );
 
     for( int i = 0; i < results.length; i++ )
     {
       final CalcJobDataBean bean = results[i];
 
       final String beanPath = bean.getPath();
-      final File serverfile = new File( serverdir, beanPath );
+      final File serverfile = new File( serveroutputdir, beanPath );
       final IFile targetfile = targetfolder.getFile( beanPath );
       FolderUtilities.mkdirs( targetfile.getParent() );
 
@@ -598,7 +596,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       {
         protected void writeStream() throws Throwable
         {
-          CopyUtils.copy( new FileInputStream( serverfile ), getOutputStream() );
+          FileInputStream fis = null;
+          try
+          {
+            fis = new FileInputStream( serverfile );
+            CopyUtils.copy( fis, getOutputStream() );
+          }
+          finally
+          {
+            if( fis != null )
+              fis.close();
+          }
         }
       };
       thread.start();
@@ -773,7 +781,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         if( outputfolder.exists() )
           outputfolder.delete( false, false, new NullProgressMonitor() );
 
-        retrieveOutput( jobBean.getBasedir(), outputfolder, results, new SubProgressMonitor(
+        final File serveroutputdir = new File( jobBean.getBasedir(), ICalcServiceConstants.OUTPUT_DIR_NAME ); 
+        retrieveOutput( serveroutputdir, outputfolder, results, new SubProgressMonitor(
             monitor, 1000 ) );
         return;
 
@@ -802,17 +811,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
-      try
-      {
-        calcService.disposeJob( job.getId() );
-      }
-      catch( final RemoteException e1 )
-      {
-        e1.printStackTrace();
-
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-      }
+//      try
+//      {
+//        calcService.disposeJob( job.getId() );
+//      }
+//      catch( final RemoteException e1 )
+//      {
+//        e1.printStackTrace();
+//
+//        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+//            "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
+//      }
     }
   }
 
