@@ -19,6 +19,7 @@ import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * A DiagramTemplate that is based on a XML file.
@@ -173,5 +174,10 @@ public class LinkedDiagramTemplate extends ObservationDiagramTemplate implements
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
     // TODO Auto-generated method stub
+  }
+
+  public void addObservation( final String name, final URL context, final String href, final String linktype, final IVariableArguments args )
+  {
+    // TODO: Marc
   }
 }
