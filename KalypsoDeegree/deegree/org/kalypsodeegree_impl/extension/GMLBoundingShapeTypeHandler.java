@@ -2,6 +2,7 @@ package org.deegree_impl.extension;
 
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.gml.schema.XMLHelper;
+import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.w3c.dom.Node;
 
 /**
@@ -32,7 +33,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
    */
   public void marshall( Object object, Node node ) throws TypeRegistryException
   {
-  throw new UnsupportedOperationException("TODO implement it");  
+  	throw new UnsupportedOperationException("TODO implement it");  
   }
 
   /**
@@ -40,7 +41,8 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
    */
   public Object unmarshall( Node node ) throws TypeRegistryException
   {
-  throw new UnsupportedOperationException("TODO implement it");  
+  	return new GM_Envelope_Impl(  );
+//  throw new UnsupportedOperationException("TODO implement it");  
   }
 
   /**
