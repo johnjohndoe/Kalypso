@@ -30,7 +30,6 @@ import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.gml.schema.XMLHelper;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.GMLWorkspace_Impl;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.java.net.IUrlResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -47,11 +46,9 @@ public final class GmlSerializer
   // do not instantiate this class
   }
 
-  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace,
-      final IProgressMonitor monitor ) throws GmlSerializeException
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace )
+      throws GmlSerializeException
   {
-    if( monitor != null )
-      monitor.beginTask( "GML wird geschrieben", 2000 );
     try
     {
       final GMLDocument gmlDoc = new GMLDocument_Impl();
@@ -64,8 +61,7 @@ public final class GmlSerializer
       final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl(
           "xmlns:xlink=http://www.w3.org/1999/xlink" );
       final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl(
-          "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance"
-       );
+          "xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance" );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
@@ -74,27 +70,19 @@ public final class GmlSerializer
       final String schemaLoc = workspace.getSchemaLocation();
       if( schemaLoc != null )
         gmlDoc.setSchemaLocation( schemaLoc );
-      
-      if( monitor != null )
-        monitor.worked( 1000 );
 
       // DOM als GML schreiben
       final Document xmlDOM = gmlDoc.getDocument();
       final Transformer t = TransformerFactory.newInstance().newTransformer();
-   
-      t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-      t.setOutputProperty(OutputKeys.INDENT, "yes");
-      
+
+      t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
+      t.setOutputProperty( OutputKeys.INDENT, "yes" );
+
       t.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
     }
     catch( final Exception e )
     {
       throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream", e );
-    }
-    finally
-    {
-      if( monitor != null )
-        monitor.done();
     }
   }
 
@@ -127,7 +115,7 @@ public final class GmlSerializer
 
     final InputStream inputStream = connection.getInputStream();
     final InputStreamReader isr = new InputStreamReader( inputStream, contentEncoding );
-    
+
     final ReplaceTokens rt = new ReplaceTokens( isr );
     rt.setBeginToken( ':' );
     rt.setEndToken( ':' );
@@ -135,17 +123,17 @@ public final class GmlSerializer
     {
       final Map.Entry entry = (Entry)tokenIt.next();
 
-      final Token token = new ReplaceTokens.Token(  );
+      final Token token = new ReplaceTokens.Token();
       token.setKey( (String)entry.getKey() );
       token.setValue( (String)entry.getValue() );
 
       rt.addConfiguredToken( token );
     }
-    
+
     // load gml
     final InputSource inputSource = new InputSource( rt );
     final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource );
-    
+
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
 
     // load schema
@@ -162,5 +150,4 @@ public final class GmlSerializer
 
     return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName );
   }
-
 }

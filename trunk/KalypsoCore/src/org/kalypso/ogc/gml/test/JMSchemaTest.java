@@ -107,7 +107,7 @@ public class JMSchemaTest extends TestCase
     file.deleteOnExit();
 
     final FileWriter writer = new FileWriter( file );
-    GmlSerializer.serializeWorkspace( writer, workspace, null );
+    GmlSerializer.serializeWorkspace( writer, workspace);
   }
 
   //  

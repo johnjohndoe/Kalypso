@@ -35,31 +35,41 @@ public class NOperationTupplemodel implements ITuppleModel
     {
         return m_baseModels[0].hashCode();
     }
-
+   
     public Object getElement(int index, IAxis axis) throws SensorException
     {
-        Class dataClass = axis.getDataClass();
+      String axisName = axis.getName();  
+      Class dataClass = axis.getDataClass();
         if (dataClass.equals(Date.class))
-            return m_baseModels[0].getElement(index,axis);
-        if (dataClass.equals(Double.class))
         {
-            double value = ((Double) m_baseModels[0].getElement(index, axis))
+            IAxis a=FilterHelper.getAxisByName(m_baseModels[0], axisName);
+            return m_baseModels[0].getElement(index,a);
+        }
+            if (dataClass.equals(Double.class))
+        {
+              IAxis a=FilterHelper.getAxisByName(m_baseModels[0], axisName);
+              double value = ((Double) m_baseModels[0].getElement(index, a))
                     .doubleValue();
             for (int i = 1; i < m_baseModels.length; i++)
             {
                 ITuppleModel model = m_baseModels[i];
-                double nextValue = ((Double) model.getElement(index, axis))
+                IAxis a2=FilterHelper.getAxisByName(m_baseModels[i], axisName);
+                double nextValue = ((Double) model.getElement(index, a2))
                         .doubleValue();
                 switch (m_operation)
                 {
                 case OperationFilter.OPERATION_PLUS:
                     value += nextValue;
+                break;
                 case OperationFilter.OPERATION_MINUS:
                     value -= nextValue;
+                break;
                 case OperationFilter.OPERATION_MAL:
                     value *= nextValue;
+                break;
                 case OperationFilter.OPERATION_DURCH: // macht das sinn, bei mehr als zwei ?
                     value /= nextValue;
+                break;
                 }
             }
             return new Double(value);
@@ -69,8 +79,7 @@ public class NOperationTupplemodel implements ITuppleModel
                 + " nicht.");
     }
 
-    public void setElement(int index, Object element, IAxis axis)
-            throws SensorException
+    public void setElement(int index, Object element, IAxis axis)            
     {
         throw new UnsupportedOperationException(getClass().getName()
                 + " unterstuetzt setElement() nicht.");

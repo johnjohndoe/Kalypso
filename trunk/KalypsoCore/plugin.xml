@@ -46,13 +46,15 @@
       <library name="kalypsocore.jar">
          <export name="*"/>
       </library>
+      <library name="lib/ant.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.core.resources" export="false"/>
       <import plugin="org.eclipse.core.runtime" export="false"/>
       <import plugin="org.kalypso.deegree"/>
       <import plugin="org.kalypso.util"/>
-      <import plugin="org.apache.ant"/>
    </requires>
 
 </plugin>
