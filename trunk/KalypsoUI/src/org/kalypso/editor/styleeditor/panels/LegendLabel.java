@@ -12,8 +12,10 @@ import java.io.ByteArrayOutputStream;
 
 import org.deegree.graphics.Encoders;
 import org.deegree.graphics.legend.LegendElement;
+import org.deegree.graphics.legend.LegendElementCollection;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree_impl.graphics.legend.LegendElementCollection_Impl;
 import org.deegree_impl.graphics.legend.LegendFactory;
 import org.deegree_impl.graphics.sld.FeatureTypeStyle_Impl;
 import org.deegree_impl.graphics.sld.UserStyle_Impl;
@@ -106,9 +108,19 @@ public 	class LegendLabel implements ModellEventListener, DisposeListener
                 FeatureTypeStyle_Impl[] ftStyles = {fts};
 				UserStyle ruleStyle = new UserStyle_Impl(null,null,null,true,ftStyles);											
 				le = factory.createLegendElement(ruleStyle,40,20,"");
+				// This is necessary, as I don't want title of the filter to appear in the label but only 
+				// an image of the filter itself
+				if(le instanceof LegendElementCollection)
+				{
+					LegendElement elements[] = ((LegendElementCollection_Impl)le).getLegendElements();
+					if(elements.length>0)
+						le = elements[0];
+				}				
 			}
 			else
-				le = factory.createLegendElement(userStyle,40,20,"");
+			{
+				le = factory.createLegendElement(userStyle,40,20,"");				
+			}
 			
 			if(le == null)
 				return;

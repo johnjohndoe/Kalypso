@@ -1,4 +1,4 @@
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;

@@ -49,7 +49,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
 
         if( part != null && layer instanceof KalypsoFeatureLayer )
         {
-          FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
+          FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();         
           KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
           part.initStyleEditor( kalypsoStyle, ft );
         }

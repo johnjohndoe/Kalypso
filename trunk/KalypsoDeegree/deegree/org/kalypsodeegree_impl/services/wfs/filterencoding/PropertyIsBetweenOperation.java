@@ -113,15 +113,25 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   private static Expression buildLowerBoundaryFromDOM( Element element )
       throws FilterConstructionException
   {
-
     // check if root element's name equals 'LowerBoundary'
     if( !element.getLocalName().equals( "LowerBoundary" ) )
       throw new FilterConstructionException( "Name of element does not equal 'LowerBoundary'!" );
-
+           
     ElementList children = XMLTools.getChildElements( element );
+    
+    // if not one node element as child
     if( children.getLength() != 1 )
-      throw new FilterConstructionException( "'LowerBoundary' requires exactly 1 element!" );
-
+    {
+    	// if text-node then ok
+    	if(element.getChildNodes().getLength() == 1)
+    	{
+    		return new BoundaryExpression(element.getChildNodes().item(0).getNodeValue());    		
+    	}
+    	// needs to have exactly one no
+    	else
+    		 throw new FilterConstructionException( "'LowerBoundary' requires exactly 1 element!" );
+    		
+    }     
     return Expression_Impl.buildFromDOM( children.item( 0 ) );
   }
 
@@ -142,10 +152,22 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
       throw new FilterConstructionException( "Name of element does not equal 'UpperBoundary'!" );
 
     ElementList children = XMLTools.getChildElements( element );
+   
+    // if not one node element as child
     if( children.getLength() != 1 )
-      throw new FilterConstructionException( "'UpperBoundary' requires exactly 1 element!" );
-
-    return Expression_Impl.buildFromDOM( children.item( 0 ) );
+    {
+    	// if text-node then ok
+    	if(element.getChildNodes().getLength() == 1)
+    	{
+    		return new BoundaryExpression(element.getChildNodes().item(0).getNodeValue());    		
+    	}
+    	// needs to have exactly one no
+    	else
+    		throw new FilterConstructionException( "'UpperBoundary' requires exactly 1 element!" );
+    		
+    }     
+    return Expression_Impl.buildFromDOM( children.item( 0 ) );    
+        
   }
 
   /**

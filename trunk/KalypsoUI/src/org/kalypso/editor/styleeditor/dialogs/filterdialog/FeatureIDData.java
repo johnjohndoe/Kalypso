@@ -2,7 +2,7 @@
  * Created on 03.08.2004
  *  
  */
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 
 public class FeatureIDData extends AbstractData

@@ -1,5 +1,5 @@
 
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 import java.util.EventListener;
 

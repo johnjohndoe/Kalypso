@@ -66,7 +66,7 @@ public class LineSymbolizerLayout extends SymbolizerLayout{
 			}
 		});
 		
-		// Stroke Width Slider
+		// Stroke Width Slider		
 		SliderPanel strokeWidthPanel = new SliderPanel(strokeGroup, "Width:", 0,10,1,SliderPanel.INTEGER, stroke.getWidth(null));
 		strokeWidthPanel.addPanelListener(new PanelListener() {			
 			public void valueChanged(PanelEvent event) {

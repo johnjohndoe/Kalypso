@@ -1,4 +1,4 @@
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 public class FilterDialogError 
 {

@@ -1,4 +1,4 @@
-package org.kalypso.editor.styleeditor.dialogs;
+package org.kalypso.editor.styleeditor.dialogs.filterdialog;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;

@@ -6,13 +6,11 @@ package org.kalypso.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.kalypso.editor.styleeditor.dialogs.errordialog.StyleEditorErrorDialog;
 
 
 /**
@@ -132,8 +130,8 @@ public class StrokeDasharrayPanel {
 				}
 				catch(NumberFormatException nfe){
 					//TODO
-					IStatus status = new Status(IStatus.ERROR,"org.kalypso.editor.mapeditor.views.styleeditor",0,"InputError-Stroke-Dasharray", nfe);					
-					ErrorDialog.openError(composite.getShell(), "Input-Error","Input needs to be of type float",status);					
+					StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog(composite.getShell(),"Input needs to be of type float","InputError-Stroke-Dasharray");
+					errorDialog.showError();														
 					lineInput.setText("" +lineFloat);
 					spaceInput.setText(""+spaceValue);
 				}
