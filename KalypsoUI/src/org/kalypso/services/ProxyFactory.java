@@ -2,6 +2,7 @@ package org.kalypso.services;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,8 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.services.proxy.DateRangeBean;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 
 /**
@@ -150,5 +153,19 @@ public class ProxyFactory
     }
 
     return proxy;
+  }
+  
+  /**
+   * Helper method that creates a DateRangeBean using a DateRangeArgument.
+   */
+  public static DateRangeBean createDateRangeBean( final DateRangeArgument dra )
+  {
+    final Calendar from = Calendar.getInstance();
+    from.setTime( dra.getFrom() );
+    
+    final Calendar to = Calendar.getInstance();
+    to.setTime( dra.getTo() );
+    
+    return new DateRangeBean( from , to );
   }
 }

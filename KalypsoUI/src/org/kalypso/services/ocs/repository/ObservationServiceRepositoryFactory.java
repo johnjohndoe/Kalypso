@@ -1,4 +1,4 @@
-package org.kalypso.ui.repository.services;
+package org.kalypso.services.ocs.repository;
 
 import javax.xml.rpc.ServiceException;
 

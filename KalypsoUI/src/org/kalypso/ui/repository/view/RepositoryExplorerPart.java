@@ -13,7 +13,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -26,7 +25,9 @@ import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.actions.AddRepositoryAction;
+import org.kalypso.ui.repository.actions.CollapseAllAction;
 import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
+import org.kalypso.ui.repository.actions.ExpandAllAction;
 import org.kalypso.ui.repository.actions.ReloadAction;
 import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
 
@@ -124,8 +125,6 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     m_repViewer.setLabelProvider( new LabelProvider() );
     m_repViewer.setInput( m_repContainer );
 
-    final Shell shell = getSite().getShell();
-
     final IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
     
     toolBarManager.add( new AddRepositoryAction( this ) );
@@ -140,6 +139,11 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     
     m_reloadAction = new ReloadAction( this );
     toolBarManager.add( m_reloadAction );
+    
+    toolBarManager.add( new Separator() );
+    
+    toolBarManager.add( new CollapseAllAction( this ) );
+    toolBarManager.add( new ExpandAllAction( this ) );
 
     getViewSite().getActionBars().updateActionBars();
 

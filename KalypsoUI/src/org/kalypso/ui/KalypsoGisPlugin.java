@@ -14,13 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.UIManager;
-import javax.xml.bind.JAXBException;
 import javax.xml.rpc.ServiceException;
 
 import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
@@ -33,6 +32,7 @@ import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.RepositorySpecification;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
@@ -42,9 +42,6 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin
 {
-  /** name of the property where the client conf files can be found */
-  public static final String CLIENT_CONF_URLS = "kalypso.client.conf";
-
   private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName()
       + ".resources.KalypsoGisPluginResources"; //$NON-NLS-N$
 
@@ -99,7 +96,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
     try
     {
-      prepareConfigure();
       configure();
       configureProxy();
       configurePool();
@@ -137,20 +133,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Prepare configuration of the Kalypso Client: reads the system properties
-   * and the localisation(s) of the kalypso client configuration file.
-   */
-  private void prepareConfigure()
-  {
-    // get system properties and use them as main configuration
-    m_mainConf = new Properties( System.getProperties() );
-
-    // set the localisation of the Configuration files
-    // TODO get this information from some external place (like Eclipse prefs)
-    m_mainConf.setProperty( CLIENT_CONF_URLS, "http://pc242:8080/KalypsoConf/kalypso-client.ini" );
-  }
-
-  /**
    * Loads the client configuration
    * 
    * @throws IllegalStateException
@@ -158,7 +140,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    */
   private void configure() throws IllegalStateException
   {
-    final String[] locs = m_mainConf.getProperty( CLIENT_CONF_URLS ).split( ";" );
+    // put system properties
+    m_mainConf.putAll( System.getProperties() );
+
+    // try to laod conf file
+    final String[] locs = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS )
+        .split( ";" );
 
     final Properties conf = new Properties();
 
@@ -180,8 +167,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       }
       catch( Exception e ) // generic exception used to simplify processing
       {
-        // do nothing, try with next location TODO: message for user?
+        // do nothing, try with next location
         e.printStackTrace();
+
+        String msg = "Konnte Konfigurationsdatei nicht laden: " + locs[i] + "\n";
+
+        if( i == locs.length - 1 )
+          msg += "Kalypso startet ohne Serverkonfiguration! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nOder prüfen Sie die Liste der Server in die Applikationseinstellungen.";
+        else
+          msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:"
+              + locs[i + 1];
+
+        MessageDialog.openWarning( getWorkbench().getDisplay().getActiveShell(),
+            "Konfiguration für Kalypso", msg );
       }
       finally
       {
@@ -196,10 +194,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         }
       }
     }
-
-    // TODO: Marc: cient sollte auch one config file laufen!?
-    //throw new IllegalStateException( "Could not load client configuration
-    // from server!" );
   }
 
   /**
@@ -284,14 +278,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         "IObservationService" );
   }
 
-  //  TODO public OutputLogger getOutputLogger()
-  //  {
-  //    if( m_outputLogger == null )
-  //      m_outputLogger = new OutputLogger();
-  //
-  //    return m_outputLogger;
-  //  }
-
   public ILoaderFactory getLoaderFactory( final Class valueClass )
   {
     ILoaderFactory loaderFactory = (ILoaderFactory)myLoaderFactories.get( valueClass );
@@ -307,8 +293,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
       }
       catch( IOException e )
       {
-        // TODO besser handeln
-        e.printStackTrace();
+        MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(),
+            "Interne Applikationsfehler", e.getLocalizedMessage() );
       }
 
       loaderFactory = new DefaultLoaderFactory( props, this.getClass().getClassLoader() );
@@ -357,7 +343,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    */
   public static KalypsoGisPlugin getDefault()
   {
-    // TODO: ist es sicher, das hier bereits was instantiiert wurde?
+    // m_plugin should be set in the constructor
+    if( m_plugin == null )
+      throw new NullPointerException( "Plugin Kalypso noch nicht instanziert!" );
+
     return m_plugin;
   }
 
@@ -464,41 +453,21 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return mySelectionIdProvider;
   }
 
-  //  public CalcJobService getCalcService()
-  //  {
-  //    if( m_calcJobService == null )
-  //    {
-  //      try
-  //      {
-  //        m_calcJobService = (CalcJobService)SimpleServiceFactory.createService(
-  // "CalcJob.Default", CalcJobService.class );
-  //      }
-  //      catch( FactoryException e )
-  //      {
-  //        e.printStackTrace();
-  //      }
-  //    }
-  //
-  //    return m_calcJobService;
-  //  }
-
   private void registerTypeHandler()
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
 
-    // TODO: error handling
     try
     {
       // TODO: read TypeHandler from property-file
       registry.registerTypeHandler( new ObservationLinkHandler() );
     }
-    catch( final TypeRegistryException e )
+    catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
+      
+      MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(),
+          "Interne Applikationsfehler", e.getLocalizedMessage() );
     }
   }
 
@@ -509,22 +478,25 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private void configureProxy()
   {
-    // TODO: retrieve from preferences
-    System.setProperty( "proxySet", "true" );
-    System.setProperty( "proxyHost", "172.16.0.1" );
-    System.setProperty( "proxyPort", "8080" );
-    
-    // TODO: get login from preferences
-    Authenticator.setDefault(new Authenticator()
-        {
+    System.setProperty( "proxySet", getPluginPreferences().getString(
+        IKalypsoPreferences.HTTP_PROXY_USE ) );
+    System.setProperty( "proxyHost", getPluginPreferences().getString(
+        IKalypsoPreferences.HTTP_PROXY_HOST ) );
+    System.setProperty( "proxyPort", getPluginPreferences().getString(
+        IKalypsoPreferences.HTTP_PROXY_PORT ) );
+
+    Authenticator.setDefault( new Authenticator()
+    {
       /**
        * @see java.net.Authenticator#getPasswordAuthentication()
        */
       protected PasswordAuthentication getPasswordAuthentication()
       {
-        return new PasswordAuthentication( "belger", "LaufMensch".toCharArray() );
+        return new PasswordAuthentication( getPluginPreferences().getString(
+            IKalypsoPreferences.HTTP_PROXY_USER ), getPluginPreferences().getString(
+            IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
       }
-        } );
+    } );
   }
 
 }
