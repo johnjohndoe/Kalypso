@@ -378,6 +378,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public Object getFeatureFromPath( final String featurePath )
   {
     final FeaturePath path = new FeaturePath( featurePath );
+    if( path.isID() )
+      return getFeature( path.getID() );
 
     Feature aktuFeature = getRootFeature();
     for( int i = 0; i < path.getLength(); i++ )
@@ -436,6 +438,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public FeatureType getFeatureTypeFromPath( final String featurePath )
   {
     final FeaturePath path = new FeaturePath( featurePath );
+    if( path.isID() )
+    {
+      // todo: das feature muss es noch gar nicht geben -> problem?
+      final Feature feature = getFeature( path.getID() );
+      return feature == null ? null : feature.getFeatureType();
+    }
+    
     final String typename = path.getTypename();
 
     FeatureType aktuType = getRootFeature().getFeatureType();
@@ -470,8 +479,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public String getFeaturepathForFeature( final Feature feature )
   {
-    // TODO: implement it!
-    return "";
+    return "#fid#" + feature.getId();
   }
 
   /**

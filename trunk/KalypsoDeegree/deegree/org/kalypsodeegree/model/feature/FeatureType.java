@@ -113,6 +113,8 @@ public interface FeatureType
   public int getMinOccurs( String linkName );
 
   /**
+   * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die FeatureTypeProperty selbst wissen
+   * 
    * method has default modifier, other classes should use name-methodes not
    * positions
    */
