@@ -195,7 +195,10 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   {
     return getObservationsFromMap( true, onlySelected );
   }
-  
+  /**
+   * 
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#postCreateControl()
+   */
   protected void postCreateControl()
   {
     new GisTemplateLoadedThread( m_mapModell, new Runnable()
