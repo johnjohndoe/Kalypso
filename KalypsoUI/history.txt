@@ -7,11 +7,11 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ###############################################################################
 
 ----------------
-Version ..... XXXXXXXXXXXXXXXXX
+Version 0.0.5 (Deploy vom XX.02.2005)
 ----------------
 - Wizard: Spaltenbeschriftung und Legendeneinträge jetzt frei konfigurierbar
 - Wizard: Diagrammfarben für Kurven können jetzt festgelegt werden
-- FeatureEditor: jetzt mit  Scrollbar
+- FeatureEditor: jetzt mit Scrollbar
 - Beim Neuanlegen von Features (z.B. Baumansicht) werden diese mit Standardwerten gefüllt
 - Feature-Baumansicht: beim Refresh des Baums (falls sich das GML-Modell ändert) kollabiert der Baum nicht mehr (besser gesagt:
 öffnet sich wider wie vorher)
@@ -20,6 +20,21 @@ beim Durchführen der Berechnung nicht mehr nach Q (leider musste dafür die Posit
 - Bei GIS-Tabellen jetzt auch Eingabe von Dezimahlzahlen mit Komma ',' möglich
 - Bugfix SpreePlugin: Bei Leerstellen in der Bodenfeuchtentabelle gabs ne NullpointerException. 
 Jetzt Behandlung wie bei 0.0: optimaler Wert wird ermittelt und übernommen.
+- Bericht-Export: endlich in einer erste Version implementiert. Konfiguration möglich
+  über Vorlagen, mit Tokens-replace Prinzip.
+- ZML: WQObservationFilter wird jetzt automatisch beim Laden einer Zeitreihe erzeugt. Die
+  Zeitreihe muss als WQ-Zeitreihe (sprich WQParameter vorhanden) definiert sein.
+- Bug #1
+- Bug #11
+- Bug #14
+- Bug #15
+- Bug #21
+- Bug #28
+- Bug #33
+- Bug #36
+- Bug #47
+- Bug #58
+- Bug #59
 
 ----------------
 Version 0.0.4 (Deploy vom 10.02.2005)
@@ -39,6 +54,18 @@ key als immer noch ladend markiert, und konnte nicht mehr neu geladen werden
 - Die Obs-Diag Legende im Wizard wird wieder angezeigt. Problem war aufgetaucht
   nach dem letzten Refactoring. Der showLegend flag war immer auf false gesetzt
   im DiagViewTemplate-Konstruktor.
+- Bug #38
+- Bug #44
+- Bug #48
+- Bug #49
+- Bug #50
+- Bug #51
+- Bug #54
+- Bug #55
+- Bug #56
+- Bug #57
+- Bug #62
+- Bug #63
 
 ----------------
 Version 0.0.3 (Deploy vom 26.01.2005)

@@ -3,7 +3,7 @@
 <plugin
    id="org.kalypso.core"
    name="KalypsoCore Plug-in"
-   version="0.0.4"
+   version="0.0.5"
    provider-name="org.kalypso">
 
    <runtime>
