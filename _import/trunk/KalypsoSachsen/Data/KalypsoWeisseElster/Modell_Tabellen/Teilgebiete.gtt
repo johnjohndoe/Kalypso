@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org"><layer linktype="shape" id="1" ns1:type="simple" ns1:href="SRS=EPSG:31468#PATH=shapes/ezg_agg2#SERVICE=RESOURCE#" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink"><column name="GKZ" width="100" editable="false"/><column name="TG_KEN" width="617" editable="false"/></layer></gistableview>
-
+<gistableview xmlns="gistableview.template.kalypso.org">
+<layer linktype="shape" id="1" featurePath="featureMember" ns1:type="simple" ns1:href="SRS=EPSG:31468#PATH=project:/shapes/ezg_agg2#SERVICE=RESOURCE#" ns1:actuate="onRequest" xmlns:ns1="http://www.w3.org/1999/xlink">
+		<column name="GKZ" width="100" editable="false"/>
+		<column name="TG_KEN" width="617" editable="false"/>
+	</layer>
+</gistableview>
