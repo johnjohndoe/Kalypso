@@ -44,16 +44,6 @@ public class GMLSchemaFactory
 
   public static final int NO_XLINK_TYPE = 17;
 
-  public static final int XLINK_TYPE_SIMPLE = 18;
-
-  public static final int XLINK_TYPE_EXTENDED = 19;
-
-  public static final int XLINK_TYPE_LOCATOR = 20;
-
-  public static final int XLINK_TYPE_ARC = 21;
-
-  public static final int XLINK_TYPE_RESOURCE = 22;
-
   private static final int EXTENSION_SIMPLETYPE = 23;
 
   private static final int EXTENSION_COMPLEXCONTENT = 24;
@@ -467,20 +457,6 @@ public class GMLSchemaFactory
       SchemaAttribute refAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node,
           "ref" ) );
 
-      if( "http://www.w3.org/1999/xlink".equals( refAttribute.getValueNS() ) )
-      {
-        if( "simpleLink".equals( refAttribute.getValue() ) )
-          return XLINK_TYPE_SIMPLE;
-        if( "extendedLink".equals( refAttribute.getValue() ) )
-          return XLINK_TYPE_EXTENDED;
-        if( "locatorLink".equals( refAttribute.getValue() ) )
-          return XLINK_TYPE_LOCATOR;
-        if( "arcLink".equals( refAttribute.getValue() ) )
-          return XLINK_TYPE_ARC;
-        if( "resourceLink".equals( refAttribute.getValue() ) )
-          return XLINK_TYPE_RESOURCE;
-      }
-      else
         return ATTRIBUTEGROUP_TYPE;
     }
 
