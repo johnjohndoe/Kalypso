@@ -3,37 +3,28 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.Collection;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author belger
  */
-public class SubFeatureControl implements IFeatureControl
+public class SubFeatureControl extends AbstractFeatureControl
 {
-  private final IFeatureControl m_fc;
+  private IFeatureControl m_fc;
+  private final FeatureviewType[] m_views;
 
-  public SubFeatureControl( final ModellEventProvider m_workspace, final ICommandTarget m_target,
-      final Feature feature, final FeatureTypeProperty ftp, final FeatureviewType[] views )
+  public SubFeatureControl( final FeatureTypeProperty ftp, final FeatureviewType[] views )
   {
-    final Object property = feature.getProperty( ftp.getName() );
-    if( property instanceof Feature )
-      m_fc = new FeatureComposite( m_workspace, m_target, (Feature)property, views );
-//    else if( property instanceof FeatureList )
-//      m_fc = new FeatureListComposite( property );
-    else
-      m_fc = new ButtonFeatureControl( m_workspace, m_target, feature, ftp );
+    super( ftp );
+    m_views = views;
   }
 
   /**
@@ -41,18 +32,26 @@ public class SubFeatureControl implements IFeatureControl
    *      int)
    */
   public Control createControl( final Composite parent, int style )
-  {
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
-        | SWT.V_SCROLL );
+  { 
+    final Feature feature = getFeature();
+    final Object property = feature.getProperty( getFeatureTypeProperty().getName() );
+    if( property instanceof Feature )
+      m_fc = new FeatureComposite( (Feature)property, m_views );
+    else
+      m_fc = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
+//    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
+//        | SWT.V_SCROLL );
 
     // don't forget this line!
-    scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+//    scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final Control control = m_fc.createControl( scrolledComposite, SWT.NONE );
-    control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-    scrolledComposite.setContent( control );
+//    final Control control = m_fc.createControl( scrolledComposite, SWT.NONE );
+    final Control control = m_fc.createControl( parent, SWT.NONE );
+//    control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+//    scrolledComposite.setContent( control );
 
-    return scrolledComposite;
+    return control;
+//    return scrolledComposite;
   }
 
   /**
@@ -61,22 +60,6 @@ public class SubFeatureControl implements IFeatureControl
   public void dispose()
   {
     m_fc.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
-   */
-  public Feature getFeature()
-  {
-    return m_fc.getFeature();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  public void setFeature( final Feature feature )
-  {
-    m_fc.setFeature( feature );
   }
 
   /**

@@ -48,7 +48,6 @@ import javax.xml.bind.Validator;
 
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
-import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.GridDataType;
@@ -57,6 +56,7 @@ import org.kalypso.template.featureview.Group;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
+import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -87,9 +87,11 @@ public class FeatureviewHelper
     }
   }
 
-  private static ControlType createDefaultFeatureControlTypeForProperty(
-      final FeatureTypeProperty ftp ) throws JAXBException
+  private static void addDefaultFeatureControlTypeForProperty( final List controlList,
+      final FeatureType featureType, final FeatureTypeProperty ftp ) throws JAXBException
   {
+    final ControlType type;
+    boolean addLabel = true;
     final GridDataType griddata = FACTORY.createGridData();
 
     final String typename = ftp.getType();
@@ -97,15 +99,14 @@ public class FeatureviewHelper
         .indexOf( typename ) != -1 )
     {
       final TextType editor = FACTORY.createText();
-      editor.setStyle( "SWT.BORDER" );
+      editor.setStyle( "SWT.NONE" );
       editor.setEditable( true );
       editor.setProperty( ftp.getName() );
 
-      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-      griddata.setWidthHint( 100 );
+      griddata.setHorizontalAlignment( "GridData.FILL" );
       editor.setLayoutData( griddata );
 
-      return editor;
+      type = editor;
     }
     else if( "java.lang.Boolean".equals( typename ) )
     {
@@ -115,51 +116,96 @@ public class FeatureviewHelper
       checkbox.setProperty( ftp.getName() );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-      griddata.setWidthHint( 100 );
       checkbox.setLayoutData( griddata );
 
-      return checkbox;
+      type = checkbox;
     }
     else if( "FeatureAssociationType".equals( typename ) )
     {
-      final Subcomposite compo = FACTORY.createSubcomposite();
-      compo.setStyle( "SWT.BORDER" );
-      compo.setProperty( ftp.getName() );
+      if( featureType.getMaxOccurs( ftp.getName() ) != 1 )
+      {
+        final TableType table = FACTORY.createTable();
+        table.setStyle( "SWT.NONE" );
+        table.setProperty( ftp.getName() );
 
-      griddata.setHorizontalAlignment( "GridData.FILL" );
-      griddata.setGrabExcessHorizontalSpace( true );
-      griddata.setGrabExcessVerticalSpace( true );
-      compo.setLayoutData( griddata );
-      
-      final Group group = FACTORY.createGroup();
+        griddata.setHorizontalAlignment( "GridData.FILL" );
+        griddata.setVerticalAlignment( "GridData.FILL" );
+        griddata.setGrabExcessHorizontalSpace( true );
+        griddata.setGrabExcessVerticalSpace( true );
+        griddata.setHorizontalSpan( 2 );
 
-      final GridDataType groupdata = FACTORY.createGridData();
-      groupdata.setGrabExcessHorizontalSpace( true );
-      groupdata.setGrabExcessVerticalSpace( true );
-      groupdata.setHorizontalAlignment( "GridData.FILL" );
+        table.setLayoutData( griddata );
+        
+        type = table;
+      }
+      else
+      {
+        final Subcomposite compo = FACTORY.createSubcomposite();
+        compo.setStyle( "SWT.NONE" );
+        compo.setProperty( ftp.getName() );
 
-      group.setLayoutData( groupdata );
-      group.setText( ftp.getName() );
-      group.setStyle( "SWT.NONE" );
+        griddata.setHorizontalAlignment( "GridData.FILL" );
+        griddata.setVerticalAlignment( "GridData.FILL" );
+        griddata.setGrabExcessHorizontalSpace( true );
+        griddata.setGrabExcessVerticalSpace( true );
+        griddata.setHorizontalSpan( 2 );
 
-      final GridLayoutType gridLayout = FACTORY.createGridLayout();
-      gridLayout.setNumColumns( 2 );
-      group.setLayout( gridLayout );
-      
-      group.getControl().add( compo );
+        compo.setLayoutData( griddata );
 
-      return group;
+        final Group group = FACTORY.createGroup();
+
+        final GridDataType groupdata = FACTORY.createGridData();
+        groupdata.setGrabExcessHorizontalSpace( true );
+        groupdata.setGrabExcessVerticalSpace( true );
+        groupdata.setHorizontalAlignment( "GridData.FILL" );
+        groupdata.setVerticalAlignment( "GridData.FILL" );
+        groupdata.setHorizontalSpan( 2 );
+
+        group.setLayoutData( groupdata );
+        group.setText( ftp.getName() );
+        group.setStyle( "SWT.NONE" );
+
+        final GridLayoutType gridLayout = FACTORY.createGridLayout();
+        gridLayout.setNumColumns( 2 );
+        group.setLayout( gridLayout );
+
+        group.getControl().add( compo );
+
+        type = group;
+      }
+      addLabel = false;
+
+    }
+    else
+    {
+      final ButtonType button = FACTORY.createButton();
+      button.setStyle( "SWT.PUSH" );
+      button.setProperty( ftp.getName() );
+
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+//      griddata.setWidthHint( 100 );
+      button.setLayoutData( griddata );
+
+      type = button;
     }
 
-    final ButtonType button = FACTORY.createButton();
-    button.setStyle( "SWT.PUSH" );
-    button.setProperty( ftp.getName() );
+    if( addLabel )
+    {
+      final LabelType label = FACTORY.createLabel();
+      label.setStyle( "SWT.NONE" );
+      label.setText( ftp.getName() );
+      label.setVisible( true );
 
-    griddata.setHorizontalAlignment( "GridData.CENTER" );
-    griddata.setWidthHint( 100 );
-    button.setLayoutData( griddata );
+      final GridDataType labelGridData = FACTORY.createGridData();
+      labelGridData.setGrabExcessHorizontalSpace( false );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      label.setLayoutData( labelGridData );
 
-    return button;
+      controlList.add( label );
+    }
+
+    if( type != null )
+      controlList.add( type );
   }
 
   /**
@@ -181,7 +227,9 @@ public class FeatureviewHelper
       featureview.setLayout( gridLayout );
       final GridDataType griddata = FACTORY.createGridData();
       griddata.setGrabExcessHorizontalSpace( true );
+      griddata.setGrabExcessVerticalSpace( true );
       griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setVerticalAlignment( "GridData.FILL" );
       featureview.setLayoutData( griddata );
 
       final List controlList = featureview.getControl();
@@ -191,32 +239,49 @@ public class FeatureviewHelper
       {
         final FeatureTypeProperty ftp = properties[i];
 
-        final ControlType cc = createDefaultFeatureControlTypeForProperty( ftp );
-
-        if( cc instanceof CompositeType )
-        {
-          final GridDataType layoutData = (GridDataType)cc.getLayoutData();
-          layoutData.setHorizontalSpan( 2 );
-        }
-        else
-        {
-
-          final LabelType label = FACTORY.createLabel();
-          label.setStyle( "SWT.NONE" );
-          label.setText( ftp.getName() );
-          label.setVisible( true );
-
-          final GridDataType labelGridData = FACTORY.createGridData();
-          labelGridData.setGrabExcessHorizontalSpace( false );
-          labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
-          label.setLayoutData( labelGridData );
-
-          controlList.add( label );
-        }
-
-        if( cc != null )
-          controlList.add( cc );
+        addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
       }
+
+      final Validator validator = FACTORY.createValidator();
+      validator.validate( featureview );
+
+      return featureview;
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+
+      return null;
+    }
+  }
+  
+  /**
+   * Standardview für eine Property erzeugen
+   * 
+   * @param type
+   * @return featureview
+   */
+  public static Featureview createFeatureviewFromFeatureTypeProperty( final FeatureType type, final FeatureTypeProperty ftp )
+  {
+    try
+    {
+      final Featureview featureview = FACTORY.createFeatureview();
+      featureview.setTypename( type.getName() );
+      featureview.setStyle( "SWT.NONE" );
+
+      final GridLayoutType gridLayout = FACTORY.createGridLayout();
+      gridLayout.setNumColumns( 2 );
+      featureview.setLayout( gridLayout );
+      final GridDataType griddata = FACTORY.createGridData();
+      griddata.setGrabExcessHorizontalSpace( true );
+      griddata.setGrabExcessVerticalSpace( true );
+      griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setVerticalAlignment( "GridData.FILL" );
+      featureview.setLayoutData( griddata );
+
+      final List controlList = featureview.getControl();
+
+      addDefaultFeatureControlTypeForProperty( controlList, type, ftp );
 
       final Validator validator = FACTORY.createValidator();
       validator.validate( featureview );

@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.table.celleditors;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
+import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 
 /**
@@ -73,6 +74,8 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
       return new StringModifier( ftp );
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
+    if( "FeatureAssociationType".equals( type ) )
+      return new ButtonModifier( ftp );
 
     return new StringModifier( ftp );
   }

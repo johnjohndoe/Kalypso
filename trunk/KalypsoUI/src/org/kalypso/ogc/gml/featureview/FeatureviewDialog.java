@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.featureview;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -56,6 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author belger
@@ -68,22 +68,20 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
   private static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
 
-  private final ModellEventProvider m_eventprovider;
-
-  private final ICommandTarget m_commandTarget;
-
   private final Collection m_changes = new ArrayList();
 
-  public FeatureviewDialog( final Shell parentShell, final ModellEventProvider eventprovider,
-      final FeatureComposite featureComposite, final ICommandTarget commandTarget )
+  private final ModellEventProvider m_workspace;
+
+  private final ICommandTarget m_target;
+
+  public FeatureviewDialog( final ModellEventProvider workspace, final ICommandTarget target,
+      final Shell parentShell, final FeatureComposite featureComposite )
   {
     super( parentShell );
+    m_workspace = workspace;
+    m_target = target;
 
-    m_eventprovider = eventprovider;
     m_featureComposite = featureComposite;
-    m_commandTarget = commandTarget;
-
-    setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
   /**
@@ -99,7 +97,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     // don't forget this line!
     scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final Control control = m_featureComposite.createControl( scrolledComposite, SWT.NONE );
+    final Composite control = (Composite)m_featureComposite.createControl( scrolledComposite, SWT.BORDER );
     control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
     scrolledComposite.setContent( control );
 
@@ -152,9 +150,9 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
     m_featureComposite.collectChanges( m_changes );
 
-    if( m_commandTarget != null )
-      m_commandTarget.postCommand( new ChangeFeaturesCommand( m_eventprovider,
-          (FeatureChange[])m_changes.toArray( new FeatureChange[m_changes.size()] ) ), null );
+    if( m_workspace != null )
+      m_target.postCommand( new ChangeFeaturesCommand( m_workspace, (FeatureChange[])m_changes
+          .toArray( new FeatureChange[m_changes.size()] ) ), null );
 
     updateButtons( false );
   }

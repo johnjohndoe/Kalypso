@@ -76,14 +76,13 @@ public final class EditFeatureAction extends Action
    */
   public void run()
   {
-    final FeatureComposite helper = new FeatureComposite( m_workspace, m_commandTarget, m_feature );
+    final FeatureComposite helper = new FeatureComposite( m_feature );
 
     m_shell.getDisplay().asyncExec( new Runnable()
     {
       public void run()
       {
-        final FeatureviewDialog dialog = new FeatureviewDialog( m_shell, m_workspace, helper,
-            m_commandTarget );
+        final FeatureviewDialog dialog = new FeatureviewDialog( m_workspace, m_commandTarget, m_shell, helper );
         dialog.open();
       }
     } );

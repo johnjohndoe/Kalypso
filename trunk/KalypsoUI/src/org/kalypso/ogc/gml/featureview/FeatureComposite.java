@@ -57,11 +57,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
@@ -75,14 +77,14 @@ import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.SubcompositeType;
+import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
-import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * @author belger
@@ -100,32 +102,21 @@ public class FeatureComposite implements IFeatureControl
 
   private Feature m_feature;
 
-  private final ModellEventProvider m_workspace;
-
-  private final ICommandTarget m_target;
-
-  public FeatureComposite( final ModellEventProvider workspace, final ICommandTarget target,
-      final Feature feature )
+  public FeatureComposite( final Feature feature )
   {
-    this( workspace, target, feature, new URL[] {} );
+    this( feature, new URL[] {} );
   }
 
-  public FeatureComposite( final ModellEventProvider workspace, final ICommandTarget target,
-      final Feature feature, final URL[] templateURL )
+  public FeatureComposite( final Feature feature, final URL[] templateURL )
   {
-    m_workspace = workspace;
-    m_target = target;
     m_feature = feature;
 
     for( int i = 0; i < templateURL.length; i++ )
       addView( templateURL[i] );
   }
 
-  public FeatureComposite( final ModellEventProvider workspace, final ICommandTarget target,
-      final Feature feature, final FeatureviewType[] views )
+  public FeatureComposite( final Feature feature, final FeatureviewType[] views )
   {
-    m_workspace = workspace;
-    m_target = target;
     m_feature = feature;
 
     for( int i = 0; i < views.length; i++ )
@@ -251,7 +242,7 @@ public class FeatureComposite implements IFeatureControl
     if( controlType instanceof CompositeType )
     {
       final CompositeType compositeType = (CompositeType)controlType;
-      final Composite composite = createCompositeFromCompositeType( parent, compositeType );
+      final Composite composite = createCompositeFromCompositeType( parent, style, compositeType );
 
       // Layout setzen
       final LayoutType layoutType = compositeType.getLayout();
@@ -261,7 +252,7 @@ public class FeatureComposite implements IFeatureControl
       // die Children einbauen
       final List children = compositeType.getControl();
       for( final Iterator iter = children.iterator(); iter.hasNext(); )
-        createControl( composite, style, (ControlType)iter.next() );
+        createControl( composite, SWT.NONE, (ControlType)iter.next() );
 
       return composite;
     }
@@ -331,8 +322,7 @@ public class FeatureComposite implements IFeatureControl
 
       final String propertyName = buttonType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( m_workspace, m_target, feature,
-          ftp );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
 
       final Control control = bfc.createControl( parent, SWTUtilities
           .createStyleFromString( buttonType.getStyle() ) );
@@ -348,11 +338,30 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final SubFeatureControl fc = new SubFeatureControl( m_workspace, m_target, feature, ftp,
+      final IFeatureControl fc = new SubFeatureControl( ftp,
           (FeatureviewType[])m_viewMap.values().toArray( new FeatureviewType[0] ) );
+      fc.setFeature( feature );
 
       final Control control = fc.createControl( parent, SWTUtilities
           .createStyleFromString( compoType.getStyle() ) );
+
+      addFeatureControl( fc );
+
+      return control;
+    }
+    else if( controlType instanceof TableType )
+    {
+      final TableType tableType = (TableType)controlType;
+
+      final String propertyName = tableType.getProperty();
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+
+      final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+      final IFeatureControl fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), plugin.getDefaultMapSelectionID() );
+      fc.setFeature( feature );
+
+      final Control control = fc.createControl( parent, SWTUtilities
+          .createStyleFromString( tableType.getStyle() ) );
 
       addFeatureControl( fc );
 
@@ -364,18 +373,18 @@ public class FeatureComposite implements IFeatureControl
     return label;
   }
 
-  private Composite createCompositeFromCompositeType( final Composite parent,
+  private Composite createCompositeFromCompositeType( final Composite parent, final int style, 
       final CompositeType compositeType )
   {
     if( compositeType instanceof GroupType )
     {
-      final org.eclipse.swt.widgets.Group group = new org.eclipse.swt.widgets.Group( parent,
-          SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+      final Group group = new org.eclipse.swt.widgets.Group( parent,
+          style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
       group.setText( ( (GroupType)compositeType ).getText() );
       return group;
     }
 
-    return new Composite( parent, SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+    return new Composite( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
   }
 
   private Layout createLayout( final LayoutType layoutType )

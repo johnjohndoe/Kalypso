@@ -214,7 +214,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       e.printStackTrace();
     }
-    runnable.run();
+    if( runnable != null )
+      runnable.run();
   }
 
   /**
