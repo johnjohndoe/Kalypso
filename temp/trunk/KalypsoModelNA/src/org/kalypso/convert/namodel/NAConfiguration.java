@@ -33,11 +33,14 @@ public class NAConfiguration
 
     private final File m_netFile;
 
+    private final URL m_controlSchemaURL;
+
     // ASCII -> GML
     public NAConfiguration(File filePrefix) throws MalformedURLException
     {
-        // schema
+        // schemas
         m_schemaURL = getClass().getResource("schema/namodellV4.xsd");
+        m_controlSchemaURL = getClass().getResource("schema/nacontrol.xsd");
 //        m_schemaURL = getClass().getResource("schema/namodellV3.xsd");
 
         // formate:
@@ -87,5 +90,10 @@ public class NAConfiguration
     public File getNetFile()
     {
         return m_netFile;
+    }
+
+    public URL getControlSchemaURL()
+    {
+      return m_controlSchemaURL;
     }
 }

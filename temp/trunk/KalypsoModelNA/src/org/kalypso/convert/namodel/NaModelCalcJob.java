@@ -75,6 +75,13 @@ public class NaModelCalcJob extends AbstractCalcJob
                 modellURL, conf.getSchemaURL());
         Main.featureToAscii(conf, modellWorkspace);
 
+        final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId(CONTROL_ID,beans);
+        final URL controlURL = new File(controlBean.getPath()).toURL();
+        final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace(
+                controlURL, conf.getControlSchemaURL());
+        KonfigWrite.featureToASCII(basedir, controlWorkspace, modellWorkspace);
+        Main.featureToAscii(conf, modellWorkspace);
+        
         //        final CalcJobDataBean controlBean =
         // CalcJobHelper.getBeanForId(CONTROL_ID,beans);
 
