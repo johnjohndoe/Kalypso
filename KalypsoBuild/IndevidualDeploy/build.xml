@@ -1,0 +1,67 @@
+<project default="zip-deploy">
+
+  <property file="${workspace}/projectbuild.properties" />
+  <property file="deploy.properties" />
+
+  <property name="build" value="${workspace}/KalypsoBuild" />
+  <property name="build.output" value="${build}/output" />
+
+  <property name="deploy" value="${build}/${ReleaseName}_${ReleaseVersion}" />
+  <property name="deploy.temp" value="${deploy}/temp" />
+
+
+  <target name="prepare">
+    <!-- Output Ordner erzeugen -->
+    <mkdir dir="${deploy}" />
+    <mkdir dir="${deploy.temp}" />
+  </target>
+
+  <target name="build">
+    <!-- Die nötigen Dateien erzeugen -->
+    <ant antfile="${build}/KalypsoBuildServices/build.xml"
+         target="build"
+         inheritall="false"
+    />
+  </target>
+
+  <target name="package-calc" if="KalypsoCalc" depends="prepare">
+    <copy file="${build.output}/server/jaxrpc-kalypsoservice_calculation.war"
+          tofile="${deploy.temp}"
+          overwrite="true"
+    />
+  </target>
+
+  <target name="package-user" if="KalypsoUser" depends="prepare">
+    <copy file="${build.output}/server/jaxrpc-kalypsoservice_user.war"
+          tofile="${deploy.temp}"
+          overwrite="true"
+    />
+  </target>
+
+  <target name="package-obs" if="KalypsoObs" depends="prepare">
+    <copy file="${build.output}/server/jaxrpc-kalypsoservice_observation.war"
+          tofile="${deploy.temp}"
+          overwrite="true"
+    />
+  </target>
+
+  <target name="package-metadoc" if="KalypsoMetaDoc" depends="prepare">
+    <copy file="${build.output}/server/jaxrpc-kalypsoservice_metadoc.war"
+          tofile="${deploy.temp}"
+          overwrite="true"
+    />
+  </target>
+
+  <target name="package-conf">
+    <jar destfile="config_${ReleaseName}_${ReleaseVersion}.war">
+      <fileset dir="${KalypsoConfDir}" includes="**/**" />
+    </jar>
+  </target>
+
+  <target name="zip-deploy">
+    <jar destfile="${deploy}/${ReleaseName}_${ReleaseVersion}.zip">
+      <fileset dir="´${deploy.temp}" includes="**/**" />
+    </jar>
+  </target>
+
+</project>

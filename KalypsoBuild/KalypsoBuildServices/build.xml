@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<project name="Kalypso" default="nightly-build">
+  <description>
+		Builds KalypsoServices and Runs Junit-Tests
+    </description>
+
+  <property file="../../projectbuild.properties" />
+
+  <property name="dist" value="${workspace}/KalypsoBuild/output" />
+  <property name="dist.base" value="${dist}/base" />
+  <property name="dist.server" value="${dist}/server" />
+  <property name="dist.client" value="${dist}/client" />
+
+  <target name="prepare">
+    <mkdir dir="${dist}" />
+    <mkdir dir="${dist.base}" />
+    <mkdir dir="${dist.client}" />
+    <mkdir dir="${dist.server}" />
+  </target>
+
+  <target name="clean-base">
+
+    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUtil/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
+         dir="${workspace}/KalypsoDeegree/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
+         dir="${workspace}/KalypsoRepository/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCore/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+
+  </target>
+
+  <target name="clean-server">
+
+    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCalcService/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoObsService/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUserServices/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+
+  </target>
+
+  <target name="clean" depends="clean-base,clean-server">
+    <delete dir="${dist}" />
+    <delete dir="${dist.base}" />
+    <delete dir="${dist.client}" />
+    <delete dir="${dist.server}" />
+  </target>
+
+  <target name="fake-psi-compact" depends="prepare">
+  </target>
+
+  <target name="real-psi-compact" depends="prepare">
+  </target>
+
+  <target name="build-base" depends="prepare">
+
+    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUtil/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/KalypsoUtil/build/KalypsoUil.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
+         dir="${workspace}/KalypsoDeegree/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/KalypsoDeegree/build/KalypsoDeegree.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
+         dir="${workspace}/KalypsoRepository/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/KalypsoRepository/build/KalypsoRepository.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+    <copy file="${workspace}/KalypsoUtil/lib/repositoryBinding.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCore/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/KalypsoCore/build/KalypsoCore.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+    <copy file="${workspace}/KalypsoCore/coreBinding.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+  </target>
+
+  <target name="build-server" depends="prepare,real-psi-compact">
+
+    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+         inheritall="true"
+         target="compile"
+    />
+
+    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCalcService/etc/ant/"
+         inheritall="true"
+         target="build"
+    />
+    <rename dest="${dist.server}/jaxrpc-kalypsoservice_calculation.zip"
+            src="${dist.server}/jaxrpc-kalypsoservice_calculation.war"
+    />
+
+    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoObsService/etc/ant/"
+         inheritall="true"
+         target="build"
+    />
+    <rename dest="${dist.server}/jaxrpc-kalypsoservice_observation.zip"
+            src="${dist.server}/jaxrpc-kalypsoservice_observation.war"
+    />
+
+    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUserServices/etc/ant/"
+         inheritall="true"
+         target="build"
+    />
+    <rename dest="${dist.server}/jaxrpc-kalypsoservice_user.zip"
+            src="${dist.server}/jaxrpc-kalypsoservice_user.zip"
+    />
+
+    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+         inheritall="true"
+         target="build"
+    />
+    <rename dest="${dist.server}/jaxrpc-kalypsoservice_metadoc.zip"
+            src="${dist.server}/jaxrpc-kalypsoservice_metadoc.war"
+    />
+
+  </target>
+
+  <target name="build" depends="prepare,build-base,build-server">
+  </target>
+
+  <target name="junit-test-base">
+
+    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUtil/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+    <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
+         dir="${workspace}/KalypsoDeegree/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+    <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
+         dir="${workspace}/KalypsoRepository/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+    <ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCore/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+  </target>
+
+  <target name="junit-test-server">
+
+    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCalcService/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoObsService/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
+         dir="${workspace}/KalypsoUserServices/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
+         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+  </target>
+
+  <target name="junit-test" depends="junit-test-base,junit-test-server">
+  </target>
+
+  <target name="nightly-build" depends="build,junit-test">
+  </target>
+
+</project>
+
