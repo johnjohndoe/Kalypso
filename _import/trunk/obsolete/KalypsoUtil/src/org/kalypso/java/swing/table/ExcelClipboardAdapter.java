@@ -20,7 +20,7 @@ import javax.swing.KeyStroke;
  * enabled JTables and Excel.
  * <p>
  * This code is adapted from the Online Article at
- * {@link http://www.javaworld.com/javaworld/javatips/jw-javatip77.html}
+ * {see http://www.javaworld.com/javaworld/javatips/jw-javatip77.html}
  */
 public final class ExcelClipboardAdapter
 {

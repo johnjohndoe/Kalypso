@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -57,10 +56,9 @@ public class CSV extends AbstractCSV
    * 
    * @param split
    *          the string used for spliting each line into chunks
-   * @throws IOException
    */
   public CSV( final String split, final int startLine,
-      final boolean ignoreEmptyLines ) throws IOException
+      final boolean ignoreEmptyLines )
   {
     super( startLine, ignoreEmptyLines );
 

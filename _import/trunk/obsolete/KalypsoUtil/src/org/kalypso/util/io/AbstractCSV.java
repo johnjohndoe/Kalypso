@@ -69,8 +69,6 @@ public abstract class AbstractCSV implements ITabledValues
   /**
    * Constructor
    * 
-   * @param line
-   *          the line number to start reading the values at
    * @param ignoreEmptyLines
    *          when true, empty lines are not stored in this object
    */

@@ -6,11 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-
 import junit.framework.TestCase;
+
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,11 +61,9 @@ public class RegexCSV extends AbstractCSV
    *          the line number to start reading the values at
    * @param ignoreEmptyLines
    *          when true empty lines are ignored and not added to this object
-   * 
-   * @throws IOException
    */
   public RegexCSV( final Pattern p, final int line,
-      final boolean ignoreEmptyLines ) throws IOException
+      final boolean ignoreEmptyLines )
   {
     super( line, ignoreEmptyLines );
 

@@ -1,0 +1,58 @@
+Import beliebiger (Geo)Daten in ein bestehendes GML
+===================================================
+
+Baustein 1: Übertragen von FeatureListen in FeatureListen
+---------------------------------------------------------
+Überträgt Properties aus einer FeatureListe in eine andere.
+
+Variante 1: erzeugt neue Features, füllt deren Attribute mit Attributen aus der alten Liste
+Variante 2: ändert bestehende Features: Zuordnung erfolgt über eine Property, Ferature wird anhand Properties aus alter Liste geändert.
+
+- copyProperties( Feature source, Feature target, Map mapping )
+mit mapping: String -> String
+			propertyName |-> propertyName
+die Typen müssen passen
+
+- addFeatures( FeatureList source, FeatureList target, Map mapping, String idpropname)
+mit mapping wie oben
+falls idmapname != null: ids werden aus dieser Property der source erzeugt
+falls idmapname == null: ids werden automatisch erzeugt
+neue Features werden angehängt, nicht zugeorndete Properties erhalten den default wert
+- changeFeatures( FeatureList source, FeatureListe target, Map mapping, String sourceprop, String targetprop )
+mapping: wie oben
+für jedes feature in der source-liste wird ein feature in der target liste gesucht, so dass die beiden properties (durch sourceprop und targetprop agegeben)
+übereinstimmen. Bei diesem Feature weden dann entsprechend dem mapping die Daten übertragen.
+
+Baustein 2: Einheitliche Loader für alle Formate
+------------------------------------------------
+Für shp und gml schon da, fehlt nur csv
+-> hier Problem festzulegen, was was ist (d.h FeatureType und Spaltenzuordnung müssen angegeben werden)
+List von { java-type, formatstring, colnums[] }
+
+Zusätzlich wäre schön, die Loader über einen ExtensionPoint zu registrieren.
+
+Baustein 3: Import durchführen
+------------------------------
+Nur alles zusammenpacken, das heist:
+- quell und ziel Datei als GmlWorkspace laden
+- die Daten übertragen
+- die zieldateiwieder speichern
+
+Baustein 4: Persitierung der Import-Einstellungen
+-------------------------------------------------
+Die Einstellungen für einen speziellen import am besten
+in einem xml format ablegen.
+
+Baustein 5: GUI (optional)
+--------------------------
+Minimum ist, ein (z.b. manuell erzeugtes import-xml) auszuführen.
+
+Sehr schön wäre z.B. ein Wizard der die ganzen Daten sammelt 
+und im xml ablegt, dann den eigentlichen import anstösst.
+
+Baustein 6: Übertragen von Daten aus zml
+----------------------------------------
+Eigentlich ganz ähnlich wie übertragen von Daten aus einem GmlWorkspace, statt der
+Properties bieten sich hier z.B: Metadaten an oder die Werte zu einem festen Zeitpunkt.
+
+Es müssen analog die Baustein 1-4 durchgeführt werden (kann man da was vereinheitlichen?).

@@ -54,7 +54,6 @@ public class Arrays
    * Return a list containing the elements of the array.
    * 
    * @param array
-   * @return
    */
   public static List asList( final Object[] array )
   {
