@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="zml.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Observation">
+		<xs:annotation>
+			<xs:documentation>an observation made by a sensor. This schema is derived from the OGC Draft on SensorML.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Name" type="xs:string"/>
+				<xs:element name="TargetProperty" type="TargetPropertyType" minOccurs="0"/>
+				<xs:element name="MetadataList" type="MetadataListType" minOccurs="0"/>
+				<xs:element name="Axis" type="AxisType" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="MetadataType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:anySimpleType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="AxisType">
+		<xs:sequence>
+			<xs:element name="ValueArray">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="type" type="xs:string" use="required"/>
+							<xs:attribute name="separator" type="xs:string" use="optional" default=""/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="unit" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="MetadataListType">
+		<xs:sequence>
+			<xs:element name="Metadata" type="MetadataType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TargetPropertyType">
+		<xs:attribute name="source" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+		<xs:attribute name="objectid" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

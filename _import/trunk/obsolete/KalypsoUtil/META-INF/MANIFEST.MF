@@ -7,4 +7,6 @@ Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin
 Eclipse-AutoStart: false
 Provide-Package: org.kalypso.util.command,
- org.kalypso.util.observer
+ org.kalypso.util.observer,
+ org.kalypso.xml,
+ org.kalypso.zml
