@@ -74,7 +74,7 @@ public class ModelNature implements IProjectNature
       final IFile file = m_project.getFile( new Path( METADATA_FILE ) );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      m_metadata.save( bos, "Modell-Projekt Metadata Information" );
+      m_metadata.store( bos, "Modell-Projekt Metadata Information" );
       bos.close();
 
       final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );

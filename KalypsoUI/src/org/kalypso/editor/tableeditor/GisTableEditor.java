@@ -16,7 +16,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -33,6 +35,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
+import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -72,7 +75,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   private String m_type;
 
-  private final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
+  protected final ResourcePool m_layerPool = KalypsoGisPlugin.getDefault().getPool(
       KalypsoFeatureLayer.class );
 
   private PoolableObjectType m_key = null;
@@ -281,7 +284,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     if( oldValue == DUMMY_OBJECT || m_layerTable.getModel().getLayer() == oldValue )
     {
-      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)m_layerPool.getObject( m_key, new NullProgressMonitor() );
+      final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)m_layerPool.getObject( m_key,
+          new NullProgressMonitor() );
 
       final LayerType layerType = m_tableview.getLayer();
       final List columnList = layerType.getColumn();
@@ -294,19 +298,38 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
         columns[count++] = new LayerTableModel.Column( ftp, ct.getWidth(), ct.isEditable() );
       }
 
-      getEditorSite().getShell().getDisplay().asyncExec( new Runnable() {
+      getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
+      {
         public void run()
         {
           if( !m_layerTable.isDisposed() )
-            m_layerTable.setModel( new LayerTableModel( layer, columns ) );    
-        }} );
-      
+            m_layerTable.setModel( new LayerTableModel( layer, columns ) );
+        }
+      } );
+
     }
   }
 
   public void saveData()
   {
-    // TODO Auto-generated method stub
+    final Job saveJob = new Job( "Daten speichern" )
+    {
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          m_layerPool.saveObject( m_layerTable.getModel().getLayer(), monitor );
+        }
+        catch( final FactoryException e )
+        {
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Speichern der Daten", e );
+        }
+        
+        return Status.OK_STATUS;
+      }
+    };
     
+    saveJob.setPriority( Job.LONG );
+    saveJob.schedule();
   }
 }

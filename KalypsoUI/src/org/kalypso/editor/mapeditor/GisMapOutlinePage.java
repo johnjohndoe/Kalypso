@@ -277,8 +277,18 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       final TableTreeItem ti = (TableTreeItem)e.item;
       final Object data = ti.getData();
       if( data instanceof KalypsoTheme )
-        m_commandManager.postCommand( new EnableThemeCommand( m_mapModell, (KalypsoTheme)data, ti
-            .getChecked() ), null );
+      {
+        // TODO: use Job!
+        try
+        {
+          m_commandManager.postCommand( new EnableThemeCommand( m_mapModell, (KalypsoTheme)data, ti
+              .getChecked() ), null );
+        }
+        catch( final Exception e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
     }
   }
 
@@ -296,7 +306,14 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementDown( final Object element )
   {
-    m_commandManager.postCommand( new MoveThemeUpCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
+    try
+    {
+      m_commandManager.postCommand( new MoveThemeUpCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -304,7 +321,14 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandManager.postCommand( new MoveThemeDownCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
+    try
+    {
+      m_commandManager.postCommand( new MoveThemeDownCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -312,7 +336,14 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    m_commandManager.postCommand( new RemoveThemeCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
+    try
+    {
+      m_commandManager.postCommand( new RemoveThemeCommand( m_mapModell, (KalypsoTheme)element ), new SelectThemeRunner( (KalypsoTheme)element ) );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**

@@ -34,7 +34,16 @@ public class UndoAction extends FullAction implements ICommandManagerListener
   public void run()
   {
     if( m_commandManager.canUndo() )
-      m_commandManager.undo();
+    {
+      try
+      {
+        m_commandManager.undo();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
   
   public void dispose()

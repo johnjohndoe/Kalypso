@@ -32,7 +32,14 @@ public final class ColumnAction extends Action
    */
   public void run()
   {
-    m_commandManager.postCommand( new SetColumnVisibleCommand( m_layerTable.getModel(), m_ftp,
-        isChecked() ), null );
+    try
+    {
+      m_commandManager.postCommand( new SetColumnVisibleCommand( m_layerTable.getModel(), m_ftp,
+          isChecked() ), null );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
@@ -45,9 +46,7 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
       final String name = source.getProperty( "LAYER", "" );
 
       // erst mal gml laden
-      final PoolableObjectType key = new PoolableObjectType( "gmlarray", source, project );
-      final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])m_gmlArrayPool.getObject( key,
-          monitor );
+      final KalypsoFeatureLayer[] layers = getLayerArray( source, project, monitor );
 
       for( int i = 0; i < layers.length; i++ )
       {
@@ -64,6 +63,14 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
       e.printStackTrace();
       throw new LoaderException( e );
     }
+  }
+
+  private KalypsoFeatureLayer[] getLayerArray( final Properties source, final IProject project, final IProgressMonitor monitor ) throws Exception
+  {
+    final PoolableObjectType key = new PoolableObjectType( "gmlarray", source, project );
+    final KalypsoFeatureLayer[] layers = (KalypsoFeatureLayer[])m_gmlArrayPool.getObject( key,
+        monitor );
+    return layers;
   }
 
   /**
@@ -87,4 +94,27 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
       }
     }
   }
+
+  /**
+   * @see org.kalypso.loader.AbstractLoader#save(java.util.Properties, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   */
+  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data )
+      throws LoaderException
+  {
+    try
+    {
+      monitor.beginTask( "Thema speichern", 2000 );
+      
+      // das (bereits gepoolte objekt holen)
+      final KalypsoFeatureLayer[] layerArray = getLayerArray( source, project, new SubProgressMonitor( monitor, 1000 ) );
+      m_gmlArrayPool.saveObject( layerArray, new SubProgressMonitor( monitor, 1000 ) );
+    }
+    catch( Exception e )
+    {
+      throw new LoaderException( e );
+    }
+  }
+  
+  
+  
 }

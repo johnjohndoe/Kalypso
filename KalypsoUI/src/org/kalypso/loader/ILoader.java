@@ -13,7 +13,7 @@ public interface ILoader
 {
   public Object load( final Properties source, final IProject project, final IProgressMonitor monitor ) throws LoaderException;
   
-  public void save( final Properties source, final Object data ) throws LoaderException;
+  public void save( final Properties source, final IProject project, final IProgressMonitor monitor, final Object data ) throws LoaderException;
 
   public String getDescription();
   
