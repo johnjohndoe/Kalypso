@@ -4,6 +4,7 @@
 package org.kalypso.editor.styleeditor.panels;
 
 import org.eclipse.swt.widgets.*;
+import org.kalypso.ui.editor.styleeditor.panels.FilterComboPanel;
 
 /**
  * @author Administrator

@@ -1,20 +1,19 @@
-package org.kalypso.ui.editor.mapeditor.views;
+package org.kalypso.editor.mapeditor.views;
 
 import org.deegree.graphics.sld.Rule;
-import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.editor.styleeditor.SLDEditorGuiBuilder;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.RuleTreeObject;
 import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
-import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
 
 /**
  * 
@@ -51,17 +50,17 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
    */
   public void createPartControl( Composite parent )
   {
-    guiBuilder = new SLDEditorGuiBuilder( parent, this );
+    guiBuilder = new SLDEditorGuiBuilder( parent);
   }
 
-  public void initStyleEditor( KalypsoUserStyle userStyle, FeatureType featureType, int index )
+  public void initStyleEditor( KalypsoUserStyle userStyle, IKalypsoLayer layer, int index )
   {
-    guiBuilder.buildSWTGui( userStyle, featureType, index );
+    guiBuilder.buildSWTGui( userStyle, layer, index );
   }
 
-  public void initStyleEditor( KalypsoUserStyle userStyle, FeatureType featureType )
+  public void initStyleEditor( KalypsoUserStyle userStyle, IKalypsoLayer layer )
   {
-    guiBuilder.buildSWTGui( userStyle, featureType );
+  	guiBuilder.buildSWTGui( userStyle, layer);
   }
 
   /**
@@ -86,10 +85,9 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       if( !( layer instanceof KalypsoFeatureLayer ) )
         initStyleEditor( null, null );
       else
-      {
-        FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
+      {        
         KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
-        initStyleEditor( kalypsoStyle, ft );
+        initStyleEditor( kalypsoStyle, layer );
       }
     }
     else if( o instanceof IKalypsoTheme )
@@ -111,7 +109,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
           }
         }
       }
-      initStyleEditor( obj.getStyle(), obj.getFeatureType(), index );
+      initStyleEditor( obj.getStyle(), obj.getLayer(), index );
     }
   }
 }
