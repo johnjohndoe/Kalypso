@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class AbstractDecoratorFeatureCellEditor extends CellEditor
 {
-  private final CellEditor m_cellEditor;  
-  
-  public AbstractDecoratorFeatureCellEditor( final CellEditor cellEditor )
+  private CellEditor m_cellEditor;  
+
+  public void setCellEditor( final CellEditor cellEditor )
   {
     m_cellEditor = cellEditor;
   }

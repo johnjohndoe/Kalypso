@@ -50,31 +50,31 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   private ResourceBundle m_resourceBundle = null;
 
   private CS_CoordinateSystem myCoordinateSystem = null;
-  
+
   private final HashMap myPools = new HashMap();
-  
+
   private final HashMap myLoaderFactories = new HashMap();
-  
+
   private static final String POOL_PROPERTIES = "resources/pools.properties";
+
   private final Properties myPoolProperties = new Properties();
-  
+
   private Properties m_ftpProperties;
-  
+
   private final Properties m_zmlRepositoriesProperties = new Properties();
+
   private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties";
 
   private DefaultRepositoryContainer m_tsRepositoryContainer = null;
 
   private RepositorySpecification[] m_repositoriesSpecification = null;
 
-  private ICellEditorFactory m_featureTypeCellEditorFactory; 
-
-  private final SelectionIdProvider mySelectionIdProvider=new SelectionIdProvider();
+  private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
 
   private CalcJobService m_calcJobService;
 
   private IURLConnectionFactory m_urlConnectionFactory;
-  
+
   /**
    * The constructor.
    */
@@ -94,28 +94,29 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
       ex.printStackTrace();
     }
-    
+
     try
     {
       myPoolProperties.load( this.getClass().getResourceAsStream( POOL_PROPERTIES ) );
-      
-      m_zmlRepositoriesProperties.load( getClass().getResourceAsStream( ZML_REPOSITORIES_PROPERTIES ) );
+
+      m_zmlRepositoriesProperties.load( getClass()
+          .getResourceAsStream( ZML_REPOSITORIES_PROPERTIES ) );
       prepareRepositoriesSpecifications();
     }
     catch( final IOException e )
     {
       e.printStackTrace();
     }
-    
+
     try
     {
-      UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName(  ) );
+      UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
     }
     catch( Exception e1 )
     {
       e1.printStackTrace();
     }
-    
+
     registerTypeHandler();
   }
 
@@ -123,7 +124,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     final Logger logger = Logger.getLogger( "" );
     logger.setLevel( Level.INFO );
-    
+
     final Handler[] handlers = logger.getHandlers();
     for( int i = 0; i < handlers.length; i++ )
     {
@@ -137,17 +138,16 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
    */
   private void prepareRepositoriesSpecifications()
   {
-    String[] available = m_zmlRepositoriesProperties.getProperty( "available" ).split(",");
-    
-    m_repositoriesSpecification = new RepositorySpecification[ available.length ];
-    
+    String[] available = m_zmlRepositoriesProperties.getProperty( "available" ).split( "," );
+
+    m_repositoriesSpecification = new RepositorySpecification[available.length];
+
     for( int i = 0; i < available.length; i++ )
-      m_repositoriesSpecification[i] = 
-        new RepositorySpecification( available[i],
-            m_zmlRepositoriesProperties.getProperty( available[i] ),
-            m_zmlRepositoriesProperties.getProperty( available[i] + "_FACTORY" ) );
+      m_repositoriesSpecification[i] = new RepositorySpecification( available[i],
+          m_zmlRepositoriesProperties.getProperty( available[i] ), m_zmlRepositoriesProperties
+              .getProperty( available[i] + "_FACTORY" ) );
   }
-  
+
   /**
    * Liefert die Liste der Konfigurierte und Zugreifbare Zeitreihen Repositories
    */
@@ -156,51 +156,51 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     return m_repositoriesSpecification;
   }
 
-//  TODO public OutputLogger getOutputLogger()
-//  {
-//    if( m_outputLogger == null )
-//      m_outputLogger = new OutputLogger();
-//
-//    return m_outputLogger;
-//  }
+  //  TODO public OutputLogger getOutputLogger()
+  //  {
+  //    if( m_outputLogger == null )
+  //      m_outputLogger = new OutputLogger();
+  //
+  //    return m_outputLogger;
+  //  }
 
   public ILoaderFactory getLoaderFactory( final Class valueClass )
   {
     ILoaderFactory loaderFactory = (ILoaderFactory)myLoaderFactories.get( valueClass );
-    
+
     if( loaderFactory == null )
     {
       final String propFilename = (String)myPoolProperties.get( valueClass.getName() );
-      
+
       final Properties props = new Properties();
       try
       {
-        props.load( KalypsoGisPlugin.class.getResourceAsStream(propFilename) );
+        props.load( KalypsoGisPlugin.class.getResourceAsStream( propFilename ) );
       }
       catch( IOException e )
       {
         // TODO besser handeln
         e.printStackTrace();
       }
-      
+
       loaderFactory = new DefaultLoaderFactory( props, this.getClass().getClassLoader() );
-      
-      myLoaderFactories.put( valueClass, loaderFactory);
+
+      myLoaderFactories.put( valueClass, loaderFactory );
     }
-    
+
     return loaderFactory;
   }
-  
+
   public ResourcePool getPool( final Class valueClass )
   {
     ResourcePool pool = (ResourcePool)myPools.get( valueClass );
     if( pool == null )
     {
       pool = new ResourcePool( getLoaderFactory( valueClass ) );
-      myPools.put(valueClass, pool);
+      myPools.put( valueClass, pool );
     }
-    
-     return pool;
+
+    return pool;
   }
 
   /**
@@ -223,7 +223,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     return getDefault().getBundle().getSymbolicName();
   }
-  
+
   /**
    * Returns the shared instance.
    */
@@ -262,10 +262,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   public CS_CoordinateSystem getCoordinatesSystem()
   {
-    if(myCoordinateSystem==null)
+    if( myCoordinateSystem == null )
     {
-      ConvenienceCSFactoryFull csFac=new ConvenienceCSFactoryFull();
-      myCoordinateSystem=org.deegree_impl.model.cs.Adapters.getDefault(  ).export(csFac.getCSByName("EPSG:4326"));
+      ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+      myCoordinateSystem = org.deegree_impl.model.cs.Adapters.getDefault().export(
+          csFac.getCSByName( "EPSG:4326" ) );
     }
     return myCoordinateSystem;
   }
@@ -273,41 +274,44 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public DefaultRepositoryContainer getRepositoryContainer()
   {
     if( m_tsRepositoryContainer == null )
-        m_tsRepositoryContainer = new DefaultRepositoryContainer();
-    
+      m_tsRepositoryContainer = new DefaultRepositoryContainer();
+
     return m_tsRepositoryContainer;
   }
-  
+
   private Properties getFeatureTypeCellEditorProperties()
   {
     if( m_ftpProperties == null )
     {
       m_ftpProperties = new Properties();
-      
+
       try
       {
-        m_ftpProperties.load( KalypsoGisPlugin.class.getResourceAsStream( "resources/featureTypeEditor.properties" ) );
+        m_ftpProperties.load( KalypsoGisPlugin.class
+            .getResourceAsStream( "resources/featureTypeEditor.properties" ) );
       }
       catch( final IOException e )
       {
         e.printStackTrace();
       }
     }
-    
+
     return m_ftpProperties;
   }
 
-  public ICellEditorFactory getFeatureTypeCellEditorFactory()
+  /**
+   * Erzeugt jedesmal eine neue Factory. Nötig, weil die Factory die
+   * CellEditoren cached, diese aber mit schliessen der Tabelle disposed werden.
+   */
+  public ICellEditorFactory createFeatureTypeCellEditorFactory()
   {
-    if( m_featureTypeCellEditorFactory == null )
-      m_featureTypeCellEditorFactory = new DefaultCellEditorFactory( getFeatureTypeCellEditorProperties(), this.getClass().getClassLoader() );
-    
-    return m_featureTypeCellEditorFactory;
+    return new DefaultCellEditorFactory( getFeatureTypeCellEditorProperties(), this.getClass()
+        .getClassLoader() );
   }
-  
+
   public SelectionIdProvider getSelectionIdProvider()
   {
-      return mySelectionIdProvider;
+    return mySelectionIdProvider;
   }
 
   public CalcJobService getCalcService()
@@ -323,14 +327,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
         e.printStackTrace();
       }
     }
-    
+
     return m_calcJobService;
   }
-  
+
   private void registerTypeHandler()
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
-    
+
     // TODO: error handling
     try
     {
@@ -349,17 +353,16 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private void configureProxy()
   {
-    System.setProperty("proxySet",  "true");
-    System.setProperty("proxyHost", "172.16.0.1");
-    System.setProperty("proxyPort", "8080");  
+    System.setProperty( "proxySet", "true" );
+    System.setProperty( "proxyHost", "172.16.0.1" );
+    System.setProperty( "proxyPort", "8080" );
     String pw = "belger:LaufMensch";
-    String epw = "Basic "+(new BASE64Encoder()).encode(pw.getBytes());
-    
-    m_urlConnectionFactory=new URLConnectionFactory("Proxy-Authorization",epw);
-    NetWorker.setURLConnectionFactory(m_urlConnectionFactory);
+    String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
+
+    m_urlConnectionFactory = new URLConnectionFactory( "Proxy-Authorization", epw );
+    NetWorker.setURLConnectionFactory( m_urlConnectionFactory );
   }
-  
- 
+
   public IURLConnectionFactory getURLConnectionFactory()
   {
     return m_urlConnectionFactory;
@@ -367,30 +370,32 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private class URLConnectionFactory implements IURLConnectionFactory
   {
-      private final String m_property;
-      private final String m_value;
-      private URLConnectionFactory(String property,String value)
-      {
-        m_property=property;
-        m_value=value;
-      }
+    private final String m_property;
 
-      private URLConnectionFactory()
-      {
-        m_property=null;
-        m_value=null;
-      }
-      
-      /**
-       * @see org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
-       */
-      public URLConnection createURLConnection( URL url ) throws IOException
-      {
-        if(m_property==null)
-          return url.openConnection();
-          URLConnection connection=url.openConnection();
-        connection.setRequestProperty(m_property,m_value);     
-        return connection;
-      }
+    private final String m_value;
+
+    private URLConnectionFactory( String property, String value )
+    {
+      m_property = property;
+      m_value = value;
+    }
+
+    private URLConnectionFactory()
+    {
+      m_property = null;
+      m_value = null;
+    }
+
+    /**
+     * @see org.deegree.tools.IURLConnectionFactory#createURLConnection(java.net.URL)
+     */
+    public URLConnection createURLConnection( URL url ) throws IOException
+    {
+      if( m_property == null )
+        return url.openConnection();
+      URLConnection connection = url.openConnection();
+      connection.setRequestProperty( m_property, m_value );
+      return connection;
+    }
   }
 }

@@ -1,4 +1,4 @@
-package org.kalypso.editor.tableeditor.layerTable;
+package org.kalypso.ogc.gml.table;
 
 import org.kalypso.ogc.gml.KalypsoFeature;
 

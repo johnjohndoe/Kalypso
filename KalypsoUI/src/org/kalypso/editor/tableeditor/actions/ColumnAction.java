@@ -1,8 +1,8 @@
 package org.kalypso.editor.tableeditor.actions;
 
 import org.eclipse.jface.action.Action;
-import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
-import org.kalypso.editor.tableeditor.layerTable.command.SetColumnVisibleCommand;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
 import org.kalypso.util.command.ICommandTarget;
 
 public final class ColumnAction extends Action

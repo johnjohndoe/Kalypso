@@ -26,9 +26,9 @@ import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
-import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gistableview.Gistableview;
@@ -87,7 +87,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     super.dispose();
   }
 
-  /** File must exist! */ 
+  /** File must exist! */
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
     if( m_layerTable == null )
@@ -97,7 +97,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     {
       final Gistableview tableTemplate = m_layerTable.createTableTemplate();
 
-      // die Vorlagendatei ist klein, deswegen einfach in ein ByteArray serialisieren
+      // die Vorlagendatei ist klein, deswegen einfach in ein ByteArray
+      // serialisieren
       final IFile file = input.getFile();
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -127,13 +128,15 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
+    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+    
     final ICellEditorFactory factory = KalypsoGisPlugin.getDefault()
-        .getFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, factory, -1 );
+        .createFeatureTypeCellEditorFactory();
+    m_layerTable = new LayerTableViewer( parent, project, factory, -1 );
 
     final MenuManager menuMgr = createSpaltenMenu();
     final Control viewerControl = m_layerTable.getControl();
@@ -151,7 +154,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     monitor.beginTask( "Vorlage laden", 1000 );
 
-    
     final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( input.getFile() );
 
     final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();

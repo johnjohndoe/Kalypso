@@ -1,20 +1,29 @@
-package org.kalypso.editor.tableeditor.layerTable;
+package org.kalypso.ogc.gml.table;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.eclipse.jface.viewers.AbstractFeatureCellEditor;
 import org.kalypso.ogc.gml.KalypsoFeature;
 
 /**
- * @author bce
+ * @author Belger
  */
 public class LayerTableLabelProvider implements ITableLabelProvider
 {
-  private LayerTableViewer m_viewer;
+  private final LayerTableViewer m_viewer;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
     m_viewer = layerTable;
+  }
+  
+  /**
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+   */
+  public void dispose()
+  {
+    // nix zu disposen  
   }
   
   /**
@@ -34,10 +43,10 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     if( m_viewer.getColumnCount() == 0 )
       return "";
     
-    final String name = m_viewer.getPropertyName( columnIndex );
-    
-    final Object property = ((KalypsoFeature)element).getProperty( name );
-    return property == null ? "" : property.toString();
+    final KalypsoFeature kalypsoFeature = (KalypsoFeature)element;
+
+    final AbstractFeatureCellEditor cellEditor = (AbstractFeatureCellEditor)m_viewer.getCellEditors()[columnIndex];
+    return cellEditor.renderLabel( kalypsoFeature );
   }
 
   /**
@@ -45,21 +54,13 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public void addListener( final ILabelProviderListener listener )
   {
-  //  
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-   */
-  public void dispose()
-  {
-  //  
+    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?
   }
 
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
-  public boolean isLabelProperty( Object element, String property )
+  public boolean isLabelProperty( final Object element, final String property )
   {
     return false;
   }
@@ -67,9 +68,9 @@ public class LayerTableLabelProvider implements ITableLabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
-  public void removeListener( ILabelProviderListener listener )
+  public void removeListener( final ILabelProviderListener listener )
   {
-  //  
+    //  TODO
   }
 
 }

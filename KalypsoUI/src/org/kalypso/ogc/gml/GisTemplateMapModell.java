@@ -17,12 +17,14 @@ import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author gernot
+ * 
+ * @author Belger
  */
 public class GisTemplateMapModell implements IMapModell
 {
@@ -40,9 +42,13 @@ public class GisTemplateMapModell implements IMapModell
     {
       final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
           .get( i );
-      IKalypsoTheme theme = null;
-      if( "wms".equals( layerType.getLinktype() ) )
+      
+      final IKalypsoTheme theme = loadTheme( layerType, project );
+      
+      if( theme != null )
       {
+        addTheme( theme );
+        enableTheme( theme, layerType.isVisible() );
         // TODO soll hier wirklich "wms" - coodiert werden, das sollte doch generischer gehen
         ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
         try
@@ -62,15 +68,35 @@ public class GisTemplateMapModell implements IMapModell
           e.printStackTrace();
         }
       }
-      else
-      {
-        theme = new PoolableKalypsoFeatureTheme( layerType, project );
+    }
+  }
 
-        // falls jetzt schon geladen, gleich hinzufügen, sonst erst wenn
-        // fertig geladen
-        addTheme( theme );
+  private IKalypsoTheme loadTheme( final Layer layerType, final IProject project )
+  {
+    if( "wms".equals( layerType.getLinktype() ) )
+    {
+      // TODO soll hier wirklich "wms" - coodiert werden, das sollte doch generischer gehen
+      final ILoaderFactory loaderFactory = KalypsoGisPlugin.getDefault().getLoaderFactory(KalypsoWMSLayer.class);
+      try
+      {
+        final ILoader loaderInstance = loaderFactory.getLoaderInstance(layerType.getLinktype());
+        final String source = layerType.getHref();
+        final PoolableObjectType poolType = new PoolableObjectType( "sld", source, project );
+        
+        final KalypsoWMSLayer layer = (KalypsoWMSLayer)loaderInstance.load(poolType.getSource(), project, null);
+        return new KalypsoWMSTheme( layerType.getName(), layer );
+      }
+      catch( FactoryException e )
+      {
+        e.printStackTrace();
+      }
+      catch( LoaderException e )
+      {
+        e.printStackTrace();
       }
     }
+
+    return new PoolableKalypsoFeatureTheme( layerType, project );
   }
 
   public void activateTheme( IKalypsoTheme theme )

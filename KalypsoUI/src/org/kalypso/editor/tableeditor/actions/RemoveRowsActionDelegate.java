@@ -4,11 +4,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.editor.tableeditor.GisTableEditor;
-import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.java.util.Arrays;
 import org.kalypso.ogc.command.RemoveFeaturesCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.util.command.ICommand;
 
 /**

@@ -58,7 +58,7 @@ public class SaveStyleAction extends AbstractOutlineAction {
 		FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
 		saveDialog.setFilterExtensions(filterExtension);
 		String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
-		sldContents += ((KalypsoUserStyle) userStyle).exportAsXML();
+		sldContents += userStyle.exportAsXML();
 		sldContents += "</NamedLayer></StyledLayerDescriptor>";
 		StyledLayerDescriptor sld;
 		try 

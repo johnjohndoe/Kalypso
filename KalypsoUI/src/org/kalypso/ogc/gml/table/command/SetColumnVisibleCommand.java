@@ -1,6 +1,6 @@
-package org.kalypso.editor.tableeditor.layerTable.command;
+package org.kalypso.ogc.gml.table.command;
 
-import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.util.command.ICommand;
 
 /**
