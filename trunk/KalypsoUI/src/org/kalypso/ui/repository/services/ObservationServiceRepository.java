@@ -110,8 +110,33 @@ public class ObservationServiceRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( String id ) throws RepositoryException
   {
-// TODO    
-//      final IRepositoryItem[] children = getChildren();
+    final IRepositoryItem item = findItemRecursive( id, this );
+    
+    if( item == null )
+      throw new RepositoryException( "Coult not find item: " + id );
+    
+    return item;
+  }
+
+  /**
+   * Helper: finds item using recursion
+   * TODO: better performance by caching items that were already found? do not forget
+   * to clear the cache in reload()
+   */
+  private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item )
+  {
+    if( item.getIdentifier().equalsIgnoreCase( id ) )
+      return item;
+    
+    final IRepositoryItem[] items = item.getChildren();
+    for( int i = 0; i < items.length; i++ )
+    {
+      final IRepositoryItem item2 = findItemRecursive( id, items[i] );
+      
+      if( item2 != null )
+        return item2;
+    }
+    
     return null;
   }
 }
