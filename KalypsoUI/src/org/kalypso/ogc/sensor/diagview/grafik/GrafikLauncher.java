@@ -140,6 +140,8 @@ public class GrafikLauncher
     try
     {
       // create the grafik exe
+      // TODO: check if version has changed an then try to delete old file
+      // TODO: always use file name 'grafik.exe'
       final File grafikExe = FileUtilities
           .makeFileFromStream(
               false,
@@ -148,10 +150,12 @@ public class GrafikLauncher
               DiagramTemplateUtils.class
                   .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ),
               true );
+      grafikExe.deleteOnExit();
 
       // also create the help file if not already existing
       final File grafikHelp = new File( grafikExe.getParentFile(),
           FileUtilities.nameWithoutExtension( grafikExe.getName() ) + ".hlp" );
+      grafikHelp.deleteOnExit();
       if( !grafikHelp.exists() )
       {
         final File tmp = FileUtilities

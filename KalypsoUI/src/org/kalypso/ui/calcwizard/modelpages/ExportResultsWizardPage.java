@@ -562,7 +562,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   protected void startGrafik()
   {
-    // maybe move all code to Main-Class?
     final IFolder calcFolder = getCalcFolder();
     final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
 
