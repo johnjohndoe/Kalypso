@@ -27,8 +27,6 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
  */
 public class SymbolizerTabItemBuilder {
 	
-	private TabItem tabItem = null;	
-	
 	public SymbolizerTabItemBuilder(TabFolder tabFolder, Symbolizer symbolizer, KalypsoUserStyle userStyle, FeatureType featureType)
 	{				
 		TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
