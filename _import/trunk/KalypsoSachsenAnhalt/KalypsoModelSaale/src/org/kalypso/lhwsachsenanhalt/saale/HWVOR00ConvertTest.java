@@ -57,10 +57,10 @@ public class HWVOR00ConvertTest extends TestCase
 {
   public void testhwvor002zml() throws ParseException, IOException
   {
-    final InputStream is = HWVOR00ConvertTest.class.getResourceAsStream( "resources/TLDAT.OLD" );
+    final InputStream is = HWVOR00ConvertTest.class.getResourceAsStream( "resources/test.txt" );
     final InputStreamReader reader = new InputStreamReader( is );
     
-    final IObservation[] observations = HWVOR00Converter.hwvor002zml( TimeserieConstants.TYPE_RAINFALL, reader );
+    final IObservation[] observations = HWVOR00Converter.toZML( TimeserieConstants.TYPE_RAINFALL, reader );
     
     FileWriter out = new FileWriter( "C:\\test.txt" );
     HWVOR00Converter conv = new HWVOR00Converter();

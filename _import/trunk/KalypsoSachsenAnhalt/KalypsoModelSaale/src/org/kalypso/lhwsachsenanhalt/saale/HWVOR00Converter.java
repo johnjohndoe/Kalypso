@@ -162,7 +162,12 @@ public class HWVOR00Converter
     }
   }
   
-  public static IObservation[] hwvor002zml( String valueType, Reader file ) throws ParseException
+  public static IObservation[] toZML( String valueType, Reader file ) throws ParseException
+  {
+    return toZML(valueType, file, null);
+  }
+  
+  public static IObservation[] toZML( String valueType, Reader file, MetadataList metadata ) throws ParseException
   {
     ArrayList lines = new ArrayList();
     ArrayList dates, data; 
@@ -205,7 +210,7 @@ public class HWVOR00Converter
     
     //Daten einlesen
     dates = new ArrayList();
-    for( int i = 1; i != lines.size(); i++)
+    for( int i = 1; i != lines.size() && ( (StringTokenizer)lines.get( i ) ).hasMoreTokens(); i++)
       dates.add( HWVOR00_DATE.parse( ( (StringTokenizer)lines.get( i ) ).nextToken() ) );
    
     while( ( (StringTokenizer) lines.get(0) ).hasMoreTokens() )
@@ -215,7 +220,7 @@ public class HWVOR00Converter
       obsName = ( (StringTokenizer) lines.get(0) ).nextToken();
       
       //Eine Spalte einlesen 
-      for( int i = 1; i != lines.size(); i++ )
+      for( int i = 1; i != lines.size() && ( (StringTokenizer)lines.get( i ) ).hasMoreTokens(); i++ )
         data.add( new Double( ( (StringTokenizer) lines.get( i ) ).nextToken().replace(',', '.') ) );
       
       //Achsen erzeugen
@@ -229,7 +234,7 @@ public class HWVOR00Converter
       }
       
       tplValues = new SimpleTuppleModel( axis, tuppleData );
-      outOb.add( new SimpleObservation( "href", "ID", obsName, false, null, new MetadataList(), axis, tplValues ) );
+      outOb.add( new SimpleObservation( "href", "ID", obsName, false, null, metadata, axis, tplValues ) );
     }
     return (IObservation[]) outOb.toArray( new IObservation[outOb.size()] );
   }
