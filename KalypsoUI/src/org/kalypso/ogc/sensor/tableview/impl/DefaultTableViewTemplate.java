@@ -1,10 +1,12 @@
 package org.kalypso.ogc.sensor.tableview.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.Rules;
 import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
@@ -19,35 +21,54 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
 {
   private final Rules m_rules = new Rules();
 
-  private final List m_columns = new ArrayList();
+  private final Map m_themesMap = new Hashtable();
 
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getColumns()
    */
-  public List getColumns()
+  public Collection getColumns()
   {
-    return m_columns;
+    return m_themesMap.values();
   }
 
-  public void addColumn( ITableViewColumn column )
+  /**
+   * Adds a theme.
+   * 
+   * @param theme
+   */
+  public void addTheme( ITableViewTheme theme )
   {
-    m_columns.add( column );
+    m_themesMap.put( theme, theme.getColumns() );
     
-    fireTemplateChanged( new TemplateEvent( this, column, TemplateEvent.TYPE_ADD ) );
-  }
-
-  public void removeColumn( ITableViewColumn column )
-  {
-    m_columns.remove( column );
-    
-    fireTemplateChanged( new TemplateEvent( this, column, TemplateEvent.TYPE_REMOVE ) );
+    final Iterator it = theme.getColumns().iterator();
+    while( it.hasNext() )
+      fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_ADD) );
   }
   
-  public void removeAllColumns()
+  /**
+   * Removes a theme.
+   * 
+   * @param theme
+   */
+  public void removeTheme( ITableViewTheme theme )
   {
-    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL ) );
+    final Iterator it = theme.getColumns().iterator();
+    while( it.hasNext() )
+      fireTemplateChanged( new TemplateEvent( this, it.next(), TemplateEvent.TYPE_REMOVE ) );
+    
+    m_themesMap.remove( theme );
   }
-
+  
+  /**
+   * Removes all the themes and fires event
+   */
+  public void removeAllThemes()
+  {
+    m_themesMap.clear();
+    
+    fireTemplateChanged( new TemplateEvent( this, null, TemplateEvent.TYPE_REMOVE_ALL) );
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#findRules(int)
    */
@@ -77,6 +98,18 @@ public class DefaultTableViewTemplate extends AbstractTemplateEventProvider impl
    */
   public void dispose( )
   {
-    m_columns.clear();
+    final Iterator it = m_themesMap.keySet().iterator();
+    while( it.hasNext() )
+      ((ITableViewTheme) it.next()).dispose();
+    
+    m_themesMap.clear();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getThemes()
+   */
+  public Collection getThemes( )
+  {
+    return m_themesMap.keySet();
   }
 }

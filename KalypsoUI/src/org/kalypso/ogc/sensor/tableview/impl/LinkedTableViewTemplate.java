@@ -1,28 +1,17 @@
 package org.kalypso.ogc.sensor.tableview.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-import javax.xml.bind.JAXBException;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
@@ -32,6 +21,7 @@ import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * A DefaultTableViewTemplate based on a XML template file. Performs the load
@@ -39,32 +29,33 @@ import org.kalypso.util.pool.ResourcePool;
  * 
  * @author schlienger
  */
-public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
+public class LinkedTableViewTemplate extends ObservationTableViewTemplate implements
     IPoolListener
 {
-  private final static ObjectFactory m_obsTableFactory = new ObjectFactory();
-
   private final ResourcePool m_pool;
 
-  private final TreeMap m_key2cols;
-
-  private final Hashtable m_col2key;
+  private final TreeMap m_key2themes;
 
   /**
    * Constructor
+   */
+  public LinkedTableViewTemplate( )
+  {
+    super();
+    
+    m_pool = KalypsoGisPlugin.getDefault().getPool();
+    m_key2themes = new TreeMap( m_pool.getKeyComparator() );
+  }
+
+  /**
+   * Sets the base template and loads the columns.
    * 
    * @param obsTableView
    * @param context
    */
-  public LinkedTableViewTemplate( final ObstableviewType obsTableView,
+  public void setBaseTemplate( final ObstableviewType obsTableView,
       final URL context )
   {
-    super();
-
-    m_pool = KalypsoGisPlugin.getDefault().getPool();
-    m_key2cols = new TreeMap( m_pool.getKeyComparator() );
-    m_col2key = new Hashtable();
-
     final RulesType trules = obsTableView.getRules();
     if( trules != null )
     {
@@ -79,22 +70,12 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
     {
       final TypeObservation tobs = (TypeObservation) it.next();
 
-      final List cols = new ArrayList();
-      final List tcols = tobs.getColumn();
-      for( Iterator itCols = tcols.iterator(); itCols.hasNext(); )
-      {
-        final TypeColumn tcol = (TypeColumn) itCols.next();
-
-        final DefaultTableViewColumn col = new DefaultTableViewColumn( tcol
-            .getAxis(), tcol.isEditable(), tcol.getWidth(), tcol.getAxis(), null );
-
-        cols.add( col );
-      }
+      final LinkedTableViewTheme theme = new LinkedTableViewTheme( tobs );
 
       final PoolableObjectType key = new PoolableObjectType(
           tobs.getLinktype(), tobs.getHref(), context );
 
-      addObservationTheme( key, cols );
+      startLoading( key, theme );
     }
   }
 
@@ -102,22 +83,41 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
    * Adds a list of columns as an observation theme
    * 
    * @param key
-   * @param cols
+   * @param theme
    */
-  public void addObservationTheme( final PoolableObjectType key, final List cols )
+  public void startLoading( final PoolableObjectType key, final ITableViewTheme theme )
   {
     // first record key
-    m_key2cols.put( key, cols );
-
-    // store ref col to key, used in removeColumn( ... )
-    final Iterator it = cols.iterator();
-    while( it.hasNext() )
-      m_col2key.put( it.next(), key );
+    m_key2themes.put( key, theme );
 
     // finally launch request on pool
     m_pool.addPoolListener( this, key );
   }
   
+  /**
+   * Convenienve method for adding an observation to this template.
+   *
+   * TODO: use themeName as name for the column
+   * 
+   * @param themeName
+   * @param context
+   * @param href
+   * @param linktype
+   * @param args
+   */
+  public void addObservation( String themeName, URL context, String href, String linktype, IVariableArguments args )
+  {
+    // create key according to observation link
+    final PoolableObjectType key = new PoolableObjectType( linktype, href, context );
+
+    // fake theme because it won't be added directly to this template
+    DefaultTableViewTheme fakeTheme = new DefaultTableViewTheme();
+    fakeTheme.setArguments( args );
+    
+    // use load mechanism
+    startLoading( key, fakeTheme );
+  }
+
   /**
    * Saves the given obs using the pool.
    * 
@@ -132,30 +132,36 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#removeAllColumns()
+   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#removeAllThemes()
    */
-  public void removeAllColumns( )
+  public void removeAllThemes( )
   {
-    super.removeAllColumns();
-
-    m_key2cols.clear();
-    m_col2key.clear();
+    m_key2themes.clear();
+    
+    super.removeAllThemes();
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#removeColumn(org.kalypso.ogc.sensor.tableview.ITableViewColumn)
+   * @see org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate#removeTheme(org.kalypso.ogc.sensor.tableview.ITableViewTheme)
    */
-  public void removeColumn( final ITableViewColumn column )
+  public void removeTheme( ITableViewTheme theme )
   {
-    super.removeColumn( column );
-
-    final Object key = m_col2key.get( column );
-    final List list = (List) m_key2cols.get( key );
-    list.remove( column );
-    if( list.isEmpty() )
-      m_key2cols.remove( key );
-
-    m_col2key.remove( column );
+    if( m_key2themes.containsValue( theme ) )
+    {
+      final Iterator it = m_key2themes.keySet().iterator();
+      while( it.hasNext() )
+      {
+        Object key = it.next();
+        
+        if( m_key2themes.get( key ) == theme )
+        {
+          m_key2themes.remove( key );
+          break;
+        }
+      }
+    }
+    
+    super.removeTheme( theme );
   }
 
   /**
@@ -163,12 +169,10 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
    */
   public void dispose( )
   {
-    super.dispose();
-
-    m_key2cols.clear();
-    m_col2key.clear();
-
+    m_key2themes.clear();
     m_pool.removePoolListener( this );
+
+    super.dispose();
   }
 
   /**
@@ -180,19 +184,17 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
   {
     if( status.isOK() )
     {
-      final List cols = (List) m_key2cols.get( key );
+      final DefaultTableViewTheme theme = (DefaultTableViewTheme) m_key2themes.get( key );
 
-      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
-      {
-        final DefaultTableViewColumn col = (DefaultTableViewColumn) itCols
-            .next();
-        col.setObservation( (IObservation) newValue );
-      }
+      final IObservation obs = (IObservation) newValue;
       
-      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
-      {
-        addColumn( (ITableViewColumn) itCols.next() );
-      }
+      theme.setObservation( obs );
+
+      // was it a fake theme?
+      if( theme.getColumns().size() == 0 )
+        addObservation( obs, true, theme.getArguments() );
+      else
+        addTheme( theme );
     }
   }
 
@@ -204,26 +206,4 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
   {
     // TODO Auto-generated method stub
   }
-
-  /**
-   * @param file
-   * @return table view template
-   * @throws CoreException
-   * @throws JAXBException
-   * @throws IOException
-   */
-  public static LinkedTableViewTemplate loadTableViewTemplate( final IFile file )
-      throws CoreException, JAXBException, IOException
-  {
-    final InputStream ins = file.getContents();
-    final ObstableviewType baseTemplate = (ObstableviewType) m_obsTableFactory
-        .createUnmarshaller().unmarshal( ins );
-    ins.close();
-
-    return new LinkedTableViewTemplate( baseTemplate, ResourceUtilities
-        .createURL( file ) );
-  }
-
-  public void addObservation( String name, URL context, String href, String linktype, Object object )
-  {}
 }

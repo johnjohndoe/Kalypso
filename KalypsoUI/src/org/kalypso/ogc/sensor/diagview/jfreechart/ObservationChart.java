@@ -54,6 +54,7 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
       if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof IDiagramCurve )
         ( (ObservationPlot)getPlot() ).addCurve( (IDiagramCurve)evt.getObject() );
       
+      // TODO je crois que c'est inutile maintenant
       if( evt.getType() == TemplateEvent.TYPE_LOADED && evt.getObject() instanceof IDiagramTemplateTheme )
       {
         final IDiagramTemplateTheme theme = (IDiagramTemplateTheme) evt.getObject();

@@ -1,7 +1,5 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
-import java.util.Properties;
-
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
@@ -47,20 +45,20 @@ public class AxisMapping implements IAxisMapping
     return m_oAxis + " - " + m_dAxis;
   }
   
-  /**
-   * Convenience method that builds a properties object and sets its property-entries
-   * so that they are adequate to the given mappings.
-   * 
-   * @param mappings
-   * @return properties
-   */
-  public static Properties saveAsProperties( IAxisMapping[] mappings )
-  {
-    Properties props = new Properties();
-    
-    for( int i = 0; i < mappings.length; i++ )
-      props.setProperty( mappings[i].getObservationAxis().getName(), mappings[i].getDiagramAxis().getIdentifier() );
-    
-    return props;
-  }
+//  /**
+//   * Convenience method that builds a properties object and sets its property-entries
+//   * so that they are adequate to the given mappings.
+//   * 
+//   * @param mappings
+//   * @return properties
+//   */
+//  public static Properties saveAsProperties( IAxisMapping[] mappings )
+//  {
+//    Properties props = new Properties();
+//    
+//    for( int i = 0; i < mappings.length; i++ )
+//      props.setProperty( mappings[i].getObservationAxis().getName(), mappings[i].getDiagramAxis().getIdentifier() );
+//    
+//    return props;
+//  }
 }

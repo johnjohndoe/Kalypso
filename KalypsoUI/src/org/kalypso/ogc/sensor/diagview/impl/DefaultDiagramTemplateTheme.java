@@ -15,18 +15,19 @@ import org.kalypso.util.runtime.IVariableArguments;
  */
 public class DefaultDiagramTemplateTheme implements IDiagramTemplateTheme
 {
-  private IObservation m_obs;
   private final List m_curves = new ArrayList();
-  private IVariableArguments m_args;
+  private IObservation m_obs = null;
+  private IVariableArguments m_args = null;
+  private String m_themeName;
 
-  /**
-   * Constructor
-   * 
-   * @param obs [optional]
-   */
-  public DefaultDiagramTemplateTheme( final IObservation obs )
+  public DefaultDiagramTemplateTheme()
   {
-    m_obs = obs;
+    this( null );
+  }
+  
+  public DefaultDiagramTemplateTheme( final String themeName )
+  {
+    m_themeName = themeName;
   }
   
   /**
@@ -87,9 +88,12 @@ public class DefaultDiagramTemplateTheme implements IDiagramTemplateTheme
    */
   public String toString( )
   {
+    if( m_themeName != null )
+      return m_themeName;
+    
     if( m_obs != null )
       return m_obs.getName();
     
-    return "Noch keine Observation...";
+    return super.toString();
   }
 }

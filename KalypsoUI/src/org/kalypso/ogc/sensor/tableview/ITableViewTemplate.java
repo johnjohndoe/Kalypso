@@ -1,6 +1,6 @@
 package org.kalypso.ogc.sensor.tableview;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.kalypso.ogc.sensor.template.ITemplateEventProvider;
 
@@ -13,28 +13,14 @@ import org.kalypso.ogc.sensor.template.ITemplateEventProvider;
 public interface ITableViewTemplate extends ITableViewRules, ITemplateEventProvider
 {
   /**
-   * @return list of ITableViewColumn
+   * @return list of <code>ITableViewColumn</code>
    */
-  public List getColumns();
-  
-//  /**
-//   * Adds the given column
-//   * 
-//   * @param column
-//   */
-//  public void addColumn( ITableViewColumn column );
-//  
-//  /**
-//   * Remove given column
-//   * 
-//   * @param column
-//   */
-//  public void removeColumn( ITableViewColumn column );
-//  
-//  /**
-//   * Removes all column
-//   */
-//  public void removeAllColumns();
+  public Collection getColumns();
+
+  /**
+   * @return list of <code>ITableViewTheme</code>
+   */
+  public Collection getThemes();
 
   /**
    * Clean all possible resources before object is thrown away
