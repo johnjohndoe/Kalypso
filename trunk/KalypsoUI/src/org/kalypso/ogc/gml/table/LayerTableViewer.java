@@ -428,7 +428,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     if( isDisposed() )
       return;
 
-    // die Namen der Spalten auffrisch, wegen der Sortierungs-Markierung
+    // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
       setColumnText( columns[i] );
@@ -596,14 +596,20 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   
   public String getColumnAlignment( final int columnIndex )
   {
+    if( columnIndex == -1 )
+      return "SWT.LEAD";
+    
     final TableColumn column = getTable().getColumn( columnIndex );
     return "" + column.getStyle();
   }
   
   public String getColumnFormat( final int columnIndex )
   {
+    if( columnIndex == -1 )
+      return null;
+    
     final TableColumn column = getTable().getColumn( columnIndex );
-    return column.getData( COLUMN_PROP_FORMAT ).toString();
+    return (String)column.getData( COLUMN_PROP_FORMAT );
   }
 
   public boolean isEditable( final String property )
