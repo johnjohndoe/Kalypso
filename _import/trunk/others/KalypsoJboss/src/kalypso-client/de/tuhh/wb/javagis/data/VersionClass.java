@@ -77,9 +77,20 @@ public class VersionClass implements EJBEventListener
 	Vector result=new Vector();
 	try
 	    {			
+		String allKeys=Main.props.getProperty("theme_keys");
+		String keys[] = allKeys.split("\\:");
+		for(int i=0;i<keys.length;i++)
+		    result.add(keys[i]);
+
+		/*
 		result.add("Modell");		
 		result.add("Control");		
 		result.add("SimulationCase");
+		result.add("HWS_System");
+		result.add("HWS_Szenario");
+		result.add("HWS_Logistics");
+		result.add("HWS_Combination");
+		*/		
 		//		result.add("Test2");
 	    }
 	catch(Exception e)
