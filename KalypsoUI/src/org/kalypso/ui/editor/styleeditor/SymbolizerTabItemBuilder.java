@@ -2,9 +2,14 @@
  * Created on 12.07.2004
  *
  */
-package org.kalypso.editor.styleeditor;
+package org.kalypso.ui.editor.styleeditor;
 
-import org.deegree.graphics.sld.*;
+import org.deegree.graphics.sld.LineSymbolizer;
+import org.deegree.graphics.sld.PointSymbolizer;
+import org.deegree.graphics.sld.PolygonSymbolizer;
+import org.deegree.graphics.sld.RasterSymbolizer;
+import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 import org.eclipse.swt.SWT;
@@ -12,13 +17,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.editor.styleeditor.symbolizerLayouts.LineSymbolizerLayout;
-import org.kalypso.editor.styleeditor.symbolizerLayouts.PointSymbolizerLayout;
-import org.kalypso.editor.styleeditor.symbolizerLayouts.PolygonSymbolizerLayout;
-import org.kalypso.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout;
-import org.kalypso.editor.styleeditor.symbolizerLayouts.SymbolizerLayout;
-import org.kalypso.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.LineSymbolizerLayout;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.PointSymbolizerLayout;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.PolygonSymbolizerLayout;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.SymbolizerLayout;
+import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 
 
 /**

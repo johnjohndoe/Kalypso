@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml.table;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -94,9 +96,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final LayerTableSorter m_sorter = new LayerTableSorter();
 
-  private final ICommandTarget m_templateTarget;
+  protected final ICommandTarget m_templateTarget;
   
-  private boolean m_isApplyTemplate = false;
+  protected boolean m_isApplyTemplate = false;
 
   /**
    * This class handles selections of the column headers. Selection of the
@@ -619,5 +621,42 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     if( m_isFeatureSelectionSynchron )
       assignSelectionToFeatures();
+  }
+
+  public String[][] exportTable( final boolean onlySelected )
+  {
+    Object[] features;
+    
+    if( onlySelected )
+    {
+      final IStructuredSelection sel = (IStructuredSelection)getSelection();
+      features = sel.toArray(  );
+    }
+    else
+      features = ((KalypsoFeatureLayer)getTheme().getLayer()).getAllFeatures();
+
+    final Collection lines = new ArrayList(); 
+
+    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
+    
+    final Table table = getTable();
+    final TableColumn[] columns = table.getColumns();
+    
+    final String[] firstLine = new String[columns.length];
+    for( int j = 0; j < columns.length; j++ )
+      firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
+    lines.add( firstLine );
+    
+    for( int i = 0; i < features.length; i++ )
+    {
+      final String[] line = new String[columns.length];
+      
+      for( int j = 0; j < columns.length; j++ )
+        line[j] = labelProvider.getColumnText( features[i], j );
+
+      lines.add( line );
+    }
+    
+    return (String[][])lines.toArray( new String[features.length][] );
   }
 }

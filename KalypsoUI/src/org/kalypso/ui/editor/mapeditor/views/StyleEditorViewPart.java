@@ -1,4 +1,4 @@
-package org.kalypso.editor.mapeditor.views;
+package org.kalypso.ui.editor.mapeditor.views;
 
 import org.deegree.graphics.sld.Rule;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -7,13 +7,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.editor.styleeditor.SLDEditorGuiBuilder;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.RuleTreeObject;
 import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
+import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
 
 /**
  * 

@@ -66,11 +66,12 @@ public class ChangeSortingCommand implements ICommand
     m_sorter.setInverse( bInverse );
     m_sorter.setPropertyName( propertyName );
 
-    m_viewer.getControl().getDisplay().asyncExec( new Runnable()
+    final LayerTableViewer viewer = m_viewer;
+    viewer.getControl().getDisplay().asyncExec( new Runnable()
     {
       public void run()
       {
-        m_viewer.refresh();
+        viewer.refresh();
       }
     } );
   }

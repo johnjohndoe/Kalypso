@@ -29,20 +29,22 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.editor.styleeditor.panels.AddSymbolizerPanel;
-import org.kalypso.editor.styleeditor.panels.ControlRulePanel;
-import org.kalypso.editor.styleeditor.panels.PanelEvent;
-import org.kalypso.editor.styleeditor.panels.PanelListener;
-import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.editor.styleeditor.RuleCollection;
+import org.kalypso.editor.styleeditor.RuleFilterCollection;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
+import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
+import org.kalypso.ui.editor.styleeditor.panels.ControlRulePanel;
+import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
+import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 
 /**
  * @author Administrator
