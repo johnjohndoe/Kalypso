@@ -4,7 +4,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.services.proxy.DateRangeBean;
@@ -100,7 +100,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
         DateRangeBean drb = new DateRangeBean();
         final OCSDataBean bean = m_srv.readData( ob, drb );
         
-        final ZmlObservation obs = new ZmlObservation( new URL( bean.getLocation() ), bean.getObsId() );
+        final IObservation obs = ZmlFactory.parseXML( new URL( bean.getLocation() ), bean.getObsId() );
         
         m_srv.clearTempData( bean );
         

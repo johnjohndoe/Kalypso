@@ -23,7 +23,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
 {
   public ObservationTimeSeries( final IObservation obs, final IVariableArguments args ) throws SensorException
   {
-    this( obs, ObservationUtilities.findAxis( obs, Date.class )[0], ObservationUtilities.findAxis( obs, Number.class ), args );
+    this( obs, ObservationUtilities.findAxis( obs.getAxisList(), Date.class )[0], ObservationUtilities.findAxis( obs.getAxisList(), Number.class ), args );
   }
   
   public ObservationTimeSeries( final IObservation obs,  final IAxis dateAxis, final IAxis[] valueAxis, final IVariableArguments args ) throws SensorException
@@ -40,8 +40,8 @@ public class ObservationTimeSeries extends TimeSeriesCollection
   
           for( int j = 0; j < model.getCount(); j++ )
           {
-            s.addOrUpdate( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
-                ((Number)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
+            s.addOrUpdate( new FixedMillisecond( (Date)model.getElement( j, dateAxis ) ),
+                ((Number)model.getElement( j, valueAxis[i] ) ).doubleValue() );
           }
   
           addSeries( s );

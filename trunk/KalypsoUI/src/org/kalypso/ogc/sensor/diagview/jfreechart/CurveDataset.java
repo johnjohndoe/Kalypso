@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jfree.data.AbstractSeriesDataset;
 import org.jfree.data.XYDataset;
+import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * 
@@ -47,7 +48,15 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public int getItemCount( int series )
   {
-    return ( (XYCurveSerie)m_curves.get( series ) ).getItemCount();
+    try
+    {
+      return ( (XYCurveSerie)m_curves.get( series ) ).getItemCount();
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return 0;
+    }
   }
 
   /**
@@ -55,7 +64,15 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public Number getXValue( int series, int item )
   {
-    return ( (XYCurveSerie)m_curves.get( series ) ).getXValue( item );
+    try
+    {
+      return ( (XYCurveSerie)m_curves.get( series ) ).getXValue( item );
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return new Integer(0);
+    }
   }
 
   /**
@@ -72,7 +89,15 @@ class CurveDataset extends AbstractSeriesDataset implements XYDataset
    */
   public Number getYValue( int series, int item )
   {
-    return ( (XYCurveSerie)m_curves.get( series ) ).getYValue( item );
+    try
+    {
+      return ( (XYCurveSerie)m_curves.get( series ) ).getYValue( item );
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return new Integer(0);
+    }
   }
 
   /**

@@ -46,8 +46,8 @@ public class DefaultDiagramTemplate implements IDiagramTemplate
     m_template.removeAllCurves();
     m_template.setTitle( obs.getName() );
     
-    final IAxis[] valueAxis = ObservationUtilities.findAxis( obs, Number.class );
-    final IAxis dateAxis = ObservationUtilities.findAxis( obs, Date.class )[0];
+    final IAxis[] valueAxis = ObservationUtilities.findAxis( obs.getAxisList(), Number.class );
+    final IAxis dateAxis = ObservationUtilities.findAxis( obs.getAxisList(), Date.class )[0];
 
     for( int i = 0; i < valueAxis.length; i++ )
     {
