@@ -1,5 +1,7 @@
 package org.deegree_impl.extension;
 
+import java.net.URL;
+
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree.ogcbasic.CommonNamespaces;
@@ -36,7 +38,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   /**
    * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node)
    */
-  public void marshall( final Object object, final Node node ) throws TypeRegistryException
+  public void marshall( final Object object, final Node node ,URL context ) throws TypeRegistryException
   {
     final GM_Envelope envelope = (GM_Envelope)object;
 
@@ -114,7 +116,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   /**
    * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
    */
-  public Object unmarshall( Node node ) throws TypeRegistryException
+  public Object unmarshall( Node node ,URL context ) throws TypeRegistryException
   {
   	return new GM_Envelope_Impl(  );
 //  throw new UnsupportedOperationException("TODO implement it");  

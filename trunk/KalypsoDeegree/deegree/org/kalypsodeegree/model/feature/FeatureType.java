@@ -80,19 +80,6 @@ public interface FeatureType
   public static final int UNBOUND_OCCURENCY = -1;
 
   /**
-   * returns the direct parents of the FeatureType. If it hasn't a parent null
-   * should be returned
-   */
-  public FeatureType[] getParents();
-
-  /**
-   * returns the direct children of the FeatureType
-   * 
-   * @deprecated Don't use it!
-   */
-  public FeatureType[] getChildren();
-
-  /**
    * returns the name of the FeatureType
    */
   public String getName();
@@ -110,28 +97,32 @@ public interface FeatureType
   public String getNamespace();
 
   /**
-   * @deprecated use getMinOccurs(String prop) instead
+   * method has default modifier, other classes should use name-methodes not
+   * positions
    */
-  public int getMinOccurs( int pos );
+  int getMinOccurs( int pos );
 
   /**
-   * @deprecated use getMaxOccurs(String prop) instead
+   * method has default modifier, other classes should use name-methodes not
+   * positions
    */
-  public int getMaxOccurs( int pos );
+  int getMaxOccurs( int pos );
 
   public int getMaxOccurs( String linkName );
 
   public int getMinOccurs( String linkName );
 
   /**
-   * @deprecated don't use positions, use names only
+   * method has default modifier, other classes should use name-methodes not
+   * positions
    */
-  public int getPropertyPosition( String name );
+  int getPropertyPosition( String name );
 
   /**
-   * @deprecated don't use positions, use names only
+   * method has default modifier, other classes should use name-methodes not
+   * positions
    */
-  public int getDefaultGeometryPropertyPosition();
+  int getDefaultGeometryPropertyPosition();
 
   public FeatureTypeProperty getDefaultGeometryProperty();
 

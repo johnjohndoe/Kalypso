@@ -411,8 +411,9 @@ public class FeatureFactory
       System.out.println( "no Type" );
     final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
         .getTypeHandlerForClassName( type );
+//  TODO give context not null
     if( typeHandler != null )
-      return typeHandler.unmarshall( gmlProperty.getElement() );
+      return typeHandler.unmarshall( gmlProperty.getElement() ,null);
     //FeatureAssociationType
     final Object o = gmlProperty.getPropertyValue();
     if( o == null )

@@ -137,25 +137,6 @@ class FeatureType_Impl implements FeatureType, Serializable
   }
 
   /**
-   * returns the direct parents of the FeatureType. If it hasn't a parent null
-   * should be returned
-   */
-  public FeatureType[] getParents()
-  {
-    return null;
-  }
-
-  /**
-   * returns the direct children of the FeatureType
-   * 
-   * @deprecated
-   */
-  public FeatureType[] getChildren()
-  {
-    return null;
-  }
-
-  /**
    * returns the name of the FeatureType
    */
   public String getName()

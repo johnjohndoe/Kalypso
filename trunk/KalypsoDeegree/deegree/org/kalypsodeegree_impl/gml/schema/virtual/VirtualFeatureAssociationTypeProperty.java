@@ -154,7 +154,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtuelFeatureType
       if( srcGeo == null )
         return null;
       final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor(
-          workspace, m_linkName, 0 );
+          workspace, m_linkName, 2 );
       visitor.visit( feature );
       final GM_Object[] destGeo = visitor.getGeometryDestinations();
       final List curves = new ArrayList();

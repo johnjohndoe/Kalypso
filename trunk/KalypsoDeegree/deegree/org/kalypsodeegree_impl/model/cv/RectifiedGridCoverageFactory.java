@@ -57,14 +57,14 @@ public class RectifiedGridCoverageFactory {
 		ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
 				.getTypeHandlerForTypeName(
 						NSRGC + ":" + "RectifiedGridDomainType");
-		typeHandler.marshall(gridDomain, e_rectifiedGridDomain);
+		typeHandler.marshall(gridDomain, e_rectifiedGridDomain,null);
 		e_rectifiedGridCoverage.appendChild(e_rectifiedGridDomain);
 
 		Element e_rangeSet = doc.createElement("rangeSet");
 		RangeSet rangeSet = gridCoverage.getRangeSet();
 		typeHandler = TypeRegistrySingleton.getTypeRegistry()
 				.getTypeHandlerForTypeName(NSRGC + ":" + "RangeSetType");
-		typeHandler.marshall(rangeSet, e_rangeSet);
+		typeHandler.marshall(rangeSet, e_rangeSet,null);
 		e_rectifiedGridCoverage.appendChild(e_rangeSet);
 
 		e_rectifiedGridCoverageMember.appendChild(e_rectifiedGridCoverage);

@@ -243,9 +243,9 @@ public class JMSchemaTest extends TestCase
 
   private String toString( int indent, FeatureType parent, FeatureTypeProperty ftp )
   {
-    int ftpPos = parent.getPropertyPosition( ftp.getNamespace() + ":" + ftp.getName() );
-    int maxOccurs = parent.getMaxOccurs( ftpPos );
-    int minOccurs = parent.getMinOccurs( ftpPos );
+    String propName=ftp.getNamespace() + ":" + ftp.getName();
+    int maxOccurs = parent.getMaxOccurs( propName );
+    int minOccurs = parent.getMinOccurs( propName );
     String result = getIndent( indent, " +" + ftp.getNamespace() + ":" + ftp.getName(), 55 )
         + ftp.getType();
     result = result + annotationToString( indent, ftp.getAnnotationMap() );

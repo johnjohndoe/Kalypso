@@ -1,5 +1,6 @@
 package org.deegree_impl.model.cv;
 
+import java.net.URL;
 import java.util.Vector;
 
 import org.deegree.gml.GMLGeometry;
@@ -51,10 +52,9 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
-   *      org.w3c.dom.Node)
+   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
-  public void marshall( Object object, Node node ) throws TypeRegistryException
+  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
 
     RectifiedGridDomain gridDomain = (RectifiedGridDomain)object;
@@ -125,10 +125,9 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
+   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-
-  public Object unmarshall( Node node ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL context ) throws TypeRegistryException
   {
     Node node_rg = ( (Element)node ).getElementsByTagNameNS( NSRGC, "RectifiedGrid" ).item( 0 );
 
@@ -201,5 +200,6 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
   {
     return "rectifiedGridDomain";
   }
+
 
 }
