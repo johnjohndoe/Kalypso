@@ -73,6 +73,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   private GM_Envelope myBoundingBox = new GM_Envelope_Impl();
 
   private final int m_selectionID;
+  private GM_Envelope m_wishBBox;
 
   public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final int selectionID )
   {
@@ -419,9 +420,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return myBoundingBox;
   }
 
-  public void setBoundingBox( GM_Envelope env )
+  public void setBoundingBox( GM_Envelope wishBBox )
   {
-    myBoundingBox = adjustBoundingBox( env );
+    m_wishBBox = wishBBox;
+    myBoundingBox = adjustBoundingBox( m_wishBBox );
     m_projection.setSourceRect( myBoundingBox );
 
     // redraw
@@ -526,7 +528,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void componentResized( ComponentEvent e )
   {
-     setBoundingBox(getBoundingBox());
+    if( m_wishBBox != null )
+      setBoundingBox( m_wishBBox );
+    else
+    setBoundingBox(getBoundingBox());
   }
 
   /**
@@ -534,6 +539,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void componentShown( ComponentEvent e )
   {
+    if( m_wishBBox != null )
+      setBoundingBox( m_wishBBox );
+    else
     setBoundingBox(getBoundingBox());
   }
 }

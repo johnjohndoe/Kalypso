@@ -34,21 +34,21 @@ import org.kalypso.util.pool.ResourcePool;
 
 /**
  * <p>
- * Ein Decorator für ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme},
- * welches dieses (asynchron) über den Pool aus einer Source lädt.
+ * Ein Decorator f?r ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme},
+ * welches dieses (asynchron) ?ber den Pool aus einer Source l?dt.
  * </p>
  * <p>
- * Die ganze dynamic, also die Überwachung, ob sich das Pool-Objekt geändert
+ * Die ganze dynamic, also die ?berwachung, ob sich das Pool-Objekt ge?ndert
  * etc. findet hier statt
  * </p>
  * 
  * <p>
- * Hier findet auch die Verwaltung statt, ob sich Daten des Themas geändert
+ * Hier findet auch die Verwaltung statt, ob sich Daten des Themas ge?ndert
  * haben
  * </p>
  * <p>
  * Implementiert unter anderem {@link org.kalypso.util.command.ICommandTarget},
- * da sich die Daten des unterliegenden Themas ändern können
+ * da sich die Daten des unterliegenden Themas ?ndern k?nnen
  * </p>
  * 
  * @author Belger
@@ -234,7 +234,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
         // jetzt immer die styles noch mal holen
-        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user hinzugefügt wurden?
+        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user hinzugef?gt wurden?
         for( int i = 0; i < m_styleKeys.length; i++ )
           pool.addPoolListener( this, m_styleKeys[i] );
         
@@ -284,7 +284,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.dispose();
       m_theme = null;
 
-      // schon mal mitteilen, dass sich das Thema geändert hat
+      // schon mal mitteilen, dass sich das Thema ge?ndert hat
       fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
     }
 
@@ -343,7 +343,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getStyles();
-    return null;
+    return new UserStyle[0];
   }
 
   /**
