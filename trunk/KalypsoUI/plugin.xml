@@ -73,11 +73,11 @@
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.eclipse.debug.core" export="true"/>
       <import plugin="org.kalypso.util" export="true"/>
-      <import plugin="org.kalypso.deegree" export="true"/>
-      <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.apache.ant" export="true"/>
+      <import plugin="org.kalypso.deegree" export="true"/>
+      <import plugin="org.kalypso.core" export="false"/>
    </requires>
    <extension point="org.eclipse.core.runtime.preferences">
 	    <initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
