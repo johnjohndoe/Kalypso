@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.simple;
+package org.kalypso.ogc.sensor.impl;
 
 import javax.swing.table.DefaultTableModel;
 

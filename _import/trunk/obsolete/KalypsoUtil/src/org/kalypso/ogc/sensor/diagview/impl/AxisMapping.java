@@ -1,6 +1,8 @@
-package org.kalypso.ogc.sensor.diagview;
+package org.kalypso.ogc.sensor.diagview.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.diagview.IAxisMapping;
+import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 
 /**
  * Default implementation of <code>IAxisMapping</code>.

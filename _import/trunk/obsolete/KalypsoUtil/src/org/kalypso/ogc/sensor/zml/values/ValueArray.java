@@ -31,14 +31,18 @@ public class ValueArray implements IZmlValuesLoader, IZmlValues
    */
   public IZmlValues load( ) throws SensorException
   {
-    StringTokenizer stok = new StringTokenizer( m_va.getValue(), m_va.getSeparator() );
+    final StringTokenizer stok = new StringTokenizer( m_va.getValue(), m_va.getSeparator() );
 
     m_values = new Vector( stok.countTokens() );
 
     try
     {
       while( stok.hasMoreElements() )
-        m_values.add( m_axis.getParser().parse( stok.nextToken() ) );
+      {
+        final String token = stok.nextToken();
+        final Object obj = m_axis.getParser().parse( token );
+        m_values.add( obj );
+      }
 
       return this;
     }

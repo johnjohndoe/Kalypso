@@ -1,8 +1,9 @@
-package org.kalypso.ogc.sensor.tableview;
+package org.kalypso.ogc.sensor.tableview.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 
 /**
  * @author schlienger

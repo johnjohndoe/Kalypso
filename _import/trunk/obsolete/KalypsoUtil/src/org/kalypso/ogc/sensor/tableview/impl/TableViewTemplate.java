@@ -1,8 +1,10 @@
-package org.kalypso.ogc.sensor.tableview;
+package org.kalypso.ogc.sensor.tableview.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.Rules;
 import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;

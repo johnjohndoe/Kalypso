@@ -1,8 +1,9 @@
-package org.kalypso.ogc.sensor;
+package org.kalypso.util.runtime.args;
 
 import java.util.Date;
 
 import org.kalypso.util.runtime.IVariableArguments;
+
 
 /**
  * Simple Date Range. Can be used as argument where IVariableArguments is required.

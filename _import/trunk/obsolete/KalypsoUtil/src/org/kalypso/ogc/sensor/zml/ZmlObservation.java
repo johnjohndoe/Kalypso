@@ -1,6 +1,8 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,20 +12,20 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.ogc.sensor.DefaultTarget;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITarget;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.Metadata;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.DefaultTarget;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataType;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
-import org.kalypso.zml.TargetPropertyType;
 import org.xml.sax.InputSource;
 
 /**
@@ -34,178 +36,84 @@ import org.xml.sax.InputSource;
  */
 public class ZmlObservation implements IObservation
 {
-  private Observation m_obsFile = null;
-
-  private Metadata m_metadata = null;
-
-  private ArrayList m_axisList = null;
-
-  private DefaultTarget m_target = null;
-
-  private ZmlTuppleModel m_model = null;
-
   protected final static ObjectFactory m_zmlObjectFactory = new ObjectFactory();
-
-  private final String m_sourceName;
 
   private final URL m_url;
 
+  private final SimpleObservation m_observation;
+
+  private final ZmlAxis[] m_axes;
+
+  private ZmlTuppleModel m_model = null;
+
   /**
    * Constructor using a <code>File</code> object.
-   */
-  public ZmlObservation( final File file ) throws MalformedURLException
-  {
-    this( file.getName(), file.toURL() );
-  }
-
-  public ZmlObservation( final String sourceName, final URL url )
-  {
-    m_sourceName = sourceName;
-    m_url = url;
-  }
-
-  /**
-   * Returns the name of the source of this ZmlObservation.
-   */
-  public String getSourceName()
-  {
-    return m_sourceName;
-  }
-
-  /**
-   * Helper that loads the file
-   */
-  private Observation getObservation()
-  {
-    if( m_obsFile == null )
-    {
-      try
-      {
-        Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
-
-        m_obsFile = (Observation)u.unmarshal( new InputSource( m_url.openStream() ) );
-      }
-      catch( Exception e )
-      {
-        // TODO: how to handle this correctly?
-        throw new RuntimeException( e );
-      }
-    }
-
-    return m_obsFile;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getName()
-   */
-  public String getName()
-  {
-    return getObservation().getName();
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getTarget()
-   */
-  public ITarget getTarget()
-  {
-    if( m_target == null )
-    {
-      TargetPropertyType tp = getObservation().getTargetProperty();
-      m_target = new DefaultTarget( tp.getSource(), tp.getType(), tp.getObjectid() );
-    }
-
-    return m_target;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getMetadata()
-   */
-  public Metadata getMetadata()
-  {
-    if( m_metadata == null )
-    {
-      m_metadata = new Metadata();
-
-      Observation obs = getObservation();
-
-      m_metadata.put( Metadata.MD_NAME, obs.getName() );
-
-      if( obs.getMetadataList() != null )
-      {
-        List mdList = obs.getMetadataList().getMetadata();
-
-        for( Iterator it = mdList.iterator(); it.hasNext(); )
-        {
-          MetadataType md = (MetadataType)it.next();
-
-          m_metadata.put( md.getName(), md.getValue() );
-        }
-      }
-    }
-
-    return m_metadata;
-  }
-
-  /**
-   * TODO: explain why synchronized (jobs for display in table and diagram QV)
    * 
-   * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
+   * @throws MalformedURLException
+   * @throws JAXBException
+   * @throws SensorException
+   * @throws IOException
    */
-  public synchronized IAxis[] getAxisList()
+  public ZmlObservation( final File file ) throws MalformedURLException, JAXBException,
+      IOException, SensorException
   {
-    if( m_axisList == null )
-    {
-      List tmpList = getObservation().getAxis();
-
-      m_axisList = new ArrayList( tmpList.size() );
-
-      for( int i = 0; i < tmpList.size(); i++ )
-      {
-        AxisType tmpAxis = (AxisType)tmpList.get( i );
-
-        try
-        {
-          m_axisList.add( new ZmlAxis( tmpAxis, i ) );
-        }
-        catch( SensorException e )
-        {
-          // TODO: besseres Handling?
-          throw new RuntimeException( e );
-        }
-      }
-    }
-
-    return (ZmlAxis[])m_axisList.toArray( new ZmlAxis[0] );
+    this( file.toURL() );
   }
 
   /**
-   * Adds an axis to this observation. Convenience method that can be used by
-   * subclasses.
+   * Constructor using URL.
    * 
+   * @throws JAXBException
+   * @throws IOException
    * @throws SensorException
    */
-  protected void addAxis( final String name, final String unit, final String dataType,
-      final String separator, final String values ) throws SensorException
+  public ZmlObservation( final URL url ) throws JAXBException, IOException, SensorException
   {
-    try
+    m_url = url;
+
+    Unmarshaller u = m_zmlObjectFactory.createUnmarshaller();
+
+    // unmarshal and close stream
+    final InputStream inputStream = m_url.openStream();
+    final Observation obs = (Observation)u.unmarshal( new InputSource( inputStream ) );
+    inputStream.close();
+
+    // target
+    ITarget target = null;
+    if( obs.getTargetProperty() != null )
+      target = new DefaultTarget( obs.getTargetProperty() );
+
+    // metadata
+    final Metadata metadata = new Metadata();
+    metadata.put( Metadata.MD_NAME, obs.getName() );
+
+    if( obs.getMetadataList() != null )
     {
-      AxisType at = m_zmlObjectFactory.createAxisType();
-      at.setName( name );
-      at.setUnit( unit );
-      at.setDatatype( dataType );
+      final List mdList = obs.getMetadataList().getMetadata();
 
-      AxisType.ValueArrayType vat = m_zmlObjectFactory.createAxisTypeValueArrayType();
-      vat.setSeparator( separator );
-      vat.setValue( values );
+      for( final Iterator it = mdList.iterator(); it.hasNext(); )
+      {
+        final MetadataType md = (MetadataType)it.next();
 
-      at.setValueArray( vat );
-
-      m_axisList.add( new ZmlAxis( at, m_axisList.size() ) );
+        metadata.put( md.getName(), md.getValue() );
+      }
     }
-    catch( JAXBException e )
+
+    // axes
+    final List tmpList = obs.getAxis();
+    final List axisList = new ArrayList( tmpList.size() );
+
+    for( int i = 0; i < tmpList.size(); i++ )
     {
-      throw new SensorException( e );
+      final AxisType tmpAxis = (AxisType)tmpList.get( i );
+
+      axisList.add( new ZmlAxis( tmpAxis, i ) );
     }
+
+    m_axes = (ZmlAxis[])axisList.toArray( new ZmlAxis[ axisList.size() ] );
+    
+    m_observation = new SimpleObservation( obs.getName(), obs.isEditable(), target, metadata,
+        (IAxis[])axisList.toArray( new IAxis[0] ) );
   }
 
   /**
@@ -214,7 +122,7 @@ public class ZmlObservation implements IObservation
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     if( m_model == null )
-      m_model = new ZmlTuppleModel( m_url, (ZmlAxis[])getAxisList() );
+      m_model = new ZmlTuppleModel( m_url, m_axes );
 
     return m_model;
   }
@@ -227,12 +135,38 @@ public class ZmlObservation implements IObservation
   // TODO
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#isEditable()
-   */
+  public IAxis[] getAxisList()
+  {
+    return m_observation.getAxisList();
+  }
+
+  public Metadata getMetadata()
+  {
+    return m_observation.getMetadata();
+  }
+
+  public String getName()
+  {
+    return m_observation.getName();
+  }
+
+  public ITarget getTarget()
+  {
+    return m_observation.getTarget();
+  }
+
+  public int hashCode()
+  {
+    return m_observation.hashCode();
+  }
+
   public boolean isEditable()
   {
-    //getObservation().
-    return true;
+    return m_observation.isEditable();
+  }
+
+  public String toString()
+  {
+    return m_observation.toString();
   }
 }

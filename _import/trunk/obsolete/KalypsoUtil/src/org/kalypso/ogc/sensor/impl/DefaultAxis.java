@@ -1,6 +1,8 @@
-package org.kalypso.ogc.sensor;
+package org.kalypso.ogc.sensor.impl;
 
 import java.util.List;
+
+import org.kalypso.ogc.sensor.IAxis;
 
 
 /**

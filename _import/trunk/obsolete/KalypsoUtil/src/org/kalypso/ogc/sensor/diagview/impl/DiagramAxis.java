@@ -1,5 +1,6 @@
-package org.kalypso.ogc.sensor.diagview;
+package org.kalypso.ogc.sensor.diagview.impl;
 
+import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
 /**

@@ -1,10 +1,13 @@
-package org.kalypso.ogc.sensor.diagview;
+package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.template.AbstractTemplateEventProvider;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 

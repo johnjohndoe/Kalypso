@@ -8,10 +8,10 @@ import java.util.TreeSet;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.kalypso.ogc.sensor.DefaultAxis;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewRules;
@@ -29,7 +29,7 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class ObservationTableModel extends AbstractTableModel implements ITemplateEventListener
 {
   private final static ITableViewColumn[] EMPTY_COLS = new ITableViewColumn[0];
-  
+
   private ITableViewColumn[] m_columns = EMPTY_COLS;
 
   private IVariableArguments m_args = null;
@@ -41,6 +41,8 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
   private DefaultAxis m_ccAxis = null;
 
   private ITableViewRules m_rules = null;
+
+  private final Object m_lock = new Object();
 
   public ObservationTableModel()
   {
@@ -71,7 +73,8 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
       setColumns( (ITableViewColumn[])cols.toArray( new ITableViewColumn[0] ), m_args );
     }
     else
-      setColumns( new ITableViewColumn[] { column }, m_args );
+      setColumns( new ITableViewColumn[]
+      { column }, m_args );
   }
 
   /**
@@ -87,41 +90,45 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
       throws SensorException
   {
     if( columns == null )
-      throw new IllegalArgumentException("columns null not allowed. (If you want to clear the table: use clearColumns() instead)");
-    
-    m_columns = columns;
-    m_args = args;
+      throw new IllegalArgumentException(
+          "columns null not allowed. (If you want to clear the table: use clearColumns() instead)" );
 
-    // reset
-    m_cc = null;
-    m_ccAxis = null;
-
-    if( m_columns != EMPTY_COLS )
+    synchronized( m_lock )
     {
-      // the common column, merges all the values from the common axes
-      m_cc = new TreeSet();
+      m_columns = columns;
+      m_args = args;
 
-      for( int col = 0; col < m_columns.length; col++ )
+      // reset
+      m_cc = null;
+      m_ccAxis = null;
+
+      if( m_columns != EMPTY_COLS )
       {
-        IAxis sharedAxis = m_columns[col].getSharedAxis();
+        // the common column, merges all the values from the common axes
+        m_cc = new TreeSet();
 
-        // create common axis (fake)
-        if( m_ccAxis == null )
-          m_ccAxis = new DefaultAxis( sharedAxis );
+        for( int col = 0; col < m_columns.length; col++ )
+        {
+          IAxis sharedAxis = m_columns[col].getSharedAxis();
 
-        // verify compatibility of the axes
-        if( m_ccAxis.getDataClass() != sharedAxis.getDataClass()
-            || !m_ccAxis.getUnit().equals( sharedAxis.getUnit() ) )
-          throw new SensorException( m_ccAxis + " ist nicht mit " + sharedAxis + " kompatibel." );
+          // create common axis (fake)
+          if( m_ccAxis == null )
+            m_ccAxis = new DefaultAxis( sharedAxis );
 
-        ITuppleModel sharedModel = m_columns[col].getObservation().getValues( m_args );
+          // verify compatibility of the axes
+          if( m_ccAxis.getDataClass() != sharedAxis.getDataClass()
+              || !m_ccAxis.getUnit().equals( sharedAxis.getUnit() ) )
+            throw new SensorException( m_ccAxis + " ist nicht mit " + sharedAxis + " kompatibel." );
 
-        for( int row = 0; row < sharedModel.getCount(); row++ )
-          m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
+          ITuppleModel sharedModel = m_columns[col].getObservation().getValues( m_args );
+
+          for( int row = 0; row < sharedModel.getCount(); row++ )
+            m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
+        }
       }
-    }
 
-    fireTableStructureChanged();
+      fireTableStructureChanged();
+    }
   }
 
   /**
@@ -173,28 +180,31 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
    */
   public Object getValueAt( int rowIndex, int columnIndex )
   {
-    if( columnIndex == 0 )
-      return m_cc.toArray()[rowIndex];
-
-    try
+    synchronized( m_lock )
     {
-      // Retrieve object of common column at given position
-      Object obj = m_cc.toArray()[rowIndex];
+      if( columnIndex == 0 )
+        return m_cc.toArray()[rowIndex];
 
-      // Use this object to retrieve real index from tupple (with shared axis)
-      ITuppleModel values = m_columns[columnIndex - 1].getObservation().getValues( m_args );
-      int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
+      try
+      {
+        // Retrieve object of common column at given position
+        Object obj = m_cc.toArray()[rowIndex];
 
-      if( index < 0 )
-        return null;
+        // Use this object to retrieve real index from tupple (with shared axis)
+        ITuppleModel values = m_columns[columnIndex - 1].getObservation().getValues( m_args );
+        int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
 
-      // Now we can retrieve the element using value axis
-      return values.getElement( index, m_columns[columnIndex - 1].getValueAxis().getPosition() );
-    }
-    catch( SensorException e )
-    {
-      // TODO: handling
-      throw new RuntimeException( e );
+        if( index < 0 )
+          return null;
+
+        // Now we can retrieve the element using value axis
+        return values.getElement( index, m_columns[columnIndex - 1].getValueAxis().getPosition() );
+      }
+      catch( SensorException e )
+      {
+        // TODO: handling
+        throw new RuntimeException( e );
+      }
     }
   }
 
@@ -235,8 +245,8 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
   }
 
   /**
-   * Sets the rules. Important: you should call this method if you want the rules rendering
-   * to be enabled.
+   * Sets the rules. Important: you should call this method if you want the
+   * rules rendering to be enabled.
    */
   public void setRules( final ITableViewRules rules )
   {
@@ -244,7 +254,7 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
   }
 
   /**
-   * 
+   *  
    */
   public RenderingRule[] findRules( int row, int column ) throws NoSuchElementException
   {
@@ -259,7 +269,9 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
 
   /**
    * Finds a value axis with the given name.
-   * @throws NoSuchElementException when axis could not be found
+   * 
+   * @throws NoSuchElementException
+   *           when axis could not be found
    */
   private IAxis findValueAxis( final String name ) throws NoSuchElementException
   {
@@ -281,7 +293,7 @@ public class ObservationTableModel extends AbstractTableModel implements ITempla
     {
       if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof ITableViewColumn )
         addColumn( (ITableViewColumn)evt.getObject() );
-      
+
       if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
         clearColumns();
     }

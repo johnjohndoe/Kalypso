@@ -2,7 +2,6 @@ package org.kalypso.psiadapter;
 
 import java.util.Date;
 
-import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITarget;
@@ -11,6 +10,7 @@ import org.kalypso.ogc.sensor.Metadata;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;

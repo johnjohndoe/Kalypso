@@ -1,6 +1,6 @@
 package org.kalypso.psiadapter;
 
-import org.kalypso.ogc.sensor.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
 /**
  * Ein PSICompact Axis

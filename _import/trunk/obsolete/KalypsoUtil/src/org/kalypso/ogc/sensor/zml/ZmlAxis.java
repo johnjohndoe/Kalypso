@@ -5,8 +5,8 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.kalypso.java.properties.PropertiesHelper;
-import org.kalypso.ogc.sensor.DefaultAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
@@ -63,7 +63,7 @@ public class ZmlAxis extends DefaultAxis
   }
   
   /**
-   * @see org.kalypso.ogc.sensor.DefaultAxis#getDataClass()
+   * @see org.kalypso.ogc.sensor.impl.DefaultAxis#getDataClass()
    */
   public Class getDataClass()
   {

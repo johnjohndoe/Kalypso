@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.diagview;
+package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,6 +7,9 @@ import java.util.Properties;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.diagview.IAxisMapping;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
+import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 
 /**
  * @author schlienger

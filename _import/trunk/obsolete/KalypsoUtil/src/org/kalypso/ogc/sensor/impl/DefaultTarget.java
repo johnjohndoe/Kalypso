@@ -1,4 +1,7 @@
-package org.kalypso.ogc.sensor;
+package org.kalypso.ogc.sensor.impl;
+
+import org.kalypso.ogc.sensor.ITarget;
+import org.kalypso.zml.TargetPropertyType;
 
 /**
  * A simple implementation of ITarget.
@@ -11,6 +14,11 @@ public class DefaultTarget implements ITarget
   private final String m_type;
   private final String m_identifier;
 
+  public DefaultTarget( final TargetPropertyType tpt )
+  {
+    this( tpt.getSource(), tpt.getType(), tpt.getObjectid() );
+  }
+  
   public DefaultTarget( final String source, final String type, final String identifier )
   {
     m_source = source;

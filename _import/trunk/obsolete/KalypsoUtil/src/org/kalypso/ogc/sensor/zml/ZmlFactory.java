@@ -74,7 +74,7 @@ public class ZmlFactory
   /**
    * Helper, man sollte es benutzen um auf die ParserFactory zugreifen zu können
    */
-  public static ParserFactory getParserFactory()
+  public static synchronized ParserFactory getParserFactory()
   {
     if( m_parserFactory == null )
       m_parserFactory = new ParserFactory( getProperties(), ZmlAxis.class.getClassLoader() );
