@@ -1,22 +1,21 @@
-package org.kalypso.editor.tableeditor.layerTable;
+package org.kalypso.editor.tableeditor.layerTable.command;
 
-import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.Feature;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
 import org.kalypso.util.command.ICommand;
 
 /**
  * @author bce
  */
-public class SetColumnVisibleCommand implements ICommand
+public class RemoveRowsCommand implements ICommand
 {
   private final LayerTableModel m_model;
-  private final FeatureTypeProperty m_ftp;
-  private final boolean m_bVisible;
+  private Feature[] m_features;
 
-  public SetColumnVisibleCommand( final LayerTableModel model, final FeatureTypeProperty ftp, final boolean bVisible )
+  public RemoveRowsCommand( final LayerTableModel model, final Feature[] features )
   {
     m_model = model;
-    m_ftp = ftp;
-    m_bVisible = bVisible;
+    m_features = features;
   }
 
   /**
@@ -32,7 +31,8 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_model.setVisible( m_ftp, m_bVisible );
+    for( int i = 0; i < m_features.length; i++ )
+      m_model.removeFeature(m_features[i]);  
   }
 
   /**
@@ -42,14 +42,14 @@ public class SetColumnVisibleCommand implements ICommand
   {
     process();
   }
-
+  
   /**
    * @see org.kalypso.util.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
-    m_model.setVisible( m_ftp, !m_bVisible );
-  
+    for( int i = 0; i < m_features.length; i++ )
+      m_model.addFeature( m_features[i] );  
   }
 
   /**
@@ -57,7 +57,6 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Spalte '" + m_ftp.getName() + "' " + ( m_bVisible ? "anzeigen" : "verstecken" );
+    return "Element löschen";
   }
-
 }

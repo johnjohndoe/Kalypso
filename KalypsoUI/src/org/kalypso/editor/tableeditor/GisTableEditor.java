@@ -18,6 +18,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.eclipse.jface.action.FullAction;
@@ -51,7 +54,7 @@ import org.kalypso.xml.types.TableviewLayerType.ColumnType;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart
+public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider
 {
   private final ObjectFactory m_tableviewObjectFactory = new ObjectFactory();
 
@@ -230,5 +233,37 @@ public class GisTableEditor extends AbstractEditorPart
   public LayerTable getLayerTable()
   {
     return m_layerTable;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_layerTable.addSelectionChangedListener(listener);
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    return m_layerTable.getSelection();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+  m_layerTable.removeSelectionChangedListener(listener);
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( ISelection selection )
+  {
+    m_layerTable.setSelection(selection);
   }
 }
