@@ -27,7 +27,7 @@ import org.kalypso.ui.editor.styleeditor.panels.StrokeLinejoinComboPanel;
  *  
  */
 
-public class LineSymbolizerLayout extends SymbolizerLayout
+public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   public LineSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,

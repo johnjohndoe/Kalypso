@@ -43,7 +43,7 @@ import org.kalypso.ui.editor.styleeditor.panels.WellKnownNameComboPanel;
  *  
  */
 
-public class PointSymbolizerLayout extends SymbolizerLayout
+public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   private int markCounter = 1;

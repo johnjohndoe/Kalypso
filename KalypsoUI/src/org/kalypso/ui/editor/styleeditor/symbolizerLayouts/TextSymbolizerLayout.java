@@ -41,7 +41,7 @@ import org.kalypso.ui.editor.styleeditor.panels.TextLabelComboPanel;
  *  
  */
 
-public class TextSymbolizerLayout extends SymbolizerLayout
+public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   private FeatureType featureType = null;

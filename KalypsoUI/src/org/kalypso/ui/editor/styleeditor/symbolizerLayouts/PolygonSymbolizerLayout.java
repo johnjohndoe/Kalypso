@@ -33,7 +33,7 @@ import org.kalypso.ui.editor.styleeditor.panels.StrokeLinejoinComboPanel;
  *  
  */
 
-public class PolygonSymbolizerLayout extends SymbolizerLayout
+public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   private Fill polygonFill = null;

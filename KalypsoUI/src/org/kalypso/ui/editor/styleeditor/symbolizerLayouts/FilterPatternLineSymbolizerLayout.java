@@ -27,7 +27,7 @@ import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
  *  
  */
 
-public class FilterPatternLineSymbolizerLayout extends SymbolizerLayout
+public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
   private int selectionIndex = 0;
@@ -112,8 +112,7 @@ public class FilterPatternLineSymbolizerLayout extends SymbolizerLayout
         {
           ( (LineSymbolizer)symb ).getStroke().setStroke(new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );         
         }
-      }
-      userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+      }      
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
