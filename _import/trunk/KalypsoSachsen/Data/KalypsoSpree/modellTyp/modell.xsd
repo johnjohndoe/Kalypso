@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Andreas (TU) -->
+
 <schema targetNamespace="http://www.tuhh.de/kalypsoSpree" version="0.9" xmlns:na="http://www.tuhh.de/kalypsoSpree" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obs="zml.kalypso.org">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/> 
-	<import namespace="zml.kalypso.org" schemaLocation="observation.xsd"/> 
+ 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/> 
+    <import namespace="zml.kalypso.org" schemaLocation="observation.xsd"/> 
+
 <!--
 	<element name="SpreeModell" substitutionGroup="gml:_FeatureCollection"/>
 	<complexType name="_SpreeModellType">
@@ -18,14 +19,13 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="BodenfeuchteMin" type="double"/>
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
-					<element name="Niederschlag" type="string"/>
+					<element name="Niederschlag" type="obs:ObservationLink"/>
 					<element name="Wasserstand" type="string"/>
-					<!-- TODO link auf Zeitreihe-->
 				</sequence>
 			</extension>
 		</complexContent>
@@ -37,7 +37,7 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Name" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="Korrektur_Faktor" type="double"/>
 					<element name="Korrektur_Niveau" type="double"/>
 					<element name="Korrektur_Laufzeit" type="double"/>
@@ -57,7 +57,7 @@
 					<element name="Name" type="string"/>
 					<element name="Anfangsvolumen" type="double"/>
 					<element name="Abgabe" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
 					<!-- TODO link auf Zeitreihe-->
 				</sequence>
 			</extension>
@@ -71,7 +71,7 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Abgabe" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
 						<!-- TODO link auf Zeitreihe-->
 				</sequence>
 			</extension>
@@ -85,7 +85,7 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Zugabe" type="string"/>
-					<element name="Ort" type="gml:PointPropertyType" substitutionGroup="gml:pointProperty"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
 					<!-- TODO link auf Zeitreihe-->
 				</sequence>
 			</extension>
