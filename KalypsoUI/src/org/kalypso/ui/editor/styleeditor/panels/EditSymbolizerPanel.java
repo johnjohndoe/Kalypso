@@ -7,14 +7,16 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -37,11 +39,11 @@ public class EditSymbolizerPanel
 
   private int canDelete = -1;
 
-  private Button moveBackwardSymbolizerButton = null;
+  private Label moveBackwardSymbolizerButton = null;
 
-  private Button removeSymbolizerButton = null;
+  private Label removeSymbolizerButton = null;
 
-  private Button moveForwardSymbolizerButton = null;
+  private Label moveForwardSymbolizerButton = null;
 
   public EditSymbolizerPanel( Composite parent, int m_size )
   {
@@ -66,7 +68,8 @@ public class EditSymbolizerPanel
 
   private void init()
   {
-    removeSymbolizerButton = new Button( composite, SWT.PUSH );
+    removeSymbolizerButton = new Label( composite, SWT.PUSH );
+    removeSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     if( getCanDelete() == 0 )
       removeSymbolizerButton.setEnabled( false );
     FormData removeSymbolizerButtonData = new FormData();
@@ -75,23 +78,26 @@ public class EditSymbolizerPanel
     removeSymbolizerButtonData.left = new FormAttachment( 250, 1000, 0 );
     removeSymbolizerButtonData.top = new FormAttachment( 100, 1000, 0 );
     removeSymbolizerButton.setLayoutData( removeSymbolizerButtonData );
-    removeSymbolizerButton.setText( "-" );
-    removeSymbolizerButton.setToolTipText( "Remove Symbolizer" );
-    removeSymbolizerButton.addSelectionListener( new SelectionListener()
+    removeSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_REMOVE_SYMBOLIZER );
+    removeSymbolizerButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( REM_SYMB );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    moveBackwardSymbolizerButton = new Button( composite, SWT.PUSH );
+    moveBackwardSymbolizerButton = new Label( composite, SWT.PUSH );
+    moveBackwardSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveBackwardSymbolizerButton.setEnabled( false );
     FormData moveBackwardSymbolizerButtonData = new FormData();
@@ -100,23 +106,26 @@ public class EditSymbolizerPanel
     moveBackwardSymbolizerButtonData.left = new FormAttachment( 500, 1000, 0 );
     moveBackwardSymbolizerButtonData.top = new FormAttachment( 100, 1000, 0 );
     moveBackwardSymbolizerButton.setLayoutData( moveBackwardSymbolizerButtonData );
-    moveBackwardSymbolizerButton.setText( "<-" );
-    moveBackwardSymbolizerButton.setToolTipText( "Move Backward" );
-    moveBackwardSymbolizerButton.addSelectionListener( new SelectionListener()
+    moveBackwardSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_BACKWARD );
+    moveBackwardSymbolizerButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( BAK_SYMB );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    moveForwardSymbolizerButton = new Button( composite, SWT.PUSH );
+    moveForwardSymbolizerButton = new Label( composite, SWT.PUSH );
+    moveForwardSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveForwardSymbolizerButton.setEnabled( false );
     FormData moveForwardSymbolizerButtonData = new FormData();
@@ -125,20 +134,22 @@ public class EditSymbolizerPanel
     moveForwardSymbolizerButtonData.left = new FormAttachment( 750, 1000, 0 );
     moveForwardSymbolizerButtonData.top = new FormAttachment( 100, 1000, 0 );
     moveForwardSymbolizerButton.setLayoutData( moveForwardSymbolizerButtonData );
-    moveForwardSymbolizerButton.setText( "->" );
-    moveForwardSymbolizerButton.setToolTipText( "Move Forward" );
-    moveForwardSymbolizerButton.addSelectionListener( new SelectionListener()
+    moveForwardSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_FORWARD );
+    moveForwardSymbolizerButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( FOR_SYMB );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
   }
 

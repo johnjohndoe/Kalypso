@@ -17,16 +17,17 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 
 /**
@@ -125,26 +126,30 @@ public class AddSymbolizerPanel
     }
 
     // Symbolizer Add-Button
-    Button symbolizerAddButton = new Button( composite, SWT.PUSH | SWT.CENTER );
+    Label symbolizerAddButton = new Label( composite, SWT.PUSH | SWT.CENTER );
+    symbolizerAddButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
     FormData symbolizerAddButtonData = new FormData();
     symbolizerAddButtonData.height = 20;
     symbolizerAddButtonData.width = 30;
     symbolizerAddButtonData.left = new FormAttachment( 860, 1000, 0 );
     symbolizerAddButtonData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerAddButton.setLayoutData( symbolizerAddButtonData );
-    symbolizerAddButton.setText( "Add" );
-    symbolizerAddButton.addSelectionListener( new SelectionListener()
+    symbolizerAddButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    symbolizerAddButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setSelection( getSymbolizerCombo().getSelectionIndex() );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     // ***** Label
@@ -185,12 +190,11 @@ public class AddSymbolizerPanel
       textSymbolizer.setFill( null );
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
       textSymbolizer.setLabel( null );
-      textSymbolizer.getFont().setColor( Color.BLACK );      
+      textSymbolizer.getFont().setColor( Color.BLACK );
       // check which geometry-type
       // if line than label_placement - line_placement
       if( TextSymbolizerLayout.getFeatureTypeGeometryType( featureType ) == TextSymbolizerLayout.GM_LINESTRING )
-        StyleFactory.createLabelPlacement( StyleFactory
-            .createLinePlacement( "above" ) );
+        StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "above" ) );
       // else label_placement - point_placement
       else
         StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
@@ -239,7 +243,8 @@ public class AddSymbolizerPanel
   private String[] getItemsByFeatureType( FeatureType m_featureType )
   {
     String items[] = null;
-    // in case of Pattern-Rule it does not make sense to have a pattern for textsymbolizer
+    // in case of Pattern-Rule it does not make sense to have a pattern for
+    // textsymbolizer
     if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POINT )
     {
       if( isSimpleRule )

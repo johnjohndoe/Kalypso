@@ -3,21 +3,22 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 
 /**
@@ -72,17 +73,18 @@ public class DenominatorInputPanel
     text.setLayoutData( textData );
     text.setText( "" + denominator );
 
-    Button okButton = new Button( composite, SWT.PUSH );
+    Label okButton = new Label( composite, SWT.PUSH );
+    okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
     FormData okButtonData = new FormData();
     okButtonData.height = 15;
     okButtonData.width = 22;
     okButtonData.left = new FormAttachment( 900, 1000, 0 );
     okButtonData.top = new FormAttachment( 100, 1000, 0 );
     okButton.setLayoutData( okButtonData );
-    okButton.setText( "Ok" );
-    okButton.addSelectionListener( new SelectionListener()
+    okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
+    okButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         try
         {
@@ -90,7 +92,8 @@ public class DenominatorInputPanel
           if( getDenominator() < 0 )
           {
             StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-                .getShell(), "Input value invalid", "needs to be positive" );
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_ERROR_POSITIVE );
             errorDialog.showError();
           }
           else
@@ -99,31 +102,35 @@ public class DenominatorInputPanel
         catch( NumberFormatException nfe )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-              .getShell(), "Input needs to be of type double", "needs to be double" );
+              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getText().setText( "" + getDenominator() );
         }
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button getCurrentScaleButton = new Button( composite, SWT.PUSH );
+    Label getCurrentScaleButton = new Label( composite, SWT.PUSH );
+    getCurrentScaleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_GET_SCALE.createImage() );
     FormData getCurrentScaleButtonData = new FormData();
     getCurrentScaleButtonData.height = 15;
     getCurrentScaleButtonData.width = 22;
     getCurrentScaleButtonData.left = new FormAttachment( 770, 1000, 0 );
     getCurrentScaleButtonData.top = new FormAttachment( 100, 1000, 0 );
     getCurrentScaleButton.setLayoutData( getCurrentScaleButtonData );
-    getCurrentScaleButton.setText( "->" );
-    getCurrentScaleButton.setToolTipText( "aktuellen Maﬂstab" );
+    getCurrentScaleButton.setToolTipText( MessageBundle.STYLE_EDITOR_SCALE );
 
-    getCurrentScaleButton.addSelectionListener( new SelectionListener()
+    getCurrentScaleButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
         IEditorPart editor = window.getActivePage().getActiveEditor();
@@ -136,10 +143,13 @@ public class DenominatorInputPanel
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     Label urlLabel = new Label( composite, SWT.NULL );

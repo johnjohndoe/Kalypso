@@ -97,13 +97,13 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     //        "Thema hinzuf?gen", m_modellView, this );
 
     m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style ändern", m_modellView );
+        ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD, "Style ändern", m_modellView );
 
     m_removeRuleAction = new RemoveRuleAction( "Regel löschen",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Regel löschen", m_modellView, this );
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Regel löschen", m_modellView, this );
 
     m_saveStyleAction = new SaveStyleAction( "Style speichern",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Style speichern", m_modellView );
+        ImageProvider.IMAGE_STYLEEDITOR_SAVE, "Style speichern", m_modellView );
 
     m_activateThemeAction = new ActivateThemeAction( "Thema aktivieren", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema aktivieren", m_modellView );
 

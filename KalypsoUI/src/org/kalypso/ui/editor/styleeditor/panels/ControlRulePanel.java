@@ -7,15 +7,16 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
@@ -81,55 +82,62 @@ public class ControlRulePanel
     label.setLayoutData( labelData );
     label.setText( labelText );
 
-    Button addPatternRuleButton = new Button( composite, SWT.PUSH );
-    FormData addPatternRuleButtonData = new FormData();
-    addPatternRuleButtonData.height = 18;
-    addPatternRuleButtonData.width = 18;
-    addPatternRuleButtonData.left = new FormAttachment( 300, 1000, 0 );
-    addPatternRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
-    addPatternRuleButton.setLayoutData( addPatternRuleButtonData );
-    addPatternRuleButton.setText( "+" );
-    if( getPossibleNumericFeatureTypeNumber() == 0 )
-      addPatternRuleButton.setEnabled( false );
-    addPatternRuleButton.setToolTipText( "Add Pattern rule" );
-    addPatternRuleButton.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        setCurrentAction( ADD_PATTERN_RULE );
-        fire();
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        widgetSelected( e );
-      }
-    } );
-
-    Button addRuleButton = new Button( composite, SWT.PUSH );
+    Label addRuleButton = new Label( composite, SWT.PUSH );
+    addRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
     FormData addRuleButtonData = new FormData();
     addRuleButtonData.height = 18;
     addRuleButtonData.width = 18;
-    addRuleButtonData.left = new FormAttachment( 400, 1000, 0 );
+    addRuleButtonData.left = new FormAttachment( 300, 1000, 0 );
     addRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     addRuleButton.setLayoutData( addRuleButtonData );
-    addRuleButton.setText( "+" );
-    addRuleButton.setToolTipText( "Add rule" );
-    addRuleButton.addSelectionListener( new SelectionListener()
+    addRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD_RULE );
+    addRuleButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( ADD_RULE );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button removeRuleButton = new Button( composite, SWT.PUSH );
+    Label addPatternRuleButton = new Label( composite, SWT.PUSH );
+    addPatternRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE_PATTERN.createImage() );
+    FormData addPatternRuleButtonData = new FormData();
+    addPatternRuleButtonData.height = 18;
+    addPatternRuleButtonData.width = 18;
+    addPatternRuleButtonData.left = new FormAttachment( 400, 1000, 0 );
+    addPatternRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
+    addPatternRuleButton.setLayoutData( addPatternRuleButtonData );
+    if( getPossibleNumericFeatureTypeNumber() == 0 )
+      addPatternRuleButton.setEnabled( false );
+    addPatternRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD_RULE_PATTERN );
+    addPatternRuleButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        setCurrentAction( ADD_PATTERN_RULE );
+        fire();
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
+    } );
+
+    Label removeRuleButton = new Label( composite, SWT.PUSH );
+    removeRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     if( getCanDelete() == 0 )
       removeRuleButton.setEnabled( false );
     FormData removeRuleButtonData = new FormData();
@@ -138,23 +146,26 @@ public class ControlRulePanel
     removeRuleButtonData.left = new FormAttachment( 500, 1000, 0 );
     removeRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     removeRuleButton.setLayoutData( removeRuleButtonData );
-    removeRuleButton.setText( "-" );
-    removeRuleButton.setToolTipText( "Remove rule" );
-    removeRuleButton.addSelectionListener( new SelectionListener()
+    removeRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_REMOVE_RULE );
+    removeRuleButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( REM_RULE );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button moveBackwardRuleButton = new Button( composite, SWT.PUSH );
+    Label moveBackwardRuleButton = new Label( composite, SWT.PUSH );
+    moveBackwardRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveBackwardRuleButton.setEnabled( false );
     FormData moveBackwardRuleButtonData = new FormData();
@@ -163,23 +174,26 @@ public class ControlRulePanel
     moveBackwardRuleButtonData.left = new FormAttachment( 750, 1000, 0 );
     moveBackwardRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     moveBackwardRuleButton.setLayoutData( moveBackwardRuleButtonData );
-    moveBackwardRuleButton.setText( "<-" );
-    moveBackwardRuleButton.setToolTipText( "Move Backward" );
-    moveBackwardRuleButton.addSelectionListener( new SelectionListener()
+    moveBackwardRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_BACKWARD );
+    moveBackwardRuleButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( BAK_RULE );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
-    Button moveForwardRuleButton = new Button( composite, SWT.PUSH );
+    Label moveForwardRuleButton = new Label( composite, SWT.PUSH );
+    moveForwardRuleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveForwardRuleButton.setEnabled( false );
     FormData moveForwardRuleButtonData = new FormData();
@@ -188,20 +202,22 @@ public class ControlRulePanel
     moveForwardRuleButtonData.left = new FormAttachment( 850, 1000, 0 );
     moveForwardRuleButtonData.top = new FormAttachment( 100, 1000, 0 );
     moveForwardRuleButton.setLayoutData( moveForwardRuleButtonData );
-    moveForwardRuleButton.setText( "->" );
-    moveForwardRuleButton.setToolTipText( "Move Forward" );
-    moveForwardRuleButton.addSelectionListener( new SelectionListener()
+    moveForwardRuleButton.setToolTipText( MessageBundle.STYLE_EDITOR_FORWARD );
+    moveForwardRuleButton.addMouseListener( new MouseListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setCurrentAction( FOR_RULE );
         fire();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        widgetSelected( e );
+        mouseDoubleClick( e );
       }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
   }
 

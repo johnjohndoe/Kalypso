@@ -47,5 +47,16 @@ public class ImageProvider
   
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );
   public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = id( "icons/util/unchecked.gif" );
+  
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = id( "icons/gistable/save_edit.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = id( "icons/obstable/add_row.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE_PATTERN = IMAGE_ZML_REPOSITORY_EXPAND;
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_REMOVE = IMAGE_MAPVIEW_OUTLINE_REMOVE;
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_BACKWARD = id( "icons/util/backward_nav.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_FORWARD = id( "icons/util/forward_nav.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
+  
+  
 }
 

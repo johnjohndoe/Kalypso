@@ -97,7 +97,7 @@ public class RulePatternTabItem
     String rulePatternName = tmpRule.getTitle();
     if( rulePatternName == null || rulePatternName.trim().length() == 0 )
     {
-      rulePatternName = "set title";
+      rulePatternName = MessageBundle.STYLE_EDITOR_SET_VALUE;
       tmpRule.setTitle( rulePatternName );
     }
     double rulePatternMinDenom = tmpRule.getMinScaleDenominator();
@@ -113,12 +113,12 @@ public class RulePatternTabItem
     compositeLayout.marginHeight = 5;
     composite.layout();
     tabItem.setControl( composite );
-    tabItem.setText( "Pattern:" + rulePatternName );
+    tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + rulePatternName );
 
     final TabFolder symbolizerTabFolder;
     RulePatternInputPanel rulePatternInputPanel = null;
 
-    TextInputPanel titleInputPanel = new TextInputPanel( composite, "Title:", rulePatternName );
+    TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rulePatternName );
     titleInputPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -127,7 +127,7 @@ public class RulePatternTabItem
         if( name == null || name.trim().length() == 0 )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid input value", "Title should not be null" );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
         }
         else
@@ -139,13 +139,13 @@ public class RulePatternTabItem
           getUserStyle().fireModellEvent(
               new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
-        tabItem.setText( "Pattern:" + name );
+        tabItem.setText(MessageBundle.STYLE_EDITOR_PATTERN  +" "+ name );
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
     final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite,
-        "MinDenom:", rulePatternMinDenom );
+        MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom );
     minDenominatorPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -156,8 +156,8 @@ public class RulePatternTabItem
         if( min > max )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid value for MinDenominator",
-              "MinDenominator cannot be larger then MaxDenominator" );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
           minDenominatorPanel.setDenominator( tmpRule.getMinScaleDenominator() );
         }
@@ -191,7 +191,7 @@ public class RulePatternTabItem
         tmpRule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
     final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite,
-        "MaxDenom:", rulePatternMaxDenom );
+        MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom );
     maxDenominatorPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -202,8 +202,8 @@ public class RulePatternTabItem
         if( min > max )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              "Invalid value for MaxDenominator",
-              "MaxDenominator needs to be larger then MinDenominator" );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
           maxDenominatorPanel.setDenominator( tmpRule.getMaxScaleDenominator() );
         }
@@ -231,7 +231,7 @@ public class RulePatternTabItem
     } );
 
     final AddFilterPropertyPanel addFilterPropertyPanel = new AddFilterPropertyPanel( composite,
-        "FilterProperty", getNumericFeatureTypePropertylist() );
+        MessageBundle.STYLE_EDITOR_FILTER_PROPERTY, getNumericFeatureTypePropertylist() );
     // necessary if focus had been changed and rule-pattern is redrawn
     addFilterPropertyPanel.setSelection( ( (PropertyIsBetweenOperation)( (ComplexFilter)tmpRule
         .getFilter() ).getOperation() ).getPropertyName().getValue() );
@@ -257,7 +257,7 @@ public class RulePatternTabItem
       }
     } );
 
-    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, "Symbolizer",
+    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER,
         featureType, false );
 
     // 3. getFilterType -> at the moment we assume only a pattern of
@@ -305,7 +305,7 @@ public class RulePatternTabItem
             }
           }
         }
-        rulePatternInputPanel = new RulePatternInputPanel( composite, "Pattern:", minValue,
+        rulePatternInputPanel = new RulePatternInputPanel( composite, MessageBundle.STYLE_EDITOR_PATTERN, minValue,
             maxValue, step );
       }
     }

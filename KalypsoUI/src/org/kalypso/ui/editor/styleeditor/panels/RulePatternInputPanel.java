@@ -149,10 +149,10 @@ public class RulePatternInputPanel
             errorDialog.showError();
           }
           // restrict editor to 50 steps
-          else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 50 )
+          else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 35 )
           {
             new StyleEditorErrorDialog( getComposite().getShell(), "Verweis",
-                "Editor ist auf 50 Abschnitte begrenzt" ).showError();
+                "Editor ist auf 35 Abschnitte begrenzt" ).showError();
           }
           else
           {
