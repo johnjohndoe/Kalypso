@@ -7,8 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
@@ -23,7 +21,11 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
+import org.kalypso.ogc.event.ModellEventListener;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayer;
+import org.kalypso.ogc.gml.KalypsoFeature;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.mapactions.FullExtentMapAction;
 import org.kalypso.ogc.gml.mapactions.PanToWidgetAction;
 import org.kalypso.ogc.gml.mapactions.SelectWidgetAction;
@@ -42,7 +44,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISelectionChangedListener
+public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
@@ -71,6 +73,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
   
   private LayerTableViewer m_viewer;
 
+  private IMapModell m_mapModell;
+
   public MapAndTableWizardPage()
   {
     super( "<MapAndTableWizardPage>" );
@@ -81,7 +85,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
    */
   public void dispose()
   {
-    m_viewer.removeSelectionChangedListener(this);
+    m_mapModell.removeModellListener( this );
   }
 
   /**
@@ -143,8 +147,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
       m_viewer = new LayerTableViewer( parent, getProject(), KalypsoGisPlugin.getDefault()
           .createFeatureTypeCellEditorFactory(), SELECTION_ID );
       m_viewer.applyTableTemplate( template, getProject() );
-      
-      m_viewer.addSelectionChangedListener( this );
     }
     catch( final Exception e )
     {
@@ -166,7 +168,8 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    final IMapModell mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
+    m_mapModell = new GisTemplateMapModell( gisview, getProject(), crs );
+    m_mapModell.addModellListener( this );
 
     ///////////
     // Karte //
@@ -179,7 +182,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
     mapPanel.setVisible( true );
     virtualFrame.add( mapPanel );
 
-    mapPanel.setMapModell( mapModell );
+    mapPanel.setMapModell( m_mapModell );
     mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     /////////////
@@ -205,7 +208,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
     /////////////
     // Legende //
     /////////////
-    final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( this, mapModell );
+    final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( this, m_mapModell );
     outlineViewer.createControl( mapView );
 
     mapView.setContent( mapComposite );
@@ -224,14 +227,26 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements ISe
     return true;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   /**
+   * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
-  public void selectionChanged( final SelectionChangedEvent event )
+  public void onModellChange( final ModellEvent modellEvent )
   {
     final String propNames = getArguments().getProperty(  PROP_TIMEPROPNAME, "" );
     final String[] timeNames = propNames.split( "#" );
 
-    System.out.println( event.getSelection() );
+    final IKalypsoLayer layer = m_mapModell.getActiveTheme().getLayer();
+    if( !( layer instanceof KalypsoFeatureLayer ) )
+      return;
+    
+    final KalypsoFeatureLayer kfl = (KalypsoFeatureLayer)layer;
+    final KalypsoFeature[] allFeatures = kfl.getAllFeatures();
+    for( int i = 0; i < allFeatures.length; i++ )
+    {
+      if( allFeatures[i].isSelected( SELECTION_ID ) )
+      {
+        // do something
+      }
+    }
   }
 }
