@@ -45,7 +45,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -72,6 +71,8 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.model.xml.ArgListType;
+import org.kalypso.model.xml.ArgType;
 import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.ObjectFactory;
@@ -165,13 +166,7 @@ public class CalcWizard implements IWizard, IProjectProvider
       {
         final CalcwizardType.PageType page = (CalcwizardType.PageType)pIt.next();
 
-        final Properties props = new Properties();
-        final List arglist = page.getArg();
-        for( Iterator aIt = arglist.iterator(); aIt.hasNext(); )
-        {
-          final CalcwizardType.PageType.ArgType arg = (CalcwizardType.PageType.ArgType)aIt.next();
-          props.setProperty( arg.getName(), arg.getValue() );
-        }
+        final Arguments arguments = buildArguments( page );
 
         final String className = page.getClassName();
         final String pageTitle = page.getPageTitle();
@@ -181,7 +176,7 @@ public class CalcWizard implements IWizard, IProjectProvider
 
         final IModelWizardPage wizardPage = (IModelWizardPage)ClassUtilities.newInstance(
             className, IModelWizardPage.class, ModelNature.class.getClassLoader(), null, null );
-        wizardPage.init( m_project, pageTitle, imageDesc, props, calcCaseFolder );
+        wizardPage.init( m_project, pageTitle, imageDesc, arguments, calcCaseFolder );
 
         addPage( wizardPage );
       }
@@ -205,6 +200,24 @@ public class CalcWizard implements IWizard, IProjectProvider
     }
   }
 
+  private Arguments buildArguments( final ArgListType alt )
+  {
+    final Arguments map = new Arguments();
+    
+    final List arglist = alt.getArg();
+    for( Iterator aIt = arglist.iterator(); aIt.hasNext(); )
+    {
+      final ArgType arg = (ArgType)aIt.next();
+      Object value = arg.getValue();
+      if( value == null )
+        value = buildArguments( arg );
+        
+      map.put( arg.getName(), value );
+    }
+    
+    return map;
+  }
+  
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */

@@ -42,13 +42,13 @@ package org.kalypso.ui.calcwizard.modelpages;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Properties;
+import java.util.Iterator;
 
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
+import org.kalypso.ui.calcwizard.Arguments;
 
 /**
  * Provides some convenience methods for dealing with the stuff in Kalypso
@@ -79,19 +79,19 @@ public class KalypsoWizardHelper
    * @return array of TimeserieFeatureProps
    */
   public static TimeserieFeatureProps[] parseTimeserieFeatureProps(
-      final Properties props )
+      final Arguments props )
   {
     final ArrayList l = new ArrayList();
 
-    final Enumeration names = props.propertyNames();
-    while( names.hasMoreElements() )
+    
+    for( final Iterator names = props.keySet().iterator(); names.hasNext(); )
     {
-      final String pName = (String) names.nextElement();
+      final String pName = (String) names.next();
 
       if( pName
           .startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
         l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString(
-            props.getProperty( pName ), '#' ) ) );
+            (String) props.get( pName ), '#' ) ) );
     }
 
     return (TimeserieFeatureProps[]) l.toArray( new TimeserieFeatureProps[0] );

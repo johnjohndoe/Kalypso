@@ -41,6 +41,7 @@
 package org.kalypso.ui.metadoc.util;
 
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.services.proxy.DocBean;
@@ -66,12 +67,16 @@ public class MultiDocumentServiceWrapper
   
   private MetadocServiceWrapper m_wrapper;
 
+  private DocBean m_dummybean;
+
+  private String m_username;
+
   
   public MultiDocumentServiceWrapper() throws CoreException
   {
-    final String username = System.getProperty( "user.name" );
-
-    m_wrapper = new MetadocServiceWrapper( m_dummyDoc.getDocumentExtension(), username );
+    m_username = System.getProperty( "user.name" );
+    m_wrapper = new MetadocServiceWrapper(  );
+    m_dummybean = m_wrapper.prepareDocument( m_dummyDoc.getDocumentExtension(), m_username );
   }
 
 
@@ -80,18 +85,16 @@ public class MultiDocumentServiceWrapper
     return m_dummyDoc;
   }
 
-
-  public DocBean getDoc()
+  public DocBean getDummyBean()
   {
-    return m_wrapper.getDoc();
+    return m_dummybean;
   }
-
 
   public void dispose()
   {
     try
     {
-      m_wrapper.cancelData();
+      m_wrapper.cancelData( m_dummybean );
     }
     catch( final CoreException e )
     {
@@ -99,4 +102,21 @@ public class MultiDocumentServiceWrapper
     }
   }
   
+  
+  public DocBean getCopyBean( final String extension ) throws CoreException
+  {
+    final DocBean newbean = m_wrapper.prepareDocument( extension, m_username );
+    newbean.setMetadata( new HashMap( m_dummybean.getMetadata() ) );
+    return newbean;
+  }
+
+  public void commitBean( final DocBean doc ) throws CoreException
+  {
+    m_wrapper.commitData( doc );
+  }
+
+  public void cancelBean( final DocBean doc ) throws CoreException
+  {
+    m_wrapper.cancelData( doc );
+  }
 }

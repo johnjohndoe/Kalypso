@@ -75,17 +75,17 @@ public abstract class AbstractExportActionDelegate extends AbstractEditorActionD
     {
       final String username = System.getProperty( "user.name" );
       
-      m_metadocService = new MetadocServiceWrapper( expDoc.getDocumentExtension(), username );
-      final DocBean doc = m_metadocService.getDoc();
+      m_metadocService = new MetadocServiceWrapper(  );
+      final DocBean doc = m_metadocService.prepareDocument( expDoc.getDocumentExtension(), username );
 
       final Constructor constructor = wizardClass.getConstructor( CONS_SIGN );
       final Wizard exportWizard = (Wizard) constructor.newInstance( new Object[] {expDoc, doc} ); 
 
       final WizardDialog dialog = new WizardDialog( shell, exportWizard );
       if( dialog.open() == Window.OK )
-        m_metadocService.commitData(  );
+        m_metadocService.commitData( doc );
       else
-        m_metadocService.cancelData(  );
+        m_metadocService.cancelData( doc );
     }
     catch( final Exception e )
     {

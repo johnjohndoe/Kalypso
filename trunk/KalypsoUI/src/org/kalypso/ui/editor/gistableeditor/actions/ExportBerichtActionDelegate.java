@@ -68,8 +68,8 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
     try
     {
       final String username = System.getProperty( "user.name" );
-      final MetadocServiceWrapper service = new MetadocServiceWrapper( ".csv", username );
-      final DocBean doc = service.getDoc();
+      final MetadocServiceWrapper service = new MetadocServiceWrapper(  );
+      final DocBean doc = service.prepareDocument( ".csv", username );
       
       final ExportableLayerTable exp = new ExportableLayerTable( getEditor().getLayerTable() );
       
@@ -84,9 +84,9 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
           try
           {
             if( ok == Window.OK )
-              service.commitData();
+              service.commitData( doc );
             else
-              service.cancelData();
+              service.cancelData( doc );
           }
           catch( CoreException e )
           {

@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
@@ -61,6 +62,7 @@ import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
+import org.xml.sax.InputSource;
 
 /**
  * Observation Diagramm Template Handling made easy.
@@ -137,15 +139,48 @@ public class DiagViewUtils
   {
     try
     {
-      final ObsdiagviewType baseTemplate = (ObsdiagviewType) ODT_OF
-          .createUnmarshaller().unmarshal( ins );
-
-      return baseTemplate;
+      return loadDiagramTemplateXML( new InputSource( ins ) );
     }
     finally
     {
       IOUtils.closeQuietly( ins );
     }
+  }
+
+  /**
+   * Loads a binding template. Closes the stream.
+   * 
+   * @param reader
+   * @return diagram template object parsed from the file
+   * @throws JAXBException
+   */
+  public static ObsdiagviewType loadDiagramTemplateXML( final Reader reader )
+      throws JAXBException
+  {
+    try
+    {
+      return loadDiagramTemplateXML( new InputSource( reader ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
+  /**
+   * Loads a binding template. Closes the stream.
+   * 
+   * @param ins
+   * @return diagram template object parsed from the file
+   * @throws JAXBException
+   */
+  private static ObsdiagviewType loadDiagramTemplateXML( final InputSource ins )
+      throws JAXBException
+  {
+    final ObsdiagviewType baseTemplate = (ObsdiagviewType) ODT_OF
+        .createUnmarshaller().unmarshal( ins );
+
+    return baseTemplate;
   }
 
   /**
@@ -191,8 +226,7 @@ public class DiagViewUtils
     final Iterator itThemes = template.getThemes().iterator();
     while( itThemes.hasNext() )
     {
-      final DiagViewTheme theme = (DiagViewTheme) itThemes
-          .next();
+      final DiagViewTheme theme = (DiagViewTheme) itThemes.next();
 
       final IObservation obs = theme.getObservation();
 
@@ -212,7 +246,7 @@ public class DiagViewUtils
         xmlCurve.setName( curve.getName() );
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
-        
+
         final List xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();
@@ -246,7 +280,7 @@ public class DiagViewUtils
   {
     return createAxisFor( axis.getType(), axis.getName(), axis.getUnit() );
   }
-  
+
   /**
    * Creates a diagram axis according to the given IObservation axis
    * 
@@ -260,8 +294,7 @@ public class DiagViewUtils
   {
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
       return new DiagramAxis( axisType, "date", label, unit,
-          DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM,
-          false );
+          DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       return new DiagramAxis( axisType, "double", label, unit,
@@ -273,7 +306,8 @@ public class DiagViewUtils
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new DiagramAxis( axisType, "double", label, unit,
-          DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_RIGHT, true, null, new Double(0.8) );
+          DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_RIGHT, true,
+          null, new Double( 0.8 ) );
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit,

@@ -63,18 +63,18 @@ public class ExportWizardBerichtWizard extends ExportBerichtWizard
   private final List m_checkedFeatures;
   private Feature[] m_choosenFeatures;
   private IBerichtExporter[] m_choosenExporter;
-  private final IBerichtExporter[] m_exporter;
+  private final IBerichtExporter[] m_exporters;
   private ArrayChooserPage m_chooseFromListPage;
   
 
-  public ExportWizardBerichtWizard( final FeatureList features, final List checkedFeatures, final String nameProperty, final IExportableDocument document2export, final DocBean doc, final IBerichtExporter[] exporter )
+  public ExportWizardBerichtWizard( final FeatureList features, final List checkedFeatures, final String nameProperty, final IExportableDocument document2export, final DocBean doc, final IBerichtExporter[] exporters )
   {
     super( document2export, doc );
     
     m_features = features;
     m_checkedFeatures = checkedFeatures;
     m_nameProperty = nameProperty;
-    m_exporter = exporter;
+    m_exporters = exporters;
   }
   
   /**
@@ -83,7 +83,7 @@ public class ExportWizardBerichtWizard extends ExportBerichtWizard
   public void addPages()
   {
     m_chooseFeaturePage = new ChooseFeaturePage( m_features, null, m_checkedFeatures.toArray(), m_nameProperty, "chooseFeatures", "Für diese Vorhersagepegel werden die Berichte erzeugt:", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
-    m_chooseFromListPage = new ArrayChooserPage( m_exporter, "arrayChooser", "Diese Berichtsarten werden erzeugt:", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); 
+    m_chooseFromListPage = new ArrayChooserPage( m_exporters, "arrayChooser", "Diese Berichtsarten werden erzeugt:", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); 
     
     addPage( m_chooseFeaturePage );
     addPage( m_chooseFromListPage );
@@ -96,8 +96,9 @@ public class ExportWizardBerichtWizard extends ExportBerichtWizard
    */
   public boolean performFinish()
   {
-    if( !super.performFinish() )
-      return false;
+    // don't call super.performFinish()
+    // instead:
+    commitData();
     
     m_choosenFeatures = m_chooseFeaturePage.getSelected();
     m_choosenExporter = (IBerichtExporter[])Arrays.castArray( m_chooseFromListPage.getChoosen(), new IBerichtExporter[0] );

@@ -40,16 +40,34 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
-import java.util.Properties;
+import java.io.OutputStream;
+import java.net.URL;
+
+import org.deegree.model.feature.Feature;
+import org.kalypso.ui.calcwizard.Arguments;
 
 /**
- * TODO marc: wir benutzen schon die interface IExportableDocument... kann man da kein Merge machen?
- * 
  * @author belger
  */
 public interface IBerichtExporter
 {
-  public void setArguments( final Properties arguments );
+  /**
+   * Initialize this exporter with the given arguments
+   * @param context
+   * @param arguments
+   */
+  public void init( final URL context, final Arguments arguments );
   
   public String toString();
+  
+  /**
+   * Export feature to Stream
+   * @param os
+   * 
+   * @param features
+   * @throws Exception
+   */
+  public void export( final Feature feature, final OutputStream os ) throws Exception;
+
+  public String getExtension( );
 }
