@@ -50,6 +50,7 @@ import java.util.Date;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.GMLSchemaCache;
 
 /**
  * @author doemming
@@ -107,7 +108,7 @@ public class NAConfiguration
     // schemas
     m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
     m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    final GMLSchema schema=new GMLSchema(m_schemaURL);
+    final GMLSchema schema=GMLSchemaCache.getSchema(m_schemaURL);
     
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );

@@ -54,6 +54,7 @@ import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.gml.schema.GMLSchema;
+import org.deegree_impl.gml.schema.GMLSchemaCache;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.GMLWorkspace_Impl;
@@ -131,7 +132,7 @@ public class NAModellConverter
     insertGeometries( rootFeature, "/home/doemming/weisseElster/shapes" );
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
     
-    final GMLSchema gmlSchema=new GMLSchema(conf.getSchemaURL());
+    final GMLSchema gmlSchema=GMLSchemaCache.getSchema(conf.getSchemaURL());
     // TODO: Andreas: Namespace ok for gml?
     // TODO: Andreas: Namespace ok for gml?
     final Document schema = gmlSchema.getSchema();
@@ -213,7 +214,7 @@ public class NAModellConverter
   public NAModellConverter( NAConfiguration conf ) throws Exception
   {
     m_conf = conf;
-    m_schema = new GMLSchema( conf.getSchemaURL() );
+    m_schema = GMLSchemaCache.getSchema( conf.getSchemaURL() );
 
     m_catchmentManager = new CatchmentManager( m_schema, m_conf );
     m_gerinneManager = new ChannelManager( m_schema, m_conf );
