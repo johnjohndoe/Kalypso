@@ -163,11 +163,11 @@ public class CatchmentManager extends AbstractManager
     // is relative
     // no copy
 
-    Object link2 = NAZMLGenerator
+    Object relativeLink = NAZMLGenerator
     .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_NIEDERSCHLAG_EINGABE, m_conf
         .getGmlBaseDir(),relativeZmlPath, true ,true);
     FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
-        link );
+        relativeLink );
     propCollector.put( "niederschlagZR", niederschlagZRProp );
 
     // continue reading

@@ -146,7 +146,6 @@
                     <element name="pns" type="string"/>
                     <element name="kurzzeit" type="string"/>
                     <element name="langzeit" type="string"/>                
-                    <element name="niederschlagZR" type="obslink:TimeseriesLink"/>
                     <element name="namfn" type="string"/>
                     <element name="faktn" type="string"/>
                     <element name="namft" type="string"/>
@@ -212,18 +211,11 @@ siehe bodenkorrekturmember...
                     <element name="gwsent" type="string"/>
                     <element name="klupor" type="string"/>
                     <element name="izkn" type="string"/>
-                    <!--                
-                    <element name="BodenfeuchteMin" type="double"/>
-                    <element name="Bodenfeuchte" type="double"/>
-                    <element name="BodenfeuchteMax" type="double"/>
-                    <element name="Ausdehnung" type="double"/>
-<!-- ZR niederschlag -->
+    
+					<!-- ZR niederschlag -->
    					<element name="niederschlagZRRepository" type="obslink:TimeseriesLink"/>
-   					<element name="niederschlagZR" type="obslink:TimeseriesLink"/>
-                    <element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLink"/>
-                    <element name="Wasserstand_gemessen" type="obslink:TimeseriesLink"/>
-                    <element name="Wasserstand_gerechnet" type="obslink:TimeseriesLink"/>
--->
+   					<element name="niederschlagZR" type="obslink:TimeseriesLink"/>                                        
+
                 </sequence>
 			</extension>
 		</complexContent>

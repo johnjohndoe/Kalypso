@@ -23,6 +23,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NAZMLGenerator
 {
+  private static boolean DEBUG=true;
   final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   public static final int NA_NIEDERSCHLAG_EINGABE = 1;
@@ -80,7 +81,7 @@ public class NAZMLGenerator
     File dir = targetZmlFile.getParentFile();
     if( !dir.exists() )
       dir.mkdirs();
-    if( !simulateCopy )
+    if( !simulateCopy && ! DEBUG)
       convert( copySource, srcType, targetZmlFile );
     if( relative )
       return generateobsLink( targetRelativePath, srcType );
