@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.kalypso.java.properties.PropertiesHelper;

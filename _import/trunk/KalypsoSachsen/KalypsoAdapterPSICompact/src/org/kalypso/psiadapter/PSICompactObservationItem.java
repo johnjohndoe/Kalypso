@@ -188,9 +188,11 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
+   * TODO: explain why synchronized (see ZmlObservation)
+   * 
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public synchronized IAxis[] getAxisList()
   {
     if( m_axes == null )
     {

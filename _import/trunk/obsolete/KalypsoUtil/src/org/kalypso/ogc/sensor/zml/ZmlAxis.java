@@ -57,7 +57,12 @@ public class ZmlAxis extends DefaultAxis
 
     try
     {
+//      System.out.println( "axis-type:" + m_type );
+//      System.out.println( "axis-format:" + m_format );
+      
       m_parser = getParserFactory().createParser( m_type, m_format );
+      
+//      System.out.println( "axis-parser:" + m_parser );
     }
     catch( FactoryException e )
     {

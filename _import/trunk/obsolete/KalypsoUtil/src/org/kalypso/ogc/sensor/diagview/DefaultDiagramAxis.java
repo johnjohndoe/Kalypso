@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.diagview;
 
+import org.kalypso.template.obsdiagview.TypeAxis;
+
 /**
  * Default implementation of <code>IDiagramAxis</code>.
  * 
@@ -13,6 +15,11 @@ public class DefaultDiagramAxis implements IDiagramAxis
   private final String m_position;
   private final boolean m_isInverted;
 
+  public DefaultDiagramAxis( final TypeAxis axis )
+  {
+    this( axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(), axis.isInverted() );
+  }
+  
   public DefaultDiagramAxis( final String label, final String unit, final String direction, final String position, final boolean isInverted )
   {
     m_label = label;

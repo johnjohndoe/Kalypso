@@ -128,13 +128,16 @@ public class ZmlObservation implements IObservation
 
       m_metadata.put( Metadata.MD_NAME, obs.getName() );
 
-      List mdList = obs.getMetadataList().getMetadata();
-
-      for( Iterator it = mdList.iterator(); it.hasNext(); )
+      if( obs.getMetadataList() != null )
       {
-        MetadataType md = (MetadataType)it.next();
-
-        m_metadata.put( md.getName(), md.getValue() );
+        List mdList = obs.getMetadataList().getMetadata();
+  
+        for( Iterator it = mdList.iterator(); it.hasNext(); )
+        {
+          MetadataType md = (MetadataType)it.next();
+  
+          m_metadata.put( md.getName(), md.getValue() );
+        }
       }
     }
 
@@ -142,9 +145,11 @@ public class ZmlObservation implements IObservation
   }
 
   /**
+   * TODO: explain why synchronized (jobs for display in table and diagram QV)
+   * 
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList()
+  public synchronized IAxis[] getAxisList()
   {
     if( m_axisList == null )
     {

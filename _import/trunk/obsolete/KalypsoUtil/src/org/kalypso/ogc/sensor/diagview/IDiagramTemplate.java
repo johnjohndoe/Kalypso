@@ -1,12 +1,13 @@
 package org.kalypso.ogc.sensor.diagview;
 
+import org.kalypso.ogc.sensor.template.ITemplateAdapter;
+
 /**
  * Template for diagram
  * 
  * @author schlienger
- *
  */
-public interface IDiagramTemplate
+public interface IDiagramTemplate extends ITemplateAdapter
 {
   public String getTitle();
   

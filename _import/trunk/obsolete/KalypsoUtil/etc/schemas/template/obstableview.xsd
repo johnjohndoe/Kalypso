@@ -23,8 +23,10 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="kalypso:layerType">
-								<xs:attribute name="editable" type="xs:boolean" use="optional" default="false"/>
-								<xs:attribute name="width" type="xs:int" use="optional" default="100"/>
+								<xs:attribute name="editable" type="xs:boolean" use="optional" default="false" />
+								<xs:attribute name="width" type="xs:int" use="optional" default="100" />
+								<xs:attribute name="sharedAxis" type="xs:string" use="required" />
+								<xs:attribute name="valueAxis" type="xs:string" use="required" />
 							</xs:extension>
 						</xs:complexContent>
 					</xs:complexType>

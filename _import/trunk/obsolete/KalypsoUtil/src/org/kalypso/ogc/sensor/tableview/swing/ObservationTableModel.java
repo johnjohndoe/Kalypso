@@ -40,7 +40,6 @@ public class ObservationTableModel extends AbstractTableModel
 
   /**
    * Constructor with columns. Calls setColumns( ITableViewColumn[] ).
-   * 
    * @throws SensorException
    */
   public ObservationTableModel( ITableViewColumn[] columns ) throws SensorException
@@ -57,8 +56,7 @@ public class ObservationTableModel extends AbstractTableModel
    *          the arguments that will be used when fetching the values
    * @throws SensorException
    */
-  public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args )
-      throws SensorException
+  public void setColumns( final ITableViewColumn[] columns, final IVariableArguments args ) throws SensorException
   {
     m_columns = columns;
     m_args = args;
@@ -66,8 +64,8 @@ public class ObservationTableModel extends AbstractTableModel
     // reset
     m_cc = null;
     m_ccAxis = null;
-
-    if( columns != null )
+    
+    if( m_columns != null )
     {
       // the common column, merges all the values from the common axes
       m_cc = new TreeSet();
@@ -91,11 +89,10 @@ public class ObservationTableModel extends AbstractTableModel
           m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
       }
     }
-
+    
     fireTableStructureChanged();
-    fireTableDataChanged();
   }
-
+  
   /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */

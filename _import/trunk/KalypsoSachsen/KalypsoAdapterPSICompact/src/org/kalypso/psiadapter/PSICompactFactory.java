@@ -290,16 +290,16 @@ public final class PSICompactFactory
       final int position )
   {
     final String key = label + unit + dataClass.getName();
-
+    
     IAxis axis = (IAxis)m_axes.get( key );
-
+    
     if( axis == null )
     {
       axis = new PSICompactAxis( label, unit, dataClass, false, position );
 
       m_axes.put( key, axis );
     }
-
+    
     return axis;
   }
 }

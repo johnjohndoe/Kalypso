@@ -6,13 +6,14 @@ import java.util.Vector;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.template.AbstractTemplateAdapter;
 
 /**
  * A default template for an observation.
  * 
  * @author schlienger
  */
-public class DefaultDiagramTemplate implements IDiagramTemplate
+public class DefaultDiagramTemplate extends AbstractTemplateAdapter implements IDiagramTemplate
 {
   private final IObservation m_obs;
   private final Map m_diagramAxisMap = new Hashtable();
@@ -83,7 +84,7 @@ public class DefaultDiagramTemplate implements IDiagramTemplate
         final IDiagramAxis da = createDiagramAxis( m_diagramAxisMap, oAxes[i], IDiagramAxis.DIRECTION_VERTICAL, IDiagramAxis.POSITION_LEFT, false );
         final IAxisMapping m = new DefaultMapping( oAxes[i], da );
         
-        curves.add( new DefaultCurve( oAxes[i].getLabel(), new IAxisMapping[] { mCmn, m } ) );
+        curves.add( new DefaultCurve( oAxes[i].getLabel(), m_obs, new IAxisMapping[] { mCmn, m } ) );
       }
       
       m_curves = (ICurve[])curves.toArray( new ICurve[0] );

@@ -1,4 +1,4 @@
-package org.kalypso.java.io;
+package org.kalypso.java.io.filter;
 
 /**
  * Ein FileFilter was mit Wildcards beschrieben werden kann.

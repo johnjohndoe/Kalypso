@@ -345,11 +345,18 @@ public class XMLTools
         }
     }
 
-    public static String xslTransform( File xmlFile, File xslFile )
+    public static String xslTransform( final File xmlFile, final File xslFile )
+    throws Exception
+    {
+      return xslTransform( new FileInputStream( xmlFile), new FileInputStream( xslFile) );
+    }
+
+    
+    public static String xslTransform( final InputStream xmlFile, final InputStream xslFile )
         throws Exception
     {
-        System.out.println( "xml:" + xmlFile.toString(  ) );
-        System.out.println( "xsl:" + xslFile.toString(  ) );
+        //System.out.println( "xml:" + xmlFile.toString(  ) );
+        //System.out.println( "xsl:" + xslFile.toString(  ) );
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(  );
         factory.setNamespaceAware( true );

@@ -1,11 +1,13 @@
 package org.kalypso.ogc.sensor;
 
+import org.kalypso.ogc.sensor.tableview.ITableObservationProvider;
+
 /**
  * Default implementation of the IObservationProvider interface.
  * 
  * @author schlienger
  */
-public class DefaultObservationProvider implements IObservationProvider
+public class DefaultObservationProvider implements ITableObservationProvider
 {
   private final IObservation m_obs;
   private final IAxis m_sharedAxis;
@@ -27,7 +29,7 @@ public class DefaultObservationProvider implements IObservationProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getSharedAxis()
+   * @see org.kalypso.ogc.sensor.tableview.ITableObservationProvider#getSharedAxis()
    */
   public IAxis getSharedAxis()
   {
@@ -35,7 +37,7 @@ public class DefaultObservationProvider implements IObservationProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getValueAxis()
+   * @see org.kalypso.ogc.sensor.tableview.ITableObservationProvider#getValueAxis()
    */
   public IAxis getValueAxis()
   {

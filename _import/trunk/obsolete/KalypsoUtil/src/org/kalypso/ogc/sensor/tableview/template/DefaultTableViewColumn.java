@@ -1,7 +1,8 @@
-package org.kalypso.ogc.sensor.tableview;
+package org.kalypso.ogc.sensor.tableview.template;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 
 /**
  * A simple implementation of the ITableViewColumn interface.
@@ -68,7 +69,7 @@ public class DefaultTableViewColumn implements ITableViewColumn
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getSharedAxis()
+   * @see org.kalypso.ogc.sensor.tableview.ITableObservationProvider#getSharedAxis()
    */
   public IAxis getSharedAxis()
   {
@@ -76,7 +77,7 @@ public class DefaultTableViewColumn implements ITableViewColumn
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getValueAxis()
+   * @see org.kalypso.ogc.sensor.tableview.ITableObservationProvider#getValueAxis()
    */
   public IAxis getValueAxis()
   {
