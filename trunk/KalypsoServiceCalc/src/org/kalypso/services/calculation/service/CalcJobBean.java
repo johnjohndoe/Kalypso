@@ -38,15 +38,15 @@ public class CalcJobBean implements Serializable
   /** aktuelle Ergebnisse */
   private CalcJobDataBean[] m_results = null;
   
-  /** Die Basis-URL, an welcher die temporären Daten stehen */
-  private String m_baseURL = null;
+  /** Das Basis-Verzeichnis, an welcher die temporären Daten stehen */
+  private String m_basedir = null;
   
   public CalcJobBean()
   {
   // empty 
   }
   
-  public CalcJobBean( final String id, final String description, final String type, final int state, final int progress, final String baseURL, final CalcJobDataBean[] results )
+  public CalcJobBean( final String id, final String description, final String type, final int state, final int progress, final String basedir, final CalcJobDataBean[] results )
   {
     m_id = id;
     m_description = description;
@@ -54,7 +54,7 @@ public class CalcJobBean implements Serializable
     m_progress = progress;
     m_results = results;
     m_type = type;
-    m_baseURL = baseURL;
+    m_basedir = basedir;
   }
   
   public String getDescription()
@@ -135,12 +135,12 @@ public class CalcJobBean implements Serializable
   {
     m_type = type;
   }
-  public final String getBaseURL()
+  public final String getBasedir()
   {
-    return m_baseURL;
+    return m_basedir;
   }
-  public final void setBaseURL( String baseURL )
+  public final void setBasedir( String basedir )
   {
-    m_baseURL = baseURL;
+    m_basedir = basedir;
   }
 }

@@ -1,5 +1,7 @@
 package org.kalypso.services.calculation.job.impl;
 
+import java.io.File;
+
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
@@ -9,9 +11,9 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 public final class CountJob extends AbstractCalcJob
 {
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(org.kalypso.services.calculation.service.CalcJobDataBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.service.CalcJobDataBean[])
    */
-  public void run( final CalcJobDataBean[] arguments ) throws CalcJobServiceException
+  public void run( final File basedir, final CalcJobDataBean[] arguments ) throws CalcJobServiceException
   {
     while( !isCanceled() )
     {

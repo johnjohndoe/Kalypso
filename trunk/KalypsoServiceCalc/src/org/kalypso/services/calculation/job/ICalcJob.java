@@ -1,5 +1,7 @@
 package org.kalypso.services.calculation.job;
 
+import java.io.File;
+
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
@@ -8,7 +10,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  */
 public interface ICalcJob
 {
-  public void run( final CalcJobDataBean[] input ) throws CalcJobServiceException;
+  public void run( final File basedir, final CalcJobDataBean[] input ) throws CalcJobServiceException;
   
   /**
    * Alles freigeben und evtl. temporäre Dateien löschen (z.B: die URL von

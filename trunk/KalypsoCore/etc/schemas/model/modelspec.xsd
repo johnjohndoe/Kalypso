@@ -6,13 +6,10 @@
 			<xs:sequence>
 				<xs:element name="input" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
+						<xs:attribute name="id" type="xs:string" use="required"/>
+						<xs:attribute name="description" type="xs:string" use="optional" default=""/>
 						<xs:attribute name="path" type="xs:string" use="required"/>
 						<xs:attribute name="relativeToCalcCase" type="xs:boolean" use="required"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="output" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:attribute name="path" type="xs:string" use="required"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
