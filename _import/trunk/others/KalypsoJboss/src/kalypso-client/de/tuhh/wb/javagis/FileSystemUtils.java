@@ -265,6 +265,29 @@ public class FileSystemUtils
             }
     }
 
+    public static String file2String(File file)
+    {
+	byte bufferInp[]=new byte[80];
+        int cInp=0;
+	InputStream streamInp=null;
+	String result="";
+	try
+	    {
+		streamInp=new FileInputStream(file);
+		while((cInp=streamInp.read(bufferInp))!=-1)
+		    {
+			String outInp=new String(bufferInp,0,cInp);
+			result=result+outInp;
+		    }
+		    streamInp.close();
+	    }
+	catch(Exception e)
+	    {
+		e.printStackTrace();
+	    }
+	return result;
+    }
+
     public static void move(File dir,String srcName,String destName)
     {
 	File srcFile=new File(dir,srcName);

@@ -308,7 +308,7 @@
               }
              }
 
-            public void toXml(Writer out) throws IOExcpetion
+            public void toXml(Writer out) throws IOException
             {
              Tools.genXmlTag(out,"v","key","<xsl:value-of select="$myVectorSet"/>");
 

@@ -71,6 +71,12 @@
                  import javax.naming.NamingException;   
                  import ejb.event.EJBEventHelper;         
          
+    import org.xml.sax.InputSource;
+    import java.io.StringReader;
+    import java.io.FileInputStream;
+
+
+
          /**
          * 
          * @ejb:bean   name="<xsl:value-of select="$themeName"/>.VersionSession"
@@ -585,6 +591,61 @@
          }
          
 
+         //		StringReader stringReader=new StringReader(xmlString);
+         //		InputSource inputSource=new InputSource(stringReader);
+         //		reader.parse(inputSource);
+         //		xmlString=null;
+
+
+         /**
+         * @ejb:interface-method
+         */
+         public void importFromXml(Object vId,String xmlString) throws
+         javax.naming.NamingException,
+         javax.ejb.CreateException,
+         javax.ejb.FinderException,
+         java.io.IOException,
+         org.xml.sax.SAXException
+         {
+          StringReader stringReader=new StringReader(xmlString);
+          InputSource inputSource=new InputSource(stringReader);
+          importFromXml(vId,inputSource);
+          xmlString=null;
+         }
+
+         public void importFromXml(Object vId,InputSource inputSource) throws
+         javax.naming.NamingException,
+         javax.ejb.CreateException,
+         javax.ejb.FinderException,
+         java.io.IOException,
+         org.xml.sax.SAXException
+         {
+          this.importIdMapping=new Hashtable();
+         
+          XmlImport xmlImport=new XmlImport(inputSource,this);
+          this.importXmlDestinationVID=vId;
+
+          xmlImport.start();
+
+         //EVENT:
+         try
+         {
+         //         System.out.println("fire VersionEvent");
+         EJBEvent event=new EJBEvent("<xsl:value-of select="$themeKey"/>",EJBEvent.VERSION_CLOSEVIEWS,vId,-1,null);
+         EJBEventHelper eventHelper=new EJBEventHelper();
+         eventHelper.fireEvent(event);
+         //         System.out.println("fired VersionEvent");
+         }
+         catch(NamingException e)
+         {
+         e.printStackTrace();
+         }
+         catch(JMSException e)
+         {
+         e.printStackTrace();
+         }
+         }
+         
          /**
          * @ejb:interface-method
          */
@@ -595,6 +656,13 @@
          java.io.IOException,
          org.xml.sax.SAXException
          {
+          FileInputStream inputStream=new FileInputStream(importFile);
+          InputSource inputSource=new InputSource(inputStream);
+          importFromXml(vId,inputSource);
+          inputStream.close();
+         }
+
+         /*
           this.importIdMapping=new Hashtable();
           XmlImport xmlImport=new XmlImport(importFile,this);
           this.importXmlDestinationVID=vId;
@@ -619,7 +687,8 @@
          e.printStackTrace();
          }
          }
-         
+         */
+
          public void importObject(GisTransferObject gto)
          {
           String tableName=gto.getTableName();

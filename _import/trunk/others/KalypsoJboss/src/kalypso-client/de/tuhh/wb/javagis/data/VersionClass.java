@@ -16,6 +16,7 @@ import javax.ejb.SessionBean;
 import javax.ejb.EJBObject;
 
 import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.FileSystemUtils;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
 
 import de.tuhh.wb.javagis.view.netview.GisPoint;
@@ -583,7 +584,10 @@ public class VersionClass implements EJBEventListener
 	try
 	    {
 		VersionSession versionSession=getVersionSession(themeKey);
-		versionSession.importFromXml(vId,file);
+		//		versionSession.importFromXml(vId,file);
+		String xmlString=FileSystemUtils.file2String(file);
+		if(!"".equals(xmlString))
+		    versionSession.importFromXml(vId,xmlString);
 		lostVersionSession=false;
 	    }
 	catch(Exception e)

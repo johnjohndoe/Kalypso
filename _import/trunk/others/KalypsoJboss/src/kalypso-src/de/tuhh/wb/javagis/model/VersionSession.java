@@ -51,7 +51,9 @@ public interface VersionSession extends EJBObject
 
     public java.util.Vector getPrimaryKeyList(  ) throws  FinderException,  RemoteException;
 
+    public void importFromXml( java.lang.Object vId,String xmlString) throws NamingException,  CreateException,  FinderException, IOException, SAXException,  RemoteException;
     public void importFromXml( java.lang.Object vId,java.io.File file ) throws NamingException,  CreateException,  FinderException, IOException, SAXException,  RemoteException;
+
     public void exportToXml( java.lang.Object vId,java.io.File file ) throws NamingException, IOException,  CreateException,  RemoteException,FinderException;
     public String exportToXml( java.lang.Object vId ) throws NamingException, IOException,  CreateException,  RemoteException,FinderException;
     public void copyVersion(Object vId,String project,String name,String state,String description,String hostory) throws NamingException,CreateException,FinderException,SAXException, RemoteException;
