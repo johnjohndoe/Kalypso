@@ -31,7 +31,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class NetFileManager extends AbstractManager
 {
-  static boolean DEBUG=true;
+  static boolean DEBUG=false;
   
   final NAConfiguration m_conf;
 
@@ -359,7 +359,7 @@ public class NetFileManager extends AbstractManager
         downStreamElement.addUpStream( upStreamElement );
       }
     }
-    final Feature rootNodeFE = workspace.getFeature( m_conf.getNodeFT(), "Node10000" );
+    final Feature rootNodeFE = workspace.getFeature( m_conf.getNodeFT(), "Node3002" );
     // select netelement from root element
     Feature rootChannel = workspace.resolveLink( rootNodeFE, "downStreamChannelMember" );
     List rootNetElements = new ArrayList();

@@ -6,6 +6,7 @@ package org.kalypso.convert.namodel;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Date;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.gml.schema.GMLSchema;
@@ -46,6 +47,12 @@ public class NAConfiguration
   private final FeatureType m_vChannelFT;
 
   private final FeatureType m_kmChannelFT;
+
+  private Date m_simulationForecast;
+
+  private Date m_simulationStart;
+
+  private Date m_simulationEnd;
    
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -160,5 +167,32 @@ public class NAConfiguration
   public FeatureType getVChannelFT()
   {
     return m_vChannelFT;
+  }
+
+  public void setSimulationForecasetStart( Date simulationForecast )
+  {
+    m_simulationForecast = simulationForecast;}
+
+  public void setSimulationStart( Date simulationStart )
+  {
+    m_simulationStart = simulationStart;
+  }
+
+  public void setSimulationEnd( Date simulationEnd )
+  {
+    m_simulationEnd = simulationEnd;
+  }
+
+  public Date getSimulationStart()
+  {
+    return m_simulationStart;
+  }
+  public Date getSimulationEnd()
+  {
+    return m_simulationEnd;
+  }
+  public Date getSimulationForecastStart()
+  {
+    return m_simulationForecast;
   }
 }

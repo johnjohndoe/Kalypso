@@ -1,13 +1,13 @@
 package org.kalypso.convert.namodel.test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 
 import junit.framework.TestCase;
 
+import org.deegree_impl.extension.ITypeRegistry;
+import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.convert.namodel.NaModelCalcJob;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.StreamUtilities;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 
 /**
@@ -16,22 +16,32 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
  */
 public class NaModelCalcJobTest extends TestCase
 {
-
   final String modellGMLResource = "data/namodell.gml";
 
   final String controlGMLResource = "data/nacontrol.gml";
 
   public void testRun() throws Exception
   {
-    File modellGML = File.createTempFile( "NA_MODELL", ".gml" );
-    File controlGML = File.createTempFile( "NA_CONTROL", ".gml" );
+    // general
+    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+    registry.registerTypeHandler( new ObservationLinkHandler() );
 
-    StreamUtilities.streamCopy( getClass().getResourceAsStream( modellGMLResource ),
-        new FileOutputStream( modellGML ) );
-    StreamUtilities.streamCopy( getClass().getResourceAsStream( controlGMLResource ),
-        new FileOutputStream( controlGML ) );
+    //    File modellGML = File.createTempFile( "NA_MODELL", ".gml" );
+    //    File controlGML = File.createTempFile( "NA_CONTROL", ".gml" );
+    File modellGML = new File( "C:\\simulation\\namodell.gml" );
+    File controlGML = new File( "C:\\simulation\\nacontrol.gml" );
 
-    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
+    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
+    // modellGMLResource ),
+    //        new FileOutputStream( modellGML ) );
+    //    StreamUtilities.streamCopy( getClass().getResourceAsStream(
+    // controlGMLResource ),
+    //        new FileOutputStream( controlGML ) );
+
+    //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
+    File baseDir = new File( "C:\\TMP\\NA_Simulation" );
+    baseDir.mkdirs();
+
     NaModelCalcJob job = new NaModelCalcJob();
     CalcJobDataBean[] beans = new CalcJobDataBean[]
     {

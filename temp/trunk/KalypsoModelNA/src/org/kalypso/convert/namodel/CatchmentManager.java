@@ -194,9 +194,12 @@ public class CatchmentManager extends AbstractManager
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + toAscii( (String)feature.getProperty( "faktn" ), "f5.2" ) + "\n" );
+    // 5
+    b.append("std.tmp std.ver");
     writer.write( b.toString() );
-    // 4-8
-    for( int i = 4; i <= 8; i++ )
+    
+    // 5-8
+    for( int i = 5; i <= 8; i++ )
       writer.write( toAscci( feature, i ) + "\n" );
 
     // 9
