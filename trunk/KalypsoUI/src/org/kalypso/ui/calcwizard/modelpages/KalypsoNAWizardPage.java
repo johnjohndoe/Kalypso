@@ -52,6 +52,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
+  private LayerTableViewer m_viewer;
 
   public KalypsoNAWizardPage()
   {

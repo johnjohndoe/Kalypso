@@ -440,6 +440,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = kft.getFeatureList();
+    
     if( featureList == null )
       return new TSLinkWithName[] {};
 

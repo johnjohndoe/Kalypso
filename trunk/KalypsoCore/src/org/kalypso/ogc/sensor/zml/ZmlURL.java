@@ -97,7 +97,11 @@ public class ZmlURL
 
     String[] strs = tmpUrl.split( "\\?", 2 );
 
-    tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra );
+    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
+      tmpUrl = "?" + strs[0] + buildDateRangeSpec( dra );
+    else
+      tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra );
+
     if( strs.length >= 2 )
       tmpUrl += strs[1];
 
