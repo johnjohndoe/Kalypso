@@ -55,6 +55,11 @@ public class FileItem implements IRepositoryItem
     return items;
   }
 
+  public File getFile()
+  {
+    return m_file;
+  }
+  
   /**
    * @see org.kalypso.util.repository.IRepositoryItem#hasChildren()
    */

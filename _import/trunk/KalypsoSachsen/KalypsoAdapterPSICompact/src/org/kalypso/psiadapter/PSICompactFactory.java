@@ -1,8 +1,11 @@
 package org.kalypso.psiadapter;
 
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.java.reflect.ClassUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.util.repository.RepositoryException;
 
 import de.psi.go.lhwz.PSICompact;
@@ -14,17 +17,19 @@ import de.psi.go.lhwz.PSICompact;
  */
 public final class PSICompactFactory
 {
-  static String PSI_CLASS = null;
+  private static String PSI_CLASS = null;
 
-  protected static PSICompact psiCompact = null;
+  protected static PSICompact m_psiCompact = null;
 
-  protected static PSICompactRepository psiCompactRep = null;
+  protected static PSICompactRepository m_psiCompactRep = null;
 
-  protected static int currentVersion = 0;
+  protected static int m_currentVersion = 0;
 
-  private static Thread threadVersionChecker = null;
+  private static Thread m_threadVersionChecker = null;
 
-  private static Properties factoryProperties = null;
+  private static Properties m_factoryProperties = null;
+
+  private final static Map m_axes = new Hashtable();
 
   /**
    * Returns the connection to the PSI-Interface implementation. This method is
@@ -32,58 +37,60 @@ public final class PSICompactFactory
    */
   static PSICompact getConnection()
   {
-    if( psiCompact == null )
+    if( m_psiCompact == null )
     {
       try
       {
-        factoryProperties = new Properties();
-        factoryProperties.load( PSICompactFactory.class.getResourceAsStream( "resources/config.ini" ) );
+        m_factoryProperties = new Properties();
+        m_factoryProperties.load( PSICompactFactory.class
+            .getResourceAsStream( "resources/config.ini" ) );
 
         // path of class which implements the PSICompact interface
-        PSI_CLASS = factoryProperties.getProperty( "PSI_CLASS", "de.psi.go.lhwz.PSICompactImpl" );
+        PSI_CLASS = m_factoryProperties.getProperty( "PSI_CLASS", "de.psi.go.lhwz.PSICompactImpl" );
 
-        psiCompact = (PSICompact)ClassUtilities.newInstance( PSI_CLASS, PSICompact.class,
+        m_psiCompact = (PSICompact)ClassUtilities.newInstance( PSI_CLASS, PSICompact.class,
             PSICompactFactory.class.getClassLoader() );
 
         // Wichtig! init() aufrufen damit die PSI-Schnittstelle sich
         // initialisieren kann
-        psiCompact.init();
+        m_psiCompact.init();
 
-        currentVersion = psiCompact.getDataModelVersion();
+        m_currentVersion = m_psiCompact.getDataModelVersion();
       }
       catch( Exception e )
       {
         e.printStackTrace();
-        
+
         return null;
       }
     }
 
-    return psiCompact;
+    return m_psiCompact;
   }
 
   /**
    * Liefert den PSICompactRepository
+   * 
    * @throws RepositoryException
    */
   static PSICompactRepository getRepository() throws RepositoryException
   {
-    if( psiCompactRep == null )
+    if( m_psiCompactRep == null )
     {
       // TODO: specify location of the service here
-      psiCompactRep = new PSICompactRepository( "PSICompact@localhost" );
+      m_psiCompactRep = new PSICompactRepository( "PSICompact@localhost" );
 
-      threadVersionChecker = new Thread( new VersionChecker() );
-      threadVersionChecker.start();
+      m_threadVersionChecker = new Thread( new VersionChecker() );
+      m_threadVersionChecker.start();
     }
 
-    return psiCompactRep;
+    return m_psiCompactRep;
   }
 
   public static void dispose()
   {
-    if( threadVersionChecker != null )
-      threadVersionChecker.stop();
+    if( m_threadVersionChecker != null )
+      m_threadVersionChecker.stop();
   }
 
   /**
@@ -94,17 +101,17 @@ public final class PSICompactFactory
     switch( measType )
     {
     case PSICompact.MEAS_FLOW:
-      return factoryProperties.getProperty( "MEAS_FLOW" );
+      return m_factoryProperties.getProperty( "MEAS_FLOW" );
     case PSICompact.MEAS_LEVEL:
-      return factoryProperties.getProperty( "MEAS_LEVEL" );
+      return m_factoryProperties.getProperty( "MEAS_LEVEL" );
     case PSICompact.MEAS_RAINFALL:
-      return factoryProperties.getProperty( "MEAS_RAINFALL" );
+      return m_factoryProperties.getProperty( "MEAS_RAINFALL" );
     case PSICompact.MEAS_TEMPERATUR:
-      return factoryProperties.getProperty( "MEAS_TEMPERATUR" );
+      return m_factoryProperties.getProperty( "MEAS_TEMPERATUR" );
     case PSICompact.MEAS_UNDEF:
-      return factoryProperties.getProperty( "MEAS_UNDEF" );
+      return m_factoryProperties.getProperty( "MEAS_UNDEF" );
     default:
-      return factoryProperties.getProperty( "UNKNOWN" );
+      return m_factoryProperties.getProperty( "UNKNOWN" );
     }
   }
 
@@ -116,16 +123,97 @@ public final class PSICompactFactory
     switch( valueType )
     {
     case PSICompact.TYPE_MEASUREMENT:
-      return factoryProperties.getProperty( "TYPE_MEASUREMENT" );
+      return m_factoryProperties.getProperty( "TYPE_MEASUREMENT" );
     case PSICompact.TYPE_VALUE:
-      return factoryProperties.getProperty( "TYPE_VALUE" );
+      return m_factoryProperties.getProperty( "TYPE_VALUE" );
     case PSICompact.TYPE_UNDEF:
-      return factoryProperties.getProperty( "TYPE_UNDEF" );
+      return m_factoryProperties.getProperty( "TYPE_UNDEF" );
     default:
-      return factoryProperties.getProperty( "UNKNOWN" );
+      return m_factoryProperties.getProperty( "UNKNOWN" );
     }
   }
 
+  /**
+   * Helper für die Übersetzung des 'Unit' (ObjectMetaData) in eine leesbare String
+   */
+  public final static String unitToString( int unit )
+  {
+    switch( unit )
+    {
+    case PSICompact.SI_CUBIC_METER_PER_SECOND:
+      return m_factoryProperties.getProperty( "SI_CUBIC_METER_PER_SECOND" );
+    case PSICompact.SI_KELVIN:
+      return m_factoryProperties.getProperty( "SI_KELVIN" );
+    case PSICompact.SI_METER:
+      return m_factoryProperties.getProperty( "SI_METER" );
+    case PSICompact.SI_QUBIC_METER:
+      return m_factoryProperties.getProperty( "SI_QUBIC_METER" );
+    case PSICompact.SI_NO_UNIT:
+      return m_factoryProperties.getProperty( "SI_NO_UNIT" );
+    case PSICompact.SI_UNDEF:
+      return m_factoryProperties.getProperty( "SI_UNDEF" );
+    default:
+      return m_factoryProperties.getProperty( "UNKNOWN" );
+    }
+  }
+  
+  /**
+   * Helper für die Übersetzung des 'Status' (ArchiveData) in eine leesbare String
+   */
+  public final static String statusToString( int status )
+  {
+    switch( status )
+    {
+    case PSICompact.STATUS_AUTO:
+      return m_factoryProperties.getProperty( "STATUS_AUTO" );
+    case PSICompact.STATUS_ERSALLG:
+      return m_factoryProperties.getProperty( "STATUS_ERSALLG" );
+    case PSICompact.STATUS_MANKOR:
+      return m_factoryProperties.getProperty( "STATUS_MANKOR" );
+    case PSICompact.STATUS_NACH:
+      return m_factoryProperties.getProperty( "STATUS_NACH" );
+    case PSICompact.STATUS_NORM:
+      return m_factoryProperties.getProperty( "STATUS_NORM" );
+    case PSICompact.STATUS_NORMALLG:
+      return m_factoryProperties.getProperty( "STATUS_NORMALLG" );
+    case PSICompact.STATUS_OK:
+      return m_factoryProperties.getProperty( "STATUS_OK" );
+    case PSICompact.STATUS_REKO:
+      return m_factoryProperties.getProperty( "STATUS_REKO" );
+    case PSICompact.STATUS_UNDEF:
+      return m_factoryProperties.getProperty( "STATUS_UNDEF" );
+
+    default:
+      return m_factoryProperties.getProperty( "UNKNOWN" );
+    }
+  }
+
+  /**
+   * Helper that translates the status string back to an integer
+   */
+  public static int statusTranslate( String status )
+  {
+    if( status.equals( m_factoryProperties.getProperty( "STATUS_AUTO" ) ) )
+      return PSICompact.STATUS_AUTO;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_ERSALLG" ) ) )
+        return PSICompact.STATUS_ERSALLG;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_MANKOR" ) ) )
+      return PSICompact.STATUS_MANKOR;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NACH" ) ) )
+      return PSICompact.STATUS_NACH;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NORM" ) ) )
+      return PSICompact.STATUS_NORM;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_NORMALLG" ) ) )
+      return PSICompact.STATUS_NORMALLG;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_OK" ) ) )
+      return PSICompact.STATUS_OK;
+    else if( status.equals( m_factoryProperties.getProperty( "STATUS_REKO" ) ) )
+      return PSICompact.STATUS_REKO;
+    else
+      return PSICompact.STATUS_UNDEF;
+  }
+
+  
   /**
    * Internal version checker for the PSICompact Interface.
    * 
@@ -142,14 +230,14 @@ public final class PSICompactFactory
       {
         Thread.sleep( 10 );
 
-        int version = psiCompact.getDataModelVersion();
+        int version = m_psiCompact.getDataModelVersion();
 
-        if( version > currentVersion )
+        if( version > m_currentVersion )
         {
-          currentVersion = version;
+          m_currentVersion = version;
 
-          if( psiCompactRep != null )
-            psiCompactRep.fireRepositoryStructureChanged();
+          if( m_psiCompactRep != null )
+            m_psiCompactRep.fireRepositoryStructureChanged();
         }
       }
       catch( Exception e )
@@ -157,5 +245,24 @@ public final class PSICompactFactory
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Factory method um Achsen zu erzeugen.<p>
+   */
+  public static IAxis getAxis( final String label, final String unit, final Class dataClass, final int position )
+  {
+    final String key = label + unit + dataClass.getName();
+
+    IAxis axis = (IAxis)m_axes.get( key );
+
+    if( axis == null )
+    {
+      axis = new PSICompactAxis( label, unit, dataClass, false, position );
+
+      m_axes.put( key, axis );
+    }
+
+    return axis;
   }
 }

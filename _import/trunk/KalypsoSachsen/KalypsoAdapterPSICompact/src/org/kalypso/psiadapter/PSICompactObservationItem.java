@@ -1,18 +1,21 @@
 package org.kalypso.psiadapter;
 
-
+import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITarget;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.Metadata;
+import org.kalypso.ogc.sensor.SensorException;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
-import de.psi.go.lhwz.PSICompact.ObjectInfo;
+import de.psi.go.lhwz.PSICompact.*;
 
 /**
- * A specific item representing a timeserie.
+ * Eine Observation aus PSICompact was auch ein Repository Item ist.
  * 
  * @author schlienger
  */
@@ -22,11 +25,15 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
   private final int m_valueType;
 
-  private Metadata m_metadata = null;
-  
-  public final static String MD_NAME = "Name";
+  /** Metadaten aus PSICompact */
+  private ObjectMetaData m_psicMetaData = null;
 
-  public final static String MD_DESCRIPTION = "Beschreibung";
+  private WQParamSet[] m_psicWQParamSet = null;
+
+  /** Metadaten für die Observation */
+  private Metadata m_metadata = null;
+
+  private List m_axes = null;
 
   public final static String MD_WQ = "WQ-Parameter";
 
@@ -46,6 +53,16 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
   public final static String MD_HOEHENANGABEART = "Höhenangabeart";
 
+  public final static String MD_MESSTISCHBLATT = "Messtischblattnummer";
+
+  /**
+   * Constructor
+   * 
+   * @param parent
+   *          kann null sein wenn dieses Objekt root ist
+   * @param valueType
+   *          aus PSICompact Sicht
+   */
   public PSICompactObservationItem( final PSICompactItem parent, final String name,
       final PSICompact.ObjectInfo info, final int valueType )
   {
@@ -53,26 +70,50 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
 
     m_objectInfo = info;
     m_valueType = valueType;
-    
-    // TODO: z.Z: ist es simuliert, aber zukunftig aus der PSICompact Schnittstelle lesen
-    constructFakeMetadata();
+
+    try
+    {
+      m_psicMetaData = PSICompactFactory.getConnection().getObjectMetaData( m_objectInfo.getId() );
+
+      m_psicWQParamSet = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
+
+      constructMetadata();
+    }
+    catch( ECommException e )
+    {
+      // TODO: logging!
+      e.printStackTrace();
+    }
   }
 
-  private void constructFakeMetadata()
+  /**
+   * Helper für die Erzeugung der Metadaten
+   */
+  private void constructMetadata()
   {
     m_metadata = new Metadata();
-    m_metadata.put( MD_NAME, getName() );
-    m_metadata.put( MD_DESCRIPTION, m_objectInfo.getDescription() );
-    m_metadata.put( MD_GKH, "12345678" );
-    m_metadata.put( MD_GKR, "12345678" );
-    m_metadata.put( MD_HOEHENANGABEART, "ABC" );
-    m_metadata.put( MD_PEGELNULLPUNKT, "456,789" );
-    m_metadata.put( MD_WQ, "X=12;Y=23;Z=34" );
-    m_metadata.put( MD_ALARM_1, "4,5" );
-    m_metadata.put( MD_ALARM_2, "5,6" );
-    m_metadata.put( MD_ALARM_3, "6,7" );
-    m_metadata.put( MD_ALARM_4, "7,8" );
+
+    m_metadata.put( Metadata.MD_NAME, getName() );
+    m_metadata.put( Metadata.MD_DESCRIPTION, m_objectInfo.getDescription() );
+
+    if( m_psicMetaData != null )
+    {
+      m_metadata.put( MD_GKH, String.valueOf( m_psicMetaData.getHeight() ) );
+      m_metadata.put( MD_GKR, String.valueOf( m_psicMetaData.getRight() ) );
+      m_metadata.put( MD_HOEHENANGABEART, m_psicMetaData.getLevelUnit() );
+      m_metadata.put( MD_PEGELNULLPUNKT, String.valueOf( m_psicMetaData.getLevel() ) );
+      m_metadata.put( MD_MESSTISCHBLATT, String.valueOf( m_psicMetaData.getMapNo() ) );
+      m_metadata.put( MD_ALARM_1, String.valueOf( m_psicMetaData.getAlarm1() ) );
+      m_metadata.put( MD_ALARM_2, String.valueOf( m_psicMetaData.getAlarm2() ) );
+      m_metadata.put( MD_ALARM_3, String.valueOf( m_psicMetaData.getAlarm3() ) );
+      m_metadata.put( MD_ALARM_4, String.valueOf( m_psicMetaData.getAlarm4() ) );
     }
+
+    if( m_psicWQParamSet != null )
+    {
+      m_metadata.put( MD_WQ, m_psicWQParamSet.toString() );
+    }
+  }
 
   /**
    * Gibt das Messwerttyp dieser Zeitreihe zurück
@@ -130,6 +171,65 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    */
   public List getAxisList()
   {
-    return null;
+    if( m_axes == null )
+    {
+      m_axes = new Vector();
+
+      // immer Datum Axis
+      m_axes.add( PSICompactFactory.getAxis( "Datum", "", Date.class, 0 ) );
+
+      // Wert (Einheit abfragen)
+      String label = toString();
+      String unit = PSICompactFactory.unitToString( m_psicMetaData.getUnit() );
+      m_axes.add( PSICompactFactory.getAxis( label, unit, Double.class, 1 ) );
+
+      // TODO: Status Axis?
+    }
+
+    return m_axes;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getValues( Date, Date )
+   */
+  public ITuppleModel getValues( final Date from, final Date to ) throws SensorException
+  {
+    try
+    {
+      ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
+          PSICompact.ARC_MIN15, from, to );
+
+      return new PSICompactTuppleModel( data );
+    }
+    catch( ECommException e )
+    {
+      throw new SensorException( e );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
+   */
+  public void setValues( final ITuppleModel values ) throws SensorException
+  {
+    PSICompactTuppleModel model = null;
+    
+    if( values instanceof PSICompactTuppleModel )
+      model = (PSICompactTuppleModel)values;
+    else
+      model = new PSICompactTuppleModel( values );
+    
+    if( model.getCount() > 0 )
+    {
+      try
+      {
+        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), PSICompact.ARC_MIN15,
+            model.getData()[0].getTimestamp(), model.getData() );
+      }
+      catch( ECommException e )
+      {
+        throw new SensorException( e );
+      }
+    }
   }
 }

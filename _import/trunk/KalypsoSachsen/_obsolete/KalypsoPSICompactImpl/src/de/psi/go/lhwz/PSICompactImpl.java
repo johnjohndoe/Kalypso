@@ -126,7 +126,21 @@ public class PSICompactImpl implements PSICompact
 	 */
 	public ObjectMetaData getObjectMetaData(String id)
 	{
-		return null;
+    ObjectMetaData omd = new ObjectMetaData();
+    
+    omd.setAlarm1(1.0);
+    omd.setAlarm2(2.0);
+    omd.setAlarm3(3.0);
+    omd.setAlarm4(4.0);
+    omd.setDescription(1);
+    omd.setHeight(34);
+    omd.setId(id);
+    omd.setLevel(56.8);
+    omd.setLevelUnit("Etwas...");
+    omd.setMapNo(7);
+    omd.setRight( 987654321 );
+    
+		return omd;
 	}
 
 	/**

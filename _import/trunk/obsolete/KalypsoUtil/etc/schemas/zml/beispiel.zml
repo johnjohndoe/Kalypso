@@ -1,5 +1,5 @@
 <Observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
-./observation.xsd">
+./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<Name>Eine Test Observation</Name>
 	<TargetProperty source="./model.gml#pegel" type="gml" objectid="234"/>
 	<MetadataList>
@@ -10,11 +10,11 @@
 	</MetadataList>
 
 	<Axis name="Datum" unit="">
-		<ValueArray type="xs:date">12.01.2004 13.01.2004</ValueArray>
+		<ValueArray datatype="xs:date">12.01.2004 13.01.2004</ValueArray>
 	</Axis>
 	
 	<Axis name="Pegel" unit="m">
-		<ValueArray type="xs:double">23.4 25.8</ValueArray>
+		<ValueLink datatype="xs:double" xlink:type="simple" xlink:href="PATH=beispiel.zml.values/values.txt#COLUMN=2" xlink:actuate="onLoad"/>
 	</Axis>
 
 </Observation>

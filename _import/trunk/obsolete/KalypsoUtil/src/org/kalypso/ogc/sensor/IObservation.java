@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,4 +18,9 @@ public interface IObservation
   public Metadata getMetadata();
   
   public List getAxisList();
+  
+  // TODO: arguments from and to are not so nice here? better Visitor pattern?
+  public ITuppleModel getValues( Date from, Date to ) throws SensorException;
+  
+  public void setValues( ITuppleModel values ) throws SensorException;
 }
