@@ -44,7 +44,9 @@ public class PSICompactRepository extends AbstractRepository
   private PSICompactItem buildStructure( Map nodes, int valueType )
       throws ECommException
   {
-    ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo(
+    final PSICompact psi = PSICompactFactory.getConnection();
+    
+    final ObjectInfo[] objInfos = psi.getInfo(
         valueType );
 
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
@@ -72,7 +74,7 @@ public class PSICompactRepository extends AbstractRepository
           parent = (PSICompactItem) nodes.get( nodeID );
         else
         {
-          final boolean adaptable = nodeID.equals( infoID );
+          final boolean adaptable = psi.getMeasureType( nodeID ) != PSICompact.TYPE_UNDEF;
 
           final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info,
               adaptable, valueType );

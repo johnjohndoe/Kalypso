@@ -1,5 +1,6 @@
 package org.kalypso.util.runtime.args;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -73,7 +74,8 @@ public class DateRangeArgument implements IVariableArguments
    */
   public String toString( )
   {
-    return getClass().getName() + ": " + m_from + " - " + m_to;
+    DateFormat df = DateFormat.getDateTimeInstance();
+    return df.format( m_from ) + " - " + df.format( m_to );
   }
 
   /**
@@ -83,31 +85,15 @@ public class DateRangeArgument implements IVariableArguments
    * [now - pastDays, now]
    * </pre>.
    * 
-   * If pastDays == 0, then the range is as follows:
-   * 
-   * <pre>
-   * [ cal.getTime() - now]
-   * </pre>
-   * 
-   * for a Calendar instance which was set like:
-   * 
-   * <pre>
-   * cal.set( 0, 0, 0, 0, 0, 0 );
-   * </pre>
+   * If pastDays == 0, then the range is null.
    * 
    * @param pastDays
-   * @return new argument
+   * @return new argument or null if pastDays is 0
    */
   public static DateRangeArgument createFromPastDays( final int pastDays )
   {
     if( pastDays == 0 )
-    {
-      final Date d1 = DateUtilities.getMinimum();
-
-      final Date d2 = new Date();
-
-      return new DateRangeArgument( d1, d2 );
-    }
+      return null;
 
     final Calendar cal = Calendar.getInstance();
 

@@ -200,16 +200,12 @@ public class PSICompactImpl implements PSICompact
       if( m_id2values.containsKey( id ) )
         return (ArchiveData[]) m_id2values.get( id );
 
-      final ArchiveData[] data;
-
       // zml?
       if( m_id2zml.containsKey( id ) )
-        data = readFromZml( id, from, to );
-      else
-        data = randomData( from, to );
+        return readFromZml( id, from, to );
 
-      m_id2values.put( id, data );
-      return data;
+      // random
+      return randomData( from, to );
     }
 
     return new ArchiveData[0];
@@ -275,6 +271,7 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
+    // simply store it temporarely
     m_id2values.put( id, data );
 
     return true;
