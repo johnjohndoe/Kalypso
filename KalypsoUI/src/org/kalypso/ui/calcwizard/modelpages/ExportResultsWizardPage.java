@@ -40,6 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,11 +53,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
@@ -94,7 +97,6 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilityException;
-import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -108,8 +110,10 @@ import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
+import org.kalypso.services.proxy.DocBean;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.ui.calcwizard.bericht.ExportWizardBerichtWizard;
 import org.kalypso.ui.calcwizard.bericht.IBerichtExporter;
 import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
@@ -165,7 +169,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
   private CheckboxTableViewer m_checklist;
 
-  private IBerichtExporter[] m_berichtExporter;
+  private IBerichtExporter[] m_berichtExporters;
 
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
 
@@ -273,7 +277,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
   private void createExportPanel( final Composite parent )
   {
-    m_berichtExporter = createExporter();
+    m_berichtExporters = createExporters();
 
     // noch einen ListViewer einfügen!
     final Composite topPanel = new Composite( parent, SWT.NONE );
@@ -332,7 +336,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     } );
 
     doItButton
-        .setEnabled( !(m_berichtExporter == null || m_berichtExporter.length == 0) );
+        .setEnabled( !(m_berichtExporters == null || m_berichtExporters.length == 0) );
   }
 
   /**
@@ -374,20 +378,47 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     {
       final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard(
           features, selectedFeatures, nameProperty, metadocService
-              .getDummyDoc(), metadocService.getDoc(), m_berichtExporter );
+              .getDummyDoc(), metadocService.getDummyBean(), m_berichtExporters );
       final WizardDialog dialog = new WizardDialog( getContainer().getShell(),
           wizard );
       if( dialog.open() == Window.OK )
       {
-        //        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
-        //        final IBerichtExporter[] choosenExporter =
-        // wizard.getChoosenExporter();
-        //        
+        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
+        final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
+
+        for( int i = 0; i < choosenExporter.length; i++ )
+        {
+          final String extension = choosenExporter[i].getExtension();
+          for( int j = 0; j < choosenFeatures.length; j++ )
+          {
+            final DocBean doc = metadocService.getCopyBean( extension );
+            
+            final OutputStream os = new FileOutputStream( new File( doc.getLocation() ) );
+            try
+            {
+              choosenExporter[i].export( choosenFeatures[j], os );
+            }
+            catch( final Exception e )
+            {
+              // error handling?
+              e.printStackTrace();
+              
+              metadocService.cancelBean( doc );
+              continue;
+            }
+            finally
+            {
+              IOUtils.closeQuietly( os );
+            }
+
+            metadocService.commitBean( doc );
+          }
+        }
       }
-
-      // jeden gewünschten Typ exportieren
-
-      // doit
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
     }
     finally
     {
@@ -395,30 +426,28 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
   }
 
-  private IBerichtExporter[] createExporter( )
+  private IBerichtExporter[] createExporters( )
   {
     final Collection exporters = new ArrayList();
 
-    final Properties arguments = getArguments();
+    final Arguments arguments = getArguments();
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
       final Map.Entry entry = (Entry) aIt.next();
       final String key = (String) entry.getKey();
-      final String exporterargs = (String) entry.getValue();
-
       if( key.startsWith( "exporter" ) )
       {
         try
         {
-          final Properties props = PropertiesHelper.parseFromString(
-              exporterargs, ';' );
-          final String classname = props.getProperty( "class" );
+          // todo: maybe check if argument is ok?
+          final Arguments args = (Arguments) entry.getValue();
+          final String classname = args.getProperty( "class" );
           if( classname != null )
           {
             final IBerichtExporter exporter = (IBerichtExporter) ClassUtilities
                 .newInstance( classname, IBerichtExporter.class, this
                     .getClass().getClassLoader() );
-            exporter.setArguments( props );
+            exporter.init( getContext(), args );
             exporters.add( exporter );
           }
         }

@@ -40,22 +40,43 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
-import java.util.Properties;
+import java.net.URL;
+
+import org.deegree.model.feature.Feature;
+import org.kalypso.ui.calcwizard.Arguments;
 
 /**
  * @author belger
  */
-public class AbstractBerichtExporter implements IBerichtExporter
+public abstract class AbstractBerichtExporter implements IBerichtExporter
 {
-  private Properties m_arguments = new Properties();
+  private Arguments m_arguments = new Arguments();
   private static final String ARG_NAME = "name";
+  private URL m_context = null;
 
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#setArguments(java.util.Properties)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#init(URL, java.util.Arguments)
    */
-  public void setArguments( final Properties arguments )
+  public void init( final URL context, final Arguments arguments )
   {
+    m_context = context;
     m_arguments.putAll( arguments );
+  }
+
+  /**
+   * @return Returns the context.
+   */
+  protected URL getContext( )
+  {
+    return m_context;
+  }
+  
+  /**
+   * @return Returns the arguments.
+   */
+  protected Arguments getArguments( )
+  {
+    return m_arguments;
   }
   
   /**

@@ -60,14 +60,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class MetadocServiceWrapper
 {
   private final IMetaDocService m_service;
-  private final DocBean m_bean;
   
   /**
-   * @param fileExtension Extension with '.' (e.g. '.csv')
-   * @param username
    * @throws CoreException
    */
-  public MetadocServiceWrapper( final String fileExtension, final String username ) throws CoreException
+  public MetadocServiceWrapper(  ) throws CoreException
   {
     try
     {
@@ -76,14 +73,6 @@ public class MetadocServiceWrapper
       m_service = (IMetaDocService) serviceProxyFactory.getProxy(
           "Kalypso_MetaDocService", ClassUtilities
               .getOnlyClassName( IMetaDocService.class ) );
-
-      m_bean = m_service.prepareNewDocument( fileExtension, username );
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Berichtsablage-Dienstes", e ) );
     }
     catch( final ServiceException e )
     {
@@ -92,12 +81,32 @@ public class MetadocServiceWrapper
           "Berichtsablage-Dienst konnte nicht initialisiert werden", e ) );
     }
   }
-  
-  public void commitData( ) throws CoreException
+ 
+  /**
+   * @param fileExtension Extension with '.' (e.g. '.csv')
+   * @param username
+   * @return
+   * @throws CoreException
+   */
+  public DocBean prepareDocument( final String fileExtension, final String username ) throws CoreException
   {
     try
     {
-      m_service.commitNewDocument( m_bean );
+      return m_service.prepareNewDocument( fileExtension, username );
+    }
+    catch( final RemoteException e )
+    {
+      e.printStackTrace();
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Fehler beim Aufruf des Berichtsablage-Dienstes", e ) );
+    }
+  }
+  
+  public void commitData( final DocBean bean ) throws CoreException
+  {
+    try
+    {
+      m_service.commitNewDocument( bean );
     }
     catch( final IOException e )
     {
@@ -107,11 +116,11 @@ public class MetadocServiceWrapper
     }
   }
 
-  public void cancelData( ) throws CoreException
+  public void cancelData( final DocBean bean ) throws CoreException
   {
     try
     {
-      m_service.rollbackNewDocument( m_bean );
+      m_service.rollbackNewDocument( bean );
     }
     catch( final RemoteException e )
     {
@@ -119,10 +128,5 @@ public class MetadocServiceWrapper
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Löschen der Berichtsvorlage auf dem Server gescheitert", e ) );
     }
-  }
-
-  public DocBean getDoc()
-  {
-    return m_bean;
   }
 }

@@ -114,6 +114,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
@@ -173,7 +174,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), null );
 
-  private Properties m_arguments = null;
+  private Arguments m_arguments = null;
 
   private IProject m_project = null;
 
@@ -241,7 +242,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagTemplate.dispose();
   }
 
-  public Properties getArguments()
+  public Arguments getArguments()
   {
     return m_arguments;
   }
@@ -276,7 +277,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    *      java.util.Properties, org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
-      final ImageDescriptor imagedesc, final Properties arguments, final IFolder calcFolder )
+      final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder )
   {
     setTitle( pagetitle );
     setImageDescriptor( imagedesc );
@@ -342,7 +343,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected Control initMap( final Composite parent, final String widgetID ) throws IOException,
       JAXBException, CoreException
   {
-    final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
+    final String mapFileName = (String) getArguments().get( PROP_MAPTEMPLATE );
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
     if( mapFile == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
@@ -492,7 +493,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
-      final String templateFileName = getArguments().getProperty( PROP_TABLETEMPLATE );
+      final String templateFileName = (String) getArguments().get( PROP_TABLETEMPLATE );
       final IFile templateFile = (IFile)getProject().findMember( templateFileName );
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
           getReplaceProperties() );
