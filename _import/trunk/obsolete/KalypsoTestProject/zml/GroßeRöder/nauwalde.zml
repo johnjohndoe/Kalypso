@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
-./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<Name>Nauwalde</Name>
+<observation xmlns="zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<name>Nauwalde</name>
 	
-	<TargetProperty source="" type="" objectid=""/>
-
-	<Axis name="Datum" unit="" datatype="TYPE=xs:date#FORMAT=yyMMddHHmm">
-		<ValueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=nauwalde.uvf#COLUMN=1#LINE=5" xlink:actuate="onRequest"/>
-	</Axis>
+	<axis type="date" name="Datum" unit="" datatype="TYPE=xs:date#FORMAT=yyMMddHHmm">
+		<valueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=nauwalde.uvf#COLUMN=1#LINE=5" xlink:actuate="onRequest"/>
+	</axis>
 	
-	<Axis name="Pegel-Nauwalde" unit="m3/s" datatype="TYPE=xs:double">
-		<ValueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=nauwalde.uvf#COLUMN=2#LINE=5" xlink:actuate="onRequest"/>
-	</Axis>
+	<axis type="value" name="Pegel-Nauwalde" unit="m3/s" datatype="TYPE=xs:double">
+		<valueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=nauwalde.uvf#COLUMN=2#LINE=5" xlink:actuate="onRequest"/>
+	</axis>
 
-</Observation>
+</observation>

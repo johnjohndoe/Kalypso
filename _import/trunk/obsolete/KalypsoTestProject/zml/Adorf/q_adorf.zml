@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
+./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<name>Abfluss Adorf</name>
+	
+<!--	<TargetProperty source="" type="" objectid=""/> -->
+
+	<axis type="date" name="Datum" unit="" datatype="TYPE=xs:date#FORMAT=dd.MM.yy HH.mm">
+		<valueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=q_adorf.dat#COLUMN=1" xlink:actuate="onRequest"/>
+	</axis>
+	
+	<axis type="value" name="Adorf" unit="m3/s" datatype="TYPE=xs:double">
+		<valueLink separator="  " xlink:type="simple" xlink:href="TYPE=relative#LOCATION=q_adorf.dat#COLUMN=2" xlink:actuate="onRequest"/>
+	</axis>
+
+</observation>

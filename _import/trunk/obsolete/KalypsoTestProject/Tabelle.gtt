@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-    <layer id="1" linktype="shape" ns1:actuate="onRequest"
-        ns1:href="SRS=EPSG:4326#PATH=shapes/major_rivers#SERVICE=RESOURCE#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column editable="false" name="NAME" width="123"/>
-        <column editable="false" name="GEOM" width="800"/>
-    </layer>
-</gistableview>
+<layer id="1" linktype="shape" ns1:actuate="onRequest" ns1:href="SRS=EPSG:4326#PATH=shapes/Buenzau_gebiete#SERVICE=RESOURCE#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+<column editable="false" name="NEWFIELD2" width="24"/><column editable="false" name="COUNT" width="24"/><column editable="false" name="MIN_NEWFIE" width="24"/><column editable="false" name="ZUSAMMEN" width="24"/><column editable="false" name="AREA" width="82"/><column editable="false" name="AREANEW" width="82"/><column editable="false" name="GESAMTFLAE" width="100"/><column editable="false" name="PEROZENT" width="34"/><column editable="false" name="GEOM" width="100"/></layer></gistableview>
+
