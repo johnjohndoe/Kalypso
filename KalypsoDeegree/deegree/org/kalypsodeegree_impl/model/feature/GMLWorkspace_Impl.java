@@ -33,7 +33,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final HashMap m_featureMap = new HashMap();
 
   /**
-   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(org.deegree.model.feature.FeatureType, java.lang.String)
    */
   public Feature getFeature( FeatureType ft, String id )
   {
@@ -189,7 +190,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final Collection m_listener = new ArrayList();
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+   * 
+   * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.deegree.model.feature.event.ModellEventListener)
    */
   public void addModellListener( final ModellEventListener listener )
   {
@@ -197,7 +199,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+   * 
+   * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.deegree.model.feature.event.ModellEventListener)
    */
   public void removeModellListener( final ModellEventListener listener )
   {
@@ -205,7 +208,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.gml.event.ModellEvent)
+   * 
+   * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.deegree.model.feature.event.ModellEvent)
    */
   public void fireModellEvent( final ModellEvent event )
   {
