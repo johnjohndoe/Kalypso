@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -42,6 +40,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.java.reflect.ClassUtilities;
+import org.kalypso.java.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.model.transformation.ICalculationCaseTransformation;
 import org.kalypso.model.transformation.TransformationException;
 import org.kalypso.model.transformation.TransformationFactory;
@@ -463,10 +463,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final String imageLocation = page.getImageLocation();
         final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
 
-        final Class wizardPageClass = Class.forName( className );
-        final Constructor pageConstructor = wizardPageClass.getConstructor( new Class[] { IProject.class, String.class, ImageDescriptor.class, Properties.class } );
-        final IWizardPage wizardPage = (IWizardPage)pageConstructor.newInstance( new Object[] { project, pageTitle, imageDesc, props } );
-        
+        final IWizardPage wizardPage = (IWizardPage)ClassUtilities.newInstance( className, IWizardPage.class, ModelNature.class.getClassLoader(), new Object[] { project, pageTitle, imageDesc, props } );
         wizard.addPage( wizardPage );
       }
 
@@ -490,27 +487,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( ClassNotFoundException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( InstantiationException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( IllegalAccessException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
     catch( SecurityException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( NoSuchMethodException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -520,9 +497,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( InvocationTargetException e )
+    catch( ClassUtilityException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
