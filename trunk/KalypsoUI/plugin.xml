@@ -158,5 +158,11 @@
                id="org.kalypso.tableeditor.AddRowAction"/>
         </viewerContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.ide.resourceFilters">
+      <filter
+            selected="false"
+            pattern="*.gml"/>
+   </extension>
 
 </plugin>

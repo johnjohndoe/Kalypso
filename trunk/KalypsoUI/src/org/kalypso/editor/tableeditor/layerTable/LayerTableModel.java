@@ -2,8 +2,8 @@ package org.kalypso.editor.tableeditor.layerTable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.deegree.model.feature.FeatureType;
@@ -20,7 +20,7 @@ public class LayerTableModel
   
   private final KalypsoFeatureLayer myLayer;
 
-  private final Map m_ftpColumnMap = new HashMap();
+  private final Map m_ftpColumnMap = new LinkedHashMap();
 
   public LayerTableModel( final KalypsoFeatureLayer layer, final Column[] columns )
   {

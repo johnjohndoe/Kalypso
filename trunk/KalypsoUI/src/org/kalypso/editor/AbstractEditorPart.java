@@ -56,15 +56,14 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
 
   /** Jeder Editor hat sein eigenes Mutex, so dass Jobs sch?n hintereinander ausgef?hrt werden */
   private Mutex myMutexRule = new Mutex();
+
+  private boolean m_isSaving = false;
   
   public AbstractEditorPart()
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
   
-//  protected abstract FullAction[] createFullActions(  );
-//  protected abstract WidgetAction[] createWidgetActions(  );
-//      
   public void dispose()
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
@@ -84,7 +83,17 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
     if( input != null )
-      doSaveInternal( monitor, input );
+    {
+      try
+      {
+        m_isSaving = true;
+        doSaveInternal( monitor, input );
+      }
+      finally
+      {
+        m_isSaving = false;
+      }
+    }
   }
   
   protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input );
@@ -230,7 +239,10 @@ public abstract class AbstractEditorPart extends EditorPart implements ICommandM
     {
       final IResourceDelta delta = event.getDelta().findMember( input.getFile().getFullPath() );
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
-        load();
+      {
+        if( !m_isSaving )
+          load();
+      }
     }
   }
 
