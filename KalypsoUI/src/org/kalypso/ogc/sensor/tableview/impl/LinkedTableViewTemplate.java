@@ -3,10 +3,9 @@ package org.kalypso.ogc.sensor.tableview.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.bind.JAXBException;
 
@@ -41,7 +40,7 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
   private final ResourcePool m_pool;
 
-  private final Map m_keys;
+  private final TreeMap m_keys;
 
   /**
    * Constructor
@@ -55,7 +54,7 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
     super();
 
     m_pool = KalypsoGisPlugin.getDefault().getPool( );
-    m_keys = new Hashtable();
+    m_keys = new TreeMap( m_pool.getKeyComparator() );
 
     final List list = obsTableView.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
@@ -64,8 +63,8 @@ public class LinkedTableViewTemplate extends DefaultTableViewTemplate implements
 
       final PoolableObjectType key = new PoolableObjectType( tobs.getLinktype(), tobs
           .getHref(), context );
-      m_pool.addPoolListener( this, key );
       m_keys.put( key, tobs );
+      m_pool.addPoolListener( this, key );
     }
 
     final RulesType trules = obsTableView.getRules();

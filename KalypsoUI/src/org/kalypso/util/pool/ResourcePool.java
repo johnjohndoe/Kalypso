@@ -26,7 +26,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.factory.FactoryException;
 
 /**
- * @author sbad0205
+ * @author dömming,belger
  */
 public class ResourcePool implements ILoaderListener
 {
@@ -41,7 +41,7 @@ public class ResourcePool implements ILoaderListener
    */
   private final ISchedulingRule m_schedulingRule = new MutexSchedulingRule();
 
-  private final Comparator m_keyComparator = new KeyComparator();
+  private final Comparator m_keyComparator = new KeyComparator(this);
 
   /** key -> Set(IPoolListener) */
   private Map m_listeners = new TreeMap( m_keyComparator );
@@ -84,6 +84,9 @@ public class ResourcePool implements ILoaderListener
   /**
    * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das
    * Objekt für den key vorhanden, wird der Listener sofort informiert
+   * 
+   * @param l
+   * @param key
    */
   public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {
@@ -133,6 +136,8 @@ public class ResourcePool implements ILoaderListener
   /**
    * Prüft, ob das Objekt für den Key vorhanden ist Falls ja wird es
    * zurückgegeben. Falls nein wird der Ladevorgang gestartet
+   * @param key
+   * @return object belonging to key
    */
   private Object checkValid( final IPoolableObjectType key )
   {
@@ -217,6 +222,10 @@ public class ResourcePool implements ILoaderListener
 
   /**
    * Erzeugt ein Objekt anhand seines Typs. Benutzt den entsprechenden ILoader.
+   * @param key
+   * @param monitor
+   * @return instance using loader
+   * @throws Exception
    */
   protected Object makeObject( final IPoolableObjectType key, final IProgressMonitor monitor )
       throws Exception
@@ -365,38 +374,16 @@ public class ResourcePool implements ILoaderListener
     }
   }
 
-  private class KeyComparator implements Comparator
-  {
-    /**
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
-    public int compare( final Object o1, final Object o2 )
-    {
-      final IPoolableObjectType k1 = (IPoolableObjectType)o1;
-      final IPoolableObjectType k2 = (IPoolableObjectType)o2;
-
-      final int typeCompare = k1.getType().compareToIgnoreCase( k2.getType() );
-      if( typeCompare != 0 )
-        return typeCompare;
-
-      try
-      {
-        final ILoader loader = getLoader( k1.getType() );
-        return loader
-            .compareKeys( k1.getSource(), k1.getContext(), k2.getSource(), k2.getContext() );
-      }
-      catch( FactoryException e )
-      {
-        e.printStackTrace();
-      }
-
-      return 0;
-    }
-  }
-
   public boolean equalsKeys( final IPoolableObjectType key1, final IPoolableObjectType key2 )
   {
     return m_keyComparator.compare( key1, key2 ) == 0;
   }
-
+  
+  /**
+   * @return Returns the keyComparator.
+   */
+  public Comparator getKeyComparator( )
+  {
+    return m_keyComparator;
+  }
 }

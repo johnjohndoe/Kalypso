@@ -99,8 +99,6 @@ public class KalypsoWizardHelper
           mappings.setProperty( obsLink.getTimeaxis(), props[i]._diagDateAxis );
           mappings
               .setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
-
-          
           
           final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink
               .getLinktype(), new JAXBXLink( obsLink ), name + " ("
