@@ -45,6 +45,8 @@ public final class KiWWClientSample2
         if( null != args[0] )
         {
           rmiUrl = args[0];
+          
+          System.out.println( "Connecting to: " + rmiUrl );
         }
       }
       catch( ArrayIndexOutOfBoundsException arex )
@@ -93,7 +95,7 @@ public final class KiWWClientSample2
         {
           for( a = 0; a < listsize; a++ )
           {
-            HashMap map = (HashMap) columnnames.get( a );
+            //HashMap map = (HashMap) columnnames.get( a );
             System.out.println( columnnames.get( a ) );
           }
         }
@@ -257,7 +259,8 @@ public final class KiWWClientSample2
         timeseries_map.put( KiWWDataProviderInterface.KEY_TIMESERIES, tsID_map );
 
         //setTsData
-        boolean setdata = myServerObject.setTsData( ud, timeseries_map, null );
+        final boolean setdata = myServerObject.setTsData( ud, timeseries_map, null );
+        System.out.println( "setdata= " + setdata );
 
         //getTsData for created ts object
         HashMap getts_data_check = myServerObject.getTsData( ud,

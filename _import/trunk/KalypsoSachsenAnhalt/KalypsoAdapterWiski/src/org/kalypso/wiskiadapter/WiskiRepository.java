@@ -78,6 +78,10 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
+//      BCEHelper.configureProxy( "172.16.0.253", "8080", "schlienger",
+//          "lba7cfi8" );
+
+      //create a server object
       final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
           .lookup( m_url );
       LOG.info( "Wiski About()=" + myServerObject.about() );
@@ -89,7 +93,7 @@ public class WiskiRepository extends AbstractRepository
       m_userData.put( "language", m_language );
 
       final HashMap auth = myServerObject.getUserAuthorisation( m_domain,
-          m_logonName, m_password, "myhost.kisters.de" );
+          m_logonName, m_password, "myhost.kisters.de", null );
       LOG.info( "Wiski login=" + auth );
 
       if( auth == null
@@ -105,12 +109,14 @@ public class WiskiRepository extends AbstractRepository
     }
   }
 
+  
+  
   /**
    * @see java.lang.Object#finalize()
    */
   protected void finalize( ) throws Throwable
   {
-    m_wiski.logout( m_domain, m_logonName );
+    m_wiski.logout( m_userData, null );
 
     super.finalize();
   }
@@ -157,10 +163,10 @@ public class WiskiRepository extends AbstractRepository
   {
     SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
     sort.addColumnAscent( "station_name" );
-    
+
     //m_wiski.getRiverList( )
-    m_wiski.getStationList( m_userData, new String[] { "station_no", "station_name",
-    "station_id" }, new String[] );
+    //m_wiski.getStationList( m_userData, new String[] { "station_no",
+      //  "station_name", "station_id" }, new String[] );
 
     // TODO Auto-generated method stub
     return null;
