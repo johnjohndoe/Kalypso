@@ -40,10 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.IObsProvider;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * A column for an observation table view. It is based on a key axis and a value
@@ -51,10 +50,8 @@ import org.kalypso.ogc.sensor.template.TemplateEvent;
  * 
  * @author schlienger
  */
-public class TableViewColumn
+public class TableViewColumn extends ObsViewItem
 {
-  private String m_name = "";
-
   private boolean m_isEditable = true;
 
   private int m_width = 50;
@@ -62,8 +59,6 @@ public class TableViewColumn
   private final IAxis m_keyAxis;
 
   private final IAxis m_valueAxis;
-
-  private TableViewTheme m_theme;
 
   /**
    * flag specifying when the column needs to be saved. It comes along with the
@@ -80,45 +75,17 @@ public class TableViewColumn
   /** column has been modified, model is not in sync */
   private boolean m_dirty = false;
 
-  private final TableViewTemplate m_template;
-
   private boolean m_shown = true;
 
-  /**
-   * Constructor
-   * 
-   * @param name
-   * @param isEditable
-   * @param width
-   * @param keyAxis
-   * @param valueAxis
-   * @param theme
-   * @param template
-   */
-  public TableViewColumn( final String name, final boolean isEditable,
-      final int width, final IAxis keyAxis, final IAxis valueAxis,
-      final TableViewTheme theme, final TableViewTemplate template )
+  public TableViewColumn( final TableView view, final IObsProvider provider, final String name, final boolean isEditable,
+      final int width, final IAxis keyAxis, final IAxis valueAxis )
   {
-    m_name = name;
+    super( view, provider, name );
+
     m_isEditable = isEditable;
     m_width = width;
     m_keyAxis = keyAxis;
     m_valueAxis = valueAxis;
-    m_theme = theme;
-    m_template = template;
-  }
-
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString( )
-  {
-    return getName();
   }
 
   public boolean isEditable( )
@@ -131,10 +98,10 @@ public class TableViewColumn
     return m_width;
   }
 
-  public void setWidth( int width )
-  {
-    m_width = width;
-  }
+//  public void setWidth( int width )
+//  {
+//    m_width = width;
+//  }
 
   public boolean isDirty( )
   {
@@ -182,16 +149,6 @@ public class TableViewColumn
     return m_keyAxis;
   }
 
-  public TableViewTheme getTheme( )
-  {
-    return m_theme;
-  }
-
-  public void setName( String name )
-  {
-    m_name = name;
-  }
-
   public boolean isShown( )
   {
     return m_shown;
@@ -203,34 +160,33 @@ public class TableViewColumn
     {
       m_shown = shown;
 
-      m_template.fireTemplateChanged( new TemplateEvent( this,
-          TemplateEvent.TYPE_SHOW_STATE ) );
+      getView().refresh( this );
     }
   }
 
-  /**
-   * Two TableViewColumn objects are equal if they have the same name and belong
-   * to the same theme.
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals( final Object obj )
-  {
-    if( !this.getClass().equals( obj.getClass() ) )
-      return false;
-
-    final TableViewColumn col = (TableViewColumn) obj;
-
-    return new EqualsBuilder().append( col.m_name, m_name ).append(
-        col.m_theme, m_theme ).isEquals();
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode( )
-  {
-    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
-        .toHashCode();
-  }
+//  /**
+//   * Two TableViewColumn objects are equal if they have the same name and belong
+//   * to the same theme.
+//   * 
+//   * @see java.lang.Object#equals(java.lang.Object)
+//   */
+//  public boolean equals( final Object obj )
+//  {
+//    if( !this.getClass().equals( obj.getClass() ) )
+//      return false;
+//
+//    final TableViewColumn col = (TableViewColumn) obj;
+//
+//    return new EqualsBuilder().append( col.m_name, m_name ).append(
+//        col.m_theme, m_theme ).isEquals();
+//  }
+//
+//  /**
+//   * @see java.lang.Object#hashCode()
+//   */
+//  public int hashCode( )
+//  {
+//    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
+//        .toHashCode();
+//  }
 }

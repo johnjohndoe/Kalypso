@@ -19,6 +19,7 @@ import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 
@@ -140,12 +141,8 @@ public class GMLReader implements IPoolListener
   {
     try
     {
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
-      if( pool.equalsKeys( key, m_layerKey ) )
-      {
+      if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
         workspace = (CommandableWorkspace)newValue;
-      }
     }
     catch( final Throwable e )
     {

@@ -37,6 +37,7 @@ public class GetSelectionVisitor implements FeatureVisitor
     return visitor.getSelectedFeatures();
   }
 
+  /** List<Feature> */
   private final List m_selectedFeatures = new ArrayList();
 
   private final int m_selectionID;

@@ -52,7 +52,6 @@ import org.deegree.graphics.sld.RasterSymbolizer;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.graphics.sld.TextSymbolizer;
 import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

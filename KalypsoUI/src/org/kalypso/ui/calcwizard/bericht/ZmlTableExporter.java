@@ -49,7 +49,7 @@ import java.util.Properties;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.io.ReaderUtilities;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
@@ -86,19 +86,20 @@ public class ZmlTableExporter extends AbstractBerichtExporter
     
     final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
 
-    final TableViewTemplate tpl = new TableViewTemplate();
-    final ObservationTable table = new ObservationTable( tpl, true );
+    final TableView view = new TableView();
+    final ObservationTable table = new ObservationTable( view, true );
 
-    tpl.setBaseTemplate( xml, getContext(), false );
-    tpl.waitUntilLoaded( 100, 100 );
+    TableViewUtils.applyXMLTemplate( view, xml, getContext() );
+    view.waitUntilLoaded( 100, 100 );
 
     // warte auf table to perform refresh in swing thread
+    // TODO: still need it?
     Thread.sleep( 1000 );
     
     new ExportableObservationTable( table ).exportDocument( os );
 
     table.dispose();
-    tpl.dispose();
+    view.dispose();
   }
 
   /**

@@ -829,7 +829,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     final ObsdiagviewType xml;
     try
     {
-      xml = DiagViewUtils.buildDiagramTemplateXML( m_diagTemplate );
+      xml = DiagViewUtils.buildDiagramTemplateXML( m_diagView );
     }
     catch( JAXBException e2 )
     {
@@ -872,6 +872,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    */
   public void refreshDiagram( )
   {
+    // TODO: sollte nicht diese methode überschreiben sondern besser die methode
+    // getObservationsToShow!
+    
     // erstmal leer, damit das Diagramm gelöscht wird
     refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
 

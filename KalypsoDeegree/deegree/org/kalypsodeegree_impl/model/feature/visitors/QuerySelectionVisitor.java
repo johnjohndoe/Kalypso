@@ -22,7 +22,7 @@ public class QuerySelectionVisitor implements FeatureVisitor
    */
   public QuerySelectionVisitor()
   {
-    m_selectionMap = new HashMap();
+    this( new HashMap() );
   }
 
   /** Verwendet die übergebene Map zum sammeln */

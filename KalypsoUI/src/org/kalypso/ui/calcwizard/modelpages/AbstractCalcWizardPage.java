@@ -103,13 +103,9 @@ import org.kalypso.ogc.gml.map.MapPanelHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
@@ -216,11 +212,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private ObservationChart m_obsChart = null;
 
   // protected so that subclasses can access it
-  protected DiagViewTemplate m_diagTemplate = null;
+  protected DiagView m_diagView = null;
 
   private Frame m_tableFrame = null;
 
-  private TableViewTemplate m_tableTemplate = null;
+  private TableView m_tableTemplate = null;
 
   private ObservationTable m_table = null;
 
@@ -239,6 +235,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   private boolean m_showZmlTableOnlySelected = true;
 
   private final int m_selectSource;
+
+  private String m_ignoreType;
 
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
@@ -264,8 +262,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_obsChart != null )
       m_obsChart.dispose();
-    if( m_diagTemplate != null )
-      m_diagTemplate.dispose();
+    if( m_diagView != null )
+      m_diagView.dispose();
   }
 
   public Arguments getArguments()
@@ -448,16 +446,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     try
     {
       // actually creates the template
-      m_diagTemplate = new DiagViewTemplate( true );
+      m_diagView = new DiagView( true );
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
-      m_diagTemplate.setIgnoreType( ignoreType );
+      m_ignoreType = ignoreType;
 
       final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
 
-      m_obsChart = new ObservationChart( m_diagTemplate );
+      m_obsChart = new ObservationChart( m_diagView );
 
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
@@ -517,18 +515,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void refreshDiagramForContext( final TSLinkWithName[] obs, final URL context )
   {
-    final DiagViewTemplate diagTemplate = m_diagTemplate;
-
-    if( diagTemplate != null )
-      KalypsoWizardHelper.updateDiagramTemplate( diagTemplate, obs, context, true );
+    if( m_diagView != null )
+      KalypsoWizardHelper.updateZMLView( m_diagView, obs, context, true, m_ignoreType );
   }
 
   protected void refreshZmlTableForContext( final TSLinkWithName[] obs, final URL context )
   {
-    final TableViewTemplate tableTemplate = m_tableTemplate;
-
-    if( tableTemplate != null )
-      KalypsoWizardHelper.updateTableTemplate( tableTemplate, obs, context, true );
+    if( m_tableTemplate != null )
+      KalypsoWizardHelper.updateZMLView( m_tableTemplate, obs, context, true, m_ignoreType );
   }
 
   protected abstract TSLinkWithName[] getObservationsToShow( final boolean onlySelected );
@@ -559,11 +553,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     try
     {
-      m_tableTemplate = new TableViewTemplate();
+      m_tableTemplate = new TableView();
       m_table = new ObservationTable( m_tableTemplate );
 
       final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
-      m_tableTemplate.setIgnoreType( ignoreType );
+      m_ignoreType = ignoreType;
 
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
@@ -674,7 +668,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       {
         // Save the observations before refreshing else
         // changes are lost
-        saveDirtyObservations( true, new NullProgressMonitor() );
+        saveDirtyObservations( new NullProgressMonitor(), true );
 
         refreshZMLTable();
       }
@@ -732,7 +726,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       activeTheme = m_gisTableViewer.getTheme();
       break;
     case SELECT_FROM_FEATUREVIEW:
-      // TODO
       activeTheme = null;
       break;
     default:
@@ -752,10 +745,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   protected void setObsIgnoreType( final String ignoreType )
   {
-    if( m_diagTemplate != null )
-      m_diagTemplate.setIgnoreType( ignoreType );
-    if( m_tableTemplate != null )
-      m_tableTemplate.setIgnoreType( ignoreType );
+    m_ignoreType = ignoreType;
 
     refreshDiagram();
     refreshZMLTable();
@@ -830,52 +820,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Saves the dirty observations that were edited in the table.
-   * 
-   * @param saveFiles
    * @param monitor
+   * @param saveFiles
    */
-  protected void saveDirtyObservations( final boolean saveFiles, final IProgressMonitor monitor )
+  protected void saveDirtyObservations( final IProgressMonitor monitor, final boolean saveFiles )
   {
-    if( m_tableTemplate == null || m_table == null )
+    if( m_table == null )
       return;
 
-    final TableViewTemplate tableTemplate = m_tableTemplate;
     final ObservationTableModel model = (ObservationTableModel)m_table.getModel();
-
-    final Collection themes = tableTemplate.getThemes();
-
-    monitor.beginTask( "Zeitreihen speichern", themes.size() );
-
-    for( final Iterator it = themes.iterator(); it.hasNext(); )
-    {
-      try
-      {
-        final TableViewTheme theme = (TableViewTheme)it.next();
-
-        final IObservation obs = theme.getObservation();
-
-        final ITuppleModel values = model.getValues( theme );
-
-        obs.setValues( values );
-
-        if( saveFiles )
-          tableTemplate.saveObservation( obs, monitor );
-
-        for( final Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-          ( (TableViewColumn)itcol.next() ).setDirty( false );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-
-        // todo
-        // nichts tun? oder error handling?
-      }
-
-      monitor.worked( 1 );
-    }
-
-    monitor.done();
+    model.saveDirtyObservations( monitor, saveFiles );
   }
 
   /**
@@ -888,7 +842,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     try
     {
-      saveDirtyObservations( true, new SubProgressMonitor( monitor, 1000 ) );
+      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ), true );
       if( m_gisTableViewer != null )
         m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
       else

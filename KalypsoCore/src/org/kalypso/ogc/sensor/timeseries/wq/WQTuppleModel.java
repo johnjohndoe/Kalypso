@@ -143,14 +143,14 @@ public class WQTuppleModel extends AbstractTuppleModel
           e.printStackTrace();
         }
 
-        final WechmannSet set = m_wsets.getFor( d );
 
-        if( set != null )
+        final Number number = (Number) m_model.getElement( index, m_srcAxis );
+        final WechmannSet set = m_wsets.getFor( d );
+        if( number != null && set != null )
         {
           if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
           {
-            final double w = ((Number) m_model.getElement( index, m_srcAxis ))
-                .doubleValue();
+            final double w = number.doubleValue();
 
             double q = WechmannFunction.computeQ( set.getForW( w ), w );
             // just leave 3 decimals
@@ -160,8 +160,7 @@ public class WQTuppleModel extends AbstractTuppleModel
           }
           else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
           {
-            final double q = ((Number) m_model.getElement( index, m_srcAxis ))
-                .doubleValue();
+            final double q = number.doubleValue();
             try
             {
               value = new Double( WechmannFunction.computeW( set.getForQ( q ),
@@ -176,7 +175,8 @@ public class WQTuppleModel extends AbstractTuppleModel
         else
           value = ZERO;
 
-        m_values.put( objIndex, value );
+        if( number != null )
+          m_values.put( objIndex, value );
 
         return value;
       }

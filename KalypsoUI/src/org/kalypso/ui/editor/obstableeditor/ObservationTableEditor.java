@@ -42,25 +42,20 @@ package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
 import java.io.Writer;
-import java.net.URL;
 
 import javax.swing.JScrollPane;
 
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IStorageEditorInput;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
@@ -84,9 +79,9 @@ public class ObservationTableEditor extends AbstractObservationEditor
    */
   public ObservationTableEditor( )
   {
-    super( new TableViewTemplate() );
+    super( new TableView() );
     
-    m_table = new ObservationTable( (TableViewTemplate) getTemplate() );
+    m_table = new ObservationTable( (TableView) getView() );
   }
   
   /**
@@ -139,7 +134,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
   protected void doSaveInternal( IProgressMonitor monitor,
       IFileEditorInput input ) throws CoreException
   {
-    final TableViewTemplate template = (TableViewTemplate) getTemplate();
+    final TableView template = (TableView) getView();
     if( template == null )
       return;
 
@@ -155,45 +150,5 @@ public class ObservationTableEditor extends AbstractObservationEditor
     };
 
     helper.setFileContents( input.getFile(), false, true, monitor );
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.ui.IFileEditorInput)
-   */
-  protected void loadInternal( final IProgressMonitor monitor,
-      final IStorageEditorInput input ) throws Exception
-  {
-    monitor.beginTask( "Tabelle-Vorlage laden", IProgressMonitor.UNKNOWN );
-
-    final TableViewTemplate template = (TableViewTemplate) getTemplate();
-    try
-    {
-      final IStorage storage = input.getStorage();
-
-      if( storage instanceof TemplateStorage )
-      {
-        final TemplateStorage ts = (TemplateStorage) storage;
-        template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
-            "zml", false, null );
-      }
-      else
-      {
-        final ObstableviewType baseTemplate = TableViewUtils
-            .loadTableTemplateXML( storage.getContents() );
-
-        final String strUrl = ResourceUtilities.createURLSpec( input
-            .getStorage().getFullPath() );
-        template.setBaseTemplate( baseTemplate, new URL( strUrl ), false );
-      }
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      monitor.done();
-    }
   }
 }

@@ -56,15 +56,14 @@ import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
 import org.kalypso.ogc.sensor.tableview.swing.marker.ForecastLabelMarker;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
-import org.kalypso.ogc.sensor.template.ITemplateEventListener;
-import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.IObsViewEventListener;
+import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
@@ -73,11 +72,11 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  * 
  * @author schlienger
  */
-public class ObservationTable extends JTable implements ITemplateEventListener
+public class ObservationTable extends JTable implements IObsViewEventListener
 {
   private final ObservationTableModel m_model;
 
-  private final TableViewTemplate m_template;
+  private final TableView m_view;
 
   private final DateTableCellRenderer m_dateRenderer;
 
@@ -90,7 +89,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
    * 
    * @param template
    */
-  public ObservationTable( final TableViewTemplate template )
+  public ObservationTable( final TableView template )
   {
     this( template, false );
   }
@@ -99,11 +98,11 @@ public class ObservationTable extends JTable implements ITemplateEventListener
    * 
    * @param template
    */
-  public ObservationTable( final TableViewTemplate template, final boolean waitForSwing )
+  public ObservationTable( final TableView template, final boolean waitForSwing )
   {
     super( new ObservationTableModel() );
 
-    m_template = template;
+    m_view = template;
     m_waitForSwing = waitForSwing;
 
     // for convenience
@@ -131,12 +130,12 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     getTableHeader().setReorderingAllowed( false );
 
     // removed in this.dispose()
-    m_template.addTemplateEventListener( this );
+    m_view.addObsViewEventListener( this );
 //    for( final Iterator tIt = m_template.getThemes().iterator(); tIt.hasNext(); )
-//      m_template.fireTemplateChanged( new TemplateEvent( m_template, tIt.next(), TemplateEvent.TYPE_ADD ) );
+//      m_template.fireTemplateChanged( new ObsViewEvent( m_template, tIt.next(), ObsViewEvent.TYPE_ADD ) );
 //    for( final Iterator tIt = m_template.getThemes().iterator(); tIt.hasNext(); )
 //    {
-//      TableViewTheme theme = (TableViewTheme)tIt.next();
+//      TableViewColumnXMLLoader theme = (TableViewColumnXMLLoader)tIt.next();
 //      
 //    }
   }
@@ -144,16 +143,16 @@ public class ObservationTable extends JTable implements ITemplateEventListener
   public void dispose( )
   {
     m_dateRenderer.clearMarkers();
-    m_template.removeTemplateEventListener( this );
+    m_view.removeObsViewListener( this );
     
     m_model.clearColumns();
     m_model.setTable( null );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
-  public final void onTemplateChanged( final TemplateEvent evt )
+  public final void onObsViewChanged( final ObsViewEvent evt )
   {
     // for runnable
     final ObservationTableModel model = m_model;
@@ -163,51 +162,39 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     {
       protected void runIntern( ) throws Throwable
       {
-        // REFRESH ONE THEME
-        if( evt.getType() == TemplateEvent.TYPE_REFRESH
-            && evt.getObject() instanceof TableViewTheme )
-        {
-          final TableViewTheme theme = (TableViewTheme) evt.getObject();
-
-          model.refreshColumns( theme );
-
-          checkForecast( theme, true );
-        }
-
-        // ADD THEME
-        if( evt.getType() == TemplateEvent.TYPE_ADD
-            && evt.getObject() instanceof TableViewTheme )
-        {
-          final TableViewTheme theme = (TableViewTheme) evt.getObject();
-          model.addColumnsFor( theme );
-
-          checkForecast( theme, true );
-        }
-
-        // SHOW/HIDE A COLUMN
-        if( evt.isType( TemplateEvent.TYPE_SHOW_STATE )
+        // REFRESH ONE COLUMN
+        if( evt.getType() == ObsViewEvent.TYPE_REFRESH
             && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn col = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          model.refreshColumn( column );
 
-          if( col.isShown() )
-            model.addColumn( col );
-          else
-            model.removeColumn( col );
+          checkForecast( column.getObservation(), true );
         }
 
-        // REMOVE THEME
-        if( evt.getType() == TemplateEvent.TYPE_REMOVE
-            && evt.getObject() instanceof TableViewTheme )
+        // ADD COLUMN
+        if( evt.getType() == ObsViewEvent.TYPE_ADD
+            && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewTheme theme = (TableViewTheme) evt.getObject();
-          model.removeColumnsFor( theme );
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          if( column.isShown() )
+            model.addColumn( column );
 
-          checkForecast( theme, false );
+          checkForecast( column.getObservation(), true );
+        }
+
+        // REMOVE COLUMN
+        if( evt.getType() == ObsViewEvent.TYPE_REMOVE
+            && evt.getObject() instanceof TableViewColumn )
+        {
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          model.removeColumn( column );
+
+          checkForecast( column.getObservation(), false );
         }
 
         // REMOVE ALL
-        if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
+        if( evt.getType() == ObsViewEvent.TYPE_REMOVE_ALL )
         {
           model.clearColumns();
           dateRenderer.clearMarkers();
@@ -257,13 +244,11 @@ public class ObservationTable extends JTable implements ITemplateEventListener
    * Helper method that adds a marker to the date renderer for observations that
    * are forecasts
    * 
-   * @param theme
    * @param adding
    */
-  protected void checkForecast( final TableViewTheme theme, final boolean adding )
+  protected void checkForecast( final IObservation obs, final boolean adding )
   {
     // check if observation is a vorhersage
-    final IObservation obs = theme.getObservation();
     if( obs != null )
     {
       final DateRangeArgument dr = TimeserieUtils.isForecast( obs );

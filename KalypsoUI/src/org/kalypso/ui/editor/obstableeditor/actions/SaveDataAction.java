@@ -40,8 +40,10 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor.actions;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,13 +54,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
+import org.kalypso.util.pool.ResourcePool;
 
 /**
  * Save data
@@ -75,18 +78,22 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     boolean atLeastOneDirtySave = false;
     
     final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
-    final TableViewTemplate template = (TableViewTemplate) editor.getTemplate();
+    final TableView view = (TableView) editor.getView();
     final ObservationTableModel model = editor.getModel();
 
-    final Collection themes = template.getThemes();
+    final Map map = ObsView.mapItems( view.getItems() );
 
-    for( final Iterator it = themes.iterator(); it.hasNext(); )
+    for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
-      final TableViewTheme theme = (TableViewTheme) it.next();
+      final Map.Entry entry = (Entry)it.next();
+      final IObservation obs = (IObservation)entry.getKey();
+      if( obs == null )
+        continue;
 
       boolean dirtySave = false;
 
-      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+      final List items = ((List)entry.getValue());
+      for( final Iterator itcol = items.iterator(); itcol.hasNext(); )
       {
         final TableViewColumn col = (TableViewColumn) itcol.next();
         dirtySave = col.isDirtySave();
@@ -98,8 +105,6 @@ public class SaveDataAction extends AbstractEditorActionDelegate
           break;
         }
       }
-
-      final IObservation obs = theme.getObservation();
 
       if( dirtySave )
       {
@@ -114,7 +119,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
           final ITuppleModel values;
           try
           {
-            values = model.getValues( theme );
+            values = model.getValues( items, null );
           }
           catch( SensorException e1 )
           {
@@ -130,9 +135,10 @@ public class SaveDataAction extends AbstractEditorActionDelegate
               {
                 obs.setValues( values );
 
-                template.saveObservation( obs, monitor );
+                final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+                pool.saveObject( obs, monitor );
                 
-                for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+                for( Iterator itcol = items.iterator(); itcol.hasNext(); )
                   ((TableViewColumn) itcol.next()).resetDirtySave( );
               }
               catch( Exception e )

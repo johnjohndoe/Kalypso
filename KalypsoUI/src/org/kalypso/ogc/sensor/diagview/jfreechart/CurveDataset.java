@@ -69,13 +69,15 @@ class CurveDataset extends AbstractIntervalXYDataset
     // empty
   }
 
-  public void addCurveSerie( final XYCurveSerie xyc, final Color color )
+  public void addCurveSerie( final XYCurveSerie xyc, final Color color, final XYItemRenderer renderer )
   {
     synchronized( m_curves )
     {
       m_curves.add( xyc );
       m_colors.put( xyc, color );
 
+      reconfigureRenderer( renderer );
+      
       fireDatasetChanged();
     }
   }
@@ -272,8 +274,11 @@ class CurveDataset extends AbstractIntervalXYDataset
     return getY( series, item );
   }
 
-  public void reconfigureRenderer( final XYItemRenderer renderer )
+  private void reconfigureRenderer( final XYItemRenderer renderer )
   {
+    if( renderer == null )
+      return;
+    
     for( int i = 0; i < m_curves.size(); i++ )
     {
       final Color color = (Color)m_colors.get( m_curves.get( i ) );
