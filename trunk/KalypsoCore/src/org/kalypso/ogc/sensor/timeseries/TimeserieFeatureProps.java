@@ -9,28 +9,21 @@ import java.util.Properties;
  */
 public class TimeserieFeatureProps
 {
-  //  public final static String PROP_TYPE = "type";
-  //
-  //  public final static String PROP_TYPENAME = "typeName";
-  public final static String PROP_DIAGDATEAXIS = "diagDateAxis";
+  private final static String PROP_DIAGDATEAXIS = "diagDateAxis";
 
-  public final static String PROP_DIAGVALUEAXIS = "diagValueAxis";
+  private final static String PROP_DIAGVALUEAXIS = "diagValueAxis";
 
-  public final static String PROP_NAMECOLUMN = "nameColumn";
+  private final static String PROP_NAMECOLUMN = "nameColumn";
 
-  public final static String PROP_LINKCOLUM = "linkColumn";
+  private final static String PROP_LINKCOLUM = "linkColumn";
 
-  //  public final String _type;
-  //
-  //  public final String _typeName;
+  private final String m_nameColumn;
 
-  public final String _nameColumn;
+  private final String m_linkColumn;
 
-  public final String _linkColumn;
+  private final String m_diagDateAxis;
 
-  public final String _diagDateAxis;
-
-  public final String _diagValueAxis;
+  private final String m_diagValueAxis;
 
   public TimeserieFeatureProps( final Properties props )
   {
@@ -41,9 +34,41 @@ public class TimeserieFeatureProps
   public TimeserieFeatureProps( final String diagDateAxis, final String diagValueAxis,
       final String nameColumn, final String linkColumn )
   {
-    _diagDateAxis = diagDateAxis;
-    _diagValueAxis = diagValueAxis;
-    _nameColumn = nameColumn;
-    _linkColumn = linkColumn;
+    m_diagDateAxis = diagDateAxis;
+    m_diagValueAxis = diagValueAxis;
+    m_nameColumn = nameColumn;
+    m_linkColumn = linkColumn;
+  }
+  
+  /**
+   * @return Returns the diagDateAxis.
+   */
+  public String getDiagDateAxis( )
+  {
+    return m_diagDateAxis;
+  }
+  
+  /**
+   * @return Returns the diagValueAxis.
+   */
+  public String getDiagValueAxis( )
+  {
+    return m_diagValueAxis;
+  }
+  
+  /**
+   * @return Returns the linkColumn.
+   */
+  public String getLinkColumn( )
+  {
+    return m_linkColumn;
+  }
+  
+  /**
+   * @return Returns the nameColumn.
+   */
+  public String getNameColumn( )
+  {
+    return m_nameColumn;
   }
 }

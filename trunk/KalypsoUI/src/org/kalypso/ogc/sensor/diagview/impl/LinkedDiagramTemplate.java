@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -8,6 +9,7 @@ import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -29,7 +31,8 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
 {
   private static ObjectFactory m_objectFactory;
   private final ResourcePool m_pool;
-  private final TreeMap m_keys;
+  private final TreeMap m_key2curves;
+  private final TreeMap m_curve2key;
 
   /**
    * Constructor
@@ -46,25 +49,96 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
             .isVisible() );
 
     m_pool = KalypsoGisPlugin.getDefault().getPool( );
-    m_keys = new TreeMap( m_pool.getKeyComparator() );
+    m_key2curves = new TreeMap( m_pool.getKeyComparator() );
+    m_curve2key = new TreeMap();
 
-    final List list = obsDiagView.getObservation();
-    for( final Iterator it = list.iterator(); it.hasNext(); )
-    {
-      final TypeObservation tobs = (TypeObservation) it.next();
-
-      final PoolableObjectType key = new PoolableObjectType( tobs.getLinktype(), tobs
-          .getHref(), context );
-      m_keys.put( key, tobs );
-      m_pool.addPoolListener( this, key );
-    }
-    
     for( final Iterator it = obsDiagView.getAxis().iterator(); it.hasNext(); )
     {
       final TypeAxis baseAxis = (TypeAxis) it.next();
 
       addAxis( new DiagramAxis( baseAxis ) );
     }
+    
+    final List curves = new ArrayList();
+    
+    final List list = obsDiagView.getObservation();
+    for( final Iterator it = list.iterator(); it.hasNext(); )
+    {
+      final TypeObservation tobs = (TypeObservation) it.next();
+
+      final List tcurves = tobs.getCurve();
+      for( final Iterator itcurves = tcurves.iterator(); itcurves.hasNext(); )
+      {
+        final TypeCurve tcurve = (TypeCurve) itcurves.next();
+
+        final Properties mappings = new Properties();
+        
+        final List tmaps = tcurve.getMapping();
+        for( final Iterator itm = tmaps.iterator(); itm.hasNext(); )
+        {
+          final TypeAxisMapping mapping = (TypeAxisMapping) itm.next();
+          
+          mappings.setProperty( mapping.getObservationAxis(), mapping.getDiagramAxis() );
+        }
+
+        // new curve, here no observation yet (null) but will be updated once loaded
+        final DiagramCurve curve = new DiagramCurve( tcurve.getName(), null, mappings, this );
+        curves.add( curve );
+      }
+  
+      final PoolableObjectType key = new PoolableObjectType( tobs.getLinktype(), tobs
+          .getHref(), context );
+
+      addObservationTheme( key, curves );
+    }
+  }
+  
+  /**
+   * Adds a list of curves as an observation them
+   * 
+   * @param key
+   * @param curves
+   */
+  public void addObservationTheme( final PoolableObjectType key, final List curves )
+  {
+    // store key-tobs in map before adding to pool
+    m_key2curves.put( key, curves );
+    
+    // store ref for curve to key, used in removeCurve( ... )
+    final Iterator it = curves.iterator();
+    while( it.hasNext() )
+      m_curve2key.put( it.next(), key );
+    
+    // now add to pool
+    m_pool.addPoolListener( this, key );
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeAllCurves()
+   */
+  public void removeAllCurves( )
+  {
+    super.removeAllCurves();
+    
+    m_key2curves.clear();
+    m_curve2key.clear();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate#removeCurve(org.kalypso.ogc.sensor.diagview.IDiagramCurve)
+   */
+  public void removeCurve( final IDiagramCurve curve )
+  {
+    super.removeCurve( curve );
+    
+    final Object key = m_curve2key.get( curve );
+    
+    final ArrayList list = (ArrayList) m_key2curves.get( key );
+    list.remove( curve );
+    if( list.isEmpty() )
+      m_key2curves.remove( key );
+    
+    m_curve2key.remove( curve );
   }
   
   /**
@@ -74,36 +148,33 @@ public class LinkedDiagramTemplate extends DefaultDiagramTemplate implements IPo
   {
     super.dispose();
 
+    m_curve2key.clear();
+    m_key2curves.clear();
+    
     m_pool.removePoolListener( this );
   }
   
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
-  public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( status.isOK() )
     {
-      final TypeObservation tobs = (TypeObservation) m_keys.get( key );
+      final List curves = (List) m_key2curves.get( key );
 
-      final List curves = tobs.getCurve();
-      for( Iterator it = curves.iterator(); it.hasNext(); )
+      if( curves == null || curves.size() == 0 )
+        return;
+      
+      for( final Iterator it = curves.iterator(); it.hasNext(); )
       {
-        final TypeCurve curve = (TypeCurve) it.next();
-
-        final Properties mappings = new Properties();
+        final DiagramCurve curve = (DiagramCurve) it.next();
+        curve.setObservation( (IObservation) newValue );
         
-        final List list = curve.getMapping();
-        for( final Iterator itm = list.iterator(); itm.hasNext(); )
-        {
-          final TypeAxisMapping mapping = (TypeAxisMapping) itm.next();
-          
-          mappings.setProperty( mapping.getObservationAxis(), mapping.getDiagramAxis() );
-        }
-
-        addCurve( new DiagramCurve( curve.getName(), (IObservation) newValue, mappings, this ) );
+        // now add the curve since observation has been loaded
+        addCurve( curve );
       }
-    }    
+    }
   }
 
   /**

@@ -13,11 +13,14 @@ import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.ObservationTemplateHelper;
-import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
+import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewColumn;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
+import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.util.xml.xlink.JAXBXLink;
+import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -28,6 +31,8 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class KalypsoWizardHelper
 {
+  private static final ObjectFactory m_diagObjectFactory = new ObjectFactory();
+  
   private KalypsoWizardHelper( )
   {
     // not to be instanciated
@@ -78,7 +83,7 @@ public class KalypsoWizardHelper
    */
   public static void updateDiagramTemplate(
       final TimeserieFeatureProps[] props, final List features,
-      final DefaultDiagramTemplate template, final URL context )
+      final LinkedDiagramTemplate template, final URL context )
       throws SensorException
   {
     template.removeAllCurves();
@@ -89,22 +94,25 @@ public class KalypsoWizardHelper
 
       for( int i = 0; i < props.length; i++ )
       {
-        final String name = (String) kf.getProperty( props[i]._nameColumn );
+        final String name = (String) kf.getProperty( props[i].getNameColumn() );
         final TimeseriesLink obsLink = (TimeseriesLink) kf
-            .getProperty( props[i]._linkColumn );
+            .getProperty( props[i].getLinkColumn() );
 
         if( obsLink != null )
         {
           final Properties mappings = new Properties();
-          mappings.setProperty( obsLink.getTimeaxis(), props[i]._diagDateAxis );
+          mappings.setProperty( obsLink.getTimeaxis(), props[i].getDiagDateAxis() );
           mappings
-              .setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
-          
-          final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink
-              .getLinktype(), new JAXBXLink( obsLink ), name + " ("
-              + props[i]._linkColumn + ')', mappings, template, context );
+              .setProperty( obsLink.getValueaxis(), props[i].getDiagValueAxis() );
 
-          template.addCurve( curve );
+          final String curveName = name + " (" + props[i].getLinkColumn() + ')';
+          final DiagramCurve curve = new DiagramCurve( curveName, null, mappings, template );
+          
+          final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(), obsLink.getHref(), context );
+          
+          final List curves = new ArrayList();
+          curves.add( curve );
+          template.addObservationTheme( key, curves );
         }
       }
     }
@@ -129,18 +137,23 @@ public class KalypsoWizardHelper
 
       for( int i = 0; i < props.length; i++ )
       {
-        final String name = (String) kf.getProperty( props[i]._nameColumn );
+        final String name = (String) kf.getProperty( props[i].getNameColumn() );
         final TimeseriesLink obsLink = (TimeseriesLink) kf
-            .getProperty( props[i]._linkColumn );
+            .getProperty( props[i].getLinkColumn() );
 
         if( obsLink != null )
         {
-          final LinkedTableViewColumn col = new LinkedTableViewColumn(
-              template, name + " (" + props[i]._linkColumn + ')', obsLink
-                  .getLinktype(), new JAXBXLink( obsLink ), true, 50, obsLink
-                  .getTimeaxis(), obsLink.getValueaxis(), context );
+          final String colName = name + " (" + props[i].getLinkColumn() + ')';
+          
+          // no observation yet
+          final DefaultTableViewColumn col = new DefaultTableViewColumn( colName, true, 50, null );
 
-          template.addColumn( col );
+          final PoolableObjectType key = new PoolableObjectType( obsLink.getLinktype(), obsLink.getHref(), context );
+          
+          final List cols = new ArrayList();
+          cols.add( col );
+          
+          template.addObservationTheme( key, cols );
         }
       }
     }
@@ -162,13 +175,13 @@ public class KalypsoWizardHelper
 
       for( int i = 0; i < props.length; i++ )
       {
-        final String name = (String) kf.getProperty( props[i]._nameColumn );
+        final String name = (String) kf.getProperty( props[i].getNameColumn() );
         final TimeseriesLink obsLink = (TimeseriesLink) kf
-            .getProperty( props[i]._linkColumn );
+            .getProperty( props[i].getLinkColumn() );
 
         if( obsLink != null )
           ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name,
-              props[i]._diagDateAxis, props[i]._diagValueAxis );
+              props[i].getDiagDateAxis(), props[i].getDiagValueAxis() );
       }
     }
   }

@@ -22,7 +22,7 @@ public class DiagramCurve implements IDiagramCurve
 
   private final Properties m_mappings;
 
-  private final IObservation m_obs;
+  private IObservation m_obs = null;
 
   private final IDiagramTemplate m_template;
 
@@ -30,7 +30,7 @@ public class DiagramCurve implements IDiagramCurve
    * Constructor
    * 
    * @param name
-   * @param obs
+   * @param obs optional, can be null, but diag template cannot be shown until setObservation is called for each curve.
    * @param mappings
    * @param template
    */
@@ -76,5 +76,13 @@ public class DiagramCurve implements IDiagramCurve
   public IObservation getObservation()
   {
     return m_obs;
+  }
+  
+  /**
+   * @param obs The obs to set.
+   */
+  public void setObservation( IObservation obs )
+  {
+    m_obs = obs;
   }
 }

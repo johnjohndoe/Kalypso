@@ -4,6 +4,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 
 /**
+ * Default implementation of the <code>ITableViewColumn</code> interface
+ * 
  * @author schlienger
  */
 public class DefaultTableViewColumn implements ITableViewColumn
@@ -81,5 +83,13 @@ public class DefaultTableViewColumn implements ITableViewColumn
   public IObservation getObservation( )
   {
     return m_obs;
+  }
+
+  /**
+   * @param observation The obs to set.
+   */
+  public void setObservation( final IObservation observation )
+  {
+    m_obs = observation;
   }
 }
