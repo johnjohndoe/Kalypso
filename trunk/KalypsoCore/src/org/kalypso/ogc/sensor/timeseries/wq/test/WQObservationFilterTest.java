@@ -11,8 +11,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
-import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
@@ -23,25 +21,31 @@ import org.xml.sax.InputSource;
  */
 public class WQObservationFilterTest extends TestCase
 {
-  private IObservation m_obs;
-
   /**
-   * Note: this also tests the FilterFactory class.
+   * first test
    * 
-   * @see junit.framework.TestCase#setUp()
-   * @see org.kalypso.ogc.sensor.filter.FilterFactory
+   * @throws MalformedURLException
+   * @throws SensorException
    */
-  protected void setUp( ) throws Exception
+  public void testGetValues( ) throws MalformedURLException, SensorException
   {
     InputStream ins = null;
     try
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" );
 
-      m_obs = ZmlFactory.parseXML( new InputSource( ins ), "", new URL(
-          "file:/wq-test.zml?filter(wq*W)" ) );
+      final IObservation obs = ZmlFactory
+          .parseXML(
+              new InputSource( ins ),
+              "",
+              new URL(
+                  "file:/wq-test.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
 
-      assertTrue( m_obs instanceof WQObservationFilter );
+      final ITuppleModel wqValues = obs.getValues( null );
+
+      assertNotNull( wqValues );
+
+      System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
     }
     finally
     {
@@ -49,31 +53,65 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testGetValues( ) throws SensorException
-  {
-    final ITuppleModel wqValues = m_obs.getValues( null );
-
-    assertNotNull( wqValues );
-    assertTrue( wqValues instanceof WQTuppleModel );
-
-    System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
-  }
-  
-  public void testSchirgiswalde() throws MalformedURLException, SensorException
+  /**
+   * tests schirgiswalde
+   * 
+   * @throws MalformedURLException
+   * @throws SensorException
+   */
+  public void testSchirgiswalde( ) throws MalformedURLException,
+      SensorException
   {
     InputStream ins = null;
     try
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" );
 
-      IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", new URL(
-          "file:/wq-test.zml?filter(wq*W)" ) );
+      final IObservation obs = ZmlFactory
+          .parseXML(
+              new InputSource( ins ),
+              "",
+              new URL(
+                  "file:/wq-test2.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
 
-      assertTrue( obs instanceof WQObservationFilter );
-      
-      ITuppleModel values = obs.getValues( null );
-      
-      System.out.println(  ObservationUtilities.dump( values, "  " ) );
+      final ITuppleModel values = obs.getValues( null );
+
+      assertNotNull( values );
+
+      System.out.println( ObservationUtilities.dump( values, "  " ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
+    }
+  }
+
+  /**
+   * tests a wq filter over an observation that does not have any wq param spec
+   * 
+   * @throws MalformedURLException
+   * @throws SensorException
+   */
+  public void testObsWithoutWQParam( ) throws MalformedURLException,
+      SensorException
+  {
+    InputStream ins = null;
+    try
+    {
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" );
+
+      final IObservation obs = ZmlFactory
+          .parseXML(
+              new InputSource( ins ),
+              "",
+              new URL(
+                  "file:/wq-test3.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
+
+      final ITuppleModel values = obs.getValues( null );
+
+      assertNotNull( values );
+
+      System.out.println( ObservationUtilities.dump( values, "  " ) );
     }
     finally
     {

@@ -73,6 +73,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   private final int m_selectionID;
 
   /**
+   * @param layerType
+   * @param context
    * @param selectionID Falls ungleich -1, wird das erste feature des geladenen Themas mit dieser ID selektiert
    */
   public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final int selectionID )

@@ -782,8 +782,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
           ((ITableViewColumn) itcol.next()).setDirty( false );
 
         final ITuppleModel values = model.getValues( theme.getColumns() );
-        obs.setValues( values );
 
+        obs.setValues( values );
+        
         if( saveFiles )
           tableTemplate.saveObservation( obs, monitor );
       }

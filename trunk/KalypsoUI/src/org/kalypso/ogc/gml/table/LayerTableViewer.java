@@ -156,6 +156,10 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   };
 
   /**
+   * @param parent
+   * @param templateTarget
+   * @param featureControlFactory
+   * @param selectionID
    * @param bCursorSelects
    *          falls true, wird immer die unter dem Cursor liegende Zeile
    *          selektiert

@@ -106,6 +106,7 @@ public class KalypsoObservationService implements IObservationService
     m_mapBean2Item.clear();
     m_mapItem2Beans.clear();
     m_mapId2Rep.clear();
+    m_repositoryBeans = null;
 
     try
     {

@@ -87,7 +87,7 @@ public abstract class SetContentHelper
           }
         }
       };
-      final Thread innerThread = new Thread( innerRunnable );
+      final Thread innerThread = new Thread( innerRunnable, "SetContentHelper" );
       innerThread.start();
 
       // set file contents
