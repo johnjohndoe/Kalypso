@@ -101,6 +101,7 @@ public class ObservationPlot extends XYPlot
       int pos = m_axes2ds.values().size();
 
       setDataset( pos, cds );
+      setRenderer( pos, getRenderer() );
 
       mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos
           .get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );

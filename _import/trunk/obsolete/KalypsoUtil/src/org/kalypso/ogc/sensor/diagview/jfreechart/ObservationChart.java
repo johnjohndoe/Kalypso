@@ -1,6 +1,7 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.StandardLegend;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
@@ -22,6 +23,14 @@ public class ObservationChart extends JFreeChart implements ITemplateEventListen
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory
         .createObservationPlot( template ), template.isShowLegend() );
+    
+    if( template.isShowLegend() )
+    {
+      final StandardLegend leg = new StandardLegend();
+      leg.setTitle( template.getLegendName() );
+      
+      setLegend( leg );
+    }
   }
 
   /**
