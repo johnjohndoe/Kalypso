@@ -42,6 +42,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
@@ -520,6 +521,7 @@ public class SpreeCalcJob extends AbstractCalcJob
   /**
    * schreibt die exe aus den Resourcen in ein temproäres Verzeichnis
    * 
+   * @param exedir
    * @param logwriter
    * 
    * @throws CalcJobServiceException
@@ -546,6 +548,9 @@ public class SpreeCalcJob extends AbstractCalcJob
   /**
    * Kopiert die entsrpechende Dateien aus den resourcen in das tmp-dir, aber
    * nur, wenn sie neuer ist als die bereits vorhandene
+   * @param exedir
+   * @param filename
+   * @throws IOException
    */
   private void copyFileToTmp( final File exedir, final String filename ) throws IOException
   {
@@ -627,7 +632,7 @@ public class SpreeCalcJob extends AbstractCalcJob
     }
 
     final String dateType = TimeserieConstants.TYPE_DATE;
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieConstants.getUnit( dateType ),
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieUtils.getUnit( dateType ),
         Date.class, 0, true );
 
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
@@ -678,8 +683,8 @@ public class SpreeCalcJob extends AbstractCalcJob
       if( tuples.size() > 0 )
       {
         final String valueType = TSMap.getTypeForName( column );
-        final String unit = TimeserieConstants.getUnit( valueType );
-        final String name = TimeserieConstants.getName( valueType );
+        final String unit = TimeserieUtils.getUnit( valueType );
+        final String name = TimeserieUtils.getName( valueType );
         
         final IAxis valueAxis = new DefaultAxis( name, valueType, unit, Double.class, 1, false );
         final IAxis[] achsen = new IAxis[]

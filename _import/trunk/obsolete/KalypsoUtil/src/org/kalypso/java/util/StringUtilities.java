@@ -25,10 +25,11 @@ public final class StringUtilities
   /**
    * Converts a String into a Color.
    * <p>
-   * String has to have the following format: "R;G;B"
+   * String has to have the following format: "R;G;B[;A]"
    * <p>
    * with R, G, B being the Red, Green, Blue components of the color
-   * and expressed as integers in the range (0 - 255). 
+   * and expressed as integers in the range (0 - 255).
+   * with A optional, being the alpha composite value in the range (0 - 255).
    *
    * @param s
    *
@@ -36,18 +37,22 @@ public final class StringUtilities
    *
    * @throws IllegalArgumentException if s is null
    */
-  public static final Color stringToColor( String s ) throws IllegalArgumentException
+  public static final Color stringToColor( final String s ) throws IllegalArgumentException
   {
     if( s == null )
       throw new IllegalArgumentException( "Color String is null" );
 
-    String[] sc = s.split( ";" );
+    final String[] sc = s.split( ";" );
 
-    if( sc.length != 3 )
-      throw new IllegalArgumentException( "Color String has wrong format: " + s );
-
-    return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
+    if( sc.length == 3 )
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
                       Integer.parseInt( sc[2] ) );
+    
+    if( sc.length == 4 )
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
+          Integer.parseInt( sc[2] ), Integer.parseInt( sc[3]) );
+    
+    throw new IllegalArgumentException( "Color String has wrong format: " + s );
   }
 
   /**
@@ -61,16 +66,20 @@ public final class StringUtilities
    *
    * @throws IllegalArgumentException if color is null
    */
-  public static final String colorToString( Color c )
+  public static final String colorToString( final Color c )
   {
     if( c == null )
       throw new IllegalArgumentException( "Color is null" );
 
-    StringBuffer buf = new StringBuffer(  );
+    final StringBuffer buf = new StringBuffer(  );
 
     buf.append( c.getRed(  ) ).append( ";" ).append( c.getGreen(  ) )
        .append( ";" ).append( c.getBlue(  ) );
 
+    // alpha component is optional
+    if( c.getAlpha() != 255 )
+      buf.append( ";" ).append( c.getAlpha() );
+    
     return buf.toString(  );
   }
 
@@ -86,17 +95,17 @@ public final class StringUtilities
    *
    * @throws IllegalArgumentException if s is null
    */
-  public static final Font stringToFont( String s )
+  public static final Font stringToFont( final String s )
   {
     if( s == null )
       throw new IllegalArgumentException( "Font String is null" );
 
-    String[] sc = s.split( ";" );
+    final String[] sc = s.split( ";" );
 
     if( sc.length != 3 )
       throw new IllegalArgumentException( "Font String has wrong format" );
 
-    Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
+    final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
 
     return f;
   }
@@ -110,12 +119,12 @@ public final class StringUtilities
    *
    * @throws IllegalArgumentException if f is null
    */
-  public static final String fontToString( Font f )
+  public static final String fontToString( final Font f )
   {
     if( f == null )
       throw new IllegalArgumentException( "Font is null" );
 
-    StringBuffer buf = new StringBuffer(  );
+    final StringBuffer buf = new StringBuffer(  );
 
     buf.append( f.getName(  ) ).append( ";" ).append( f.getStyle(  ) )
        .append( ";" ).append( f.getSize(  ) );
@@ -125,6 +134,10 @@ public final class StringUtilities
 
   /** 
    * Replacement per Pattern-Matching
+   * 
+   * @param sourceValue
+   * @param replaceProperties
+   * @return string
    */
   public static final String replaceAll( final String sourceValue, final Properties replaceProperties )
   {
