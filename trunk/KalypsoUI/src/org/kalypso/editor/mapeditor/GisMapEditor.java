@@ -6,7 +6,6 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -83,7 +82,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public void dispose()
   {
     setMapModell( null );
-    
+
     if( m_outlinePage != null )
       m_outlinePage.dispose();
 
@@ -165,73 +164,55 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     virtualFrame.add( myMapPanel );
   }
 
-  protected final void loadInternal()
+  protected final void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+      throws Exception, CoreException
   {
     // prepare for exception
     setMapModell( null );
-    
-    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
-    Gismapview gisview = null;
+    monitor.beginTask( "Kartenvorlage laden", 2000 );
 
-    try
-    {
-      gisview = (Gismapview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
-    }
-    catch( final ResourceException re )
-    {
-      re.printStackTrace(  );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final JAXBException e )
-    {
-      //      KalypsoGisPlugin.getDefault().getOutputLogger().log(
-      // Level.SEVERE, "Fehler
-      // beim Laden der Datei", e, getSite().getShell() );
+    final Gismapview gisview = (Gismapview)m_unmarshaller.unmarshal( input.getStorage()
+        .getContents() );
 
-      e.printStackTrace();
-    }
+    monitor.worked( 1000 );
 
-    final MapModell mapModell = new MapModell( myMapPanel, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+    final MapModell mapModell = new MapModell( myMapPanel, KalypsoGisPlugin.getDefault()
+        .getCoordinatesSystem() );
     setMapModell( mapModell );
-    
-    if( gisview != null )
+
+    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+
+    final LayersType layerListType = gisview.getLayers();
+    final List layerList = layerListType.getLayer();
+
+    for( int i = 0; i < layerList.size(); i++ )
     {
-      final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
+      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
+          .get( i );
 
-      final LayersType layerListType = gisview.getLayers();
-      final List layerList = layerListType.getLayer();
+      final PoolableKalypsoFeatureTheme theme = new PoolableKalypsoFeatureTheme( layerType, project );
 
-      for( int i = 0; i < layerList.size(); i++ )
-      {
-        final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
-            .get( i );
+      // falls jetzt schon geladen, gleich hinzufügen, sonst erst wenn
+      // fertig geladen
+      m_mapModell.addTheme( theme );
 
-        final PoolableKalypsoFeatureTheme theme = new PoolableKalypsoFeatureTheme( layerType,
-            project );
-
-        // falls jetzt schon geladen, gleich hinzufügen, sonst erst wenn fertig geladen
-        m_mapModell.addTheme( theme );
-      }
+      monitor.worked( 1000 / layerList.size() );
     }
 
-    setContentDescription( input.getFile().getName() );
-    setPartName( input.getFile().getName() );
+    monitor.done();
   }
 
   private void setMapModell( final MapModell mapModell )
   {
     if( m_mapModell != null )
       m_mapModell.removeModellListener( this );
-    
+
     m_mapModell = mapModell;
-    
+
     if( m_mapModell != null )
       m_mapModell.addModellListener( this );
-    
+
     myMapPanel.setMapModell( m_mapModell );
     if( m_outlinePage != null )
       m_outlinePage.setMapModell( m_mapModell );
@@ -263,7 +244,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    //
+  //
   }
 
 }

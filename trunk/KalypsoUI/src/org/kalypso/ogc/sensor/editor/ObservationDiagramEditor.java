@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.editor;
 import java.awt.Frame;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -58,28 +59,17 @@ public class ObservationDiagramEditor extends AbstractEditorPart
   }
 
   /**
+   * @throws CoreException
    * @see org.kalypso.editor.AbstractEditorPart#load()
    */
-  protected void loadInternal()
+  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input  ) throws CoreException
   {
-    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
-
-    try
-    {
-      IFile f = input.getFile();
-      InputSource ins = new InputSource( f.getContents() );
+      final IFile f = input.getFile();
+      final InputSource ins = new InputSource( f.getContents() );
       ins.setEncoding( f.getCharset() );
       
-      ZmlObservation obs = new ZmlObservation( f.getProject().getLocation().toOSString(), input.getName(), ins );
+      final ZmlObservation obs = new ZmlObservation( f.getProject().getLocation().toOSString(), input.getName(), ins );
 
-      setContentDescription( input.getFile().getName() );
-      setPartName( input.getFile().getName() );
-      
       getEditorSite().getShell().getDisplay().asyncExec( new ShowObservationInDiagramJob( m_tsCol, obs ) );
-    }
-    catch( Exception e1 )
-    {
-      e1.printStackTrace();
-    }
   }
 }

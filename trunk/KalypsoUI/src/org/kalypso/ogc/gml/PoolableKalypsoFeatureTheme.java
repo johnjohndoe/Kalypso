@@ -46,9 +46,6 @@ import org.kalypso.util.pool.ResourcePool;
  * da sich die Daten des unterliegenden Themas ändern können
  * </p>
  * 
- * TODO: release keys! 
- * 
- * 
  * @author Belger
  */
 public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements IPoolListener,
@@ -112,6 +109,13 @@ public class PoolableKalypsoFeatureTheme extends AbstractKalypsoTheme implements
     m_layerPool.removePoolListener( this );
     m_stylePool.removePoolListener( this );
 
+    m_layerPool.releaseKey( m_layerKey );
+    if( m_styleKeys != null )
+    {
+      for( int i = 0; i < m_styleKeys.length; i++ )
+        m_stylePool.releaseKey( m_styleKeys[i] );
+    }
+    
     m_commandTarget.dispose();
 
     if( m_theme != null )

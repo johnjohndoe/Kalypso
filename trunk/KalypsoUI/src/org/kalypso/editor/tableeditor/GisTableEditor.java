@@ -12,7 +12,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -53,7 +52,7 @@ import org.kalypso.util.pool.PoolableObjectType;
  * zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 
- * TODO: release keys after use! TODO: resource listener?
+ * TODO: resource listener?
  * 
  * @author belger
  */
@@ -79,7 +78,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       m_unmarshaller = m_gistableviewFactory.createUnmarshaller();
       m_marshaller = m_gistableviewFactory.createMarshaller();
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       // sollte nie passieren
       e.printStackTrace();
@@ -95,6 +94,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     if( m_theme != null )
     {
+      m_theme.dispose();
       m_theme.removeModellListener( this );
       m_theme = null;
     }
@@ -184,49 +184,37 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     load();
   }
 
-  protected final void loadInternal()
+  protected final void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws Exception, CoreException
   {
     if( m_layerTable == null )
       return;
-    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
-    try
-    {
+      monitor.beginTask( "Vorlage laden", 2000 );
+      
+      final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
       m_tableview = (Gistableview)m_unmarshaller.unmarshal( input.getStorage().getContents() );
-    }
-    catch( final ResourceException re )
-    {
-      // TODO: handle ResourceException: e.g. Resource is out of sync
-      re.printStackTrace();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-    }
 
-    if( m_theme != null )
-    {
-      m_theme.removeModellListener( this );
-      m_theme.dispose();
-    }
-    m_theme = null;
+      monitor.worked( 1000 );
+      
+      // prepare for exception
+      if( m_theme != null )
+      {
+        m_theme.removeModellListener( this );
+        m_theme.dispose();
+        m_theme = null;
+      }
+      
+      getSite().getShell().getDisplay().syncExec( new Runnable() {
+        public void run()
+        {
+          m_layerTable.setModel( null );
+        }} );
 
-    m_layerTable.setModel( null );
-    if( m_tableview == null )
-      return;
+      m_theme = new PoolableKalypsoFeatureTheme( m_tableview.getLayer(), project );
 
-    final IProject project = ( (IFileEditorInput)getEditorInput() ).getFile().getProject();
-    
-    m_theme = new PoolableKalypsoFeatureTheme( m_tableview.getLayer(), project );
-    
-    m_theme.addModellListener( this );
+      m_theme.addModellListener( this );
 
-    setContentDescription( input.getFile().getName() );
-    setPartName( input.getFile().getName() );
+      monitor.worked( 1000 );
   }
 
   public LayerTable getLayerTable()
@@ -276,7 +264,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent != null && modellEvent.getEventSource() == m_theme && modellEvent.getType() == ModellEvent.FULL_CHANGE )
+    if( modellEvent != null && modellEvent.getEventSource() == m_theme
+        && modellEvent.getType() == ModellEvent.FULL_CHANGE )
     {
       final FeatureType featureType = m_theme.getLayer().getFeatureType();
 
