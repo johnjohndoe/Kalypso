@@ -354,14 +354,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private void configureProxy()
   {
-    System.setProperty( "proxySet", "true" );
-    System.setProperty( "proxyHost", "172.16.0.1" );
-    System.setProperty( "proxyPort", "8080" );
-    String pw = "belger:LaufMensch";
-    String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
-
-    m_urlConnectionFactory = new URLConnectionFactory( "Proxy-Authorization", epw );
-    NetWorker.setURLConnectionFactory( m_urlConnectionFactory );
+//    System.setProperty( "proxySet", "true" );
+//    System.setProperty( "proxyHost", "172.16.0.1" );
+//    System.setProperty( "proxyPort", "8080" );
+//    String pw = "belger:LaufMensch";
+//    String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
+//
+//    m_urlConnectionFactory = new URLConnectionFactory( "Proxy-Authorization", epw );
+//    NetWorker.setURLConnectionFactory( m_urlConnectionFactory );
   }
 
   public IURLConnectionFactory getURLConnectionFactory()
