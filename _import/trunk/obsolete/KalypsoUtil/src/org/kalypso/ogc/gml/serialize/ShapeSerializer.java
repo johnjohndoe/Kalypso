@@ -1,10 +1,15 @@
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureCollection;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.io.shpapi.ShapeFile;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.GMLHelper;
@@ -25,9 +30,24 @@ public class ShapeSerializer
   // wird nicht instantiiert
   }
 
-  public final static void serialize( final KalypsoFeatureLayer layer, final String[] columns,
+  public final static void serialize( final KalypsoFeatureLayer layer, final Properties mapping,
       final File file ) throws GmlSerializeException
   {
+    final FeatureType featureType = layer.getFeatureType();
+    
+    final FeatureTypeProperty[] ftps = new FeatureTypeProperty[mapping.size()];
+    int count = 0;
+    for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)mIt.next();
+      
+      final FeatureTypeProperty ftp = featureType.getProperty( (String)entry.getKey() );
+      
+      ftps[count++] = FeatureFactory.createFeatureTypeProperty( (String)entry.getValue(), ftp.getType(), ftp.isNullable() );
+    }    
+    
+    final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( null, null, featureType.getName(), ftps );
+    
     try
     {
       final ShapeFile shapeFile = new ShapeFile( file.toString(), "rw" );
@@ -38,11 +58,22 @@ public class ShapeSerializer
 
       for( int i = 0; i < features.length; i++ )
       {
-        // TODO: only Properties specified in 'columns'
+        final KalypsoFeature kalypsoFeature = features[i];
+
+        final Object[] data = new Object[mapping.size()];
+        int datacount = 0;
+        for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
+        {
+          final Map.Entry entry = (Entry)mIt.next();
+          
+          data[datacount++] = kalypsoFeature.getProperty( (String)entry.getKey() );
+        }
+        
+       final Feature feature = FeatureFactory.createFeature( "" + i, shapeFeatureType, data );
         
         // TODO: change CRS to WGS84 als Koordinatensystem ?
 
-        fc.appendFeature( features[i] );
+        fc.appendFeature( feature );
       }
 
       shapeFile.writeShape( fc );
