@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NAModellControl fid="ID000000" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">
+<NAModellControl fid="ID000000" xmlns="org.kalypso.namodell.control" xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+	xs:schemaLocation="org.kalypso.namodell.control project:/.model/schema/nacontrol.xsd" >
 	<editor>Editor</editor>
 	<description>Beschreibung</description>
 	<comment>Kommentar</comment>
@@ -35,7 +37,8 @@
 	<spn>false</spn>
 	<vep>false</vep>
 	<automaticCallibration>false</automaticCallibration>
-	<Catchments><![CDATA[//Catchment[@fid="Catchment6000" or @fid="Catchment1403" or @fid="Catchment1404" or @fid="Catchment1401" or @fid="Catchment1402" or @fid="Catchment1302" or @fid="Catchment1304" or @fid="Catchment1301"]]]></Catchments>
+	<Catchments><![CDATA[//Catchment[@fid="Catchment1302" or @fid="Catchment1304" or @fid="Catchment1301" or @fid="Catchment1300" or @fid="Catchment1303"]]]>
+		</Catchments>
 	<CatchmentsBianf>1.0</CatchmentsBianf>
 	<CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
 	<CatchmentsFaktn>1.0</CatchmentsFaktn>
@@ -43,13 +46,13 @@
 	<KMChannels><![CDATA[//KMChannel[@fid="KMChannel1800" or @fid="KMChannel1700" or @fid="KMChannel1600" or @fid="KMChannel1601"]]]></KMChannels>
 	<KMChannelsFaktorRkf>0.5</KMChannelsFaktorRkf>
 	<KMChannelsFaktorRnf>0.5</KMChannelsFaktorRnf>
-	<rootNode>Node1302</rootNode>
+	<rootNode>Node1300</rootNode>
 	<pegelZR>
 		<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" 
-			ns1:href="Pegel/Pegel_Node1302.zml" ns1:type="simple"/>
+			ns1:href="Pegel/Pegel_Node1300.zml" ns1:type="simple"/>
 	</pegelZR>
 	<qberechnetZR>
 		<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" 
-			ns1:href="Ergebnisse/Berechnet/Abfluss_Node1302.zml" ns1:type="simple"/>
+			ns1:href="Ergebnisse/Berechnet/Abfluss_Node1300.zml" ns1:type="simple"/>
 	</qberechnetZR>
 </NAModellControl>

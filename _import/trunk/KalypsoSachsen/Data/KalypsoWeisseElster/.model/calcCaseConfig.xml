@@ -12,10 +12,19 @@
 			<argument name="output" value=":calcdir:nacontrol_1600.gml"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/nacontrol_1401.gml"/>
+			<argument name="output" value=":calcdir:nacontrol_1401.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/nacontrol_1300.gml"/>
+			<argument name="output" value=":calcdir:nacontrol_1300.gml"/>
+		</transformation>
+<!--
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/nacontrol_1302.gml"/>
 			<argument name="output" value=":calcdir:nacontrol_1302.gml"/>
 		</transformation>
-		
+-->	
 <!-- create zml-directories -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.model/.info.txt"/>

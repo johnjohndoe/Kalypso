@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-	<layer featurePath="/" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="nacontrol_1600.gml" 
+	<layer featurePath="/" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="nacontrol_1401.gml" 
 		ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
 		<column editable="false" name="editor" width="44"/>
 		<column editable="true" name="CatchmentsBianf" width="58"/>
