@@ -41,13 +41,16 @@
 package org.kalypso.convert.update;
 
 import java.io.StringWriter;
+import java.io.Writer;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.filters.InterpolationFilter;
+import org.kalypso.zml.filters.IntervallFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 
 /**
@@ -65,17 +68,51 @@ public class UpdateHelper
   public static String createInterpolationFilter( int amountHours, double defaultValue,
       boolean forceFill ) throws JAXBException
   {
-    final ObjectFactory of = new ObjectFactory();
-    InterpolationFilter interpolationFilter = of.createInterpolationFilter();
-    interpolationFilter.setAmount( amountHours );
-    interpolationFilter.setCalendarField( "HOUR_OF_DAY" );
-    interpolationFilter.setDefaultValue( defaultValue );
-    interpolationFilter.setDefaultStatus( KalypsoStati.BIT_CHECK );
-    interpolationFilter.setForceFill( forceFill );
-    Marshaller marshaller = of.createMarshaller();
-    StringWriter writer = new StringWriter( 0 );
-    marshaller.marshal( interpolationFilter, writer );
-    final String result = writer.toString();
-    return XMLUtilities.prepareInLine( result );
+    StringWriter writer = null;
+    try
+    {
+      final ObjectFactory of = new ObjectFactory();
+      InterpolationFilter interpolationFilter = of.createInterpolationFilter();
+      interpolationFilter.setAmount( amountHours );
+      interpolationFilter.setCalendarField( "HOUR_OF_DAY" );
+      interpolationFilter.setDefaultValue( defaultValue );
+      interpolationFilter.setDefaultStatus( KalypsoStati.BIT_CHECK );
+      interpolationFilter.setForceFill( forceFill );
+      Marshaller marshaller = of.createMarshaller();
+      writer = new StringWriter( 0 );
+      marshaller.marshal( interpolationFilter, writer );
+      final String result = writer.toString();
+      return XMLUtilities.prepareInLine( result );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+  }
+
+  public static String createIntervallFilter( int amount, String calendarField, String mode )
+      throws JAXBException
+  {
+    Writer writer = null;
+    try
+    {
+      final ObjectFactory fac = new ObjectFactory();
+
+      final IntervallFilter intervallFilter = fac.createIntervallFilter();
+      intervallFilter.setAmount( amount );
+      intervallFilter.setCalendarField( calendarField );
+      intervallFilter.setMode( mode );
+      writer = new StringWriter();
+      final Marshaller marshaller = fac.createMarshaller();
+      marshaller.marshal( intervallFilter, writer );
+
+      final String string = XMLUtilities.removeXMLHeader( writer.toString() );
+      final String filterInline = XMLUtilities.prepareInLine( string );
+      return filterInline;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
   }
 }

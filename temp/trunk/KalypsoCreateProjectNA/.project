@@ -3,7 +3,7 @@
 	<name>KalypsoCreateNAProject</name>
 	<comment></comment>
 	<projects>
-		<project>backupdeegree</project>
+		<project>KalypsoDeegree</project>
 		<project>KalypsoNA</project>
 		<project>KalypsoUI</project>
 		<project>KalypsoUtil</project>

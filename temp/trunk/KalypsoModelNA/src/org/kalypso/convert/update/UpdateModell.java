@@ -45,6 +45,12 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
 
+import org.kalypso.convert.WeisseElsterConstants;
+import org.kalypso.convert.namodel.NAZMLGenerator;
+import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -52,12 +58,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypso.convert.WeisseElsterConstants;
-import org.kalypso.convert.namodel.NAZMLGenerator;
-import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * @author doemming
@@ -69,8 +69,6 @@ public class UpdateModell
   private final URL m_modellURL;
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
-
-  private static final double DEFAULT_N = 0;
 
   private static final double DEFAULT_Q = 0;
 
@@ -128,19 +126,19 @@ public class UpdateModell
 
   private static void updateCatchments( Feature[] features ) throws Exception
   {
-    String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, DEFAULT_N, true );
+    String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 15, "MINUTE", "sum" );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       // messung
       TimeseriesLink linkMessung = NAZMLGenerator
           .generateobsLink( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell
-              + feature.getId() + interpolationFilter );
+              + feature.getId() + intervallFilter );
       setTSLink( feature, "niederschlagZRRepository", linkMessung );
       // vorhersage
       TimeseriesLink linkVorhersage = NAZMLGenerator
           .generateobsLink( WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE
-              + feature.getId() + ".zml" + interpolationFilter );
+              + feature.getId() + ".zml" + intervallFilter );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkVorhersage );
       // berechnung
       TimeseriesLink linkBerechnung = NAZMLGenerator
