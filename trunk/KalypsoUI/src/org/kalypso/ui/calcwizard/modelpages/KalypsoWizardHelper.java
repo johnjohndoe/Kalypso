@@ -3,17 +3,12 @@ package org.kalypso.ui.calcwizard.modelpages;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
-import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
-import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
  * Provides some convenience methods for dealing with the stuff in Kalypso
@@ -34,12 +29,8 @@ public class KalypsoWizardHelper
    * TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
-   * 
-   *  
-   *         &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *         &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *   
-   *  
+   * &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   * &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
    * </pre>
    * 
    * @param props
@@ -107,31 +98,5 @@ public class KalypsoWizardHelper
           template.addObservation( link.name, context, link.href,
               link.linktype, ignoreExceptions, null );
         }
-  }
-
-  /**
-   * @param props
-   * @param features
-   * @param template
-   */
-  public static void updateXMLDiagramTemplate(
-      final TimeserieFeatureProps[] props, final List features,
-      final ObsdiagviewType template )
-  {
-    for( Iterator it = features.iterator(); it.hasNext(); )
-    {
-      final Feature kf = (Feature) it.next();
-
-      for( int i = 0; i < props.length; i++ )
-      {
-        final String name = (String) kf.getProperty( props[i].getNameColumn() );
-        final TimeseriesLink obsLink = (TimeseriesLink) kf
-            .getProperty( props[i].getLinkColumn() );
-
-//        if( obsLink != null )
-//          ObservationTemplateHelper.addTimeseriesLink( template, obsLink, name,
-//              props[i].getDiagDateAxis(), props[i].getDiagValueAxis() );
-      }
-    }
   }
 }

@@ -13,9 +13,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -28,13 +26,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -111,36 +108,22 @@ public class SteuerparameterWizardPage extends WizardPage
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
 
     final GMLWorkspace workspace = m_workspace;
-    final SetContentThread thread = new SetContentThread( controlFile, !controlFile.exists(),
-        false, false, new NullProgressMonitor() )
+    final SetContentHelper thread = new SetContentHelper(  )
     {
       public void write( final Writer w ) throws Throwable
       {
         GmlSerializer.serializeWorkspace( w, workspace );
       }
     };
-    thread.start();
+    
     try
     {
-      thread.join();
-    }
-    catch( final InterruptedException e )
-    {
-      throw new CoreException( Status.CANCEL_STATUS );
+      thread.setFileContents(controlFile, false, false, new NullProgressMonitor());
     }
     finally
     {
       monitor.done();
     }
-
-    final CoreException fileException = thread.getFileException();
-    if( fileException != null )
-      throw fileException;
-
-    final Throwable throwable = thread.getThrown();
-    if( throwable != null )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Speichern der Steuerdaten.\n" + throwable.getLocalizedMessage(), throwable ) );
   }
 
   /**
@@ -180,6 +163,8 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * Setzt dne aktuellen Rechenfall, ist dort schon eine .calculation vorhanden,
    * wird diese geladen, sonst die default.
+   * 
+   * @param currentCalcCase
    */
   public void setFolder( final IFolder currentCalcCase )
   {

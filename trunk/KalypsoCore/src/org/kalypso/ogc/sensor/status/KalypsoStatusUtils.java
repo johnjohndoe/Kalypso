@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.status;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import javax.swing.Icon;
@@ -24,11 +25,18 @@ public class KalypsoStatusUtils
 
   public final static String STATUS_AXIS_UNIT = "";
 
-  private final static Icon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ) );
-  private final static Icon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ) );
-  private final static Icon ICON_ERROR = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
-  private final static Icon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ) );
-  
+  private final static Icon ICON_QUESTION = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/question.gif" ) );
+
+  private final static Icon ICON_WARNING = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/warning.gif" ) );
+
+  private final static Icon ICON_ERROR = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
+
+  private final static Icon ICON_WRITE = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/write.gif" ) );
+
   private KalypsoStatusUtils( )
   {
     // not to be instanciated
@@ -101,6 +109,25 @@ public class KalypsoStatusUtils
   }
 
   /**
+   * Finds the list of status axis among the given axes
+   * 
+   * @param axes
+   * @return status axes
+   */
+  public static IAxis[] findStatusAxes( final IAxis[] axes )
+  {
+    final ArrayList list = new ArrayList();
+
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( isStatusAxis( axes[i] ) )
+        list.add( axes[i] );
+    }
+
+    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+  }
+
+  /**
    * Checks if bit is in the mask.
    * 
    * @param mask
@@ -111,45 +138,39 @@ public class KalypsoStatusUtils
   {
     return (mask & bit) == bit;
   }
-  
+
   /**
    * @param mask
    * @return the icon that best fits the mask, or null if no fit
    */
   public static Icon getIconFor( final int mask )
   {
-    if( checkMask( mask, KalypsoStati.BIT_NOT ) )
-      return ICON_ERROR;
-    
-    if( checkMask( mask, KalypsoStati.BIT_MAYBE ) )
+    if( checkMask( mask, KalypsoStati.BIT_CHECK ) )
+      return ICON_WARNING;
+
+    if( checkMask( mask, KalypsoStati.BIT_REQUIRED ) )
       return ICON_QUESTION;
 
     if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
       return ICON_WRITE;
-    
+
     return null;
   }
-  
+
   /**
    * @param mask
    * @return the tooltip that best fits the mask, or null if no fit
    */
   public static String getTooltipFor( final int mask )
   {
-    if( checkMask( mask, KalypsoStati.BIT_NOT ) )
-      return "Nicht geeignet";
-    
-    if( checkMask( mask, KalypsoStati.BIT_MAYBE ) )
-      return "Eventuell nicht geeignet";
-
-    if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
-      return "Vom Benutzer geändert";
+    if( checkMask( mask, KalypsoStati.BIT_CHECK ) )
+      return "Wert auf Gültigkeit prüfen";
 
     if( checkMask( mask, KalypsoStati.BIT_REQUIRED ) )
       return "Eingabe erforderlich";
 
-    if( checkMask( mask, KalypsoStati.BIT_LOCKED ) )
-      return "Eingabe gesperrt";
+    if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
+      return "Vom Benutzer geändert";
 
     return null;
   }

@@ -6,7 +6,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.IAxisMapping;
 import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.runtime.IVariableArguments;
 
@@ -19,8 +18,8 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class ObservationDiagramTemplate extends DefaultDiagramTemplate
 {
   /**
-   * If set, the Method addObservation ignores all axes with the given type
-   * Must be one of TimeserieConstants.TYPE_...
+   * If set, the Method addObservation ignores all axes with the given type Must
+   * be one of TimeserieConstants.TYPE_...
    */
   private String m_ignoreType;
 
@@ -61,7 +60,7 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
       final IVariableArguments args )
   {
     final IAxis[] valueAxis = ObservationUtilities.findAxisByClass( obs
-        .getAxisList(), Number.class );
+        .getAxisList(), Number.class, true );
     final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( obs
         .getAxisList() );
 
@@ -76,35 +75,33 @@ public class ObservationDiagramTemplate extends DefaultDiagramTemplate
 
     for( int i = 0; i < valueAxis.length; i++ )
     {
-      if( !KalypsoStatusUtils.isStatusAxis( valueAxis[i] ) )
+      final String type = valueAxis[i].getType();
+      if( !type.equals( m_ignoreType ) )
       {
-        final String type = valueAxis[i].getType();
-        if( !type.equals( m_ignoreType ) )
+        final IAxisMapping[] mappings = new IAxisMapping[2];
+
+        // look for a date diagram axis
+        IDiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
+        if( daDate == null )
         {
-          final IAxisMapping[] mappings = new IAxisMapping[2];
-
-          // look for a date diagram axis
-          IDiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
-          if( daDate == null )
-          {
-            daDate = DiagramTemplateUtils.createAxisFor( dateAxis );
-            addAxis( daDate );
-          }
-          mappings[0] = new AxisMapping( dateAxis, daDate );
-
-          // look for a value diagram axis
-          IDiagramAxis daValue = getDiagramAxis( type );
-          if( daValue == null )
-          {
-            daValue = DiagramTemplateUtils.createAxisFor( valueAxis[i] );
-            addAxis( daValue );
-          }
-          mappings[1] = new AxisMapping( valueAxis[i], daValue );
-
-          final DiagramCurve curve = new DiagramCurve( theme.getName() + " ("
-              + valueAxis[i].getName() + ")", TimeserieUtils.getColorFor( valueAxis[i].getType() ), theme, mappings, this );
-          theme.addCurve( curve );
+          daDate = DiagramTemplateUtils.createAxisFor( dateAxis );
+          addAxis( daDate );
         }
+        mappings[0] = new AxisMapping( dateAxis, daDate );
+
+        // look for a value diagram axis
+        IDiagramAxis daValue = getDiagramAxis( type );
+        if( daValue == null )
+        {
+          daValue = DiagramTemplateUtils.createAxisFor( valueAxis[i] );
+          addAxis( daValue );
+        }
+        mappings[1] = new AxisMapping( valueAxis[i], daValue );
+
+        final DiagramCurve curve = new DiagramCurve( theme.getName() + " ("
+            + valueAxis[i].getName() + ")", TimeserieUtils
+            .getColorFor( valueAxis[i].getType() ), theme, mappings, this );
+        theme.addCurve( curve );
       }
     }
 

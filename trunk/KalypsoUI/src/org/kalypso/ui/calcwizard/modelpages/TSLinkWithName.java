@@ -9,14 +9,22 @@ public class TSLinkWithName
   public final String linktype;
   public final String href;
 
-  public TSLinkWithName( final String name, final String linktype, final String href, final String filter )
+  /**
+   * Constructor
+   * 
+   * @param sname
+   * @param slinktype
+   * @param shref
+   * @param filter
+   */
+  public TSLinkWithName( final String sname, final String slinktype, final String shref, final String filter )
   {
-    this.name = name;
-    this.linktype = linktype;
+    this.name = sname;
+    this.linktype = slinktype;
     
     if( filter != null && filter.length() > 0 )
-      this.href = href + "?" + filter;
+      this.href = shref + "?" + filter;
     else
-      this.href = href;
+      this.href = shref;
   }
 }

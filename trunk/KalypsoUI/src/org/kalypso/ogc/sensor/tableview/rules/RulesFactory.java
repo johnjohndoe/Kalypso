@@ -53,16 +53,17 @@ public class RulesFactory
     {
       DEFAULT_RULES = new Rules();
 
-	    final int[] bits = { KalypsoStati.BIT_MAYBE, KalypsoStati.BIT_NOT, KalypsoStati.BIT_USER_MODIFIED };
-	    
-	    for( int i = 0; i < bits.length; i++ )
-	    {
-	      DEFAULT_RULES.addRule( new RenderingRule( bits[i], null, null, null,
-	          KalypsoStatusUtils.getTooltipFor( bits[i] ), KalypsoStatusUtils
-	              .getIconFor( bits[i] ) ) );
-	    }
+      final int[] bits = { KalypsoStati.BIT_CHECK, KalypsoStati.BIT_REQUIRED,
+          KalypsoStati.BIT_USER_MODIFIED };
+
+      for( int i = 0; i < bits.length; i++ )
+      {
+        DEFAULT_RULES.addRule( new RenderingRule( bits[i], null, null, null,
+            KalypsoStatusUtils.getTooltipFor( bits[i] ), KalypsoStatusUtils
+                .getIconFor( bits[i] ) ) );
+      }
     }
-    
+
     return DEFAULT_RULES;
   }
 }

@@ -15,7 +15,6 @@ import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.zml.ZmlObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
@@ -55,7 +54,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
       final IObservation obs = theme.getObservation();
 
-      if( dirty && obs instanceof ZmlObservation )
+      if( dirty )
       {
         final String msg = "Sie haben Änderungen in " + obs.getName()
             + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";

@@ -8,8 +8,6 @@ import org.kalypso.ogc.sensor.SensorException;
  * <p>
  * The specification of the filter is coded as an xml string.
  * 
- * TODO: IMPORTANT NOTE: currently the 'fragment' separator is not '#' but '?'.
- * 
  * @author schlienger
  */
 public interface IObservationFilter extends IObservation

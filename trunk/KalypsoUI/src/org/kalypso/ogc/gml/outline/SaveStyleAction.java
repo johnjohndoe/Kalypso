@@ -26,11 +26,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.w3c.dom.Document;
 
 /**
@@ -93,8 +92,7 @@ public class SaveStyleAction extends AbstractOutlineAction
         if( iFile != null )
         {
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
-          final SetContentThread thread = new SetContentThread( iFile, !iFile.exists(), false,
-              true, new NullProgressMonitor() )
+          final SetContentHelper thread = new SetContentHelper(  )
           {
             protected void write( final Writer writer ) throws Throwable
             {
@@ -105,21 +103,8 @@ public class SaveStyleAction extends AbstractOutlineAction
               t.transform( source, new StreamResult( writer ) );
             }
           };
-          thread.start();
-          thread.join();
-
-          final CoreException fileException = thread.getFileException();
-          if( fileException != null )
-            throw fileException;
-
-          final Throwable thrown = thread.getThrown();
-          if( thrown != null )
-          {
-            CoreException coreE = new CoreException( KalypsoGisPlugin.createErrorStatus(
-                "Fehler beim Speichern", thrown ) );
-            ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern des Styles", coreE
-                .getStatus() );
-          }
+          thread.setFileContents( iFile, false,
+              true, new NullProgressMonitor() );
         }
         else if( file != null )
         {
@@ -132,9 +117,14 @@ public class SaveStyleAction extends AbstractOutlineAction
         }
       }
     }
+    catch( final CoreException ce )
+    {
+      ce.printStackTrace();
+      ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern des Styles", ce.getStatus() );
+    }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
+      // TODO error handling
       e.printStackTrace();
     }
   }

@@ -1,7 +1,3 @@
-/**
- * TODO: license definieren
- */
-
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;

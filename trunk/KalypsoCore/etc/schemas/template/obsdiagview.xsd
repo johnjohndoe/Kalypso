@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="obsdiagview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org" xmlns:myns="obsdiagview.template.kalypso.org">
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+	
 	<!-- type Direction -->
 	<xs:simpleType name="typeDirection">
 		<xs:restriction base="xs:string">
@@ -8,6 +9,7 @@
 			<xs:enumeration value="horizontal"/>
 		</xs:restriction>
 	</xs:simpleType>
+	
 	<!-- type Position -->
 	<xs:simpleType name="typePosition">
 		<xs:restriction base="xs:string">
@@ -17,6 +19,7 @@
 			<xs:enumeration value="top"/>
 		</xs:restriction>
 	</xs:simpleType>
+	
 	<!-- type Axis -->
 	<xs:complexType name="typeAxis">
 		<xs:attribute name="id" type="xs:ID" use="required"/>
@@ -27,11 +30,13 @@
 		<xs:attribute name="position" type="myns:typePosition" use="required"/>
 		<xs:attribute name="inverted" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
+	
 	<!-- type AxisMaping-->
 	<xs:complexType name="typeAxisMapping">
 		<xs:attribute name="observation-axis" type="xs:string"/>
 		<xs:attribute name="diagram-axis" type="xs:string"/>
 	</xs:complexType>
+	
 	<!-- typeCurve -->
 	<xs:complexType name="typeCurve">
 		<xs:sequence>
@@ -39,17 +44,22 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string" use="required"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="color" type="xs:string" use="optional"/>
 	</xs:complexType>
+	
 	<!-- typeObservation -->
 	<xs:complexType name="typeObservation">
 		<xs:complexContent>
 			<xs:extension base="kalypso:kalypsoLinkType">
 				<xs:sequence>
-					<xs:element name="curve" type="myns:typeCurve" minOccurs="1" maxOccurs="unbounded"/>
+					<!-- curve elements are optional, if no curve specified, then
+						all axes from the observation are displayed -->
+					<xs:element name="curve" type="myns:typeCurve" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
 	<!-- root element: obsdiagview -->
 	<xs:element name="obsdiagview">
 		<xs:complexType>

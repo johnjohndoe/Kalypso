@@ -12,11 +12,10 @@ import org.deegree_impl.model.feature.visitors.ResortVisitor;
 import org.deegree_impl.model.feature.visitors.TransformVisitor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -109,23 +108,14 @@ public class GmlLoader extends AbstractLoader
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
       {
-        final SetContentThread thread = new SetContentThread( file, !file.exists(), false, true, new NullProgressMonitor() ) 
+        final SetContentHelper thread = new SetContentHelper(  ) 
         {
           protected void write( final Writer writer ) throws Throwable
           {
             GmlSerializer.serializeWorkspace( writer, workspace);            
           }
         };
-        thread.start();
-        thread.join();
-        
-        final CoreException fileException = thread.getFileException();
-        if( fileException != null )
-          throw fileException;
-        
-        final Throwable thrown = thread.getThrown();
-        if( thrown != null )
-          throw thrown;
+        thread.setFileContents( file, false, true, new NullProgressMonitor() );
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )
       {

@@ -54,13 +54,13 @@ public class InterpolationFilterTest extends TestCase
     
     m_to = CAL.getTime();
     
-    m_obs = new SimpleObservation("", "", true, null, null, axes );
+    m_obs = new SimpleObservation("","", "", true, null, null, axes );
     m_obs.setValues( model );
   }
   
   public void testGetValues() throws SensorException
   {
-    InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, -1 );
+    InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, -1, 0 );
     
     filter.initFilter( null, m_obs );
     

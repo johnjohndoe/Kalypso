@@ -15,7 +15,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.util.SetContentThread;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
@@ -24,7 +24,6 @@ import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -84,7 +83,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     if( adapter == IContentOutlinePage.class )
     {
       // lazy loading
-      if( m_outline == null || m_outline.getControl() != null && m_outline.getControl().isDisposed() )
+      if( m_outline == null || m_outline.getControl() != null
+          && m_outline.getControl().isDisposed() )
       {
         // TODO check if ok to dispose when not null
         if( m_outline != null )
@@ -114,7 +114,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
 
     if( m_outline != null )
       m_outline.dispose();
-    
+
     if( m_obsChart != null )
       m_obsChart.dispose();
 
@@ -131,8 +131,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     if( m_template == null )
       return;
 
-    final SetContentThread thread = new SetContentThread( input.getFile(),
-        !input.getFile().exists(), false, true, monitor )
+    final SetContentHelper thread = new SetContentHelper()
     {
       protected void write( Writer writer ) throws Throwable
       {
@@ -145,26 +144,9 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
       }
     };
 
-    thread.start();
-    try
-    {
-      thread.join();
+    thread.setFileContents( input.getFile(), false, true, monitor );
 
-      if( thread.getFileException() != null )
-        throw thread.getFileException();
-
-      if( thread.getThrown() != null )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Diagrammvorlage speichern", thread.getThrown() ) );
-      
-      fireDirty();
-    }
-    catch( InterruptedException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Diagrammvorlage speichern", e ) );
-    }
+    fireDirty();
   }
 
   /**
