@@ -60,7 +60,7 @@ public class DiagramCurve implements IDiagramCurve
       String obsAxis = (String)it.next();
       String diagAxis = m_mappings.getProperty( obsAxis );
 
-      ms.add( new AxisMapping( ObservationUtilities.findAxis( m_obs.getAxisList(), obsAxis ), m_template
+      ms.add( new AxisMapping( ObservationUtilities.findAxisByName( m_obs.getAxisList(), obsAxis ), m_template
           .findAxis( diagAxis ) ) );
     }
 

@@ -23,7 +23,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
 {
   public ObservationTimeSeries( final IObservation obs, final IVariableArguments args ) throws SensorException
   {
-    this( obs, ObservationUtilities.findAxis( obs.getAxisList(), Date.class )[0], ObservationUtilities.findAxis( obs.getAxisList(), Number.class ), args );
+    this( obs, ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class )[0], ObservationUtilities.findAxisByClass( obs.getAxisList(), Number.class ), args );
   }
   
   public ObservationTimeSeries( final IObservation obs,  final IAxis dateAxis, final IAxis[] valueAxis, final IVariableArguments args ) throws SensorException

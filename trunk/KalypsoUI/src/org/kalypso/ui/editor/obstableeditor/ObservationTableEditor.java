@@ -1,12 +1,9 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
-import java.io.IOException;
 
 import javax.swing.JScrollPane;
-import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -86,15 +83,7 @@ public class ObservationTableEditor extends AbstractEditorPart
       
       monitor.worked(1);
     }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
-    }
-    catch( IOException e )
+    catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
     }

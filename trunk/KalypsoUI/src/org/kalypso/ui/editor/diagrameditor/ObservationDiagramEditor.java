@@ -1,12 +1,9 @@
 package org.kalypso.ui.editor.diagrameditor;
 
 import java.awt.Frame;
-import java.io.IOException;
 
 import javax.swing.JTextField;
-import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -17,7 +14,6 @@ import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.util.factory.FactoryException;
 
 /**
  * Observation Diagram Editor.
@@ -77,7 +73,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart
   {
     try
     {
-      monitor.beginTask( "Laden", 2 );
+      monitor.beginTask( "Vorlage Laden", 2 );
       
       m_template = ObservationTemplateHelper.loadDiagramTemplate( input.getFile() );
 
@@ -96,19 +92,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart
 
       monitor.worked( 1 );
     }
-    catch( CoreException e )
-    {
-      e.printStackTrace();
-    }
-    catch( JAXBException e )
-    {
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( FactoryException e )
+    catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
     }

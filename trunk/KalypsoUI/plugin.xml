@@ -381,15 +381,15 @@
          point="org.eclipse.ui.viewActions">
       <viewContribution
             targetID="org.eclipse.ui.views.ResourceNavigator"
-            id="org.kalypso.ogc.sensor.view.vc1">
+            id="org.kalypso.ui.resource.vc1">
          <action
                label="Grafik starten (mit Vorlage)"
-               id="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate"
+               id="org.kalypso.ui.navigator.GrafikViewActionDelegate"
                menubarPath="additions"
 	           toolbarPath="additions" 
                icon="icons/grafik-icon.gif" 
                tooltip="Grafik-Tool anhand einer Vorlage starten" 
-               class="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate" 
+               class="org.kalypso.ui.navigator.GrafikViewActionDelegate" 
                enablesFor="1"> 
 			<selection class="org.eclipse.core.resources.IFile" name="*.odt"/>
    <selection
@@ -398,6 +398,18 @@
 	   	</action>
 
                
+      </viewContribution>
+      <viewContribution
+            targetID="org.eclipse.ui.views.ResourceNavigator"
+            id="org.kalypso.ui.resource.vc2">
+         <action
+               toolbarPath="additions"
+               label="Cache löschen"
+               icon="icons/sample.gif"
+               class="org.kalypso.ui.navigator.ClearCacheActionDelegate"
+               tooltip="Löscht den Cache (Zwischengespeicherte Dateien)"
+               menubarPath="additions"
+               id="org.kalypso.ui.navigator.ClearCacheActionDelegate"/>
       </viewContribution>
 
    </extension>

@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.view.resourceNavigator;
+package org.kalypso.ui.navigator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
