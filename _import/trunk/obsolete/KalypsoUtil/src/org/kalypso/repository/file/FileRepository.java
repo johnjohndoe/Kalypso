@@ -148,14 +148,6 @@ public class FileRepository extends AbstractRepository
    */
   public String getIdentifier()
   {
-    //    try
-    //    {
-    //      return m_root.toURL().toExternalForm();
-    //    }
-    //    catch( MalformedURLException e )
-    //    {
-    //      throw new IllegalStateException( e.getLocalizedMessage() );
-    //    }
     return m_identifier;
   }
 

@@ -154,7 +154,7 @@ public abstract class AbstractRepository implements IRepository
    */
   public String getName()
   {
-    return getLocation();
+    return getIdentifier() + " (" + getLocation() + ")";
   }
 
   /**
