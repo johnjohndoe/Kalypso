@@ -67,7 +67,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
           for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
             ((ITableViewColumn) itcol.next()).setDirty( false );
 
-          final ITuppleModel values = model.getValues( theme.getColumns() );
+          final ITuppleModel values = model.getValues( theme );
 
           final Job job = new Job( "ZML-Speichern: " + obs.getName() )
           {

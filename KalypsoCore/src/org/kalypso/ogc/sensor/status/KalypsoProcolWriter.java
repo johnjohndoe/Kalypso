@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 
@@ -98,21 +99,25 @@ public class KalypsoProcolWriter
               // did already summ up?
               if( !sumDone )
               {
-                final String header = "Warnung in Zeitreihe: "
+                sumDone = true;
+                
+                String header = "Warnung in Zeitreihe: "
                     + observations[i].getName();
+                
+                final String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" );
+                if( desc.length() > 0 )
+                  header += " (" + desc + ")";
 
                 summaryWriter.write( header + '\n');
-//                summaryWriter.newLine();
-                sumDone = true;
 
+                detailsWriter.newLine();
                 detailsWriter.write( header );
                 detailsWriter.newLine();
                 detailsWriter.write( "Details:" );
                 detailsWriter.newLine();
               }
 
-              detailsWriter.write( ix + "- "
-                  + ObservationUtilities.dump( models[i], " ", ix, true )
+              detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true )
                   + " Grund: " + bf.toString() );
             }
           }

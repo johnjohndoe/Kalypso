@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -738,13 +737,22 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
 
   protected void saveTimeseriesPressed( final boolean saveInFiles )
   {
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    final IRunnableWithProgress op = new IRunnableWithProgress()
     {
-      protected void execute( final IProgressMonitor monitor )
+      public void run( final IProgressMonitor monitor )
+          throws InvocationTargetException, InterruptedException
       {
         saveDirtyObservations( saveInFiles, monitor );
       }
     };
+
+    //    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    //    {
+    //      protected void execute( final IProgressMonitor monitor )
+    //      {
+    //        saveDirtyObservations( saveInFiles, monitor );
+    //      }
+    //    };
 
     runAndHandleOperation( op, "Zeitreihen speichern" );
   }
@@ -781,10 +789,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
             .hasNext(); )
           ((ITableViewColumn) itcol.next()).setDirty( false );
 
-        final ITuppleModel values = model.getValues( theme.getColumns() );
+        final ITuppleModel values = model.getValues( theme );
 
         obs.setValues( values );
-        
+
         if( saveFiles )
           tableTemplate.saveObservation( obs, monitor );
       }
@@ -857,41 +865,55 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements
   {
     final IWizard wizard = getWizard();
 
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    //    final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
+    //    {
+    //      public void execute( final IProgressMonitor monitor )
+    //          throws CoreException
+    //      {
+    IRunnableWithProgress op = new IRunnableWithProgress()
     {
-      public void execute( final IProgressMonitor monitor )
-          throws CoreException
+
+      public void run( IProgressMonitor monitor )
+          throws InvocationTargetException, InterruptedException
       {
-        final IWizardPage[] pages = wizard.getPages();
-
-        monitor.beginTask( "Berechnung wird durchgeführt",
-            1000 + pages.length * 100 );
-
-        for( int i = 0; i < pages.length; i++ )
+        try
         {
-          final IWizardPage page = pages[i];
-          if( page instanceof IModelWizardPage )
-            ((IModelWizardPage) page).saveData( new SubProgressMonitor(
-                monitor, 100 ) );
-          else
-            monitor.worked( 100 );
-        }
+          final IWizardPage[] pages = wizard.getPages();
 
-        final ModelNature nature = (ModelNature) getCalcFolder().getProject()
-            .getNature( ModelNature.ID );
-        final String modelspec = getArguments().getProperty( PROP_MODELSPEC,
-            null );
-        final String clearResults = getArguments().getProperty(
-            PROP_CLEAR_RESULTS, "true" );
-        boolean doClearResults = true;
-        if( "false".equals( clearResults ) )
-          doClearResults = false;
-        
-        final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor(
-            monitor, 1000 ), modelspec, doClearResults );
-        
-        if( status !=  Status.OK_STATUS )
-          throw new CoreException( status );
+          monitor.beginTask( "Berechnung wird durchgeführt",
+              1000 + pages.length * 100 );
+
+          for( int i = 0; i < pages.length; i++ )
+          {
+            final IWizardPage page = pages[i];
+            if( page instanceof IModelWizardPage )
+              ((IModelWizardPage) page).saveData( new SubProgressMonitor(
+                  monitor, 100 ) );
+            else
+              monitor.worked( 100 );
+          }
+
+          final ModelNature nature = (ModelNature) getCalcFolder().getProject()
+              .getNature( ModelNature.ID );
+          final String modelspec = getArguments().getProperty( PROP_MODELSPEC,
+              null );
+          final String clearResults = getArguments().getProperty(
+              PROP_CLEAR_RESULTS, "true" );
+          boolean doClearResults = true;
+          if( "false".equals( clearResults ) )
+            doClearResults = false;
+
+          final IStatus status = nature.runCalculation( getCalcFolder(),
+              new SubProgressMonitor( monitor, 1000 ), modelspec,
+              doClearResults );
+
+          if( status != Status.OK_STATUS )
+            throw new CoreException( status );
+        }
+        catch( CoreException e )
+        {
+          throw new InvocationTargetException( e );
+        }
       }
     };
 

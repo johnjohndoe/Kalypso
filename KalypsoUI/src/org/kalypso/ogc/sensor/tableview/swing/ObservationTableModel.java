@@ -22,6 +22,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.ITableViewRules;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 
@@ -89,7 +90,8 @@ public class ObservationTableModel extends AbstractTableModel
         m_sharedAxis = keyAxis;
       else
       {
-        // verify compatibility of the axes
+        // verify compatibility of the axes. We do not use IAxis.equals()
+        // since the position is not relevant here
         if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
             || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
             || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
@@ -403,24 +405,14 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Creates an ITuppleModel with the values of all columns and all rows.
+   * Creates an ITuppleModel with the values of the columns of the given theme.
    * 
+   * @param theme
    * @return new model
    */
-  public ITuppleModel getValues( )
+  public ITuppleModel getValues( final ITableViewTheme theme )
   {
-    return getValues( m_columns, null );
-  }
-
-  /**
-   * Creates an ITuppleModel with the values of the given columns and all rows.
-   * 
-   * @param cols
-   * @return new model
-   */
-  public ITuppleModel getValues( final List cols )
-  {
-    return getValues( cols, null );
+    return getValues( theme.getColumns(), null );
   }
 
   /**
@@ -444,13 +436,11 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @return new model
    */
-  public ITuppleModel getValues( final List cols, final int[] rows )
+  protected ITuppleModel getValues( final List cols, final int[] rows )
   {
     final List allAxes = new ArrayList();
     final Map statusAxes = new HashMap();
 
-    allAxes.add( m_sharedAxis );
-    
     final Iterator it = cols.iterator();
     while( it.hasNext() )
     {
@@ -463,6 +453,10 @@ public class ObservationTableModel extends AbstractTableModel
         allAxes.add( statusAxis );
         statusAxes.put( col, statusAxis );
       }
+
+      // for the last column, add also the key axis
+      if( !it.hasNext() )
+        allAxes.add( col.getKeyAxis() );
     }
 
     final SimpleTuppleModel model = new SimpleTuppleModel( allAxes );
@@ -477,8 +471,6 @@ public class ObservationTableModel extends AbstractTableModel
       {
         final Object[] tupple = new Object[ allAxes.size() ];
 
-        tupple[ m_sharedAxis.getPosition() ] = keyObj;
-
         for( final Iterator ita = cols.iterator(); ita.hasNext(); )
         {
           final ITableViewColumn col = (ITableViewColumn) ita.next();
@@ -491,6 +483,10 @@ public class ObservationTableModel extends AbstractTableModel
           final IAxis statusAxis = (IAxis) statusAxes.get( col );
           if( statusAxis != null )
             tupple[ statusAxis.getPosition() ] = m_statusModel.getValueAt( rowIndex, colIndex );
+          
+          // and the key value
+          if( !ita.hasNext() )
+            tupple[ col.getKeyAxis().getPosition() ] = keyObj;
         }
 
         model.addTupple( tupple );
