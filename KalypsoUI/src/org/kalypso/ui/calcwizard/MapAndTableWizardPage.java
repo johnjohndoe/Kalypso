@@ -18,6 +18,7 @@ import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.MapPanel;
 import org.kalypso.ogc.event.ModellEvent;
@@ -33,6 +34,7 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -43,10 +45,10 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class MapAndTableWizardPage extends WizardPage
 {
   public final static String PROP_MAPTEMPLATE = "mapTemplate";
+
   public static final String PROP_MAPTITLE = "mapTitle";
 
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
-
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( null );
 
@@ -54,6 +56,7 @@ public class MapAndTableWizardPage extends WizardPage
 
   private IProject m_project;
 
+  private static final int SELECTION_ID = 0x10;
 
   public MapAndTableWizardPage( final IProject project, final String pagetitle,
       final ImageDescriptor imagedesc, final Properties arguments )
@@ -69,7 +72,6 @@ public class MapAndTableWizardPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-
     final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
 
     try
@@ -77,8 +79,9 @@ public class MapAndTableWizardPage extends WizardPage
       // links karte
       createMapPanel( sashForm );
       createTablePanel( sashForm );
-      
-      sashForm.setWeights( new int[] { 70, 30 } );
+
+      sashForm.setWeights( new int[]
+      { 70, 30 } );
     }
     catch( final Exception e )
     {
@@ -90,9 +93,22 @@ public class MapAndTableWizardPage extends WizardPage
 
   private void createTablePanel( final Composite parent )
   {
-    // rechts tabelle
-    final Text text = new Text( parent, SWT.NONE );
-    text.setText( m_arguments.getProperty(PROP_TABLETEMPLATE) );
+    try
+    {
+      final String templateFileName = m_arguments.getProperty( PROP_TABLETEMPLATE );
+      final IFile templateFile = (IFile)m_project.findMember( templateFileName );
+      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile );
+
+      final LayerTableViewer viewer = new LayerTableViewer( parent, KalypsoGisPlugin.getDefault()
+          .getFeatureTypeCellEditorFactory(), SELECTION_ID );
+      viewer.applyTableTemplate( template, m_project );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final Text text = new Text( parent, SWT.NONE );
+      text.setText( "Fehler beim Laden des TableTemplate" );
+    }
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -113,10 +129,9 @@ public class MapAndTableWizardPage extends WizardPage
     // Karte //
     ///////////
     // Karte
-    final MapPanel mapPanel = new MapPanel( m_commandTarget, crs );
+    final MapPanel mapPanel = new MapPanel( m_commandTarget, crs, SELECTION_ID );
     final Composite mapComposite = new Composite( mapView, SWT.RIGHT | SWT.EMBEDDED );
-    final Frame virtualFrame = SWT_AWT
-        .new_Frame( mapComposite );
+    final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
     virtualFrame.setVisible( true );
     mapPanel.setVisible( true );
@@ -124,26 +139,25 @@ public class MapAndTableWizardPage extends WizardPage
 
     mapPanel.setMapModell( mapModell );
     mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
-    
-    
+
     /////////////
     // Toolbar //
     /////////////
-    final ToolBarManager tbm = new ToolBarManager( );
+    final ToolBarManager tbm = new ToolBarManager();
 
     tbm.add( new GroupMarker( "radio_group" ) );
-    
+
     tbm.appendToGroup( "radio_group", new ZoomInWidgetAction( mapPanel ) );
     tbm.appendToGroup( "radio_group", new PanToWidgetAction( mapPanel ) );
     tbm.appendToGroup( "radio_group", new ToggleSelectWidgetAction( mapPanel ) );
     tbm.appendToGroup( "radio_group", new SelectWidgetAction( mapPanel ) );
     tbm.appendToGroup( "radio_group", new UnselectWidgetAction( mapPanel ) );
-    
+
     tbm.add( new Separator() );
-    
+
     tbm.add( new FullExtentMapAction( m_commandTarget, mapPanel ) );
     tbm.add( new ZoomOutMapAction( m_commandTarget, mapPanel ) );
-    
+
     final ToolBar toolBar = tbm.createControl( mapView );
 
     /////////////
@@ -151,7 +165,7 @@ public class MapAndTableWizardPage extends WizardPage
     /////////////
     final GisMapOutlineViewer outlineViewer = new GisMapOutlineViewer( m_commandTarget, mapModell );
     outlineViewer.createControl( mapView );
-    
+
     mapView.setContent( mapComposite );
     mapView.setTopCenter( toolBar );
     mapView.setTopLeft( outlineViewer.getControl() );

@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,6 +34,8 @@ import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+
+import com.sun.xml.bind.StringInputStream;
 
 /**
  * @author bce
@@ -85,7 +88,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public final void doSave( final IProgressMonitor monitor )
+  public final void doSave( final IProgressMonitor monitor ) 
   {
     final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
@@ -166,20 +169,20 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
 
     dialog.create();
 
-    final IProgressMonitor progressMonitor = getProgressMonitor();
+    final IProgressMonitor monitor = getProgressMonitor();
 
     if( dialog.open() == Window.CANCEL )
     {
-      if( progressMonitor != null )
-        progressMonitor.setCanceled( true );
+      if( monitor != null )
+        monitor.setCanceled( true );
       return;
     }
 
     final IPath filePath = dialog.getResult();
     if( filePath == null )
     {
-      if( progressMonitor != null )
-        progressMonitor.setCanceled( true );
+      if( monitor != null )
+        monitor.setCanceled( true );
       return;
     }
 
@@ -187,13 +190,27 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     final IFile file = workspace.getRoot().getFile( filePath );
     final IFileEditorInput newInput = new FileEditorInput( file );
 
-    doSaveInternal( progressMonitor, newInput );
-    m_commandTarget.setDirty( false );
-
-    if( progressMonitor != null )
-      progressMonitor.setCanceled( false );
-
-    setInput( newInput );
+    try
+    {
+      monitor.beginTask( "Save file",  3000 );
+      file.create( new StringInputStream( "" ), false, new SubProgressMonitor( monitor, 1000 ) );
+      file.setCharset( original.getCharset(), new SubProgressMonitor( monitor, 1000 ) );
+      
+      doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
+      m_commandTarget.setDirty( false );
+  
+      if( monitor != null )
+        monitor.setCanceled( false );
+  
+      setInput( newInput );
+      
+      monitor.done();
+    }
+    catch( final CoreException ce )
+    {
+      // TODO: error handling
+      ce.printStackTrace();
+    }
   }
 
   /**

@@ -8,8 +8,8 @@ import org.kalypso.ogc.widgets.SelectWidget;
  */
 public class SelectWidgetDelegate extends GisMapEditorWidgetActionDelegate
 {
-  public SelectWidgetDelegate(  )
+  public SelectWidgetDelegate()
   {
-    super( new SelectWidget() );
+    super( new SelectWidget( ) );
   }
 }
