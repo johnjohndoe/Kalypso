@@ -159,11 +159,10 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   public void createPartControl( Composite parent )
   {
     super.createPartControl( parent );
-
+    
     m_layerTable = new LayerTable( parent, this );
 
     load();
-
   }
 
   protected void load()

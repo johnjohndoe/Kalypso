@@ -37,8 +37,8 @@
             id="org.kalypso.editor.mapeditor.GisMapEditor"
             extensions="gmt"/>
       <editor
-            icon="icons/sample.gif"
             class="org.kalypso.editor.tableeditor.GisTableEditor"
+            icon="icons/sample.gif"
             default="true"
             contributorClass="org.kalypso.editor.tableeditor.GisTableEditorActionBarContributor"
             name="Kalypso GisTableEditor"
@@ -67,6 +67,7 @@
                path="additions"
                id="org.kalypso.editors.tableeditor.menu">
             <separator name="tabelle"/>
+            <separator name="spalten"/>
          </menu>
          <action
                toolbarPath="tabelle"
@@ -85,27 +86,28 @@
                menubarPath="org.kalypso.editors.tableeditor.menu/tabelle"
                id="org.kalypso.editors.tableeditor.RemoveRowsAction">
          </action>
+         <menu
+               label="Spalten"
+               path="org.kalypso.editors.tableeditor.menu/spalten"
+               id="org.kalypso.editors.tableeditor.columnmenu">
+            <separator name="spalten"/>
+         </menu>
       </editorContribution>
-      <editorContribution
-            targetID="org.kalypso.editor.mapeditor.GisMapEditor"
-            id="org.kalypso.editor.mapeditor.GisMapEditorActionDelegate">
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="org.kalypso.editors.tableeditor.contextMenu"
+            id="org.kalypso.editors.tableeditor.popupMenu">
+         <menu
+               label="Menu"
+               path="org.kalypso.editors.tableeditor.popMenu"
+               id="org.kalypso.editors.tableeditor.popMenu.menu"/>
          <action
-               toolbarPath="karte"
-               label="volle Ausdehnung"
-               tooltip="Zoom to fullextent"
-               icon="icons/full/elcl16/kde_window_fullscreen.gif"
-               class="org.kalypso.editor.mapeditor.actions.FullExtentAction"
-               style="push"
-               id="org.kalypso.editor.mapeditor.action.FullExtentAction"/>
-         <action
-               toolbarPath="karte"
-               label="Ausschnitt vergrößern"
-               tooltip="vergrößert den Kartenausschnitt"
-               icon="icons/full/elcl16/kde_viewmag-.gif"
-               class="org.kalypso.editor.mapeditor.actions.ZoomOutAction"
-               style="push"
-               id="org.kalypso.editor.mapeditor.action.ZoomOutAction"/>
-      </editorContribution>
+               label="AddRow"
+               class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
+               id="org.kalypso.tableeditor.AddRowAction"/>
+      </viewerContribution>
    </extension>
 
 </plugin>

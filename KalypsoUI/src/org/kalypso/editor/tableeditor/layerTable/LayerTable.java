@@ -3,7 +3,7 @@ package org.kalypso.editor.tableeditor.layerTable;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -15,7 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.kalypso.editor.tableeditor.layerTable.command.SetColumnVisibleCommand;
+import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommandManager;
 
@@ -29,6 +29,8 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   private LayerTableModel m_model = null;
 
   private final ICommandManager m_commandManager;
+
+  private MenuManager m_menu;
 
   public LayerTable( final Composite parent, final ICommandManager commandManager )
   {
@@ -47,6 +49,9 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   {
     if( m_model != null )
       m_model.removeModelListener( this );
+    
+    if( m_menu != null )
+      m_menu.dispose();
   }
 
   public LayerTableModel getModel()
@@ -71,7 +76,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
 
     m_model.addModelListener( this );
 
-    final MenuManager mm = new MenuManager( "Kontext", "context" );
+    if( m_menu != null )
+      m_menu.dispose();
+    
+    m_menu = new MenuManager( "Kontext", "context" );
 
     final KalypsoFeatureLayer layer = model.getLayer();
     final FeatureType featureType = layer.getFeatureType();
@@ -87,10 +95,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
 
       handleColumn( tc );
 
-      mm.add( new ColumnAction( m_commandManager, this, ftp, getModel().isVisible( ftp ) ) );
+      m_menu.add( new ColumnAction( m_commandManager, this, ftp, getModel().isVisible( ftp ) ) );
     }
 
-    table.setMenu( mm.createContextMenu( table ) );
+    table.setMenu( m_menu.createContextMenu( table ) );
 
     m_viewer.setInput( model );
   }
@@ -100,36 +108,6 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
     final boolean bVisible = m_model.isVisible( (FeatureTypeProperty)tc.getData() );
     tc.setResizable( bVisible );
     tc.setWidth( bVisible ? 100 : 0 );
-  }
-
-  private final static class ColumnAction extends Action
-  {
-    private final FeatureTypeProperty m_ftp;
-
-    private final ICommandManager m_commandManager;
-
-    private final LayerTable m_layerTable;
-
-    public ColumnAction( final ICommandManager commandManager, final LayerTable layerTable,
-        final FeatureTypeProperty ftp, final boolean bVisible )
-    {
-      super( ftp.getName() );
-
-      m_ftp = ftp;
-      m_commandManager = commandManager;
-      m_layerTable = layerTable;
-
-      setChecked( bVisible );
-    }
-
-    /**
-     * @see org.eclipse.jface.action.IAction#run()
-     */
-    public void run()
-    {
-      m_commandManager.postCommand( new SetColumnVisibleCommand( m_layerTable.getModel(), m_ftp,
-          isChecked() ), null );
-    }
   }
 
   /**
@@ -210,4 +188,10 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider
   {
     m_viewer.setSelection(selection);
   }
+  
+  public IMenuManager getMenu()
+  {
+    return m_menu;
+  }
+
 }
