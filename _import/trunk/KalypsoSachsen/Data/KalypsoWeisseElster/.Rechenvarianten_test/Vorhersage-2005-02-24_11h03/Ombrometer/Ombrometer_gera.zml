@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>433160</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="0.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Vorhersage" value="22.02.2005 11:00:00;24.02.2005 11:00:00"/>
+        <metadata name="Beschreibung" value="Gera"/>
+        <metadata name="Flussgebiet" value=""/>
+        <metadata name="Name" value="433160"/>
+        <metadata name="Alarmstufe 4" value="0.0"/>
+        <metadata name="Alarmstufe 3" value="0.0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="0.0"/>
+        <metadata name="Alarmstufe 1" value="0.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value=""/>
+    </metadataList>
+    <axis datatype="TYPE=double" key="false" name="Niederschlag 433160" type="N" unit="mm">
+        <valueArray separator=";"/>
+    </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Niederschlag 433160" type="kalypso-status" unit="">
+        <valueArray separator=";"/>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";"/>
+    </axis>
+</observation>
+

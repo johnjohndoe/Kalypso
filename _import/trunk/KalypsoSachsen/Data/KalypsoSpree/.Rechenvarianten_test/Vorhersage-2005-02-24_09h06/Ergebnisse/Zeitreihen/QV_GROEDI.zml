@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QV_GROEDI</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="160.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Gröditz 1"/>
+        <metadata name="Vorhersage" value="24.02.2005 07:00:00;26.02.2005 07:00:00"/>
+        <metadata name="Flussgebiet" value="Spree"/>
+        <metadata name="Name" value="583121"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1992-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-20.01&lt;/w1&gt;             &lt;lnk1&gt;-13.03851&lt;/lnk1&gt;             &lt;k2&gt;3.48364&lt;/k2&gt;             &lt;wgr&gt;20.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-0.01&lt;/w1&gt;             &lt;lnk1&gt;-4.46986&lt;/lnk1&gt;             &lt;k2&gt;1.43458&lt;/k2&gt;             &lt;wgr&gt;170.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;6.59&lt;/w1&gt;             &lt;lnk1&gt;-10.52398&lt;/lnk1&gt;             &lt;k2&gt;2.63409&lt;/k2&gt;             &lt;wgr&gt;300.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="270.0"/>
+        <metadata name="Messtischblattnummer" value="4753"/>
+        <metadata name="Alarmstufe 3" value="250.0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="210.0"/>
+        <metadata name="Alarmstufe 1" value="150.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-02-24T07:00:00;2005-02-24T10:00:00;2005-02-24T13:00:00;2005-02-24T16:00:00;2005-02-24T19:00:00;2005-02-24T22:00:00;2005-02-25T01:00:00;2005-02-25T04:00:00;2005-02-25T07:00:00;2005-02-25T10:00:00;2005-02-25T13:00:00;2005-02-25T16:00:00;2005-02-25T19:00:00;2005-02-25T22:00:00;2005-02-26T01:00:00;2005-02-26T04:00:00;2005-02-26T07:00:00;2005-02-26T10:00:00;2005-02-26T13:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">1.159999966621399;12.329999923706055;36.36000061035156;57.150001525878906;72.77999877929688;85.3499984741211;89.91000366210938;83.01000213623047;67.86000061035156;50.91999816894531;36.209999084472656;24.959999084472656;17.09000015258789;11.970000267028809;8.890000343322754;7.190000057220459;6.400000095367432;6.159999847412109;6.389999866485596</valueArray>
+    </axis>
+</observation>
+

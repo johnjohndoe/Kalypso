@@ -27,7 +27,7 @@
         <arg name="selectionID" value="4"/>
         <arg name="zmlTableShow" value="all"/>
         
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe"/>
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe#color=0x0000ff"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -42,7 +42,7 @@
         <arg name="zmlTableShow" value="all"/>
         <arg name="ignoreType1" value="Q"/>
 
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -57,7 +57,7 @@
         <arg name="zmlTableShow" value="all"/>
 		<arg name="ignoreType1" value="Q"/>
 		
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -71,7 +71,7 @@
         <arg name="selectionID" value="16"/>
         <arg name="zmlTableShow" value="all"/>
         
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Abfluss"/>
+        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Abfluss#color=0x0000ff"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -94,9 +94,9 @@
         <arg name="ignoreLabel2" value="Wasserstand"/>
 
         <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
-        <arg name="timeserie2" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
-        <arg name="timeserie3" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-        <arg name="timeserie4" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+        <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -116,10 +116,10 @@
         <arg name="ignoreLabel1" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Volumen"/>
 
-        <arg name="timeserie1" value="nameString=%axisname% - Eingabe#linkColumn=Abgabe"/>
-        <arg name="timeserie2" value="nameString=%axisname% - Plausibilisierung#linkColumn=Abgabe_plausibilisiert#color=0xff0000"/>
-        <arg name="timeserie3" value="nameString=%axisname% - Zufluss Berechnung#linkColumn=Zufluss_berechnet#color=0x00ff00"/>
-        <arg name="timeserie4" value="nameString=%axisname% - Stauinhalt#linkColumn=Stauinhalt"/>
+        <arg name="timeserie1" value="nameString=Eingabe Abgabe#linkColumn=Abgabe#color=0x0000ff"/>
+        <arg name="timeserie2" value="nameString=Plausibilisierung Abgabe#linkColumn=Abgabe_plausibilisiert#color=0xff0000"/>
+        <arg name="timeserie3" value="nameString=Berechnung Zufluss #linkColumn=Zufluss_berechnet#color=0x008040"/>
+        <arg name="timeserie4" value="nameString=Stauinhalt#linkColumn=Stauinhalt"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -135,9 +135,9 @@
         <arg name="ignoreLabel1" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Wasserstand"/>
 
-        <arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
-        <arg name="timeserie2" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-        <arg name="timeserie3" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+        <arg name="timeserie1" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
+        <arg name="timeserie2" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+        <arg name="timeserie3" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
@@ -153,9 +153,9 @@
 	   	<arg name="mapTemplate" value="project:.templates/calcCase/pegel.gmt"/>
 	
 	        <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
-	        <arg name="timeserie2" value="nameString=%axisname% - Beobachtung#linkColumn=Wasserstand_gemessen"/>
-	        <arg name="timeserie3" value="nameString=%axisname% - Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-	        <arg name="timeserie4" value="nameString=%axisname% - Vorhersage#linkColumn=Wasserstand_vorhersage"/>
+	        <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
+	        <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
+	        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
 		
 		<arg name="ignoreType1" value="W"/>
 	        <arg name="ignoreType2" value="Q"/>

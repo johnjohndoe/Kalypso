@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QP_SPWITZ</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="99.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Spreewitz"/>
+        <metadata name="Vorhersage" value="24.02.2005 07:00:00;26.02.2005 07:00:00"/>
+        <metadata name="Flussgebiet" value="Spree"/>
+        <metadata name="Name" value="582820"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1989-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;139.79&lt;/w1&gt;             &lt;lnk1&gt;-3.30939&lt;/lnk1&gt;             &lt;k2&gt;1.42567&lt;/k2&gt;             &lt;wgr&gt;500.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1997-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;139.99&lt;/w1&gt;             &lt;lnk1&gt;-2.33247&lt;/lnk1&gt;             &lt;k2&gt;1.15866&lt;/k2&gt;             &lt;wgr&gt;190.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;138.69&lt;/w1&gt;             &lt;lnk1&gt;-3.21981&lt;/lnk1&gt;             &lt;k2&gt;1.37808&lt;/k2&gt;             &lt;wgr&gt;440.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;2002-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;124.87&lt;/w1&gt;             &lt;lnk1&gt;-7.01202&lt;/lnk1&gt;             &lt;k2&gt;2.1708&lt;/k2&gt;             &lt;wgr&gt;182.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;151.95&lt;/w1&gt;             &lt;lnk1&gt;-2.54436&lt;/lnk1&gt;             &lt;k2&gt;1.26817&lt;/k2&gt;             &lt;wgr&gt;440.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="470.0"/>
+        <metadata name="Messtischblattnummer" value="4452"/>
+        <metadata name="Alarmstufe 3" value="409.99999999999994"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="360.0"/>
+        <metadata name="Alarmstufe 1" value="260.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-02-22T16:00:00;2005-02-22T19:00:00;2005-02-22T22:00:00;2005-02-23T01:00:00;2005-02-23T04:00:00;2005-02-23T07:00:00;2005-02-23T10:00:00;2005-02-23T13:00:00;2005-02-23T16:00:00;2005-02-23T19:00:00;2005-02-23T22:00:00;2005-02-24T01:00:00;2005-02-24T04:00:00;2005-02-24T07:00:00;2005-02-24T10:00:00;2005-02-24T13:00:00;2005-02-24T16:00:00;2005-02-24T19:00:00;2005-02-24T22:00:00;2005-02-25T01:00:00;2005-02-25T04:00:00;2005-02-25T07:00:00;2005-02-25T10:00:00;2005-02-25T13:00:00;2005-02-25T16:00:00;2005-02-25T19:00:00;2005-02-25T22:00:00;2005-02-26T01:00:00;2005-02-26T04:00:00;2005-02-26T07:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">9.0;9.0;8.46;8.46;8.19;8.19;8.46;8.46;8.46;8.46;8.46;8.19;8.73;9.0;8.939;8.886;8.895;11.005;17.616;27.78;37.511;45.111;51.584;57.946;64.558;70.484;75.4;79.891;83.945;87.134</valueArray>
+    </axis>
+</observation>
+

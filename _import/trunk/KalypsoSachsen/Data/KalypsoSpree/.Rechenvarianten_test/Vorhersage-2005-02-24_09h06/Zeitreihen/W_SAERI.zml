@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>583290</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="169.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Särichen"/>
+        <metadata name="Vorhersage" value="24.02.2005 07:00:00;26.02.2005 07:00:00"/>
+        <metadata name="Flussgebiet" value="Spree"/>
+        <metadata name="Name" value="583290"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1991-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-4.01&lt;/w1&gt;             &lt;lnk1&gt;-19.70092&lt;/lnk1&gt;             &lt;k2&gt;5.09957&lt;/k2&gt;             &lt;wgr&gt;28.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-2.01&lt;/w1&gt;             &lt;lnk1&gt;-9.78589&lt;/lnk1&gt;             &lt;k2&gt;2.27723&lt;/k2&gt;             &lt;wgr&gt;90.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-70.01&lt;/w1&gt;             &lt;lnk1&gt;-21.65598&lt;/lnk1&gt;             &lt;k2&gt;4.36827&lt;/k2&gt;             &lt;wgr&gt;160.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-90.01&lt;/w1&gt;             &lt;lnk1&gt;-24.29015&lt;/lnk1&gt;             &lt;k2&gt;4.77955&lt;/k2&gt;             &lt;wgr&gt;310.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1994-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-2.01&lt;/w1&gt;             &lt;lnk1&gt;-9.78589&lt;/lnk1&gt;             &lt;k2&gt;2.27723&lt;/k2&gt;             &lt;wgr&gt;90.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-70.01&lt;/w1&gt;             &lt;lnk1&gt;-21.65598&lt;/lnk1&gt;             &lt;k2&gt;4.36827&lt;/k2&gt;             &lt;wgr&gt;160.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-90.01&lt;/w1&gt;             &lt;lnk1&gt;-18.21971&lt;/lnk1&gt;             &lt;k2&gt;3.68172&lt;/k2&gt;             &lt;wgr&gt;260.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;2003-01-15T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;15.23&lt;/w1&gt;             &lt;lnk1&gt;-7.32185&lt;/lnk1&gt;             &lt;k2&gt;1.86439&lt;/k2&gt;             &lt;wgr&gt;44.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-7.25&lt;/w1&gt;             &lt;lnk1&gt;-10.6756&lt;/lnk1&gt;             &lt;k2&gt;2.4444&lt;/k2&gt;             &lt;wgr&gt;90.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-69.55&lt;/w1&gt;             &lt;lnk1&gt;-21.6024&lt;/lnk1&gt;             &lt;k2&gt;4.36004&lt;/k2&gt;             &lt;wgr&gt;160.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-64.08&lt;/w1&gt;             &lt;lnk1&gt;-16.19238&lt;/lnk1&gt;             &lt;k2&gt;3.37982&lt;/k2&gt;             &lt;wgr&gt;260.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="240.0"/>
+        <metadata name="Alarmstufe 3" value="220.00000000000003"/>
+        <metadata name="Messtischblattnummer" value="4755"/>
+        <metadata name="Alarmstufe 2" value="200.0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 1" value="180.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-02-22T07:00:00;2005-02-22T10:00:00;2005-02-22T13:00:00;2005-02-22T16:00:00;2005-02-22T19:00:00;2005-02-22T22:00:00;2005-02-23T01:00:00;2005-02-23T04:00:00;2005-02-23T07:00:00;2005-02-23T10:00:00;2005-02-23T13:00:00;2005-02-23T16:00:00;2005-02-23T19:00:00;2005-02-23T22:00:00;2005-02-24T01:00:00;2005-02-24T04:00:00;2005-02-24T07:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_Wasserstand 583290" type="kalypso-status" unit="">
+        <valueArray separator=";">1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Wasserstand 583290" type="W" unit="cm">
+        <valueArray separator=";">62.0;62.0;62.0;62.0;62.0;62.0;61.0;61.0;61.0;61.0;61.0;61.0;61.0;61.0;61.0;60.0;59.0</valueArray>
+    </axis>
+</observation>
+

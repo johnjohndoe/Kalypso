@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QV_SCHIRG</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="260.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Schirgiswalde"/>
+        <metadata name="Vorhersage" value="22.11.2004 19:00:00;24.11.2004 19:00:00"/>
+        <metadata name="Flussgebiet" value="Spree"/>
+        <metadata name="Name" value="582010"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1994-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;99.96&lt;/w1&gt;             &lt;lnk1&gt;-8.43382&lt;/lnk1&gt;             &lt;k2&gt;2.2592&lt;/k2&gt;             &lt;wgr&gt;230.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;89.99&lt;/w1&gt;             &lt;lnk1&gt;-7.49066&lt;/lnk1&gt;             &lt;k2&gt;2.03671&lt;/k2&gt;             &lt;wgr&gt;450.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;2002-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;129.19&lt;/w1&gt;             &lt;lnk1&gt;-4.27233&lt;/lnk1&gt;             &lt;k2&gt;1.46528&lt;/k2&gt;             &lt;wgr&gt;200.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;110.99&lt;/w1&gt;             &lt;lnk1&gt;-6.45377&lt;/lnk1&gt;             &lt;k2&gt;1.87986&lt;/k2&gt;             &lt;wgr&gt;450.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="460.00000000000006"/>
+        <metadata name="Messtischblattnummer" value="4952"/>
+        <metadata name="Alarmstufe 3" value="430.0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="310.0"/>
+        <metadata name="Alarmstufe 1" value="250.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-11-22T19:00:00;2004-11-22T22:00:00;2004-11-23T01:00:00;2004-11-23T04:00:00;2004-11-23T07:00:00;2004-11-23T10:00:00;2004-11-23T13:00:00;2004-11-23T16:00:00;2004-11-23T19:00:00;2004-11-23T22:00:00;2004-11-24T01:00:00;2004-11-24T04:00:00;2004-11-24T07:00:00;2004-11-24T10:00:00;2004-11-24T13:00:00;2004-11-24T16:00:00;2004-11-24T19:00:00;2004-11-24T22:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">4.409999847412109;6.800000190734863;8.930000305175781;10.989999771118164;13.0600004196167;13.84000015258789;13.289999961853027;12.239999771118164;11.09000015258789;9.829999923706055;8.529999732971191;7.579999923706055;7.010000228881836;6.739999771118164;6.679999828338623;6.739999771118164;6.880000114440918;7.070000171661377</valueArray>
+    </axis>
+</observation>
+

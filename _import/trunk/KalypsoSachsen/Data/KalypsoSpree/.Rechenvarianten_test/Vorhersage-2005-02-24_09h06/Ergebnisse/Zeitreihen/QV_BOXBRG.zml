@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QV_BOXBRG</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="118.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Boxberg"/>
+        <metadata name="Vorhersage" value="24.02.2005 07:00:00;26.02.2005 07:00:00"/>
+        <metadata name="Flussgebiet" value="Spree"/>
+        <metadata name="Name" value="583200"/>
+        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1990-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;79.99&lt;/w1&gt;             &lt;lnk1&gt;-7.63945&lt;/lnk1&gt;             &lt;k2&gt;2.24606&lt;/k2&gt;             &lt;wgr&gt;120.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;96.69&lt;/w1&gt;             &lt;lnk1&gt;-3.30177&lt;/lnk1&gt;             &lt;k2&gt;1.25562&lt;/k2&gt;             &lt;wgr&gt;200.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;99.56&lt;/w1&gt;             &lt;lnk1&gt;-3.06712&lt;/lnk1&gt;             &lt;k2&gt;1.21392&lt;/k2&gt;             &lt;wgr&gt;499.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1997-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;99.99&lt;/w1&gt;             &lt;lnk1&gt;-2.96841&lt;/lnk1&gt;             &lt;k2&gt;1.16429&lt;/k2&gt;             &lt;wgr&gt;250.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;106.59&lt;/w1&gt;             &lt;lnk1&gt;-3.70573&lt;/lnk1&gt;             &lt;k2&gt;1.32344&lt;/k2&gt;             &lt;wgr&gt;500.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;1998-11-01T01:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-10.01&lt;/w1&gt;             &lt;lnk1&gt;-28.78608&lt;/lnk1&gt;             &lt;k2&gt;5.9975&lt;/k2&gt;             &lt;wgr&gt;160.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-2.31&lt;/w1&gt;             &lt;lnk1&gt;-7.79811&lt;/lnk1&gt;             &lt;k2&gt;1.92756&lt;/k2&gt;             &lt;wgr&gt;500.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="Alarmstufe 4" value="400.0"/>
+        <metadata name="Messtischblattnummer" value="4553"/>
+        <metadata name="Alarmstufe 3" value="350.0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="300.0"/>
+        <metadata name="Alarmstufe 1" value="225.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-02-24T07:00:00;2005-02-24T10:00:00;2005-02-24T13:00:00;2005-02-24T16:00:00;2005-02-24T19:00:00;2005-02-24T22:00:00;2005-02-25T01:00:00;2005-02-25T04:00:00;2005-02-25T07:00:00;2005-02-25T10:00:00;2005-02-25T13:00:00;2005-02-25T16:00:00;2005-02-25T19:00:00;2005-02-25T22:00:00;2005-02-26T01:00:00;2005-02-26T04:00:00;2005-02-26T07:00:00;2005-02-26T10:00:00;2005-02-26T13:00:00;2005-02-26T16:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">6.75;6.019999980926514;5.980000019073486;6.320000171661377;6.929999828338623;7.519999980926514;7.880000114440918;8.119999885559082;8.329999923706055;8.550000190734863;8.779999732971191;9.039999961853027;9.300000190734863;9.59000015258789;9.890000343322754;10.59000015258789;11.149999618530273;11.180000305175781;11.34000015258789;11.630000114440918</valueArray>
+    </axis>
+</observation>
+

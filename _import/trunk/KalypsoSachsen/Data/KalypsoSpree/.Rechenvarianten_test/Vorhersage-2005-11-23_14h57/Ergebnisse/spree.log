@@ -1,0 +1,46 @@
+Spree - Modell Berechnung wird gestartet
+
+Dateien für Rechenkern werden erzeugt
+Lese Steuerparameter: .calculation
+Lese Modelldaten: \\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\calc\.calculation
+Erzeuge _vhs Datei: HW041122_vhs.dbf
+Erzeuge _flp Datei: \\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\native\HW041122_flp
+Erzeuge _nap Datei: \\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\native\HW041122_nap
+Erzeuge Zeitreihen-Datei: \\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\native\HW041122
+Rechenkern wird aufgerufen
+Rechenkern wird vorbereitet
+\\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\native\spree.exe 2004,11,22,19,00,00 \\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\native\HW041122.dbf
+Ausgabe des Rechenkerns
+#######################
+#########START#########
+#######################
+
+Initialisiere xHwKernel.dll
+Setze Zeitpunkt: 22.11.2004  19:0:0
+Oeffne Datei:\\LFUG-KV-01\kalypso$\CalcJob-31-1109254879151\input\native\HW041122.dbf
+Berechnung wird gestartet
+Schrigiswalde
+Bautzen WB
+TS Bautzen
+Gröditz
+Kleine Spree
+Lieske
+Jänkendorf
+TS Quitzdorf
+Särichen
+Boxberg
+Bärwalde
+Lohsa II
+Sprey
+Burgneudorf
+Spreewitz
+Restlochkette
+Spremberg
+Berechnung abgeschlossen, Ergebnisse werden geschrieben
+Berechnung erfolgreich beendet
+#######################
+#########ENDE#########
+#######################
+
+Ergebnisse werden zurückgelesen
+Berechnung beendet
