@@ -49,6 +49,11 @@ public class ObservationTemplateHelper
 
   /**
    * Loads the binded template.
+   * @param file
+   * @return XML-binded object
+   * @throws CoreException
+   * @throws JAXBException
+   * @throws IOException
    */
   public static ObsdiagviewType loadDiagramTemplateXML( final IFile file ) throws CoreException,
       JAXBException, IOException
@@ -63,6 +68,11 @@ public class ObservationTemplateHelper
 
   /**
    * Loads a LinkedDiagramTemplate from the given file.
+   * @param file
+   * @return diagram template object parsed from the file
+   * @throws CoreException
+   * @throws JAXBException
+   * @throws IOException
    */
   public static IDiagramTemplate loadDiagramTemplate( final IFile file ) throws CoreException,
       JAXBException, IOException
@@ -72,6 +82,9 @@ public class ObservationTemplateHelper
 
   /**
    * Creates a LinkedDiagramCurve for the given binding object.
+   * @param baseCurve
+   * @param template
+   * @return curve for the template
    */
   public static LinkedDiagramCurve createCurve( final ObsdiagviewType.CurveType baseCurve,
       final IDiagramTemplate template )
@@ -90,7 +103,11 @@ public class ObservationTemplateHelper
   }
 
   /**
-   *  
+   * @param file
+   * @return table view template
+   * @throws CoreException
+   * @throws JAXBException
+   * @throws IOException
    */
   public static LinkedTableViewTemplate loadTableViewTemplate( final IFile file )
       throws CoreException, JAXBException, IOException
@@ -119,6 +136,8 @@ public class ObservationTemplateHelper
 
   /**
    * Opens the grafik tool using an observation template file.
+   * @param file
+   * @param project
    * 
    * @throws SensorException if problems occur during operation.
    */
@@ -183,68 +202,6 @@ public class ObservationTemplateHelper
     }
   }
 
-  //  /**
-  //   *
-  //   */
-  //  public static void openGrafik4odt( final ObsdiagviewType tpl ) throws
-  // Exception
-  //  {
-  //    final InputStream xsl = ObservationTemplateHelper.class
-  //        .getResourceAsStream(
-  // "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
-  //
-  //    final PipedOutputStream pos = new PipedOutputStream();
-  //    final PipedInputStream pis = new PipedInputStream( pos );
-  //
-  //    final Runnable runnable = new Runnable()
-  //    {
-  //      public void run()
-  //      {
-  //        try
-  //        {
-  //          DiagramTemplateFactory.writeTemplate( tpl, pos );
-  //        }
-  //        catch( JAXBException e )
-  //        {
-  //          e.printStackTrace();
-  //        }
-  //        finally
-  //        {
-  //          try
-  //          {
-  //            pos.close();
-  //          }
-  //          catch( IOException e1 )
-  //          {
-  //            e1.printStackTrace();
-  //          }
-  //        }
-  //      }
-  //    };
-  //
-  //    final Thread thread = new Thread( runnable );
-  //    thread.start();
-  //
-  //    final String str = XMLTools.xslTransform( pis, xsl );
-  //    pis.close();
-  //
-  //    final File file = File.createTempFile( "grafik", "vorlage" );
-  //    file.deleteOnExit();
-  //
-  //    FileWriter fw = new FileWriter( file );
-  //    fw.write( str );
-  //    fw.close();
-  //
-  //    final File grafikExe = SetContentThread.makeFileFromStream( false, "grafik",
-  // ".exe",
-  //        GrafikViewActionDelegate.class
-  //            .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ),
-  // true );
-  //
-  //    Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" +
-  // file.getAbsolutePath() );
-  //  }
-
   /**
    * Starts the grafik.exe on the given grafik-template file.
    * 
@@ -262,7 +219,7 @@ public class ObservationTemplateHelper
               .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ), true );
 
       /*
-       * Bl?der Workaround weil das Grafik-Tool nicht mit relativen Pfad
+       * Blöder Workaround weil das Grafik-Tool nicht mit relativen Pfad
        * arbeiten kann: wir ersetzen _XXXX_ aus der .tpl Datei mit dem aktuellen
        * Projektpfad.
        * 
