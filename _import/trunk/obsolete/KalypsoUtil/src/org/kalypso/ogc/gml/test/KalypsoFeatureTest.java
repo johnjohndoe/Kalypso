@@ -3,8 +3,8 @@ package org.kalypso.ogc.gml.test;
 import junit.framework.TestCase;
 
 import org.deegree.model.feature.FeatureType;
+import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.ogc.gml.JMSchema;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.util.xml.XMLTools;
 
@@ -18,7 +18,7 @@ public class KalypsoFeatureTest extends TestCase
   {
   try
   {
-    final JMSchema schema = new JMSchema(
+    final GMLSchema schema = new GMLSchema(
       XMLTools.getAsDOM(
           getClass().getResourceAsStream("point.xsd")));
     final FeatureType featureType = schema.getFeatureTypes()[0];

@@ -20,9 +20,9 @@ import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.gml.GMLDocument_Impl;
 import org.deegree_impl.gml.GMLFactory;
 import org.deegree_impl.gml.GMLNameSpace_Impl;
+import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.GMLHelper;
-import org.kalypso.ogc.gml.JMSchema;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.progress.IProgressMonitor;
@@ -58,7 +58,7 @@ public final class GmlSerializer
           monitor.worked( 1000 );
 
       // load schema
-      final JMSchema schema = new JMSchema( XMLTools.getAsDOM( schemaSource ) );
+      final GMLSchema schema = new GMLSchema( XMLTools.getAsDOM( schemaSource ) );
       if(monitor!=null)
             monitor.worked( 1000 );
 

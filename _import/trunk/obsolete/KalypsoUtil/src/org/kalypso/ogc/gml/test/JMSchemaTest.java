@@ -14,10 +14,10 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.extension.TypeRegistryException;
 import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.deegree_impl.gml.schema.EnumerationFeatureTypeProperty;
+import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.deegree_impl.model.feature.XLinkFeatureTypeProperty;
-import org.kalypso.ogc.gml.EnumerationFeatureTypeProperty;
-import org.kalypso.ogc.gml.JMSchema;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -49,7 +49,7 @@ public class JMSchemaTest extends TestCase
   public void loadSchemaAndCompareIt( final String xsdName, final String compareFile )
       throws Exception
   {
-    final JMSchema jmSchema = new JMSchema( XMLTools.getAsDOM( getClass().getResourceAsStream(
+    final GMLSchema jmSchema = new GMLSchema( XMLTools.getAsDOM( getClass().getResourceAsStream(
         xsdName ) ) );
 
     final FeatureType[] ftps = jmSchema.getFeatureTypes();

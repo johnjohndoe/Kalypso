@@ -22,7 +22,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.kalypso.ogc.gml.JMNodeList;
+import org.deegree_impl.gml.schema.NodeList_Impl;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -239,7 +239,7 @@ public class XMLTools
 
     public static NodeList reduceByAttribute( NodeList nl, String attributeName, String attributeValue )
     {
-        JMNodeList result = new JMNodeList();
+        NodeList_Impl result = new NodeList_Impl();
 
         for( int i = 0; i < nl.getLength(  ); i++ )
         {
