@@ -19,6 +19,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * Helper-Klasse für {@link org.eclipse.core.resources.IFile}
  * 
+ * TODO check resource closing (use IOUtils.closeQuietly in finally blocks)
+ * 
  * @author belger
  */
 public abstract class SetContentThread extends CatchThread
