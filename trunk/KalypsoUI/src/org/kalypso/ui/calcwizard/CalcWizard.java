@@ -52,7 +52,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -499,27 +498,6 @@ public class CalcWizard implements IWizard, IProjectProvider
 //    }
     
     return wizardPage;
-  }
-
-  public boolean doBack( final IWizardPage page )
-  {
-    final IWizardPage previous = getPreviousPage( page );
-    if( previous instanceof ICalcWizardPage )
-    {
-      try
-      {
-        ( (ICalcWizardPage)previous ).update( new NullProgressMonitor() );
-        return true;
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-
-        return false;
-      }
-    }
-
-    return true;
   }
 
   /**

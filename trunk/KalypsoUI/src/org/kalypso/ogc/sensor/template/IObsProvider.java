@@ -19,4 +19,7 @@ public interface IObsProvider
   public void dispose();
 
   public boolean isLoading();
+
+  /** Clones this object, that is returns a provider of the same observation */
+  public IObsProvider copy();
 }

@@ -70,7 +70,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   /**
    * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
-  protected void objectLoaded( IPoolableObjectType key, Object newValue )
+  protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
     final IObservation obs = (IObservation)newValue;
 
@@ -79,7 +79,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
     final TableView m_view = (TableView)m_data[0];
     
-    for( Iterator itCols = xmlObs.getColumn().iterator(); itCols.hasNext(); )
+    for( final Iterator itCols = xmlObs.getColumn().iterator(); itCols.hasNext(); )
     {
       final TypeColumn tcol = (TypeColumn)itCols.next();
 

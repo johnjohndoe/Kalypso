@@ -264,6 +264,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_obsChart != null )
       m_obsChart.dispose();
+    
     if( m_diagView != null )
       m_diagView.dispose();
   }
@@ -478,24 +479,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
       return text;
     }
-  }
-
-  public void clean( final IProgressMonitor monitor )
-  {
-  // nix zu tun
-  }
-
-  public void doNext( final IProgressMonitor monitor )
-  {
-  // nix zu tun
-  }
-
-  /**
-   * @see org.kalypso.ui.calcwizard.ICalcWizardPage#update(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public void update( final IProgressMonitor monitor )
-  {
-  // nix tun
   }
 
   protected ControlAdapter getControlAdapter()

@@ -98,11 +98,6 @@ public class TableViewColumn extends ObsViewItem
     return m_width;
   }
 
-//  public void setWidth( int width )
-//  {
-//    m_width = width;
-//  }
-
   public boolean isDirty( )
   {
     return m_dirty;
@@ -163,30 +158,4 @@ public class TableViewColumn extends ObsViewItem
       getView().refresh( this );
     }
   }
-
-//  /**
-//   * Two TableViewColumn objects are equal if they have the same name and belong
-//   * to the same theme.
-//   * 
-//   * @see java.lang.Object#equals(java.lang.Object)
-//   */
-//  public boolean equals( final Object obj )
-//  {
-//    if( !this.getClass().equals( obj.getClass() ) )
-//      return false;
-//
-//    final TableViewColumn col = (TableViewColumn) obj;
-//
-//    return new EqualsBuilder().append( col.m_name, m_name ).append(
-//        col.m_theme, m_theme ).isEquals();
-//  }
-//
-//  /**
-//   * @see java.lang.Object#hashCode()
-//   */
-//  public int hashCode( )
-//  {
-//    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
-//        .toHashCode();
-//  }
 }

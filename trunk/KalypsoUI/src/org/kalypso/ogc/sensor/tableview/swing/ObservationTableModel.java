@@ -644,10 +644,10 @@ public class ObservationTableModel extends AbstractTableModel
 
     final SimpleTuppleModel model = new SimpleTuppleModel( allAxes );
 
-    int rowIndex = 0;
-    for( final Iterator ite = m_sharedModel.iterator(); ite.hasNext(); )
+    final Object[] keys = m_sharedModel.toArray( );
+    for( int rowIndex = 0; rowIndex < keys.length; rowIndex++ )
     {
-      final Object keyObj = ite.next();
+      final Object keyObj = keys[rowIndex];
 
       if( rows == null || ( rows != null && Arrays.binarySearch( rows, rowIndex ) >= 0 ) )
       {
@@ -664,6 +664,9 @@ public class ObservationTableModel extends AbstractTableModel
           // TODO: do something if the value is null else
           // it is a problem when loading the zml back
           final Object value = m_valuesModel.getValueAt( rowIndex, colIndex );
+          if( value == null )
+            m_logger.warning( "Element " + rowIndex + " is null for Column: " + col );
+          
           tupple[model.getPositionFor( col.getAxis() )] = value;
 
           // status
@@ -681,8 +684,6 @@ public class ObservationTableModel extends AbstractTableModel
 
         model.addTupple( tupple );
       }
-
-      rowIndex++;
     }
 
     return model;
@@ -754,14 +755,28 @@ public class ObservationTableModel extends AbstractTableModel
       final List columns = (List)entry.getValue();
       try
       {
-        final ITuppleModel values = getValues( columns, null );
-
-        m_dontRefreshColumns.addAll( columns );
-        obs.setValues( values );
-        m_dontRefreshColumns.removeAll( columns );
-
-        if( saveFiles )
-          KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
+        boolean doIt = false;
+        for( final Iterator iter = columns.iterator(); iter.hasNext(); )
+        {
+          final TableViewColumn col = (TableViewColumn)iter.next();
+          doIt |= col.isDirty();
+          
+          col.setDirty( false );
+          if( saveFiles )
+            col.resetDirtySave();
+        }
+        
+        if( doIt )
+        {
+          final ITuppleModel values = getValues( columns, null );
+  
+          m_dontRefreshColumns.addAll( columns );
+          obs.setValues( values );
+          m_dontRefreshColumns.removeAll( columns );
+  
+          if( saveFiles )
+            KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
+        }
       }
       catch( final Exception e )
       {

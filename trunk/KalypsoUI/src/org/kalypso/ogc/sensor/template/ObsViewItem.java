@@ -50,7 +50,7 @@ import org.kalypso.util.runtime.IVariableArguments;
  * 
  * @author schlienger
  */
-public abstract class ObsViewItem implements IObsProviderListener, IObservationListener, IObsProvider, IViewable
+public abstract class ObsViewItem implements IObsProviderListener, IObservationListener, IViewable
 {
   private final ObsView m_view;
   
@@ -139,7 +139,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation)
    */
-  public void observationChanged( IObservation obs )
+  public void observationChanged( final IObservation obs )
   {
     m_view.refresh( this );
   }
@@ -160,50 +160,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     return m_obsProvider.getArguments();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
-  public void addListener( final IObsProviderListener l )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
-  public void removeListener( final IObsProviderListener l )
-  {
-    throw new UnsupportedOperationException();
-  }
-
   public boolean isLoading()
   {
     return m_obsProvider.isLoading();
   }
-
-//  /**
-//   * Two TableViewColumn objects are equal if they have the same name and belong
-//   * to the same theme.
-//   * 
-//   * @see java.lang.Object#equals(java.lang.Object)
-//   */
-//  public boolean equals( final Object obj )
-//  {
-//    if( !this.getClass().equals( obj.getClass() ) )
-//      return false;
-//
-//    final ObsViewItem col = (ObsViewItem) obj;
-//
-//    return new EqualsBuilder().append( col.m_name, m_name ).append(
-//        col.m_theme, m_theme ).isEquals();
-//  }
-//
-//  /**
-//   * @see java.lang.Object#hashCode()
-//   */
-//  public int hashCode( )
-//  {
-//    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
-//        .toHashCode();
-//  }
 }

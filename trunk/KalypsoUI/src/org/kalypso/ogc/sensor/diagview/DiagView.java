@@ -169,6 +169,8 @@ public class DiagView extends ObsView
   /**
    * Update the diagView with the new observation, perform best guess to know
    * which curves will be added to it.
+   *
+   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider, java.lang.String, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
   public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreType, final ItemData data )
   {
@@ -211,8 +213,8 @@ public class DiagView extends ObsView
 
           final Color color = data.color != null ? data.color : TimeserieUtils.getColorFor( valueAxis[i].getType() );
           final String name = NameUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
-          
-          final DiagViewCurve curve = new DiagViewCurve( this, provider, name, color, mappings );
+
+          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, mappings );
 
           addItem( curve );
         }

@@ -95,7 +95,6 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
     m_loadedStatus = STATUS_DISPOSED;
   }
 
-
   public IObservation getObservation()
   {
     return m_observation;
@@ -170,5 +169,13 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   public IVariableArguments getArguments()
   {
     return m_args;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
+   */
+  public IObsProvider copy()
+  {
+    return new PooledObsProvider( m_key, m_args );
   }
 }

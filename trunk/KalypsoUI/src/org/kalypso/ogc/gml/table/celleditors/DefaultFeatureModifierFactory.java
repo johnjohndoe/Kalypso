@@ -59,24 +59,24 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     final String type = ftp.getType();
 
     if( "java.lang.String".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.Integer".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.Long".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.Float".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.Double".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.Date".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.String".equals( type ) )
-      return new StringModifier( ftp, format );
+      return new StringModifier( ftp );
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
     if( "FeatureAssociationType".equals( type ) )
       return new ButtonModifier( ftp );
 
-    return new StringModifier( ftp, format );
+    return new StringModifier( ftp );
   }
 }

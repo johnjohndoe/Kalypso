@@ -82,7 +82,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   {
     super( feature, ftp );
 
-    m_modifier = new StringModifier( ftp, null );
+    m_modifier = new StringModifier( ftp );
   }
 
   /**

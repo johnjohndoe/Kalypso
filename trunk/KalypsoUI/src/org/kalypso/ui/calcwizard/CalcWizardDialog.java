@@ -65,13 +65,6 @@ public class CalcWizardDialog extends WizardDialog
     setMinimumPageSize( (int)( size.x * 0.8 ), (int)( size.y *  0.66 ) );
   }
   
-  protected void backPressed()
-  {
-    if( !((CalcWizard)getWizard()).doBack( getCurrentPage() ) )
-      return;
-    
-    super.backPressed();
-  }
   protected void nextPressed()
   {
     if( !((CalcWizard)getWizard()).doNext( getCurrentPage() ) )
