@@ -1,0 +1,2037 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<virtualRepository xmlns="virtual.repository.zml.kalypso.org">
+  <level id="Messung" name="WeisseElster - Gebietsniederschlaege">
+    <item id="Catchment1002" name="Niederschlag - Catchment1002">
+      <ns1:nOperationFilter xmlns:ns1="filters.zml.kalypso.org" operator="+">
+        <ns1:operationFilter operand="0.654" operator="*">
+          <ns1:zmlFilter>
+            <ns1:zml xmlns:ns2="http://www.w3.org/1999/xlink" ns2:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns1:zmlFilter>
+        </ns1:operationFilter>
+        <ns1:operationFilter operand="0.322" operator="*">
+          <ns1:zmlFilter>
+            <ns1:zml xmlns:ns3="http://www.w3.org/1999/xlink" ns3:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns1:zmlFilter>
+        </ns1:operationFilter>
+        <ns1:operationFilter operand="0.024" operator="*">
+          <ns1:zmlFilter>
+            <ns1:zml xmlns:ns4="http://www.w3.org/1999/xlink" ns4:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns1:zmlFilter>
+        </ns1:operationFilter>
+      </ns1:nOperationFilter>
+    </item>
+    <item id="Catchment1003" name="Niederschlag - Catchment1003">
+      <ns5:nOperationFilter xmlns:ns5="filters.zml.kalypso.org" operator="+">
+        <ns5:operationFilter operand="0.6405384615384615" operator="*">
+          <ns5:zmlFilter>
+            <ns5:zml xmlns:ns6="http://www.w3.org/1999/xlink" ns6:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns5:zmlFilter>
+        </ns5:operationFilter>
+        <ns5:operationFilter operand="0.28946153846153844" operator="*">
+          <ns5:zmlFilter>
+            <ns5:zml xmlns:ns7="http://www.w3.org/1999/xlink" ns7:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns5:zmlFilter>
+        </ns5:operationFilter>
+        <ns5:operationFilter operand="0.06999999999999999" operator="*">
+          <ns5:zmlFilter>
+            <ns5:zml xmlns:ns8="http://www.w3.org/1999/xlink" ns8:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns5:zmlFilter>
+        </ns5:operationFilter>
+      </ns5:nOperationFilter>
+    </item>
+    <item id="Catchment1004" name="Niederschlag - Catchment1004">
+      <ns9:nOperationFilter xmlns:ns9="filters.zml.kalypso.org" operator="+">
+        <ns9:operationFilter operand="0.68175" operator="*">
+          <ns9:zmlFilter>
+            <ns9:zml xmlns:ns10="http://www.w3.org/1999/xlink" ns10:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns9:zmlFilter>
+        </ns9:operationFilter>
+        <ns9:operationFilter operand="0.1995" operator="*">
+          <ns9:zmlFilter>
+            <ns9:zml xmlns:ns11="http://www.w3.org/1999/xlink" ns11:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns9:zmlFilter>
+        </ns9:operationFilter>
+        <ns9:operationFilter operand="0.11875" operator="*">
+          <ns9:zmlFilter>
+            <ns9:zml xmlns:ns12="http://www.w3.org/1999/xlink" ns12:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns9:zmlFilter>
+        </ns9:operationFilter>
+      </ns9:nOperationFilter>
+    </item>
+    <item id="Catchment1005" name="Niederschlag - Catchment1005">
+      <ns13:nOperationFilter xmlns:ns13="filters.zml.kalypso.org" operator="+">
+        <ns13:operationFilter operand="0.525" operator="*">
+          <ns13:zmlFilter>
+            <ns13:zml xmlns:ns14="http://www.w3.org/1999/xlink" ns14:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns13:zmlFilter>
+        </ns13:operationFilter>
+        <ns13:operationFilter operand="0.23959999999999998" operator="*">
+          <ns13:zmlFilter>
+            <ns13:zml xmlns:ns15="http://www.w3.org/1999/xlink" ns15:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns13:zmlFilter>
+        </ns13:operationFilter>
+        <ns13:operationFilter operand="0.23559999999999998" operator="*">
+          <ns13:zmlFilter>
+            <ns13:zml xmlns:ns16="http://www.w3.org/1999/xlink" ns16:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns13:zmlFilter>
+        </ns13:operationFilter>
+      </ns13:nOperationFilter>
+    </item>
+    <item id="Catchment1006" name="Niederschlag - Catchment1006">
+      <ns17:nOperationFilter xmlns:ns17="filters.zml.kalypso.org" operator="+">
+        <ns17:operationFilter operand="0.07586046511627909" operator="*">
+          <ns17:zmlFilter>
+            <ns17:zml xmlns:ns18="http://www.w3.org/1999/xlink" ns18:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns17:zmlFilter>
+        </ns17:operationFilter>
+        <ns17:operationFilter operand="0.8272558139534881" operator="*">
+          <ns17:zmlFilter>
+            <ns17:zml xmlns:ns19="http://www.w3.org/1999/xlink" ns19:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns17:zmlFilter>
+        </ns17:operationFilter>
+        <ns17:operationFilter operand="0.09695348837209304" operator="*">
+          <ns17:zmlFilter>
+            <ns17:zml xmlns:ns20="http://www.w3.org/1999/xlink" ns20:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns17:zmlFilter>
+        </ns17:operationFilter>
+      </ns17:nOperationFilter>
+    </item>
+    <item id="Catchment1007" name="Niederschlag - Catchment1007">
+      <ns21:nOperationFilter xmlns:ns21="filters.zml.kalypso.org" operator="+">
+        <ns21:operationFilter operand="0.4744375" operator="*">
+          <ns21:zmlFilter>
+            <ns21:zml xmlns:ns22="http://www.w3.org/1999/xlink" ns22:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns21:zmlFilter>
+        </ns21:operationFilter>
+        <ns21:operationFilter operand="0.4878125" operator="*">
+          <ns21:zmlFilter>
+            <ns21:zml xmlns:ns23="http://www.w3.org/1999/xlink" ns23:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns21:zmlFilter>
+        </ns21:operationFilter>
+        <ns21:operationFilter operand="0.037750000000000006" operator="*">
+          <ns21:zmlFilter>
+            <ns21:zml xmlns:ns24="http://www.w3.org/1999/xlink" ns24:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns21:zmlFilter>
+        </ns21:operationFilter>
+      </ns21:nOperationFilter>
+    </item>
+    <item id="Catchment1008" name="Niederschlag - Catchment1008">
+      <ns25:nOperationFilter xmlns:ns25="filters.zml.kalypso.org" operator="+">
+        <ns25:operationFilter operand="0.4787209302325582" operator="*">
+          <ns25:zmlFilter>
+            <ns25:zml xmlns:ns26="http://www.w3.org/1999/xlink" ns26:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns25:zmlFilter>
+        </ns25:operationFilter>
+        <ns25:operationFilter operand="0.42548837209302337" operator="*">
+          <ns25:zmlFilter>
+            <ns25:zml xmlns:ns27="http://www.w3.org/1999/xlink" ns27:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns25:zmlFilter>
+        </ns25:operationFilter>
+        <ns25:operationFilter operand="0.09583720930232559" operator="*">
+          <ns25:zmlFilter>
+            <ns25:zml xmlns:ns28="http://www.w3.org/1999/xlink" ns28:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns25:zmlFilter>
+        </ns25:operationFilter>
+      </ns25:nOperationFilter>
+    </item>
+    <item id="Catchment1009" name="Niederschlag - Catchment1009">
+      <ns29:nOperationFilter xmlns:ns29="filters.zml.kalypso.org" operator="+">
+        <ns29:operationFilter operand="0.5382857142857144" operator="*">
+          <ns29:zmlFilter>
+            <ns29:zml xmlns:ns30="http://www.w3.org/1999/xlink" ns30:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns29:zmlFilter>
+        </ns29:operationFilter>
+        <ns29:operationFilter operand="0.43299999999999994" operator="*">
+          <ns29:zmlFilter>
+            <ns29:zml xmlns:ns31="http://www.w3.org/1999/xlink" ns31:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns29:zmlFilter>
+        </ns29:operationFilter>
+        <ns29:operationFilter operand="0.028714285714285716" operator="*">
+          <ns29:zmlFilter>
+            <ns29:zml xmlns:ns32="http://www.w3.org/1999/xlink" ns32:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns29:zmlFilter>
+        </ns29:operationFilter>
+      </ns29:nOperationFilter>
+    </item>
+    <item id="Catchment1010" name="Niederschlag - Catchment1010">
+      <ns33:nOperationFilter xmlns:ns33="filters.zml.kalypso.org" operator="+">
+        <ns33:operationFilter operand="0.7614000000000001" operator="*">
+          <ns33:zmlFilter>
+            <ns33:zml xmlns:ns34="http://www.w3.org/1999/xlink" ns34:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns33:zmlFilter>
+        </ns33:operationFilter>
+        <ns33:operationFilter operand="0.179" operator="*">
+          <ns33:zmlFilter>
+            <ns33:zml xmlns:ns35="http://www.w3.org/1999/xlink" ns35:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns33:zmlFilter>
+        </ns33:operationFilter>
+        <ns33:operationFilter operand="0.0598" operator="*">
+          <ns33:zmlFilter>
+            <ns33:zml xmlns:ns36="http://www.w3.org/1999/xlink" ns36:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns33:zmlFilter>
+        </ns33:operationFilter>
+      </ns33:nOperationFilter>
+    </item>
+    <item id="Catchment1011" name="Niederschlag - Catchment1011">
+      <ns37:nOperationFilter xmlns:ns37="filters.zml.kalypso.org" operator="+">
+        <ns37:operationFilter operand="0.6336" operator="*">
+          <ns37:zmlFilter>
+            <ns37:zml xmlns:ns38="http://www.w3.org/1999/xlink" ns38:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns37:zmlFilter>
+        </ns37:operationFilter>
+        <ns37:operationFilter operand="0.23920000000000002" operator="*">
+          <ns37:zmlFilter>
+            <ns37:zml xmlns:ns39="http://www.w3.org/1999/xlink" ns39:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns37:zmlFilter>
+        </ns37:operationFilter>
+        <ns37:operationFilter operand="0.1271" operator="*">
+          <ns37:zmlFilter>
+            <ns37:zml xmlns:ns40="http://www.w3.org/1999/xlink" ns40:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns37:zmlFilter>
+        </ns37:operationFilter>
+      </ns37:nOperationFilter>
+    </item>
+    <item id="Catchment1012" name="Niederschlag - Catchment1012">
+      <ns41:nOperationFilter xmlns:ns41="filters.zml.kalypso.org" operator="+">
+        <ns41:operationFilter operand="0.09932835820895525" operator="*">
+          <ns41:zmlFilter>
+            <ns41:zml xmlns:ns42="http://www.w3.org/1999/xlink" ns42:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns41:zmlFilter>
+        </ns41:operationFilter>
+        <ns41:operationFilter operand="0.7197611940298507" operator="*">
+          <ns41:zmlFilter>
+            <ns41:zml xmlns:ns43="http://www.w3.org/1999/xlink" ns43:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns41:zmlFilter>
+        </ns41:operationFilter>
+        <ns41:operationFilter operand="0.18088059701492545" operator="*">
+          <ns41:zmlFilter>
+            <ns41:zml xmlns:ns44="http://www.w3.org/1999/xlink" ns44:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns41:zmlFilter>
+        </ns41:operationFilter>
+      </ns41:nOperationFilter>
+    </item>
+    <item id="Catchment1013" name="Niederschlag - Catchment1013">
+      <ns45:nOperationFilter xmlns:ns45="filters.zml.kalypso.org" operator="+">
+        <ns45:operationFilter operand="0.5096875" operator="*">
+          <ns45:zmlFilter>
+            <ns45:zml xmlns:ns46="http://www.w3.org/1999/xlink" ns46:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns45:zmlFilter>
+        </ns45:operationFilter>
+        <ns45:operationFilter operand="0.27468750000000003" operator="*">
+          <ns45:zmlFilter>
+            <ns45:zml xmlns:ns47="http://www.w3.org/1999/xlink" ns47:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns45:zmlFilter>
+        </ns45:operationFilter>
+        <ns45:operationFilter operand="0.21568750000000003" operator="*">
+          <ns45:zmlFilter>
+            <ns45:zml xmlns:ns48="http://www.w3.org/1999/xlink" ns48:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns45:zmlFilter>
+        </ns45:operationFilter>
+      </ns45:nOperationFilter>
+    </item>
+    <item id="Catchment1014" name="Niederschlag - Catchment1014">
+      <ns49:nOperationFilter xmlns:ns49="filters.zml.kalypso.org" operator="+">
+        <ns49:operationFilter operand="0.6150857142857141" operator="*">
+          <ns49:zmlFilter>
+            <ns49:zml xmlns:ns50="http://www.w3.org/1999/xlink" ns50:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns49:zmlFilter>
+        </ns49:operationFilter>
+        <ns49:operationFilter operand="0.16794285714285714" operator="*">
+          <ns49:zmlFilter>
+            <ns49:zml xmlns:ns51="http://www.w3.org/1999/xlink" ns51:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns49:zmlFilter>
+        </ns49:operationFilter>
+        <ns49:operationFilter operand="0.2169428571428571" operator="*">
+          <ns49:zmlFilter>
+            <ns49:zml xmlns:ns52="http://www.w3.org/1999/xlink" ns52:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns49:zmlFilter>
+        </ns49:operationFilter>
+      </ns49:nOperationFilter>
+    </item>
+    <item id="Catchment1016" name="Niederschlag - Catchment1016">
+      <ns53:nOperationFilter xmlns:ns53="filters.zml.kalypso.org" operator="+">
+        <ns53:operationFilter operand="0.07375000000000001" operator="*">
+          <ns53:zmlFilter>
+            <ns53:zml xmlns:ns54="http://www.w3.org/1999/xlink" ns54:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns53:zmlFilter>
+        </ns53:operationFilter>
+        <ns53:operationFilter operand="0.7842" operator="*">
+          <ns53:zmlFilter>
+            <ns53:zml xmlns:ns55="http://www.w3.org/1999/xlink" ns55:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns53:zmlFilter>
+        </ns53:operationFilter>
+        <ns53:operationFilter operand="0.14204999999999998" operator="*">
+          <ns53:zmlFilter>
+            <ns53:zml xmlns:ns56="http://www.w3.org/1999/xlink" ns56:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns53:zmlFilter>
+        </ns53:operationFilter>
+      </ns53:nOperationFilter>
+    </item>
+    <item id="Catchment1020" name="Niederschlag - Catchment1020">
+      <ns57:nOperationFilter xmlns:ns57="filters.zml.kalypso.org" operator="+">
+        <ns57:operationFilter operand="0.5353333333333333" operator="*">
+          <ns57:zmlFilter>
+            <ns57:zml xmlns:ns58="http://www.w3.org/1999/xlink" ns58:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns57:zmlFilter>
+        </ns57:operationFilter>
+        <ns57:operationFilter operand="0.16633333333333333" operator="*">
+          <ns57:zmlFilter>
+            <ns57:zml xmlns:ns59="http://www.w3.org/1999/xlink" ns59:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns57:zmlFilter>
+        </ns57:operationFilter>
+        <ns57:operationFilter operand="0.298" operator="*">
+          <ns57:zmlFilter>
+            <ns57:zml xmlns:ns60="http://www.w3.org/1999/xlink" ns60:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns57:zmlFilter>
+        </ns57:operationFilter>
+      </ns57:nOperationFilter>
+    </item>
+    <item id="Catchment1021" name="Niederschlag - Catchment1021">
+      <ns61:nOperationFilter xmlns:ns61="filters.zml.kalypso.org" operator="+">
+        <ns61:operationFilter operand="0.44260000000000005" operator="*">
+          <ns61:zmlFilter>
+            <ns61:zml xmlns:ns62="http://www.w3.org/1999/xlink" ns62:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns61:zmlFilter>
+        </ns61:operationFilter>
+        <ns61:operationFilter operand="0.17619999999999997" operator="*">
+          <ns61:zmlFilter>
+            <ns61:zml xmlns:ns63="http://www.w3.org/1999/xlink" ns63:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns61:zmlFilter>
+        </ns61:operationFilter>
+        <ns61:operationFilter operand="0.3812" operator="*">
+          <ns61:zmlFilter>
+            <ns61:zml xmlns:ns64="http://www.w3.org/1999/xlink" ns64:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns61:zmlFilter>
+        </ns61:operationFilter>
+      </ns61:nOperationFilter>
+    </item>
+    <item id="Catchment1022" name="Niederschlag - Catchment1022">
+      <ns65:nOperationFilter xmlns:ns65="filters.zml.kalypso.org" operator="+">
+        <ns65:operationFilter operand="0.49424999999999997" operator="*">
+          <ns65:zmlFilter>
+            <ns65:zml xmlns:ns66="http://www.w3.org/1999/xlink" ns66:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns65:zmlFilter>
+        </ns65:operationFilter>
+        <ns65:operationFilter operand="0.17074999999999999" operator="*">
+          <ns65:zmlFilter>
+            <ns65:zml xmlns:ns67="http://www.w3.org/1999/xlink" ns67:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns65:zmlFilter>
+        </ns65:operationFilter>
+        <ns65:operationFilter operand="0.3355" operator="*">
+          <ns65:zmlFilter>
+            <ns65:zml xmlns:ns68="http://www.w3.org/1999/xlink" ns68:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns65:zmlFilter>
+        </ns65:operationFilter>
+      </ns65:nOperationFilter>
+    </item>
+    <item id="Catchment1023" name="Niederschlag - Catchment1023">
+      <ns69:nOperationFilter xmlns:ns69="filters.zml.kalypso.org" operator="+">
+        <ns69:operationFilter operand="0.481769230769231" operator="*">
+          <ns69:zmlFilter>
+            <ns69:zml xmlns:ns70="http://www.w3.org/1999/xlink" ns70:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns69:zmlFilter>
+        </ns69:operationFilter>
+        <ns69:operationFilter operand="0.12893589743589748" operator="*">
+          <ns69:zmlFilter>
+            <ns69:zml xmlns:ns71="http://www.w3.org/1999/xlink" ns71:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns69:zmlFilter>
+        </ns69:operationFilter>
+        <ns69:operationFilter operand="0.3892435897435897" operator="*">
+          <ns69:zmlFilter>
+            <ns69:zml xmlns:ns72="http://www.w3.org/1999/xlink" ns72:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns69:zmlFilter>
+        </ns69:operationFilter>
+      </ns69:nOperationFilter>
+    </item>
+    <item id="Catchment1024" name="Niederschlag - Catchment1024">
+      <ns73:nOperationFilter xmlns:ns73="filters.zml.kalypso.org" operator="+">
+        <ns73:operationFilter operand="0.4876969696969697" operator="*">
+          <ns73:zmlFilter>
+            <ns73:zml xmlns:ns74="http://www.w3.org/1999/xlink" ns74:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns73:zmlFilter>
+        </ns73:operationFilter>
+        <ns73:operationFilter operand="0.20060606060606057" operator="*">
+          <ns73:zmlFilter>
+            <ns73:zml xmlns:ns75="http://www.w3.org/1999/xlink" ns75:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns73:zmlFilter>
+        </ns73:operationFilter>
+        <ns73:operationFilter operand="0.3115757575757575" operator="*">
+          <ns73:zmlFilter>
+            <ns73:zml xmlns:ns76="http://www.w3.org/1999/xlink" ns76:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns73:zmlFilter>
+        </ns73:operationFilter>
+      </ns73:nOperationFilter>
+    </item>
+    <item id="Catchment1025" name="Niederschlag - Catchment1025">
+      <ns77:nOperationFilter xmlns:ns77="filters.zml.kalypso.org" operator="+">
+        <ns77:operationFilter operand="0.4042666666666666" operator="*">
+          <ns77:zmlFilter>
+            <ns77:zml xmlns:ns78="http://www.w3.org/1999/xlink" ns78:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns77:zmlFilter>
+        </ns77:operationFilter>
+        <ns77:operationFilter operand="0.156" operator="*">
+          <ns77:zmlFilter>
+            <ns77:zml xmlns:ns79="http://www.w3.org/1999/xlink" ns79:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns77:zmlFilter>
+        </ns77:operationFilter>
+        <ns77:operationFilter operand="0.43973333333333336" operator="*">
+          <ns77:zmlFilter>
+            <ns77:zml xmlns:ns80="http://www.w3.org/1999/xlink" ns80:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns77:zmlFilter>
+        </ns77:operationFilter>
+      </ns77:nOperationFilter>
+    </item>
+    <item id="Catchment1110" name="Niederschlag - Catchment1110">
+      <ns81:nOperationFilter xmlns:ns81="filters.zml.kalypso.org" operator="+">
+        <ns81:operationFilter operand="0.19015606936416185" operator="*">
+          <ns81:zmlFilter>
+            <ns81:zml xmlns:ns82="http://www.w3.org/1999/xlink" ns82:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns81:zmlFilter>
+        </ns81:operationFilter>
+        <ns81:operationFilter operand="0.032508670520231216" operator="*">
+          <ns81:zmlFilter>
+            <ns81:zml xmlns:ns83="http://www.w3.org/1999/xlink" ns83:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns81:zmlFilter>
+        </ns81:operationFilter>
+        <ns81:operationFilter operand="0.108635838150289" operator="*">
+          <ns81:zmlFilter>
+            <ns81:zml xmlns:ns84="http://www.w3.org/1999/xlink" ns84:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns81:zmlFilter>
+        </ns81:operationFilter>
+        <ns81:operationFilter operand="0.6687283236994219" operator="*">
+          <ns81:zmlFilter>
+            <ns81:zml xmlns:ns85="http://www.w3.org/1999/xlink" ns85:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns81:zmlFilter>
+        </ns81:operationFilter>
+      </ns81:nOperationFilter>
+    </item>
+    <item id="Catchment1200" name="Niederschlag - Catchment1200">
+      <ns86:nOperationFilter xmlns:ns86="filters.zml.kalypso.org" operator="+">
+        <ns86:operationFilter operand="0.04120779220779221" operator="*">
+          <ns86:zmlFilter>
+            <ns86:zml xmlns:ns87="http://www.w3.org/1999/xlink" ns87:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns86:zmlFilter>
+        </ns86:operationFilter>
+        <ns86:operationFilter operand="0.059506493506493514" operator="*">
+          <ns86:zmlFilter>
+            <ns86:zml xmlns:ns88="http://www.w3.org/1999/xlink" ns88:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns86:zmlFilter>
+        </ns86:operationFilter>
+        <ns86:operationFilter operand="0.14694805194805188" operator="*">
+          <ns86:zmlFilter>
+            <ns86:zml xmlns:ns89="http://www.w3.org/1999/xlink" ns89:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns86:zmlFilter>
+        </ns86:operationFilter>
+        <ns86:operationFilter operand="0.7522597402597401" operator="*">
+          <ns86:zmlFilter>
+            <ns86:zml xmlns:ns90="http://www.w3.org/1999/xlink" ns90:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns86:zmlFilter>
+        </ns86:operationFilter>
+      </ns86:nOperationFilter>
+    </item>
+    <item id="Catchment1201" name="Niederschlag - Catchment1201">
+      <ns91:nOperationFilter xmlns:ns91="filters.zml.kalypso.org" operator="+">
+        <ns91:operationFilter operand="0.056548387096774184" operator="*">
+          <ns91:zmlFilter>
+            <ns91:zml xmlns:ns92="http://www.w3.org/1999/xlink" ns92:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns91:zmlFilter>
+        </ns91:operationFilter>
+        <ns91:operationFilter operand="0.07830645161290323" operator="*">
+          <ns91:zmlFilter>
+            <ns91:zml xmlns:ns93="http://www.w3.org/1999/xlink" ns93:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns91:zmlFilter>
+        </ns91:operationFilter>
+        <ns91:operationFilter operand="0.22529032258064516" operator="*">
+          <ns91:zmlFilter>
+            <ns91:zml xmlns:ns94="http://www.w3.org/1999/xlink" ns94:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns91:zmlFilter>
+        </ns91:operationFilter>
+        <ns91:operationFilter operand="0.6398225806451614" operator="*">
+          <ns91:zmlFilter>
+            <ns91:zml xmlns:ns95="http://www.w3.org/1999/xlink" ns95:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns91:zmlFilter>
+        </ns91:operationFilter>
+      </ns91:nOperationFilter>
+    </item>
+    <item id="Catchment1210" name="Niederschlag - Catchment1210">
+      <ns96:nOperationFilter xmlns:ns96="filters.zml.kalypso.org" operator="+">
+        <ns96:operationFilter operand="0.0625586592178771" operator="*">
+          <ns96:zmlFilter>
+            <ns96:zml xmlns:ns97="http://www.w3.org/1999/xlink" ns97:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns96:zmlFilter>
+        </ns96:operationFilter>
+        <ns96:operationFilter operand="0.014888268156424581" operator="*">
+          <ns96:zmlFilter>
+            <ns96:zml xmlns:ns98="http://www.w3.org/1999/xlink" ns98:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns96:zmlFilter>
+        </ns96:operationFilter>
+        <ns96:operationFilter operand="0.08212290502793296" operator="*">
+          <ns96:zmlFilter>
+            <ns96:zml xmlns:ns99="http://www.w3.org/1999/xlink" ns99:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns96:zmlFilter>
+        </ns96:operationFilter>
+        <ns96:operationFilter operand="4.6368715083798886E-4" operator="*">
+          <ns96:zmlFilter>
+            <ns96:zml xmlns:ns100="http://www.w3.org/1999/xlink" ns100:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns96:zmlFilter>
+        </ns96:operationFilter>
+        <ns96:operationFilter operand="0.8399497206703911" operator="*">
+          <ns96:zmlFilter>
+            <ns96:zml xmlns:ns101="http://www.w3.org/1999/xlink" ns101:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns96:zmlFilter>
+        </ns96:operationFilter>
+      </ns96:nOperationFilter>
+    </item>
+    <item id="Catchment1211" name="Niederschlag - Catchment1211">
+      <ns102:nOperationFilter xmlns:ns102="filters.zml.kalypso.org" operator="+">
+        <ns102:operationFilter operand="0.28338674033149164" operator="*">
+          <ns102:zmlFilter>
+            <ns102:zml xmlns:ns103="http://www.w3.org/1999/xlink" ns103:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns102:zmlFilter>
+        </ns102:operationFilter>
+        <ns102:operationFilter operand="0.13704972375690608" operator="*">
+          <ns102:zmlFilter>
+            <ns102:zml xmlns:ns104="http://www.w3.org/1999/xlink" ns104:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns102:zmlFilter>
+        </ns102:operationFilter>
+        <ns102:operationFilter operand="0.027895027624309395" operator="*">
+          <ns102:zmlFilter>
+            <ns102:zml xmlns:ns105="http://www.w3.org/1999/xlink" ns105:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns102:zmlFilter>
+        </ns102:operationFilter>
+        <ns102:operationFilter operand="0.5516740331491712" operator="*">
+          <ns102:zmlFilter>
+            <ns102:zml xmlns:ns106="http://www.w3.org/1999/xlink" ns106:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns102:zmlFilter>
+        </ns102:operationFilter>
+      </ns102:nOperationFilter>
+    </item>
+    <item id="Catchment1212" name="Niederschlag - Catchment1212">
+      <ns107:nOperationFilter xmlns:ns107="filters.zml.kalypso.org" operator="+">
+        <ns107:operationFilter operand="0.08228301886792452" operator="*">
+          <ns107:zmlFilter>
+            <ns107:zml xmlns:ns108="http://www.w3.org/1999/xlink" ns108:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns107:zmlFilter>
+        </ns107:operationFilter>
+        <ns107:operationFilter operand="0.22202830188679246" operator="*">
+          <ns107:zmlFilter>
+            <ns107:zml xmlns:ns109="http://www.w3.org/1999/xlink" ns109:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns107:zmlFilter>
+        </ns107:operationFilter>
+        <ns107:operationFilter operand="0.6956886792452829" operator="*">
+          <ns107:zmlFilter>
+            <ns107:zml xmlns:ns110="http://www.w3.org/1999/xlink" ns110:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns107:zmlFilter>
+        </ns107:operationFilter>
+      </ns107:nOperationFilter>
+    </item>
+    <item id="Catchment1220" name="Niederschlag - Catchment1220">
+      <ns111:nOperationFilter xmlns:ns111="filters.zml.kalypso.org" operator="+">
+        <ns111:operationFilter operand="0.5136666666666666" operator="*">
+          <ns111:zmlFilter>
+            <ns111:zml xmlns:ns112="http://www.w3.org/1999/xlink" ns112:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns111:zmlFilter>
+        </ns111:operationFilter>
+        <ns111:operationFilter operand="0.17125" operator="*">
+          <ns111:zmlFilter>
+            <ns111:zml xmlns:ns113="http://www.w3.org/1999/xlink" ns113:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns111:zmlFilter>
+        </ns111:operationFilter>
+        <ns111:operationFilter operand="0.3151666666666667" operator="*">
+          <ns111:zmlFilter>
+            <ns111:zml xmlns:ns114="http://www.w3.org/1999/xlink" ns114:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns111:zmlFilter>
+        </ns111:operationFilter>
+      </ns111:nOperationFilter>
+    </item>
+    <item id="Catchment1221" name="Niederschlag - Catchment1221">
+      <ns115:nOperationFilter xmlns:ns115="filters.zml.kalypso.org" operator="+">
+        <ns115:operationFilter operand="0.39602631578947356" operator="*">
+          <ns115:zmlFilter>
+            <ns115:zml xmlns:ns116="http://www.w3.org/1999/xlink" ns116:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns115:zmlFilter>
+        </ns115:operationFilter>
+        <ns115:operationFilter operand="0.03571052631578947" operator="*">
+          <ns115:zmlFilter>
+            <ns115:zml xmlns:ns117="http://www.w3.org/1999/xlink" ns117:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns115:zmlFilter>
+        </ns115:operationFilter>
+        <ns115:operationFilter operand="0.20105263157894737" operator="*">
+          <ns115:zmlFilter>
+            <ns115:zml xmlns:ns118="http://www.w3.org/1999/xlink" ns118:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns115:zmlFilter>
+        </ns115:operationFilter>
+        <ns115:operationFilter operand="0.36710526315789477" operator="*">
+          <ns115:zmlFilter>
+            <ns115:zml xmlns:ns119="http://www.w3.org/1999/xlink" ns119:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns115:zmlFilter>
+        </ns115:operationFilter>
+      </ns115:nOperationFilter>
+    </item>
+    <item id="Catchment1300" name="Niederschlag - Catchment1300">
+      <ns120:nOperationFilter xmlns:ns120="filters.zml.kalypso.org" operator="+">
+        <ns120:operationFilter operand="0.039" operator="*">
+          <ns120:zmlFilter>
+            <ns120:zml xmlns:ns121="http://www.w3.org/1999/xlink" ns121:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns120:zmlFilter>
+        </ns120:operationFilter>
+        <ns120:operationFilter operand="0.614047619047619" operator="*">
+          <ns120:zmlFilter>
+            <ns120:zml xmlns:ns122="http://www.w3.org/1999/xlink" ns122:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns120:zmlFilter>
+        </ns120:operationFilter>
+        <ns120:operationFilter operand="0.15757142857142853" operator="*">
+          <ns120:zmlFilter>
+            <ns120:zml xmlns:ns123="http://www.w3.org/1999/xlink" ns123:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns120:zmlFilter>
+        </ns120:operationFilter>
+        <ns120:operationFilter operand="0.18933333333333333" operator="*">
+          <ns120:zmlFilter>
+            <ns120:zml xmlns:ns124="http://www.w3.org/1999/xlink" ns124:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns120:zmlFilter>
+        </ns120:operationFilter>
+      </ns120:nOperationFilter>
+    </item>
+    <item id="Catchment1301" name="Niederschlag - Catchment1301">
+      <ns125:nOperationFilter xmlns:ns125="filters.zml.kalypso.org" operator="+">
+        <ns125:operationFilter operand="0.08057894736842107" operator="*">
+          <ns125:zmlFilter>
+            <ns125:zml xmlns:ns126="http://www.w3.org/1999/xlink" ns126:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns125:zmlFilter>
+        </ns125:operationFilter>
+        <ns125:operationFilter operand="0.7456315789473684" operator="*">
+          <ns125:zmlFilter>
+            <ns125:zml xmlns:ns127="http://www.w3.org/1999/xlink" ns127:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns125:zmlFilter>
+        </ns125:operationFilter>
+        <ns125:operationFilter operand="0.1431578947368421" operator="*">
+          <ns125:zmlFilter>
+            <ns125:zml xmlns:ns128="http://www.w3.org/1999/xlink" ns128:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns125:zmlFilter>
+        </ns125:operationFilter>
+        <ns125:operationFilter operand="0.030473684210526313" operator="*">
+          <ns125:zmlFilter>
+            <ns125:zml xmlns:ns129="http://www.w3.org/1999/xlink" ns129:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns125:zmlFilter>
+        </ns125:operationFilter>
+      </ns125:nOperationFilter>
+    </item>
+    <item id="Catchment1302" name="Niederschlag - Catchment1302">
+      <ns130:nOperationFilter xmlns:ns130="filters.zml.kalypso.org" operator="+">
+        <ns130:operationFilter operand="0.026807692307692307" operator="*">
+          <ns130:zmlFilter>
+            <ns130:zml xmlns:ns131="http://www.w3.org/1999/xlink" ns131:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns130:zmlFilter>
+        </ns130:operationFilter>
+        <ns130:operationFilter operand="0.8500384615384614" operator="*">
+          <ns130:zmlFilter>
+            <ns130:zml xmlns:ns132="http://www.w3.org/1999/xlink" ns132:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns130:zmlFilter>
+        </ns130:operationFilter>
+        <ns130:operationFilter operand="0.11026923076923074" operator="*">
+          <ns130:zmlFilter>
+            <ns130:zml xmlns:ns133="http://www.w3.org/1999/xlink" ns133:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns130:zmlFilter>
+        </ns130:operationFilter>
+        <ns130:operationFilter operand="0.012711538461538462" operator="*">
+          <ns130:zmlFilter>
+            <ns130:zml xmlns:ns134="http://www.w3.org/1999/xlink" ns134:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns130:zmlFilter>
+        </ns130:operationFilter>
+      </ns130:nOperationFilter>
+    </item>
+    <item id="Catchment1303" name="Niederschlag - Catchment1303">
+      <ns135:nOperationFilter xmlns:ns135="filters.zml.kalypso.org" operator="+">
+        <ns135:operationFilter operand="0.5515538461538461" operator="*">
+          <ns135:zmlFilter>
+            <ns135:zml xmlns:ns136="http://www.w3.org/1999/xlink" ns136:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns135:zmlFilter>
+        </ns135:operationFilter>
+        <ns135:operationFilter operand="0.24233846153846159" operator="*">
+          <ns135:zmlFilter>
+            <ns135:zml xmlns:ns137="http://www.w3.org/1999/xlink" ns137:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns135:zmlFilter>
+        </ns135:operationFilter>
+        <ns135:operationFilter operand="0.20618461538461544" operator="*">
+          <ns135:zmlFilter>
+            <ns135:zml xmlns:ns138="http://www.w3.org/1999/xlink" ns138:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns135:zmlFilter>
+        </ns135:operationFilter>
+      </ns135:nOperationFilter>
+    </item>
+    <item id="Catchment1304" name="Niederschlag - Catchment1304">
+      <ns139:nOperationFilter xmlns:ns139="filters.zml.kalypso.org" operator="+">
+        <ns139:operationFilter operand="0.12676923076923077" operator="*">
+          <ns139:zmlFilter>
+            <ns139:zml xmlns:ns140="http://www.w3.org/1999/xlink" ns140:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns139:zmlFilter>
+        </ns139:operationFilter>
+        <ns139:operationFilter operand="0.8414999999999999" operator="*">
+          <ns139:zmlFilter>
+            <ns139:zml xmlns:ns141="http://www.w3.org/1999/xlink" ns141:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns139:zmlFilter>
+        </ns139:operationFilter>
+        <ns139:operationFilter operand="0.03173076923076923" operator="*">
+          <ns139:zmlFilter>
+            <ns139:zml xmlns:ns142="http://www.w3.org/1999/xlink" ns142:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns139:zmlFilter>
+        </ns139:operationFilter>
+      </ns139:nOperationFilter>
+    </item>
+    <item id="Catchment1401" name="Niederschlag - Catchment1401">
+      <ns143:nOperationFilter xmlns:ns143="filters.zml.kalypso.org" operator="+">
+        <ns143:operationFilter operand="0.04704761904761905" operator="*">
+          <ns143:zmlFilter>
+            <ns143:zml xmlns:ns144="http://www.w3.org/1999/xlink" ns144:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns143:zmlFilter>
+        </ns143:operationFilter>
+        <ns143:operationFilter operand="0.7949047619047619" operator="*">
+          <ns143:zmlFilter>
+            <ns143:zml xmlns:ns145="http://www.w3.org/1999/xlink" ns145:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns143:zmlFilter>
+        </ns143:operationFilter>
+        <ns143:operationFilter operand="0.15795238095238096" operator="*">
+          <ns143:zmlFilter>
+            <ns143:zml xmlns:ns146="http://www.w3.org/1999/xlink" ns146:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns143:zmlFilter>
+        </ns143:operationFilter>
+      </ns143:nOperationFilter>
+    </item>
+    <item id="Catchment1402" name="Niederschlag - Catchment1402">
+      <ns147:nOperationFilter xmlns:ns147="filters.zml.kalypso.org" operator="+">
+        <ns147:operationFilter operand="0.01720253164556962" operator="*">
+          <ns147:zmlFilter>
+            <ns147:zml xmlns:ns148="http://www.w3.org/1999/xlink" ns148:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns147:zmlFilter>
+        </ns147:operationFilter>
+        <ns147:operationFilter operand="0.6206329113924047" operator="*">
+          <ns147:zmlFilter>
+            <ns147:zml xmlns:ns149="http://www.w3.org/1999/xlink" ns149:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns147:zmlFilter>
+        </ns147:operationFilter>
+        <ns147:operationFilter operand="0.3373544303797469" operator="*">
+          <ns147:zmlFilter>
+            <ns147:zml xmlns:ns150="http://www.w3.org/1999/xlink" ns150:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns147:zmlFilter>
+        </ns147:operationFilter>
+        <ns147:operationFilter operand="0.024797468354430374" operator="*">
+          <ns147:zmlFilter>
+            <ns147:zml xmlns:ns151="http://www.w3.org/1999/xlink" ns151:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns147:zmlFilter>
+        </ns147:operationFilter>
+      </ns147:nOperationFilter>
+    </item>
+    <item id="Catchment1403" name="Niederschlag - Catchment1403">
+      <ns152:nOperationFilter xmlns:ns152="filters.zml.kalypso.org" operator="+">
+        <ns152:operationFilter operand="0.18363157894736845" operator="*">
+          <ns152:zmlFilter>
+            <ns152:zml xmlns:ns153="http://www.w3.org/1999/xlink" ns153:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns152:zmlFilter>
+        </ns152:operationFilter>
+        <ns152:operationFilter operand="0.6615" operator="*">
+          <ns152:zmlFilter>
+            <ns152:zml xmlns:ns154="http://www.w3.org/1999/xlink" ns154:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns152:zmlFilter>
+        </ns152:operationFilter>
+        <ns152:operationFilter operand="0.1549736842105263" operator="*">
+          <ns152:zmlFilter>
+            <ns152:zml xmlns:ns155="http://www.w3.org/1999/xlink" ns155:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns152:zmlFilter>
+        </ns152:operationFilter>
+      </ns152:nOperationFilter>
+    </item>
+    <item id="Catchment1404" name="Niederschlag - Catchment1404">
+      <ns156:nOperationFilter xmlns:ns156="filters.zml.kalypso.org" operator="+">
+        <ns156:operationFilter operand="0.07607894736842104" operator="*">
+          <ns156:zmlFilter>
+            <ns156:zml xmlns:ns157="http://www.w3.org/1999/xlink" ns157:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns156:zmlFilter>
+        </ns156:operationFilter>
+        <ns156:operationFilter operand="0.5967105263157894" operator="*">
+          <ns156:zmlFilter>
+            <ns156:zml xmlns:ns158="http://www.w3.org/1999/xlink" ns158:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns156:zmlFilter>
+        </ns156:operationFilter>
+        <ns156:operationFilter operand="0.3271315789473684" operator="*">
+          <ns156:zmlFilter>
+            <ns156:zml xmlns:ns159="http://www.w3.org/1999/xlink" ns159:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns156:zmlFilter>
+        </ns156:operationFilter>
+      </ns156:nOperationFilter>
+    </item>
+    <item id="Catchment1500" name="Niederschlag - Catchment1500">
+      <ns160:nOperationFilter xmlns:ns160="filters.zml.kalypso.org" operator="+">
+        <ns160:operationFilter operand="0.14680851063829786" operator="*">
+          <ns160:zmlFilter>
+            <ns160:zml xmlns:ns161="http://www.w3.org/1999/xlink" ns161:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns160:zmlFilter>
+        </ns160:operationFilter>
+        <ns160:operationFilter operand="0.7862978723404255" operator="*">
+          <ns160:zmlFilter>
+            <ns160:zml xmlns:ns162="http://www.w3.org/1999/xlink" ns162:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns160:zmlFilter>
+        </ns160:operationFilter>
+        <ns160:operationFilter operand="0.06695744680851062" operator="*">
+          <ns160:zmlFilter>
+            <ns160:zml xmlns:ns163="http://www.w3.org/1999/xlink" ns163:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns160:zmlFilter>
+        </ns160:operationFilter>
+      </ns160:nOperationFilter>
+    </item>
+    <item id="Catchment1600" name="Niederschlag - Catchment1600">
+      <ns164:nOperationFilter xmlns:ns164="filters.zml.kalypso.org" operator="+">
+        <ns164:operationFilter operand="0.3264912280701752" operator="*">
+          <ns164:zmlFilter>
+            <ns164:zml xmlns:ns165="http://www.w3.org/1999/xlink" ns165:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns164:zmlFilter>
+        </ns164:operationFilter>
+        <ns164:operationFilter operand="0.5707631578947371" operator="*">
+          <ns164:zmlFilter>
+            <ns164:zml xmlns:ns166="http://www.w3.org/1999/xlink" ns166:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns164:zmlFilter>
+        </ns164:operationFilter>
+        <ns164:operationFilter operand="0.08124561403508775" operator="*">
+          <ns164:zmlFilter>
+            <ns164:zml xmlns:ns167="http://www.w3.org/1999/xlink" ns167:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns164:zmlFilter>
+        </ns164:operationFilter>
+        <ns164:operationFilter operand="0.02153508771929824" operator="*">
+          <ns164:zmlFilter>
+            <ns164:zml xmlns:ns168="http://www.w3.org/1999/xlink" ns168:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns164:zmlFilter>
+        </ns164:operationFilter>
+      </ns164:nOperationFilter>
+    </item>
+    <item id="Catchment1601" name="Niederschlag - Catchment1601">
+      <ns169:nOperationFilter xmlns:ns169="filters.zml.kalypso.org" operator="+">
+        <ns169:operationFilter operand="0.3008297872340426" operator="*">
+          <ns169:zmlFilter>
+            <ns169:zml xmlns:ns170="http://www.w3.org/1999/xlink" ns170:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns169:zmlFilter>
+        </ns169:operationFilter>
+        <ns169:operationFilter operand="0.6354893617021278" operator="*">
+          <ns169:zmlFilter>
+            <ns169:zml xmlns:ns171="http://www.w3.org/1999/xlink" ns171:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns169:zmlFilter>
+        </ns169:operationFilter>
+        <ns169:operationFilter operand="0.03661702127659574" operator="*">
+          <ns169:zmlFilter>
+            <ns169:zml xmlns:ns172="http://www.w3.org/1999/xlink" ns172:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns169:zmlFilter>
+        </ns169:operationFilter>
+        <ns169:operationFilter operand="0.02697872340425532" operator="*">
+          <ns169:zmlFilter>
+            <ns169:zml xmlns:ns173="http://www.w3.org/1999/xlink" ns173:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns169:zmlFilter>
+        </ns169:operationFilter>
+      </ns169:nOperationFilter>
+    </item>
+    <item id="Catchment1700" name="Niederschlag - Catchment1700">
+      <ns174:nOperationFilter xmlns:ns174="filters.zml.kalypso.org" operator="+">
+        <ns174:operationFilter operand="0.42891869918699205" operator="*">
+          <ns174:zmlFilter>
+            <ns174:zml xmlns:ns175="http://www.w3.org/1999/xlink" ns175:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns174:zmlFilter>
+        </ns174:operationFilter>
+        <ns174:operationFilter operand="0.46488617886178896" operator="*">
+          <ns174:zmlFilter>
+            <ns174:zml xmlns:ns176="http://www.w3.org/1999/xlink" ns176:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns174:zmlFilter>
+        </ns174:operationFilter>
+        <ns174:operationFilter operand="0.05030081300813008" operator="*">
+          <ns174:zmlFilter>
+            <ns174:zml xmlns:ns177="http://www.w3.org/1999/xlink" ns177:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns174:zmlFilter>
+        </ns174:operationFilter>
+        <ns174:operationFilter operand="0.05592682926829269" operator="*">
+          <ns174:zmlFilter>
+            <ns174:zml xmlns:ns178="http://www.w3.org/1999/xlink" ns178:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns174:zmlFilter>
+        </ns174:operationFilter>
+      </ns174:nOperationFilter>
+    </item>
+    <item id="Catchment1800" name="Niederschlag - Catchment1800">
+      <ns179:nOperationFilter xmlns:ns179="filters.zml.kalypso.org" operator="+">
+        <ns179:operationFilter operand="0.38161702127659575" operator="*">
+          <ns179:zmlFilter>
+            <ns179:zml xmlns:ns180="http://www.w3.org/1999/xlink" ns180:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns179:zmlFilter>
+        </ns179:operationFilter>
+        <ns179:operationFilter operand="0.42048936170212764" operator="*">
+          <ns179:zmlFilter>
+            <ns179:zml xmlns:ns181="http://www.w3.org/1999/xlink" ns181:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns179:zmlFilter>
+        </ns179:operationFilter>
+        <ns179:operationFilter operand="0.1979574468085107" operator="*">
+          <ns179:zmlFilter>
+            <ns179:zml xmlns:ns182="http://www.w3.org/1999/xlink" ns182:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns179:zmlFilter>
+        </ns179:operationFilter>
+      </ns179:nOperationFilter>
+    </item>
+    <item id="Catchment2000" name="Niederschlag - Catchment2000">
+      <ns183:nOperationFilter xmlns:ns183="filters.zml.kalypso.org" operator="+">
+        <ns183:operationFilter operand="0.1443846153846154" operator="*">
+          <ns183:zmlFilter>
+            <ns183:zml xmlns:ns184="http://www.w3.org/1999/xlink" ns184:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns183:zmlFilter>
+        </ns183:operationFilter>
+        <ns183:operationFilter operand="0.1944615384615384" operator="*">
+          <ns183:zmlFilter>
+            <ns183:zml xmlns:ns185="http://www.w3.org/1999/xlink" ns185:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns183:zmlFilter>
+        </ns183:operationFilter>
+        <ns183:operationFilter operand="0.661076923076923" operator="*">
+          <ns183:zmlFilter>
+            <ns183:zml xmlns:ns186="http://www.w3.org/1999/xlink" ns186:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns183:zmlFilter>
+        </ns183:operationFilter>
+      </ns183:nOperationFilter>
+    </item>
+    <item id="Catchment2003" name="Niederschlag - Catchment2003">
+      <ns187:nOperationFilter xmlns:ns187="filters.zml.kalypso.org" operator="+">
+        <ns187:operationFilter operand="0.21330985915492962" operator="*">
+          <ns187:zmlFilter>
+            <ns187:zml xmlns:ns188="http://www.w3.org/1999/xlink" ns188:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns187:zmlFilter>
+        </ns187:operationFilter>
+        <ns187:operationFilter operand="0.47722535211267597" operator="*">
+          <ns187:zmlFilter>
+            <ns187:zml xmlns:ns189="http://www.w3.org/1999/xlink" ns189:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns187:zmlFilter>
+        </ns187:operationFilter>
+        <ns187:operationFilter operand="0.3094507042253521" operator="*">
+          <ns187:zmlFilter>
+            <ns187:zml xmlns:ns190="http://www.w3.org/1999/xlink" ns190:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns187:zmlFilter>
+        </ns187:operationFilter>
+      </ns187:nOperationFilter>
+    </item>
+    <item id="Catchment2004" name="Niederschlag - Catchment2004">
+      <ns191:nOperationFilter xmlns:ns191="filters.zml.kalypso.org" operator="+">
+        <ns191:operationFilter operand="0.13523076923076924" operator="*">
+          <ns191:zmlFilter>
+            <ns191:zml xmlns:ns192="http://www.w3.org/1999/xlink" ns192:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns191:zmlFilter>
+        </ns191:operationFilter>
+        <ns191:operationFilter operand="0.7074230769230769" operator="*">
+          <ns191:zmlFilter>
+            <ns191:zml xmlns:ns193="http://www.w3.org/1999/xlink" ns193:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns191:zmlFilter>
+        </ns191:operationFilter>
+        <ns191:operationFilter operand="0.1573846153846154" operator="*">
+          <ns191:zmlFilter>
+            <ns191:zml xmlns:ns194="http://www.w3.org/1999/xlink" ns194:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns191:zmlFilter>
+        </ns191:operationFilter>
+      </ns191:nOperationFilter>
+    </item>
+    <item id="Catchment2005" name="Niederschlag - Catchment2005">
+      <ns195:nOperationFilter xmlns:ns195="filters.zml.kalypso.org" operator="+">
+        <ns195:operationFilter operand="0.36719999999999986" operator="*">
+          <ns195:zmlFilter>
+            <ns195:zml xmlns:ns196="http://www.w3.org/1999/xlink" ns196:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns195:zmlFilter>
+        </ns195:operationFilter>
+        <ns195:operationFilter operand="0.4949538461538462" operator="*">
+          <ns195:zmlFilter>
+            <ns195:zml xmlns:ns197="http://www.w3.org/1999/xlink" ns197:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns195:zmlFilter>
+        </ns195:operationFilter>
+        <ns195:operationFilter operand="0.1377384615384616" operator="*">
+          <ns195:zmlFilter>
+            <ns195:zml xmlns:ns198="http://www.w3.org/1999/xlink" ns198:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns195:zmlFilter>
+        </ns195:operationFilter>
+      </ns195:nOperationFilter>
+    </item>
+    <item id="Catchment2006" name="Niederschlag - Catchment2006">
+      <ns199:nOperationFilter xmlns:ns199="filters.zml.kalypso.org" operator="+">
+        <ns199:operationFilter operand="0.34415625000000005" operator="*">
+          <ns199:zmlFilter>
+            <ns199:zml xmlns:ns200="http://www.w3.org/1999/xlink" ns200:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns199:zmlFilter>
+        </ns199:operationFilter>
+        <ns199:operationFilter operand="0.36412500000000014" operator="*">
+          <ns199:zmlFilter>
+            <ns199:zml xmlns:ns201="http://www.w3.org/1999/xlink" ns201:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns199:zmlFilter>
+        </ns199:operationFilter>
+        <ns199:operationFilter operand="0.29173437500000005" operator="*">
+          <ns199:zmlFilter>
+            <ns199:zml xmlns:ns202="http://www.w3.org/1999/xlink" ns202:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns199:zmlFilter>
+        </ns199:operationFilter>
+      </ns199:nOperationFilter>
+    </item>
+    <item id="Catchment2007" name="Niederschlag - Catchment2007">
+      <ns203:nOperationFilter xmlns:ns203="filters.zml.kalypso.org" operator="+">
+        <ns203:operationFilter operand="0.3279999999999999" operator="*">
+          <ns203:zmlFilter>
+            <ns203:zml xmlns:ns204="http://www.w3.org/1999/xlink" ns204:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns203:zmlFilter>
+        </ns203:operationFilter>
+        <ns203:operationFilter operand="0.26330188679245287" operator="*">
+          <ns203:zmlFilter>
+            <ns203:zml xmlns:ns205="http://www.w3.org/1999/xlink" ns205:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns203:zmlFilter>
+        </ns203:operationFilter>
+        <ns203:operationFilter operand="0.40866037735849053" operator="*">
+          <ns203:zmlFilter>
+            <ns203:zml xmlns:ns206="http://www.w3.org/1999/xlink" ns206:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns203:zmlFilter>
+        </ns203:operationFilter>
+      </ns203:nOperationFilter>
+    </item>
+    <item id="Catchment2008" name="Niederschlag - Catchment2008">
+      <ns207:nOperationFilter xmlns:ns207="filters.zml.kalypso.org" operator="+">
+        <ns207:operationFilter operand="0.13795172413793094" operator="*">
+          <ns207:zmlFilter>
+            <ns207:zml xmlns:ns208="http://www.w3.org/1999/xlink" ns208:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns207:zmlFilter>
+        </ns207:operationFilter>
+        <ns207:operationFilter operand="0.4274275862068966" operator="*">
+          <ns207:zmlFilter>
+            <ns207:zml xmlns:ns209="http://www.w3.org/1999/xlink" ns209:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns207:zmlFilter>
+        </ns207:operationFilter>
+        <ns207:operationFilter operand="0.43459310344827595" operator="*">
+          <ns207:zmlFilter>
+            <ns207:zml xmlns:ns210="http://www.w3.org/1999/xlink" ns210:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns207:zmlFilter>
+        </ns207:operationFilter>
+      </ns207:nOperationFilter>
+    </item>
+    <item id="Catchment3001" name="Niederschlag - Catchment3001">
+      <ns211:nOperationFilter xmlns:ns211="filters.zml.kalypso.org" operator="+">
+        <ns211:operationFilter operand="0.7780000000000001" operator="*">
+          <ns211:zmlFilter>
+            <ns211:zml xmlns:ns212="http://www.w3.org/1999/xlink" ns212:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns211:zmlFilter>
+        </ns211:operationFilter>
+        <ns211:operationFilter operand="0.21008333333333337" operator="*">
+          <ns211:zmlFilter>
+            <ns211:zml xmlns:ns213="http://www.w3.org/1999/xlink" ns213:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns211:zmlFilter>
+        </ns211:operationFilter>
+        <ns211:operationFilter operand="0.01175" operator="*">
+          <ns211:zmlFilter>
+            <ns211:zml xmlns:ns214="http://www.w3.org/1999/xlink" ns214:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns211:zmlFilter>
+        </ns211:operationFilter>
+      </ns211:nOperationFilter>
+    </item>
+    <item id="Catchment3002" name="Niederschlag - Catchment3002">
+      <ns215:nOperationFilter xmlns:ns215="filters.zml.kalypso.org" operator="+">
+        <ns215:operationFilter operand="0.7059545454545455" operator="*">
+          <ns215:zmlFilter>
+            <ns215:zml xmlns:ns216="http://www.w3.org/1999/xlink" ns216:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns215:zmlFilter>
+        </ns215:operationFilter>
+        <ns215:operationFilter operand="0.2675454545454545" operator="*">
+          <ns215:zmlFilter>
+            <ns215:zml xmlns:ns217="http://www.w3.org/1999/xlink" ns217:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns215:zmlFilter>
+        </ns215:operationFilter>
+        <ns215:operationFilter operand="0.02640909090909091" operator="*">
+          <ns215:zmlFilter>
+            <ns215:zml xmlns:ns218="http://www.w3.org/1999/xlink" ns218:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns215:zmlFilter>
+        </ns215:operationFilter>
+      </ns215:nOperationFilter>
+    </item>
+    <item id="Catchment3003" name="Niederschlag - Catchment3003">
+      <ns219:nOperationFilter xmlns:ns219="filters.zml.kalypso.org" operator="+">
+        <ns219:operationFilter operand="0.5174848484848485" operator="*">
+          <ns219:zmlFilter>
+            <ns219:zml xmlns:ns220="http://www.w3.org/1999/xlink" ns220:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns219:zmlFilter>
+        </ns219:operationFilter>
+        <ns219:operationFilter operand="0.4587575757575757" operator="*">
+          <ns219:zmlFilter>
+            <ns219:zml xmlns:ns221="http://www.w3.org/1999/xlink" ns221:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns219:zmlFilter>
+        </ns219:operationFilter>
+        <ns219:operationFilter operand="0.023727272727272725" operator="*">
+          <ns219:zmlFilter>
+            <ns219:zml xmlns:ns222="http://www.w3.org/1999/xlink" ns222:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns219:zmlFilter>
+        </ns219:operationFilter>
+      </ns219:nOperationFilter>
+    </item>
+    <item id="Catchment3004" name="Niederschlag - Catchment3004">
+      <ns223:nOperationFilter xmlns:ns223="filters.zml.kalypso.org" operator="+">
+        <ns223:operationFilter operand="0.903095238095238" operator="*">
+          <ns223:zmlFilter>
+            <ns223:zml xmlns:ns224="http://www.w3.org/1999/xlink" ns224:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns223:zmlFilter>
+        </ns223:operationFilter>
+        <ns223:operationFilter operand="0.06495238095238096" operator="*">
+          <ns223:zmlFilter>
+            <ns223:zml xmlns:ns225="http://www.w3.org/1999/xlink" ns225:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns223:zmlFilter>
+        </ns223:operationFilter>
+        <ns223:operationFilter operand="0.03195238095238096" operator="*">
+          <ns223:zmlFilter>
+            <ns223:zml xmlns:ns226="http://www.w3.org/1999/xlink" ns226:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns223:zmlFilter>
+        </ns223:operationFilter>
+      </ns223:nOperationFilter>
+    </item>
+    <item id="Catchment3100" name="Niederschlag - Catchment3100">
+      <ns227:nOperationFilter xmlns:ns227="filters.zml.kalypso.org" operator="+">
+        <ns227:operationFilter operand="0.6543846153846152" operator="*">
+          <ns227:zmlFilter>
+            <ns227:zml xmlns:ns228="http://www.w3.org/1999/xlink" ns228:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns227:zmlFilter>
+        </ns227:operationFilter>
+        <ns227:operationFilter operand="0.2914230769230769" operator="*">
+          <ns227:zmlFilter>
+            <ns227:zml xmlns:ns229="http://www.w3.org/1999/xlink" ns229:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns227:zmlFilter>
+        </ns227:operationFilter>
+        <ns227:operationFilter operand="0.05419230769230769" operator="*">
+          <ns227:zmlFilter>
+            <ns227:zml xmlns:ns230="http://www.w3.org/1999/xlink" ns230:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns227:zmlFilter>
+        </ns227:operationFilter>
+      </ns227:nOperationFilter>
+    </item>
+    <item id="Catchment3101" name="Niederschlag - Catchment3101">
+      <ns231:nOperationFilter xmlns:ns231="filters.zml.kalypso.org" operator="+">
+        <ns231:operationFilter operand="0.7164000000000001" operator="*">
+          <ns231:zmlFilter>
+            <ns231:zml xmlns:ns232="http://www.w3.org/1999/xlink" ns232:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns231:zmlFilter>
+        </ns231:operationFilter>
+        <ns231:operationFilter operand="0.19164444444444448" operator="*">
+          <ns231:zmlFilter>
+            <ns231:zml xmlns:ns233="http://www.w3.org/1999/xlink" ns233:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns231:zmlFilter>
+        </ns231:operationFilter>
+        <ns231:operationFilter operand="0.0919111111111111" operator="*">
+          <ns231:zmlFilter>
+            <ns231:zml xmlns:ns234="http://www.w3.org/1999/xlink" ns234:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns231:zmlFilter>
+        </ns231:operationFilter>
+      </ns231:nOperationFilter>
+    </item>
+    <item id="Catchment3102" name="Niederschlag - Catchment3102">
+      <ns235:nOperationFilter xmlns:ns235="filters.zml.kalypso.org" operator="+">
+        <ns235:operationFilter operand="0.7223846153846153" operator="*">
+          <ns235:zmlFilter>
+            <ns235:zml xmlns:ns236="http://www.w3.org/1999/xlink" ns236:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns235:zmlFilter>
+        </ns235:operationFilter>
+        <ns235:operationFilter operand="0.1427692307692308" operator="*">
+          <ns235:zmlFilter>
+            <ns235:zml xmlns:ns237="http://www.w3.org/1999/xlink" ns237:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns235:zmlFilter>
+        </ns235:operationFilter>
+        <ns235:operationFilter operand="0.13488461538461535" operator="*">
+          <ns235:zmlFilter>
+            <ns235:zml xmlns:ns238="http://www.w3.org/1999/xlink" ns238:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns235:zmlFilter>
+        </ns235:operationFilter>
+      </ns235:nOperationFilter>
+    </item>
+    <item id="Catchment3103" name="Niederschlag - Catchment3103">
+      <ns239:nOperationFilter xmlns:ns239="filters.zml.kalypso.org" operator="+">
+        <ns239:operationFilter operand="0.5729473684210526" operator="*">
+          <ns239:zmlFilter>
+            <ns239:zml xmlns:ns240="http://www.w3.org/1999/xlink" ns240:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns239:zmlFilter>
+        </ns239:operationFilter>
+        <ns239:operationFilter operand="0.33847368421052637" operator="*">
+          <ns239:zmlFilter>
+            <ns239:zml xmlns:ns241="http://www.w3.org/1999/xlink" ns241:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns239:zmlFilter>
+        </ns239:operationFilter>
+        <ns239:operationFilter operand="0.08863157894736844" operator="*">
+          <ns239:zmlFilter>
+            <ns239:zml xmlns:ns242="http://www.w3.org/1999/xlink" ns242:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns239:zmlFilter>
+        </ns239:operationFilter>
+      </ns239:nOperationFilter>
+    </item>
+    <item id="Catchment3104" name="Niederschlag - Catchment3104">
+      <ns243:nOperationFilter xmlns:ns243="filters.zml.kalypso.org" operator="+">
+        <ns243:operationFilter operand="0.8500588235294116" operator="*">
+          <ns243:zmlFilter>
+            <ns243:zml xmlns:ns244="http://www.w3.org/1999/xlink" ns244:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns243:zmlFilter>
+        </ns243:operationFilter>
+        <ns243:operationFilter operand="0.07547058823529412" operator="*">
+          <ns243:zmlFilter>
+            <ns243:zml xmlns:ns245="http://www.w3.org/1999/xlink" ns245:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns243:zmlFilter>
+        </ns243:operationFilter>
+        <ns243:operationFilter operand="0.0743529411764706" operator="*">
+          <ns243:zmlFilter>
+            <ns243:zml xmlns:ns246="http://www.w3.org/1999/xlink" ns246:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns243:zmlFilter>
+        </ns243:operationFilter>
+      </ns243:nOperationFilter>
+    </item>
+    <item id="Catchment3105" name="Niederschlag - Catchment3105">
+      <ns247:nOperationFilter xmlns:ns247="filters.zml.kalypso.org" operator="+">
+        <ns247:operationFilter operand="0.8127906976744189" operator="*">
+          <ns247:zmlFilter>
+            <ns247:zml xmlns:ns248="http://www.w3.org/1999/xlink" ns248:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns247:zmlFilter>
+        </ns247:operationFilter>
+        <ns247:operationFilter operand="0.06067441860465116" operator="*">
+          <ns247:zmlFilter>
+            <ns247:zml xmlns:ns249="http://www.w3.org/1999/xlink" ns249:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns247:zmlFilter>
+        </ns247:operationFilter>
+        <ns247:operationFilter operand="0.12651162790697676" operator="*">
+          <ns247:zmlFilter>
+            <ns247:zml xmlns:ns250="http://www.w3.org/1999/xlink" ns250:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns247:zmlFilter>
+        </ns247:operationFilter>
+      </ns247:nOperationFilter>
+    </item>
+    <item id="Catchment3201" name="Niederschlag - Catchment3201">
+      <ns251:nOperationFilter xmlns:ns251="filters.zml.kalypso.org" operator="+">
+        <ns251:operationFilter operand="0.6701086956521739" operator="*">
+          <ns251:zmlFilter>
+            <ns251:zml xmlns:ns252="http://www.w3.org/1999/xlink" ns252:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns251:zmlFilter>
+        </ns251:operationFilter>
+        <ns251:operationFilter operand="0.0981086956521739" operator="*">
+          <ns251:zmlFilter>
+            <ns251:zml xmlns:ns253="http://www.w3.org/1999/xlink" ns253:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns251:zmlFilter>
+        </ns251:operationFilter>
+        <ns251:operationFilter operand="0.14395652173913046" operator="*">
+          <ns251:zmlFilter>
+            <ns251:zml xmlns:ns254="http://www.w3.org/1999/xlink" ns254:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns251:zmlFilter>
+        </ns251:operationFilter>
+        <ns251:operationFilter operand="0.08786956521739134" operator="*">
+          <ns251:zmlFilter>
+            <ns251:zml xmlns:ns255="http://www.w3.org/1999/xlink" ns255:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns251:zmlFilter>
+        </ns251:operationFilter>
+      </ns251:nOperationFilter>
+    </item>
+    <item id="Catchment3202" name="Niederschlag - Catchment3202">
+      <ns256:nOperationFilter xmlns:ns256="filters.zml.kalypso.org" operator="+">
+        <ns256:operationFilter operand="0.5357441860465114" operator="*">
+          <ns256:zmlFilter>
+            <ns256:zml xmlns:ns257="http://www.w3.org/1999/xlink" ns257:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns256:zmlFilter>
+        </ns256:operationFilter>
+        <ns256:operationFilter operand="0.10927906976744187" operator="*">
+          <ns256:zmlFilter>
+            <ns256:zml xmlns:ns258="http://www.w3.org/1999/xlink" ns258:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns256:zmlFilter>
+        </ns256:operationFilter>
+        <ns256:operationFilter operand="0.3550232558139536" operator="*">
+          <ns256:zmlFilter>
+            <ns256:zml xmlns:ns259="http://www.w3.org/1999/xlink" ns259:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns256:zmlFilter>
+        </ns256:operationFilter>
+      </ns256:nOperationFilter>
+    </item>
+    <item id="Catchment3203" name="Niederschlag - Catchment3203">
+      <ns260:nOperationFilter xmlns:ns260="filters.zml.kalypso.org" operator="+">
+        <ns260:operationFilter operand="0.6687400000000001" operator="*">
+          <ns260:zmlFilter>
+            <ns260:zml xmlns:ns261="http://www.w3.org/1999/xlink" ns261:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns260:zmlFilter>
+        </ns260:operationFilter>
+        <ns260:operationFilter operand="0.12485999999999998" operator="*">
+          <ns260:zmlFilter>
+            <ns260:zml xmlns:ns262="http://www.w3.org/1999/xlink" ns262:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns260:zmlFilter>
+        </ns260:operationFilter>
+        <ns260:operationFilter operand="0.1473" operator="*">
+          <ns260:zmlFilter>
+            <ns260:zml xmlns:ns263="http://www.w3.org/1999/xlink" ns263:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns260:zmlFilter>
+        </ns260:operationFilter>
+        <ns260:operationFilter operand="0.05896" operator="*">
+          <ns260:zmlFilter>
+            <ns260:zml xmlns:ns264="http://www.w3.org/1999/xlink" ns264:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns260:zmlFilter>
+        </ns260:operationFilter>
+      </ns260:nOperationFilter>
+    </item>
+    <item id="Catchment4000" name="Niederschlag - Catchment4000">
+      <ns265:nOperationFilter xmlns:ns265="filters.zml.kalypso.org" operator="+">
+        <ns265:operationFilter operand="0.0155625" operator="*">
+          <ns265:zmlFilter>
+            <ns265:zml xmlns:ns266="http://www.w3.org/1999/xlink" ns266:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns265:zmlFilter>
+        </ns265:operationFilter>
+        <ns265:operationFilter operand="0.5443749999999999" operator="*">
+          <ns265:zmlFilter>
+            <ns265:zml xmlns:ns267="http://www.w3.org/1999/xlink" ns267:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns265:zmlFilter>
+        </ns265:operationFilter>
+        <ns265:operationFilter operand="0.127125" operator="*">
+          <ns265:zmlFilter>
+            <ns265:zml xmlns:ns268="http://www.w3.org/1999/xlink" ns268:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns265:zmlFilter>
+        </ns265:operationFilter>
+        <ns265:operationFilter operand="0.029375" operator="*">
+          <ns265:zmlFilter>
+            <ns265:zml xmlns:ns269="http://www.w3.org/1999/xlink" ns269:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns265:zmlFilter>
+        </ns265:operationFilter>
+        <ns265:operationFilter operand="0.283625" operator="*">
+          <ns265:zmlFilter>
+            <ns265:zml xmlns:ns270="http://www.w3.org/1999/xlink" ns270:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns265:zmlFilter>
+        </ns265:operationFilter>
+      </ns265:nOperationFilter>
+    </item>
+    <item id="Catchment4001" name="Niederschlag - Catchment4001">
+      <ns271:nOperationFilter xmlns:ns271="filters.zml.kalypso.org" operator="+">
+        <ns271:operationFilter operand="0.2165384615384615" operator="*">
+          <ns271:zmlFilter>
+            <ns271:zml xmlns:ns272="http://www.w3.org/1999/xlink" ns272:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns271:zmlFilter>
+        </ns271:operationFilter>
+        <ns271:operationFilter operand="0.5866153846153846" operator="*">
+          <ns271:zmlFilter>
+            <ns271:zml xmlns:ns273="http://www.w3.org/1999/xlink" ns273:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns271:zmlFilter>
+        </ns271:operationFilter>
+        <ns271:operationFilter operand="0.08646153846153845" operator="*">
+          <ns271:zmlFilter>
+            <ns271:zml xmlns:ns274="http://www.w3.org/1999/xlink" ns274:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns271:zmlFilter>
+        </ns271:operationFilter>
+        <ns271:operationFilter operand="0.06792307692307692" operator="*">
+          <ns271:zmlFilter>
+            <ns271:zml xmlns:ns275="http://www.w3.org/1999/xlink" ns275:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns271:zmlFilter>
+        </ns271:operationFilter>
+        <ns271:operationFilter operand="0.04238461538461538" operator="*">
+          <ns271:zmlFilter>
+            <ns271:zml xmlns:ns276="http://www.w3.org/1999/xlink" ns276:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns271:zmlFilter>
+        </ns271:operationFilter>
+      </ns271:nOperationFilter>
+    </item>
+    <item id="Catchment4002" name="Niederschlag - Catchment4002">
+      <ns277:nOperationFilter xmlns:ns277="filters.zml.kalypso.org" operator="+">
+        <ns277:operationFilter operand="0.12812" operator="*">
+          <ns277:zmlFilter>
+            <ns277:zml xmlns:ns278="http://www.w3.org/1999/xlink" ns278:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns277:zmlFilter>
+        </ns277:operationFilter>
+        <ns277:operationFilter operand="0.46206" operator="*">
+          <ns277:zmlFilter>
+            <ns277:zml xmlns:ns279="http://www.w3.org/1999/xlink" ns279:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns277:zmlFilter>
+        </ns277:operationFilter>
+        <ns277:operationFilter operand="0.005699999999999999" operator="*">
+          <ns277:zmlFilter>
+            <ns277:zml xmlns:ns280="http://www.w3.org/1999/xlink" ns280:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns277:zmlFilter>
+        </ns277:operationFilter>
+        <ns277:operationFilter operand="0.30920000000000003" operator="*">
+          <ns277:zmlFilter>
+            <ns277:zml xmlns:ns281="http://www.w3.org/1999/xlink" ns281:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns277:zmlFilter>
+        </ns277:operationFilter>
+        <ns277:operationFilter operand="0.09499999999999999" operator="*">
+          <ns277:zmlFilter>
+            <ns277:zml xmlns:ns282="http://www.w3.org/1999/xlink" ns282:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns277:zmlFilter>
+        </ns277:operationFilter>
+      </ns277:nOperationFilter>
+    </item>
+    <item id="Catchment4100" name="Niederschlag - Catchment4100">
+      <ns283:nOperationFilter xmlns:ns283="filters.zml.kalypso.org" operator="+">
+        <ns283:operationFilter operand="0.181" operator="*">
+          <ns283:zmlFilter>
+            <ns283:zml xmlns:ns284="http://www.w3.org/1999/xlink" ns284:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns283:zmlFilter>
+        </ns283:operationFilter>
+        <ns283:operationFilter operand="0.5791578947368421" operator="*">
+          <ns283:zmlFilter>
+            <ns283:zml xmlns:ns285="http://www.w3.org/1999/xlink" ns285:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns283:zmlFilter>
+        </ns283:operationFilter>
+        <ns283:operationFilter operand="0.24" operator="*">
+          <ns283:zmlFilter>
+            <ns283:zml xmlns:ns286="http://www.w3.org/1999/xlink" ns286:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns283:zmlFilter>
+        </ns283:operationFilter>
+      </ns283:nOperationFilter>
+    </item>
+    <item id="Catchment4101" name="Niederschlag - Catchment4101">
+      <ns287:nOperationFilter xmlns:ns287="filters.zml.kalypso.org" operator="+">
+        <ns287:operationFilter operand="0.266015625" operator="*">
+          <ns287:zmlFilter>
+            <ns287:zml xmlns:ns288="http://www.w3.org/1999/xlink" ns288:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns287:zmlFilter>
+        </ns287:operationFilter>
+        <ns287:operationFilter operand="0.43993750000000004" operator="*">
+          <ns287:zmlFilter>
+            <ns287:zml xmlns:ns289="http://www.w3.org/1999/xlink" ns289:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns287:zmlFilter>
+        </ns287:operationFilter>
+        <ns287:operationFilter operand="0.2940312499999999" operator="*">
+          <ns287:zmlFilter>
+            <ns287:zml xmlns:ns290="http://www.w3.org/1999/xlink" ns290:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns287:zmlFilter>
+        </ns287:operationFilter>
+      </ns287:nOperationFilter>
+    </item>
+    <item id="Catchment4200" name="Niederschlag - Catchment4200">
+      <ns291:nOperationFilter xmlns:ns291="filters.zml.kalypso.org" operator="+">
+        <ns291:operationFilter operand="0.42510144927536214" operator="*">
+          <ns291:zmlFilter>
+            <ns291:zml xmlns:ns292="http://www.w3.org/1999/xlink" ns292:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns291:zmlFilter>
+        </ns291:operationFilter>
+        <ns291:operationFilter operand="0.37889855072463763" operator="*">
+          <ns291:zmlFilter>
+            <ns291:zml xmlns:ns293="http://www.w3.org/1999/xlink" ns293:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns291:zmlFilter>
+        </ns291:operationFilter>
+        <ns291:operationFilter operand="0.19601449275362315" operator="*">
+          <ns291:zmlFilter>
+            <ns291:zml xmlns:ns294="http://www.w3.org/1999/xlink" ns294:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns291:zmlFilter>
+        </ns291:operationFilter>
+      </ns291:nOperationFilter>
+    </item>
+    <item id="Catchment5000" name="Niederschlag - Catchment5000">
+      <ns295:nOperationFilter xmlns:ns295="filters.zml.kalypso.org" operator="+">
+        <ns295:operationFilter operand="0.2596265822784811" operator="*">
+          <ns295:zmlFilter>
+            <ns295:zml xmlns:ns296="http://www.w3.org/1999/xlink" ns296:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns295:zmlFilter>
+        </ns295:operationFilter>
+        <ns295:operationFilter operand="0.6245886075949368" operator="*">
+          <ns295:zmlFilter>
+            <ns295:zml xmlns:ns297="http://www.w3.org/1999/xlink" ns297:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns295:zmlFilter>
+        </ns295:operationFilter>
+        <ns295:operationFilter operand="0.027215189873417717" operator="*">
+          <ns295:zmlFilter>
+            <ns295:zml xmlns:ns298="http://www.w3.org/1999/xlink" ns298:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns295:zmlFilter>
+        </ns295:operationFilter>
+        <ns295:operationFilter operand="0.08857594936708861" operator="*">
+          <ns295:zmlFilter>
+            <ns295:zml xmlns:ns299="http://www.w3.org/1999/xlink" ns299:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns295:zmlFilter>
+        </ns295:operationFilter>
+      </ns295:nOperationFilter>
+    </item>
+    <item id="Catchment6000" name="Niederschlag - Catchment6000">
+      <ns300:nOperationFilter xmlns:ns300="filters.zml.kalypso.org" operator="+">
+        <ns300:operationFilter operand="0.10824999999999999" operator="*">
+          <ns300:zmlFilter>
+            <ns300:zml xmlns:ns301="http://www.w3.org/1999/xlink" ns301:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns300:zmlFilter>
+        </ns300:operationFilter>
+        <ns300:operationFilter operand="0.705375" operator="*">
+          <ns300:zmlFilter>
+            <ns300:zml xmlns:ns302="http://www.w3.org/1999/xlink" ns302:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns300:zmlFilter>
+        </ns300:operationFilter>
+        <ns300:operationFilter operand="0.187" operator="*">
+          <ns300:zmlFilter>
+            <ns300:zml xmlns:ns303="http://www.w3.org/1999/xlink" ns303:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns300:zmlFilter>
+        </ns300:operationFilter>
+      </ns300:nOperationFilter>
+    </item>
+    <item id="Catchment6100" name="Niederschlag - Catchment6100">
+      <ns304:nOperationFilter xmlns:ns304="filters.zml.kalypso.org" operator="+">
+        <ns304:operationFilter operand="0.15335185185185185" operator="*">
+          <ns304:zmlFilter>
+            <ns304:zml xmlns:ns305="http://www.w3.org/1999/xlink" ns305:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns304:zmlFilter>
+        </ns304:operationFilter>
+        <ns304:operationFilter operand="0.5922037037037037" operator="*">
+          <ns304:zmlFilter>
+            <ns304:zml xmlns:ns306="http://www.w3.org/1999/xlink" ns306:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns304:zmlFilter>
+        </ns304:operationFilter>
+        <ns304:operationFilter operand="0.2543888888888889" operator="*">
+          <ns304:zmlFilter>
+            <ns304:zml xmlns:ns307="http://www.w3.org/1999/xlink" ns307:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns304:zmlFilter>
+        </ns304:operationFilter>
+      </ns304:nOperationFilter>
+    </item>
+    <item id="Catchment7001" name="Niederschlag - Catchment7001">
+      <ns308:nOperationFilter xmlns:ns308="filters.zml.kalypso.org" operator="+">
+        <ns308:operationFilter operand="0.749" operator="*">
+          <ns308:zmlFilter>
+            <ns308:zml xmlns:ns309="http://www.w3.org/1999/xlink" ns309:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns308:zmlFilter>
+        </ns308:operationFilter>
+        <ns308:operationFilter operand="0.22166666666666665" operator="*">
+          <ns308:zmlFilter>
+            <ns308:zml xmlns:ns310="http://www.w3.org/1999/xlink" ns310:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns308:zmlFilter>
+        </ns308:operationFilter>
+        <ns308:operationFilter operand="0.029666666666666664" operator="*">
+          <ns308:zmlFilter>
+            <ns308:zml xmlns:ns311="http://www.w3.org/1999/xlink" ns311:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns308:zmlFilter>
+        </ns308:operationFilter>
+      </ns308:nOperationFilter>
+    </item>
+    <item id="Catchment7002" name="Niederschlag - Catchment7002">
+      <ns312:nOperationFilter xmlns:ns312="filters.zml.kalypso.org" operator="+">
+        <ns312:operationFilter operand="0.8939999999999999" operator="*">
+          <ns312:zmlFilter>
+            <ns312:zml xmlns:ns313="http://www.w3.org/1999/xlink" ns313:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns312:zmlFilter>
+        </ns312:operationFilter>
+        <ns312:operationFilter operand="0.056125" operator="*">
+          <ns312:zmlFilter>
+            <ns312:zml xmlns:ns314="http://www.w3.org/1999/xlink" ns314:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns312:zmlFilter>
+        </ns312:operationFilter>
+        <ns312:operationFilter operand="0.04993750000000002" operator="*">
+          <ns312:zmlFilter>
+            <ns312:zml xmlns:ns315="http://www.w3.org/1999/xlink" ns315:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns312:zmlFilter>
+        </ns312:operationFilter>
+      </ns312:nOperationFilter>
+    </item>
+    <item id="Catchment7003" name="Niederschlag - Catchment7003">
+      <ns316:nOperationFilter xmlns:ns316="filters.zml.kalypso.org" operator="+">
+        <ns316:operationFilter operand="0.7809999999999999" operator="*">
+          <ns316:zmlFilter>
+            <ns316:zml xmlns:ns317="http://www.w3.org/1999/xlink" ns317:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns316:zmlFilter>
+        </ns316:operationFilter>
+        <ns316:operationFilter operand="0.09280000000000001" operator="*">
+          <ns316:zmlFilter>
+            <ns316:zml xmlns:ns318="http://www.w3.org/1999/xlink" ns318:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns316:zmlFilter>
+        </ns316:operationFilter>
+        <ns316:operationFilter operand="0.1262" operator="*">
+          <ns316:zmlFilter>
+            <ns316:zml xmlns:ns319="http://www.w3.org/1999/xlink" ns319:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns316:zmlFilter>
+        </ns316:operationFilter>
+      </ns316:nOperationFilter>
+    </item>
+    <item id="Catchment7004" name="Niederschlag - Catchment7004">
+      <ns320:nOperationFilter xmlns:ns320="filters.zml.kalypso.org" operator="+">
+        <ns320:operationFilter operand="0.6990000000000001" operator="*">
+          <ns320:zmlFilter>
+            <ns320:zml xmlns:ns321="http://www.w3.org/1999/xlink" ns321:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns320:zmlFilter>
+        </ns320:operationFilter>
+        <ns320:operationFilter operand="0.09533333333333335" operator="*">
+          <ns320:zmlFilter>
+            <ns320:zml xmlns:ns322="http://www.w3.org/1999/xlink" ns322:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns320:zmlFilter>
+        </ns320:operationFilter>
+        <ns320:operationFilter operand="0.20566666666666666" operator="*">
+          <ns320:zmlFilter>
+            <ns320:zml xmlns:ns323="http://www.w3.org/1999/xlink" ns323:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns320:zmlFilter>
+        </ns320:operationFilter>
+      </ns320:nOperationFilter>
+    </item>
+    <item id="Catchment7005" name="Niederschlag - Catchment7005">
+      <ns324:nOperationFilter xmlns:ns324="filters.zml.kalypso.org" operator="+">
+        <ns324:operationFilter operand="0.793531914893617" operator="*">
+          <ns324:zmlFilter>
+            <ns324:zml xmlns:ns325="http://www.w3.org/1999/xlink" ns325:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns324:zmlFilter>
+        </ns324:operationFilter>
+        <ns324:operationFilter operand="0.05923404255319147" operator="*">
+          <ns324:zmlFilter>
+            <ns324:zml xmlns:ns326="http://www.w3.org/1999/xlink" ns326:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns324:zmlFilter>
+        </ns324:operationFilter>
+        <ns324:operationFilter operand="0.14717021276595746" operator="*">
+          <ns324:zmlFilter>
+            <ns324:zml xmlns:ns327="http://www.w3.org/1999/xlink" ns327:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns324:zmlFilter>
+        </ns324:operationFilter>
+      </ns324:nOperationFilter>
+    </item>
+    <item id="Catchment7006" name="Niederschlag - Catchment7006">
+      <ns328:nOperationFilter xmlns:ns328="filters.zml.kalypso.org" operator="+">
+        <ns328:operationFilter operand="0.6748088235294116" operator="*">
+          <ns328:zmlFilter>
+            <ns328:zml xmlns:ns329="http://www.w3.org/1999/xlink" ns329:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns328:zmlFilter>
+        </ns328:operationFilter>
+        <ns328:operationFilter operand="0.08266176470588237" operator="*">
+          <ns328:zmlFilter>
+            <ns328:zml xmlns:ns330="http://www.w3.org/1999/xlink" ns330:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns328:zmlFilter>
+        </ns328:operationFilter>
+        <ns328:operationFilter operand="0.06889705882352941" operator="*">
+          <ns328:zmlFilter>
+            <ns328:zml xmlns:ns331="http://www.w3.org/1999/xlink" ns331:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns328:zmlFilter>
+        </ns328:operationFilter>
+        <ns328:operationFilter operand="0.17358823529411763" operator="*">
+          <ns328:zmlFilter>
+            <ns328:zml xmlns:ns332="http://www.w3.org/1999/xlink" ns332:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns328:zmlFilter>
+        </ns328:operationFilter>
+      </ns328:nOperationFilter>
+    </item>
+    <item id="Catchment7007" name="Niederschlag - Catchment7007">
+      <ns333:nOperationFilter xmlns:ns333="filters.zml.kalypso.org" operator="+">
+        <ns333:operationFilter operand="0.7302857142857142" operator="*">
+          <ns333:zmlFilter>
+            <ns333:zml xmlns:ns334="http://www.w3.org/1999/xlink" ns334:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns333:zmlFilter>
+        </ns333:operationFilter>
+        <ns333:operationFilter operand="0.13695238095238094" operator="*">
+          <ns333:zmlFilter>
+            <ns333:zml xmlns:ns335="http://www.w3.org/1999/xlink" ns335:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns333:zmlFilter>
+        </ns333:operationFilter>
+        <ns333:operationFilter operand="0.13266666666666668" operator="*">
+          <ns333:zmlFilter>
+            <ns333:zml xmlns:ns336="http://www.w3.org/1999/xlink" ns336:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns333:zmlFilter>
+        </ns333:operationFilter>
+      </ns333:nOperationFilter>
+    </item>
+    <item id="Catchment7008" name="Niederschlag - Catchment7008">
+      <ns337:nOperationFilter xmlns:ns337="filters.zml.kalypso.org" operator="+">
+        <ns337:operationFilter operand="0.8353636363636362" operator="*">
+          <ns337:zmlFilter>
+            <ns337:zml xmlns:ns338="http://www.w3.org/1999/xlink" ns338:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns337:zmlFilter>
+        </ns337:operationFilter>
+        <ns337:operationFilter operand="0.14672727272727273" operator="*">
+          <ns337:zmlFilter>
+            <ns337:zml xmlns:ns339="http://www.w3.org/1999/xlink" ns339:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns337:zmlFilter>
+        </ns337:operationFilter>
+        <ns337:operationFilter operand="0.01790909090909091" operator="*">
+          <ns337:zmlFilter>
+            <ns337:zml xmlns:ns340="http://www.w3.org/1999/xlink" ns340:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns337:zmlFilter>
+        </ns337:operationFilter>
+      </ns337:nOperationFilter>
+    </item>
+    <item id="Catchment7200" name="Niederschlag - Catchment7200">
+      <ns341:nOperationFilter xmlns:ns341="filters.zml.kalypso.org" operator="+">
+        <ns341:operationFilter operand="0.27518181818181814" operator="*">
+          <ns341:zmlFilter>
+            <ns341:zml xmlns:ns342="http://www.w3.org/1999/xlink" ns342:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns341:zmlFilter>
+        </ns341:operationFilter>
+        <ns341:operationFilter operand="0.18600000000000003" operator="*">
+          <ns341:zmlFilter>
+            <ns341:zml xmlns:ns343="http://www.w3.org/1999/xlink" ns343:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns341:zmlFilter>
+        </ns341:operationFilter>
+        <ns341:operationFilter operand="0.5387272727272727" operator="*">
+          <ns341:zmlFilter>
+            <ns341:zml xmlns:ns344="http://www.w3.org/1999/xlink" ns344:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns341:zmlFilter>
+        </ns341:operationFilter>
+      </ns341:nOperationFilter>
+    </item>
+    <item id="Catchment7201" name="Niederschlag - Catchment7201">
+      <ns345:nOperationFilter xmlns:ns345="filters.zml.kalypso.org" operator="+">
+        <ns345:operationFilter operand="0.23852173913043484" operator="*">
+          <ns345:zmlFilter>
+            <ns345:zml xmlns:ns346="http://www.w3.org/1999/xlink" ns346:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns345:zmlFilter>
+        </ns345:operationFilter>
+        <ns345:operationFilter operand="0.19273913043478264" operator="*">
+          <ns345:zmlFilter>
+            <ns345:zml xmlns:ns347="http://www.w3.org/1999/xlink" ns347:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns345:zmlFilter>
+        </ns345:operationFilter>
+        <ns345:operationFilter operand="0.5689130434782609" operator="*">
+          <ns345:zmlFilter>
+            <ns345:zml xmlns:ns348="http://www.w3.org/1999/xlink" ns348:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns345:zmlFilter>
+        </ns345:operationFilter>
+      </ns345:nOperationFilter>
+    </item>
+    <item id="Catchment7203" name="Niederschlag - Catchment7203">
+      <ns349:nOperationFilter xmlns:ns349="filters.zml.kalypso.org" operator="+">
+        <ns349:operationFilter operand="0.21003703703703702" operator="*">
+          <ns349:zmlFilter>
+            <ns349:zml xmlns:ns350="http://www.w3.org/1999/xlink" ns350:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns349:zmlFilter>
+        </ns349:operationFilter>
+        <ns349:operationFilter operand="0.268" operator="*">
+          <ns349:zmlFilter>
+            <ns349:zml xmlns:ns351="http://www.w3.org/1999/xlink" ns351:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns349:zmlFilter>
+        </ns349:operationFilter>
+        <ns349:operationFilter operand="0.5218518518518518" operator="*">
+          <ns349:zmlFilter>
+            <ns349:zml xmlns:ns352="http://www.w3.org/1999/xlink" ns352:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns349:zmlFilter>
+        </ns349:operationFilter>
+      </ns349:nOperationFilter>
+    </item>
+    <item id="Catchment7204" name="Niederschlag - Catchment7204">
+      <ns353:nOperationFilter xmlns:ns353="filters.zml.kalypso.org" operator="+">
+        <ns353:operationFilter operand="0.32406060606060605" operator="*">
+          <ns353:zmlFilter>
+            <ns353:zml xmlns:ns354="http://www.w3.org/1999/xlink" ns354:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns353:zmlFilter>
+        </ns353:operationFilter>
+        <ns353:operationFilter operand="0.20781818181818176" operator="*">
+          <ns353:zmlFilter>
+            <ns353:zml xmlns:ns355="http://www.w3.org/1999/xlink" ns355:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns353:zmlFilter>
+        </ns353:operationFilter>
+        <ns353:operationFilter operand="0.4683030303030304" operator="*">
+          <ns353:zmlFilter>
+            <ns353:zml xmlns:ns356="http://www.w3.org/1999/xlink" ns356:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns353:zmlFilter>
+        </ns353:operationFilter>
+      </ns353:nOperationFilter>
+    </item>
+    <item id="Catchment7300" name="Niederschlag - Catchment7300">
+      <ns357:nOperationFilter xmlns:ns357="filters.zml.kalypso.org" operator="+">
+        <ns357:operationFilter operand="0.09518518518518519" operator="*">
+          <ns357:zmlFilter>
+            <ns357:zml xmlns:ns358="http://www.w3.org/1999/xlink" ns358:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns357:zmlFilter>
+        </ns357:operationFilter>
+        <ns357:operationFilter operand="0.11985185185185186" operator="*">
+          <ns357:zmlFilter>
+            <ns357:zml xmlns:ns359="http://www.w3.org/1999/xlink" ns359:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns357:zmlFilter>
+        </ns357:operationFilter>
+        <ns357:operationFilter operand="0.32340740740740737" operator="*">
+          <ns357:zmlFilter>
+            <ns357:zml xmlns:ns360="http://www.w3.org/1999/xlink" ns360:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns357:zmlFilter>
+        </ns357:operationFilter>
+        <ns357:operationFilter operand="0.46166666666666667" operator="*">
+          <ns357:zmlFilter>
+            <ns357:zml xmlns:ns361="http://www.w3.org/1999/xlink" ns361:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns357:zmlFilter>
+        </ns357:operationFilter>
+      </ns357:nOperationFilter>
+    </item>
+    <item id="Catchment7302" name="Niederschlag - Catchment7302">
+      <ns362:nOperationFilter xmlns:ns362="filters.zml.kalypso.org" operator="+">
+        <ns362:operationFilter operand="0.06565625" operator="*">
+          <ns362:zmlFilter>
+            <ns362:zml xmlns:ns363="http://www.w3.org/1999/xlink" ns363:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns362:zmlFilter>
+        </ns362:operationFilter>
+        <ns362:operationFilter operand="0.35637500000000005" operator="*">
+          <ns362:zmlFilter>
+            <ns362:zml xmlns:ns364="http://www.w3.org/1999/xlink" ns364:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns362:zmlFilter>
+        </ns362:operationFilter>
+        <ns362:operationFilter operand="0.37978125000000007" operator="*">
+          <ns362:zmlFilter>
+            <ns362:zml xmlns:ns365="http://www.w3.org/1999/xlink" ns365:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns362:zmlFilter>
+        </ns362:operationFilter>
+        <ns362:operationFilter operand="0.19806249999999995" operator="*">
+          <ns362:zmlFilter>
+            <ns362:zml xmlns:ns366="http://www.w3.org/1999/xlink" ns366:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns362:zmlFilter>
+        </ns362:operationFilter>
+      </ns362:nOperationFilter>
+    </item>
+    <item id="Catchment7303" name="Niederschlag - Catchment7303">
+      <ns367:nOperationFilter xmlns:ns367="filters.zml.kalypso.org" operator="+">
+        <ns367:operationFilter operand="0.2630434782608696" operator="*">
+          <ns367:zmlFilter>
+            <ns367:zml xmlns:ns368="http://www.w3.org/1999/xlink" ns368:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns367:zmlFilter>
+        </ns367:operationFilter>
+        <ns367:operationFilter operand="0.0752608695652174" operator="*">
+          <ns367:zmlFilter>
+            <ns367:zml xmlns:ns369="http://www.w3.org/1999/xlink" ns369:href="WeisseElster://Niederschlag/Ombrometer_4435"/>
+          </ns367:zmlFilter>
+        </ns367:operationFilter>
+        <ns367:operationFilter operand="0.017434782608695652" operator="*">
+          <ns367:zmlFilter>
+            <ns367:zml xmlns:ns370="http://www.w3.org/1999/xlink" ns370:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns367:zmlFilter>
+        </ns367:operationFilter>
+        <ns367:operationFilter operand="0.42839130434782613" operator="*">
+          <ns367:zmlFilter>
+            <ns367:zml xmlns:ns371="http://www.w3.org/1999/xlink" ns371:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns367:zmlFilter>
+        </ns367:operationFilter>
+        <ns367:operationFilter operand="0.21569565217391307" operator="*">
+          <ns367:zmlFilter>
+            <ns367:zml xmlns:ns372="http://www.w3.org/1999/xlink" ns372:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns367:zmlFilter>
+        </ns367:operationFilter>
+      </ns367:nOperationFilter>
+    </item>
+    <item id="Catchment7304" name="Niederschlag - Catchment7304">
+      <ns373:nOperationFilter xmlns:ns373="filters.zml.kalypso.org" operator="+">
+        <ns373:operationFilter operand="0.3076315789473684" operator="*">
+          <ns373:zmlFilter>
+            <ns373:zml xmlns:ns374="http://www.w3.org/1999/xlink" ns374:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns373:zmlFilter>
+        </ns373:operationFilter>
+        <ns373:operationFilter operand="0.322578947368421" operator="*">
+          <ns373:zmlFilter>
+            <ns373:zml xmlns:ns375="http://www.w3.org/1999/xlink" ns375:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns373:zmlFilter>
+        </ns373:operationFilter>
+        <ns373:operationFilter operand="0.36973684210526325" operator="*">
+          <ns373:zmlFilter>
+            <ns373:zml xmlns:ns376="http://www.w3.org/1999/xlink" ns376:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns373:zmlFilter>
+        </ns373:operationFilter>
+      </ns373:nOperationFilter>
+    </item>
+    <item id="Catchment7305" name="Niederschlag - Catchment7305">
+      <ns377:nOperationFilter xmlns:ns377="filters.zml.kalypso.org" operator="+">
+        <ns377:operationFilter operand="0.2805000000000001" operator="*">
+          <ns377:zmlFilter>
+            <ns377:zml xmlns:ns378="http://www.w3.org/1999/xlink" ns378:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns377:zmlFilter>
+        </ns377:operationFilter>
+        <ns377:operationFilter operand="0.28893749999999996" operator="*">
+          <ns377:zmlFilter>
+            <ns377:zml xmlns:ns379="http://www.w3.org/1999/xlink" ns379:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns377:zmlFilter>
+        </ns377:operationFilter>
+        <ns377:operationFilter operand="0.43062500000000004" operator="*">
+          <ns377:zmlFilter>
+            <ns377:zml xmlns:ns380="http://www.w3.org/1999/xlink" ns380:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns377:zmlFilter>
+        </ns377:operationFilter>
+      </ns377:nOperationFilter>
+    </item>
+    <item id="Catchment7306" name="Niederschlag - Catchment7306">
+      <ns381:nOperationFilter xmlns:ns381="filters.zml.kalypso.org" operator="+">
+        <ns381:operationFilter operand="0.24266666666666672" operator="*">
+          <ns381:zmlFilter>
+            <ns381:zml xmlns:ns382="http://www.w3.org/1999/xlink" ns382:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns381:zmlFilter>
+        </ns381:operationFilter>
+        <ns381:operationFilter operand="0.2574166666666667" operator="*">
+          <ns381:zmlFilter>
+            <ns381:zml xmlns:ns383="http://www.w3.org/1999/xlink" ns383:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns381:zmlFilter>
+        </ns381:operationFilter>
+        <ns381:operationFilter operand="0.4999166666666667" operator="*">
+          <ns381:zmlFilter>
+            <ns381:zml xmlns:ns384="http://www.w3.org/1999/xlink" ns384:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns381:zmlFilter>
+        </ns381:operationFilter>
+      </ns381:nOperationFilter>
+    </item>
+    <item id="Catchment7307" name="Niederschlag - Catchment7307">
+      <ns385:nOperationFilter xmlns:ns385="filters.zml.kalypso.org" operator="+">
+        <ns385:operationFilter operand="0.19087499999999993" operator="*">
+          <ns385:zmlFilter>
+            <ns385:zml xmlns:ns386="http://www.w3.org/1999/xlink" ns386:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns385:zmlFilter>
+        </ns385:operationFilter>
+        <ns385:operationFilter operand="0.23854166666666668" operator="*">
+          <ns385:zmlFilter>
+            <ns385:zml xmlns:ns387="http://www.w3.org/1999/xlink" ns387:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns385:zmlFilter>
+        </ns385:operationFilter>
+        <ns385:operationFilter operand="0.5706666666666667" operator="*">
+          <ns385:zmlFilter>
+            <ns385:zml xmlns:ns388="http://www.w3.org/1999/xlink" ns388:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns385:zmlFilter>
+        </ns385:operationFilter>
+      </ns385:nOperationFilter>
+    </item>
+    <item id="Catchment7099" name="Niederschlag - Catchment7099">
+      <ns389:nOperationFilter xmlns:ns389="filters.zml.kalypso.org" operator="+">
+        <ns389:operationFilter operand="0.006192" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns390="http://www.w3.org/1999/xlink" ns390:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+        <ns389:operationFilter operand="0.27997299999999986" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns391="http://www.w3.org/1999/xlink" ns391:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+        <ns389:operationFilter operand="0.0011030000000000002" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns392="http://www.w3.org/1999/xlink" ns392:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+        <ns389:operationFilter operand="0.021422" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns393="http://www.w3.org/1999/xlink" ns393:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+        <ns389:operationFilter operand="0.24035600000000018" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns394="http://www.w3.org/1999/xlink" ns394:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+        <ns389:operationFilter operand="0.037397" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns395="http://www.w3.org/1999/xlink" ns395:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+        <ns389:operationFilter operand="0.4135500000000003" operator="*">
+          <ns389:zmlFilter>
+            <ns389:zml xmlns:ns396="http://www.w3.org/1999/xlink" ns396:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns389:zmlFilter>
+        </ns389:operationFilter>
+      </ns389:nOperationFilter>
+    </item>
+    <item id="Catchment7202" name="Niederschlag - Catchment7202">
+      <ns397:nOperationFilter xmlns:ns397="filters.zml.kalypso.org" operator="+">
+        <ns397:operationFilter operand="0.23693939393939395" operator="*">
+          <ns397:zmlFilter>
+            <ns397:zml xmlns:ns398="http://www.w3.org/1999/xlink" ns398:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns397:zmlFilter>
+        </ns397:operationFilter>
+        <ns397:operationFilter operand="0.23839393939393935" operator="*">
+          <ns397:zmlFilter>
+            <ns397:zml xmlns:ns399="http://www.w3.org/1999/xlink" ns399:href="WeisseElster://Niederschlag/Ombrometer_4422"/>
+          </ns397:zmlFilter>
+        </ns397:operationFilter>
+        <ns397:operationFilter operand="0.5246363636363636" operator="*">
+          <ns397:zmlFilter>
+            <ns397:zml xmlns:ns400="http://www.w3.org/1999/xlink" ns400:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns397:zmlFilter>
+        </ns397:operationFilter>
+      </ns397:nOperationFilter>
+    </item>
+    <item id="Catchment1000" name="Niederschlag - Catchment1000">
+      <ns401:nOperationFilter xmlns:ns401="filters.zml.kalypso.org" operator="+">
+        <ns401:operationFilter operand="0.12326785714285719" operator="*">
+          <ns401:zmlFilter>
+            <ns401:zml xmlns:ns402="http://www.w3.org/1999/xlink" ns402:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns401:zmlFilter>
+        </ns401:operationFilter>
+        <ns401:operationFilter operand="0.7095892857142856" operator="*">
+          <ns401:zmlFilter>
+            <ns401:zml xmlns:ns403="http://www.w3.org/1999/xlink" ns403:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns401:zmlFilter>
+        </ns401:operationFilter>
+        <ns401:operationFilter operand="0.16708928571428572" operator="*">
+          <ns401:zmlFilter>
+            <ns401:zml xmlns:ns404="http://www.w3.org/1999/xlink" ns404:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns401:zmlFilter>
+        </ns401:operationFilter>
+      </ns401:nOperationFilter>
+    </item>
+    <item id="Catchment1001" name="Niederschlag - Catchment1001">
+      <ns405:nOperationFilter xmlns:ns405="filters.zml.kalypso.org" operator="+">
+        <ns405:operationFilter operand="0.24785000000000007" operator="*">
+          <ns405:zmlFilter>
+            <ns405:zml xmlns:ns406="http://www.w3.org/1999/xlink" ns406:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns405:zmlFilter>
+        </ns405:operationFilter>
+        <ns405:operationFilter operand="0.71865" operator="*">
+          <ns405:zmlFilter>
+            <ns405:zml xmlns:ns407="http://www.w3.org/1999/xlink" ns407:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns405:zmlFilter>
+        </ns405:operationFilter>
+        <ns405:operationFilter operand="0.033549999999999996" operator="*">
+          <ns405:zmlFilter>
+            <ns405:zml xmlns:ns408="http://www.w3.org/1999/xlink" ns408:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns405:zmlFilter>
+        </ns405:operationFilter>
+      </ns405:nOperationFilter>
+    </item>
+    <item id="Catchment1027" name="Niederschlag - Catchment1027">
+      <ns409:nOperationFilter xmlns:ns409="filters.zml.kalypso.org" operator="+">
+        <ns409:operationFilter operand="0.27410071942446035" operator="*">
+          <ns409:zmlFilter>
+            <ns409:zml xmlns:ns410="http://www.w3.org/1999/xlink" ns410:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns409:zmlFilter>
+        </ns409:operationFilter>
+        <ns409:operationFilter operand="0.0035827338129496406" operator="*">
+          <ns409:zmlFilter>
+            <ns409:zml xmlns:ns411="http://www.w3.org/1999/xlink" ns411:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns409:zmlFilter>
+        </ns409:operationFilter>
+        <ns409:operationFilter operand="0.08040287769784173" operator="*">
+          <ns409:zmlFilter>
+            <ns409:zml xmlns:ns412="http://www.w3.org/1999/xlink" ns412:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns409:zmlFilter>
+        </ns409:operationFilter>
+        <ns409:operationFilter operand="0.024575539568345326" operator="*">
+          <ns409:zmlFilter>
+            <ns409:zml xmlns:ns413="http://www.w3.org/1999/xlink" ns413:href="WeisseElster://Niederschlag/Ombrometer_4412"/>
+          </ns409:zmlFilter>
+        </ns409:operationFilter>
+        <ns409:operationFilter operand="0.6173093525179856" operator="*">
+          <ns409:zmlFilter>
+            <ns409:zml xmlns:ns414="http://www.w3.org/1999/xlink" ns414:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns409:zmlFilter>
+        </ns409:operationFilter>
+      </ns409:nOperationFilter>
+    </item>
+    <item id="Catchment1100" name="Niederschlag - Catchment1100">
+      <ns415:nOperationFilter xmlns:ns415="filters.zml.kalypso.org" operator="+">
+        <ns415:operationFilter operand="0.3155701754385965" operator="*">
+          <ns415:zmlFilter>
+            <ns415:zml xmlns:ns416="http://www.w3.org/1999/xlink" ns416:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns415:zmlFilter>
+        </ns415:operationFilter>
+        <ns415:operationFilter operand="0.19705263157894734" operator="*">
+          <ns415:zmlFilter>
+            <ns415:zml xmlns:ns417="http://www.w3.org/1999/xlink" ns417:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns415:zmlFilter>
+        </ns415:operationFilter>
+        <ns415:operationFilter operand="0.48728070175438576" operator="*">
+          <ns415:zmlFilter>
+            <ns415:zml xmlns:ns418="http://www.w3.org/1999/xlink" ns418:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns415:zmlFilter>
+        </ns415:operationFilter>
+      </ns415:nOperationFilter>
+    </item>
+    <item id="Catchment1026" name="Niederschlag - Catchment1026">
+      <ns419:nOperationFilter xmlns:ns419="filters.zml.kalypso.org" operator="+">
+        <ns419:operationFilter operand="0.3193999999999999" operator="*">
+          <ns419:zmlFilter>
+            <ns419:zml xmlns:ns420="http://www.w3.org/1999/xlink" ns420:href="WeisseElster://Niederschlag/Ombrometer_3375"/>
+          </ns419:zmlFilter>
+        </ns419:operationFilter>
+        <ns419:operationFilter operand="0.13879999999999998" operator="*">
+          <ns419:zmlFilter>
+            <ns419:zml xmlns:ns421="http://www.w3.org/1999/xlink" ns421:href="WeisseElster://Niederschlag/Ombrometer_3368"/>
+          </ns419:zmlFilter>
+        </ns419:operationFilter>
+        <ns419:operationFilter operand="0.5417333333333332" operator="*">
+          <ns419:zmlFilter>
+            <ns419:zml xmlns:ns422="http://www.w3.org/1999/xlink" ns422:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns419:zmlFilter>
+        </ns419:operationFilter>
+      </ns419:nOperationFilter>
+    </item>
+    <item id="Catchment2001" name="Niederschlag - Catchment2001">
+      <ns423:nOperationFilter xmlns:ns423="filters.zml.kalypso.org" operator="+">
+        <ns423:operationFilter operand="0.19914285714285712" operator="*">
+          <ns423:zmlFilter>
+            <ns423:zml xmlns:ns424="http://www.w3.org/1999/xlink" ns424:href="WeisseElster://Niederschlag/Ombrometer_4426"/>
+          </ns423:zmlFilter>
+        </ns423:operationFilter>
+        <ns423:operationFilter operand="0.24771428571428575" operator="*">
+          <ns423:zmlFilter>
+            <ns423:zml xmlns:ns425="http://www.w3.org/1999/xlink" ns425:href="WeisseElster://Niederschlag/Ombrometer_4234"/>
+          </ns423:zmlFilter>
+        </ns423:operationFilter>
+        <ns423:operationFilter operand="0.5533333333333332" operator="*">
+          <ns423:zmlFilter>
+            <ns423:zml xmlns:ns426="http://www.w3.org/1999/xlink" ns426:href="WeisseElster://Niederschlag/Ombrometer_4406"/>
+          </ns423:zmlFilter>
+        </ns423:operationFilter>
+      </ns423:nOperationFilter>
+    </item>
+  </level>
+</virtualRepository>
