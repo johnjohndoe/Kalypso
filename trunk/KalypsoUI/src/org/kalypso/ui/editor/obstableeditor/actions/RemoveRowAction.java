@@ -23,7 +23,7 @@ public class RemoveRowAction extends AbstractEditorActionDelegate
     
     final int rowIndex = getEditor().getTable().getSelectedRow();
     
-    if( rowIndex <= 0 )
+    if( rowIndex < 0 )
       return;
     
     getEditor().postCommand( new RemoveRowCommand( model, rowIndex), null );

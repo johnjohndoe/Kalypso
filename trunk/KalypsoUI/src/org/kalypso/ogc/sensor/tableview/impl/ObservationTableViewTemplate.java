@@ -78,8 +78,8 @@ public class ObservationTableViewTemplate extends DefaultTableViewTemplate
 
         if( !valueAxis.getType().equals( m_ignoreType ) )
         {
-          final DefaultTableViewColumn col = new DefaultTableViewColumn( axes[i].getName() + " - "
-              + axes[i].getUnit(), editableColumns, 50, keyAxes[0], valueAxis, theme );
+          final DefaultTableViewColumn col = new DefaultTableViewColumn( theme.getName() + " (" + axes[i].getName() + " - "
+              + axes[i].getUnit() + ")", editableColumns, 50, keyAxes[0], valueAxis, theme );
 
           theme.addColumn( col );
         }
