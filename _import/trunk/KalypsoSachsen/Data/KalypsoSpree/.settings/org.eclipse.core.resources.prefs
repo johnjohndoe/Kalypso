@@ -1,4 +1,4 @@
-#Wed Oct 27 20:06:55 CEST 2004
+#Sat Oct 30 17:18:48 CEST 2004
 encoding//.templates/calcCase/ergebniskontrollePegel.gtt=UTF-8
 encoding//.templates/calcCase/calcCase.gmlOLD=UTF-8
 encoding//.prognose/prognose7/Ergebnisse/Zeitreihen/WV_SCHIRG.zml=UTF-8
@@ -22,6 +22,7 @@ encoding//Grunddaten/Tabellen/flussmodelle.gtt=UTF-8
 encoding//Grunddaten/Tabellen/einzugsgebiete.gtt=UTF-8
 encoding//.prognose/prognose4/results.gml=UTF-8
 encoding//.prognose/prognose8/calcCase.gml=UTF-8
+encoding//Rechenvarianten/r1/calcCase.gml=UTF-8
 encoding//.templates/calcCase/flusslauf.gtt=UTF-8
 encoding//.templates/calcCase/talsperren.gtt=UTF-8
 encoding//.prognose/prognose4/calcCase.gml=UTF-8
