@@ -19,6 +19,7 @@
 		<pathelement location="${workspace}/KalypsoCore/build/bin" />
 		<pathelement location="${workspace}/KalypsoCoreServices/build/bin" />
 		<pathelement location="${workspace}/KalypsoUtil/build/bin" />
+		<pathelement location="${workspace}/KalypsoRepository/build/bin" />
 	</path>
 
 	<path id="ant.classpath">
@@ -162,6 +163,11 @@
 			<param name="package_jar" value="KalypsoUtil.jar" />
 			<param name="package_bin" value="KalypsoUtil/build/bin" />
 			<param name="package_lib" value="KalypsoUtil/lib" />
+		</antcall>
+		<antcall target="package-a-plugin">
+			<param name="package_jar" value="KalypsoRepository.jar" />
+			<param name="package_bin" value="KalypsoRepository/build/bin" />
+			<param name="package_lib" value="KalypsoRepository/lib" />
 		</antcall>
 		<antcall target="package-a-plugin">
 			<param name="package_jar" value="KalypsoCore.jar" />

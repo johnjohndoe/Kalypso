@@ -38,52 +38,52 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.repository;
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
-import org.kalypso.repository.beans.ItemBean;
-
+package org.kalypso.repository.factory;
 
 /**
- * General service base interface for repositories.
+ * Abstract implementation of the <code>IRepositoryFactory</code> to permit
+ * subclasses to inherit from this common functionality.
  * <p>
- * <b>IMPORTANT NOTE</b>: this interface is primary not intended to be directly
- * used as a webservice. It should be extended by some specific interfaces
- * that, in turn, are eligible to be real web services.
- * <p>
- * For an example see <code>IObservationService</code>.
+ * This class provides support for setting the configuration and readonly parameters.
  * 
  * @author schlienger
  */
-public interface IRepositoryService extends Remote
+public abstract class AbstractRepositoryFactory implements IRepositoryFactory
 {
-  /**
-   * @param parent
-   * @return true if the given parent has children.
-   * @throws RemoteException
-   */
-  public boolean hasChildren( final ItemBean parent ) throws RemoteException;
+  private String m_configuration;
   
-  /**
-   * @param parent
-   * @return the children of the given item (parent node). Returns an empty array
-   * when the parent has no children.
-   * @throws RemoteException
-   */
-  public ItemBean[] getChildren( final ItemBean parent ) throws RemoteException;
+  private boolean m_readOnly;
+
+  private String m_name;
+
   
-  /**
-   * @param id
-   * @return ItemBean if found, else null.
-   * @throws RemoteException
-   */
-  public ItemBean findItem( final String id ) throws RemoteException;
+  public String getRepositoryName( )
+  {
+    return m_name;
+  }
+
+  public void setRepositoryName( String name )
+  {
+    m_name = name;
+  }
   
-  /**
-   * Forces the refresh of the remote repository.
-   * @throws RemoteException
-   */
-  public void reload() throws RemoteException;
+  public String getConfiguration()
+  {
+    return m_configuration;
+  }
+  
+  public void setConfiguration( final String configuration )
+  {
+    m_configuration = configuration;
+  }
+  
+  public void setReadOnly( final boolean ro )
+  {
+    m_readOnly = ro;
+  }
+  
+  public boolean isReadOnly()
+  {
+    return m_readOnly;
+  }
 }

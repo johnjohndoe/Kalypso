@@ -63,13 +63,12 @@ import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.beans.ItemBean;
-import org.kalypso.repository.conf.RepositoryConfig;
-import org.kalypso.repository.conf.RepositoryConfigItem;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
+import org.kalypso.repository.conf.RepositoryFactoryConfig;
+import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -156,14 +155,12 @@ public class KalypsoObservationService implements IObservationService
       final InputStream stream = new FileInputStream( conf );
 
       // this call also closes the stream
-      final RepositoryConfig config = RepositoryConfigUtils.loadConfig( stream );
+      final List facConfs = RepositoryConfigUtils.loadConfig( stream );
+      m_repositories = new Vector( facConfs.size() );
 
-      final List items = config.getItems();
-      m_repositories = new Vector( items.size() );
-
-      for( final Iterator it = items.iterator(); it.hasNext(); )
+      for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
-        final RepositoryConfigItem item = (RepositoryConfigItem) it.next();
+        final RepositoryFactoryConfig item = (RepositoryFactoryConfig) it.next();
         final IRepositoryFactory fact = item.createFactory( getClass()
             .getClassLoader() );
 
@@ -430,7 +427,7 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.repository.IRepositoryService#hasChildren(org.kalypso.repository.beans.ItemBean)
+   * @see org.kalypso.repository.service.IRepositoryService#hasChildren(org.kalypso.repository.beans.ItemBean)
    */
   public boolean hasChildren( final ItemBean parent ) throws RemoteException
   {
@@ -452,7 +449,7 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.repository.IRepositoryService#getChildren(org.kalypso.repository.beans.ItemBean)
+   * @see org.kalypso.repository.service.IRepositoryService#getChildren(org.kalypso.repository.beans.ItemBean)
    */
   public ItemBean[] getChildren( final ItemBean pbean ) throws RemoteException
   {
@@ -560,32 +557,15 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.repository.IRepositoryService#reload()
+   * @see org.kalypso.repository.service.IRepositoryService#reload()
    */
   public void reload( ) throws RemoteException
   {
     init();
-
-    //    m_repositoryBeans = null;
-    //
-    //    for( Iterator it = m_repositories.iterator(); it.hasNext(); )
-    //    {
-    //      final IRepository rep = (IRepository) it.next();
-    //
-    //      try
-    //      {
-    //        rep.reload();
-    //      }
-    //      catch( RepositoryException e )
-    //      {
-    //        m_logger.throwing( getClass().getName(), "reload", e );
-    //        throw new RemoteException( "", e );
-    //      }
-    //    }
   }
 
   /**
-   * @see org.kalypso.services.repository.IRepositoryService#findItem(java.lang.String)
+   * @see org.kalypso.repository.service.IRepositoryService#findItem(java.lang.String)
    */
   public ItemBean findItem( final String id ) throws RemoteException
   {

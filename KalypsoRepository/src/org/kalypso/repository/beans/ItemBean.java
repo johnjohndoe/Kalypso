@@ -38,26 +38,83 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.repository.conf;
+package org.kalypso.repository.beans;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * The holder for a set of configuration items
+ * A Repository Item Bean: an element of a repository.
  * 
  * @author schlienger
  */
-public class RepositoryConfig
+public class ItemBean implements Serializable
 {
-  private List m_items;
+  private String m_id;
 
-  public RepositoryConfig( final List items )
+  private String m_name;
+
+  private String m_repId;
+
+  public ItemBean()
   {
-    m_items = items;
+    this( "", "", "" );
   }
 
-  public List getItems()
+  /**
+   * @param id
+   *          identifier of this item
+   * @param name
+   *          name of this item
+   * @param repId
+   *          identifier of the repository this item belongs to
+   */
+  public ItemBean( final String id, final String name, final String repId )
   {
-    return m_items;
+    m_id = id;
+    m_name = name;
+    m_repId = repId;
+  }
+
+  public String getId()
+  {
+    return m_id;
+  }
+
+  public void setId( final String id )
+  {
+    m_id = id;
+  }
+
+  public String getName()
+  {
+    return m_name;
+  }
+
+  public void setName( final String name )
+  {
+    m_name = name;
+  }
+
+  public String getRepId()
+  {
+    return m_repId;
+  }
+
+  public void setRepId( String repId )
+  {
+    m_repId = repId;
+  }
+  
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( obj == null || !(obj instanceof ItemBean) )
+      return false;
+    
+    final ItemBean other = (ItemBean)obj;
+    
+    return m_id.equals( other.getId() );
   }
 }

@@ -75,8 +75,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
-import org.kalypso.repository.DefaultRepositoryContainer;
-import org.kalypso.repository.RepositorySpecification;
+import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
@@ -111,17 +110,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
 
   private CS_CoordinateSystem myCoordinateSystem = null;
 
-  /**
-   * Contains the list of available repositories that can be selected by the
-   * user. For each available repository, the IRepositoryFactory is provided.
-   */
-  private final Properties m_zmlRepositoriesProperties = new Properties();
-
   /** Manages the list of repositories. */
   private DefaultRepositoryContainer m_tsRepositoryContainer = null;
-
-  /** The list of specifications for each repositories. */
-  private RepositorySpecification[] m_repositoriesSpecification = null;
 
   private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
 
@@ -290,41 +280,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     m_proxyFactory = new ProxyFactory( mainConf );
   }
 
-  /**
-   * Loads the properties related to the available repositories. For each of
-   * these repositories, it creates a simple wrapper class that contains its
-   * specification.
-   * 
-   * @throws IOException
-   */
-  private void configureRepositorySpecifications( ) throws IOException
-  {
-    InputStream ins = null;
-    try
-    {
-      ins = getClass()
-          .getResourceAsStream( OBSERVATION_REPOSITORIES_PROPERTIES );
-
-      m_zmlRepositoriesProperties.load( ins );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( ins );
-    }
-
-    final String[] available = m_zmlRepositoriesProperties.getProperty(
-        "available" ).split( "," );
-
-    m_repositoriesSpecification = new RepositorySpecification[available.length];
-
-    for( int i = 0; i < available.length; i++ )
-      m_repositoriesSpecification[i] = new RepositorySpecification(
-          available[i],
-          m_zmlRepositoriesProperties.getProperty( available[i] ),
-          m_zmlRepositoriesProperties.getProperty( available[i] + "_FACTORY" ),
-          m_zmlRepositoriesProperties.getProperty( available[i] + "_MAXCARD" ) );
-  }
-
   private void configureLogger( )
   {
     final Logger logger = Logger.getLogger( "org.kalypso" ); //$NON-NLS-N$
@@ -359,15 +314,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
         new String[] { ServiceRepositoryObservation.SCHEME_OCS } );
     context.registerService( URLStreamHandlerService.class.getName(),
         new OcsURLStreamHandler(), properties );
-  }
-
-  /**
-   * @return Liste der zur verfügungstehende und konfigurierte Zeitreihen
-   *         Repositories
-   */
-  public RepositorySpecification[] getRepositoriesSpecifications( )
-  {
-    return m_repositoriesSpecification;
   }
 
   /**
@@ -426,7 +372,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
       configure( m_mainConf );
       configureProxy();
       configurePool();
-      configureRepositorySpecifications();
       configureServiceProxyFactory( m_mainConf );
       configureURLStreamHandler( context );
 

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
 import java.io.IOException;
@@ -58,38 +58,44 @@ import org.kalypso.repository.RepositoryException;
  */
 public class RepositoryConfigUtils
 {
-  private RepositoryConfigUtils()
+  private RepositoryConfigUtils( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
-   * Loads the config from an <code>InputStream</code> and closes the stream once finished.
-   *  
+   * Loads the config from an <code>InputStream</code> and closes the stream
+   * once finished.
+   * 
+   * @param ins
+   * @return
+   * @throws RepositoryException
    */
-  public static RepositoryConfig loadConfig( final InputStream ins ) throws RepositoryException
+  public static List loadConfig( final InputStream ins )
+      throws RepositoryException
   {
     try
     {
       final ObjectFactory factory = new ObjectFactory();
       final Unmarshaller unmarshaller = factory.createUnmarshaller();
 
-      final RepconfType repconf = (RepconfType)unmarshaller.unmarshal( ins );
+      final RepconfType repconf = (RepconfType) unmarshaller.unmarshal( ins );
 
-      final List list = repconf.getRep();
+      final List list = repconf.getRepository();
 
-      final List items = new Vector( list.size() );
+      final List fConfs = new Vector( list.size() );
 
       for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final RepconfType.RepType elt = (RepconfType.RepType)it.next();
+        final RepconfType.RepositoryType elt = (RepconfType.RepositoryType) it
+            .next();
 
-        final RepositoryConfigItem item = new RepositoryConfigItem( elt.getClassName(), elt
-            .getConfString(), elt.isReadOnly() );
-        items.add( item );
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt
+            .getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly() );
+        fConfs.add( item );
       }
 
-      return new RepositoryConfig( items );
+      return fConfs;
     }
     catch( JAXBException e )
     {

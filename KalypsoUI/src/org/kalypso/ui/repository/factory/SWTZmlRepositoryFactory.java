@@ -38,18 +38,12 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.file;
-
-import java.io.FileFilter;
+package org.kalypso.ui.repository.factory;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.java.io.filter.AcceptAllFileFilter;
-import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
-import org.kalypso.repository.AbstractRepositoryFactory;
-import org.kalypso.repository.IRepository;
+import org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
 
@@ -63,12 +57,10 @@ import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
  * 
  * @author schlienger
  */
-public class FileRepositoryFactory extends AbstractRepositoryFactory
+public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
 {
-  private final static String SEPARATOR = "#";
-  
   /**
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
   public boolean configureRepository(  )
   {
@@ -83,7 +75,9 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     if( res == Window.OK )
     {
       // update configuration to stay consistent
-      setConfiguration( dlg.getLocation() + SEPARATOR + dlg.getIdentifier() + SEPARATOR + dlg.getFilters() );
+      setConfiguration( dlg.getLocation() + SEPARATOR + dlg.getFilters() );
+      
+      setRepositoryName( dlg.getIdentifier() );
       
       b = true;
     }
@@ -91,26 +85,5 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     dlg.dispose();
     
     return b;
-  }
-  
-  /**
-   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
-   */
-  public IRepository createRepository()
-  {
-    final FileFilter filter;
-    
-    final String[] splits = getConfiguration().split( SEPARATOR );
-    
-    if( splits.length == 2 || splits[2].length() == 0 )
-      filter = new AcceptAllFileFilter();
-    else
-    {
-      final String[] exts = splits[2].split(",");
-      filter = new MultipleWildCardFileFilter( exts, false, true, false );
-    }
-
-    // could be improved: instead of directly instantiating we could use class loading...
-    return new ZmlObservationRepository( this, splits[0], splits[1], isReadOnly(), filter );
   }
 }

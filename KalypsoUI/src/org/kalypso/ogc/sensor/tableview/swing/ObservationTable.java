@@ -114,7 +114,7 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
     setDefaultEditor( Double.class, new SelectAllCellEditor(
-        new DoubleCellEditor( nf, true ) ) );
+        new DoubleCellEditor( nf, true, new Double(0) ) ) );
 
     setSelectionForeground( Color.BLACK );
     setSelectionBackground( Color.YELLOW );

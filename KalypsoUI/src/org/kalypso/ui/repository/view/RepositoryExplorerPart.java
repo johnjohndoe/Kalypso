@@ -71,12 +71,12 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.kalypso.eclipse.ui.MementoUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
-import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryContainer;
-import org.kalypso.repository.IRepositoryContainerListener;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.conf.RepositoryConfigItem;
+import org.kalypso.repository.conf.RepositoryFactoryConfig;
+import org.kalypso.repository.container.DefaultRepositoryContainer;
+import org.kalypso.repository.container.IRepositoryContainer;
+import org.kalypso.repository.container.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.actions.AddRepositoryAction;
 import org.kalypso.ui.repository.actions.CollapseAllAction;
@@ -341,7 +341,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   }
 
   /**
-   * @see org.kalypso.repository.IRepositoryContainerListener#onRepositoryContainerChanged()
+   * @see org.kalypso.repository.container.IRepositoryContainerListener#onRepositoryContainerChanged()
    */
   public void onRepositoryContainerChanged()
   {
@@ -427,7 +427,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
       final IRepository rep = (IRepository)it.next();
 
       final IMemento child = repsMem.createChild( TAG_REPOSITORY );
-      child.putTextData( new RepositoryConfigItem( rep.getFactory() ).saveState() );
+      child.putTextData( new RepositoryFactoryConfig( rep ).saveState() );
       
       // save properties for that repository
       final IMemento propsMem = child.createChild( TAG_REPOSITORY_PROPS );
@@ -481,7 +481,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
           
         try
         {
-          final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
+          final RepositoryFactoryConfig item = RepositoryFactoryConfig.restore( repMem[i].getTextData() );
           if( item != null )
           {
 	          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();

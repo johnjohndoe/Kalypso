@@ -36,39 +36,46 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
 import javax.xml.rpc.ServiceException;
 
-import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.factory.AbstractRepositoryFactory;
 
 /**
  * @author schlienger
  */
-public class ObservationServiceRepositoryFactory extends AbstractRepositoryFactory
+public class ObservationServiceRepositoryFactory extends
+    AbstractRepositoryFactory
 {
+  public ObservationServiceRepositoryFactory()
+  {
+    setRepositoryName( "Zeitreihen Dienst" );
+  }
+  
   /**
    * Does nothing
    * 
-   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository(  )
+  public boolean configureRepository( )
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
+   * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository() throws RepositoryException
+  public IRepository createRepository( ) throws RepositoryException
   {
     try
     {
-      return new ObservationServiceRepository( this, isReadOnly() );
+      return new ObservationServiceRepository( getRepositoryName(), getClass()
+          .getName(), isReadOnly() );
     }
     catch( ServiceException e )
     {

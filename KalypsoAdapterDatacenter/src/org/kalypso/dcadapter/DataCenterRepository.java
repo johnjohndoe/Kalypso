@@ -15,26 +15,31 @@ import com.bce.datacenter.db.common.Level;
 public class DataCenterRepository extends AbstractRepository
 {
   private final IngresDatabase m_database;
+
   private DataCenterLevelItem m_root;
 
-  /**
-   * @param fac
-   * @param url
-   * @param password
-   * @param userName
-   */
-  public DataCenterRepository( final DataCenterRepositoryFactory fac, final String url, final String userName, final String password )
+  public DataCenterRepository( String name, String factory, String conf, boolean ro,
+      String url, String userName, String password )
   {
-    super( fac );
-    
+    super( name, factory, conf, ro );
+
     m_database = new IngresDatabase( url, userName, password );
   }
 
+  /**
+   * @see org.kalypso.repository.IRepository#getDescription()
+   */
+  public String getDescription( )
+  {
+    return m_database.getUrl();
+  }
+  
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
+    // TODO implement this
     return null;
   }
 
@@ -54,14 +59,15 @@ public class DataCenterRepository extends AbstractRepository
     return "datacenter://";
   }
 
-  private DataCenterLevelItem getRootItem()
+  private DataCenterLevelItem getRootItem( )
   {
     if( m_root == null )
-      m_root = new DataCenterLevelItem(this, null, Level.getRoot(m_database.getConnection()));
+      m_root = new DataCenterLevelItem( this, null, Level.getRoot( m_database
+          .getConnection() ) );
 
     return m_root;
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */

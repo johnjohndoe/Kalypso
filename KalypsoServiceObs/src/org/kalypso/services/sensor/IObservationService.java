@@ -46,8 +46,8 @@ import org.kalypso.ogc.sensor.beans.DateRangeBean;
 import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.repository.beans.ItemBean;
+import org.kalypso.repository.service.IRepositoryService;
 import org.kalypso.services.IKalypsoService;
-import org.kalypso.services.repository.IRepositoryService;
 
 /**
  * WebService interface for the Observation-Service.
