@@ -24,6 +24,7 @@ public class VirtualFeatureTypeRegistry
     try
     {
       m_instance.register( new VirtualAssociationFeatureTypePropertyHanlder() );
+      m_instance.register( new VirtualRasterFeatureTypePropertyHandler() );
     }
     catch( Exception e )
     {

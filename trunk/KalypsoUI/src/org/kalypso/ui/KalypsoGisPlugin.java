@@ -62,6 +62,8 @@ import org.apache.commons.io.IOUtils;
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.deegree_impl.model.cv.RangeSetTypeHandler;
+import org.deegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -490,6 +492,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
       registry.registerTypeHandler( new ObservationLinkHandler() );
       // TODO: make new NA-project and move registration to it 
       registry.registerTypeHandler(new DiagramTypeHandler());
+      registry.registerTypeHandler(new RangeSetTypeHandler());
+      registry.registerTypeHandler(new RectifiedGridDomainTypeHandler());
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

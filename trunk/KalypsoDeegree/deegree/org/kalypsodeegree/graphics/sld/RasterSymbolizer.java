@@ -60,6 +60,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.deegree.graphics.sld;
 
+import java.util.TreeMap;
+
 /**
  * 
  * <p>
@@ -70,4 +72,14 @@ package org.deegree.graphics.sld;
  * @version $Revision$ $Date$
  */
 public interface RasterSymbolizer extends Symbolizer
-{}
+{
+	TreeMap getColorMap();
+	
+	void setColorMap(TreeMap colorMap);
+  
+  int getMode();
+  
+  void setMode(int mode);
+  
+  TreeMap getIntervalMap();
+}

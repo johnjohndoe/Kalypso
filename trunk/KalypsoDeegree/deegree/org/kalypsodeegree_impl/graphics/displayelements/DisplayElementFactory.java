@@ -96,7 +96,6 @@ import org.deegree.model.geometry.GM_Surface;
 import org.deegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.deegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.deegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.deegree_impl.graphics.sld.RasterSymbolizer_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
 import org.opengis.gc.GC_GridCoverage;
@@ -176,8 +175,10 @@ public class DisplayElementFactory
                     }
                   }
 
-                  // Filter expression is true for this feature, so a
-                  // corresponding DisplayElement has to be added to the
+                  // Filter expression is true for this
+                  // feature, so a
+                  // corresponding DisplayElement has to be
+                  // added to the
                   // list
                   Symbolizer[] symbolizers = rules[n].getSymbolizers();
 
@@ -204,11 +205,6 @@ public class DisplayElementFactory
         System.out.println( e );
         e.printStackTrace();
       }
-    }
-    else
-    {
-      RasterSymbolizer symbolizer = new RasterSymbolizer_Impl();
-      list.add( buildRasterDisplayElement( (GC_GridCoverage)o, symbolizer ) );
     }
 
     DisplayElement[] de = new DisplayElement[list.size()];
@@ -257,10 +253,9 @@ public class DisplayElementFactory
       }
 
       // if the geometry property is null, do not build a DisplayElement
-      if( geoProperty == null )
-      {
-        return null;
-      }
+      /*
+       * if (geoProperty == null) { return null; }
+       */
 
       // PointSymbolizer
       if( symbolizer instanceof PointSymbolizer )
@@ -281,14 +276,14 @@ public class DisplayElementFactory
       else if( symbolizer instanceof TextSymbolizer )
       {
         displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer)symbolizer );
-      }
-    }
-    else
-    {
-      if( symbolizer instanceof RasterSymbolizer )
+      } // RasterSymbolizer
+      else if( symbolizer instanceof RasterSymbolizer )
       {
-        displayElement = buildRasterDisplayElement( (GC_GridCoverage)o,
-            (RasterSymbolizer)symbolizer );
+        displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer)symbolizer );
+      }
+      else
+      {
+        System.out.println("symbolizer...?");
       }
     }
 
@@ -316,8 +311,9 @@ public class DisplayElementFactory
 
     if( o instanceof GC_GridCoverage )
     {
-      RasterSymbolizer symbolizer = new RasterSymbolizer_Impl();
-      displayElement = buildRasterDisplayElement( (GC_GridCoverage)o, symbolizer );
+      //      RasterSymbolizer symbolizer = new RasterSymbolizer_Impl();
+      //      displayElement = buildRasterDisplayElement( (GC_GridCoverage)o,
+      // symbolizer );
     }
     else
     {
@@ -530,16 +526,16 @@ public class DisplayElementFactory
    * submitted <tt>GM_Envelope</tt> holds the bounding box of the imgae/raster
    * data.
    * 
-   * @param gc
-   *          grid coverage
+   * @param feature
+   *          grid coverage as feature
    * @param sym
    *          raster symbolizer
    * 
    * @return RasterDisplayElement
    */
-  public static RasterDisplayElement buildRasterDisplayElement( GC_GridCoverage gc,
+  public static RasterDisplayElement buildRasterDisplayElement( Feature feature,
       RasterSymbolizer sym )
   {
-    throw new UnsupportedOperationException( "Rasterelements are not supported" );
+    return new RasterDisplayElement_Impl( feature, null, sym );
   }
 }

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,10 +57,23 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.graphics.sld;
 
+import java.awt.Color;
+import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
+
+import javax.xml.bind.Marshaller;
+
+import net.opengis.sld.ObjectFactory;
+
+import org.deegree.graphics.sld.ColorMapEntry;
+import org.deegree.graphics.sld.Interval;
 import org.deegree.graphics.sld.RasterSymbolizer;
+import org.deegree.xml.Marshallable;
 
 /**
  * 
@@ -71,5 +84,99 @@ import org.deegree.graphics.sld.RasterSymbolizer;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer
-{}
+public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer,
+    Marshallable
+{
+
+  private TreeMap m_colorMap = null;
+
+  private final int mode_intervalColorMapping = 0;
+
+  private final int mode_valueColorMapping = 1;
+
+  private int mode = mode_valueColorMapping;
+
+  public RasterSymbolizer_Impl( TreeMap colorMap )
+  {
+    setColorMap( colorMap );
+  }
+
+  public TreeMap getColorMap()
+  {
+    return m_colorMap;
+  }
+
+  public void setColorMap( TreeMap colorMap )
+  {
+    m_colorMap = colorMap;
+  }
+
+  public int getMode()
+  {
+    return mode;
+  }
+
+  public void setMode( int mode )
+  {
+    this.mode = mode;
+  }
+
+  public TreeMap getIntervalMap()
+  {
+    TreeMap intervalMap = new TreeMap();
+    Object[] colorMapKeys = m_colorMap.keySet().toArray();
+    int startIndex = 0;
+    double nullValue = -9999;
+    if( ( (Double)colorMapKeys[0] ).doubleValue() == nullValue )
+    {
+      startIndex = 1;
+    }
+    for( int i = startIndex; i < colorMapKeys.length - 1; i++ )
+    {
+      ColorMapEntry colorMapEntry_i = (ColorMapEntry)m_colorMap.get( colorMapKeys[i] );
+      ColorMapEntry colorMapEntry_i1 = (ColorMapEntry)m_colorMap.get( colorMapKeys[i + 1] );
+      Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1
+          .getQuantity() );
+      Color color = colorMapEntry_i.getColor();
+      Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(),
+          (int)Math.round( colorMapEntry_i.getOpacity() * 255 ) );
+      intervalMap.put( interval, colorWithOpacity );
+    }
+    return intervalMap;
+  }
+
+  public String exportAsXML()
+  {
+    try
+    {
+      ObjectFactory fac = new ObjectFactory();
+      Marshaller marshaller = fac.createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      net.opengis.sld.RasterSymbolizer rasterSymbolizerElement = fac.createRasterSymbolizer();
+      if( m_colorMap != null )
+      {
+        net.opengis.sld.ColorMap colorMapElement = fac.createColorMap();
+        List colorMapEntryList = colorMapElement.getColorMapEntry();
+        Iterator it = m_colorMap.keySet().iterator();
+        while( it.hasNext() )
+        {
+          ColorMapEntry colorMapEntry = (ColorMapEntry)m_colorMap.get( it.next() );
+          colorMapEntryList.add( colorMapEntry.exportAsXML() );
+        }
+        rasterSymbolizerElement.setColorMap( colorMapElement );
+      }
+      StringWriter writer = new StringWriter();
+      marshaller.marshal( rasterSymbolizerElement, writer );
+      writer.close();
+      //System.out.println( writer.toString() );
+      return (writer.toString()).replaceFirst("<?.*?>", "");
+    }
+    catch( Exception e )
+    {
+      System.out.println( e );
+      return null;
+    }
+
+  }
+
+}

@@ -248,4 +248,6 @@ public class MessageBundle
   public static final String STYLE_EDITOR_PATTERN_UPPER_ERROR = "UpperBoundary ist kein numerischer Wert";
 
   public static final String STYLE_EDITOR_PATTERN_UPPER_LOWER_ERROR = "UpperBoundary darf nicht kleiner als LowerBoundary sein";
+  
+  public static final String STYLE_EDITOR_COLORMAP = "ColorMap";
 }

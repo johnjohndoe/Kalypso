@@ -101,7 +101,7 @@ class FeatureType_Impl implements FeatureType, Serializable
 
   private final Map m_annotationsMap;
 
-  private FeatureTypeProperty[] m_virtualProperties;
+  private FeatureTypeProperty[] m_virtualProperties=new FeatureTypeProperty[0];
 
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
       int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )

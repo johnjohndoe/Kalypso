@@ -146,8 +146,8 @@ public class Feature_Impl implements Feature
    */
   public GM_Object[] getGeometryProperties()
   {
-    List result = new ArrayList();
-    FeatureTypeProperty[] ftp = m_featureType.getProperties();
+    final List result = new ArrayList();
+    final FeatureTypeProperty[] ftp = m_featureType.getProperties();
     for( int p = 0; p < ftp.length; p++ )
     {
       if( ftp[p].isGeometryProperty() )
@@ -163,6 +163,24 @@ public class Feature_Impl implements Feature
           result.add( o );
       }
     }
+	// TODO allways use virtual ftp to calculate bbox ??
+    final FeatureTypeProperty[] vftp = m_featureType.getVirtuelFeatureTypeProperty();
+    for( int p = 0; p < vftp.length; p++ )
+    {
+      if( vftp[p].isGeometryProperty() )
+      {
+        Object o = getVirtuelProperty( vftp[p].getName(), null );
+        if( o == null )
+          continue;
+        if( o instanceof List )
+        {
+          result.addAll( (List)o );
+        }
+        else
+          result.add( o );
+      }
+    }
+
     return (GM_Object[])result.toArray( new GM_Object[result.size()] );
   }
 
@@ -371,9 +389,10 @@ public class Feature_Impl implements Feature
   /**
    * @see org.deegree.model.feature.Feature#getVirtuelProperty(java.lang.String)
    */
-  public Object getVirtuelProperty( String propertyName,GMLWorkspace workspace )
+  public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace )
   {
-    VirtuelFeatureTypeProperty virtuelFeatureTypeProperty = (VirtuelFeatureTypeProperty)m_featureType.getVirtuelFeatureTypeProperty(propertyName);
-    return virtuelFeatureTypeProperty.getVirtuelValue(this,workspace);
+    VirtuelFeatureTypeProperty virtuelFeatureTypeProperty = (VirtuelFeatureTypeProperty)m_featureType
+        .getVirtuelFeatureTypeProperty( propertyName );
+    return virtuelFeatureTypeProperty.getVirtuelValue( this, workspace );
   }
 }
