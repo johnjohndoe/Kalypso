@@ -1173,6 +1173,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
     propertyLabel.setText( "Property" );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
+    GridData propertyNameComboData = new GridData( 75, 30 );
+    propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -1264,6 +1266,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
     propertyLabel.setText( "Property" );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
+    GridData propertyNameComboData = new GridData( 75, 30 );
+    propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -1399,6 +1403,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
     propertyLabel.setText( "Property" );
     final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
+    GridData propertyNameComboData = new GridData( 75, 30 );
+    propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -1499,7 +1505,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
     Label propertyLabel = new Label( configureGroup, SWT.NULL );
     propertyLabel.setText( "Property" );
-    final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );    
+    final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
+    GridData propertyNameComboData = new GridData( 75, 30 );
+    propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();

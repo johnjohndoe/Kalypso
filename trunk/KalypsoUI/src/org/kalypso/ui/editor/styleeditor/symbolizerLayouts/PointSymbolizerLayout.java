@@ -159,7 +159,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
             pointSymbolizer.getGraphic().addMarksAndExtGraphic( newMark );
             setSelectionIndex( graphic.getMarksAndExtGraphics().length - 1 );
             draw();
-            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );            
           }
           catch( FilterEvaluationException e )
           {
@@ -173,7 +173,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           {
             Object object = objects[index];
             pointSymbolizer.getGraphic().removeMarksAndExtGraphic( object );
-            setSelectionIndex( index );
+            setSelectionIndex( index -1);
             if( getSelectionIndex() < 0 )
               setSelectionIndex( 0 );
             userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
