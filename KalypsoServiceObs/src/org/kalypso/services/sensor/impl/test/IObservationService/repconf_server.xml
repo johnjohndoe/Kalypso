@@ -2,7 +2,7 @@
 <repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="conf.repository.kalypso.org
 .\repconf.xsd">
 
-	<rep className="org.kalypso.ogc.sensor.zml.repository.SimpleZmlObservationRepositoryFactory" confString="//Pc242/KalypsoServer/data/mirrored/SomeObservations" />
+	<rep className="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory" confString="//Pc242/KalypsoServer/data/mirrored/SomeObservations" />
 	<rep className="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory" confString="" />
 
 </repconf>
