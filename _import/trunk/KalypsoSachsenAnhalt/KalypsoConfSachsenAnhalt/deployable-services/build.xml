@@ -26,13 +26,7 @@
 		<antcall target="build-KalypsoConf-war" />
 	</target>
 	
-	<target name="echte-psicompact" depends="prepare">
-		<copy file="${project.path}/deployable-services/echte-psicompact/PSICompact.jar"
-			  tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" 
-		      overwrite="true"/>
-	</target>
-			
-	<target name="zip-services-lfug" depends="prepare,clean,echte-psicompact,build-services" description="copy all services.war to the deploy dir">
+	<target name="zip-services-lfug" depends="prepare,clean,build-services" description="copy all services.war to the deploy dir">
 		<echo message="Copying the wars to ${dist.services}" />
 
 		<copy tofile="${dist.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true"/>
@@ -41,12 +35,7 @@
 		<copy tofile="${dist.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true"/>
 	</target>
 
-	<target name="fake-psicompact" depends="prepare" description="deploy the fake impl of psicompact into the KalypsoPSICompactAdapter libs">
-		<delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
-		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false"/>
-	</target>
-	
-	<target name="redeploy-services-bce" depends="prepare,fake-psicompact,build-services" description="redeploys all services">
+	<target name="redeploy-services-bce" depends="prepare,build-services" description="redeploys all services">
 		<echo message="Redeploying all services"/>
 		
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
