@@ -111,6 +111,8 @@ public class ZmlLoader extends AbstractLoader
   {
     try
     {
+      if(data==null)
+        return;
       final URL url = m_urlResolver.resolveURL( context, source );
       
       monitor.beginTask( "ZML speichern in: " + url, IProgressMonitor.UNKNOWN );

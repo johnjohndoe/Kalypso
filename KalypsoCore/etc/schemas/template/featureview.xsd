@@ -7,7 +7,7 @@
 	<xs:element name="featuretemplate">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="layer">
+				<xs:element name="layer" minOccurs="0">
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="kalypso:layerType"/>
@@ -32,7 +32,7 @@
 		<xs:sequence minOccurs="0">
 			<xs:element ref="ns1:layoutData"/>
 		</xs:sequence>
-		<xs:attribute name="style" type="xs:int" use="required"/>
+		<xs:attribute name="style" type="xs:string" use="required"/>
 		<xs:attribute name="tooltip" type="xs:string" use="optional" default=""/>
 		<xs:attribute name="visible" type="xs:boolean" use="optional" default="true"/>
 	</xs:complexType>
@@ -118,8 +118,8 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="ns1:layoutDataType">
-					<xs:attribute name="verticalAlignment" type="xs:int" use="optional" default="2"/>
-					<xs:attribute name="horizontalAlignment" type="xs:int" use="optional" default="2"/>
+					<xs:attribute name="verticalAlignment" type="xs:string" use="optional" default="2"/>
+					<xs:attribute name="horizontalAlignment" type="xs:string" use="optional" default="2"/>
 					<xs:attribute name="widthHint" type="xs:int" use="optional" default="-1"/>
 					<xs:attribute name="heightHint" type="xs:int" use="optional" default="-1"/>
 					<xs:attribute name="horizontalIndent" type="xs:int" use="optional" default="0"/>

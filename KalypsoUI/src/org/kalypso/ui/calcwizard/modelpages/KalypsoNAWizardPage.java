@@ -79,7 +79,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
 
   public KalypsoNAWizardPage()
   {
-    super( "<MapAndTableWizardPage>" );
+    super( "<MapAndTableWizardPage>",SELECT_FROM_TABLEVIEW );
   }
 
   public void dispose()
@@ -195,7 +195,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
    */
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( true, onlySelected );
+    return getObservations( onlySelected );
   }
   
   /**

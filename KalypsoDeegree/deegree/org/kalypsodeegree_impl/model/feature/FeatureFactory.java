@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.model.feature;
 
 import java.util.ArrayList;
@@ -277,11 +277,11 @@ public class FeatureFactory
     return feature;
   }
 
-  public static Feature createFeature( final GMLFeature gmlFeature, final FeatureType featureTypes[] )
-      throws Exception
+  public static Feature createFeature( final GMLFeature gmlFeature,
+      final FeatureType featureTypes[] ) throws Exception
   {
     Debug.debugMethodBegin();
-    
+
     final String featureName = gmlFeature.getLocalName();
     final String featureNamespace = gmlFeature.getNamespaceURI();
 
@@ -290,17 +290,18 @@ public class FeatureFactory
     {
       final String name = featureTypes[ft_i].getName();
       final String namespace = featureTypes[ft_i].getNamespace();
-      
+
       if( featureName.equals( name ) && featureNamespace.equals( namespace ) )
       {
         featureType = featureTypes[ft_i];
         break;
       }
     }
-    
+
     if( featureType == null )
-      throw new Exception( "Could not find named feature " + featureNamespace + ":" + featureName + " in schema" );
-      
+      throw new Exception( "Could not find named feature " + featureNamespace + ":" + featureName
+          + " in schema" );
+
     final GMLProperty[] gmlProps = gmlFeature.getProperties();
 
     String id = gmlFeature.getId();
@@ -330,7 +331,7 @@ public class FeatureFactory
     Debug.debugMethodEnd();
     return feature;
   }
-  
+
   /** Creates default feature, used by LegendView */
   public static Feature createDefaultFeature( final FeatureType ft, final boolean createGeometry )
   {
@@ -341,20 +342,20 @@ public class FeatureFactory
   }
 
   /** Creates default FeatureProperties, used by LegendView */
-  public static FeatureProperty[] createDefaultFeatureProperty( final FeatureTypeProperty[] propTypes, final boolean createGeometry )
+  public static FeatureProperty[] createDefaultFeatureProperty(
+      final FeatureTypeProperty[] propTypes, final boolean createGeometry )
   {
     final List results = new ArrayList();
     for( int i = 0; i < propTypes.length; i++ )
     {
       final FeatureTypeProperty ftp = propTypes[i];
-      
+
       final String type = ftp.getType();
       final Object value = Mapper.defaultValueforJavaType( type, createGeometry );
       results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
     }
     return (FeatureProperty[])results.toArray( new FeatureProperty[results.size()] );
   }
-
 
   private static Object wrap( FeatureTypeProperty ftp, GMLProperty gmlProperty ) throws Exception
   {
@@ -480,6 +481,13 @@ public class FeatureFactory
       break;
     }
     return type;
+  }
+
+  public static FeatureList createFeatureList( final List list )
+  {
+    final SplitSort result = new SplitSort();
+    result.addAll( list );
+    return result;
   }
 
   public static FeatureList createFeatureList()

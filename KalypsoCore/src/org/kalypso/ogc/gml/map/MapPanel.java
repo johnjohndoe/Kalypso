@@ -357,7 +357,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     setValidAll( false );
     clearOffset();
   }
-
+  
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
   {
     double ratio = m_height / m_width;

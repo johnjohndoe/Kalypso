@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
 import java.io.InputStreamReader;
@@ -46,6 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
@@ -89,11 +90,13 @@ public class FeatureEditor extends EditorPart
       final Shell shell = getSite().getShell();
       if( shell != null )
       {
-        shell.getDisplay().asyncExec( new Runnable( ) {
+        shell.getDisplay().asyncExec( new Runnable()
+        {
           public void run()
           {
-            fireDirtyChange(  );
-          }} );
+            fireDirtyChange();
+          }
+        } );
       }
     }
   };
@@ -199,7 +202,7 @@ public class FeatureEditor extends EditorPart
   public void createPartControl( final Composite parent )
   {
     m_viewer.createControls( parent, SWT.NONE );
-    
+
     final IActionBars actionBars = getEditorSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
@@ -216,7 +219,6 @@ public class FeatureEditor extends EditorPart
       }
     };
 
-    
     final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     try
     {
@@ -234,11 +236,12 @@ public class FeatureEditor extends EditorPart
       else
       {
         final String locmsg = targetException.getLocalizedMessage();
-        final String msg = locmsg == null ? "" : locmsg; 
+        final String msg = locmsg == null ? "" : locmsg;
         status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
       }
 
-      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht", status );
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht",
+          status );
     }
     catch( final InterruptedException e )
     {
@@ -254,17 +257,17 @@ public class FeatureEditor extends EditorPart
     try
     {
       final IStorage storage = input.getStorage();
-      
+
       final Reader r;
       if( storage instanceof IEncodedStorage )
-        r = new InputStreamReader( storage.getContents(), ((IEncodedStorage)storage).getCharset() );
+        r = new InputStreamReader( storage.getContents(), ( (IEncodedStorage)storage ).getCharset() );
       else
         r = new InputStreamReader( storage.getContents() );
-      
+
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
       final URL context = ResourceUtilities.createURL( file );
-      
-      m_viewer.loadInput( r, context, monitor );
+
+      m_viewer.loadInput( r, context, monitor, new Properties() );
     }
     catch( final MalformedURLException e )
     {
@@ -281,8 +284,8 @@ public class FeatureEditor extends EditorPart
     }
     catch( final CoreException e )
     {
-      e.printStackTrace(); 
-      
+      e.printStackTrace();
+
       throw e;
     }
     finally
@@ -293,6 +296,6 @@ public class FeatureEditor extends EditorPart
 
   protected void fireDirtyChange()
   {
-     firePropertyChange( PROP_DIRTY );
+    firePropertyChange( PROP_DIRTY );
   }
 }

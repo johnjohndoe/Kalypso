@@ -128,4 +128,6 @@ public interface GM_Envelope
    */
   GM_Envelope getBuffer( double b );
 
+  GM_Envelope getPaned( GM_Point centroid );
+
 }

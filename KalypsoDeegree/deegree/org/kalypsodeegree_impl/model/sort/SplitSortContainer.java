@@ -13,7 +13,11 @@ public class SplitSortContainer
   private static final int MAX_OBJECTS = 100;
 
   private SplitSortContainer[] mySubContainer =
-  { null, null, null, null };
+  {
+      null,
+      null,
+      null,
+      null };
 
   private GM_Envelope myEnvelope;
 
@@ -94,9 +98,9 @@ public class SplitSortContainer
   public void add( GM_Envelope env, Object object )
   {
     if( !myEnvelope.contains( env ) )
-      {
-//    Debug.println("ERROR: Container.add() does not contain envelope :-(");
-      }
+    {
+      //    Debug.println("ERROR: Container.add() does not contain envelope :-(");
+    }
     else if( !hasSubContainers() && myObjects.size() < MAX_OBJECTS )
     {
       add( object );
@@ -256,7 +260,8 @@ public class SplitSortContainer
     double minY = myEnvelope.getMin().getY();
 
     GM_Envelope env[] =
-    { GeometryFactory.createGM_Envelope( minX, minY, midX, midY ),
+    {
+        GeometryFactory.createGM_Envelope( minX, minY, midX, midY ),
         GeometryFactory.createGM_Envelope( midX, minY, maxX, midY ),
         GeometryFactory.createGM_Envelope( midX, midY, maxX, maxY ),
         GeometryFactory.createGM_Envelope( minX, midY, midX, maxY ) };
@@ -274,9 +279,10 @@ public class SplitSortContainer
 
   public void query( GM_Envelope env, List result )
   {
-    if( result == null || env == null )
+    if( result == null )
       result = new ArrayList();
-    
+    if( env == null )
+      return;
     for( int i = 0; i < myObjects.size(); i++ )
     {
       GM_Envelope envObject = SplitSort.getEnvelope( myObjects.get( i ) );
@@ -367,7 +373,11 @@ public class SplitSortContainer
           return;
       }
       mySubContainer = new SplitSortContainer[]
-      { null, null, null, null };
+      {
+          null,
+          null,
+          null,
+          null };
     }
     if( hasSubContainers() )
       return;

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.model.geometry;
 
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Point;
 import org.deegree.model.geometry.GM_Position;
 
 /**
@@ -339,9 +340,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public GM_Envelope getBuffer( double b )
   {
     GM_Position bmin = new GM_Position_Impl( new double[]
-    { min.getX() - b, min.getY() - b } );
+    {
+        min.getX() - b,
+        min.getY() - b } );
     GM_Position bmax = new GM_Position_Impl( new double[]
-    { max.getX() + b, max.getY() + b } );
+    {
+        max.getX() + b,
+        max.getY() + b } );
     return GeometryFactory.createGM_Envelope( bmin, bmax );
   }
 
@@ -389,25 +394,37 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     return ret;
   }
 
+  /**
+   * @see org.deegree.model.geometry.GM_Envelope#getPaned(org.deegree.model.geometry.GM_Point)
+   */
+  public GM_Envelope getPaned( GM_Point center )
+  {
+    double dx = getMax().getX() - getMin().getX();
+    double dy = getMax().getY() - getMin().getY();
+    double minx = center.getX() - dx / 2d;
+    double maxx = center.getX() + dx / 2d;
+    double miny = center.getY() - dy / 2d;
+    double maxy = center.getY() + dy / 2d;
+    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
+  }
 }
 
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.7  2005/02/15 17:13:49  doemming
+ * Revision 1.8  2005/02/20 18:56:50  doemming
  * *** empty log message ***
- *
- * Revision 1.6  2005/01/18 12:50:41  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2004/10/07 14:09:10  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:51  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:54:32 doemming ***
- * empty log message *** Revision 1.13 2004/03/02 07:38:14 poth no message
+ * Revision 1.7 2005/02/15 17:13:49 doemming ***
+ * empty log message ***
+ * 
+ * Revision 1.6 2005/01/18 12:50:41 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/10/07 14:09:10 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision
+ * 1.3 2004/08/31 13:54:32 doemming *** empty log message *** Revision 1.13
+ * 2004/03/02 07:38:14 poth no message
  * 
  * Revision 1.12 2004/02/23 07:47:50 poth no message
  * 

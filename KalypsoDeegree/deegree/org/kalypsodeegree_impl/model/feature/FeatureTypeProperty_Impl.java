@@ -63,6 +63,7 @@ package org.deegree_impl.model.feature;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.deegree.model.feature.Annotation;
@@ -86,11 +87,11 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
 
   private final String m_namespace;
 
-  private final String name;
+  private final String m_name;
 
-  private final String type;
+  private final String m_type;
 
-  private final boolean nullable;
+  private final boolean m_nullable;
 
   /**
    * initializes a FeatureTypeProperty with its name its associated type and a
@@ -100,11 +101,15 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
       Map annotationMap )
   {
     m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
-    this.name = name;
+    m_name = name;
     m_namespace = namespace;
-    this.type = type;
-    this.nullable = nullable;
+    m_type = type;
+    m_nullable = nullable;
 
+    final String localKey = Locale.getDefault().getLanguage();
+    if( !m_annotationMap.containsKey( localKey ) )
+      m_annotationMap.put( localKey, new Annotation( localKey, m_name, "", m_namespace + ":"
+          + m_name ) );
   }
 
   /**
@@ -112,7 +117,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public String getName()
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -120,7 +125,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public String getType()
   {
-    return type;
+    return m_type;
   }
 
   /**
@@ -128,15 +133,15 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public boolean isNullable()
   {
-    return nullable;
+    return m_nullable;
   }
 
   public String toString()
   {
     String ret = null;
-    ret = "name = " + name + "\n";
-    ret += "type = " + type + "\n";
-    ret += "nullable = " + nullable + "\n";
+    ret = "name = " + m_name + "\n";
+    ret += "type = " + m_type + "\n";
+    ret += "nullable = " + m_nullable + "\n";
     return ret;
   }
 
@@ -150,7 +155,7 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public boolean isGeometryProperty()
   {
-    return type.startsWith( "org.deegree.model.geometry." ) && !type.endsWith( "Envelope" );
+    return m_type.startsWith( "org.deegree.model.geometry." ) && !m_type.endsWith( "Envelope" );
   }
 
   /**
@@ -174,10 +179,11 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.7  2005/01/26 17:55:31  doemming
+ * Revision 1.8  2005/02/20 18:56:50  doemming
  * *** empty log message ***
- * Revision 1.6 2005/01/18 12:50:42
- * doemming *** empty log message ***
+ * Revision 1.7 2005/01/26 17:55:31
+ * doemming *** empty log message *** Revision 1.6 2005/01/18 12:50:42 doemming
+ * *** empty log message ***
  * 
  * Revision 1.5 2004/10/11 14:44:28 doemming *** empty log message *** Revision
  * 1.4 2004/10/09 18:41:20 belger *** empty log message ***

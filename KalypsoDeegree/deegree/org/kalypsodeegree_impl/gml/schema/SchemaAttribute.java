@@ -23,6 +23,9 @@ public class SchemaAttribute
   {
     m_Schema = schema;
 
+    // you get an exeption here ?
+    // -> check if you have registred all needed types (TypeRegistry)
+
     m_NS = atributeNode.getNamespaceURI();
     m_Name = atributeNode.getLocalName(); //ref
 

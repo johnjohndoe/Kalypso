@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import org.deegree.model.feature.event.ModellEventListener;
@@ -72,7 +72,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
   public MapAndTableWizardPage()
   {
-    super( "<MapAndTableWizardPage>" );
+    super( "<MapAndTableWizardPage>", SELECT_FROM_MAPVIEW );
   }
 
   /**
@@ -137,7 +137,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
     final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
     ignoreData.horizontalAlignment = GridData.BEGINNING;
     createIgnoreButtonPanel( panel ).setLayoutData( ignoreData );
-    
+
     final Button button = new Button( panel, SWT.PUSH );
     button.setText( "Berechnung durchführen" );
 
@@ -175,6 +175,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
    */
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( false, onlySelected );
+    return getObservations( onlySelected );
   }
+
 }
