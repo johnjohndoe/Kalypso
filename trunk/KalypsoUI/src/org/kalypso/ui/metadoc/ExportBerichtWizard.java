@@ -20,7 +20,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.services.proxy.DocBean;
-import org.kalypso.ui.wizard.metadata.FeaturePage;
+import org.kalypso.ui.wizard.feature.FeaturePage;
 
 /**
  * @author belger
@@ -48,7 +48,6 @@ public class ExportBerichtWizard extends Wizard
     setDialogSettings( section );
     
     setWindowTitle( "Berichtsablage" );
-
     
     // create featuretype from bean
     final Collection ftpColl = new ArrayList();
@@ -73,7 +72,7 @@ public class ExportBerichtWizard extends Wizard
       try
       {
         typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
-        realValue = Mapper.mapXMLValueToJava( value, typename );
+        realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
       }
       catch( final Exception e )
       {
