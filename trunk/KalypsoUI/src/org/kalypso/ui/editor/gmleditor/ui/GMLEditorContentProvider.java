@@ -13,7 +13,7 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
 {
   private static Object[] EMPTY_ARRAY = new Object[0];
 
-  protected TreeViewer viewer;
+  protected TreeViewer m_viewer;
 
   /*
    * @see IContentProvider#dispose()
@@ -43,9 +43,9 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
    *          the new input element, or <code>null</code> if the viewer does
    *          not have an input
    */
-  public void inputChanged( Viewer m_viewer, Object oldInput, Object newInput )
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    this.viewer = (TreeViewer)m_viewer;
+    m_viewer = (TreeViewer)viewer;
     //		if(oldInput != null) {
     //			removeListenerFrom((FeaturePropertyElement)oldInput);
     //		}
@@ -56,7 +56,9 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
 
   /**
    * Because the domain model does not have a richer listener model, recursively
-   * remove this listener from each child box of the given box.
+   * remove this listener from each child box of the given box
+   * 
+   * @param fe
    */
   protected void removeListenerFrom( FeatureElement fe )
   {
@@ -69,7 +71,9 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
 
   /**
    * Because the domain model does not have a richer listener model, recursively
-   * add this listener to each child box of the given box.
+   * add this listener to each child box of the given box
+   * 
+   * @param fe
    */
   protected void addListenerTo( FeatureElement fe )
   {
