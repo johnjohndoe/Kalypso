@@ -145,7 +145,7 @@ public class TransformationHelper
     // copy temp file into real log file
     try
     {
-      FileUtilities.copyFile( tmpFile, logFile, new SubProgressMonitor(
+      FileUtilities.copyFile( charset, tmpFile, logFile, new SubProgressMonitor(
           monitor, 1 ) );
     }
     catch( CoreException e )
