@@ -32,48 +32,54 @@ import org.xml.sax.InputSource;
  */
 public class SpreeCalcJobTest extends TestCase
 {
-//  public void testReadTS() throws Exception
-//  {
-//    final File resultDir = FileUtilities.createNewTempDir( "SpreeCalcJobTest" );
-//
-//    final File dbfFile = new File( resultDir, "spree.dbf" );
-//    final File shpFile = new File( resultDir, "spree.shp" );
-//    final File shxFile = new File( resultDir, "spree.shx" );
-//    FileUtilities.makeFileFromStream( false, dbfFile, getClass().getResourceAsStream(
-//        "test/HW040427.dbf" ) );
-//    FileUtilities.makeFileFromStream( false, shpFile, getClass().getResourceAsStream(
-//        "test/HW040427.shp" ) );
-//    FileUtilities.makeFileFromStream( false, shxFile, getClass().getResourceAsStream(
-//        "test/HW040427.shx" ) );
-//
-//    final String inputFilename = dbfFile.getAbsolutePath();
-//    final int pointindex = inputFilename.lastIndexOf( '.' );
-//    final String inputFilenameWOext = inputFilename.substring( 0, pointindex );
-//
-//    final Map map = new HashMap();
-//    map.put( SpreeCalcJob.DATA_LABEL, "Prognose" );
-//    map.put( SpreeCalcJob.DATA_STARTDATESTRING, "27.4.2005 12:00" );
-//
-//    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, map, null );
-//    FileUtilities.deleteRecursive( resultDir );
-//  }
-//
-//  public void test040427() throws IOException, TypeRegistryException, JAXBException
-//  {
-//    final File baseDir = calculateModel( "040427" );
-//    FileUtilities.deleteRecursive( baseDir );
-//  }
-//
-//  public void test040427_neu() throws IOException, TypeRegistryException, JAXBException
-//  {
-//    final File baseDir = calculateModel( "040427_neu" );
-//    FileUtilities.deleteRecursive( baseDir );
-//  }
+  public void testReadTS() throws Exception
+  {
+    final File resultDir = FileUtilities.createNewTempDir( "SpreeCalcJobTest" );
+
+    final File dbfFile = new File( resultDir, "spree.dbf" );
+    final File shpFile = new File( resultDir, "spree.shp" );
+    final File shxFile = new File( resultDir, "spree.shx" );
+    FileUtilities.makeFileFromStream( false, dbfFile, getClass().getResourceAsStream(
+        "test/HW040427.dbf" ) );
+    FileUtilities.makeFileFromStream( false, shpFile, getClass().getResourceAsStream(
+        "test/HW040427.shp" ) );
+    FileUtilities.makeFileFromStream( false, shxFile, getClass().getResourceAsStream(
+        "test/HW040427.shx" ) );
+
+    final String inputFilename = dbfFile.getAbsolutePath();
+    final int pointindex = inputFilename.lastIndexOf( '.' );
+    final String inputFilenameWOext = inputFilename.substring( 0, pointindex );
+
+    final Map map = new HashMap();
+    map.put( SpreeCalcJob.DATA_LABEL, "Prognose" );
+    map.put( SpreeCalcJob.DATA_STARTDATESTRING, "27.4.2005 12:00" );
+
+    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, map, null );
+    FileUtilities.deleteRecursive( resultDir );
+  }
+
+  public void test040427() throws IOException, TypeRegistryException, JAXBException
+  {
+    final File baseDir = calculateModel( "040427" );
+    FileUtilities.deleteRecursive( baseDir );
+  }
+
+  public void test040427_neu() throws IOException, TypeRegistryException, JAXBException
+  {
+    final File baseDir = calculateModel( "040427_neu" );
+    FileUtilities.deleteRecursive( baseDir );
+  }
 
   public void test040427_ns_problem() throws IOException, TypeRegistryException, JAXBException
   {
     final File baseDir = calculateModel( "040427_ns_problem" );
-//    FileUtilities.deleteRecursive( baseDir );
+    FileUtilities.deleteRecursive( baseDir );
+  }
+
+  public void test040427_optimizeit() throws IOException, TypeRegistryException, JAXBException
+  {
+    final File baseDir = calculateModel( "040427_optimizeit" );
+    FileUtilities.deleteRecursive( baseDir );
   }
   
   public File calculateModel( final String testName ) throws IOException, TypeRegistryException, JAXBException

@@ -98,6 +98,7 @@ public class SpreeInputWorker
       logwriter.println( "Lese Modelldaten: " + controlGML );
 
       final GMLWorkspace workspace = loadGML( tmpdir, inputMap );
+      props.put( SpreeCalcJob.DATA_GML,workspace );
 
       final String tsFilename = writeNonTs( props, logwriter, workspace );
 
@@ -171,116 +172,6 @@ public class SpreeInputWorker
 
     return tsFilename;
   }
-
-  //    public static void createTimeseriesFile( final String tsFilename, final
-  //   TSMap valuesMap, final PrintWriter logwriter ) throws
-  //   CalcJobServiceException
-  //    {
-  //      final List ftpList = new LinkedList();
-  //  
-  //      // Layer erzeugen!
-  //      ftpList
-  //          .add( FeatureFactory.createFeatureTypeProperty( "GEOM",
-  //   GM_Point.class.getName(), false ) );
-  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "DZAHL",
-  //   "java.lang.Double", false ) );
-  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "STUNDE",
-  //   "java.lang.Double", false ) );
-  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "DATUM",
-  //   "java.lang.String", false ) );
-  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "VON",
-  //   "java.lang.Double", false ) );
-  //      ftpList.add( FeatureFactory.createFeatureTypeProperty( "AB",
-  //   "java.lang.Double", false ) );
-  //  
-  //      for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
-  //      {
-  //        final TSDesc desc = SpreeCalcJob.TS_DESCRIPTOR[i];
-  //        ftpList.add( FeatureFactory.createFeatureTypeProperty( desc.id,
-  //   "java.lang.Double", true ) );
-  //      }
-  //  
-  //      final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpList
-  //          .toArray( new FeatureTypeProperty[ftpList.size()] );
-  //  
-  //      final FeatureType type = FeatureFactory.createFeatureType( "shapetype",
-  //   null, ftps,
-  //          new int[ftps.length], new int[ftps.length], null, null );
-  //  
-  //      // Werte schreiben
-  //      final DateFormat specialDateFormat = new SimpleDateFormat( "yMM.dd" );
-  //      final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
-  //      final Calendar calendar = Calendar.getInstance();
-  //      
-  //      final Date[] dateArray = valuesMap.getDates();
-  //  
-  //      final Collection shapeFeatures = new ArrayList( dateArray.length );
-  //  
-  //      for( int i = 0; i < dateArray.length; i++ )
-  //      {
-  //        final Date date = dateArray[i];
-  //  
-  //        final Object[] data = new Object[6 + SpreeCalcJob.TS_DESCRIPTOR.length];
-  //  
-  //        calendar.setTime( date );
-  //        data[0] = GeometryFactory.createGM_Point( 0.0, 0.0, null );
-  //        data[1] = new Double( specialDateFormat.format( date ) );
-  //        data[2] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
-  //        data[3] = new String( dateFormat.format( date ) );
-  //        calendar.add( Calendar.HOUR_OF_DAY, -3 );
-  //        data[4] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
-  //        calendar.add( Calendar.HOUR_OF_DAY, -3 );
-  //        data[5] = new Double( calendar.get( Calendar.HOUR_OF_DAY ) );
-  //  
-  //        for( int j = 0; j < SpreeCalcJob.TS_DESCRIPTOR.length; j++ )
-  //        {
-  //          final String id = SpreeCalcJob.TS_DESCRIPTOR[j].id;
-  //          final Map datesToValuesMap = valuesMap.getTimeserie( id );
-  //  
-  //          if( datesToValuesMap == null )
-  //            continue;
-  //  
-  //          final Double value = (Double)datesToValuesMap.get( date );
-  //  
-  //          Double outVal = null;
-  //  
-  //          if( value == null )
-  //          {
-  //            if( id.startsWith( "PA_" ) || id.startsWith( "PG" ) )
-  //              outVal = new Double( -99.9 );
-  //            else
-  //              outVal = null;
-  //          }
-  //          else
-  //            outVal = value;
-  //  
-  //          data[6 + j] = outVal;
-  //        }
-  //  
-  //        for( int j = 0; j < data.length; j++ )
-  //          logwriter.print( data[j] + "\t" );
-  //        logwriter.println();
-  //  
-  //        final Feature feature = FeatureFactory.createFeature( "" + ( i + 1 ), type,
-  //   data );
-  //        shapeFeatures.add( feature );
-  //      }
-  //  
-  //      try
-  //      {
-  //        final ShapeFile shapeFile = new ShapeFile( tsFilename, "rw" );
-  //        shapeFile.writeShape( (Feature[])shapeFeatures.toArray( new
-  //   Feature[shapeFeatures.size()] ) );
-  //        shapeFile.close();
-  //      }
-  //      catch( final Exception e )
-  //      {
-  //        e.printStackTrace();
-  //        
-  //        throw new CalcJobServiceException( "Fehler beim Schreiben der Datei " +
-  //   tsFilename + "\n" + e.getLocalizedMessage(), e );
-  //      }
-  //    }
 
   public static void createTimeseriesFile( final String tsFilename,
       final TSMap valuesMap ) throws CalcJobServiceException

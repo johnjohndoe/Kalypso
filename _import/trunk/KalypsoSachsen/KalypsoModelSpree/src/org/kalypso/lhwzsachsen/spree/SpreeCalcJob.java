@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -27,7 +28,12 @@ import java.util.Properties;
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
+import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -78,6 +84,8 @@ public class SpreeCalcJob extends AbstractCalcJob
 
   public static final Map NAP_MAP = new LinkedHashMap();
 
+  public static final String FEATURE_PROP_BODENFEUCHTE = "Bodenfeuchte";
+  
   static
   {
     NAP_MAP.put( "PEGEL", "Name" );
@@ -95,6 +103,8 @@ public class SpreeCalcJob extends AbstractCalcJob
   public static final Object DATA_STARTDATESTRING = "startDateString";
 
   public static final Object DATA_BASEFILENAME = "baseFileName";
+
+  public static final Object DATA_GML = "gmlWorkspace";
 
   public static final Object DATA_FLPFILE = "flpFile";
 
@@ -302,11 +312,12 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         final String tsFilename = (String)props.get( DATA_TSFILENAME );
         writeResultsToFolder( tsFilename, outputdir, props, tsmap );
+        fetchOptimalValues( props, outputdir );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
-        throw new CalcJobServiceException( "", e );
+        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
       }
       progress( 34 );
       if( isCanceled() )
@@ -326,6 +337,72 @@ public class SpreeCalcJob extends AbstractCalcJob
       if( pw != null )
         pw.close();
     }
+  }
+
+  private void fetchOptimalValues( final Properties props, final File outdir )
+  {
+    final GMLWorkspace workspace = (GMLWorkspace)props.get( DATA_GML );
+    if( workspace == null )
+      return;
+
+    // geänderte _nap lesen
+    final String napFilename = (String)props.get( DATA_NAPFILENAME );
+    final Collection napFeatures = ShapeSerializer.readFeaturesFromDbf( napFilename );
+
+    // Werte eventuell ändern
+    final FeatureType featureType = workspace.getFeatureType( NAP_NAME );
+    if( featureType == null )
+      return;
+
+    final Feature[] gmlFeatures = workspace.getFeatures( featureType );
+    if( gmlFeatures.length != napFeatures.size() )
+      return;
+
+    final Iterator iter = napFeatures.iterator();
+    for( int i = 0; i < gmlFeatures.length; i++ )
+    {
+      final Feature napFeature = (Feature)iter.next();
+      final Feature gmlFeature = gmlFeatures[i];
+      
+      final Double gmlValue = (Double)gmlFeature.getProperty( FEATURE_PROP_BODENFEUCHTE );
+      if( Math.abs( gmlValue.doubleValue() ) < 0.01 )
+      {
+        final double optimalValue = ((Double)napFeature.getProperty( "VORFEUCHTE" )).doubleValue();
+
+        final FeatureProperty newValue = FeatureFactory.createFeatureProperty( FEATURE_PROP_BODENFEUCHTE , new Double( optimalValue ) );
+        gmlFeature.setProperty( newValue );
+      }
+    }
+    
+    // gml in Ergebnisse schreiben
+    final String outfilename = "calcCase.gml";
+    final File outFile = new File( outdir, outfilename );
+    final File outFileRelative = FileUtilities.getRelativeFileTo( outdir, outFile );
+    
+    FileOutputStream fos = null;
+    try
+    {
+      fos = new FileOutputStream( outFile );
+      final OutputStreamWriter writer = new OutputStreamWriter( fos, "UTF-8" );
+      GmlSerializer.serializeWorkspace( writer, workspace );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    if( fos != null )
+    {
+      try
+      {
+        fos.close();
+      }
+      catch( final IOException e1 )
+      {
+        e1.printStackTrace();
+      }
+      addResult( new CalcJobDataBean( "GML", "Geänderte Eingangsdaten", outFileRelative.getPath() ) );
+    }
+    
   }
 
   private void copyAndAddToOutput( final String subdirname, final File outputdir, final File toCopy )
@@ -624,11 +701,6 @@ public class SpreeCalcJob extends AbstractCalcJob
         if( metadata == null )
           metadata = new MetadataList();
           
-        
-        //        final MetadataList metadata = new MetadataList();
-        //        metadata.setProperty( "StartZeit", (String)dataMap.get(
-        // DATA_STARTDATESTRING ) );
-
         final IObservation observation = new SimpleObservation( column, column, false, null,
             metadata, achsen );
         observation.setValues( model );
