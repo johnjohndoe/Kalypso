@@ -1,0 +1,103 @@
+package id2wkvzcyitw0pkcyiu1em6;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.XAffineTransform:oiref><oihard>
+@__modelType reference 
+*/
+class reference158 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.ResourceCompiler:oiref><oihard>
+@__modelType reference 
+*/
+class reference159 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.XMath:oiref><oihard>
+@__modelType reference 
+*/
+class reference160 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.WeakHashSet:oiref><oihard>
+@__modelType reference 
+*/
+class reference161 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.XDimension2D:oiref><oihard>
+@__modelType reference 
+*/
+class reference163 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.XArray:oiref><oihard>
+@__modelType reference 
+*/
+class reference164 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.ClassChanger:oiref><oihard>
+@__modelType reference 
+*/
+class reference165 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.OpenGIS:oiref><oihard>
+@__modelType reference 
+*/
+class reference166 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.ResourceBundle:oiref><oihard>
+@__modelType reference 
+*/
+class reference167 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.Colors:oiref><oihard>
+@__modelType reference 
+*/
+class reference168 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.XRectangle2D:oiref><oihard>
+@__modelType reference 
+*/
+class reference169 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.Geometry:oiref><oihard>
+@__modelType reference 
+*/
+class reference170 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.Utilities:oiref><oihard>
+@__modelType reference 
+*/
+class reference171 {
+}/**
+@__ref <oiref:design#Class#id4b07ud6kqs8tbd6kqtbip.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#source.deegree.org.deegree_impl.model.resources.css:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.Naming:oiref><oihard>
+@__modelType reference 
+*/
+class reference12 {
+}/**
+@__ref <oiref:java#Class#org.deegree_impl.model.resources.Images:oiref><oihard>
+@__modelType reference 
+*/
+class reference13 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

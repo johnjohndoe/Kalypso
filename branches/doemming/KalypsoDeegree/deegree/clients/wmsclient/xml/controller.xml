@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<controller>
+	<event name="init" class="org.deegree_impl.clients.wmsclient.control.InitListener" next="map.jsp"/>
+	<event name="REFRESH" class="org.deegree_impl.clients.wmsclient.control.RefreshListener" next="map.jsp"/>
+	<event name="ZOOMIN" class="org.deegree_impl.clients.wmsclient.control.ZoomInListener" next="map.jsp"/>
+	<event name="ZOOMOUT" class="org.deegree_impl.clients.wmsclient.control.ZoomOutListener" next="map.jsp"/>
+	<event name="RECENTER" class="org.deegree_impl.clients.wmsclient.control.RecenterListener" next="map.jsp"/>
+	<event name="RESET" class="org.deegree_impl.clients.wmsclient.control.ResetListener" next="map.jsp"/>
+	<event name="PAN" class="org.deegree_impl.clients.wmsclient.control.PanListener" next="map.jsp"/>
+	<event name="INFO" class="org.deegree_impl.clients.wmsclient.control.InfoListener" next="featureInfo.jsp"/>
+	<event name="SELECTSTYLE" class="org.deegree_impl.clients.wmsclient.control.SelectStyleListener" next="selectStyle.jsp"/>
+</controller>
