@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
-import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.extension.ITypeRegistry;
 import org.deegree_impl.extension.TypeRegistrySingleton;
@@ -93,8 +91,9 @@ public class NAModellConverter
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
     
     final GMLSchema gmlSchema=new GMLSchema(conf.getSchemaURL());
+    // TODO: Andreas: Namespace ok for gml?
     GMLWorkspace workspace = new GMLWorkspace_Impl( gmlSchema.getFeatureTypes(),rootFeature,
-            null, ":project:.model/schema/namodel.gml");
+            null, ":project:.model/schema/namodel.gml", gmlSchema.getSchema().getNamespaceURI());
     GmlSerializer.serializeWorkspace(new FileWriter( gmlFile ),workspace);
     final UpdateModell updater=new UpdateModell(gmlFile.toURL());
     updater.updateIt();
