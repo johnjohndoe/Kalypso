@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.awt.Color;
@@ -56,8 +56,9 @@ import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
 import org.kalypso.ogc.sensor.tableview.swing.marker.ForecastLabelMarker;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
@@ -81,18 +82,31 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     NF.setMinimumFractionDigits( 3 );
   }
 
-  protected final ObservationTableModel m_model;
+  private final ObservationTableModel m_model;
 
-  protected final DateTableCellRenderer m_dateRenderer;
+  private final TableViewTemplate m_template;
+
+  private final DateTableCellRenderer m_dateRenderer;
 
   private MaskedNumberTableCellRenderer m_nbRenderer;
 
-  public ObservationTable( final ObservationTableModel model )
+  /**
+   * Constructs a table based on the given template
+   * 
+   * @param template
+   */
+  public ObservationTable( final TableViewTemplate template )
   {
-    super( model );
+    super( new ObservationTableModel() );
+
+    m_template = template;
 
     // for convenience
-    m_model = model;
+    m_model = (ObservationTableModel) getModel();
+    m_model.setRules( template.getRules() );
+
+    // removed in this.dispose()
+    m_template.addTemplateEventListener( this );
 
     m_dateRenderer = new DateTableCellRenderer();
 
@@ -114,60 +128,84 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     getTableHeader().setReorderingAllowed( false );
   }
 
+  public void dispose( )
+  {
+    m_template.removeTemplateEventListener( this );
+    m_model.clearColumns();
+    m_dateRenderer.clearMarkers();
+  }
+
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
   public void onTemplateChanged( final TemplateEvent evt )
   {
+    // for runnable
+    final ObservationTableModel model = m_model;
+    final DateTableCellRenderer dateRenderer = m_dateRenderer;
+
     final CatchRunnable runnable = new CatchRunnable()
     {
       protected void runIntern( ) throws Throwable
       {
-        // ADD COLUMN
-        if( evt.getType() == TemplateEvent.TYPE_ADD
-            && evt.getObject() instanceof ITableViewColumn )
+        // REFRESH ONE THEME
+        if( evt.getType() == TemplateEvent.TYPE_REFRESH
+            && evt.getObject() instanceof TableViewTheme )
         {
-          final ITableViewColumn col = (ITableViewColumn) evt.getObject();
-          m_model.addTableViewColumn( col );
+          final TableViewTheme theme = (TableViewTheme) evt.getObject();
 
-          checkForecast( col.getTheme().getObservation() );
+          model.refreshColumns( theme );
+
+          checkForecast( theme, true );
+        }
+
+        // ADD THEME
+        if( evt.getType() == TemplateEvent.TYPE_ADD
+            && evt.getObject() instanceof TableViewTheme )
+        {
+          final TableViewTheme theme = (TableViewTheme) evt.getObject();
+          model.addColumnsFor( theme );
+
+          checkForecast( theme, true );
         }
 
         // SHOW/HIDE A COLUMN
         if( evt.isType( TemplateEvent.TYPE_SHOW_STATE )
-            && evt.getObject() instanceof ITableViewColumn )
+            && evt.getObject() instanceof TableViewColumn )
         {
-          final ITableViewColumn col = (ITableViewColumn) evt.getObject();
-          
+          final TableViewColumn col = (TableViewColumn) evt.getObject();
+
           if( col.isShown() )
-            m_model.addTableViewColumn( col );
+            model.addColumn( col );
           else
-            m_model.removeTableViewColumn( col );
+            model.removeColumn( col );
         }
-        
+
         // REMOVE THEME
         if( evt.getType() == TemplateEvent.TYPE_REMOVE
-            && evt.getObject() instanceof ITableViewTheme )
+            && evt.getObject() instanceof TableViewTheme )
         {
-          final ITableViewTheme theme = (ITableViewTheme) evt.getObject();
-          m_model.removeTableViewColumns( theme );
+          final TableViewTheme theme = (TableViewTheme) evt.getObject();
+          model.removeColumnsFor( theme );
 
-          // TODO clear the marker that may be associated with the obs
-          // of the theme we are removing
+          checkForecast( theme, false );
         }
 
         // REMOVE ALL
         if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
         {
-          m_model.clearColumns();
-          m_dateRenderer.clearMarkers();
+          model.clearColumns();
+          dateRenderer.clearMarkers();
         }
       }
     };
 
     try
     {
-      SwingUtilities.invokeAndWait( runnable );
+      if( !SwingUtilities.isEventDispatchThread() )
+        SwingUtilities.invokeAndWait( runnable );
+      else
+        runnable.run();
 
       if( runnable.getThrown() != null )
         throw runnable.getThrown();
@@ -181,7 +219,8 @@ public class ObservationTable extends JTable implements ITemplateEventListener
       if( shell != null )
         MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
       else
-        JOptionPane.showMessageDialog( null, e.toString(), "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, e.toString(),
+            "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
     }
   }
 
@@ -194,11 +233,27 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     return renderer;
   }
 
-  protected void checkForecast( final IObservation obs )
+  /**
+   * Helper method that adds a marker to the date renderer for observations that
+   * are forecasts
+   * 
+   * @param theme
+   * @param adding
+   */
+  protected void checkForecast( final TableViewTheme theme, final boolean adding )
   {
     // check if observation is a vorhersage
-    final DateRangeArgument dr = TimeserieUtils.isForecast( obs );
-    if( dr != null )
-      m_dateRenderer.addMarker( new ForecastLabelMarker( dr ) );
+    final IObservation obs = theme.getObservation();
+    if( obs != null )
+    {
+      final DateRangeArgument dr = TimeserieUtils.isForecast( obs );
+      if( dr != null )
+      {
+        if( adding )
+          m_dateRenderer.addMarker( new ForecastLabelMarker( dr ) );
+        else
+          m_dateRenderer.removeMarker( new ForecastLabelMarker( dr ) );
+      }
+    }
   }
 }

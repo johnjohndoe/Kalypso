@@ -114,6 +114,11 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     m_markers.add( marker );
   }
 
+  public void removeMarker( final ILabelMarker marker )
+  {
+    m_markers.remove( marker );
+  }
+  
   /**
    * Clears all markers
    */

@@ -69,10 +69,10 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.IAxisMapping;
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
-import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.AxisMapping;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagramAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
@@ -141,7 +141,7 @@ public class ObservationPlot extends XYPlot
    * @param template
    * @throws SensorException
    */
-  public ObservationPlot( final IDiagramTemplate template )
+  public ObservationPlot( final DiagViewTemplate template )
       throws SensorException
   {
     super();
@@ -159,7 +159,7 @@ public class ObservationPlot extends XYPlot
 
     for( final Iterator it = diagAxes.iterator(); it.hasNext(); )
     {
-      final IDiagramAxis diagAxis = (IDiagramAxis) it.next();
+      final DiagramAxis diagAxis = (DiagramAxis) it.next();
 
       addDiagramAxis( diagAxis );
     }
@@ -168,7 +168,7 @@ public class ObservationPlot extends XYPlot
     for( Iterator it = curves.iterator(); it.hasNext(); )
     {
       final Object diagramCurve = it.next();
-      addCurve( (IDiagramCurve) diagramCurve );
+      addCurve( (DiagViewCurve) diagramCurve );
     }
 
     setNoDataMessage( "Keine Daten vorhanden" );
@@ -185,7 +185,7 @@ public class ObservationPlot extends XYPlot
    * @param diagAxis
    * @throws SensorException
    */
-  private final void addDiagramAxis( IDiagramAxis diagAxis )
+  private final void addDiagramAxis( DiagramAxis diagAxis )
       throws SensorException
   {
     final ValueAxis vAxis;
@@ -210,7 +210,7 @@ public class ObservationPlot extends XYPlot
 
     AxisLocation loc = getLocation( diagAxis );
 
-    if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+    if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
     {
       setDomainAxis( m_domPos, vAxis );
       setDomainAxisLocation( m_domPos, loc );
@@ -266,24 +266,24 @@ public class ObservationPlot extends XYPlot
    * @param curve
    * @throws SensorException
    */
-  public synchronized void addCurve( final IDiagramCurve curve )
+  public synchronized void addCurve( final DiagViewCurve curve )
       throws SensorException
   {
-    final IAxisMapping[] mings = curve.getMappings();
+    final AxisMapping[] mings = curve.getMappings();
     IAxis xAxis = null;
-    IDiagramAxis xDiagAxis = null;
+    DiagramAxis xDiagAxis = null;
     IAxis yAxis = null;
-    IDiagramAxis yDiagAxis = null;
+    DiagramAxis yDiagAxis = null;
 
     for( int i = 0; i < mings.length; i++ )
     {
-      final IDiagramAxis diagAxis = mings[i].getDiagramAxis();
+      final DiagramAxis diagAxis = mings[i].getDiagramAxis();
 
       // check if this axis is already present in this plot
       if( !m_diag2chartAxis.containsKey( diagAxis ) )
         addDiagramAxis( diagAxis );
 
-      if( diagAxis.getDirection().equals( IDiagramAxis.DIRECTION_HORIZONTAL ) )
+      if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
       {
         xAxis = mings[i].getObservationAxis();
         xDiagAxis = diagAxis;
@@ -307,7 +307,7 @@ public class ObservationPlot extends XYPlot
 
 //    final String key = xDiagAxis.getIdentifier() + "#-#"
 //        + yDiagAxis.getIdentifier();
-    final IDiagramAxis key = yDiagAxis;
+    final DiagramAxis key = yDiagAxis;
 
     CurveDataset cds = (CurveDataset) m_diagAxis2ds.get( key );
 
@@ -387,7 +387,7 @@ public class ObservationPlot extends XYPlot
    * 
    * @param curve
    */
-  public synchronized void removeCurve( final IDiagramCurve curve )
+  public synchronized void removeCurve( final DiagViewCurve curve )
   {
     final XYCurveSerie serie = (XYCurveSerie) m_curve2serie.get( curve );
     if( serie != null )
@@ -417,7 +417,7 @@ public class ObservationPlot extends XYPlot
           final Iterator it = m_diagAxis2ds.keySet().iterator();
           while( it.hasNext() )
           {
-            final IDiagramAxis dAxis = (IDiagramAxis) it.next();
+            final DiagramAxis dAxis = (DiagramAxis) it.next();
             if( m_diagAxis2ds.get( dAxis ) == ds )
             {
               final ValueAxis cAxis = (ValueAxis) m_diag2chartAxis.get( dAxis );
@@ -530,30 +530,30 @@ public class ObservationPlot extends XYPlot
    * @param diagAxis
    * @return location according to axis
    */
-  private final static AxisLocation getLocation( final IDiagramAxis diagAxis )
+  private final static AxisLocation getLocation( final DiagramAxis diagAxis )
   {
-    if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
+    if( diagAxis.getPosition().equals( DiagramAxis.POSITION_BOTTOM ) )
     {
       //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
       return AxisLocation.BOTTOM_OR_LEFT;
       //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
       //  return AxisLocation.BOTTOM_OR_RIGHT;
     }
-    else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
+    else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_TOP ) )
     {
       //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
       return AxisLocation.TOP_OR_LEFT;
       //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
       //  return AxisLocation.TOP_OR_RIGHT;
     }
-    else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
+    else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
     {
       //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
       //  return AxisLocation.BOTTOM_OR_LEFT;
       //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
       return AxisLocation.TOP_OR_LEFT;
     }
-    else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
+    else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_RIGHT ) )
     {
       //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
       //  return AxisLocation.BOTTOM_OR_RIGHT;

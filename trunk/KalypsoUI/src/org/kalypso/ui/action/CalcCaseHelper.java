@@ -73,6 +73,9 @@ public class CalcCaseHelper
    * Lässt den Benutzer aus einer Liste von Rechenfällen auswählen Es werden
    * alle Rechenfälle angezeigt, welche sich in oder unterhalb der angegebenen
    * Selection von Resourcen befinden.
+   * @param shell
+   * @param selection
+   * @param title
    * 
    * @param message
    * @return null bei Abbruch

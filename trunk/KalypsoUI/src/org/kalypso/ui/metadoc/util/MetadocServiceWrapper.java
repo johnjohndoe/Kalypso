@@ -64,6 +64,8 @@ public class MetadocServiceWrapper
   
   /**
    * @param fileExtension Extension with '.' (e.g. '.csv')
+   * @param username
+   * @throws CoreException
    */
   public MetadocServiceWrapper( final String fileExtension, final String username ) throws CoreException
   {

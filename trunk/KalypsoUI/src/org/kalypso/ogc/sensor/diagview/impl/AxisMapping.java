@@ -41,8 +41,6 @@
 package org.kalypso.ogc.sensor.diagview.impl;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.diagview.IAxisMapping;
-import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
 
 /**
  * Default implementation of <code>IAxisMapping</code>.
@@ -50,29 +48,23 @@ import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
  * @author schlienger
  *
  */
-public class AxisMapping implements IAxisMapping
+public class AxisMapping
 {
   private final IAxis m_oAxis;
-  private final IDiagramAxis m_dAxis;
+  private final DiagramAxis m_dAxis;
 
-  public AxisMapping( final IAxis oAxis, final IDiagramAxis dAxis )
+  public AxisMapping( final IAxis oAxis, final DiagramAxis dAxis )
   {
     m_oAxis = oAxis;
     m_dAxis = dAxis;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IAxisMapping#getObservationAxis()
-   */
   public IAxis getObservationAxis()
   {
     return m_oAxis;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.diagview.IAxisMapping#getDiagramAxis()
-   */
-  public IDiagramAxis getDiagramAxis()
+  public DiagramAxis getDiagramAxis()
   {
     return m_dAxis;
   }

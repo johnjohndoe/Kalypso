@@ -106,6 +106,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   }
 
   /**
+   * @return control
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
   public Control getControl()
@@ -233,6 +234,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   }
 
   /**
+   * @return object
    * @see org.eclipse.jface.viewers.IInputProvider#getInput()
    */
   public Object getInput()

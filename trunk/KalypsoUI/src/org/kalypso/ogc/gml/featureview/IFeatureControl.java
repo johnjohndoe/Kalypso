@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.Collection;
@@ -54,26 +54,37 @@ public interface IFeatureControl
 {
   public Control createControl( final Composite parent, final int style );
 
-  public void dispose();
-  
-  public Feature getFeature();
-  
-  public void setFeature( final Feature feature );
-  
-  /** Render this control as string */
-  public String toString();
-  
-  /** Update Control from Feature  */
-  public void updateControl();
+  public void dispose( );
 
-  /** Adds {@link FeatureChange} objects to a collection, representing changes to features */
+  public Feature getFeature( );
+
+  public void setFeature( final Feature feature );
+
+  /**
+   * Render this control as string
+   * 
+   * @return string
+   */
+  public String toString( );
+
+  /** Update Control from Feature */
+  public void updateControl( );
+
+  /**
+   * Adds {@link FeatureChange}objects to a collection, representing changes to
+   * features
+   * 
+   * @param c
+   */
   public void collectChanges( final Collection c );
 
-  public boolean isValid();
-  
+  public boolean isValid( );
+
   public void addModifyListener( final ModifyListener l );
+
   public void removeModifyListener( final ModifyListener l );
-  
+
   public void addChangeListener( final IFeatureChangeListener l );
+
   public void removeChangeListener( final IFeatureChangeListener l );
 }

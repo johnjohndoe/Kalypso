@@ -98,6 +98,7 @@ public abstract class GisTableAbstractActionDelagate implements IEditorActionDel
   }
   
   /**
+   * @param action
    * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
    */
   public void init( final IAction action )

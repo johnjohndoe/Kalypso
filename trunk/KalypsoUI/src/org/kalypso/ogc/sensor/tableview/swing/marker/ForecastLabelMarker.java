@@ -45,6 +45,7 @@ import java.util.Date;
 
 import javax.swing.JLabel;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -115,5 +116,21 @@ public class ForecastLabelMarker implements ILabelMarker
       return -1;
 
     return m_dra.compareTo( ((ForecastLabelMarker) o).m_dra );
+  }
+  
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    return compareTo( obj ) == 0;
+  }
+  
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode( )
+  {
+    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).hashCode();
   }
 }

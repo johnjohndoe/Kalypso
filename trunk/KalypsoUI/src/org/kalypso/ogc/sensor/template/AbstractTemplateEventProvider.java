@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
 import java.util.ArrayList;
@@ -55,13 +55,13 @@ public abstract class AbstractTemplateEventProvider implements
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventProvider#fireTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
-  public void fireTemplateChanged( TemplateEvent evt )
+  public void fireTemplateChanged( final TemplateEvent evt )
   {
     synchronized( m_listeners )
     {
-      for( Iterator it = m_listeners.iterator(); it.hasNext(); )
+      for( final Iterator it = m_listeners.iterator(); it.hasNext(); )
       {
-        ITemplateEventListener l = (ITemplateEventListener) it.next();
+        final ITemplateEventListener l = (ITemplateEventListener) it.next();
 
         l.onTemplateChanged( evt );
       }
@@ -71,7 +71,7 @@ public abstract class AbstractTemplateEventProvider implements
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventProvider#addTemplateEventListener(org.kalypso.ogc.sensor.template.ITemplateEventListener)
    */
-  public void addTemplateEventListener( ITemplateEventListener l )
+  public void addTemplateEventListener( final ITemplateEventListener l )
   {
     synchronized( m_listeners )
     {
@@ -82,7 +82,7 @@ public abstract class AbstractTemplateEventProvider implements
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventProvider#removeTemplateEventListener(org.kalypso.ogc.sensor.template.ITemplateEventListener)
    */
-  public void removeTemplateEventListener( ITemplateEventListener l )
+  public void removeTemplateEventListener( final ITemplateEventListener l )
   {
     synchronized( m_listeners )
     {

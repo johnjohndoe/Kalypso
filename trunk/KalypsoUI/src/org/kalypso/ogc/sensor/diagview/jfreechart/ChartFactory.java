@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import org.jfree.chart.plot.Plot;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
 
 /**
  * @author schlienger
@@ -56,7 +56,7 @@ public final class ChartFactory
    * @return plot
    * @throws SensorException
    */
-  static Plot createObservationPlot( final IDiagramTemplate template ) throws SensorException
+  static Plot createObservationPlot( final DiagViewTemplate template ) throws SensorException
   {
     synchronized( template )
     {

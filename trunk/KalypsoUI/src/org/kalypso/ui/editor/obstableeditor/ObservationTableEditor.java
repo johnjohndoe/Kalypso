@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
@@ -47,7 +47,6 @@ import javax.swing.JScrollPane;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -56,11 +55,9 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.tableview.ObservationTableTemplateFactory;
-import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.event.ObservationModelChangeListener;
-import org.kalypso.ogc.sensor.tableview.swing.event.SetValuesForDirtyColumnsRunnable;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
@@ -75,24 +72,37 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 public class ObservationTableEditor extends AbstractEditorPart implements
     ITemplateEventListener
 {
-  protected final LinkedTableViewTemplate m_template = new LinkedTableViewTemplate();
+  protected final TableViewTemplate m_template = new TableViewTemplate();
 
-  protected ObservationTableModel m_model = null;
-
-  protected ObservationTable m_table = null;
+  protected final ObservationTable m_table;
 
   protected ObsTableOutlinePage m_outline = null;
 
   private boolean m_dirty = false;
 
-  private ObservationModelChangeListener m_listener;
 
   /**
-   * @return Returns the model.
+   * Constructor: the ObservationTable is already created here because
+   * of the listening functionality that needs to be set up before
+   * the template gets loaded.
+   * <p>
+   * Doing this stuff in createPartControl would prove inadequate, because
+   * the order in which createPartControl and loadIntern are called is
+   * not guaranteed to be always the same.
+   */
+  public ObservationTableEditor( )
+  {
+    m_table = new ObservationTable( m_template );
+
+    m_template.addTemplateEventListener( this );
+  }
+  
+  /**
+   * @return Returns the observation table model
    */
   public ObservationTableModel getModel( )
   {
-    return m_model;
+    return (ObservationTableModel) m_table.getModel();
   }
 
   /**
@@ -106,7 +116,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   /**
    * @return Returns the template.
    */
-  public LinkedTableViewTemplate getTemplate( )
+  public TableViewTemplate getTemplate( )
   {
     return m_template;
   }
@@ -122,23 +132,10 @@ public class ObservationTableEditor extends AbstractEditorPart implements
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
 
-    m_model = new ObservationTableModel();
-    m_model.setRules( m_template.getRules() );
-    m_table = new ObservationTable( m_model );
-
-    final IRunnableWithProgress rwp = new SetValuesForDirtyColumnsRunnable(
-        m_template, m_model );
-    m_listener = new ObservationModelChangeListener( rwp );
-    m_model.addTableModelListener( m_listener );
-
-    m_template.addTemplateEventListener( m_table );
-    m_template.addTemplateEventListener( this );
-
     final JScrollPane pane = new JScrollPane( m_table );
     vFrame.add( pane );
 
     vFrame.setVisible( true );
-    //m_table.setVisible( true );
   }
 
   /**
@@ -170,15 +167,14 @@ public class ObservationTableEditor extends AbstractEditorPart implements
    */
   public void dispose( )
   {
+    m_table.dispose();
+    
     if( m_template != null )
     {
       m_template.removeTemplateEventListener( this );
       m_template.removeTemplateEventListener( m_table );
       m_template.dispose();
     }
-    
-    if( m_model != null && m_listener != null )
-      m_model.removeTableModelListener( m_listener );
 
     if( m_outline != null )
       m_outline.dispose();
@@ -193,7 +189,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void doSaveInternal( IProgressMonitor monitor,
-      IFileEditorInput input ) 
+      IFileEditorInput input )
   {
     // TODO Vorlage speichern
     System.out.println( "TODO: Vorlage auch speichern..." );
@@ -215,7 +211,6 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage) storage;
-        Thread.sleep( 750 );
         m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }

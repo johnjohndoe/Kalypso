@@ -151,8 +151,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
   {
     final Control diagramControl = initZmlTable( parent );
     diagramControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    registerObservationTableModelChangeListener();
   }
 
   private void createMapPanel( final Composite parent ) throws Exception,

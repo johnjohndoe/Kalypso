@@ -94,6 +94,7 @@ public class TypeBasedInputValidator implements IInputValidator
   }
   
   /**
+   * @param text
    * @return the real value behind the given text
    */
   public Object toValue( final String text )

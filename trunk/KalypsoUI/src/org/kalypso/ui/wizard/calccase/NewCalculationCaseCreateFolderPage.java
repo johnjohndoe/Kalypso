@@ -122,6 +122,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
   /**
    * (non-Javadoc) Method declared on IDialogPage.
+   * @param parent
    */
   public void createControl( Composite parent )
   {
@@ -152,6 +153,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    * The <code>WizardNewFolderCreationPage</code> implementation of this
    * <code>Listener</code> method handles all events and enablements for
    * controls on this page. Subclasses may extend.
+   * @param ev
    */
   public void handleEvent( Event ev )
   {

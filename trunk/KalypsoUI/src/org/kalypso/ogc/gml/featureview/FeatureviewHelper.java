@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.List;
@@ -64,9 +64,9 @@ import org.kalypso.template.featureview.TextType;
  */
 public class FeatureviewHelper
 {
-  private FeatureviewHelper()
+  private FeatureviewHelper( )
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 
   public static final ObjectFactory FACTORY = new ObjectFactory();
@@ -117,8 +117,14 @@ public class FeatureviewHelper
     return button;
   }
 
-  /** Standardview erzeugen */
-  public static Featureview createFeatureviewFromFeatureType( final FeatureType type )
+  /**
+   * Standardview erzeugen
+   * 
+   * @param type
+   * @return featureview
+   */
+  public static Featureview createFeatureviewFromFeatureType(
+      final FeatureType type )
   {
     try
     {

@@ -62,11 +62,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -84,8 +83,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private final TimeseriesLink m_timeserie;
 
-  private final ObservationDiagramTemplate m_diagTemplate = new ObservationDiagramTemplate();
-  private final ObservationTableViewTemplate m_tableTemplate = new ObservationTableViewTemplate();
+  private final DiagViewTemplate m_diagTemplate = new DiagViewTemplate();
+  private final TableViewTemplate m_tableTemplate = new TableViewTemplate();
 
   private ObservationChart m_chart;
   private ObservationTable m_table;
@@ -113,7 +112,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   {
     m_pool.removePoolListener( this );
     m_diagTemplate.removeTemplateEventListener( m_chart );
-    m_tableTemplate.removeTemplateEventListener( m_table );
+    
+    m_table.dispose();
   }
 
   /**
@@ -186,8 +186,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private void createTable( final Composite parent )
   {
-    m_table = new ObservationTable( new ObservationTableModel() );
-    m_tableTemplate.addTemplateEventListener( m_table );
+    m_table = new ObservationTable( m_tableTemplate );
 
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
@@ -214,7 +213,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
         m_diagTemplate.setObservation( obs, null );
 
         //m_tableTemplate.removeAllColumns();
-        m_tableTemplate.setObservation( obs, false, null );
+        m_tableTemplate.setObservation( obs, null );
       }
       catch( Exception e )
       {

@@ -62,9 +62,9 @@ public class LayerTableSorter extends ViewerSorter
     super();
   }
 
-  public LayerTableSorter( final Collator collator )
+  public LayerTableSorter( final Collator cola )
   {
-    super( collator );
+    super( cola );
   }
   
   public final String getPropertyName()

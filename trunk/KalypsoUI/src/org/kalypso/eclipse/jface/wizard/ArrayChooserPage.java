@@ -60,6 +60,9 @@ public class ArrayChooserPage extends WizardPage
   /**
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
+   * @param pageName
+   * @param title
+   * @param titleImage
    */
   public ArrayChooserPage( final Object chooseables, final String pageName, final String title,
       final ImageDescriptor titleImage )

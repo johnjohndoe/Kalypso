@@ -70,10 +70,9 @@ import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer2;
 import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
-import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.impl.ObservationTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -87,7 +86,7 @@ import org.kalypso.ui.editor.obstableeditor.actions.RemoveThemeAction;
 public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     ITemplateEventListener, ICheckStateListener
 {
-  protected LinkedTableViewTemplate m_template;
+  protected TableViewTemplate m_template;
 
   private RemoveThemeAction m_removeThemeAction;
 
@@ -126,7 +125,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   /**
    * @return the selected theme or null
    */
-  public ITableViewTheme getSelectedTheme( )
+  public TableViewTheme getSelectedTheme( )
   {
     final ISelection sel = getSelection();
 
@@ -134,11 +133,11 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      if( element instanceof ITableViewTheme )
-        return (ITableViewTheme) element;
+      if( element instanceof TableViewTheme )
+        return (TableViewTheme) element;
 
-      if( element instanceof ITableViewColumn )
-        return ((ITableViewColumn) element).getTheme();
+      if( element instanceof TableViewColumn )
+        return ((TableViewColumn) element).getTheme();
     }
 
     return null;
@@ -155,7 +154,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
     {
       final Object element = ((IStructuredSelection) sel).getFirstElement();
 
-      return element instanceof ITableViewTheme;
+      return element instanceof TableViewTheme;
     }
     
     return false;
@@ -164,7 +163,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   /**
    * @return template
    */
-  public ObservationTableViewTemplate getTemplate( )
+  public TableViewTemplate getTemplate( )
   {
     return m_template;
   }
@@ -215,7 +214,7 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   /**
    * @param template
    */
-  public void setTemplate( LinkedTableViewTemplate template )
+  public void setTemplate( TableViewTemplate template )
   {
     if( m_template != null )
       m_template.removeTemplateEventListener( this );
@@ -263,18 +262,18 @@ public class ObsTableOutlinePage extends ContentOutlinePage2 implements
   {
     final Object element = event.getElement();
 
-    if( element instanceof ITableViewColumn )
+    if( element instanceof TableViewColumn )
     {
-      final ITableViewColumn col = (ITableViewColumn) element;
+      final TableViewColumn col = (TableViewColumn) element;
       col.setShown( event.getChecked() );
     }
-    else if( element instanceof ITableViewTheme )
+    else if( element instanceof TableViewTheme )
     {
-      final ITableViewTheme theme = (ITableViewTheme) element;
+      final TableViewTheme theme = (TableViewTheme) element;
 
       for( final Iterator it = theme.getColumns().iterator(); it.hasNext(); )
       {
-        final ITableViewColumn col = (ITableViewColumn) it.next();
+        final TableViewColumn col = (TableViewColumn) it.next();
         col.setShown( event.getChecked() );
       }
     }

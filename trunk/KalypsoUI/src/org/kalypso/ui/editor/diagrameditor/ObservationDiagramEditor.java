@@ -58,7 +58,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
-import org.kalypso.ogc.sensor.diagview.impl.LinkedDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
@@ -75,7 +75,7 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 public class ObservationDiagramEditor extends AbstractEditorPart implements
     ITemplateEventListener
 {
-  protected final LinkedDiagramTemplate m_template = new LinkedDiagramTemplate();
+  protected final DiagViewTemplate m_template = new DiagViewTemplate();
 
   protected Frame m_diagFrame = null;
 
@@ -283,7 +283,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   /**
    * @return template
    */
-  public LinkedDiagramTemplate getTemplate( )
+  public DiagViewTemplate getTemplate( )
   {
     return m_template;
   }

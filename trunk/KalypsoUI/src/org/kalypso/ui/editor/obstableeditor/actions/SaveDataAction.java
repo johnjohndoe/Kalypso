@@ -52,9 +52,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
-import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.impl.TableViewTheme;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
@@ -72,30 +72,36 @@ public class SaveDataAction extends AbstractEditorActionDelegate
    */
   public void run( final IAction action )
   {
+    boolean atLeastOneDirtySave = false;
+    
     final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
-    final LinkedTableViewTemplate template = editor.getTemplate();
+    final TableViewTemplate template = editor.getTemplate();
     final ObservationTableModel model = editor.getModel();
 
     final Collection themes = template.getThemes();
 
     for( final Iterator it = themes.iterator(); it.hasNext(); )
     {
-      final ITableViewTheme theme = (ITableViewTheme) it.next();
+      final TableViewTheme theme = (TableViewTheme) it.next();
 
-      boolean dirty = false;
+      boolean dirtySave = false;
 
       for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
       {
-        dirty = ((ITableViewColumn) itcol.next()).isDirty();
+        final TableViewColumn col = (TableViewColumn) itcol.next();
+        dirtySave = col.isDirtySave();
 
-        // at least one col dirty?
-        if( dirty )
+        // at least one col dirty-save?
+        if( dirtySave )
+        {
+          atLeastOneDirtySave = true;
           break;
+        }
       }
 
       final IObservation obs = theme.getObservation();
 
-      if( dirty )
+      if( dirtySave )
       {
         final String msg = "Sie haben Änderungen in " + obs.getName()
             + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
@@ -105,9 +111,6 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
         if( b )
         {
-          for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
-            ((ITableViewColumn) itcol.next()).setDirty( false );
-
           final ITuppleModel values;
           try
           {
@@ -128,6 +131,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
                 obs.setValues( values );
 
                 template.saveObservation( obs, monitor );
+                
+                for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+                  ((TableViewColumn) itcol.next()).resetDirtySave( );
               }
               catch( Exception e )
               {
@@ -143,5 +149,8 @@ public class SaveDataAction extends AbstractEditorActionDelegate
         }
       }
     }
+    
+    if( !atLeastOneDirtySave )
+      MessageDialog.openInformation( getShell(), "Keine Änderung", "Keine geänderte Zeitreihe" );
   }
 }

@@ -77,8 +77,7 @@ public class ExportableObservationTable implements IExportableTableDocument
    */
   public void exportDocument( final OutputStream outs ) throws Exception
   {
-    final ITuppleModel values = m_table.m_model
-        .getValues( m_onlySelected ? m_table.getSelectedRows() : null );
+    final ITuppleModel values = ((ObservationTableModel) m_table.getModel()).getValues( m_onlySelected ? m_table.getSelectedRows() : null );
 
     final OutputStreamWriter writer = new OutputStreamWriter( outs );
     try

@@ -145,6 +145,7 @@ public class ModelSynchronizer
   /**
    * Schreibt ein einzelnes Verzeichnis innerhalb des lokalen Projekts zurück
    * zum server Das Verzeichnis darf Serverseitig noch nicht existieren
+   * @param folder
    * @param monitor
    * 
    * @throws CoreException
@@ -171,6 +172,8 @@ public class ModelSynchronizer
   /**
    * Lädt einen Remote Folder vom Server und legt in local ab überschreibt, ist
    * lokal bereits etwas vorhanden, gibts ne Fehlermeldung
+   * @param dir
+   * @param localName
    * @param monitor
    * 
    * @throws CoreException

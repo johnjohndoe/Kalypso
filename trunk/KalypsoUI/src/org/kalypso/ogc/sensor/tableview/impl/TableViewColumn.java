@@ -36,22 +36,22 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.impl;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
-import org.kalypso.ogc.sensor.tableview.ITableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
 import org.kalypso.ogc.sensor.template.TemplateEvent;
 
 /**
- * Default implementation of the <code>ITableViewColumn</code> interface
+ * A column for an observation table view. It is based on a key axis and a value
+ * axis.
  * 
  * @author schlienger
  */
-public class DefaultTableViewColumn implements ITableViewColumn
+public class TableViewColumn
 {
   private String m_name = "";
 
@@ -63,11 +63,24 @@ public class DefaultTableViewColumn implements ITableViewColumn
 
   private final IAxis m_valueAxis;
 
-  private ITableViewTheme m_theme;
+  private TableViewTheme m_theme;
 
+  /**
+   * flag specifying when the column needs to be saved. It comes along with the
+   * dirty flag. Once the dirty flag is set to true, the dirtySave flag becomes
+   * true as well. It will only be reset to false once setDirtySave( false ) is
+   * called. A call to setDirty( false ) only changes the dirty flag, not the
+   * dirtySave one.
+   * <p>
+   * This mechanism is used to know when the column has been persisted
+   * (dirtySave=false)in opposition to the model is in sync (dirty=false).
+   */
+  private boolean m_dirtySave = false;
+
+  /** column has been modified, model is not in sync */
   private boolean m_dirty = false;
 
-  private final ITableViewTemplate m_template;
+  private final TableViewTemplate m_template;
 
   private boolean m_shown = true;
 
@@ -82,9 +95,9 @@ public class DefaultTableViewColumn implements ITableViewColumn
    * @param theme
    * @param template
    */
-  public DefaultTableViewColumn( final String name, final boolean isEditable,
+  public TableViewColumn( final String name, final boolean isEditable,
       final int width, final IAxis keyAxis, final IAxis valueAxis,
-      final ITableViewTheme theme, final ITableViewTemplate template )
+      final TableViewTheme theme, final TableViewTemplate template )
   {
     m_name = name;
     m_isEditable = isEditable;
@@ -95,14 +108,11 @@ public class DefaultTableViewColumn implements ITableViewColumn
     m_template = template;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getName()
-   */
   public String getName( )
   {
     return m_name;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -111,105 +121,116 @@ public class DefaultTableViewColumn implements ITableViewColumn
     return getName();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#isEditable()
-   */
   public boolean isEditable( )
   {
     return m_isEditable;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getWidth()
-   */
   public int getWidth( )
   {
     return m_width;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#setWidth(int)
-   */
   public void setWidth( int width )
   {
     m_width = width;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#isDirty()
-   */
   public boolean isDirty( )
   {
     return m_dirty;
   }
 
   /**
+   * As soon as dirty is true, dirtySave also gets true.
+   * 
    * @param dirty
-   *          The dirty to set.
    */
   public void setDirty( boolean dirty )
   {
     m_dirty = dirty;
+    
+    if( dirty )
+      m_dirtySave = true;
   }
-
+  
+  public boolean isDirtySave( )
+  {
+    return m_dirtySave;
+  }
+  
   /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getColumnClass()
+   * This is the only means by which dirtySave can be set to false.
    */
+  public void resetDirtySave( )
+  {
+    m_dirtySave = false;
+  }
+  
   public Class getColumnClass( )
   {
     return m_valueAxis.getDataClass();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getAxis()
-   */
   public IAxis getAxis( )
   {
     return m_valueAxis;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getKeyAxis()
-   */
   public IAxis getKeyAxis( )
   {
     return m_keyAxis;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getTheme()
-   */
-  public ITableViewTheme getTheme( )
+  public TableViewTheme getTheme( )
   {
     return m_theme;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#setName(java.lang.String)
-   */
   public void setName( String name )
   {
     m_name = name;
   }
 
-  /**
-   * @see org.kalypso.eclipse.ui.IViewable#isShown()
-   */
   public boolean isShown( )
   {
     return m_shown;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#setShown(boolean)
-   */
   public void setShown( boolean shown )
   {
     if( shown != m_shown )
     {
       m_shown = shown;
 
-      m_template.fireTemplateChanged( new TemplateEvent( this, TemplateEvent.TYPE_SHOW_STATE ) );
+      m_template.fireTemplateChanged( new TemplateEvent( this,
+          TemplateEvent.TYPE_SHOW_STATE ) );
     }
+  }
+
+  /**
+   * Two TableViewColumn objects are equal if they have the same name and belong
+   * to the same theme.
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( final Object obj )
+  {
+    if( !this.getClass().equals( obj.getClass() ) )
+      return false;
+
+    final TableViewColumn col = (TableViewColumn) obj;
+
+    return new EqualsBuilder().append( col.m_name, m_name ).append(
+        col.m_theme, m_theme ).isEquals();
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode( )
+  {
+    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
+        .toHashCode();
   }
 }

@@ -44,7 +44,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.ogc.sensor.diagview.IDiagramTemplateTheme;
+import org.kalypso.ogc.sensor.diagview.impl.DiagViewTheme;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.diagrameditor.ObsDiagOutlinePage;
 
@@ -76,7 +76,7 @@ public class RemoveThemeAction extends FullAction implements ISelectionChangedLi
    */
   public void run( )
   {
-    final IDiagramTemplateTheme selectedTheme = m_page.getSelectedTheme();
+    final DiagViewTheme selectedTheme = m_page.getSelectedTheme();
     
     if( selectedTheme != null && MessageDialog.openConfirm( m_page.getSite().getShell(),  "Zeitreihe entfernen", "Wollen Sie wirklich die Zeitreihe " + selectedTheme.getName()+" entfernen" ) )
         m_page.getTemplate().removeTheme( selectedTheme );
