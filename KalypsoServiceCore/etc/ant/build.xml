@@ -23,6 +23,7 @@
 
 	<path id="ant.classpath">
 		<fileset dir="./lib/build/" includes="*.jar" />
+		<fileset dir="./lib/" includes="*.jar" />
 	</path>
 
 	<path id="compile.classpath">
@@ -166,7 +167,7 @@
 		     basedir="${workspace}/${package_bin}"
 		     includes="**/*" />
 	  
-		<copy todir="${build.web.lib}">
+		<copy todir="${build.web.lib}" flatten="true">
 			<fileset dir="${workspace}/${package_lib}" includes="**/*.jar" />
 		</copy>
 	</target>
@@ -179,7 +180,7 @@
 		<jar destfile="${build.web.lib}/${aproject_jar}"
 			basedir="${workspace}/${aproject_bin}"
 			includes="**/*"/>
-		<copy todir="${build.web.lib}">
+		<copy todir="${build.web.lib}" flatten="true">
 			<fileset dir="${workspace}/${aproject_lib}" includes="**/*.jar" />
 		</copy>
 	</target>

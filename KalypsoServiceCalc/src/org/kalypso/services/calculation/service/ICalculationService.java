@@ -2,6 +2,7 @@ package org.kalypso.services.calculation.service;
 
 import java.rmi.Remote;
 
+import org.kalypso.services.IKalypsoService;
 import org.kalypso.services.calculation.job.ICalcJob;
 
 
@@ -15,17 +16,13 @@ import org.kalypso.services.calculation.job.ICalcJob;
  * 
  * @author belger
  */
-public interface ICalculationService extends Remote 
+public interface ICalculationService extends Remote, IKalypsoService
 {
-	public final static int CANCELED = 2;
-  public final static int ERROR = 4;
-  public final static int FINISHED = 1;
-  public final static int RUNNING = 0;
-  public final static int UNKNOWN = -1;
-  public final static int WAITING = 3;
-  public final static int WAITING_FOR_DATA = 5;
-
-  /**
+//  public void setScheduling( final boolean schedule );
+//  
+//  public boolean isScheduling();
+//  
+	/**
 	 * Gibt die IDs aller unterstützten JobTypen zurück.
 	 *
 	 * @throws CalcJobServiceException
@@ -39,18 +36,25 @@ public interface ICalculationService extends Remote
    */
   public CalcJobBean[] getJobs() throws CalcJobServiceException;
 	
+  
+  /** Gibt den aktuellen Zustand eines einzelnen {@link ICalcJob} zurück */
+  public CalcJobBean getJob( final String jobID ) throws CalcJobServiceException;
+  
 	/**
 	 * Erzeugt einen neuen Auftrag. 
    * Der Auftrag wartet erstmal auf die Daten.
+   * 
+   * Erzeugt insbsondere das Basis-Verzeichnis für die Eingangsdaten, in welches diese
+   * vom Server kopiert werden müssen.
 	 */  
-  public CalcJobBean createJob( final String typeID, final String description, final CalcJobDataBean[] input ) throws CalcJobServiceException;
+  public CalcJobBean prepareJob( final String typeID, final String description ) throws CalcJobServiceException;
 
   /**
    * Teilt dem Job mit, dass jetzt alle Daten dem Server übergeben wurden.
    * Der Auftrag wird jetzt in die Liste gestellt und (abhängig von der Imlpementation)
    * baldmöglichst abgearbeitet.
    */
-  public void readyJob( final String jobID ) throws CalcJobServiceException;
+  public void startJob( final String jobID, final CalcJobDataBean[] input ) throws CalcJobServiceException;
   
   /**
    * Stoppt einen Auftrag

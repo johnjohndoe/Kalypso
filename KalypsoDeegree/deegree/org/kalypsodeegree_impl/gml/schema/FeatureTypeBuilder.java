@@ -148,14 +148,12 @@ public class FeatureTypeBuilder
       return;
     }
 
-    //    //
-    // else if( m_schema.getTargetNS().equals( valueNS ) ||
-    // m_schema.isImportedNS( valueNS ) )
-    // must be an local or imported type
-
-    GMLSchema schema = m_schema.getGMLSchema( valueNS );
+    final GMLSchema schema = m_schema.getGMLSchema( valueNS );
     final Node cNode = schema.getContentNode( typeName );
-    if( ( (Element)cNode ).getLocalName().equals( "complexType" ) )
+    if( cNode == null )
+      throw new Exception( "No content node for typeName: " + typeName );
+    
+    if( "complexType".equals( ( (Element)cNode ).getLocalName() ) )
     {
       String baseType = XMLHelper.getGMLBaseType( schema, cNode );
       if( baseType != null )
@@ -199,7 +197,7 @@ public class FeatureTypeBuilder
         ///////////
       }
     }
-    else if( ( (Element)cNode ).getLocalName().equals( "simpleType" ) )
+    else if( "simpleType".equals( ( (Element)cNode ).getLocalName() ) )
     {
       m_typeName = "org.deegree.model.FeatureProperty";
       GMLSchemaFactory.map( schema, cNode, this );

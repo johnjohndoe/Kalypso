@@ -97,8 +97,11 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     {
       final IFolder folder = calcCases[i];
       
-      new Job( "Berechne: " + folder.getName() ) 
+      final Job job = new Job( "Berechne: " + folder.getName() ) 
       {
+        /**
+         * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+         */
         protected IStatus run( final IProgressMonitor monitor )
         {
           try
@@ -114,7 +117,9 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
           }
 
           return Status.OK_STATUS;
-        }}.schedule();
+        }};
+        job.setUser( true );
+        job.schedule();
     }    
   }
 
