@@ -125,6 +125,6 @@ public class Mapper
     }
     if( "java.util.Date".equals( type ) )
       return XML_DATE_FORMAT.parseObject( value );
-    throw new Exception( "unknown XML type :" + type + "  for value: " + value );
+    throw new Exception( "unknown XML type: " + type + "  for value: " + value );
   }
 }
