@@ -25,8 +25,6 @@ public class DoubleCellEditor extends TextCellEditor
     super( parent, style );
   }
   
-  
-  
   /**
    * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
    */
@@ -34,7 +32,6 @@ public class DoubleCellEditor extends TextCellEditor
   {
     final Object object = super.doGetValue();
     final String value = object == null ? null : object.toString();
-    System.out.println( "get value: " + ( value == null ? "null" : value ) );
     return new Double( value );
   }
   /**
@@ -42,7 +39,6 @@ public class DoubleCellEditor extends TextCellEditor
    */
   protected void doSetValue( final Object value )
   {
-    System.out.println( "set value: " + ( value == null ? "null" : value.toString() ) );
     super.doSetValue( value == null ? "" : ((Double)value).toString() );
   }
 }

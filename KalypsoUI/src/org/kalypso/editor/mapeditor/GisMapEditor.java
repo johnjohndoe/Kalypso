@@ -170,6 +170,10 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     // create MapPanel
     final Frame virtualFrame = SWT_AWT
         .new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    
+    
+//    final Frame virtualFrame = new Frame();
+    
     virtualFrame.setVisible( true );
     myMapPanel.setVisible( true );
     virtualFrame.add( myMapPanel );
@@ -377,7 +381,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     public boolean isConflicting( final ISchedulingRule rule )
     {
-      return ( rule instanceof StyleRule && ((StyleRule)rule).getName().equals( m_name ) );
+      return ( rule instanceof StyleRule && ((StyleRule)rule).getName().equals( m_name ) ) || ( rule instanceof LayerRule );
     }
 
     public boolean contains( ISchedulingRule rule )
@@ -407,7 +411,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     public boolean isConflicting( final ISchedulingRule rule )
     {
-      return ( rule instanceof LayerRule && ((LayerRule)rule).getName().equals( m_name ) );
+      // Styles müssen nach den jeweiligen Themen geladen werden
+      // und alle Styles nacheinander, da Deegree hier nicht Thread Save ist
+      return ( rule instanceof LayerRule && ((LayerRule)rule).getName().equals( m_name ) ) || ( rule instanceof StyleRule );
     }
 
     public boolean contains( ISchedulingRule rule )

@@ -57,7 +57,6 @@ public class StyleLoader extends AbstractLoader implements IPoolListener
 
       final StyledLayerDescriptor sld = (StyledLayerDescriptor)m_sldPool.getObject(
           new PoolableObjectType( "sld", source, project ), monitor );
-      // TODO: move to StyleLoader
 
       final NamedLayer[] namedLayers = sld.getNamedLayers();
       for( int i = 0; i < namedLayers.length; i++ )

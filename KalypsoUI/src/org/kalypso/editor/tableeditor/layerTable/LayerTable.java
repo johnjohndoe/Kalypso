@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -66,7 +65,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_editor = editor;
     m_cellEditorFactory = cellEditorFactory;
 
-    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.MULTI /* | SWT.FULL_SELECTION */);
+    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_viewer.setContentProvider( new LayerTableContentProvider() );
     m_viewer.setLabelProvider( new LayerTableLabelProvider( this ) );
@@ -77,7 +76,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
     
-    new ExcelLikeTableCursor( m_viewer, SWT.BORDER );
+    new ExcelLikeTableCursor( m_viewer, SWT.NONE );
   }
 
   public void dispose()
@@ -215,7 +214,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.setColumnProperties( colProperties );
     m_viewer.setCellEditors( cellEditors );
     m_viewer.setInput( m_model );
-    m_viewer.setCellModifier( new LayerTableCellModifier( m_editor.getLayerCommandManager(), m_model, featureType ) );
+    m_viewer.setCellModifier( new LayerTableCellModifier( m_editor.getLayerCommandManager(), m_editor.getSchedulingRule(), m_model, featureType ) );
   }
 
   /**
