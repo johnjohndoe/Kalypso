@@ -3,6 +3,7 @@ package org.kalypso.lhwzsachsen.spree;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -85,7 +86,7 @@ public class SpreeInputWorker
    * @return Location of native files
    */
   public static File createNativeInput( final File tmpdir, final CalcJobDataBean[] input,
-      final Properties props ) throws CalcJobServiceException
+      final Properties props, final PrintWriter logwriter ) throws CalcJobServiceException
   {
     try
     {
@@ -97,6 +98,8 @@ public class SpreeInputWorker
       final File controlGML = checkInput( "CONTROL_GML", inputMap, tmpdir );
       final File controlXSD = checkInput( "CONTROL_XSD", inputMap, tmpdir );
 
+      logwriter.println( "Lese Steuerparameter: " + controlGML.getName() );
+      
       final Map map = parseControlFile( controlGML, controlXSD, nativedir );
       props.putAll( map );
 
@@ -106,16 +109,22 @@ public class SpreeInputWorker
       final String napFilename = (String)props.get( SpreeCalcJob.DATA_NAPFILENAME );
       final String tsFilename = (String)props.get( SpreeCalcJob.DATA_TSFILENAME );
 
+      logwriter.println( "Erzeuge _vhs Datei: " + vhsFile.getName() );
       StreamUtilities.streamCopy( SpreeInputWorker.class.getResourceAsStream( "resources/"
           + SpreeCalcJob.VHS_FILE ), new FileOutputStream( vhsFile ) );
 
+      logwriter.println( "Erzeuge _flp Datei: " + flpFilename );
       findAndWriteLayer( layers, SpreeCalcJob.FLP_NAME, SpreeCalcJob.FLP_MAP,
           SpreeCalcJob.FLP_GEOM, flpFilename );
+
+      logwriter.println( "Erzeuge _nap Datei: " + napFilename );
       findAndWriteLayer( layers, SpreeCalcJob.NAP_NAME, SpreeCalcJob.NAP_MAP,
           SpreeCalcJob.NAP_GEOM, napFilename );
 
+      
+      logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       final Map valuesMap = createTsData( tmpdir, inputMap );
-      createTimeseriesFile( tsFilename, valuesMap );
+      createTimeseriesFile( tsFilename, valuesMap, logwriter );
 
       return nativedir;
     }
@@ -126,7 +135,7 @@ public class SpreeInputWorker
     }
   }
 
-  public static void createTimeseriesFile( final String tsFilename, final Map valuesMap )
+  public static void createTimeseriesFile( final String tsFilename, final Map valuesMap, final PrintWriter logwriter )
       throws Exception
   {
     final List ftpList = new LinkedList();
@@ -202,8 +211,8 @@ public class SpreeInputWorker
       }
 
       for( int j = 0; j < data.length; j++ )
-        System.out.print( data[j] + "\t" );
-      System.out.println();
+        logwriter.print( data[j] + "\t" );
+      logwriter.println();
 
       final Feature feature = FeatureFactory.createFeature( "" + ( i + 1 ), type, data );
       shapeFeatures.add( feature );

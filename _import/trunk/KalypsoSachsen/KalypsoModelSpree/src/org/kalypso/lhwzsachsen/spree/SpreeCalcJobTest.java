@@ -21,6 +21,7 @@ import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.xml.sax.InputSource;
@@ -63,7 +64,7 @@ public class SpreeCalcJobTest extends TestCase
     final String calcCase = "calc";
     final String base = "base";
 
-    final File inputdir = new File( basedir, "input" );
+    final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
     final File inputcalcdir = new File( inputdir, calcCase );
     final File inputbasedir = new File( inputdir, base );
 
@@ -77,12 +78,12 @@ public class SpreeCalcJobTest extends TestCase
       final ModelspecType.InputType input = (InputType)iter.next();
       final String inputPath = input.getPath();
 
-      final String path = "input/" + ( input.isRelativeToCalcCase() ? calcCase : base ) + "/" + inputPath;
+      final String path = ( input.isRelativeToCalcCase() ? calcCase : base ) + "/" + inputPath;
       
       final File dir = input.isRelativeToCalcCase() ? inputcalcdir : inputbasedir;
       final File inputfile = new File( dir, inputPath );
 
-      final String inputresource = "test/040427/" + path;
+      final String inputresource = "test/040427/input/" + path;
       inputfile.getParentFile().mkdirs();
       
       FileUtilities.makeFileFromStream( false, inputfile, getClass().getResourceAsStream(
@@ -117,7 +118,7 @@ public class SpreeCalcJobTest extends TestCase
     map.put( SpreeCalcJob.DATA_LABEL, "Prognose" );
     map.put( SpreeCalcJob.DATA_STARTDATESTRING, "27.4.2005 12:00" );
 
-    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, resultDir, map );
+    new SpreeCalcJob().writeResultsToFolder( inputFilenameWOext, resultDir, map );
     FileUtilities.deleteRecursive( resultDir );
   }
 }

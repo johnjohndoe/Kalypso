@@ -1,9 +1,14 @@
 package org.kalypso.lhwzsachsen.spree;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -18,10 +23,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.output.NullOutputStream;
 import org.deegree.model.feature.Feature;
 import org.deegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -31,6 +37,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
@@ -49,7 +56,7 @@ public class SpreeCalcJob extends AbstractCalcJob
 {
   public static final String VHS_FILE = "_vhs.dbf";
 
-  public static final String FLP_FILE = "_flp";
+  public static final   String FLP_FILE = "_flp";
 
   public static final String FLP_NAME = "FlusslaufModell";
 
@@ -232,65 +239,117 @@ public class SpreeCalcJob extends AbstractCalcJob
       "xHWKERNEL.DLL" };
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.service.CalcJobDataBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.service.CalcJobDataBean[])
    */
   public void run( final File basedir, final CalcJobDataBean[] input )
       throws CalcJobServiceException
   {
-    if( isCanceled() )
-      return;
+    final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
+    final File outputdir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    outputdir.mkdirs();
+    final File logfile = new File( outputdir, "spree.log" );
+    addResult( new CalcJobDataBean( "LOG", "Spree-Log", FileUtilities.getRelativeFileTo( outputdir, logfile ).getPath() ) );
+    
+    PrintWriter pw = null;
 
-    final Properties props = new Properties();
-    final File exedir = SpreeInputWorker.createNativeInput( basedir, input, props );
-
-    progress( 33 );
-    if( isCanceled() )
-      return;
-
-    prepareExe( exedir );
-    startCalculation( exedir, props );
-
-    progress( 33 );
-
-    if( isCanceled() )
-      return;
-
-    final File outputdir = new File( basedir, "output" );
-    loadNativeOutput( basedir, outputdir, props );
-
-    progress( 34 );
-
-    if( isCanceled() )
-      return;
-  }
-
-  private void loadNativeOutput( final File basedir, final File outputdir, final Map props )
-      throws CalcJobServiceException
-  {
     try
     {
+      pw = new PrintWriter( new FileWriter( logfile ) );
+      pw.println( "Spree - Modell Berechnung wird gestartet" );
+      pw.println();
+
+      if( isCanceled() )
+        return;
+
+      final Properties props = new Properties();
+      setMessage( "Dateien für Rechenkern werden erzeugt" );
+      pw.println( "Dateien für Rechenkern werden erzeugt" );
+      final File exedir = SpreeInputWorker.createNativeInput( inputdir, input, props, pw );
+
       final File napFile = (File)props.get( DATA_NAPFILE );
       final File vhsFile = (File)props.get( DATA_VHSFILE );
       final File flpFile = (File)props.get( DATA_FLPFILE );
-      final String tsFilename = (String)props.get( DATA_TSFILENAME );
+      final File tsFile = (File)props.get( DATA_TSFILE );
+      copyAndAddToOutput( ".native/in", outputdir, napFile );
+      copyAndAddToOutput( ".native/in", outputdir, vhsFile );
+      copyAndAddToOutput( ".native/in", outputdir, flpFile );
+      copyAndAddToOutput( ".native/in", outputdir, tsFile );
 
-      writeResultsToFolder( tsFilename, basedir, outputdir, props );
+      progress( 33 );
+      if( isCanceled() )
+        return;
 
-      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, napFile )
-          .getPath() ) );
-      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, vhsFile )
-          .getPath() ) );
-      addResult( new CalcJobDataBean( "", "", FileUtilities.getRelativeFileTo( basedir, flpFile )
-          .getPath() ) );
+      setMessage( "Rechenkern wird aufgerufen" );
+      pw.println( "Rechenkern wird aufgerufen" );
+      prepareExe( exedir, pw );
+      startCalculation( exedir, props, pw );
+      copyAndAddToOutput( ".native/out", outputdir, napFile );
+      copyAndAddToOutput( ".native/out", outputdir, vhsFile );
+      copyAndAddToOutput( ".native/out", outputdir, flpFile );
+      copyAndAddToOutput( ".native/out", outputdir, tsFile );
+      progress( 33 );
+      if( isCanceled() )
+        return;
+
+      setMessage( "Ergebnisse werden zurückgelesen" );
+      pw.println( "Ergebnisse werden zurückgelesen" );
+      try
+      {
+        final String tsFilename = (String)props.get( DATA_TSFILENAME );
+        writeResultsToFolder( tsFilename, outputdir, props );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        throw new CalcJobServiceException( "", e );
+      }
+      progress( 34 );
+      if( isCanceled() )
+        return;
+
+      pw.println( "Berechnung beendet" );
     }
-    catch( final Exception e )
+    catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "", e );
+
+      throw new CalcJobServiceException( "Log-Datei konnte nicht geschrieben werden:\n"
+          + e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      if( pw != null )
+        pw.close();
     }
   }
 
-  private void startCalculation( final File exedir, final Map m_data )
+  private void copyAndAddToOutput( final String subdirname, final File outputdir, final File toCopy ) throws CalcJobServiceException
+  {
+    try
+    {
+      final File subdir = new File( outputdir, subdirname );
+      subdir.mkdirs();
+      final File targetfile = new File( outputdir, subdirname + "/" + toCopy.getName() );
+
+      final InputStream is = new FileInputStream( toCopy );
+      final OutputStream os = new FileOutputStream( targetfile );
+      CopyUtils.copy( is, os );
+      is.close();
+      os.close();
+      
+      addResult( new CalcJobDataBean( toCopy.getName(), toCopy.getName(), FileUtilities
+          .getRelativeFileTo( outputdir, targetfile ).getPath() ) );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      
+      throw new CalcJobServiceException( "Fehler beim Übertragen der Ergebnisdateien", e );
+    }
+  }
+
+  private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter )
       throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
@@ -302,28 +361,37 @@ public class SpreeCalcJob extends AbstractCalcJob
       final String timeString = new SimpleDateFormat( "yyyy,MM,dd,HH,mm,ss" ).format( startTime );
 
       final File tsFile = (File)m_data.get( DATA_TSFILE );
-      
+
       final File exefile = new File( exedir, EXE_FILE );
-      
-      final String commandString = exefile.getAbsolutePath() + " " + timeString + " " + tsFile.getAbsolutePath();
-      
-      // create crackfile
-      final Process process = Runtime.getRuntime().exec( commandString,
-          null, exedir );
+
+      final String commandString = exefile.getAbsolutePath() + " " + timeString + " "
+          + tsFile.getAbsolutePath();
+
+      logwriter.println( commandString );
+      logwriter.println( "Ausgabe des Rechenkerns" );
+      logwriter.println( "#######################" );
+      logwriter.println( "#########START#########" );
+      logwriter.println( "#######################" );
+      logwriter.println();
+
+      final Process process = Runtime.getRuntime().exec( commandString, null, exedir );
 
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
+      final OutputStream nul_dev = new NullOutputStream();
       while( true )
       {
-        ReaderUtilities.dumpAllAvailable( inStream );
-        ReaderUtilities.dumpAllAvailable( errStream );
+        CopyUtils.copy( inStream, logwriter );
+        CopyUtils.copy( errStream, nul_dev );
+        //        ReaderUtilities.dumpAllAvailable( inStream );
+        //        ReaderUtilities.dumpAllAvailable( errStream );
 
         try
         {
           process.exitValue();
           return;
         }
-        catch( IllegalThreadStateException e )
+        catch( final IllegalThreadStateException e )
         {
           // noch nicht fertig
         }
@@ -361,18 +429,27 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         e1.printStackTrace();
       }
+
+      logwriter.println( "#######################" );
+      logwriter.println( "#########ENDE#########" );
+      logwriter.println( "#######################" );
+      logwriter.println();
     }
   }
 
   /**
-   * schreibt die exe aus den resourcne in ein temproäres Verzeichnis
+   * schreibt die exe aus den Resourcen in ein temproäres Verzeichnis
+   * 
+   * @param logwriter
    * 
    * @throws CalcJobServiceException
    */
-  private void prepareExe( final File exedir ) throws CalcJobServiceException
+  private void prepareExe( final File exedir, final PrintWriter logwriter )
+      throws CalcJobServiceException
   {
     try
     {
+      logwriter.println( "Rechenkern wird vorbereitet" );
       copyFileToTmp( exedir, EXE_FILE );
 
       for( int i = 0; i < OTHER_FILES.length; i++ )
@@ -397,7 +474,6 @@ public class SpreeCalcJob extends AbstractCalcJob
     final URL resource = getClass().getResource( "resources/exe/" + filename );
     final URLConnection connection = resource.openConnection();
 
-    
     FileUtilities.makeFileFromStream( false, file, connection.getInputStream() );
     // die Zeit auf 1.1.1970 setzen, weil sonst der Rechenkern meckert
     file.setLastModified( 0 );
@@ -411,8 +487,8 @@ public class SpreeCalcJob extends AbstractCalcJob
   // die dateien werden extern gelöscht, sonst hab ich nix gemacht
   }
 
-  public void writeResultsToFolder( final String tsFilename, final File basedir, final File outdir,
-      final Map dataMap ) throws Exception
+  public void writeResultsToFolder( final String tsFilename, final File outdir, final Map dataMap )
+      throws Exception
   {
     final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     final CS_CoordinateSystem crs = org.deegree_impl.model.cs.Adapters.getDefault().export(
@@ -488,7 +564,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       final File outputDir = new File( outdir, outdirname );
       outputDir.mkdirs();
       final File outFile = new File( outputDir, outfilename );
-      final File outFileRelative = FileUtilities.getRelativeFileTo( basedir, outFile );
+      final File outFileRelative = FileUtilities.getRelativeFileTo( outdir, outFile );
 
       final Collection values = (Collection)valuesMap.get( column );
       if( values == null )
