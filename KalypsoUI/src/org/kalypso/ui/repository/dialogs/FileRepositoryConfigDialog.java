@@ -67,8 +67,9 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     final Composite sub = new Composite( c, SWT.FILL );
 
     m_fLocation = new DirectoryFieldEditor( BASEDIR, "Basis-Verzeichnis:", sub );
+    m_fIdentifier = new StringFieldEditor( IDENTIFIER, "Kennzeichen:", sub );
     m_fFilters = new StringFieldEditor( FILTER, "Dateiendung:", sub );
-
+    
     m_fLocation.setPreferenceStore( m_store );
     m_fLocation.loadDefault();
     m_fLocation.setEmptyStringAllowed( false );
@@ -84,8 +85,8 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     sub.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     m_fLocation.fillIntoGrid( sub, 5 );
-    m_fIdentifier.fillIntoGrid( sub, 4 );
-    m_fFilters.fillIntoGrid( sub, 2 );
+    m_fIdentifier.fillIntoGrid( sub, 5 );
+    m_fFilters.fillIntoGrid( sub, 3 );
 
     return c;
   }
