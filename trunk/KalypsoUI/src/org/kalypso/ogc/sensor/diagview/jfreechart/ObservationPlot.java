@@ -93,8 +93,10 @@ public class ObservationPlot extends XYPlot
 
   private int m_ranPos = 0;
 
-  private Map m_yConsts;
-
+  private transient Map m_yConsts = new HashMap();
+  
+  private transient Map m_markers = new HashMap();
+  
   /**
    * Constructor.
    * 
@@ -132,8 +134,6 @@ public class ObservationPlot extends XYPlot
     }
 
     setNoDataMessage( "Keine Daten vorhanden" );
-
-    m_yConsts = new HashMap();
   }
 
   public void dispose()
@@ -212,6 +212,7 @@ public class ObservationPlot extends XYPlot
     clearAnnotations();
     
     m_yConsts.clear();
+    m_markers.clear();
   }
 
   /**
@@ -292,10 +293,17 @@ public class ObservationPlot extends XYPlot
     final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
     if( fr != null )
     {
-      long begin = fr.getFrom().getTime();
-      long end = fr.getTo().getTime();
-      addDomainMarker( createMarker( begin, end,
-          TimeserieConstants.MD_VORHERSAGE ), Layer.BACKGROUND );
+      final Long begin = new Long( fr.getFrom().getTime() );
+      if( !m_markers.containsKey( begin) )
+      {
+        final long end = fr.getTo().getTime();
+        final Marker marker = createMarker( begin.doubleValue(), end,
+          TimeserieConstants.MD_VORHERSAGE );
+        
+        addDomainMarker( marker, Layer.BACKGROUND );
+        
+        m_markers.put( begin, marker );
+      }
     }
 
     // add a constant Y line if obs has alarmstufen
@@ -307,14 +315,14 @@ public class ObservationPlot extends XYPlot
       if( !m_yConsts.containsKey( value ) )
       {
         final Color color = TimeserieUtils.getColorFor( alarms[i] );
-        m_yConsts.put( value, new ValueAndColor( alarms[i], value.doubleValue(), color ) );
+        m_yConsts.put( value, new ValueAndColor( alarms[i] + " (" + value.doubleValue() + ")", value.doubleValue(), color ) );
         
         final double x;
         if( xyc.getItemCount() > 1 )
           x = xyc.getXValue(1).doubleValue();
         else
           x = getDomainAxis().getLowerBound();
-        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
+        final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() + 0.5 );
         ann.setPaint( color );
         addAnnotation( ann );
       }

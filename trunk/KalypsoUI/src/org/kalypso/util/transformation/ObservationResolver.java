@@ -252,11 +252,11 @@ public class ObservationResolver extends AbstractTransformation
           final ForecastFilter fc = new ForecastFilter();
           fc.initFilter( new IObservation[] { obs1, obs2 }, obs1 );
           obs = fc;
-
-          // set forecast metadata, might be used in diagram for instance
-          // to mark the forecast range
-          TimeserieUtils.setForecast( obs, from2, to2 );
         }
+        
+          // set forecast metadata, might be used in diagram for instance
+        // to mark the forecast range
+        TimeserieUtils.setForecast( obs, from2, to2 );
 
         final IFile targetfile = targetFolder.getFile( new Path( targetlink
             .getHref() ) );

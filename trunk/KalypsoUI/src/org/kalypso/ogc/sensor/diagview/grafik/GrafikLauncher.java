@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.diagview.grafik;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -210,7 +211,7 @@ public class GrafikLauncher
       String dateAxisLabel = "Datum";
 
       final List xLines = new ArrayList();
-      final List yLines = new ArrayList();
+      final Map yLines = new HashMap();
       
       int ixObs = 1;
 
@@ -298,7 +299,10 @@ public class GrafikLauncher
         final MetadataList mdl = obs.getMetadataList();
         final String[] mds = TimeserieUtils.findOutMDAlarmstufen( obs );
         for( int i = 0; i < mds.length; i++ )
-          yLines.add( mdl.getProperty( mds[i] ) );
+        {
+          final Double value = new Double( mdl.getProperty( mds[i] ) );
+          yLines.put( value, new ValueAndColor( mds[i] + " (" + mdl.getProperty( mds[i] ) + ")", value.doubleValue(), null ) );
+        }
       }
 
       writer.write( "\n" );
@@ -310,8 +314,12 @@ public class GrafikLauncher
       // TODO: find out which command means vertical line in the grafik tool...
       // writer.write( verticalLines... + '\n' );
       
-      // TODO: find out command for constant horizontal lines...
-      // writer.write( alarmstufen...  + '\n' );
+      // constant horizontal lines...
+      for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
+      {
+        final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
+        writer.write( "yKonst: " + vac.value + " " + vac.label + '\n' );
+      }
     }
     catch( Exception e )
     {
@@ -387,6 +395,27 @@ public class GrafikLauncher
     catch( Throwable e )
     {
       throw new SensorException( e );
+    }
+  }
+  
+  /**
+   * mini helper class for storing a value and a color
+   * 
+   * @author schlienger
+   */
+  private final static class ValueAndColor
+  {
+    final double value;
+
+    final Color color;
+
+    final String label;
+
+    public ValueAndColor( final String lbl, final double val, final Color col )
+    {
+      this.label = lbl;
+      this.value = val;
+      this.color = col;
     }
   }
 }
