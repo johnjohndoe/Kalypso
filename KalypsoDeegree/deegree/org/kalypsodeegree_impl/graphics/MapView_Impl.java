@@ -377,7 +377,8 @@ class MapView_Impl implements MapView {
      */
     public void paint(Graphics g)  throws RenderException {
         Debug.debugMethodBegin();
-
+        if(getThemeSize()==0)
+        	return;
         if ( g.getClipBounds() == null ) {
             throw new RenderException( "no clip bounds defined for graphic context" );
         }
@@ -413,7 +414,8 @@ class MapView_Impl implements MapView {
      */
     public void paintSelected(Graphics g)  throws RenderException {
         Debug.debugMethodBegin( this, "paintSelected" );
-        
+        if(getThemeSize()==0)
+        	return;
         if ( g.getClipBounds() == null ) {
             throw new RenderException( "no clip bounds defined for graphic context" );
         }
@@ -448,7 +450,8 @@ class MapView_Impl implements MapView {
      */
     public void paintHighlighted(Graphics g)  throws RenderException {
         Debug.debugMethodBegin( this, "paintHighlighted" );
-        
+        if(getThemeSize()==0)
+        	return;
         if ( g.getClipBounds() == null ) {
             throw new RenderException( "no clip bounds defined for graphic context" );
         }
