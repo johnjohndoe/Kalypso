@@ -3,4 +3,6 @@
 .\repconf.xsd">
 
 	<rep className="org.kalypso.ogc.sensor.zml.repository.SimpleZmlObservationRepositoryFactory" confString="//Pc242/KalypsoServer/data/mirrored/SomeObservations" />
+	<rep className="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory" confString="" />
+
 </repconf>
