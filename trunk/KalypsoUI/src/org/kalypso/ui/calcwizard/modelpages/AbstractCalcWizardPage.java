@@ -290,9 +290,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#init(org.eclipse.core.resources.IProject,
-   *      java.lang.String, org.eclipse.jface.resource.ImageDescriptor,
-   *      java.util.Properties, org.eclipse.core.resources.IFolder)
+   * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#init(org.eclipse.core.resources.IProject, java.lang.String, org.eclipse.jface.resource.ImageDescriptor, org.kalypso.ui.calcwizard.Arguments, org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
       final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder )

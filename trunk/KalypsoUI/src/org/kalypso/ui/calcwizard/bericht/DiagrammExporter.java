@@ -40,6 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
+import java.awt.Color;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -92,10 +93,11 @@ public class DiagrammExporter extends AbstractBerichtExporter
     final DiagViewTemplate tpl = new DiagViewTemplate();
     tpl.setBaseTemplate( xml, getContext() );
     
-    // TODO: wailt until template is loaded!
     
     final ObservationChart chart = new ObservationChart( tpl );
+    chart.setBackgroundPaint( Color.WHITE );
     
+    // TODO: wait until template is loaded!
     Thread.sleep( 2000 );
     
     new ExportableChart( chart, EXT, width, height ).exportDocument( os );

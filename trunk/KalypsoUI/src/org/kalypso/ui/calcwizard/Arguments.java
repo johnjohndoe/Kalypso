@@ -93,10 +93,6 @@ public class Arguments implements Map
     return m_map.values();
   }
 
-  /**
-   * @param string
-   * @return
-   */
   public Arguments getArguments( final String key )
   {
     return (Arguments) get( key );

@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -137,7 +138,7 @@ public class ExportBerichtWizard extends Wizard
     final FeatureTypeProperty[] ftps = (FeatureTypeProperty[]) ftpColl
         .toArray( new FeatureTypeProperty[ftpColl.size()] );
     final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null,
-        ftps, ints, ints, null, null );
+        ftps, ints, ints, null, new HashMap() );
 
     m_feature = FeatureFactory
         .createFeature( "0", ft, (FeatureProperty[]) fpColl
