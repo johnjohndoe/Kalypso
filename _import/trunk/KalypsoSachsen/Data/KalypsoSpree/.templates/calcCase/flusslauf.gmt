@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="50.98591108875483" left="14.31998013782212" right="14.96811501424805" top="51.5434279065593"/>
+    <layers active="ID_1">
+        <layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" featurePath="FlusslaufModellCollectionAssociation/FlusslaufModellMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="./calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Flusslaufmodelle" ns1:actuate="onRequest" ns1:href="project:/.styles/flusslaufmodelle.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="sachsenrivers" ns3:actuate="onRequest" ns3:href="project:/.styles/styles.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+
