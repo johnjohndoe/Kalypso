@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+The deegree build system is based on Apache Ant, which is a Java building tool.
+
+For more information refer to "http://jakarta.apache.org/ant/".
+
+Make sure that you have a reasonably recent version of Ant installed, i.e.
+it is in the PATH and can be executed by issuing "ant" on the command line.
+ 
+Furthermore you have to make sure, that the "JAVA_HOME" environment property
+is set to match the JDK you want to use. You need a version >=1.4.0 in order
+to compile deegree.
+
+NOTE: You most certainly have to edit the properties below that define the
+paths to external libraries that deegree depends on!!!
+
+==============================================================================
+
+This file is part of deegree.
+Copyright (C) 2001 by:
+EXSE, Department of Geography, University of Bonn
+http://www.giub.uni-bonn.de/exse/
+lat/lon Fitzke/Fretter/Poth GbR
+http://www.lat-lon.de
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Contact:
+
+Andreas Poth
+lat/lon Fitzke/Fretter/Poth GbR
+Meckenheimer Allee 176
+53115 Bonn
+Germany
+E-Mail: poth@lat-lon.de
+
+Jens Fitzke
+Department of Geography
+University of Bonn
+Meckenheimer Allee 166
+53115 Bonn
+Germany
+E-Mail: jens.fitzke@uni-bonn.de
+
+==============================================================================
+
+version: 2003-10-10
+
+author: Markus Schneider - mschneider@lat-lon.de
+        Andreas Poth - poth@lat-lon.de
+
+-->
+<project name="deegree" default="jar" basedir=".">
+	<description>Deegree Java Framework for Geospatial Solutions</description>
+	<!--
+            root path to the required libraries
+        -->
+	<property name="libPath" value="lib"/>
+	<!-- ArcSDE API 
+            comment this property to avoid compiling arcsde support
+
+	<property name="esrilibs" value="${libPath}/esri/jsde82_sdk.jar"/>
+        -->
+	<!-- Oracle JDBC driver + SDO 
+            comment this property to avoid compiling oracle support
+
+	<property name="oraclelibs" value="${libPath}/oracle/ojdbc14.jar:${libPath}/oracle/sdoapi.jar"/>
+    -->
+	<!-- Postgres JDBC driver + Postgis 
+            comment this property to avoid compiling postgis support
+       
+	<property name="pglibs" value="${libPath}/postgis/pg73jdbc3.jar:${libPath}/postgis/postgis.jar"/>
+ -->
+	<!-- MySQL JDBC driver  
+            comment this property to avoid compiling oracle support
+    
+	<property name="mysqllibs" value="${libPath}/mysql/mysql-connector-java-3.0.8-stable-bin.jar"/>
+    -->
+	<!-- Sun Servlet API (tested: 2.3) -->
+	<property name="servletlibs" value="${libPath}/servlet/servlet.jar:${libPath}/servlet/jsdk2.3.jar"/>
+	<!-- Sun Java3D (tested: 1.3) -->
+	<property name="java3dlibs" value="${libPath}/java3d/j3dcore.jar:${libPath}/java3d/j3dutils.jar:${libPath}/java3d/vecmath.jar"/>
+	<!-- Sun JAI (tested: 1.1.1_01) -->
+	<property name="jailibs" value="${libPath}/jai/jai_core.jar:${libPath}/jai/jai_codec.jar"/>
+	<!-- JTS (tested: 1.3) -->
+	<property name="jtslibs" value="${libPath}/jts/jts.jar"/>
+	<!-- mail  -->
+	<property name="maillib" value="${libPath}/mail/mail.jar"/>
+	<!-- Apache Batik (tested: 1.5) -->
+	<property name="batiklibs" value="${libPath}/batik/lib/batik-awt-util.jar;${libPath}/batik/lib/batik-css.jar;
+                                          ${libPath}/batik/lib/batik-dom.jar;${libPath}/batik/lib/batik-svg-dom.jar;
+                                          ${libPath}/batik/lib/batik-svggen.jar;${libPath}/batik/lib/batik-util.jar;
+                                          ${libPath}/batik/lib/batik-xml.jar"/>
+	<!-- ACME (tested: 1.3) -->
+	<property name="acmelibs" value="${libPath}/acme/acme.jar"/>
+	<property name="ermapperlibs" value="${libPath}/ecw/ermapper.jar"/>
+	<property name="src" value="./deegree"/>
+	<property name="build" value="build"/>
+
+	<target name="init" description="create directories">
+		<mkdir dir="${build}"/>
+		<tstamp>
+    		<format property="TODAY" pattern="yyyy-MM-dd"/>
+  		</tstamp>
+	</target>
+	<target name="compile-javax" depends="init" description="compile preliminary javax.units classes">
+		<!-- this is a bit nasty, but currently needed by javax.units -->
+		<javac srcdir="${src}/org/deegree_impl/model/resources/" destdir="${build}" includes="Utilities.java,XArray.java,WeakHashSet.java,
+                                                                                                      ResourceBundle.java"/>
+
+		<javac srcdir="${src}/org/deegree_impl/tools/" destdir="${build}" includes="StringExtend.java" debug="true" />
+		<javac srcdir="${src}/javax" destdir="${build}"/>
+	</target>
+	<target name="compile-opengis" depends="init" description="compile OpenGIS interfaces">
+		<javac srcdir="${src}/org/opengis" destdir="${build}"/>
+	</target>
+	<target name="compile-interfaces" depends="compile-javax, compile-opengis" description="compile deegree interfaces">
+		<javac srcdir="${src}/org/deegree" destdir="${build}"  debug="true" >
+			<classpath>
+<!--			<fileset dir="${src}" >
+	 	    <include name="org/**/*java"/>
+	 	</fileset>
+	 	-->
+				<pathelement path="${src}/org/deegree_ext/**/*.jar"/>
+				<pathelement path="${classpath}"/>
+				<pathelement path="${java3dlibs}"/>
+				<pathelement path="${jailibs}"/>
+				<pathelement path="${acmelibs}"/>
+				<pathelement path="${maillib}"/>
+			</classpath>
+		</javac>
+	</target>
+	<target name="compile-classes" depends="compile-interfaces" description="compile deegree classes (except ESRI support)">
+		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" excludes="io/sdeapi/*,services/wfs/sde/*,io/OracleSpatialAccess.java,
+                                                                                     services/wfs/oracle/*,model/geometry/OracleAdapter.java,
+                                                                                      services/wfs/filterencoding/OracleSQLBuilder.java,
+                                                                                     io/MySQLDBAccess.java,services/wfs/mysql/*,
+                                                                                     services/wfs/filterencoding/MySQLSQLBuilder.java,
+                                                                                     model/geometry/PostGISAdapter.java,
+                                                                                     io/PostgisDBAccess.java,services/wfs/postgis/*,
+                                                                                     services/wfs/filterencoding/PostgisSQLBuilder.java,
+                                                                                     model/geometry/SDEAdapter.java"
+			verbose="true" fork="true" memorymaximumsize="200m"  debug="true" >
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement path="${java3dlibs}"/>
+				<pathelement path="${jailibs}"/>
+				<pathelement path="${jtslibs}"/>
+				<pathelement path="${batiklibs}"/>
+				<pathelement path="${servletlibs}"/>
+				<pathelement path="${acmelibs}"/>
+				<pathelement path="${ermapperlibs}"/>
+				<pathelement path="${maillib}"/>
+			</classpath>
+		</javac>
+	</target>
+	<target name="compile-arcsde-support" depends="compile-classes" description="compile ArcSDE support for deegree" if="esrilibs">
+		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="io/sdeapi/*,services/wfs/sde/*,
+                                                                                     model/geometry/SDEAdapter.java"  debug="true" >
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement path="${java3dlibs}"/>
+				<pathelement path="${jailibs}"/>
+				<pathelement path="${jtslibs}"/>
+				<pathelement path="${esrilibs}"/>
+			</classpath>
+		</javac>
+	</target>
+		
+	<target name="compile-oracle-support" depends="compile-classes" description="compile Oracle support for deegree" if="oraclelibs">
+		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="io/OracleSpatialAccess.java,services/wfs/oracle/*,
+                                                                                     model/geometry/OracleAdapter.java,
+                                                                                     services/wfs/filterencoding/OracleSQLBuilder.java"  debug="true" >
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement path="${java3dlibs}"/>
+				<pathelement path="${jailibs}"/>
+				<pathelement path="${jtslibs}"/>
+				<pathelement path="${oraclelibs}"/>				
+			</classpath>
+		</javac>
+	</target>
+	<target name="compile-mysql-support" depends="compile-classes" description="compile MySQL support for deegree" if="mysqllibs">
+		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="io/MySQLDBAccess.java,services/wfs/mysql/*,
+                                                                                     services/wfs/filterencoding/MySQLSQLBuilder.java"  debug="true" >
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement path="${java3dlibs}"/>
+				<pathelement path="${jailibs}"/>
+				<pathelement path="${jtslibs}"/>
+				<pathelement path="${mysqllibs}"/>
+			</classpath>
+		</javac>
+	</target>
+	<target name="compile-postgis-support" depends="compile-classes" description="compile Postgis support for deegree" if="pglibs">
+		<javac srcdir="${src}/org/deegree_impl" destdir="${build}" includes="model/geometry/PostGISAdapter.java,
+                                                                                     io/PostgisDBAccess.java,services/wfs/postgis/*,
+                                                                                     services/wfs/filterencoding/PostgisSQLBuilder.java"  debug="true" >
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement path="${java3dlibs}"/>
+				<pathelement path="${jailibs}"/>
+				<pathelement path="${jtslibs}"/>
+				<pathelement path="${pglibs}"/>
+			</classpath>
+		</javac>
+	</target>
+	<target name="compile" depends="compile-classes, compile-arcsde-support, compile-oracle-support,
+                                        compile-mysql-support, compile-postgis-support" description="compile all deegree classes and interfaces"/>
+                                        
+	<target name="jar" depends="compile" description="creating the deegree java library">
+		<jar jarfile="../KalypsoUtil/lib/kalypsodeegree.jar" basedir="build" />
+	</target>                                        
+	
+	<target name="clean" description="Clean only generated classes">
+	  <delete dir="${build}"/>
+	</target>
+
+	<target name="all" depends="compile,jar"/>
+</project>
