@@ -226,8 +226,8 @@ public class ObservationUtilities
   }
 
   /**
-   * Copy the values from source into dest. Only tries to copy the values of
-   * axes that are found in the dest observation.
+   * Copy the values from source into dest. Only copies the values of
+   * the axes that are found in the dest AND in source observation.
    * 
    * @param source
    * @param dest
