@@ -94,7 +94,7 @@ public class NaModelCalcJob extends AbstractCalcJob
   public NaModelCalcJob()
   {
     m_urlUtilities = new UrlUtilities();
-  
+
   }
 
   public void run( final File basedir, final CalcJobDataBean[] input )
@@ -129,8 +129,8 @@ public class NaModelCalcJob extends AbstractCalcJob
       setMessage( "starte Simulationskern" );
       if( isCanceled() )
         return;
-      startCalculation( exeDir ); 
-      
+      startCalculation( exeDir );
+
       setMessage( "lade Ergebnisse" );
       loadResults( exeDir, modellWorkspace, logBuffer, outDir );
 
@@ -147,7 +147,7 @@ public class NaModelCalcJob extends AbstractCalcJob
       final CalcJobDataBean[] beans, File outDir ) throws Exception
   {
     // input model
-    
+
     final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
     final File modelFile = new File( inputDir, modellBean.getPath() );
 
@@ -160,8 +160,9 @@ public class NaModelCalcJob extends AbstractCalcJob
 
     final CalcJobDataBean metaBean = CalcJobHelper.getBeanForId( META_ID, beans );
     final File metaFile = new File( inputDir, metaBean.getPath() );
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaFile.toURL(), conf.getMetaSchemaURL() );
-    final Feature metaFE=metaWorkspace.getRootFeature();
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaFile.toURL(), conf
+        .getMetaSchemaURL() );
+    final Feature metaFE = metaWorkspace.getRootFeature();
     // control
     final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId( CONTROL_ID, beans );
     final File controlFile = new File( inputDir, controlBean.getPath() );
@@ -176,18 +177,18 @@ public class NaModelCalcJob extends AbstractCalcJob
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, conf
         .getSchemaURL() );
-    conf.setSimulationStart( (Date)metaWorkspace.getRootFeature()
-        .getProperty( "startsimulation" ) );
+    conf.setSimulationStart( (Date)metaWorkspace.getRootFeature().getProperty( "startsimulation" ) );
     conf.setSimulationForecasetStart( (Date)metaWorkspace.getRootFeature().getProperty(
         "startforecast" ) );
     // TODO add endsimulation in control.xsd and use it here
     // TODO change also in NAControlConverter
     conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty( "startforecast" ) );
-    //    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty( "endsimulation" ) );
+    //    conf.setSimulationEnd( (Date)metaWorkspace.getRootFeature().getProperty(
+    // "endsimulation" ) );
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
     // generate control files
-    NAControlConverter.featureToASCII( exeDir,metaFE,controlWorkspace, modellWorkspace );
+    NAControlConverter.featureToASCII( exeDir, metaFE, controlWorkspace, modellWorkspace );
 
     // update model with factor values from control
     updateFactorParameter( modellWorkspace );
@@ -333,9 +334,16 @@ public class NaModelCalcJob extends AbstractCalcJob
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if(!FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
+        if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
           continue; // should not generate results
         final String key = FeatureHelper.getAsString( feature, "num" );
+        final String feID = feature.getId();
+        final String feName = (String)feature.getProperty( "name" );
+        final String title;
+        if( feName != null )
+          title = "Berechnung " + feName + " (" + feID + ")";
+        else
+          title = "Berechnung (" + feID + ")";
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
@@ -357,14 +365,14 @@ public class NaModelCalcJob extends AbstractCalcJob
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
             Date.class, 0, true );
-        final IAxis qAxis = new DefaultAxis( TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF, "qm/s",
-            Double.class, 1, false );
+        final IAxis qAxis = new DefaultAxis( TimeserieConstants.TYPE_RUNOFF,
+            TimeserieConstants.TYPE_RUNOFF, "qm/s", Double.class, 1, false );
         IAxis[] axis = new IAxis[]
         {
             dateAxis,
             qAxis };
         ITuppleModel qTuppelModel = new SimpleTuppleModel( axis, tupelData );
-        final IObservation resultObservation = new SimpleObservation( "ID", "SimulationsErgebnis",
+        final IObservation resultObservation = new SimpleObservation( "ID", title,
             false, null, new MetadataList(), axis, qTuppelModel );
         // if pegel exists, copy metadata (inclusive wq-function)
         final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( "pegelZR" );
@@ -372,7 +380,7 @@ public class NaModelCalcJob extends AbstractCalcJob
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
               .getHref() );
-          if( ( new File(pegelURL.getFile())).exists() )
+          if( ( new File( pegelURL.getFile() ) ).exists() )
           {
 
             log
@@ -404,8 +412,9 @@ public class NaModelCalcJob extends AbstractCalcJob
                   + feature.getId() + " ." );
           continue;
         }
-//        String resultPathRelative = resultLink.getHref();
-        String resultPathRelative = FileUtilities.getRelativePathTo(new File(outputDir,"Ergebnisse"), new File( outputDir, resultLink.getHref() ));
+        //        String resultPathRelative = resultLink.getHref();
+        String resultPathRelative = FileUtilities.getRelativePathTo( new File( outputDir,
+            "Ergebnisse" ), new File( outputDir, resultLink.getHref() ) );
         final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
 
@@ -418,7 +427,7 @@ public class NaModelCalcJob extends AbstractCalcJob
         writer.close();
 
         addResult( new CalcJobDataBean( "ERG" + feature.getId(), "Berechnungsergebnis zu Knoten #"
-            + feature.getId(), resultPathRelative ) );        
+            + feature.getId(), resultPathRelative ) );
       }
     }
   }
@@ -598,7 +607,8 @@ public class NaModelCalcJob extends AbstractCalcJob
 
         if( isCanceled() )
         {
-          // TODO mit remote debugging testen ob dies auch im tomcat funktioniert - sollte eigentlich
+          // TODO mit remote debugging testen ob dies auch im tomcat
+          // funktioniert - sollte eigentlich
           process.destroy();
           return;
         }
@@ -608,12 +618,12 @@ public class NaModelCalcJob extends AbstractCalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausf?hren", e );
+      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausf?hren", e );
+      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
     }
     finally
     {
