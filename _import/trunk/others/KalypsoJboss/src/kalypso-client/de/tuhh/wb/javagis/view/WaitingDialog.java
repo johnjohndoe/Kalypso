@@ -35,8 +35,10 @@ public class WaitingDialog extends JInternalFrame {
 	
 	public static WaitingDialog getInstance()
 		 {
-		 if(instance==null)
+		 if(instance==null){
+		 //System.out.println("New Waiting Dialog");
 		 instance=new WaitingDialog();
+		 }
 		 ViewManager.desktop.add(instance);
 		 instance.moveToFront();
 		 return instance;

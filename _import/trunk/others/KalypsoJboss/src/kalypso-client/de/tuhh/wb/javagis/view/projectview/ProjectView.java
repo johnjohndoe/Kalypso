@@ -115,7 +115,7 @@ public class ProjectView
 		mi.setActionCommand("updateProjectTree");
 		mi.addActionListener(this);
 		edit.add(mi);
-		
+
 		/// In ViewManager-Menü verschoben ///
 		/*mi = new JMenuItem(I18n.get("PVJMenuItem_OpenTrafoView"));
 		//	mi.setIcon((new ImageIcon( "symbols/Refresh16.gif")));
@@ -192,6 +192,7 @@ public class ProjectView
 		int deep,
 		Hashtable parentNodes,
 		VersionAccess versionAccess) {
+		System.out.println("build Tree");
 		Hashtable nodes = new Hashtable();
 		for (int row = 0; row < versionAccess.getSize(); row++) {
 			String path = getPath(row, deep, versionAccess);
@@ -272,15 +273,7 @@ public class ProjectView
 				selectVersion(selectedVersion);
 
 				JPopupMenu popup = new JPopupMenu();
-				JMenuItem menuItem =
-					new JMenuItem(I18n.get("PV_PopMen_CopyVersion"));
-				menuItem.setIcon(
-					(new ImageIcon(cl
-						.getResource("symbols/vectorSets16.gif"))));
-				menuItem.setActionCommand("copySelectedVersion");
-				menuItem.addActionListener(this);
-				popup.add(menuItem);
-
+				JMenuItem menuItem;
 				/*menuItem = new JMenuItem(I18n.get("PV_PopMen_TblObj"));
 				menuItem.setActionCommand(
 					"openObjectTableViewFromSelectedVersion");
@@ -313,6 +306,14 @@ public class ProjectView
 					menuItem.addActionListener(this);
 					popup.add(menuItem);
 				}
+
+				menuItem = new JMenuItem(I18n.get("PV_PopMen_CopyVersion"));
+				menuItem.setIcon(
+					(new ImageIcon(cl
+						.getResource("symbols/vectorSets16.gif"))));
+				menuItem.setActionCommand("copySelectedVersion");
+				menuItem.addActionListener(this);
+				popup.add(menuItem);
 
 				menuItem = new JMenuItem(I18n.get("PV_PopMen_Rename"));
 				menuItem.setActionCommand("renameSelectedVersion");
@@ -386,28 +387,15 @@ public class ProjectView
 						reloadProjectTree();
 					} catch (Exception error) {
 						WaitingDialog.waitingDialogDispose();
-						//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						//Main.viewManager.setCursor(Cursor.getDefaultCursor());
 						gp.setVisible(false);
 					}
 					WaitingDialog.waitingDialogDispose();
-					//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					//Main.viewManager.setCursor(Cursor.getDefaultCursor());
 					gp.setVisible(false);
 				}
 			});
 			t.start();
-			/*SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					WaitingDialog.getInstance();
-				}
-			});*/
 			WaitingDialog waitDialog = WaitingDialog.getInstance();
-			//this.getContentPane().add(waitDialog);
-			//waitDialog.moveToFront();
-			//setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			gp.setVisible(true);
-			//Main.viewManager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		}
 
 		if ("openTrafoView".equals(e.getActionCommand())) {
@@ -483,7 +471,23 @@ public class ProjectView
 					case JOptionPane.NO_OPTION :
 						break;
 					case JOptionPane.YES_OPTION :
-						versionAccess.removeVersion(selectedVersion);
+						Thread t = new Thread(new Runnable() {
+							public void run() {
+								try {
+									System.out.println("remove Version");
+									versionAccess.removeVersion(
+										selectedVersion);
+								} catch (Exception error) {
+									WaitingDialog.waitingDialogDispose();
+									gp.setVisible(false);
+								}
+								//WaitingDialog.waitingDialogDispose();
+								//gp.setVisible(false);
+							}
+						});
+						t.start();
+						WaitingDialog waitDialog = WaitingDialog.getInstance();
+						gp.setVisible(true);
 					case JOptionPane.CANCEL_OPTION :
 						break;
 					default :
@@ -607,7 +611,8 @@ public class ProjectView
 		}
 		if ("xml-export".equals(e.getActionCommand())) {
 			if (selectedVersion != -1) {
-				final String themeKey = versionAccess.getThemeKey(selectedVersion);
+				final String themeKey =
+					versionAccess.getThemeKey(selectedVersion);
 				final Object vId = versionAccess.getVersionId(selectedVersion);
 
 				int returnVal = fileChooser.showDialog(this, "export xml");
@@ -633,7 +638,7 @@ public class ProjectView
 					t.start();
 					WaitingDialog waitDialog = WaitingDialog.getInstance();
 					gp.setVisible(true);
-					
+
 					LogView.println(I18n.get("LV_PV_XML_ex2"));
 				}
 			}
@@ -672,7 +677,24 @@ public class ProjectView
 
 	//VersionListener:
 	public void onVersionChanged(EJBEvent event) {
-		reloadProjectTree();
+
+		final Component gp = Main.viewManager.getGlassPane();
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					System.out.println("reloadProjectTree---VersionChanged");
+					reloadProjectTree();
+				} catch (Exception error) {
+					WaitingDialog.waitingDialogDispose();
+					gp.setVisible(false);
+				}
+				WaitingDialog.waitingDialogDispose();
+				gp.setVisible(false);
+			}
+		});
+		t.start();
+		//WaitingDialog waitDialog = WaitingDialog.getInstance();
+		//gp.setVisible(true);
 	}
 
 	//InternalFrameListener
