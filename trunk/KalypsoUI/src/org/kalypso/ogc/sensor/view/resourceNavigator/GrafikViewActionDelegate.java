@@ -1,17 +1,12 @@
 package org.kalypso.ogc.sensor.view.resourceNavigator;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.util.xml.XMLTools;
+import org.kalypso.template.ObservationTemplateHelper;
 
 /**
  * @author schlienger
@@ -22,7 +17,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
 
   public GrafikViewActionDelegate()
   {
-    // empty
+  // empty
   }
 
   /**
@@ -30,7 +25,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
    */
   public void init( IViewPart view )
   {
-    // empty
+  // empty
   }
 
   /**
@@ -40,45 +35,23 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
   {
     if( m_currentFile != null )
     {
-      // TODO: bessere konfigurierbarkeit von der Transformation?
-      InputStream xsl = GrafikViewActionDelegate.class.getResourceAsStream( "/org/kalypso/plugin/resources/xsl/grafik-vorlage.xsl" );
-      
-      try
-      {
-        File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikViewActionDelegate.class.getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_"), true );
-
-        // get the file where project resides in order to complete the relative path
-        String projectDir = m_currentFile.getProject().getLocation().toString();
-        
-        String str = XMLTools.xslTransform( m_currentFile.getContents(), xsl );
-        
-        // complete relative path (prepared by the xslt, all relative path are preceded by _XXXX_)
-        str = str.replaceAll( "_XXXX_", projectDir );
-
-        // create the template file for the grafik tool
-        File file = File.createTempFile( "grafik", "vorlage" );
-        file.deleteOnExit();
-        
-        FileWriter fw = new FileWriter( file );
-        fw.write( str );
-        fw.close();
-        
-        Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + file.getAbsolutePath() );
-      }
-      catch( Exception e )
-      {
-        throw new RuntimeException( e );
-      }
+      if( m_currentFile.getFileExtension().equalsIgnoreCase(
+          ObservationTemplateHelper.ODT_FILE_EXTENSION ) )
+        ObservationTemplateHelper.openGrafik4odt( m_currentFile );
+      else if( m_currentFile.getFileExtension().equalsIgnoreCase(
+          ObservationTemplateHelper.TPL_FILE_EXTENSION ) )
+        ObservationTemplateHelper.openGrafik4tpl( m_currentFile );
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
     IStructuredSelection sel = (IStructuredSelection)selection;
-    
+
     if( sel.getFirstElement() instanceof IFile )
       m_currentFile = (IFile)sel.getFirstElement();
     else
