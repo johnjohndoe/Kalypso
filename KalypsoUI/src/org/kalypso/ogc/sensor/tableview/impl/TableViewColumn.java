@@ -75,7 +75,7 @@ public class TableViewColumn implements ITableViewColumn
    */
   public IAxis getSharedAxis()
   {
-    return ObservationUtilities.findAxis( m_obs, m_sharedAxisName );
+    return ObservationUtilities.findAxis( m_obs.getAxisList(), m_sharedAxisName );
   }
 
   /**
@@ -83,7 +83,7 @@ public class TableViewColumn implements ITableViewColumn
    */
   public IAxis getValueAxis()
   {
-    return ObservationUtilities.findAxis( m_obs, m_valueAxisName );
+    return ObservationUtilities.findAxis( m_obs.getAxisList(), m_valueAxisName );
   }
 
   /**

@@ -110,8 +110,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     {
       final IObservation obs = (IObservation)m_pool.getObject( key, new NullProgressMonitor() );
 
-      final IAxis timeaxis = ObservationUtilities.findAxis( obs, m_timeserie.getTimeaxis() );
-      final IAxis valueaxis = ObservationUtilities.findAxis( obs, m_timeserie.getValueaxis() );
+      final IAxis timeaxis = ObservationUtilities.findAxis( obs.getAxisList(), m_timeserie.getTimeaxis() );
+      final IAxis valueaxis = ObservationUtilities.findAxis( obs.getAxisList(), m_timeserie.getValueaxis() );
 
       final List series = new ObservationTimeSeries( obs, timeaxis, new IAxis[]
       { valueaxis }, null ).getSeries();

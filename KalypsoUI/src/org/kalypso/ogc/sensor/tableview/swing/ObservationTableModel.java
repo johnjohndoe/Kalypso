@@ -118,7 +118,7 @@ public class ObservationTableModel extends AbstractTableModel
         ITuppleModel sharedModel = m_columns[col].getObservation().getValues( m_args );
 
         for( int row = 0; row < sharedModel.getCount(); row++ )
-          m_cc.add( sharedModel.getElement( row, sharedAxis.getPosition() ) );
+          m_cc.add( sharedModel.getElement( row, sharedAxis ) );
       }
     }
 
@@ -190,7 +190,7 @@ public class ObservationTableModel extends AbstractTableModel
         return null;
 
       // Now we can retrieve the element using value axis
-      return values.getElement( index, m_columns[columnIndex - 1].getValueAxis().getPosition() );
+      return values.getElement( index, m_columns[columnIndex - 1].getValueAxis() );
     }
     catch( SensorException e )
     {
@@ -226,7 +226,7 @@ public class ObservationTableModel extends AbstractTableModel
       int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
 
       // Now we can retrieve the element using value axis
-      values.setElement( index, aValue, m_columns[columnIndex - 1].getValueAxis().getPosition() );
+      values.setElement( index, aValue, m_columns[columnIndex - 1].getValueAxis() );
     }
     catch( SensorException e )
     {
