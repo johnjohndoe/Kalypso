@@ -37,6 +37,12 @@ public class EditSymbolizerPanel
 
   private int canDelete = -1;
 
+  private Button moveBackwardSymbolizerButton = null;
+
+  private Button removeSymbolizerButton = null;
+
+  private Button moveForwardSymbolizerButton = null;
+
   public EditSymbolizerPanel( Composite parent, int m_size )
   {
     setCanDelete( m_size );
@@ -60,7 +66,7 @@ public class EditSymbolizerPanel
 
   private void init()
   {
-    Button removeSymbolizerButton = new Button( composite, SWT.PUSH );
+    removeSymbolizerButton = new Button( composite, SWT.PUSH );
     if( getCanDelete() == 0 )
       removeSymbolizerButton.setEnabled( false );
     FormData removeSymbolizerButtonData = new FormData();
@@ -85,7 +91,7 @@ public class EditSymbolizerPanel
       }
     } );
 
-    Button moveBackwardSymbolizerButton = new Button( composite, SWT.PUSH );
+    moveBackwardSymbolizerButton = new Button( composite, SWT.PUSH );
     if( getCanDelete() <= 1 )
       moveBackwardSymbolizerButton.setEnabled( false );
     FormData moveBackwardSymbolizerButtonData = new FormData();
@@ -110,7 +116,7 @@ public class EditSymbolizerPanel
       }
     } );
 
-    Button moveForwardSymbolizerButton = new Button( composite, SWT.PUSH );
+    moveForwardSymbolizerButton = new Button( composite, SWT.PUSH );
     if( getCanDelete() <= 1 )
       moveForwardSymbolizerButton.setEnabled( false );
     FormData moveForwardSymbolizerButtonData = new FormData();
@@ -134,6 +140,23 @@ public class EditSymbolizerPanel
         widgetSelected( e );
       }
     } );
+  }
+
+  public void update( int symbolizerNumber )
+  {
+    setCanDelete( symbolizerNumber );
+    if( getCanDelete() == 0 )
+      removeSymbolizerButton.setEnabled( false );
+    else
+      removeSymbolizerButton.setEnabled( true );
+    if( getCanDelete() <= 1 )
+      moveBackwardSymbolizerButton.setEnabled( false );
+    else
+      moveBackwardSymbolizerButton.setEnabled( true );
+    if( getCanDelete() <= 1 )
+      moveForwardSymbolizerButton.setEnabled( false );
+    else
+      moveForwardSymbolizerButton.setEnabled( true );
   }
 
   public int getAction()

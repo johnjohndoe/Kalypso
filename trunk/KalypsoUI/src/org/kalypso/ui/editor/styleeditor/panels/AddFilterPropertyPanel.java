@@ -4,13 +4,7 @@
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
-import java.util.ArrayList;
-
 import javax.swing.event.EventListenerList;
-
-import org.deegree.graphics.sld.Symbolizer;
-import org.deegree.model.feature.FeatureType;
-import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -27,14 +21,10 @@ import org.eclipse.swt.widgets.Label;
  * @author F.Lindemann
  *  
  */
-public class AddPatternPanel
+public class AddFilterPropertyPanel
 {
 
   private Composite composite = null;
-
-  private FeatureType featureType = null;
-
-  private Combo symbolizerCombo = null;
 
   private Combo geometryCombo = null;
 
@@ -44,10 +34,12 @@ public class AddPatternPanel
 
   private String label = null;
 
-  public AddPatternPanel( Composite parent, String m_label, FeatureType m_featureType )
+  private String[] listCombi = null;
+
+  public AddFilterPropertyPanel( Composite parent, String m_label, String[] list )
   {
     setLabel( m_label );
-    setFeatureType( m_featureType );
+    setListCombi( list );
     composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();
     GridData compositeData = new GridData();
@@ -72,14 +64,14 @@ public class AddPatternPanel
     geometryCombo = new Combo( composite, SWT.NULL );
     FormData geometryComboData = new FormData();
     geometryComboData.height = 21;
-    geometryComboData.width = 75;
-    geometryComboData.left = new FormAttachment( 260, 1000, 0 );
+    geometryComboData.width = 90;
+    geometryComboData.left = new FormAttachment( 295, 1000, 0 );
     geometryComboData.top = new FormAttachment( 100, 1000, 0 );
     geometryCombo.setLayoutData( geometryComboData );
-    String[] geometryItems = getGeometries( featureType );
-    if( geometryItems != null && geometryItems.length > 0 )
+
+    if( getListCombi() != null && getListCombi().length > 0 )
     {
-      geometryCombo.setItems( geometryItems );
+      geometryCombo.setItems( getListCombi() );
       geometryCombo.select( 0 );
     }
 
@@ -91,12 +83,12 @@ public class AddPatternPanel
     symbolizerAddButtonData.left = new FormAttachment( 860, 1000, 0 );
     symbolizerAddButtonData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerAddButton.setLayoutData( symbolizerAddButtonData );
-    symbolizerAddButton.setText( "Add" );
+    symbolizerAddButton.setText( "Set" );
     symbolizerAddButton.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        setSelection( getSymbolizerCombo().getSelectionIndex() );
+        setSelection( getGeometryCombo().getSelectionIndex() );
         fire();
       }
 
@@ -117,14 +109,28 @@ public class AddPatternPanel
     symbolizerLabel.setText( label );
   }
 
-  public Symbolizer getSelection()
+  public String getSelection()
   {
-    return null;
+    return getListCombi()[selectionIndex];
   }
 
   public void setSelection( int index )
   {
     this.selectionIndex = index;
+  }
+
+  public void setSelection( String selectionString )
+  {
+    if( getListCombi() == null )
+      return;
+    for( int i = 0; i < getListCombi().length; i++ )
+    {
+      if( getListCombi()[i].equals( selectionString ) )
+      {
+        setSelection( i );
+        geometryCombo.select( i );
+      }
+    }
   }
 
   protected void fire()
@@ -138,51 +144,6 @@ public class AddPatternPanel
         ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
-  }
-
-  public static String[] getGeometries( FeatureType featureType )
-  {
-    String items[] = null;
-    ArrayList list = new ArrayList();
-    FeatureTypeProperty[] ftp = featureType.getProperties();
-    for( int i = 0; i < ftp.length; i++ )
-    {
-      if( ftp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
-        list.add( ftp[i] );
-      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
-        list.add( ftp[i] );
-    }    
-    if(list.size() > 0)
-    {
-      items = new String[list.size()];
-      for(int j = 0; j<list.size(); j++)
-      {
-        items[j] = ((FeatureTypeProperty)list.get(j)).getName();        
-      }           
-    }
-    return items;
-  }
-
-  public FeatureType getFeatureType()
-  {
-    return featureType;
-  }
-
-  public void setFeatureType( FeatureType m_featureType )
-  {
-    this.featureType = m_featureType;
   }
 
   public Combo getGeometryCombo()
@@ -215,13 +176,13 @@ public class AddPatternPanel
     this.selectionIndex = m_selectionIndex;
   }
 
-  public Combo getSymbolizerCombo()
+  public String[] getListCombi()
   {
-    return symbolizerCombo;
+    return listCombi;
   }
 
-  public void setSymbolizerCombo( Combo m_symbolizerCombo )
+  public void setListCombi( String[] m_listCombi )
   {
-    this.symbolizerCombo = m_symbolizerCombo;
+    this.listCombi = m_listCombi;
   }
 }

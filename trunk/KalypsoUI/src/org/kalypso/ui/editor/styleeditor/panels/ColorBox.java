@@ -26,6 +26,8 @@ public class ColorBox
 
   private Color color = null;
 
+  private Label fillColorImageInner = null;
+
   public ColorBox( Composite parent, Color m_color, int size, int borderWidth )
   {
 
@@ -44,7 +46,7 @@ public class ColorBox
     composite.setBackground( new Color( null, 0, 0, 0 ) );
     composite.layout();
 
-    final Label fillColorImageInner = new Label( composite, SWT.NULL );
+    fillColorImageInner = new Label( composite, SWT.NULL );
     GridData fillColorImageInnerData = new GridData();
     fillColorImageInnerData.heightHint = size;
     fillColorImageInnerData.widthHint = size;
@@ -58,9 +60,6 @@ public class ColorBox
     {
       public void mouseDoubleClick( MouseEvent e )
       {
-        dialog.open();
-        setColor( new Color( null, dialog.getRGB() ) );
-        fillColorImageInner.setBackground( getColor() );
         fire();
       }
 
@@ -77,9 +76,6 @@ public class ColorBox
     {
       public void mouseDoubleClick( MouseEvent e )
       {
-        dialog.open();
-        setColor( new Color( null, dialog.getRGB() ) );
-        fillColorImageInner.setBackground( getColor() );
         fire();
       }
 
@@ -102,6 +98,8 @@ public class ColorBox
   public void setColor( Color m_color )
   {
     this.color = m_color;
+    if( fillColorImageInner != null )
+      fillColorImageInner.setBackground( m_color );
   }
 
   public void addPanelListener( PanelListener pl )
