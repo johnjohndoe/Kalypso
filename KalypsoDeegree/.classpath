@@ -29,5 +29,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/postgis/postgis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/jsdk2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet/servlet.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
