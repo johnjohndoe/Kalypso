@@ -57,27 +57,21 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    *          kann null sein wenn dieses Objekt root ist
    * @param valueType
    *          aus PSICompact Sicht
+   * 
+   * @throws ECommException
    */
   public PSICompactObservationItem( final PSICompactItem parent, final String name,
-      final PSICompact.ObjectInfo info, final int valueType )
+      final PSICompact.ObjectInfo info, final int valueType ) throws ECommException
   {
     super( parent, name, info );
 
     m_valueType = valueType;
 
-    try
-    {
-      m_psicMetaData = PSICompactFactory.getConnection().getObjectMetaData( m_objectInfo.getId() );
+    m_psicMetaData = PSICompactFactory.getConnection().getObjectMetaData( m_objectInfo.getId() );
 
-      m_psicWQParamSet = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
+    m_psicWQParamSet = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
 
-      constructMetadata();
-    }
-    catch( ECommException e )
-    {
-      // TODO: logging!
-      e.printStackTrace();
-    }
+    constructMetadata();
   }
 
   /**
@@ -94,7 +88,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * Helper für die Erzeugung der Metadaten
    */
-  private void constructMetadata()
+  private final void constructMetadata()
   {
     m_metadata = new MetadataList();
 
@@ -273,7 +267,8 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * Helper that converts PSICompact WQParamSet objects to a WechmannSets object.
+   * Helper that converts PSICompact WQParamSet objects to a WechmannSets
+   * object.
    */
   public static WechmannSets readWQParams( final WQParamSet[] pset )
   {

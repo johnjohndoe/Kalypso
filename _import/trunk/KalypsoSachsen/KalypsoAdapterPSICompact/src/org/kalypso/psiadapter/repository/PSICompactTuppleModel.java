@@ -35,8 +35,8 @@ public class PSICompactTuppleModel implements ITuppleModel
    */
   public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes )
   {
-    m_data = data;
     m_axes = axes;
+    m_data = data;
     
     m_values = new Double[m_data.length];
 //    m_psiStati = new String[m_data.length];
