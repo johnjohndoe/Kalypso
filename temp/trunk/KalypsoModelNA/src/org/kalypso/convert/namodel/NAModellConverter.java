@@ -87,8 +87,9 @@ public class NAModellConverter
     Feature fe = asciiToFeature( conf );
     insertGeometries( fe, "/home/doemming/weisseElster/shapes" );
     File gmlFile = new File( gmlBaseDir, "naModel.gml" );
-    GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );
-
+    
+    // TODO: use workspace instead of Feature fe
+//    GmlSerializer.serializeFeature( new FileWriter( gmlFile ), fe, null );
   }
 
   private static void insertGeometries( Feature modelFeature, String shapeDir )

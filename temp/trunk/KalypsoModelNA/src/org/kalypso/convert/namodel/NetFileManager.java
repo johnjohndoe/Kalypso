@@ -35,10 +35,13 @@ public class NetFileManager extends AbstractManager
   
   final NAConfiguration m_conf;
 
+  private final UrlUtilities m_urlUtilities;
+
   public NetFileManager( NAConfiguration conf ) throws IOException
   {
     super( conf.getNetFormatURL() );
     m_conf = conf;
+    m_urlUtilities = new UrlUtilities();
    
   }
 
@@ -458,7 +461,7 @@ public class NetFileManager extends AbstractManager
         final File parent = targetFile.getParentFile();
         if( !parent.exists() )
           parent.mkdirs();
-        final URL linkURL = UrlUtilities.resolveURL( m_conf.getGMLModelURL(), link.getHref() );
+        final URL linkURL = m_urlUtilities.resolveURL( m_conf.getGMLModelURL(), link.getHref() );
 
         if( !DEBUG )
         {
@@ -492,6 +495,8 @@ public class NetFileManager extends AbstractManager
     private static final String ANFANGSKNOTEN = "    9001";
 
     private int m_status = UNCALCULATED;
+
+    private final UrlUtilities m_urlUtils = new UrlUtilities();
 
     public NetElement( Feature channelFE )
     {
@@ -528,7 +533,7 @@ public class NetFileManager extends AbstractManager
       {
         final Feature feature = catchmentFeatures[i];
         final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
-        final URL linkURL = UrlUtilities.resolveURL( m_conf.getGMLModelURL(), link.getHref() );
+        final URL linkURL = m_urlUtils.resolveURL( m_conf.getGMLModelURL(), link.getHref() );
         final String tsFileName = CatchmentManager.getNiederschlagEingabeDateiString( feature );
         final File targetFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileName );
         final File parent = targetFile.getParentFile();

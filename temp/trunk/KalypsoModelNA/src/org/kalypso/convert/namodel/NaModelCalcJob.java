@@ -88,6 +88,12 @@ public class NaModelCalcJob extends AbstractCalcJob
 
   private final String TEMPLATE_CONF_FILE = "misc/resourceFile.conf";
 
+  public NaModelCalcJob()
+  {
+    m_urlUtilities = new UrlUtilities();
+  
+  }
+
   public void run( final File basedir, final CalcJobDataBean[] input )
       throws CalcJobServiceException
   {
@@ -228,6 +234,8 @@ public class NaModelCalcJob extends AbstractCalcJob
       "retint",
       "aigw" };
 
+  private final UrlUtilities m_urlUtilities;
+
   /**
    * some parameter have factors that must be processed before generating
    * asciifiles, as these factors do not occur in ascci-format
@@ -351,7 +359,7 @@ public class NaModelCalcJob extends AbstractCalcJob
         final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( "pegelZR" );
         if( pegelLink != null )
         {
-          final URL pegelURL = UrlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
+          final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
               .getHref() );
           if( ( new File(pegelURL.getFile())).exists() )
           {

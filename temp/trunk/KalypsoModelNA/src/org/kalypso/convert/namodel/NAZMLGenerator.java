@@ -39,6 +39,8 @@ public class NAZMLGenerator
 
   final static NAZMLGenerator m_singelton = new NAZMLGenerator();
 
+  private static final UrlUtilities urlUtilities = new UrlUtilities();
+
   public NAZMLGenerator()
   {
   // do not instanciate
@@ -77,7 +79,7 @@ public class NAZMLGenerator
       }
     if( relative )
       return generateobsLink( targetRelativePath, srcType );
-    URL targetURL = UrlUtilities.resolveURL( targetBaseDir.toURL(), targetRelativePath );
+    final URL targetURL = urlUtilities.resolveURL( targetBaseDir.toURL(), targetRelativePath );
     return generateobsLink( targetURL.toExternalForm(), srcType );
   }
 
