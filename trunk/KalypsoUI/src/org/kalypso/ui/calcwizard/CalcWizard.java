@@ -85,14 +85,14 @@ public class CalcWizard implements IWizard, IProjectProvider
 
     m_controlPage = new SteuerparameterWizardPage( this, true, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
-    m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "einen neuen Rechenfall erzeugen",
+    m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "eine neue Rechenvariante erzeugen",
         m_project, m_addCalcCasePage ) );
     m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice(
-        "einen bereits vorhandenen Rechenfall fortführen", m_project, m_addCalcCasePage ) );
+        "eine bereits vorhandene Rechenvariante fortführen", m_project, m_addCalcCasePage ) );
 //    m_addCalcCasePage.addChoice( new CopyCalcCaseChoice(
 //        "einen bereits vorhandenen Rechenfall kopieren", m_project, m_addCalcCasePage ) );
     m_addCalcCasePage.addChoice( new CopyServerCalcCaseChoice(
-        "einen auf dem Server archivierten Rechenfall kopieren", m_project, m_addCalcCasePage, m_synchronizer ) );
+        "eine auf dem Server archivierte Rechenvariante kopieren", m_project, m_addCalcCasePage, m_synchronizer ) );
     addPage( m_addCalcCasePage );
     addPage( m_controlPage );
   }

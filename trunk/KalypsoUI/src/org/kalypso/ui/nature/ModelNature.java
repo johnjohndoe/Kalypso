@@ -4,10 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
@@ -23,6 +23,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.deegree.model.feature.Feature;
@@ -49,7 +50,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
-import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
@@ -211,13 +211,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IResource resource = resourceRoot.findMember( path );
 
     if( resource == null || resource == resourceRoot )
-      return "Rechenfall muss innerhalb eines Projektordners angelegt werden";
+      return "Rechenvariante muss innerhalb eines Projektordners angelegt werden";
 
     if( resource instanceof IFolder )
     {
       final IFolder folder = (IFolder) resource;
       if( isCalcCalseFolder( folder ) )
-        return "Rechenfall darf nicht innerhalb eines anderen Rechenfalls angelegt werden";
+        return "Rechenvariante darf nicht innerhalb einer anderen Rechenvariante angelegt werden";
 
       return checkCanCreateCalculationCase( folder.getParent().getFullPath() );
     }
@@ -270,20 +270,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       e.printStackTrace();
 
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
-          .getId(), 0, "Fehler beim Lesen der Rechenfallkonfiguration: "
+          .getId(), 0, "Fehler beim Lesen der Konfiguration: "
           + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
     }
     catch( final JAXBException e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin
-          .getId(), 0, "Fehler beim Lesen der Rechenfallkonfiguration: "
+          .getId(), 0, "Fehler beim Lesen der Konfiguration: "
           + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
     }
   }
 
   /**
-   * Erzeugt einen neuen Rechenfall im angegebenen Ordner
+   * Erzeugt eine neue Rechenvariante im angegebenen Ordner
    *  
    * @param folder
    * @param monitor
@@ -293,12 +293,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus createCalculationCaseInFolder( final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    return doCalcTransformation( "Rechenfall erzeugen", TRANS_TYPE_CREATE, folder,
+    return doCalcTransformation( "Rechenvariante erzeugen", TRANS_TYPE_CREATE, folder,
         monitor );
   }
 
   /**
-   * Aktualisiert einen vorhandenen Rechenfall
+   * Aktualisiert eine vorhandene Rechenvariante
    * 
    * @param folder
    * @param monitor
@@ -309,12 +309,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus updateCalcCase( final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    return doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_UPDTAE,
+    return doCalcTransformation( "Rechenvariante aktualisieren", TRANS_TYPE_UPDTAE,
         folder, monitor );
   }
 
   /**
-   * Führt eine Transformation auf einem Rechenfall durch
+   * Führt eine Transformation auf einer Rechenvariante durch
    * 
    * @param taskName
    * @param type
@@ -387,7 +387,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * fügt eine Reihe von Tokens zum ReplaceToken hinzu. Unter anderem für
    * :project: etc Ausserdem werden die Start, Mittel und Endzeit der Simulation
-   * aus dem Rechenfall Verzeichnis ausgelesen (.calculation) und als Token
+   * aus der Rechenvariante ausgelesen (.calculation) und als Token
    * hinzugefgügt.
    * 
    * @param calcFolder
@@ -643,30 +643,31 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           continue;
         }
       }
+      
+      // direktes filecopy und danach ein refresh ist besser, wegen charset problemen
       System.out.println( "Write: " + serverfile.getAbsolutePath() );
-      final SetContentHelper thread = new SetContentHelper()
-      {
-        protected void write( final Writer w ) throws Throwable
-        {
-          InputStreamReader reader = null;
-          try
-          {
-            final FileInputStream fis = new FileInputStream( serverfile );
-            reader = new InputStreamReader( fis, getCharset() );
-            CopyUtils.copy( reader, w );
-          }
-          finally
-          {
-            if( reader != null )
-              reader.close();
-          }
-        }
-      };
-      thread.setFileContents( targetfile, false, false,
-          new NullProgressMonitor() );
-      System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
 
-      monitor.worked( 1 );
+      final File targetfileFile = targetfile.getLocation().toFile();
+      FileInputStream fis = null;
+      FileOutputStream fos = null; 
+      try
+      {
+        fis = new FileInputStream( serverfile );
+        fos = new FileOutputStream( targetfileFile );
+        CopyUtils.copy( fis, fos );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( fis );
+        IOUtils.closeQuietly( fos );
+      }
+      
+      targetfile.refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 1 ) );
+      System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
 
       if( monitor.isCanceled() )
         throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin
@@ -804,7 +805,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     if( !isCalcCalseFolder( folder ) )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Verzeichnis ist kein Rechenfall :" + folder.getName(), null ) );
+          "Verzeichnis ist keine Rechenvariante:" + folder.getName(), null ) );
 
     final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
         .getServiceProxyFactory();
@@ -928,7 +929,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           retrieveOutput( serveroutputdir, outputfolder, results,
               new SubProgressMonitor( monitor, 1000 ) );
 
-          return doCalcTransformation( "Rechenfall aktualisieren",
+          return doCalcTransformation( "Rechenvariante aktualisieren",
               TRANS_TYPE_AFTERCALC, folder, new SubProgressMonitor( monitor,
                   1000 ) );
 

@@ -259,7 +259,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     final Button exportPrognoseTS = new Button( topPanel, SWT.PUSH );
     exportPrognoseTS.setText( "Export Prognosen" );
     exportPrognoseTS
-        .setToolTipText( "Exportiert die Prognosen des selektierten Rechenfalls" );
+        .setToolTipText( "Exportiert die Prognosen der selektierten Rechenvariante" );
     final GridData buttonGridData = new GridData();
     buttonGridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
     exportPrognoseTS.setLayoutData( buttonGridData );

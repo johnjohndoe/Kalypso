@@ -55,7 +55,7 @@ public class CopyCalcCase implements IWorkbenchWindowActionDelegate
     if( resource == null || !( resource instanceof IFolder ) )
     {
       MessageDialog.openInformation( m_window.getShell(), "Rechenvariante anlegen",
-      "Bitte wählen Sie einen Rechenfall im Navigator aus" );
+      "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
       return;
     }
     
@@ -64,7 +64,7 @@ public class CopyCalcCase implements IWorkbenchWindowActionDelegate
     if( !file.exists() )
     {
       MessageDialog.openInformation( m_window.getShell(), "Rechenvariante anlegen",
-      "Bitte wählen Sie einen Rechenfall im Navigator aus" );
+      "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
       return;
     }
     

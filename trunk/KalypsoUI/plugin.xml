@@ -662,7 +662,7 @@
          <action
                label="Kopieren..."
                icon="icons/util/copy_edit.gif"
-               tooltip="legt eine Variante vom selektierten Rechenfall an"
+               tooltip="legt eine Kopie der selektierten Rechenvariante an"
                class="org.kalypso.ui.action.CopyCalcCase"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.copyCalcCase">
@@ -671,7 +671,7 @@
                label="Neu..."
                icon="icons/util/new_wiz.gif"
                class="org.kalypso.ui.action.NewCalcCaseAction"
-               tooltip="Erzeugt einen neuen Rechenfall"
+               tooltip="Erzeugt eine neue Rechenvariante"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.newCalcCase">
          </action>

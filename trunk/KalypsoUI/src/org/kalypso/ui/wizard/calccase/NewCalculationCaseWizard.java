@@ -42,7 +42,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     super.init( workbench, currentSelection );
-    setWindowTitle( "neuer Rechenfall" );
+    setWindowTitle( "neue Rechenvariante" );
     setNeedsProgressMonitor( true );
   }
 
@@ -52,7 +52,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void addPages()
   {
     super.addPages();
-    m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
+    m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenvariante", getSelection() );
     m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     
     m_createControlPage.setUpdate( true );

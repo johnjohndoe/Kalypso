@@ -231,7 +231,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
   {
     if( m_dir == null )
     {
-      m_page.setErrorMessage( "Es muss ein vorhandener Rechenfall ausgewählt werden." );
+      m_page.setErrorMessage( "Es muss eine vorhandene Rechenvariante ausgewählt werden." );
       m_page.setMessage( null );
       m_page.setPageComplete( false );
     }

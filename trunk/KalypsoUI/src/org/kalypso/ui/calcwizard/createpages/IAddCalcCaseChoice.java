@@ -15,7 +15,7 @@ public interface IAddCalcCaseChoice
 
   public Control getControl();
 
-  /** Erzeugt oder wählt einen Rechenfall und gibt dessen Basisverzeichnis zurück */
+  /** Erzeugt oder wählt eine Rechenvariante und gibt derem Basisverzeichnis zurück */
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException;
 
   /**
@@ -29,7 +29,7 @@ public interface IAddCalcCaseChoice
    */
   public void refresh( final IProgressMonitor monitor ) throws CoreException;
 
-  /** Ob bei dieser Wahl der Rechenfall nach Eingabe der Steuerparameter aktualisiert werden sollte */
+  /** Ob bei dieser Wahl der Rechenvariante nach Eingabe der Steuerparameter aktualisiert werden sollte */
   public boolean shouldUpdate();
   
   public void validateChoice();
