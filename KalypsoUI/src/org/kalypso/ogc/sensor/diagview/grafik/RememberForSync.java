@@ -48,8 +48,8 @@ final class RememberForSync
     m_zmlFile = zmlFile;
     m_datFile = datFile;
     m_numberAxis = numberAxis;
-    
-//    m_modificationStamp = m_datFile.getFullPath().toFile().lastModified();
+
+    //    m_modificationStamp = m_datFile.getFullPath().toFile().lastModified();
     m_modificationStamp = m_datFile.getModificationStamp();
   }
 
@@ -70,17 +70,19 @@ final class RememberForSync
 
   private boolean isInSync( ) throws CoreException
   {
-    m_datFile.getParent().refreshLocal( 1, new NullProgressMonitor( ) );
-    
-//    return m_modificationStamp == m_datFile.getFullPath().toFile().lastModified();
+    m_datFile.getParent().refreshLocal( 1, new NullProgressMonitor() );
+
+    //    return m_modificationStamp ==
+    // m_datFile.getFullPath().toFile().lastModified();
     return m_modificationStamp == m_datFile.getModificationStamp();
   }
-  
+
   public String toString( )
   {
-    return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-" + m_zmlFile.getName() + " Axis:" + m_numberAxis;
+    return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-"
+        + m_zmlFile.getName() + " Axis:" + m_numberAxis;
   }
-  
+
   public void synchronizeZml( ) throws Exception
   {
     if( isInSync() )
@@ -90,7 +92,7 @@ final class RememberForSync
     }
     else
       Logger.getLogger( getClass().getName() ).info( "Update, " + toString() );
-    
+
     Reader datReader = null;
     Reader zmlReader = null;
     try
@@ -110,7 +112,7 @@ final class RememberForSync
       IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ),
           m_zmlFile.getName(), ResourceUtilities.createURL( m_zmlFile ) );
       IOUtils.closeQuietly( zmlReader );
-      
+
       ITuppleModel values = obs.getValues( null );
 
       IAxis[] axes = obs.getAxisList();
@@ -121,7 +123,7 @@ final class RememberForSync
       final List axisList = Arrays.asList( axes );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
-      
+
       IAxis statusAxis = null;
       try
       {
@@ -136,11 +138,14 @@ final class RememberForSync
       for( int l = 0; l < csv.getLines(); l++ )
       {
         Date date = GrafikLauncher.GRAFIK_DF.parse( csv.getItem( l, 0 ) );
-        double d = Double.parseDouble( csv.getItem( l, 1 ) );
+        double d = Double.parseDouble( csv.getItem( l, 1 )
+            .replaceAll( ",", "." ) ); // replace all ',' with '.' so that
+                                       // Double-parsing always works
 
         /*
-         * Großes TODO: z.Z. werden durch das Grafiktool hinzugefügte oder gelöschte Werte 
-         * nicht berücksichtigt. Ist auch die Frage ob man es überhaupt unterstützen sollte...
+         * Großes TODO: z.Z. werden durch das Grafiktool hinzugefügte oder
+         * gelöschte Werte nicht berücksichtigt. Ist auch die Frage ob man es
+         * überhaupt unterstützen sollte...
          */
         int ix = values.indexOf( date, dateAxis );
 
@@ -159,7 +164,7 @@ final class RememberForSync
 
       obs.setValues( values );
       final ObservationType xml = ZmlFactory.createXML( obs, null );
-      
+
       SetContentHelper helper = new SetContentHelper()
       {
         protected void write( Writer writer ) throws Throwable
@@ -167,8 +172,9 @@ final class RememberForSync
           ZmlFactory.getMarshaller().marshal( xml, writer );
         }
       };
-      
-      helper.setFileContents( m_zmlFile, true, false, new NullProgressMonitor(), m_zmlFile.getCharset() );
+
+      helper.setFileContents( m_zmlFile, true, false,
+          new NullProgressMonitor(), m_zmlFile.getCharset() );
     }
     finally
     {

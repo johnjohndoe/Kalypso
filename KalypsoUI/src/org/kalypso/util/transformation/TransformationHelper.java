@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FileUtilities;
+import org.kalypso.eclipse.core.runtime.LogStatusWrapper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilityException;
 import org.kalypso.model.xml.TransformationList;
@@ -114,7 +115,7 @@ public class TransformationHelper
    * @return result of transformation
    * @throws TransformationException
    */
-  public static TransformationResult doTranformations( final IFolder folder,
+  public static LogStatusWrapper doTranformations( final IFolder folder,
       final TransformationList trans, final IProgressMonitor monitor )
       throws TransformationException
   {
@@ -194,15 +195,14 @@ public class TransformationHelper
     }
 
     // now delete temp file
-    //tmpFile.delete();
+    //tmpFile.delete(); TODO warum ist es auskommentiert?
 
     // now handle the case where operation was successfull, but some messages
-    // were
-    // thrown for user.
+    // were thrown for user.
     final String msg = msgWriter.toString();
     if( msg.length() > 0 )
-      return new TransformationResult( msg, logFile );
+      return new LogStatusWrapper( msg, logFile );
 
-    return TransformationResult.OK_RESULT;
+    return LogStatusWrapper.OK_RESULT;
   }
 }

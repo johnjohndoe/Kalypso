@@ -38,30 +38,29 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.transformation;
+package org.kalypso.eclipse.core.runtime;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.eclipse.core.runtime.LogStatus;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TransformationResult. Convenient class to be used with the ErrorDialog. This class
+ * Convenient class to be used with the ErrorDialog. This class
  * can create an IStatus object which can be displayed in the ErrorDialog. The trick
  * is to use the LogStatus which gets its children from the log file.
  * 
  * @author schlienger
  */
-public class TransformationResult
+public class LogStatusWrapper
 {
-  public final static TransformationResult OK_RESULT = new TransformationResult( "", null );
+  public final static LogStatusWrapper OK_RESULT = new LogStatusWrapper( "", null );
   
   private final String m_summary;
   private final IFile m_logFile;
 
-  public TransformationResult( final String summary, final IFile logFile )
+  public LogStatusWrapper( final String summary, final IFile logFile )
   {
     m_summary = summary;
     m_logFile = logFile;

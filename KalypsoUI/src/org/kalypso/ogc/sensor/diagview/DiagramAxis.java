@@ -51,13 +51,17 @@ import org.kalypso.template.obsdiagview.TypeAxis;
 public class DiagramAxis
 {
   public final static String DIRECTION_HORIZONTAL = "horizontal";
+
   public final static String DIRECTION_VERTICAL = "vertical";
-  
+
   public final static String POSITION_LEFT = "left";
+
   public final static String POSITION_RIGHT = "right";
+
   public final static String POSITION_BOTTOM = "bottom";
+
   public final static String POSITION_TOP = "top";
-  
+
   private final String m_id;
 
   private final String m_label;
@@ -198,7 +202,8 @@ public class DiagramAxis
   /**
    * The lower margin is expressed in percent of the whole axis range.
    * 
-   * @return the lower margin in percent (for instance 0.07 for 7%) or null if not set
+   * @return the lower margin in percent (for instance 0.07 for 7%) or null if
+   *         not set
    */
   public Double getLowerMargin( )
   {
@@ -208,7 +213,8 @@ public class DiagramAxis
   /**
    * The upper margin is expressed in percent of the whole axis range.
    * 
-   * @return the upper margin in percent (for instance 0.07 for 7%) or null if not set
+   * @return the upper margin in percent (for instance 0.07 for 7%) or null if
+   *         not set
    */
   public Double getUpperMaring( )
   {

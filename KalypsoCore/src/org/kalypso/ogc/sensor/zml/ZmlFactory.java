@@ -220,10 +220,8 @@ public class ZmlFactory
     }    
     catch( IOException e )
     {
-//       TODO error handling
-//      throw new SensorException( "Error while unmarshalling: "
-//          + url.toExternalForm(), e );
-  return null;
+      throw new SensorException( "Error while unmarshalling: "
+          + url.toExternalForm(), e );
     }
     finally
     {

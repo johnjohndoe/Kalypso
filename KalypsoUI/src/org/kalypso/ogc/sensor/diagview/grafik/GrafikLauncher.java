@@ -49,11 +49,14 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -65,7 +68,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.io.FileUtilities;
@@ -77,11 +85,13 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 import org.xml.sax.InputSource;
@@ -93,6 +103,8 @@ import org.xml.sax.InputSource;
  */
 public class GrafikLauncher
 {
+  public final static String GRAFIK_ENCODING = "Cp1252";
+
   /** file extension of the grafik template files */
   public final static String TPL_FILE_EXTENSION = "tpl";
 
@@ -151,7 +163,7 @@ public class GrafikLauncher
       final ObsdiagviewType odt, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
-    List sync = null;
+    List sync = new Vector();
     StringWriter strWriter = null;
     try
     {
@@ -164,7 +176,25 @@ public class GrafikLauncher
 
       strWriter = new StringWriter();
 
-      sync = odt2tpl( odt, dest, strWriter, monitor );
+      final IStatus status = odt2tpl( odt, dest, strWriter, monitor, sync );
+
+      // status might not be ok but we still want to start the grafik tool
+      // so inform the use here with the current info
+      if( status != Status.OK_STATUS )
+      {
+        final Display disp = KalypsoGisPlugin.getDefault().getWorkbench()
+            .getDisplay();
+
+        disp.syncExec( new Runnable()
+        {
+          public void run( )
+          {
+            ErrorDialog.openError( disp.getActiveShell(), "Warnung",
+                "Fehler sind während der für das Grafikprogramm "
+                    + "benötigten Datenkonvertierung aufgetaucht.", status );
+          }
+        } );
+      }
 
       // redeclared final for being used in SetContentHelper
       final StringWriter schWriter = strWriter;
@@ -180,7 +210,7 @@ public class GrafikLauncher
       };
 
       sch.setFileContents( tplFile, false, false, new NullProgressMonitor(),
-          "Cp1252" );
+          GRAFIK_ENCODING );
 
       startGrafikTPL( tplFile, sync );
 
@@ -193,7 +223,7 @@ public class GrafikLauncher
     finally
     {
       IOUtils.closeQuietly( strWriter );
-      
+
       if( sync != null )
         sync.clear();
     }
@@ -273,15 +303,15 @@ public class GrafikLauncher
 
         public void processTerminated( final int returnCode )
         {
-          synchroniseZml( );
+          synchroniseZml();
         }
 
-        private void synchroniseZml()
+        private void synchroniseZml( )
         {
           for( final Iterator it = sync.iterator(); it.hasNext(); )
           {
             final RememberForSync rfs = (RememberForSync) it.next();
-           
+
             try
             {
               rfs.synchronizeZml();
@@ -293,7 +323,7 @@ public class GrafikLauncher
           }
         }
       };
-      
+
       // wait for grafik to finish and eventually synchronise data
       wraper.waitForProcess();
     }
@@ -302,7 +332,7 @@ public class GrafikLauncher
       throw new SensorException( e );
     }
   }
-  
+
   /**
    * Converts a diagram template file to a grafik tpl.
    * <p>
@@ -320,12 +350,10 @@ public class GrafikLauncher
    * @throws CoreException
    * @throws IOException
    */
-  private static List odt2tpl( final ObsdiagviewType odt, final IFolder dest,
-      final Writer writer, final IProgressMonitor monitor )
-      throws CoreException, IOException
+  private static IStatus odt2tpl( final ObsdiagviewType odt,
+      final IFolder dest, final Writer writer, final IProgressMonitor monitor,
+      final List sync ) throws CoreException, IOException
   {
-    final List sync = new Vector();
-
     final UrlResolver urlRes = new UrlResolver();
     final URL context = ResourceUtilities.createURL( dest.getParent() );
 
@@ -335,12 +363,14 @@ public class GrafikLauncher
     final Set xLines = new TreeSet();
     final Map yLines = new HashMap();
 
+    final List statusList = new LinkedList();
+
     final TypeObservation[] tobs = (TypeObservation[]) odt.getObservation()
         .toArray( new TypeObservation[0] );
     for( int i = 0; i < tobs.length; i++ )
     {
       if( monitor.isCanceled() )
-        return sync;
+        return Status.CANCEL_STATUS;
 
       // now try to locate observation file
       final URL url = urlRes.resolveURL( context, tobs[i].getHref() );
@@ -366,7 +396,12 @@ public class GrafikLauncher
       }
       catch( Exception e )
       {
-        e.printStackTrace();
+        statusList
+            .add( new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
+                "Zeitreihe konnte nicht eingelesen werden. Datei: "
+                    + zmlFile.getName() + " Grund: " + e.getLocalizedMessage(),
+                e ) );
+
         Logger.getLogger( GrafikLauncher.class.getName() ).throwing(
             GrafikLauncher.class.getName(), "odt2tpl", e );
         continue;
@@ -383,6 +418,8 @@ public class GrafikLauncher
       final IAxis[] numberAxes = ObservationUtilities.findAxisByClass( axes,
           Number.class, true );
 
+      final List displayedAxes = new ArrayList( numberAxes.length );
+
       int cc = 1;
       final List curves = tobs[i].getCurve();
       for( final Iterator itc = curves.iterator(); itc.hasNext(); )
@@ -395,6 +432,8 @@ public class GrafikLauncher
             + "-" + cc + ".dat" );
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
+
+        displayedAxes.add( axis );
 
         // convert to dat-file, ready to be read by the grafik tool
         zml2dat( obs, datFile, dateAxis, axis, monitor );
@@ -410,15 +449,29 @@ public class GrafikLauncher
       if( fr != null )
         xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
 
-      // does is have Alarmstufen?
-      final MetadataList mdl = obs.getMetadataList();
-      final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
-      for( int j = 0; j < mds.length; j++ )
+      // does is have Alarmstufen? only check if we are displaying at least a
+      // W-axis
+      try
       {
-        final Double value = new Double( mdl.getProperty( mds[j] ) );
-        yLines.put( value, new ValueAndColor( mds[j] + " ("
-            + mdl.getProperty( mds[j] ) + ")", value.doubleValue(), null ) );
+        ObservationUtilities.findAxisByType( (IAxis[]) displayedAxes
+            .toArray( new IAxis[displayedAxes.size()] ),
+            TimeserieConstants.TYPE_WATERLEVEL );
+
+        final MetadataList mdl = obs.getMetadataList();
+        final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
+        for( int j = 0; j < mds.length; j++ )
+        {
+          final Double value = new Double( mdl.getProperty( mds[j] ) );
+          yLines.put( value, new ValueAndColor( mds[j] + " ("
+              + mdl.getProperty( mds[j] ) + ")", value.doubleValue(), null ) );
+        }
       }
+      catch( NoSuchElementException e )
+      {
+        // ignored
+      }
+
+      displayedAxes.clear();
     }
 
     writer.write( gKurven.toVorlagentext() );
@@ -434,6 +487,7 @@ public class GrafikLauncher
       final String strDate = it.next().toString();
       writer.write( "Senkrechte: " + strDate + '\n' );
     }
+    xLines.clear();
 
     // constant horizontal lines...
     for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
@@ -441,8 +495,15 @@ public class GrafikLauncher
       final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
       writer.write( "yKonst: " + vac.value + " " + vac.label + '\n' );
     }
+    yLines.clear();
 
-    return sync;
+    // if there are zwischen-status, return them
+    if( statusList.size() > 0 )
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0,
+          (IStatus[]) statusList.toArray( new IStatus[statusList.size()] ),
+          "Siehe Details", null );
+
+    return Status.OK_STATUS;
   }
 
   /**
@@ -455,7 +516,7 @@ public class GrafikLauncher
    * @param monitor
    * @throws CoreException
    */
-  private static void zml2dat( final IObservation obs, final IFile datFile,
+  private static IStatus zml2dat( final IObservation obs, final IFile datFile,
       final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor )
       throws CoreException
   {
@@ -482,6 +543,8 @@ public class GrafikLauncher
     };
 
     sch.setFileContents( datFile, false, false, monitor );
+
+    return Status.OK_STATUS;
   }
 
   /**
