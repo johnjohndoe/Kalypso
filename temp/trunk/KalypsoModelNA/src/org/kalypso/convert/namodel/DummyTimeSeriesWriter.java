@@ -16,11 +16,11 @@ import java.util.TimeZone;
  */
 public class DummyTimeSeriesWriter
 {
-  private final static double m_verdMin = 0;
+//  private final static double m_verdMin = 0;
 
-  private final static double m_verdMax = 1.0;
+//  private final static double m_verdMax = 1.0;
 
-  private final static int m_verdMaxDayOfYear = 30 * 3;
+//  private final static int m_verdMaxDayOfYear = 30 * 3;
 
   private final Date m_start;
 
@@ -96,7 +96,7 @@ public class DummyTimeSeriesWriter
     calendarStart.setTime( m_start );
     calendarStart.set( Calendar.DAY_OF_YEAR, 1 );
     calendarStart.set( Calendar.HOUR, 12 );
-    double daysinYear = calendarStart.getActualMaximum( Calendar.DAY_OF_YEAR );
+//    double daysinYear = calendarStart.getActualMaximum( Calendar.DAY_OF_YEAR );
     Calendar calendarEnd = Calendar.getInstance( m_timeZone );
     calendarEnd.setTime( m_end );
     int writeTillYear = calendarEnd.get( Calendar.YEAR ) + 1;
@@ -104,9 +104,9 @@ public class DummyTimeSeriesWriter
     while( goOn )
     {
       Date date = calendarStart.getTime();
-      double dayinYear = calendarStart.get( Calendar.DAY_OF_YEAR );
-      double verd = ( m_verdMax + m_verdMin ) / 2.0d + ( m_verdMax - m_verdMin ) / 2.0d
-          * Math.sin( 2d * Math.PI / daysinYear * dayinYear + m_verdMaxDayOfYear );
+//      double dayinYear = calendarStart.get( Calendar.DAY_OF_YEAR );
+//      double verd = ( m_verdMax + m_verdMin ) / 2.0d + ( m_verdMax - m_verdMin ) / 2.0d
+//          * Math.sin( 2d * Math.PI / daysinYear * dayinYear + m_verdMaxDayOfYear );
       // TODO add numberformatparsing
       // String out = m_dateFormat.format( date )+" " +
       // Double.toString(verd)+"\n";
