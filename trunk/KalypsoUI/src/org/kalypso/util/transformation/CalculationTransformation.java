@@ -9,7 +9,6 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,22 +21,18 @@ import org.kalypso.java.util.PropertiesHelper;
  */
 public class CalculationTransformation extends AbstractTransformation
 {
-  private static final String PROP_OUTPUT = "output";
+  /** Dateiname für das Ergebnis */
+  public static final String PROP_OUTPUT = "output";
 
-  private static final String PROP_ENTRY = "entry";
+  /** Key/Value Paare */
+  public static final String PROP_ENTRY = "entry";
 
   public void transformIntern( final Properties properties,
       final IProgressMonitor monitor ) throws TransformationException
   {
     try
     {
-      final String outputFileName = properties.getProperty( PROP_OUTPUT );
-      
-      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFile outputFile = root.getFile( new Path( outputFileName ) ); 
-
       final Properties targetProperties = parseProperties( properties );
-
       final PipedOutputStream pos = new PipedOutputStream();
       final PipedInputStream pis = new PipedInputStream( pos );
 
@@ -51,6 +46,7 @@ public class CalculationTransformation extends AbstractTransformation
       };
       ct.start();
 
+      final IFile outputFile = ResourcesPlugin.getWorkspace().getRoot().getFile( new Path( properties.getProperty( PROP_OUTPUT ) ) );
       outputFile.create( pis, false, monitor );
     }
     catch( final CoreException e )

@@ -43,6 +43,7 @@
 package org.deegree_impl.model.feature;
 
 import java.util.List;
+import java.util.Map;
 
 import org.deegree.gml.GMLFeature;
 import org.deegree.gml.GMLFeatureCollection;
@@ -95,20 +96,20 @@ public class FeatureFactory
   public static FeatureTypeProperty createFeatureTypeProperty( String name, String type,
       boolean nullable )
   {
-    return createFeatureTypeProperty( name, DEFAULTNAMESPACE, type, nullable );
+    return createFeatureTypeProperty( name, DEFAULTNAMESPACE, type, nullable,null );
     // return new FeatureTypeProperty_Impl( name, type, nullable );
   }
 
   public static FeatureTypeProperty createFeatureTypeProperty( String name, String namespace,
-      String type, boolean nullable )
+      String type, boolean nullable, Map annotationMap )
   {
-    return new FeatureTypeProperty_Impl( name, namespace, type, nullable );
+    return new FeatureTypeProperty_Impl( name, namespace, type, nullable,annotationMap );
   }
 
   /**
    * creates an instance of a FeatureType from an array of
    * FeatureTypeProperties, its parents and childs and its name.
-   * 
+   * @deprecated
    * @param parents
    *          parents of the <CODE>FeatureType</CODE>
    * @param children
@@ -125,13 +126,13 @@ public class FeatureFactory
     final int[] defaultOccurs = new int[properties.length];
     for( int i = 0; i < defaultOccurs.length; i++ )
       defaultOccurs[i] = 1;
-    return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs );
+    return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs,null );
   }
 
   public static FeatureType createFeatureType( String name, String namespace,
-      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs )
+      FeatureTypeProperty[] properties, int[] minOccurs, int[] maxOccurs, Map annotationMap )
   {
-    return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs );
+    return new FeatureType_Impl( name, namespace, properties, minOccurs, maxOccurs,annotationMap );
   }
 
   /**

@@ -10,6 +10,9 @@
  */
 package org.deegree_impl.model.feature;
 
+import java.util.Map;
+
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -57,8 +60,11 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
 
   private String myLabelTo = null;
 
-  public XLinkFeatureTypeProperty( String name,String namespace, int type, boolean isNullable)
+  private final Map m_annotationMap;
+
+  public XLinkFeatureTypeProperty( String name,String namespace, int type, boolean isNullable,Map annotation)
   {
+    m_annotationMap=annotation;
     m_xlinkType = type;
     m_name = name;
     m_namespace=namespace;
@@ -153,5 +159,17 @@ public class XLinkFeatureTypeProperty implements FeatureTypeProperty
   public boolean isGeometryProperty()
   {
     return false;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
+   */
+  public Annotation getAnnotation( String lang )
+  {
+    return (Annotation)m_annotationMap.get(lang);
+  }
+  public Map getAnnotationMap()
+  {
+    return m_annotationMap;
   }
 }

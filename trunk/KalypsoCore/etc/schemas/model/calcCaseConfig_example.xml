@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<transformationConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org
+<calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org
 .\calcCaseConfig.xsd">
-
-<transformation className="org.kalypso.util.XslTransformer">
-		<arg name="input" value="modell.gml"/>
-		<arg name="xsl" value="xsl/calcCase.xsl"/>
-		<arg name="output" value="calcCase.gml"/>
-	</transformation>
-</transformationConfig>
+	<createTransformations>
+		<transformation className="org.kalypso.util.transformation.CalculationTransformation">
+			<argument name="output" value="calcdir:.calculation"/>
+			<argument name="entry0" value="startTime=#SYSTEM_TIME#"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value="project:modell.gml"/>
+			<argument name="output" value="calcdir:calcCase.gml"/>
+		</transformation>
+	</createTransformations>
+	<updateTransformations>
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="project" value="project:"/>
+			<argument name="type" value="gml"/>
+			<argument name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+			<argument name="sourceObservation" value="Niederschlag_eingabeEingang"/>
+			<argument name="targetObservation" value="Niederschlag_eingabe"/>
+			<argument name="targetFolder" value="calcdir:zeitreihen"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="project" value="project:"/>
+			<argument name="type" value="gml"/>
+			<argument name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
+			<argument name="sourceObservation" value="Wasserstand_gemessenEingang"/>
+			<argument name="targetObservation" value="Wasserstand_gemessen"/>
+			<argument name="targetFolder" value="calcdir:zeitreihen"/>
+		</transformation>
+	</updateTransformations>
+</calcCaseConfig>

@@ -1,10 +1,10 @@
 package org.kalypso.ogc.gml;
 
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree_impl.services.wms.RemoteWMService;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -72,7 +72,7 @@ public class KalypsoWMSLayer implements IKalypsoLayer
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

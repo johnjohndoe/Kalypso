@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.event;
+package org.deegree.model.feature.event;
 
 /**
  * TODO typen überarbeiten und vereinheitlichen, überall verwenden

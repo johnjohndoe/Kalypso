@@ -23,8 +23,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.ogc.gml.featureview.control.DefaultFeatureControlFactory;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory;
 import org.kalypso.ogc.gml.table.celleditors.DefaultCellEditorFactory;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -323,6 +321,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+    
+    // TODO: move configuration from Constructor to this place
   }
 
   /**
@@ -425,27 +425,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   {
     return new DefaultCellEditorFactory( getFeatureTypeCellEditorProperties(), this.getClass()
         .getClassLoader() );
-  }
-
-  /**
-   * Erzeugt jedesmal eine neue Factory. N?tig, weil die Factory die
-   * CellEditoren cached, diese aber mit schliessen der Tabelle disposed werden.
-   */
-  public IFeatureControlFactory createFeatureControlFactory()
-  {
-    final Properties controlProperties = new Properties();
-
-    try
-    {
-      controlProperties.load( KalypsoGisPlugin.class
-          .getResourceAsStream( "resources/featureControls.properties" ) );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-
-    return new DefaultFeatureControlFactory( controlProperties, this.getClass().getClassLoader() );
   }
 
   public SelectionIdProvider getSelectionIdProvider()

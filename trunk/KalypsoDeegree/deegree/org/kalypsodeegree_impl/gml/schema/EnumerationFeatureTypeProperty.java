@@ -1,5 +1,8 @@
 package org.deegree_impl.gml.schema;
 
+import java.util.Map;
+
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -20,9 +23,12 @@ public class EnumerationFeatureTypeProperty implements FeatureTypeProperty, Vali
 
   private final boolean m_isNullable;
 
+  private final Map m_annotation;
+
   public EnumerationFeatureTypeProperty( String name, String namespace, String type,
-      boolean isNullable, Object[] enumeration )
+      boolean isNullable, Object[] enumeration,Map annotation )
   {
+    m_annotation=annotation;
     m_name = name;
     m_namespace = namespace;
     m_type = type;
@@ -90,5 +96,15 @@ public class EnumerationFeatureTypeProperty implements FeatureTypeProperty, Vali
   public boolean isGeometryProperty()
   {
     return false;
+  }
+
+  public Annotation getAnnotation( String lang )
+  {
+    return (Annotation)m_annotation.get(lang);
+  }
+ 
+  public Map getAnnotationMap()
+  {
+    return m_annotation;
   }
 }

@@ -43,6 +43,8 @@
 
 package org.deegree.model.feature;
 
+import java.util.Map;
+
 
 /**
  * The FeatureType interface is intended to provide details of the type of a
@@ -94,9 +96,7 @@ public interface FeatureType
 
   public int getPropertyPosition( String name );
   public int getDefaultGeometryPropertyPosition();
-  /**
-   * @link aggregationByValue
-   * @clientCardinality 0..*
-   */
   
+  public Annotation getAnnotation(String langKey);
+  public Map getAnnotationMap();
 }

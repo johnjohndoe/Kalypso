@@ -19,9 +19,11 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -29,7 +31,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -48,7 +49,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IHelpContextIds;
 import org.eclipse.ui.internal.ide.misc.ResourceAndContainerGroup;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
@@ -63,7 +64,7 @@ import org.kalypso.ui.nature.ModelNature;
  * </ul>
  * </p>
  */
-public class NewCalculationCaseCreateFolderPage extends WizardPage implements Listener
+public class NewCalculationCaseCreateFolderPage extends WizardPage implements Listener, IProjectProvider
 {
   protected static final Logger LOGGER = Logger.getLogger( NewCalculationCaseCreateFolderPage.class.getName() );
   
@@ -209,7 +210,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
     // create the new folder and cache it if successful
     final IPath containerPath = resourceGroup.getContainerFullPath();
-    IPath newFolderPath = containerPath.append( resourceGroup.getResource() );
+    final IPath newFolderPath = containerPath.append( resourceGroup.getResource() );
     final IFolder newFolderHandle = createFolderHandle( newFolderPath );
 
     WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
@@ -224,20 +225,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
 
-          try
-          {
-            ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-            final CoreException coreException = new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-                "Rechenfall konnte nicht erzeugt werden\n" + e.getLocalizedMessage(), e ) );
-
-            LOGGER.throwing( NewCalculationCaseWizard.class.getName() , "", coreException );
-            
-            throw coreException;
-          }
+          ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
         }
         finally
         {
@@ -425,6 +413,20 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     }
 
     return valid;
+  }
+
+  /**
+   * @see org.kalypso.eclipse.core.resources.IProjectProvider#getProject()
+   */
+  public IProject getProject()
+  {
+    final IPath containerPath = resourceGroup.getContainerFullPath();
+    
+    final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( containerPath );
+    if( resource != null )
+      return resource.getProject();
+    
+    return null;
   }
 
 }

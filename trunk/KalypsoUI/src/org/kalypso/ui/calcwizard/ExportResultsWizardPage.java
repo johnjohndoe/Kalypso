@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
@@ -29,8 +31,6 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
 import org.kalypso.ogc.gml.map.actions.FullExtentMapAction;
 import org.kalypso.ogc.gml.map.actions.ToggleSingleSelectWidgetAction;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -285,7 +285,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

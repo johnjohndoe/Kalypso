@@ -60,7 +60,21 @@
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="BodenfeuchteMin" type="double"/>
-					<element name="Bodenfeuchte" type="double"/>
+                    <element name="Bodenfeuchte" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <label>FeuchteDesBodens</label>
+                                <tooltip>Der Tooltip</tooltip>
+                                <description>Beschreibung ...</description>
+                            </documentation>
+                            <documentation xml:lang="en">
+                                <label>FeuchteDesBodens en</label>
+                                <tooltip>Der Tooltip en</tooltip>
+                                <description>Beschreibung ... en</description>
+                            </documentation>
+
+                        </annotation>
+                    </element>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
 					<element name="Niederschlag_eingabeEingang" type="obslink:TimeseriesLink"/>

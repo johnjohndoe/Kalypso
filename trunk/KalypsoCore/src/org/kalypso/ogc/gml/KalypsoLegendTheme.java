@@ -16,6 +16,9 @@ import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Exception;
 import org.deegree.model.geometry.GM_Object;
@@ -24,9 +27,6 @@ import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
@@ -152,7 +152,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

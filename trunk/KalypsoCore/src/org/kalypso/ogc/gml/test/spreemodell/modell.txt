@@ -1,3 +1,4 @@
+
 --+http://www.tuhh.de/kalypsoSpree:ZuflussCollection FeatureType 
   |-+props:
   | +http://www.tuhh.de/kalypsoSpree:ZuflussMember     FeatureAssociationType
@@ -80,7 +81,15 @@
   | +http://www.tuhh.de/kalypsoSpree:Name              java.lang.String [1..1]
   | +http://www.tuhh.de/kalypsoSpree:Ort               org.deegree.model.geometry.GM_Point [1..1]
   | +http://www.tuhh.de/kalypsoSpree:BodenfeuchteMin   java.lang.Double [1..1]
-  | +http://www.tuhh.de/kalypsoSpree:Bodenfeuchte      java.lang.Double [1..1]
+  | +http://www.tuhh.de/kalypsoSpree:Bodenfeuchte      java.lang.Double
+  |lang:  de
+  |label: FeuchteDesBodens
+  |toolt: Der Tooltip
+  |descr: Beschreibung ...
+  |lang:  en
+  |label: FeuchteDesBodens en
+  |toolt: Der Tooltip en
+  |descr: Beschreibung ... en [1..1]
   | +http://www.tuhh.de/kalypsoSpree:BodenfeuchteMax   java.lang.Double [1..1]
   | +http://www.tuhh.de/kalypsoSpree:Ausdehnung        java.lang.Double [1..1]
   | +http://www.tuhh.de/kalypsoSpree:Niederschlag_eingaorg.kalypso.zml.obslink.TimeseriesLink [1..1]

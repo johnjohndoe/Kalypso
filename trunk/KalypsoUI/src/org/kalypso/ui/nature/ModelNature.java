@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -20,6 +20,9 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.tools.ant.filters.ReplaceTokens;
+import org.apache.tools.ant.filters.ReplaceTokens.Token;
+import org.deegree.model.feature.GMLWorkspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -44,23 +47,20 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
-import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.model.xml.CalcCaseConfigType;
 import org.kalypso.model.xml.Calcwizard;
 import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.model.xml.TransformationConfig;
-import org.kalypso.model.xml.TransformationType;
 import org.kalypso.model.xml.CalcwizardType.PageType.ArgType;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.ICalcWizardPage;
-import org.kalypso.util.transformation.ITransformation;
-import org.kalypso.util.transformation.TransformationException;
-import org.kalypso.util.transformation.TransformationFactory;
+import org.kalypso.util.transformation.TransformationHelper;
 import org.xml.sax.InputSource;
 
 /**
@@ -69,20 +69,21 @@ import org.xml.sax.InputSource;
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
-  private static final String MODELLTYP_FOLDER = ".modellTyp";
+  private static final String MODELLTYP_FOLDER = ".model";
 
   private static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/"
       + "calcCaseConfig.xml";
 
   private static final String MODELLTYP_MODELSPEC_XML = MODELLTYP_FOLDER + "/" + "modelspec.xml";
 
+
   public static final String ID = "org.kalypso.ui.ModelNature";
 
   private static final String METADATA_FILE = ".metadata";
 
   public static final String CALCULATION_FILE = ".calculation";
-
-//  private static final String CALC_RESULT_FOLDER = ".results";
+  
+  public static final String CONTROL_VIEW_FILE = MODELLTYP_FOLDER + "/control.template";
 
   private static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
 
@@ -93,6 +94,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private static final String PROGNOSE_FOLDER = ".prognose";
 
   private Map m_calcJobMap = new HashMap();
+
+  public static final String CONTROL_TEMPLATE_GML = MODELLTYP_FOLDER + "/" + CALCULATION_FILE;
+  public static final String CONTROL_TEMPLATE_XSD = MODELLTYP_FOLDER + "/schema/control.xsd";
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -216,57 +220,76 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return ( calcFile != null && calcFile.exists() && calcFile instanceof IFile );
   }
 
+  /** Erzeugt für dieses Projekt einen neuen Rechenfall im angegebenen Ordner */
   public static void createCalculationCaseInFolder( final IFolder folder,
-      final IProgressMonitor monitor ) throws Exception
+      final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Rechenfall erzeugen", 2000 );
+    
     final IProject project = folder.getProject();
+    
     final IFile tranformerConfigFile = project.getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
-
-    final InputStreamReader inputStreamReader = new InputStreamReader( tranformerConfigFile
-        .getContents(), tranformerConfigFile.getCharset() );
-    final Properties replaceProps = createReplacePropertiesForTransformation( folder );
-
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-
-    final TransformationConfig trans = (TransformationConfig)new ObjectFactory()
-        .createUnmarshaller().unmarshal( new InputSource( new StringReader( contents ) ) );
-
-    tranformModelData( trans, monitor );
-
-    final IFile calcFile = folder.getFile( CALCULATION_FILE );
-    if( !calcFile.exists() )
-      throw new Exception( "Es wurden keine Steuerparameter durch die Transformation erzeugt: "
-          + calcFile.getName() );
-  }
-
-  private static Properties createReplacePropertiesForTransformation( final IFolder calcFolder )
-  {
-    final Properties props = new Properties();
-
-    props.setProperty( "#SYSTEM_TIME#", new SimpleDateFormat( "dd.MM.yyyy HH:mm" )
-        .format( new Date( System.currentTimeMillis() ) ) );
-
-    props.setProperty( "calcdir:", calcFolder.getFullPath().toString() + "/" );
-    props.setProperty( "project:", calcFolder.getProject().getFullPath().toString() + "/" );
-
-    return props;
-  }
-
-  private static void tranformModelData( final TransformationConfig trans,
-      final IProgressMonitor monitor ) throws TransformationException
-  {
-    final List transList = trans.getTransformation();
-
-    monitor.beginTask( "Transformationen durchführen", transList.size() );
-
-    for( Iterator iter = transList.iterator(); iter.hasNext(); )
+    
+    // Protokolle ersetzen
+    try
     {
-      final TransformationType element = (TransformationType)iter.next();
-      final ITransformation ccTrans = TransformationFactory
-          .createTransformation( element );
+      final ReplaceTokens replaceReader = new ReplaceTokens( new InputStreamReader( tranformerConfigFile
+          .getContents(), tranformerConfigFile.getCharset() ) ); 
+      
+      configureReplaceTokensForCalcCase( folder, replaceReader );
 
-      ccTrans.transform( new SubProgressMonitor( monitor, 1 ) );
+      final CalcCaseConfigType trans = (CalcCaseConfigType)new ObjectFactory()
+          .createUnmarshaller().unmarshal( new InputSource( replaceReader ) );
+
+      monitor.worked( 1000 );
+      
+      // daten transformieren
+      TransformationHelper.doTranformations( trans.getCreateTransformations(), new SubProgressMonitor( monitor, 1000 ) );
     }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+      
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Erzeugen des Rechenfalls\n" + e.getLocalizedMessage(), e ) );
+    }
+    
+    monitor.done();
+  }
+
+  private static void configureReplaceTokensForCalcCase( final IFolder calcFolder, final ReplaceTokens replaceTokens )
+  {
+    replaceTokens.setBeginToken( ':' );
+    replaceTokens.setEndToken( ':' );
+    
+    final Token timeToken = new ReplaceTokens.Token( );
+    timeToken.setKey( "SYSTEM_TIME" );
+    timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" )
+        .format( new Date( System.currentTimeMillis() ) ) );
+    
+    replaceTokens.addConfiguredToken( timeToken );
+
+    final Token calcdirToken = new ReplaceTokens.Token( );
+    calcdirToken.setKey( "calcdir" );
+    calcdirToken.setValue( calcFolder.getFullPath().toString() + "/" );
+    
+    replaceTokens.addConfiguredToken( calcdirToken );
+
+    final Token projectToken = new ReplaceTokens.Token( );
+    projectToken.setKey( "project" );
+    projectToken.setValue( calcFolder.getProject().getFullPath().toString() + "/" );
+    
+    replaceTokens.addConfiguredToken( projectToken );
   }
 
   public String getCalcType()
@@ -662,6 +685,25 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 //    {
 //      m_calcJobMap.remove( jobID );
 //    }
+  }
+
+  public GMLWorkspace getDefaultControl() throws CoreException
+  {
+    try
+    {
+      final URL gmlURL = new URL( "platform:/resource/" + getProject().getName() + "/" + CONTROL_TEMPLATE_GML ); 
+      final URL schemaURL = new URL( "platform:/resource/" + getProject().getName() + "/" + CONTROL_TEMPLATE_XSD );
+
+      // TODO: ReplaceTokens
+      
+      return GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+    }
   }
 
 }

@@ -11,9 +11,9 @@ import java.util.List;
 
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -197,7 +197,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {

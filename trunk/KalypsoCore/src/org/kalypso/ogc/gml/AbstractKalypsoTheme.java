@@ -1,8 +1,8 @@
 package org.kalypso.ogc.gml;
 
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 
 /**
  * <p>Abstract implementation of IKalypsoTheme</p>
@@ -37,7 +37,7 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {

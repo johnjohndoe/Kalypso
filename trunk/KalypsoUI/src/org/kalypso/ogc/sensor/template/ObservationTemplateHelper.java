@@ -234,7 +234,7 @@ public class ObservationTemplateHelper
   //    fw.write( str );
   //    fw.close();
   //
-  //    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik",
+  //    final File grafikExe = SetContentThread.makeFileFromStream( false, "grafik",
   // ".exe",
   //        GrafikViewActionDelegate.class
   //            .getResourceAsStream( "/org/kalypso/plugin/resources/exe/grafik.exe_" ),

@@ -43,6 +43,8 @@
 
 package org.deegree.model.feature;
 
+import java.util.Map;
+
 /**
  * 
  * the interface describes a property entry of a feature type. the name of the
@@ -69,6 +71,7 @@ public interface FeatureTypeProperty
    */
   public String getType();
 
+  public Annotation getAnnotation(String lang);
   /**
    * returns true if the property value is allowed to be null
    */
@@ -76,11 +79,16 @@ public interface FeatureTypeProperty
   
   public String getNamespace();
   public boolean isGeometryProperty();
+
+  public Map getAnnotationMap();
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.4  2004/10/09 18:41:20  belger
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/10/07 14:09:24  doemming
  * *** empty log message ***
  *

@@ -68,6 +68,7 @@
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
       <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.apache.ant"/>
    </requires>
    <extension point="org.eclipse.core.runtime.preferences">
 	    <initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>

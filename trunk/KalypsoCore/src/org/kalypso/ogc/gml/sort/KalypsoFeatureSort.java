@@ -11,6 +11,10 @@ import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Position;
@@ -18,10 +22,6 @@ import org.deegree.model.sort.JMSpatialIndex;
 import org.deegree_impl.model.ct.GeoTransformer;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProvider;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

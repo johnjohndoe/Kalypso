@@ -2,12 +2,10 @@ package org.deegree_impl.gml.schema;
 
 import java.util.HashMap;
 
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
-import org.deegree_impl.extension.ITypeHandler;
-import org.deegree_impl.extension.ITypeRegistry;
-import org.deegree_impl.extension.TypeRegistrySingleton;
-import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -194,85 +192,88 @@ public class GMLSchemaFactory
     {
       SchemaAttribute refAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node,
           "ref" ) );
-     if(DEBUG)
-      System.out.println(refAttribute.getValueNS());
-      
-//      ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
-//      String valueNS = refAttribute.getValueNS();
-//      String value = refAttribute.getValue();
-//      ITypeHandler typeHandlerForTypeName = typeRegistry.getTypeHandlerForTypeName(valueNS+":"+value);
-//      if(typeHandlerForTypeName!=null)
-//      {
-//      	    System.out.println("debug");
-//        	String className = typeHandlerForTypeName.getClassName();
-//      		FeatureTypeProperty property = FeatureFactory.createFeatureTypeProperty("name","namespace",className,true);
-//        	collector.add(property);
-//      }
-//  else
-  {
-      GMLSchema refSchema = schema.getGMLSchema( refAttribute.getValueNS() );
-      NodeList nl = refSchema.getSchema().getElementsByTagNameNS(
-          "http://www.w3.org/2001/XMLSchema", "element" );
-      nl = XMLHelper.reduceByAttribute( nl, "name", refAttribute.getValue() );
-      //      NodeList_Impl nl2=new NodeList_Impl();
-      // must refer to a global element definition, so filter for it
-      Node refNode = null;
-      for( int i = 0; i < nl.getLength(); i++ )
-        if( XMLHelper.isGlobalElementDefinition( nl.item( i ) ) )
-          refNode = nl.item( i );
+      if( DEBUG )
+        System.out.println( refAttribute.getValueNS() );
 
-      if( refNode != null )
+      //      ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
+      //      String valueNS = refAttribute.getValueNS();
+      //      String value = refAttribute.getValue();
+      //      ITypeHandler typeHandlerForTypeName =
+      // typeRegistry.getTypeHandlerForTypeName(valueNS+":"+value);
+      //      if(typeHandlerForTypeName!=null)
+      //      {
+      //      	    System.out.println("debug");
+      //        	String className = typeHandlerForTypeName.getClassName();
+      //      		FeatureTypeProperty property =
+      // FeatureFactory.createFeatureTypeProperty("name","namespace",className,true);
+      //        	collector.add(property);
+      //      }
+      //  else
       {
-        //       map( refSchema, refNode, collector );
-        Object mapedElement = refSchema.getMappedType( refNode );
-        if( mapedElement instanceof FeatureType )
+        GMLSchema refSchema = schema.getGMLSchema( refAttribute.getValueNS() );
+        NodeList nl = refSchema.getSchema().getElementsByTagNameNS(
+            "http://www.w3.org/2001/XMLSchema", "element" );
+        nl = XMLHelper.reduceByAttribute( nl, "name", refAttribute.getValue() );
+        //      NodeList_Impl nl2=new NodeList_Impl();
+        // must refer to a global element definition, so filter for it
+        Node refNode = null;
+        for( int i = 0; i < nl.getLength(); i++ )
+          if( XMLHelper.isGlobalElementDefinition( nl.item( i ) ) )
+            refNode = nl.item( i );
+
+        if( refNode != null )
         {
-          FeatureType ft = (FeatureType)mapedElement;
-          collector.setOccurency( ft.getName(), ft.getNamespace(), node );
-          collector.add( ft );
+          //       map( refSchema, refNode, collector );
+          Object mapedElement = refSchema.getMappedType( refNode );
+          if( mapedElement instanceof FeatureType )
+          {
+            FeatureType ft = (FeatureType)mapedElement;
+            collector.setOccurency( ft.getName(), ft.getNamespace(), node );
+            collector.add( ft );
+          }
+          // are we allready building this node ?
+          // (recursive definition ?)
+          else if( mapedElement instanceof Node )
+          {
+            //refSchema.
+            // FeatureType ft=(FeatureType)mapedElement;
+            String name = ( (Element)refNode ).getAttribute( "name" );
+            collector.setOccurency( name, refSchema.getTargetNS(), node );
+            collector.add( refNode );
+          }
+          else if( mapedElement instanceof FeatureTypeProperty )
+          {
+            FeatureTypeProperty ftp = (FeatureTypeProperty)mapedElement;
+
+            collector.setOccurency( ftp.getName(), ftp.getNamespace(), node );
+            collector.add( ftp );
+
+            if( mapedElement instanceof CustoumFeatureTypeProperty )
+              return;
+
+          }
+          else
+            throw new Exception( "refered element is nether featuretype "
+                + "nor featuretypeproperty :" + mapedElement.getClass().toString() );
+
+          //FeatureTypeBuilder childCollector = new FeatureTypeBuilder(
+          // refSchema, refNode );
+          //collector.setOccurency( childCollector.getName(),
+          // childCollector.getNamespace(), node );
+          //collector.add( childCollector );
+
         }
-        // are we allready building this node ?
-        // (recursive definition ?)
-        else if( mapedElement instanceof Node )
-        {
-          //refSchema.
-          // FeatureType ft=(FeatureType)mapedElement;
-          String name = ( (Element)refNode ).getAttribute( "name" );
-          collector.setOccurency( name, refSchema.getTargetNS(), node );
-          collector.add( refNode );
-        }
-        else if( mapedElement instanceof FeatureTypeProperty )
-        {
-          FeatureTypeProperty ftp = (FeatureTypeProperty)mapedElement;
-      
-          collector.setOccurency( ftp.getName(), ftp.getNamespace(), node );
-          collector.add( ftp );
-
-          if(mapedElement instanceof CustoumFeatureTypeProperty)      	
-          	return;
-
-        }
-        else
-          throw new Exception( "refered element is nether featuretype "
-              + "nor featuretypeproperty :" + mapedElement.getClass().toString() );
-
-        //FeatureTypeBuilder childCollector = new FeatureTypeBuilder(
-        // refSchema, refNode );
-        //collector.setOccurency( childCollector.getName(),
-        // childCollector.getNamespace(), node );
-        //collector.add( childCollector );
-
       }
     }
-  }
 
       break;
 
     case NAMED_ELEMENT:
       FeatureTypeBuilder childCollector = new FeatureTypeBuilder( schema, node );
+      map(schema,node.getChildNodes(),childCollector);
       collector.setOccurency( childCollector.getName(), childCollector.getNamespace(), node );
       collector.add( childCollector );
-      break;
+      return;
     case XLINK_TYPE_SIMPLE:
     {
       //          <attributeGroup name="simpleLink">
@@ -345,11 +346,10 @@ public class GMLSchemaFactory
         System.out.println( "TODO annotation" );
       // TODO support annotations
       break;
-    case DOCUMENTATION_TYPE:
-      if( DEBUG )
-        System.out.println( "TODO map documentation" );
-      // TODO support doucumentations
-      break;
+    case DOCUMENTATION_TYPE:     
+      collector.addAnnotation( createAnnotation( (Element)node ) );
+      return;
+    // TODO support doucumentations
     case ATTRIBUTE_TYPE:
       if( DEBUG )
         System.out.println( "TODO map attribute" );
@@ -375,10 +375,20 @@ public class GMLSchemaFactory
 
     //UNSUPPORTED_TYPE
     }
-    
+
     map( schema, node.getChildNodes(), collector );
 
   } //  private static void mapGMLExtension( String typeName, FeatureTypeBuilder
+
+  private static Annotation createAnnotation( Element element )
+  {
+    String lang = element.getAttributeNS( "http://www.w3.org/XML/1998/namespace", "lang" );
+    final String tooltip = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "tooltip" );
+    final String label = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "label" );
+    final String description = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "description" );
+
+    return new Annotation( lang, label, tooltip, description );
+  }
 
   // collector )
   //  {
