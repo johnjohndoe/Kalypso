@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -25,6 +26,7 @@ public class VirtualFeatureTypeRegistry
     {
       m_instance.register( new VirtualAssociationFeatureTypePropertyHanlder() );
       m_instance.register( new VirtualRasterFeatureTypePropertyHandler() );
+      m_instance.register( new VirtualVelocityFeatureTypePropertyHandler() );
     }
     catch( Exception e )
     {
@@ -46,6 +48,24 @@ public class VirtualFeatureTypeRegistry
   public void unregister( VirtualFeatureTypePropertyHandler property )
   {
     m_register.remove( property );
+  }
+
+  public FeatureTypeProperty[] getVirtualFeatureTypePropertiesFor( final FeatureType ft )
+  {
+    final List result = new ArrayList();
+    for( Iterator iter = m_register.iterator(); iter.hasNext(); )
+    {
+      final VirtualFeatureTypePropertyHandler vftp = (VirtualFeatureTypePropertyHandler)iter.next();
+      if( vftp.isDekoratorOf( ft ) )
+      {
+        final FeatureTypeProperty[] properties = vftp.createVirtualFeatureTypeProperties( ft );
+        for( int i = 0; i < properties.length; i++ )
+        {
+          result.add( properties[i] );
+        }
+      }
+    }
+    return (FeatureTypeProperty[])result.toArray( new FeatureTypeProperty[result.size()] );
   }
 
   public FeatureTypeProperty[] getVirtualFeatureTypePropertiesFor( final FeatureTypeProperty ftp )

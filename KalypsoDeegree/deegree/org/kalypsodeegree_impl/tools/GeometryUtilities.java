@@ -1,7 +1,10 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
+package org.kalypsodeegree_impl.tools;
 
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -44,13 +47,25 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public interface VirtualFeatureTypePropertyHandler
+public class GeometryUtilities
 {
-  public boolean isDekoratorOf( FeatureType ft );
 
-  public boolean isDekoratorOf( FeatureTypeProperty ftp );
+  /*
+   * 
+   * @author doemming
+   */
+  public GeometryUtilities()
+  {
+    super();
+  }
 
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft );
-
-  public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureTypeProperty ftp );
+  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP )
+      throws GM_Exception
+  {
+    final GM_Position[] pos = new GM_Position[]
+    {
+        srcP.getPosition(),
+        targetP.getPosition() };
+    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
+  }
 }
