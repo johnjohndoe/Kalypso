@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- =========================================================== -->
+	<!-- RiskContextModel=========================================================== -->
+	<element name="RiskContextModel" type="hws:RiskContextModelType"/>
+	<complexType name="RiskContextModelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="LanduseCollectionMember" type="hws:LanduseCollectionMemberAssociationType"/>
+					<element name="RiskClassCollectionMember" type="hws:RiskClassCollectionMemberAssociationType"/>
+					<element name="IntervalCollectionMember" type="hws:IntervalCollectionMemberAssociationType" maxOccurs="unbounded"/>
+					<element name="IntervalMappingCollectionMember" type="hws:IntervalMappingCollectionMemberAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- LanduseCollectionMember=========================================================== -->
+	<complexType name="LanduseCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:LanduseCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="LanduseCollection" type="hws:LanduseCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="LanduseCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="LanduseMember" type="hws:LanduseMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- LanduseMember=========================================================== -->
+	<complexType name="LanduseMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:Landuse"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Landuse" type="hws:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="LanduseFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Name" type="string"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- RiskClassCollectionMember=========================================================== -->
+	<complexType name="RiskClassCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:RiskClassCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RiskClassCollection" type="hws:RiskClassCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RiskClassCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="RiskClassMember" type="hws:RiskClassMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- RiskClassMember=========================================================== -->
+	<complexType name="RiskClassMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:RiskClass"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RiskClass" type="hws:RiskClassFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RiskClassFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Risk" type="string"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- IntervalCollectionMember=========================================================== -->
+	<complexType name="IntervalCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:IntervalCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="IntervalCollection" type="hws:IntervalCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="IntervalCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="IntervalMember" type="hws:IntervalMemberAssociationType" minOccurs="1" maxOccurs="3"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!--  IntervalMember=========================================================== -->
+	<complexType name="IntervalMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:Interval"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Interval" type="hws:IntervalFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="IntervalFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="RiskClassLink" type="hws:RiskClassLinkType"/>
+					<element name="minValue" type="double"/>
+					<element name="maxValue" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- IntervalMappingCollectionMember=========================================================== -->
+	<complexType name="IntervalMappingCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:IntervalMappingCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="IntervalMappingCollection" type="hws:IntervalMappingCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="IntervalMappingCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="IntervalMappingMember" type="hws:IntervalMappingMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- IntervalMappingMember=========================================================== -->
+	<complexType name="IntervalMappingMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:IntervalMapping"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="IntervalMapping" type="hws:IntervalMappingFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="IntervalMappingFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="IntervalCollectionLink" type="hws:IntervalCollectionLinkType"/>
+					<element name="LanduseLink" type="hws:LanduseLinkType" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- =========================================================== -->
+	<complexType name="LanduseLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence minOccurs="0">
+					<element ref="hws:Landuse"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<complexType name="IntervalCollectionLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence minOccurs="0">
+					<element ref="hws:IntervalCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+		<complexType name="RiskClassLinkType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence minOccurs="0">
+					<element ref="hws:RiskClass"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+</schema>

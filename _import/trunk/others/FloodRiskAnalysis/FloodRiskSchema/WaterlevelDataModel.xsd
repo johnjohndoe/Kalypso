@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" schemaLocation="rectifiedGridCoverage.xsd"/>
+	<!-- =========================================================== -->
+	<!-- WaterlevelDataModel=========================================================== -->
+	<element name="WaterlevelDataModel" type="hws:WaterlevelDataModelType"/>
+	<complexType name="WaterlevelDataModelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="WaterlevelCollectionMember" type="hws:WaterlevelCollectionMemberAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- WaterlevelCollectionMember=========================================================== -->
+	<complexType name="WaterlevelCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:WaterlevelCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="WaterlevelCollection" type="hws:WaterlevelCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="WaterlevelCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="WaterlevelMember" type="hws:WaterlevelMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- WaterlevelMember=========================================================== -->
+	<complexType name="WaterlevelMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:Waterlevel"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Waterlevel" type="hws:WaterlevelFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="WaterlevelFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Annuality" type="double"/>
+					<element name="RectifiedGridCoverageMember" type="hws:RectifiedGridCoverageMemberAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- RectifiedGridCoverageMember=========================================================== -->
+	<complexType name="RectifiedGridCoverageMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:RectifiedGridCoverage"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RectifiedGridCoverage" type="hws:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RectifiedGridCoverageType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="rectifiedGridDomain" type="rgc:RectifiedGridDomainType"/>
+					<element name="rangeSet" type="rgc:RangeSetType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

@@ -1,0 +1,3 @@
+200410131326   0     0     0peiler c:\temp\imgrd1 = ASCIIGRID( x:\diplomarbeit\rectifiedgrid\waterleveltest.asc,FLOAT)
+200410131334   0     0     0peiler c:\temp\imgrd2 = ASCIIGRID( x:\diplomarbeit\rectifiedgrid\waterleveltest.asc,FLOAT)
+200410131431   0     0     0peiler c:\temp\imgrd3 = ASCIIGRID( x:\diplomarbeit\rectifiedgrid\waterleveltest.asc,FLOAT)

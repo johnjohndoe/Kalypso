@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" schemaLocation="rectifiedGridCoverage.xsd"/>
+	<!-- =========================================================== -->
+	<!-- DamageResultModel=========================================================== -->
+	<element name="DamageResultModel" type="hws:DamageResultModelType"/>
+	<complexType name="DamageResultModelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="DamageCollectionMember" type="hws:DamageCollectionMemberAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- DamageCollectionMember=========================================================== -->
+	<complexType name="DamageCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:DamageCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="DamageCollection" type="hws:DamageCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="DamageCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="DamageMember" type="hws:DamageMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- DamageMember=========================================================== -->
+	<complexType name="DamageMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:Damage"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Damage" type="hws:DamageFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="DamageFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Annuality" type="double"/>
+					<element name="RectifiedGridCoverageMember" type="hws:RectifiedGridCoverageMemberAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- RectifiedGridCoverageMember=========================================================== -->
+	<complexType name="RectifiedGridCoverageMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:RectifiedGridCoverage"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="RectifiedGridCoverage" type="hws:RectifiedGridCoverageType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RectifiedGridCoverageType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="rectifiedGridDomain" type="rgc:RectifiedGridDomainType"/>
+					<element name="rangeSet" type="rgc:RangeSetType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
