@@ -39,8 +39,6 @@ public class NaModelCalcJobTest extends TestCase
     //        new FileOutputStream( controlGML ) );
 
     //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
-    File baseDir = new File( "C:\\TMP\\NA_Simulation" );
-    baseDir.mkdirs();
 
     NaModelCalcJob job = new NaModelCalcJob();
     CalcJobDataBean[] beans = new CalcJobDataBean[]
@@ -50,6 +48,8 @@ public class NaModelCalcJobTest extends TestCase
         new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", controlGML.getPath() ) };
     try
     {
+      File baseDir = new File( "C:\\TMP\\NA_SimulationII" );
+      baseDir.mkdirs();
       job.run( baseDir, beans );
     }
     catch( Exception e )

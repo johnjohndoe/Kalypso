@@ -1,17 +1,17 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.deegree.model.feature.GMLWorkspace;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
@@ -55,15 +55,25 @@ public class NaModelCalcJob extends AbstractCalcJob
       basedir.mkdirs();
     try
     {
-      prepareBaseDir( basedir );
+      setMessage( "richte Berechnungsverzeichnis ein" );
+      if( !isCanceled() )
+        prepareBaseDir( basedir );
       // kopiere template aus resourcen:
-      copyTemplates( basedir );
+      if( !isCanceled() )
+        copyTemplates( basedir );
       // generiere ascii-dateien
-      generateASCII( basedir, input );
+      setMessage( "generiere ASCII-Dateien (Modelldaten und Zeitreihen)" );
+      if( !isCanceled() )
+        generateASCII( basedir, input );
       // starte berechnung
-      startCalculation( basedir );
+      setMessage( "starte Simulationskern" );
+      if( !isCanceled() )
+        startCalculation( basedir );
       // ergebnisse aufbereiten
+      setMessage( "lade Ergebnisse" );
+      loadResults( basedir );
 
+      System.out.println( "fertig" );
     }
     catch( Exception e )
     {
@@ -91,7 +101,7 @@ public class NaModelCalcJob extends AbstractCalcJob
     conf.setSimulationForecasetStart( (Date)controlWorkspace.getRootFeature().getProperty(
         "startforecast" ) );
     conf.setSimulationEnd( (Date)controlWorkspace.getRootFeature().getProperty( "endsimulation" ) );
-
+    conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
     NAControlConverter.featureToASCII( basedir, controlWorkspace, modellWorkspace );
 
     NAModellConverter.featureToAscii( conf, modellWorkspace );
@@ -101,6 +111,31 @@ public class NaModelCalcJob extends AbstractCalcJob
         .getSimulationEnd() );
     writer.writeTmpFile( new File( basedir, "klima.dat/std.tmp" ) );
     writer.writeVerdFile( new File( basedir, "klima.dat/std.ver" ) );
+  }
+
+  private void loadResults( File baseDir )
+  {
+    // ASCII-Files:
+    
+    // zeitreihen im out Dir
+    final File outDir = new File( baseDir, "out_we.nat" );
+    final File[] outDirResults = outDir.listFiles();
+    for( int i = 0; i < outDirResults.length; i++ )
+    {
+      final File file = outDirResults[i];
+      addResult( new CalcJobDataBean( FileUtilities.getSuffix( file ), file.getName(), file
+          .getAbsolutePath() ) );
+    }
+
+    // log und error dateien:
+    final File logDir = new File( baseDir, "out_err" );
+    final File logFile=new File(logDir,"");
+    if(logFile.exists())
+      addResult( new CalcJobDataBean( "LOG", "Berich Simulationskern", logFile.getAbsolutePath()));
+      
+    final File errFile=new File(logDir,"");
+    if(errFile.exists())
+      addResult( new CalcJobDataBean( "ERR", "Fehlerberich", errFile.getAbsolutePath()));
   }
 
   private void prepareBaseDir( File baseDir )
@@ -119,10 +154,16 @@ public class NaModelCalcJob extends AbstractCalcJob
       System.out.print( "resource: " + resource );
       if( !destFile.exists() )
       {
-        final URL url = getClass().getResource( resource );
-        final Writer writer = new FileWriter( destFile );
-        ReaderUtilities.readerCopy( new InputStreamReader( url.openStream() ), writer );
-        System.out.println( " ...copied" );
+        try
+        {
+          final InputStream inputStream = getClass().getResourceAsStream( resource );
+          FileUtilities.makeFileFromStream( false, destFile, inputStream );
+          System.out.println( " ...copied" );
+        }
+        catch( Exception e )
+        {
+          System.out.println( "ERR: " + resource + " max not exist" );
+        }
       }
       else
         System.out.println( " exists" );

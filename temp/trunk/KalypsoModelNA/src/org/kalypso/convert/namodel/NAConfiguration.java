@@ -53,6 +53,8 @@ public class NAConfiguration
   private Date m_simulationStart;
 
   private Date m_simulationEnd;
+
+  private String m_rootNodeId;
    
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -194,5 +196,15 @@ public class NAConfiguration
   public Date getSimulationForecastStart()
   {
     return m_simulationForecast;
+  }
+
+  public String getRootNodeId()
+  {
+    return m_rootNodeId;
+  }
+
+  public void setRootNodeID( String rootNodeID )
+  {
+     m_rootNodeId=rootNodeID;
   }
 }
