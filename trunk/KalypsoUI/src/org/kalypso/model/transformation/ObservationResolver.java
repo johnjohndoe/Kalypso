@@ -1,7 +1,11 @@
 package org.kalypso.model.transformation;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Properties;
+
+import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.model.feature.FeatureFactory;
@@ -10,7 +14,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.java.properties.PropertiesHelper;
@@ -19,10 +25,13 @@ import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
@@ -84,10 +93,10 @@ public class ObservationResolver extends AbstractTransformation
       final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)loaderInstance.load( newSourceProps,
           project, new SubProgressMonitor( monitor, 1000 ) );
       loaderInstance.release( layer );
-      
-      resolveTimeseries( project, layer, sourceObsName, targetObsName, targetFolder, new SubProgressMonitor(
-          monitor, 1000 ) );
-      
+
+      resolveTimeseries( project, layer, sourceObsName, targetObsName, targetFolder,
+          new SubProgressMonitor( monitor, 1000 ) );
+
       // GML wieder speichern
       loaderInstance.save( newSourceProps, project, monitor, layer );
     }
@@ -97,21 +106,22 @@ public class ObservationResolver extends AbstractTransformation
     }
   }
 
-  private void resolveTimeseries( final IProject project, final KalypsoFeatureLayer layer, final String sourceName,
-      final String targetName, final IFolder targetFolder, final IProgressMonitor monitor ) throws TransformationException
+  private void resolveTimeseries( final IProject project, final KalypsoFeatureLayer layer,
+      final String sourceName, final String targetName, final IFolder targetFolder,
+      final IProgressMonitor monitor ) throws TransformationException
   {
     checkColumn( layer, sourceName );
     checkColumn( layer, targetName );
 
     final String zmlPrefix = layer.getName() + "-" + sourceName + "-";
-    
+
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
     final ObjectFactory factory = new ObjectFactory();
-    
+
     final KalypsoFeature[] allFeatures = layer.getAllFeatures();
-    
-    monitor.beginTask( "Zeitreihen auslösen" ,  allFeatures.length * 2 );
-    
+
+    monitor.beginTask( "Zeitreihen auslösen", allFeatures.length * 2 );
+
     for( int i = 0; i < allFeatures.length; i++ )
     {
       final KalypsoFeature feature = allFeatures[i];
@@ -119,19 +129,17 @@ public class ObservationResolver extends AbstractTransformation
       final TimeseriesLink obslink = (TimeseriesLink)feature.getProperty( sourceName );
       if( obslink == null )
         continue;
-      
-      final IPoolableObjectType key = new PoolableObjectType( obslink.getLinktype(), obslink.getHref(), project );
-      
+
+      final IPoolableObjectType key = new PoolableObjectType( obslink.getLinktype(), obslink
+          .getHref(), project );
+
       try
       {
         final IObservation obs = (IObservation)pool.getObject( key, monitor );
-        obs.getClass();
-        
-        // write timeserie
-        // TODO: write it!
+
         final IFile newZmlFile = targetFolder.getFile( zmlPrefix + i + ".zml" );
-        newZmlFile.create( new ByteArrayInputStream( "<leer/>".getBytes(  ) ), false, new SubProgressMonitor( monitor, 1 ) );
-        
+        writeTimeserieToFile( newZmlFile, obs );
+
         // write property
         final Properties newSourceProps = new Properties();
         newSourceProps.setProperty( "TYPE", "relative" );
@@ -144,9 +152,9 @@ public class ObservationResolver extends AbstractTransformation
         newLink.setHref( PropertiesHelper.format( newSourceProps, '#' ) );
         newLink.setTimeaxis( obslink.getTimeaxis() );
         newLink.setValueaxis( obslink.getValueaxis() );
-        
+
         feature.setProperty( FeatureFactory.createFeatureProperty( targetName, newLink ) );
-        
+
         monitor.worked( 1 );
       }
       catch( final Exception e )
@@ -157,12 +165,54 @@ public class ObservationResolver extends AbstractTransformation
 
   }
 
-  private void checkColumn( final KalypsoFeatureLayer layer, final String sourceName ) throws TransformationException
+  private void checkColumn( final KalypsoFeatureLayer layer, final String sourceName )
+      throws TransformationException
   {
     final String linkclassname = TimeseriesLink.class.getName();
 
     final FeatureTypeProperty sourceFTP = layer.getFeatureType().getProperty( sourceName );
     if( sourceFTP == null || !sourceFTP.getType().equals( linkclassname ) )
-      throw new TransformationException( "Spalte existiert nicht oder ist nicht vom Typ " + linkclassname + ": " + sourceName );
+      throw new TransformationException( "Spalte existiert nicht oder ist nicht vom Typ "
+          + linkclassname + ": " + sourceName );
+  }
+
+  private void writeTimeserieToFile( final IFile newZmlFile, final IObservation obs ) throws CoreException, FactoryException, IOException
+  {
+    final ObservationType observationType = ZmlFactory.createXML( obs );
+
+    final PipedOutputStream pos = new PipedOutputStream();
+    final PipedInputStream pis = new PipedInputStream( pos );
+
+    final Thread writeThread = new Thread( "Output-Stream-Thread" )
+    {
+      /**
+       * @see java.lang.Thread#run()
+       */
+      public void run()
+      {
+        try
+        {
+          ZmlFactory.getMarshaller().marshal( observationType, pos );
+        }
+        catch( JAXBException e )
+        {
+          e.printStackTrace();
+        }
+        finally
+        {
+          try
+          {
+            pos.close();
+          }
+          catch( IOException e1 )
+          {
+            e1.printStackTrace();
+          }
+        }
+      }
+    };
+    writeThread.start();
+
+    newZmlFile.create( pis, false, new NullProgressMonitor() );
   }
 }
