@@ -1,49 +1,26 @@
 package org.kalypso.util.loader;
 
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.Properties;
 
-import com.bce.util.ClassUtilities;
-import com.bce.util.ClassUtilities.ClassUtilityException;
+import org.kalypso.util.factory.ConfigurableCachedObjectFactory;
+import org.kalypso.util.factory.FactoryException;
 
 /**
  * @author schlienger
  *  
  */
-public class DefaultLoaderFactory implements ILoaderFactory
+public class DefaultLoaderFactory extends ConfigurableCachedObjectFactory implements ILoaderFactory
 {
-  private final static Map m_loaders = new Hashtable();
-
-  private Properties m_props;
-
   public DefaultLoaderFactory( Properties props )
   {
-    m_props = props;
+    super( props );
   }
 
-  public ILoader getLoaderInstance( String type ) throws LoaderException
+  public ILoader getLoaderInstance( String type ) throws FactoryException
   {
-    final String className = m_props.getProperty( type );
-
-    ILoader loader = (ILoader)m_loaders.get( type );
-
-    if( loader == null )
-    {
-      try
-      {
-        loader = (ILoader)ClassUtilities.newInstance( className, ILoader.class );
-      }
-      catch( ClassUtilityException e )
-      {
-        throw new LoaderException( e );
-      }
-
-      m_loaders.put( type, loader );
-    }
-
-    return loader;
+    return (ILoader)getObjectInstance( type, ILoader.class );
   }
+}
 
   /**
    * @see org.kalypso.util.loader.ILoaderFactory#getLoaderControl(java.lang.String)

@@ -3,7 +3,6 @@
 	<name>KalypsoUtil</name>
 	<comment></comment>
 	<projects>
-		<project>bcelib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
