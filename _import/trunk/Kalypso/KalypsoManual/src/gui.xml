@@ -465,96 +465,98 @@
         </mediaobject>
       </figure>
 
-      <para></para>
+      <itemizedlist>
+        <listitem id="menu_modell_laden">
+          <para><emphasis role="bold">Modell vom Server
+          laden</emphasis></para>
 
-      <para id="menu_modell_vom_server_laden"><emphasis role="bold">Modell vom
-      Server laden</emphasis></para>
+          <para>Auf dem Server gespeicherte Modelle können in die
+          KALYPSO-Oberfläche importiert werden. Bei Auswahl des Menü-Punktes
+          erscheint eine Liste der verfügbaren Modelle. Durch Auswahl eines
+          oder mehrerer Modelle werden diese in die KALYPSO-Oberfläche
+          geladen. Die dazugehörigen Dateien werden im lokalen
+          Arbeitsverzeichnis gespeichert. Werden Dateien oder Parameter des
+          importierten Modells geändert und gespeichert, erfolgt lediglich
+          eine lokale Speicherung der Änderungen. Die Original-Dateien auf dem
+          Server bleiben hiervon unberührt.</para>
+        </listitem>
 
-      <para>Auf dem Server gespeicherte Modelle können in die
-      KALYPSO-Oberfläche importiert werden. Bei Auswahl des Menü-Punktes
-      erscheint eine Liste der verfügbaren Modelle. Durch Auswahl eines oder
-      mehrerer Modelle werden diese in die KALYPSO-Oberfläche geladen. Die
-      dazugehörigen Dateien werden im lokalen Arbeitsverzeichnis gespeichert.
-      Werden Dateien oder Parameter des importierten Modells geändert und
-      gespeichert, erfolgt lediglich eine lokale Speicherung der Änderungen.
-      Die Original-Dateien auf dem Server bleiben hiervon unberührt.</para>
+        <listitem id="menu_modell_aktualisieren">
+          <para><emphasis role="bold">Modell aktualisieren</emphasis></para>
 
-      <para></para>
+          <para>Dieser Menüpunkt dient zum Aktualisieren der Dateien eines
+          bereits geladenen Modells. Dabei werden alle vorhandenen (lokal
+          gespeicherten) Dateien mit den auf dem Server befindlichen Dateien
+          überschrieben (<emphasis>alle Änderungen gehen
+          verloren!</emphasis>). Die aktualisierten Dateien werden in das
+          lokale Arbeitsverzeichnis gespeichert.</para>
+        </listitem>
 
-      <para id="menu_modell_aktualisieren"><emphasis role="bold">Modell
-      aktualisieren</emphasis></para>
+        <listitem id="menu_modell_speichern">
+          <para><emphasis role="bold">Modell zurückspeichern</emphasis></para>
 
-      <para>Dieser Menüpunkt dient zum Aktualisieren der Dateien eines bereits
-      geladenen Modells. Dabei werden alle vorhandenen (lokal gespeicherten)
-      Dateien mit den auf dem Server befindlichen Dateien überschrieben
-      (<emphasis>alle Änderungen gehen verloren!</emphasis>). Die
-      aktualisierten Dateien werden in das lokale Arbeitsverzeichnis
-      gespeichert.</para>
+          <para>Mit diesem Menüpunkt werden alle lokal bearbeiteten
+          Modelldateien auf dem Server gespeichert. Dies betrifft sowohl
+          geänderte Modellparameter als auch Zeitreihen
+          (Berechnungsergebnisse). Neu angelegte Varianten werden als solche
+          zu dem Modell auf dem Server hinzugefügt. Bei bestehenden Varianten
+          werden die bestehenden Dateien überschrieben. Diese Option steht nur
+          Benutzern mit Administratoren-Rechten zur Verfügung und ist mit
+          Vorsicht anzuwenden, da auf dem Server gespeicherte Änderungen nicht
+          rückgängig gemacht werden können. Bei Benutzern, die Expertenrechte
+          besitzen, werden nur evtl. neu erstellte Modellvarianten auf dem
+          Server abgelegt.</para>
+        </listitem>
 
-      <para></para>
+        <listitem id="menu_modell_kopieren">
+          <para><emphasis role="bold">Modell kopieren</emphasis></para>
 
-      <para id="menu_modell_zurueckspeichern"><emphasis role="bold">Modell
-      zurückspeichern</emphasis></para>
+          <para>Bei Aktivierung dieses Menüpunktes wird eine neue Variante des
+          bestehenden Modells angelegt. Dabei werden die bereits im im Modell
+          vorhandenen Dateien unter der neuen Variante im lokalen
+          Arbeitsverzeichnis als Kopie abgespeichert. Änderungen, die in den
+          Dateien einer Modell-Variante vorgenommen werden, haben keine
+          Auswirkung auf die Dateien anderer Varianten. Nach dem lokalen
+          Speichern der Modelldateien kann die Variante optional auf den
+          Server übertragen werden (andere Varianten werden nicht
+          überschrieben).</para>
 
-      <para>Mit diesem Menüpunkt werden alle lokal bearbeiteten Modelldateien
-      auf dem Server gespeichert. Dies betrifft sowohl geänderte
-      Modellparameter als auch Zeitreihen (Berechnungsergebnisse). Neu
-      angelegte Varianten werden als solche zu dem Modell auf dem Server
-      hinzugefügt. Bei bestehenden Varianten werden die bestehenden Dateien
-      überschrieben. Diese Option steht nur Benutzern mit
-      Administratoren-Rechten zur Verfügung und ist mit Vorsicht anzuwenden,
-      da auf dem Server gespeicherte Änderungen nicht rückgängig gemacht
-      werden können. Bei Benutzern, die Expertenrechte besitzen, werden nur
-      evtl. neu erstellte Modellvarianten auf dem Server abgelegt.</para>
+          <para>Eine weitere Möglichkeit zum Öffnen eines bestehenden
+          Projektes besteht über Aktivierung des Menüpunktes <guimenu
+          id="menu_datei_neu_projekt">Datei -&gt; Neu -&gt; Projekt</guimenu>.
+          Es folgt ein Auswahlfenster mit den zur Verfügung stehenden
+          Datenquellen (Server). Im weiteren Verlauf wird der Benutzer durch
+          die Strukturen des Servers geführt und erhält eine Liste mit den
+          vorhanden Projekten. Diese können durch Bestätigung mit
+          <guibutton>Fertigstellen</guibutton> in die Programmoberfläche
+          geladen werden.</para>
 
-      <para></para>
+          <para>Zum Löschen eines Projektes wird das entsprechende Projekt im
+          Navigator-Fenster markiert und kann über <guimenu>Bearbeiten -&gt;
+          Löschen</guimenu> aus der Programmoberfläche entfernt werden. Beim
+          Löschen des Projektes bestehen zwei Möglichkeiten:</para>
 
-      <para id="menu_modellvariante_anlegen"><emphasis role="bold">Modell
-      kopieren</emphasis></para>
+          <para><guimenu>Inhalt unter [Arbeitsverzeichnis] ebenfalls
+          löschen</guimenu>: Es wird nicht nur der Projekt-Eintrag in der
+          Programmoberfläche, sondern alle zugehörigen Dateien im lokalen
+          Arbeitsverzeichnis endgültig gelöscht.</para>
 
-      <para>Bei Aktivierung dieses Menüpunktes wird eine neue Variante des
-      bestehenden Modells angelegt. Dabei werden die bereits im im Modell
-      vorhandenen Dateien unter der neuen Variante im lokalen
-      Arbeitsverzeichnis als Kopie abgespeichert. Änderungen, die in den
-      Dateien einer Modell-Variante vorgenommen werden, haben keine Auswirkung
-      auf die Dateien anderer Varianten. Nach dem lokalen Speichern der
-      Modelldateien kann die Variante optional auf den Server übertragen
-      werden (andere Varianten werden nicht überschrieben).</para>
+          <para><guimenu>Inhalt nicht löschen</guimenu>: Es wird lediglich der
+          Projekteintrag aus der Programmoberfläche entfernt. Die lokal
+          gespeicherten Projektdateien bleiben erhalten, so dass das Projekt
+          jederzeit wieder geöffnet werden kann.</para>
+        </listitem>
 
-      <para id="menu_datei">Eine weitere Möglichkeit zum Öffnen eines
-      bestehenden Projektes besteht über Aktivierung des Menüpunktes <guimenu
-      id="menu_datei_neu_projekt">Datei -&gt; Neu -&gt; Projekt</guimenu>. Es
-      folgt ein Auswahlfenster mit den zur Verfügung stehenden Datenquellen
-      (Server). Im weiteren Verlauf wird der Benutzer durch die Strukturen des
-      Servers geführt und erhält eine Liste mit den vorhanden Projekten. Diese
-      können durch Bestätigung mit <guibutton>Fertigstellen</guibutton> in die
-      Programmoberfläche geladen werden.</para>
+        <listitem id="menu_modell_vorhersage">
+          <para><emphasis role="bold">Hochwasser-Vorhersage
+          durchführen</emphasis></para>
 
-      <para>Zum Löschen eines Projektes wird das entsprechende Projekt im
-      Navigator-Fenster markiert und kann über <guimenu>Bearbeiten -&gt;
-      Löschen</guimenu> aus der Programmoberfläche entfernt werden. Beim
-      Löschen des Projektes bestehen zwei Möglichkeiten:</para>
-
-      <para><guimenu>Inhalt unter [Arbeitsverzeichnis] ebenfalls
-      löschen</guimenu>: Es wird nicht nur der Projekt-Eintrag in der
-      Programmoberfläche, sondern alle zugehörigen Dateien im lokalen
-      Arbeitsverzeichnis endgültig gelöscht.</para>
-
-      <para><guimenu>Inhalt nicht löschen</guimenu>: Es wird lediglich der
-      Projekteintrag aus der Programmoberfläche entfernt. Die lokal
-      gespeicherten Projektdateien bleiben erhalten, so dass das Projekt
-      jederzeit wieder geöffnet werden kann.</para>
-
-      <para></para>
-
-      <para
-      id="menu_modell_hochwasser_vorhersage_durchfuehren"><firstterm><emphasis
-      role="bold">Hochwasser-Vorhersage
-      durchführen</emphasis></firstterm></para>
-
-      <para>Über diesen Menüpunkt wird der Vorhersage-Wizard gestartet. Zur
-      Erläuterung der Vorgehensweise bei der Berechnung einer Vorhersage wird
-      auf <xref linkend="vorhersage_wizards" /> verwiesen.</para>
+          <para>Über diesen Menüpunkt wird der Vorhersage-Wizard gestartet.
+          Zur Erläuterung der Vorgehensweise bei der Berechnung einer
+          Vorhersage wird auf <xref linkend="vorhersage_wizards" />
+          verwiesen.</para>
+        </listitem>
+      </itemizedlist>
     </section>
 
     <section id="modellbearbeitung">
@@ -662,6 +664,8 @@
         </listitem>
       </itemizedlist>
 
+      <para> </para>
+
       <para><guilabel>Tabellen</guilabel></para>
 
       <para id="menu_bearbeiten">In der Tabellenansicht können die Modelldaten
@@ -685,6 +689,8 @@
       Karte wird die dazugehörige Tabellenzeile markiert, in der sich die
       Modelldaten befinden. Die Vorgehensweise kann ebenso umgekehrt
       werden.</para>
+
+      <para> </para>
 
       <figure id="pic_ansicht_tabelle">
         <title>Beispiel einer Tabellen-Darstellung</title>
@@ -732,92 +738,88 @@
         </mediaobject>
       </figure>
 
-      <para></para>
+      <itemizedlist id="menu_rechenvariante_neu">
+        <listitem>
+          <para><emphasis role="bold">Rechenvariante neu...</emphasis></para>
 
-      <para id="menu_rechenvariante_neu"><guimenu>Rechenvariante
-      neu...</guimenu></para>
+          <para>Bei Auswahl dieses Menüpunktes wird eine neue Rechenvariante
+          für das gerade aktive Modell definiert. Es folgt ein Auswahlfenster
+          mit der Aufforderung zur Angabe eines Ordners, in den die
+          Rechenvariante gepeichert werden soll. Empfohlen wird, vor dem
+          Anlegen einer neuen Rechenvariante einen Ordner anzulegen, in dem
+          alle Rechenvarianten in Form von Unterordnern abgelegt werden
+          können. Nach Eingabe der Steuerparameter und Bestätigung der Angaben
+          durch <guimenu>Fertigstellen</guimenu> werden die für die Berechnung
+          benötigten Modelldateien vom Programm in das angegebene Verzeichnis
+          kopiert.</para>
+        </listitem>
 
-      <para>Bei Auswahl dieses Menüpunktes wird eine neue Rechenvariante für
-      das gerade aktive Modell definiert. Es folgt ein Auswahlfenster mit der
-      Aufforderung zur Angabe eines Ordners, in den die Rechenvariante
-      gepeichert werden soll. Empfohlen wird, vor dem Anlegen einer neuen
-      Rechenvariante einen Ordner anzulegen, in dem alle Rechenvarianten in
-      Form von Unterordnern abgelegt werden können. Nach Eingabe der
-      Steuerparameter und Bestätigung der Angaben durch
-      <guimenu>Fertigstellen</guimenu> werden die für die Berechnung
-      benötigten Modelldateien vom Programm in das angegebene Verzeichnis
-      kopiert.</para>
+        <listitem id="menu_rechenvariante_kopieren">
+          <para><emphasis role="bold">Rechenvariante
+          kopieren..</emphasis></para>
 
-      <para></para>
+          <para>Im lokalen Modellverzeichnis können bereits angelegte
+          Rechenvarianten kopiert werden. Dabei wird der auszuwählende Ordner
+          unter einem anderen Namen im gleichen Verzeichnis abgelegt. Alle
+          Dateien der ausgewählten Rechenvariante werden in das neue
+          Verzeichnis kopiert.</para>
+        </listitem>
 
-      <para id="menu_rechenvariante_kopieren"><guimenu>Rechenvariante
-      kopieren...</guimenu></para>
+        <listitem id="menu_rechenvariante_zeitreihen">
+          <para><emphasis role="bold">Zeitreihen
+          aktualisieren</emphasis></para>
 
-      <para>Im lokalen Modellverzeichnis können bereits angelegte
-      Rechenvarianten kopiert werden. Dabei wird der auszuwählende Ordner
-      unter einem anderen Namen im gleichen Verzeichnis abgelegt. Alle Dateien
-      der ausgewählten Rechenvariante werden in das neue Verzeichnis
-      kopiert.</para>
+          <para>Nach Auswahl der entsprechenden Rechenvarianten werden die im
+          lokalen Verzeichnis gespeicherten Zeitreihen durch Auswahl dieses
+          Menü-Punktes neu vom Server geladen. Die bereits vorhandenen
+          Zeitreihen eines Rechenfalls werden überschrieben (Änderungen gehen
+          verloren!).</para>
+        </listitem>
 
-      <para></para>
+        <listitem id="menu_rechenvariante_vomserverladen">
+          <para><emphasis role="bold">Vom Server</emphasis></para>
 
-      <para
-      id="menu_rechenvariante_zeitreihen_aktualisieren"><guimenu>Zeitreihen
-      aktualisieren</guimenu></para>
+          <para>Mit dieser Option können bereits auf dem Server abgelegte
+          Rechenvarianten in das aktuelle Modell geladen werden. Es erscheint
+          eine Auswahl der auf dem Server archivierten Rechenvarianten. Nach
+          Bestätigung durch Fertigstellen werden die Varianten unter gleichem
+          Namen in den ausgewählten Ordner kopiert. Die Zeitreihen einer
+          Rechenvariante werden bei diesem Schritt nicht aktualisiert. Dies
+          muss bei Bedarf mit dem Menüpunkt <guimenu>Zeitreihen
+          aktualisieren</guimenu> vorgenommen werden.</para>
+        </listitem>
 
-      <para>Nach Auswahl der entsprechenden Rechenvarianten werden die im
-      lokalen Verzeichnis gespeicherten Zeitreihen durch Auswahl dieses
-      Menü-Punktes neu vom Server geladen. Die bereits vorhandenen Zeitreihen
-      eines Rechenfalls werden überschrieben (Änderungen gehen
-      verloren!).</para>
+        <listitem id="menu_rechenvariante_archivieren">
+          <para><emphasis role="bold">Archivieren</emphasis></para>
 
-      <para></para>
+          <para>Ausgewählte Rechenvarianten werden auf dem Server unter
+          gleichem Namen wie im lokalen Verzeichnis abgelegt. Die Speicherung
+          der Rechenvariante erfolgt innerhalb des Modellverzeichnisses.
+          Existiert bereits eine gleichnamige Rechenvariante, ist eine
+          Archivierung nicht möglich.</para>
+        </listitem>
 
-      <para id="menu_rechenvariante_vom_server_laden"><guimenu>Vom Server
-      laden</guimenu></para>
+        <listitem id="menu_rechenvariante_berechnung">
+          <para><emphasis role="bold">Berechnung durchführen</emphasis></para>
 
-      <para>Mit dieser Option können bereits auf dem Server abgelegte
-      Rechenvarianten in das aktuelle Modell geladen werden. Es erscheint eine
-      Auswahl der auf dem Server archivierten Rechenvarianten. Nach
-      Bestätigung durch Fertigstellen werden die Varianten unter gleichem
-      Namen in den ausgewählten Ordner kopiert. Die Zeitreihen einer
-      Rechenvariante werden bei diesem Schritt nicht aktualisiert. Dies muss
-      bei Bedarf mit dem Menüpunkt <guimenu>Zeitreihen aktualisieren</guimenu>
-      vorgenommen werden.</para>
-
-      <para></para>
-
-      <para
-      id="menu_rechenvariante_archivieren"><guimenu>Archivieren</guimenu></para>
-
-      <para>Ausgewählte Rechenvarianten werden auf dem Server unter gleichem
-      Namen wie im lokalen Verzeichnis abgelegt. Die Speicherung der
-      Rechenvariante erfolgt innerhalb des Modellverzeichnisses. Existiert
-      bereits eine gleichnamige Rechenvariante, ist eine Archivierung nicht
-      möglich.</para>
-
-      <para></para>
-
-      <para
-      id="menu_rechenvariante_berechnung_durchfuehren"><guimenu>Berechnung
-      durchführen</guimenu></para>
-
-      <para>Nach Auswahl des Modells im Navigator-Fenster können
-      Modellberechnungen über diesen Menüpunkt durchgeführt werden. Es
-      erscheint ein Auswahlfenster, in dem alle im Modell definierten
-      Berechnungsvarianten aufgelistet werden. Durch das Häkchen vor dem Namen
-      kann die jeweilige Rechenvariante aktiviert bzw. deaktiviert werden.
-      Dabei können in einem Rechenlauf beliebig viele Varianten berechnet
-      werden. Der aktuelle Fortschritt der Berechnung(en) wird mit Hilfe eines
-      Balkens dargestellt. Nach erfolgreich durchgeführter Berechnung werden
-      die Ergebnisse in Form von Zeitreihen in den Rechenlauf-Ordner
-      gespeichert. Die Speicherung erfolgt im lokalen Arbeitsverzeichnis.
-      Ggfs. müssen die berechneten Ergebnisse per Hand auf den Server
-      übertragen werden.</para>
+          <para>Nach Auswahl des Modells im Navigator-Fenster können
+          Modellberechnungen über diesen Menüpunkt durchgeführt werden. Es
+          erscheint ein Auswahlfenster, in dem alle im Modell definierten
+          Berechnungsvarianten aufgelistet werden. Durch das Häkchen vor dem
+          Namen kann die jeweilige Rechenvariante aktiviert bzw. deaktiviert
+          werden. Dabei können in einem Rechenlauf beliebig viele Varianten
+          berechnet werden. Der aktuelle Fortschritt der Berechnung(en) wird
+          mit Hilfe eines Balkens dargestellt. Nach erfolgreich durchgeführter
+          Berechnung werden die Ergebnisse in Form von Zeitreihen in den
+          Rechenlauf-Ordner gespeichert. Die Speicherung erfolgt im lokalen
+          Arbeitsverzeichnis. Ggfs. müssen die berechneten Ergebnisse per Hand
+          auf den Server übertragen werden.</para>
+        </listitem>
+      </itemizedlist>
     </section>
 
     <section id="modellergebnisse">
-      <title>Modellergebnisse</title>
+      <title> Modellergebnisse</title>
 
       <para>Ergebnisse aus Modellberechnungen werden in den Unterordner
       <guimenu>Ergebnisse</guimenu> im jeweiligen Rechenfall-Verzeichnis
@@ -830,94 +832,97 @@
       sich ein Auswahlfenster, in dem der Benutzer verschiedene Möglichkeiten
       angezeigt bekommt:</para>
 
-      <para></para>
+      <itemizedlist>
+        <listitem>
+          <para><emphasis>Visualisierung im Diagramm</emphasis></para>
 
-      <para><emphasis>Visualisierung im Diagramm</emphasis></para>
+          <para>Die Zeitreihe wird grafisch in einem Diagramm dargestellt.
+          Ausrichtung und Beschriftung der Achsen erfolgen automatisch anhand
+          der in der Zeitreihe enthaltenen Informationen. In der
+          Diagramm-Ansicht besteht keine Möglichkeit zur Editierung der Daten.
+          Dies kann durch Einlesen der Zeitreihe in das mitgelieferte
+          Grafik-Programm realisiert werden, in dem eine Vielzahl von Optionen
+          zur Visualierung und Editierung von Zeitreihen gegeben ist.</para>
+        </listitem>
 
-      <para>Die Zeitreihe wird grafisch in einem Diagramm dargestellt.
-      Ausrichtung und Beschriftung der Achsen erfolgen automatisch anhand der
-      in der Zeitreihe enthaltenen Informationen. In der Diagramm-Ansicht
-      besteht keine Möglichkeit zur Editierung der Daten. Dies kann durch
-      Einlesen der Zeitreihe in das mitgelieferte Grafik-Programm realisiert
-      werden, in dem eine Vielzahl von Optionen zur Visualierung und
-      Editierung von Zeitreihen gegeben ist.</para>
+        <listitem>
+          <para><emphasis>Anzeige in Tabellen</emphasis></para>
 
-      <para></para>
+          <para>Die Werte einer Zeitreihe werden in Form einer Tabelle
+          ausgegeben. Die Tabelle besteht aus einer Zeitspalte (Datum,
+          Uhrzeit) und dem dazugehörigen Wert (Wasserstand, Abfluss). Alle in
+          der Tabelle enthaltenen Werte können editiert werden. Es gelten die
+          allgemeinen Änderungsoptionen, die in <xref
+          linkend="ansichtssteuerung" /> beschrieben werden. Vorgenommene
+          Änderungen werden über <guimenu>Datei -&gt; Speichern</guimenu> in
+          das Projektverzeichnis übernommen. Über <guimenu>Datei -&gt;
+          Speichern unter...</guimenu> kann die Tabelle in einen beliebigen
+          Ordner im Projektverzeichnis gespeichert werden.</para>
+        </listitem>
 
-      <para><emphasis>Anzeige in Tabellen</emphasis></para>
+        <listitem>
+          <para><emphasis>Versenden der Ergebnisse an das
+          Berichtswesen</emphasis></para>
 
-      <para>Die Werte einer Zeitreihe werden in Form einer Tabelle ausgegeben.
-      Die Tabelle besteht aus einer Zeitspalte (Datum, Uhrzeit) und dem
-      dazugehörigen Wert (Wasserstand, Abfluss). Alle in der Tabelle
-      enthaltenen Werte können editiert werden. Es gelten die allgemeinen
-      Änderungsoptionen, die in <xref linkend="ansichtssteuerung" />
-      beschrieben werden. Vorgenommene Änderungen werden über <guimenu>Datei
-      -&gt; Speichern</guimenu> in das Projektverzeichnis übernommen. Über
-      <guimenu>Datei -&gt; Speichern unter...</guimenu> kann die Tabelle in
-      einen beliebigen Ordner im Projektverzeichnis gespeichert werden.</para>
+          <para>Dargestellte Diagramme und Tabellen können zur Dokumentation
+          der Ergebnisse an das Berichtswesen exportiert werden</para>
 
-      <para></para>
+          <figure>
+            <title>Menü Tabellen</title>
 
-      <para><emphasis>Versenden der Ergebnisse an das
-      Berichtswesen</emphasis></para>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/expert_tabelle.png" scale="50" />
+              </imageobject>
+            </mediaobject>
+          </figure>
 
-      <para>Dargestellte Diagramme und Tabellen können zur Dokumentation der
-      Ergebnisse an das Berichtswesen exportiert werden.</para>
+          <para>Dabei werden nicht die Daten als solche, sondern lediglich
+          Bilddateien (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen
+          (csv-Format) exportiert. Bei Tabellen werden nur die angezeigten
+          Spalten exportiert. Der Aufruf der Funktion erfolgt im jeweiligen
+          Menü-Punkt (<guimenu
+          id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
+          id="menu_diagramm_berichtsablage">Diagramm</guimenu>) unter <guimenu
+          id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
+          Eingabemaske, in der zusätzliche Informationen zu der exportierten
+          Datei eingetragen werden können (<xref
+          linkend="pic_berichtsablage" />).</para>
 
-      <figure>
-        <title>Menü Tabellen</title>
+          <figure id="pic_berichtsablage">
+            <title>Eingabemaske zur Berichtsablage</title>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/expert_tabelle.png" scale="50" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/expert_berichtsablage.png" scale="50" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
 
-      <para>Dabei werden nicht die Daten als solche, sondern lediglich
-      Bilddateien (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen
-      (csv-Format) exportiert. Bei Tabellen werden nur die angezeigten Spalten
-      exportiert. Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt
-      (<guimenu id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
-      id="menu_diagramm_berichtsablage">Diagramm</guimenu>) unter <guimenu
-      id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
-      Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
-      eingetragen werden können (<xref
-      linkend="pic_berichtsablage" />).</para>
+        <listitem>
+          <para><emphasis>Exportieren von Ergebnissen</emphasis></para>
 
-      <figure id="pic_berichtsablage">
-        <title>Eingabemaske zur Berichtsablage</title>
+          <para>Ergebnisdaten in Form von Tabellen können in einem
+          Komma-getrennten Format exportiert werden (Menü
+          <guimenu>Tabelle-&gt;Exportieren...</guimenu>).</para>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/expert_berichtsablage.png" scale="50" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+          <figure>
+            <title>Exportieren von Tabellen</title>
 
-      <para></para>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/expert_tabelle_export.png" scale="50" />
+              </imageobject>
+            </mediaobject>
+          </figure>
 
-      <para id="menu_tabelle_exportieren"><emphasis>Exportieren von
-      Ergebnissen</emphasis></para>
-
-      <para>Ergebnisdaten in Form von Tabellen können in einem
-      Komma-getrennten Format exportiert werden (Menü
-      <guimenu>Tabelle-&gt;Exportieren...</guimenu>).</para>
-
-      <figure>
-        <title>Exportieren von Tabellen</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/expert_tabelle_export.png" scale="50" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt werden.
-      Die Tabelle wird unter einem anzugebenden Namen mit der Endung *.csv
-      gespeichert und kann mit gängigen Tabellen-Kalkulationsprogrammen
-      weiterverarbeitet werden.</para>
+          <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt
+          werden. Die Tabelle wird unter einem anzugebenden Namen mit der
+          Endung *.csv gespeichert und kann mit gängigen
+          Tabellen-Kalkulationsprogrammen weiterverarbeitet werden.</para>
+        </listitem>
+      </itemizedlist>
     </section>
   </section>
 </chapter>

@@ -110,12 +110,12 @@
     </section>
 
     <section id="spree_rechenlaeufe">
-      <title>Rechenläufe</title>
+      <title>Rechenvarianten</title>
 
-      <para>Das Verzeichnis eines Rechenlaufs enthält alle zur
-      Modellberechnung notwendigen Dateien. Diese werden beim Anlegen eines
-      neuen Rechenfalls automatisch vom Programm in das entsprechende
-      Verzeichnis kopiert.</para>
+      <para>Das Verzeichnis Rechenvarianten enthält alle zur Modellberechnung
+      notwendigen Dateien. Diese werden beim Anlegen eines neuen Rechenfalls
+      automatisch vom Programm in das entsprechende Verzeichnis
+      kopiert.</para>
 
       <figure>
         <title>Verzeichnis Rechenläufe (Spree)</title>
@@ -457,14 +457,14 @@
     </section>
 
     <section id="weisse_elster_rechenlaeufe">
-      <title>Rechenläufe</title>
+      <title>Rechenvarianten</title>
 
-      <para>Das Verzeichnis eines Rechenlaufs enthält alle zur
-      Modellberechnung notwendigen Dateien. Diese werden beim Anlegen eines
-      neuen Rechenfalls automatisch vom Programm in das entsprechende
-      Verzeichnis kopiert. Beim Vorhersagemodell Weiße Elster werden
-      Zeitreihen und Modellparameter in das Verzeichnis der Rechenvariante
-      abgelegt. Pegelganglinien, Niederschlagszeitreihen und Zuflussganglinien
+      <para>Das Verzeichnis Rechenvarianten enthält alle zur Modellberechnung
+      notwendigen Dateien. Diese werden beim Anlegen einer neuen
+      Rechenvariante automatisch vom Programm in das entsprechende Verzeichnis
+      kopiert. Beim Vorhersagemodell Weiße Elster werden Zeitreihen und
+      Modellparameter in das Verzeichnis der Rechenvariante abgelegt.
+      Pegelganglinien, Niederschlagszeitreihen und Zuflussganglinien
       (TS-Abgaben) werden vom Server geladen und im jeweils gleichnamigen
       Verzeichnis gespeichert.</para>
 
