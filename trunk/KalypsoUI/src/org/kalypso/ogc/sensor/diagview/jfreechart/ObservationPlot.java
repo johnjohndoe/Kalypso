@@ -129,10 +129,6 @@ public class ObservationPlot extends XYPlot
   /** maps the series to their datasets */
   private transient final Map m_serie2dataset = new HashMap();
 
-//  private int m_domPos = 0;
-
-// private int m_ranPos = 0;
-
   private transient Map m_yConsts = new HashMap();
 
   private transient Map m_markers = new HashMap();
@@ -215,13 +211,10 @@ public class ObservationPlot extends XYPlot
     if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
     {
       int pos = getDomainPos();
-      
       setDomainAxis( pos, vAxis );
       setDomainAxisLocation( pos, loc );
 
       m_chartAxes2Pos.put( vAxis, new Integer( pos ) );
-
-      //m_domPos++;
     }
     else
     {
@@ -229,15 +222,9 @@ public class ObservationPlot extends XYPlot
       setRangeAxis( pos, vAxis );
       setRangeAxisLocation( pos, loc );
 
-      System.out.println("Adding range axis: " + vAxis.getLabel() + " pos= " + pos + " " + vAxis);
-      
       m_chartAxes2Pos.put( vAxis, new Integer( pos ) );
-
-      //m_ranPos++;
     }
 
-    System.out.println( "Identifier: " + diagAxis.getIdentifier() );
-    
     m_diag2chartAxis.put( diagAxis, vAxis );
   }
 
@@ -282,8 +269,6 @@ public class ObservationPlot extends XYPlot
 
     m_chartAxes2Pos.clear();
     m_diag2chartAxis.clear();
-//    pos = 0;
-//    m_ranPos = 0;
 
     clearDomainMarkers();
     clearAnnotations();
@@ -401,13 +386,6 @@ public class ObservationPlot extends XYPlot
         if( !m_yConsts.containsKey( value ) )
         {
           final Color color = TimeserieUtils.getColorForAlarmLevel( alarms[i] );
-          final ValueAxis vAxis = (ValueAxis) m_diag2chartAxis.get( yDiagAxis );
-          final ValueAndColor vac = new ValueAndColor( alarms[i] + " ("
-              + value.doubleValue() + ")", value.doubleValue(), color, vAxis );
-
-          m_yConsts.put( value, vac );
-
-          System.out.println( "Adding: " + vac );
 
           final double x;
           if( xyc.getItemCount() > 1 )
@@ -417,7 +395,11 @@ public class ObservationPlot extends XYPlot
           final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x,
               value.doubleValue() );
           ann.setPaint( color );
-          addAnnotation( ann );
+
+          final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i] + " ("
+              + value.doubleValue() + ")", value.doubleValue(), color, ann, yDiagAxis );
+
+          m_yConsts.put( value, vac );
         }
       }
     }
@@ -520,6 +502,8 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
+   * overriden to also draw our alarmlevels
+   * 
    * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D,
    *      java.awt.geom.Rectangle2D, org.jfree.chart.plot.PlotRenderingInfo)
    */
@@ -528,33 +512,34 @@ public class ObservationPlot extends XYPlot
   {
     super.drawAnnotations( g2d, rec, arg2 );
 
-    drawYConsts( g2d, rec );
+    drawAlarmLevels( g2d, rec );
   }
 
-  private void drawYConsts( Graphics2D g2, Rectangle2D dataArea )
+  /**
+   * Draw alarmlevels (horizontal line and text annotation)
+   */
+  private void drawAlarmLevels( Graphics2D g2, Rectangle2D dataArea )
   {
     for( final Iterator it = m_yConsts.keySet().iterator(); it.hasNext(); )
     {
-      final ValueAndColor vac = (ValueAndColor) m_yConsts.get( it.next() );
+      final AlarmLevelPlotElement vac = (AlarmLevelPlotElement) m_yConsts.get( it.next() );
 
-      final ValueAxis axis = vac.axis;
-      //if( axis.getRange().contains( vac.value ) )
-      //{
+      final ValueAxis axis = (ValueAxis) m_diag2chartAxis.get( vac.axis );
+      if( axis == null )
+        continue;
+      
+      if( axis.getRange().contains( vac.value ) )
+      {
         final double yy = axis.valueToJava2D( vac.value, dataArea,
             RectangleEdge.LEFT );
         final Line2D line = new Line2D.Double( dataArea.getMinX(), yy, dataArea
             .getMaxX(), yy );
         g2.setPaint( vac.color );
         g2.draw( line );
-      //}
-      //else
-      //{
-        //System.out.println( "!!! Range: " + axis.getRange() + " - " + vac );
 
-//        for( int i = 0; i < getRangeAxisCount(); i++ )
-//          System.out.println( "Axis: " + getRangeAxis( i ).getLabel()
-//              + " Range: " + getRangeAxis( i ).getRange() );
-//      }
+        // and draw the text annotation
+        vac.annotation.draw(g2, this, dataArea, getDomainAxis(), axis);
+      }
     }
   }
 
@@ -637,7 +622,7 @@ public class ObservationPlot extends XYPlot
    * 
    * @author schlienger
    */
-  private final static class ValueAndColor
+  private final static class AlarmLevelPlotElement
   {
     final double value;
 
@@ -645,15 +630,18 @@ public class ObservationPlot extends XYPlot
 
     final String label;
 
-    final ValueAxis axis;
+    final DiagramAxis axis;
 
-    public ValueAndColor( final String lbl, final double val, final Color col,
-        final ValueAxis vAxis )
+    final XYTextAnnotation annotation;
+
+    public AlarmLevelPlotElement( final String lbl, final double val, final Color col,
+        XYTextAnnotation ann, final DiagramAxis diagAxis )
     {
       this.label = lbl;
       this.value = val;
       this.color = col;
-      this.axis = vAxis;
+      this.annotation = ann;
+      this.axis = diagAxis;
     }
 
     /**
@@ -661,7 +649,7 @@ public class ObservationPlot extends XYPlot
      */
     public String toString( )
     {
-      return "ValueAndColor: " + this.label + " " + this.value + " "
+      return getClass().getName() + ": " + this.label + " " + this.value + " "
           + this.color + " " + this.axis.getLabel();
     }
   }

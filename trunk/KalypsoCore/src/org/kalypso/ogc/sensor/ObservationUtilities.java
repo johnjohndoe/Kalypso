@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 import java.io.StringWriter;
@@ -68,7 +68,7 @@ public class ObservationUtilities
   {
     //  not intended to be instanciated
   }
-  
+
   /**
    * Finds the axis of the given observation that has the given name.
    * 
@@ -91,7 +91,7 @@ public class ObservationUtilities
 
     throw new NoSuchElementException( "No axis found with name: " + axisName );
   }
-  
+
   /**
    * returns null when no axis found instead of throwing an exception
    * 
@@ -101,7 +101,8 @@ public class ObservationUtilities
    * 
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    */
-  public static IAxis findAxisByNameNoEx( final IAxis[] axes, final String axisName )
+  public static IAxis findAxisByNameNoEx( final IAxis[] axes,
+      final String axisName )
   {
     try
     {
@@ -137,30 +138,34 @@ public class ObservationUtilities
   }
 
   /**
-   * Returns the axes that are compatible with the desired Dataclass, including the status axis.
+   * Returns the axes that are compatible with the desired Dataclass, including
+   * the status axis.
    * 
    * @param axes
    * @param desired
-   * @return all axes which are compatible with desired Classtype (including status axes)
+   * @return all axes which are compatible with desired Classtype (including
+   *         status axes)
    */
   public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired )
   {
     return findAxisByClass( axes, desired, false );
   }
-  
+
   /**
-   * Returns the axes that are compatible with the desired Dataclass. You can specify
-   * if you want to exclude the status axes from the result list or not.
+   * Returns the axes that are compatible with the desired Dataclass. You can
+   * specify if you want to exclude the status axes from the result list or not.
    * <p>
    * Please note that currently the status axis is of a Number type.
    * 
    * @param axes
    * @param desired
-   * @param excludeStatusAxes if true, status axes will not be included in the returned array
+   * @param excludeStatusAxes
+   *          if true, status axes will not be included in the returned array
    * @return axes which are compatible with specified Class of data
    * @throws NoSuchElementException
    */
-  public static IAxis[] findAxisByClass( final IAxis[] axes, final Class desired, final boolean excludeStatusAxes )
+  public static IAxis[] findAxisByClass( final IAxis[] axes,
+      final Class desired, final boolean excludeStatusAxes )
       throws NoSuchElementException
   {
     final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
@@ -169,8 +174,9 @@ public class ObservationUtilities
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
       {
-        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
-	        list.add( axes[i] );
+        if( !excludeStatusAxes || excludeStatusAxes
+            && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+          list.add( axes[i] );
       }
     }
 
@@ -278,7 +284,7 @@ public class ObservationUtilities
           catch( ParserException e )
           {
             e.printStackTrace();
-            
+
             writer.write( "Fehler" );
           }
 
@@ -295,7 +301,7 @@ public class ObservationUtilities
       throw new SensorException( e );
     }
   }
-  
+
   /**
    * Dumps the tupple at given index using sep as separator.
    * 
@@ -306,13 +312,14 @@ public class ObservationUtilities
    * @return string representation of the given line (tupple)
    * @throws SensorException
    */
-  public static String dump( final ITuppleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
+  public static String dump( final ITuppleModel model, final String sep,
+      final int index, final boolean excludeStatusAxes ) throws SensorException
   {
     IAxis[] axes = model.getAxisList();
-    
+
     if( excludeStatusAxes )
       axes = KalypsoStatusUtils.withoutStatusAxes( axes );
-    
+
     // retrieve apropriate parsers for each axis
     final IParser[] parsers = new IParser[axes.length];
     try
@@ -325,9 +332,9 @@ public class ObservationUtilities
       e.printStackTrace();
       throw new SensorException( e );
     }
-    
+
     final StringBuffer sb = new StringBuffer();
-    
+
     for( int i = 0; i < axes.length; i++ )
     {
       try
@@ -337,30 +344,43 @@ public class ObservationUtilities
       catch( ParserException e )
       {
         e.printStackTrace();
-        
+
         sb.append( "Fehler" );
       }
 
       if( i < axes.length - 1 )
         sb.append( sep );
     }
-    
+
     return sb.toString();
   }
 
   /**
-   * Copy the values from source into dest. Only copies the values of
-   * the axes that are found in the dest AND in source observation.
+   * Copy the values from source into dest. Only copies the values of the axes
+   * that are found in the dest AND in source observation.
    * 
    * @param source
+   *          source observation from which values are read
    * @param dest
+   *          destination observation into which values are copied
    * @param args
+   *          [optional, can be null] variable arguments
+   * @param fullCompatibilityExpected
+   *          when true an InvalidStateException is thrown to indicate that the
+   *          full compatibility cannot be guaranteed. The full compatibility is
+   *          expressed in terms of the axes: the source observation must have
+   *          the same axes as the dest observation. If false, just the axes
+   *          from dest that where found in source are used, thus leading to
+   *          potential null values in the tupple model
    * @return model if some values have been copied, null otherwise
    * @throws SensorException
+   * @throws IllegalStateException
+   *           when compatibility is wished but could not be guaranteed
    */
   public static ITuppleModel optimisticValuesCopy( final IObservation source,
-      final IObservation dest, final IVariableArguments args )
-      throws SensorException
+      final IObservation dest, final IVariableArguments args,
+      boolean fullCompatibilityExpected ) throws SensorException,
+      IllegalStateException
   {
     final IAxis[] srcAxes = source.getAxisList();
     final IAxis[] destAxes = dest.getAxisList();
@@ -381,7 +401,11 @@ public class ObservationUtilities
       }
       catch( NoSuchElementException e )
       {
-        // ignored, try with next one
+        if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
+          throw new IllegalStateException( "Required axis " + destAxes[i]
+              + " from " + dest + " could not be found in " + source );
+
+        // else ignored, try with next one
       }
     }
 
@@ -399,9 +423,10 @@ public class ObservationUtilities
         final IAxis srcAxis = (IAxis) map.get( destAxes[j] );
 
         if( srcAxis != null )
-          tupple[ model.getPositionFor( destAxes[j] ) ] = values.getElement( i, srcAxis );
+          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i,
+              srcAxis );
         else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
-          tupple[ model.getPositionFor( destAxes[j] ) ] = new Integer(
+          tupple[model.getPositionFor( destAxes[j] )] = new Integer(
               KalypsoStati.BIT_OK );
       }
 
@@ -412,6 +437,5 @@ public class ObservationUtilities
 
     return model;
   }
-  
-  
+
 }

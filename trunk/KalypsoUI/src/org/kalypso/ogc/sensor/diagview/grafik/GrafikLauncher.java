@@ -53,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -69,12 +68,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.runtime.MultiStatus;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.ProcessWraper;
@@ -363,7 +362,10 @@ public class GrafikLauncher
     final Set xLines = new TreeSet();
     final Map yLines = new HashMap();
 
-    final List statusList = new LinkedList();
+    final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
+    
+    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING,
+        KalypsoGisPlugin.getId(), 0, "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
 
     final TypeObservation[] tobs = (TypeObservation[]) odt.getObservation()
         .toArray( new TypeObservation[0] );
@@ -382,7 +384,8 @@ public class GrafikLauncher
       {
         final String msg = "Konvertierung nicht möglich, Zml-Datei ist möglicherweise keine lokale Datei: "
             + url.toExternalForm();
-        Logger.getLogger( GrafikLauncher.class.getName() ).warning( msg );
+        logger.warning( msg );
+        multiStatus.addMessage( msg );
         continue;
       }
 
@@ -396,14 +399,10 @@ public class GrafikLauncher
       }
       catch( Exception e )
       {
-        statusList
-            .add( new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-                "Zeitreihe konnte nicht eingelesen werden. Datei: "
-                    + zmlFile.getName() + " Grund: " + e.getLocalizedMessage(),
-                e ) );
-
-        Logger.getLogger( GrafikLauncher.class.getName() ).throwing(
-            GrafikLauncher.class.getName(), "odt2tpl", e );
+        final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: "
+          + zmlFile.getName() + " Grund: " + e.getLocalizedMessage();
+        logger.warning( msg );
+        multiStatus.addMessage( msg, e );
         continue;
       }
       finally
@@ -498,10 +497,8 @@ public class GrafikLauncher
     yLines.clear();
 
     // if there are zwischen-status, return them
-    if( statusList.size() > 0 )
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0,
-          (IStatus[]) statusList.toArray( new IStatus[statusList.size()] ),
-          "Siehe Details", null );
+    if( multiStatus.hasMessages() )
+      return multiStatus;
 
     return Status.OK_STATUS;
   }
