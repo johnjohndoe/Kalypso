@@ -43,6 +43,8 @@ package org.kalypso.ui.calcwizard.bericht;
 import java.util.Properties;
 
 /**
+ * TODO marc: wir benutzen schon die interface IExportableDocument... kann man da kein Merge machen?
+ * 
  * @author belger
  */
 public interface IBerichtExporter

@@ -46,23 +46,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
 /**
  * @author schlienger
  */
-public class GrafikYAchsen
+public class GrafikAchsen
 {
-  private final Map name2ta = new HashMap();
-
-  private final Map name2ga = new HashMap();
+  /** maps diag-axis-id to grafik-axis (only for vertical axes) */
+  private final Map m_name2grafikAxis = new HashMap();
 
   private String m_leftLabel = "";
 
   private String m_rightLabel = "";
 
-  public GrafikYAchsen( List taxList )
+  private String m_bottomLabel = "";
+
+  public GrafikAchsen( final List taxList )
   {
     for( final Iterator ita = taxList.iterator(); ita.hasNext(); )
     {
@@ -70,19 +70,38 @@ public class GrafikYAchsen
 
       if( ta.getDirection().equals( DiagramAxis.DIRECTION_VERTICAL ) )
       {
-        name2ta.put( ta.getId(), ta );
+        GrafikAchse gAchse = null;
         
-        if( !ta.isInverted() )
+        final String name = ta.getLabel() + " [" + ta.getUnit() + "]";
+        
+        if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
         {
           if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
-            m_leftLabel = ta.getLabel() + " [" + ta.getUnit() + "]";
+          {
+            gAchse = new GrafikAchse( 1, name );
+            m_leftLabel = name;
+          }
           else if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
-            m_rightLabel = ta.getLabel() + " [" + ta.getUnit() + "]";
+          {
+            gAchse = new GrafikAchse( 2, name );
+            m_rightLabel = name;
+          }
         }
+        else
+          gAchse = new GrafikAchse( 3, name );
+        
+        m_name2grafikAxis.put( ta.getId(), gAchse );
       }
+      else if( ta.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
+        m_bottomLabel = ta.getLabel();
     }
   }
 
+  public String getBottomLabel( )
+  {
+    return m_bottomLabel;
+  }
+  
   public String getRightLabel()
   {
     return m_rightLabel;
@@ -94,38 +113,12 @@ public class GrafikYAchsen
   }
   
   /**
-   * @param axisID
+   * @param diagAxisID
    * @return corresponding Achse for the Grafik tool or null if not possible
    */
-  public GrafikAchse getFor( final String axisID )
+  public GrafikAchse getFor( final String diagAxisID )
   {
-    GrafikAchse ga = (GrafikAchse) name2ga.get( axisID );
-
-    // already here?
-    if( ga != null )
-      return ga;
-
-    // grafik can only have max 2 vertical axes
-    if( name2ga.size() == 2 )
-      return null;
-
-    // no type axis for this id
-    final TypeAxis ta = (TypeAxis) name2ta.get( axisID );
-    if( ta == null )
-      return null;
-
-    ga = new GrafikAchse( name2ga.size() + 1, ta.getLabel() + " [" + ta.getUnit() + "]" );
-    name2ga.put( axisID, ga );
-
-    return ga;
-  }
-  
-  public static String axis2grafikType( final String axisType )
-  {
-    if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return "N";
-    
-    return "L";
+    return (GrafikAchse) m_name2grafikAxis.get( diagAxisID );
   }
 
   /**
@@ -139,7 +132,7 @@ public class GrafikYAchsen
 
     private final int m_id;
 
-    public GrafikAchse( final int id, final String name )
+    public GrafikAchse( int id, String name )
     {
       m_id = id;
       m_name = name;
