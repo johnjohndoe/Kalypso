@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="src" path="/KalypsoCoreServices"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
+	<classpathentry kind="src" path="/KalypsoPSICompactAdapter"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

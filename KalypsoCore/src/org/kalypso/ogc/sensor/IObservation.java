@@ -12,6 +12,12 @@ import org.kalypso.util.xml.xlink.IXlink;
 public interface IObservation
 {
   /**
+   * Returns the identifier of this Observation. The identifier can be used to
+   * uniquely identify the Observation within its repository.
+   */
+  public String getIdentifier();
+
+  /**
    * Returns the name of this Observation
    */
   public String getName();
@@ -42,7 +48,8 @@ public interface IObservation
    * 
    * @param args
    *          some client defined arguments that can be interpretated by the
-   *          implementation.
+   *          implementation. Implementors of this interface can use this
+   *          parameter, but they are not forced to do so.
    */
   public ITuppleModel getValues( IVariableArguments args ) throws SensorException;
 

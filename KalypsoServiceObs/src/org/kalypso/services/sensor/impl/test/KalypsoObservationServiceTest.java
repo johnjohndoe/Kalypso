@@ -8,11 +8,14 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.beans.DateRangeBean;
+import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
-import org.kalypso.ogc.sensor.beans.ObservationDataDescriptorBean;
 import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * @author schlienger
@@ -93,10 +96,13 @@ public class KalypsoObservationServiceTest extends TestCase
       
       System.out.println( space + "Metadata for " + ob.getName() + " are:" + map );
       
-      final ObservationDataDescriptorBean oddb = m_srv.readData( ob );
+      final DateRangeArgument dra = ObservationUtilities.createPastDaysArgument( 30 );
+      final DateRangeBean drb = new DateRangeBean( dra.getFrom(), dra.getTo() );
+      
+      final OCSDataBean oddb = m_srv.readData( ob, drb );
       final URL url = new URL( oddb.getLocation() );
       
-      System.out.println( space + "Data location: " + url + " [" + oddb.getFormat() + "]" );
+      System.out.println( space + "Data location: " + url );
       final File f = new File( url.getFile() );
       assertTrue( f.exists() );
       

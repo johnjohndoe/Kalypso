@@ -74,7 +74,7 @@ public class ZmlLoader extends AbstractLoader
 
     try
     {
-      ZmlObservation obs = new ZmlObservation( url );
+      ZmlObservation obs = new ZmlObservation( url, url.getFile() );
 
       monitor.worked( 1 );
 
@@ -100,7 +100,7 @@ public class ZmlLoader extends AbstractLoader
   
       final IFile file = project.getFile( location );
   
-      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation)data );
+      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation)data, null );
       
       monitor.worked(1);
       
