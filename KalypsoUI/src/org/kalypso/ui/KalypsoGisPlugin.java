@@ -1,5 +1,6 @@
 package org.kalypso.ui;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
@@ -581,5 +582,18 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       return null;
     }
   }
-  
+
+  public File getServerModelRoot()
+  {
+    final String location = m_mainConf.getProperty( "MODELL_REPOSITORY", null );
+    if( location == null )
+      return null;
+    
+    final String[] locations = location.split( "," );
+    if( locations.length == 0 )
+      return null;
+
+    return new File( locations[0] );
+  }
+
 }

@@ -141,7 +141,7 @@ public class PrognosePanel
     headingLabel.setFont( headingFont );
     headingLabel.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
     m_disposeFonts.add( headingFont );
-    headingLabel.setText( "Bitte wählen Sie ein Einzugsgebiet" );
+    headingLabel.setText( "Bitte wählen Sie das Einzugsgebiet" );
 
     final List list = new List( m_control, SWT.SINGLE );
     final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
