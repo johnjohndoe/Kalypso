@@ -36,6 +36,7 @@ public class ZmlLoader extends AbstractLoader
     {
     if( type.equals( "relative" ) )
     {
+      // Anstatt InputStream --> Reader mit Encoding erstellen und an ZmlObservation geben
       ins = project.getFile( location ).getContents();
     }
     else if( type.equals( "absolute" ) )

@@ -25,8 +25,7 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
   {
     if( parentElement instanceof IKalypsoTheme )
     {
-      KalypsoFeatureTheme theme = (KalypsoFeatureTheme)parentElement;
-      System.out.println( "TreeContentProvider.getChildren(" + theme.getName() + ")" );
+      final KalypsoFeatureTheme theme = (KalypsoFeatureTheme)parentElement;
       final UserStyle[] styles = theme.getStyles();
       final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
       for( int i = 0; i < styles.length; i++ )

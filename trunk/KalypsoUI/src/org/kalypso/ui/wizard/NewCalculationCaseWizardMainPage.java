@@ -11,10 +11,13 @@
  ******************************************************************************/
 package org.kalypso.ui.wizard;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -64,6 +67,8 @@ import org.kalypso.ui.nature.ModelNature;
  */
 public class NewCalculationCaseWizardMainPage extends WizardPage implements Listener
 {
+  protected static final Logger LOGGER = Logger.getLogger( NewCalculationCaseWizardMainPage.class.getName() );
+  
   private static final int SIZING_CONTAINER_GROUP_HEIGHT = 250;
 
   private IStructuredSelection currentSelection;
@@ -225,10 +230,14 @@ public class NewCalculationCaseWizardMainPage extends WizardPage implements List
           {
             ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
-            throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-                "Rechenfall konnte nicht erzeugt werden", e ) );
+            final CoreException coreException = new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+                "Rechenfall konnte nicht erzeugt werden\n" + e.getLocalizedMessage(), e ) );
+
+            LOGGER.throwing( NewCalculationCaseWizard.class.getName() , "", coreException );
+            
+            throw coreException;
           }
         }
         finally

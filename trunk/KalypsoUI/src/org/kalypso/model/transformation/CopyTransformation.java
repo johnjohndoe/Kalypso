@@ -1,4 +1,4 @@
-package org.kalypso.util.transformation;
+package org.kalypso.model.transformation;
 
 import java.util.Properties;
 
@@ -12,26 +12,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author belger
  */
-public class CopyTransformation implements CalculationCaseTransformation
+public class CopyTransformation extends AbstractTransformation
 {
-  private Properties m_properties;
-
-  /**
-   * @see org.kalypso.util.transformation.CalculationCaseTransformation#setProperties(java.util.Properties)
-   */
-  public void setProperties( final Properties props )
-  {
-    m_properties = props;
-  }
-
   /**
    * @throws TransformationException
-   * @see org.kalypso.util.transformation.CalculationCaseTransformation#transform(org.eclipse.core.resources.IFolder, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.model.transformation.ICalculationCaseTransformation#transform(org.eclipse.core.resources.IFolder, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void transform( final IFolder targetFolder, final IProgressMonitor monitor ) throws TransformationException
+  public void transformIntern( final IFolder targetFolder, final Properties properties, final IProgressMonitor monitor ) throws TransformationException
   {
-    final String input = m_properties.getProperty( "input" );
-    final String output = m_properties.getProperty( "output" );
+    final String input = properties.getProperty( "input" );
+    final String output = properties.getProperty( "output" );
 
     if( input == null )
       throw new TransformationException( "Parameter 'input' nicht gesetzt" );
@@ -50,6 +40,7 @@ public class CopyTransformation implements CalculationCaseTransformation
     try
     {
       inputFile.copy( outputFile.getFullPath(), false, monitor );
+      outputFile.setCharset( inputFile.getCharset() );
     }
     catch( final CoreException e )
     {

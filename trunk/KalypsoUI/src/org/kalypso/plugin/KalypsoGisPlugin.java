@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.UIManager;
 
@@ -66,6 +69,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
   public KalypsoGisPlugin()
   {
     m_plugin = this;
+
+    configureLogger();
     
     try
     {
@@ -97,6 +102,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     catch( Exception e1 )
     {
       e1.printStackTrace();
+    }
+  }
+
+  private void configureLogger()
+  {
+    final Logger logger = Logger.getLogger( "" );
+    logger.setLevel( Level.FINER );
+    
+    final Handler[] handlers = logger.getHandlers();
+    for( int i = 0; i < handlers.length; i++ )
+    {
+      final Handler handler = handlers[i];
+      handler.setLevel( Level.FINER );
     }
   }
 

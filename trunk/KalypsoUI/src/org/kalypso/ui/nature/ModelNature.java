@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -33,15 +34,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.model.transformation.ICalculationCaseTransformation;
+import org.kalypso.model.transformation.TransformationException;
+import org.kalypso.model.transformation.TransformationFactory;
+import org.kalypso.model.xml.Modelspec;
+import org.kalypso.model.xml.ModelspecType;
+import org.kalypso.model.xml.ObjectFactory;
+import org.kalypso.model.xml.TransformationConfig;
+import org.kalypso.model.xml.TransformationType;
 import org.kalypso.plugin.KalypsoGisPlugin;
-import org.kalypso.util.transformation.CalculationCaseTransformation;
-import org.kalypso.util.transformation.TransformationException;
-import org.kalypso.util.transformation.TransformationFactory;
-import org.kalypso.xml.model.Modelspec;
-import org.kalypso.xml.model.ModelspecType;
-import org.kalypso.xml.model.ObjectFactory;
-import org.kalypso.xml.model.TransformationConfig;
-import org.kalypso.xml.model.TransformationType;
 
 import com.sun.xml.bind.StringInputStream;
 
@@ -66,7 +67,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private static final String METADATA_FILE = ".metadata";
 
-  private static final String CALCULATION_FILE = ".calculation";
+  public static final String CALCULATION_FILE = ".calculation";
 
   private static final String CALC_RESULT_FOLDER = ".results";
 
@@ -200,13 +201,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // maybe check requirements? (Project is of this nature an folder is not
     // contained in other CalcCase)
 
-    final IFile calcFile = folder.getFile( CALCULATION_FILE );
-
-    final ByteArrayInputStream bis = new ByteArrayInputStream( new byte[] {} );
-    calcFile.create( bis, false, new SubProgressMonitor( monitor, 500 ) );
-    bis.close();
-
     tranformModelData( folder, new SubProgressMonitor( monitor, 500 ) );
+
+    final IFile calcFile = folder.getFile( CALCULATION_FILE );
+    if( !calcFile.exists() )
+      throw new Exception( "Es wurden keine Steuerparameter durch die Transformation erzeugt: " + calcFile.getName() );
   }
 
   private static void tranformModelData( final IFolder targetFolder, final IProgressMonitor monitor )
@@ -225,7 +224,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     for( Iterator iter = transList.iterator(); iter.hasNext(); )
     {
       final TransformationType element = (TransformationType)iter.next();
-      final CalculationCaseTransformation ccTrans = TransformationFactory
+      final ICalculationCaseTransformation ccTrans = TransformationFactory
           .createTransformation( element );
 
       ccTrans.transform( targetFolder, monitor );
@@ -297,8 +296,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       // anhand der modelspec die dateien rausfinden
       final List inputList = modelspec.getInput();
-      
+
       monitor.beginTask( "Eingabedateien werden gelesen", inputList.size() );
+
+      // immer erst mal die .calculation Datei
+      final IFile calcFile = folder.getFile( CALCULATION_FILE );
+      inputStrings.add( loadFileIntoString( calcFile ) );
       
       for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
       {
@@ -308,20 +311,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final IFile file = input.isRelativeToCalcCase() ? folder.getFile( path ) : m_project
             .getFile( path );
 
-        // read data from file
-        final BufferedReader br = new BufferedReader( new InputStreamReader( file.getContents() ) );
-        final StringBuffer sb = new StringBuffer();
-        while( br.ready() )
-        {
-          final String line = br.readLine();
-          if( line == null )
-            break;
-          
-          sb.append( line );
-        }
-        br.close();
-        
-        inputStrings.add( sb.toString( ) );
+        inputStrings.add( loadFileIntoString( file ) );
         
         monitor.worked( 1 );
       }
@@ -338,6 +328,23 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     monitor.done();
 
     return (String[])inputStrings.toArray( new String[inputStrings.size()] );
+  }
+
+  private String loadFileIntoString( final IFile file ) throws UnsupportedEncodingException, CoreException, IOException
+  {
+    final BufferedReader br = new BufferedReader( new InputStreamReader( file.getContents(), file.getCharset() ) );
+    final StringBuffer sb = new StringBuffer();
+    while( br.ready() )
+    {
+      final String line = br.readLine();
+      if( line == null )
+        break;
+      
+      sb.append( line );
+      sb.append( "\n" );
+    }
+    br.close();
+    return sb.toString();
   }
 
   private Modelspec getModelspec()
@@ -362,8 +369,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  public IStatus putCalcCaseOutputData( final IFolder folder, final String[] results ) throws CoreException
+  public IStatus putCalcCaseOutputData( final IFolder folder, final String[] results, final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Ergebnisdaten werden abgelegt", 2000 );
+    
     final Modelspec modelspec = getModelspec();
     
     final List outputList = modelspec.getOutput();
@@ -372,6 +381,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Ergebnisdaten passen nicht zur Modellspezifikation", null );
     
     final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
+    if( resultsFolder.exists() )
+      resultsFolder.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
+    
     resultsFolder.create( false, true, null );
     
     for( Iterator iter = outputList.iterator(); iter.hasNext(); )
@@ -383,6 +395,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       
       file.create( new StringInputStream( results[count++] ), false, null );
     }
+    
+    monitor.worked( 1000 );
     
     return Status.OK_STATUS;
   }
