@@ -1,10 +1,10 @@
-package org.kalypso.ogc.sensor.filter.creators;
+package org.kalypso.ogc.sensor.timeseries.wq;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
-import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
+import org.kalypso.ogc.sensor.filter.creators.FilterCreatorHelper;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.WqFilterType;
 
