@@ -24,6 +24,8 @@ public class ImageProvider
   
   public static final ImageDescriptor IMAGE_ZML_FILE = id("icons/observation/zml-icon.gif");
   
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY = id("icons/repository/repository_rep.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ITEM = id("icons/repository/repository_item.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id("icons/repository/repository_add.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id("icons/repository/repository_remove.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id("icons/util/settings.gif");
@@ -61,4 +63,3 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
 }
-

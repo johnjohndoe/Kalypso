@@ -63,7 +63,7 @@ public class ExportAsFileWizard extends Wizard
     if( projects.length > 0 )
     {
       m_project = projects[0];
-      fileName = m_project.getFullPath().toOSString();
+      fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() ).getAbsolutePath();
     }
     else
       fileName = DEFAULT_FILE;

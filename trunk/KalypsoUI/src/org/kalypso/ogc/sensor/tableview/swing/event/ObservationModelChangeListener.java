@@ -8,6 +8,7 @@ import javax.swing.event.TableModelListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -40,37 +41,52 @@ public class ObservationModelChangeListener implements TableModelListener
     final IRunnableWithProgress rwp = m_rwp;
     final String msg = m_message;
 
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+//    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+//    {
+//      protected void execute( IProgressMonitor monitor ) throws CoreException,
+//          InvocationTargetException, InterruptedException
+//      {
+//        rwp.run( monitor );
+//      }
+//    };
+
+//    final Job job = new Job( m_message )
+//    {
+//      protected IStatus run( IProgressMonitor monitor )
+//      {
+//        try
+//        {
+//          op.run( monitor );
+//        }
+//        catch( InvocationTargetException ex )
+//        {
+//          ex.printStackTrace();
+//          return KalypsoGisPlugin.createErrorStatus( msg, ex );
+//        }
+//        catch( InterruptedException ex )
+//        {
+//          ex.printStackTrace();
+//        }
+//
+//        return Status.OK_STATUS;
+//      }
+//    };
+
+//    job.schedule();
+    
+    try
     {
-      protected void execute( IProgressMonitor monitor ) throws CoreException,
-          InvocationTargetException, InterruptedException
-      {
-        rwp.run( monitor );
-      }
-    };
-
-    final Job job = new Job( m_message )
+      rwp.run( new NullProgressMonitor() );
+    }
+    catch( InvocationTargetException e1 )
     {
-      protected IStatus run( IProgressMonitor monitor )
-      {
-        try
-        {
-          op.run( monitor );
-        }
-        catch( InvocationTargetException ex )
-        {
-          ex.printStackTrace();
-          return KalypsoGisPlugin.createErrorStatus( msg, ex );
-        }
-        catch( InterruptedException ex )
-        {
-          ex.printStackTrace();
-        }
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    job.schedule();
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    catch( InterruptedException e1 )
+    {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
   }
 }

@@ -3,6 +3,7 @@ package org.kalypso.ui.repository.wizard;
 import java.text.DateFormat;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -65,6 +66,18 @@ public class DateRangeInputWizardPage extends WizardPage
       return DateRangeArgument.createFromPastDays( m_ctrl.getNumberOfDays() );
     }
 
+    return null;
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
+   */
+  public IWizardPage getNextPage( )
+  {
+    // go to next page only when input is valid
+    if( m_ctrl.okPressed() )    
+      return super.getNextPage();
+    
     return null;
   }
 }

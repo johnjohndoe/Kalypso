@@ -59,8 +59,6 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     else
     {
       label.setIcon( null );
-//      label.setBackground( null );
-//      label.setToolTipText( null );
     }
 
     return label;

@@ -23,8 +23,8 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final static String FORECAST_TT = TimeserieConstants.MD_VORHERSAGE;
 
-  private final static Icon FORECAST_ICON = new ImageIcon(
-      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
+//  private final static Icon FORECAST_ICON = new ImageIcon(
+//      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
 
   private final DateRangeArgument m_dra;
 
@@ -55,9 +55,8 @@ public class ForecastLabelMarker implements ILabelMarker
   public void apply( final JLabel label )
   {
     label.setBackground( FORECAST_BG );
-    //label.setForeground( null );
     label.setToolTipText( FORECAST_TT );
-    label.setIcon( FORECAST_ICON );
+    //label.setIcon( FORECAST_ICON );
   }
 
   /**
@@ -66,7 +65,6 @@ public class ForecastLabelMarker implements ILabelMarker
   public void reset( JLabel label )
   {
     label.setBackground( null );
-    //label.setForeground( null );
     label.setToolTipText( "" );
     label.setIcon( null );
   }
