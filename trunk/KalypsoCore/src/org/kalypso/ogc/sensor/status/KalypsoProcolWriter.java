@@ -101,8 +101,8 @@ public class KalypsoProcolWriter
                 final String header = "Warnung in Zeitreihe: "
                     + observations[i].getName();
 
-                summaryWriter.write( header );
-                summaryWriter.newLine();
+                summaryWriter.write( header + '\n');
+//                summaryWriter.newLine();
                 sumDone = true;
 
                 detailsWriter.write( header );
