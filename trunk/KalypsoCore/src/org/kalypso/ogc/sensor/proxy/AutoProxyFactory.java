@@ -60,30 +60,25 @@ public class AutoProxyFactory implements IProxyFactory
     {
       final WQObservationFilter wqf = new WQObservationFilter();
       
-      String type = "";
+      boolean foundW = false;
+      boolean foundQ = false;
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
         if( axes[i].getType().equals( TimeserieConstants.TYPE_RUNOFF) )
-        {
-          type = TimeserieConstants.TYPE_RUNOFF;
-          break;
-        }
+          foundQ = true;
         else if( axes[i].getType().equals( TimeserieConstants.TYPE_WATERLEVEL) )
-        {
-          type = TimeserieConstants.TYPE_WATERLEVEL;
-          break;
-        }
+          foundW = true;
       }
       
-      // directly return original observation if the type could not be found
-      // from the axes
-      if( type.length() == 0 )
+      // directly return original observation if no W nor Q or if both
+      // already present
+      if( !foundW && !foundQ || foundW && foundQ )
         return obs;
       
       // now that we have wq-params and that we know the type of the
       // axis, let's say the filter can be created
-      wqf.initFilter( type, obs );
+      wqf.initFilter( foundW ? TimeserieConstants.TYPE_WATERLEVEL : TimeserieConstants.TYPE_RUNOFF, obs );
 
       return wqf;
     }
