@@ -35,9 +35,8 @@ public class FileRepository extends AbstractRepository
    * @param filter
    *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
    */
-  public FileRepository( final IRepositoryFactory factory,
-      final String location, final String identifier, final boolean readOnly,
-      final FileFilter filter )
+  public FileRepository( final IRepositoryFactory factory, final String location,
+      final String identifier, final boolean readOnly, final FileFilter filter )
   {
     super( factory, location, readOnly );
 
@@ -50,10 +49,8 @@ public class FileRepository extends AbstractRepository
 
     m_root = new File( location );
     if( !m_root.exists() )
-      throw new IllegalArgumentException(
-          "Location existiert nicht! (Location: " + location + ")" );
-    
-    
+      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+
   }
 
   /**
@@ -65,8 +62,8 @@ public class FileRepository extends AbstractRepository
    * @param identifier
    * @param readOnly
    */
-  public FileRepository( final IRepositoryFactory factory,
-      final String location, final String identifier, final boolean readOnly )
+  public FileRepository( final IRepositoryFactory factory, final String location,
+      final String identifier, final boolean readOnly )
   {
     this( factory, location, identifier, readOnly, null );
   }
@@ -74,7 +71,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
     return createItem( m_root ).getChildren();
   }
@@ -82,12 +79,12 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return m_root.isDirectory();
   }
 
-  public FileFilter getFilter( )
+  public FileFilter getFilter()
   {
     return m_filter;
   }
@@ -109,7 +106,7 @@ public class FileRepository extends AbstractRepository
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     //    try
     //    {
@@ -125,29 +122,32 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( )
+  public void reload()
   {
-    // nothing to do
+  // nothing to do
   }
 
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( final String id ) 
+  public IRepositoryItem findItem( final String id )
   {
     // both lowercase to be sure comparison is done homogeneously
     final String baseId = getIdentifier().toLowerCase();
     final String itemId = id.toLowerCase();
 
-    final String scheme = baseId + ":/"; 
-    
+    final String scheme = baseId + ":/";
+
     if( !itemId.startsWith( scheme ) )
       return null;
 
-    // absolute path of the root (replace backslashes on windows with forward slashes)
+    // absolute path of the root (replace backslashes on windows with forward
+    // slashes)
     final String strRoot = m_root.getAbsolutePath().replace( '\\', '/' );
-    final String path = itemId.replaceFirst( scheme, strRoot );
 
+    // replaceFirst can not handle "$" in itemId, so replaced by next line
+    //    final String path = itemId.replaceFirst( scheme, strRoot );
+    final String path = strRoot + itemId.replaceFirst( scheme, "" );
     final File f = new File( path );
 
     if( !f.exists() )
