@@ -60,15 +60,18 @@ public class ParseManager
   private final NAConfiguration m_conf;
 
   private final NetFileManager m_nodeManager;
+  
+  private final RHBManager m_rhbManager;
 
   public ParseManager( GMLSchema schema, NAConfiguration conf, CatchmentManager catchmentManager,
-      ChannelManager channelManager, NetFileManager nodeManager )
+      ChannelManager channelManager, NetFileManager nodeManager, RHBManager rhbManager )
   {
     m_conf = conf;
     m_catchmentManager = catchmentManager;
     m_channelManager = channelManager;
     m_nodeManager = nodeManager;
     m_schema = schema;
+    m_rhbManager = rhbManager;
   }
 
   public Feature asciiToFeature() throws Exception, Exception
@@ -123,6 +126,11 @@ public class ParseManager
       prop = FeatureFactory.createFeatureProperty( "nodeMember", nodeFE );
       nodeCollectionFe.addProperty( prop );
     }
+    
+    //complete Features of StorageChannel
+    features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
+    
+
     System.out.println( "\n\n-----------------" );
     return naModellFe;
 

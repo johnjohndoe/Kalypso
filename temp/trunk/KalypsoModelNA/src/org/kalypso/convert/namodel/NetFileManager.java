@@ -291,7 +291,8 @@ public class NetFileManager extends AbstractManager
     final Feature strangFE = getExistingFeature( istrngNr, new FeatureType[]
     {
         m_conf.getKmChannelFT(),
-        m_conf.getVChannelFT() } );
+        m_conf.getVChannelFT(),
+        m_conf.getStChannelFT() } );
     // node -> strang
     if( strangFE == null )
       System.out.println( istrngNr );
@@ -348,6 +349,9 @@ public class NetFileManager extends AbstractManager
     final Feature[] kmChannelFeatures = workspace.getFeatures( m_conf.getKmChannelFT() );
     for( int i = 0; i < kmChannelFeatures.length; i++ )
       channelList.add( kmChannelFeatures[i] );
+    final Feature[] stChannelFeatures = workspace.getFeatures( m_conf.getStChannelFT() );
+    for( int i = 0; i < stChannelFeatures.length; i++ )
+      channelList.add( stChannelFeatures[i] );
 
     // list of network elements
     final HashMap netElements = new HashMap();
@@ -452,7 +456,10 @@ public class NetFileManager extends AbstractManager
 
         if( upStreamFE == downStreamChannelFE )
         {
-          System.out.println( "impossible net at #" + upStreamFE.getId() );
+          //          System.out.println( "impossible net at #" + upStreamFE.getId() );
+          // two catchments discharges to the same channel, no need to generate
+          // dependency cause it is the same channel
+          // TODO check order of catchments in netfile  
           continue;
         }
         downStreamElement.addUpStream( upStreamElement );

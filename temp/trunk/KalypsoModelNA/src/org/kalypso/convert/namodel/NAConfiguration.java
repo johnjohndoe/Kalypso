@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on Oct 7, 2004
  *  
@@ -69,7 +69,11 @@ public class NAConfiguration
 
   private final File m_channelFile;
 
+  private final File m_rhbFile;
+
   private final URL m_netFormatURL;
+
+  private final URL m_rhbFormatURL;
 
   private final File m_netFile;
 
@@ -82,10 +86,12 @@ public class NAConfiguration
   private final File m_gmlBaseDir;
 
   private final FeatureType m_nodeFT;
-  
+
   private final FeatureType m_catchmentFT;
 
   private final FeatureType m_vChannelFT;
+
+  private final FeatureType m_stChannelFT;
 
   private final FeatureType m_kmChannelFT;
 
@@ -99,7 +105,7 @@ public class NAConfiguration
 
   private final URL m_metaSchemaURL;
 
-  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL) throws Exception
+  private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
     m_gmlBaseDir = gmlBaseDir;
@@ -108,34 +114,41 @@ public class NAConfiguration
     // schemas
     m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
     m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    final GMLSchema schema=GMLSchemaCache.getSchema(m_schemaURL);
-    
+    final GMLSchema schema = GMLSchemaCache.getSchema( m_schemaURL );
+
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );
     m_vChannelFT = schema.getFeatureType( "VirtualChannel" );
+    m_stChannelFT = schema.getFeatureType( "StorageChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_catchmentFT = schema.getFeatureType( "Catchment" );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
+    // TODO WernerCatchment und JessicaCatchment vergleichen mit kalypsoNa-sourcecode
+    //    m_catchmentFormatURL = getClass().getResource(
+    // "formats/JessicaCatchment.txt" );
     m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
     m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
-    
+    m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" );
+
     // ASCII
     ( new File( asciiBaseDir, "inp.dat" ) ).mkdirs();
     m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
     m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
     m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
-
+    m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );
   }
 
-  public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir ) throws Exception
+  public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir )
+      throws Exception
   {
     return new NAConfiguration( asciiBaseDir, gmlBaseDir, null );
   }
 
-  public static NAConfiguration getGml2AsciiConfiguration( URL modelURL, File asciiBaseDir ) throws Exception
+  public static NAConfiguration getGml2AsciiConfiguration( URL modelURL, File asciiBaseDir )
+      throws Exception
   {
     return new NAConfiguration( asciiBaseDir, null, modelURL );
   }
@@ -173,6 +186,16 @@ public class NAConfiguration
   public File getNetFile()
   {
     return m_netFile;
+  }
+
+  public URL getRHBFormatURL()
+  {
+    return m_rhbFormatURL;
+  }
+
+  public File getRHBFile()
+  {
+    return m_rhbFile;
   }
 
   public URL getControlSchemaURL()
@@ -215,9 +238,15 @@ public class NAConfiguration
     return m_vChannelFT;
   }
 
+  public FeatureType getStChannelFT()
+  {
+    return m_stChannelFT;
+  }
+  
   public void setSimulationForecasetStart( Date simulationForecast )
   {
-    m_simulationForecast = simulationForecast;}
+    m_simulationForecast = simulationForecast;
+  }
 
   public void setSimulationStart( Date simulationStart )
   {
@@ -233,10 +262,12 @@ public class NAConfiguration
   {
     return m_simulationStart;
   }
+
   public Date getSimulationEnd()
   {
     return m_simulationEnd;
   }
+
   public Date getSimulationForecastStart()
   {
     return m_simulationForecast;
@@ -249,11 +280,12 @@ public class NAConfiguration
 
   public void setRootNodeID( String rootNodeID )
   {
-     m_rootNodeId=rootNodeID;
+    m_rootNodeId = rootNodeID;
   }
 
   public URL getMetaSchemaURL()
   {
     return m_metaSchemaURL;
   }
+
 }
