@@ -5,6 +5,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -52,7 +53,15 @@ public class FindNearestVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final GM_Object fGeo = f.getDefaultGeometryProperty();
+    GM_Object fGeo = null;
+    String type = f.getFeatureType().getName();
+    // TODO handle this better
+    if(type.equals(RectifiedGridCoverage.getName())){
+      GM_Object[] geoProps = f.getGeometryProperties();
+      fGeo = geoProps[0];
+    }else{
+      fGeo = f.getDefaultGeometryProperty();
+    }
 
     if( fGeo != null )
     {

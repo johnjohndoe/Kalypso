@@ -77,6 +77,7 @@ public final class PasteFeatureAction extends Action
     if(m_clipboard.getClipboardFeature() != null)
       try
       {
+        // TODO use command !!
         m_workspace.addLinkedFeature(m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature());
       }
       catch( Exception e )

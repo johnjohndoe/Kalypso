@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
@@ -29,12 +31,12 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
 {
 
   protected GMLEditorTreeView viewer = null;
-  
+
   protected GMLReader gmlReader = null;
 
   public GMLEditor()
   {
-    /**/
+  /**/
   }
 
   public void dispose()
@@ -44,14 +46,43 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     viewer.dispose();
     super.dispose();
   }
-  
+
   protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
   {
-  // TODO Auto-generated method stub
+    /*try
+    {
+      CommandableWorkspace workspace = gmlReader.getGMLWorkspace();
+      IFile outputFile = ResourceUtilities.findFileFromURL(workspace.getContext());
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      final OutputStreamWriter osw = new OutputStreamWriter( bos, outputFile
+          .getCharset() );
+
+      GmlSerializer.serializeWorkspace( osw, workspace );
+      bos.close();
+
+      final ByteArrayInputStream bis = new ByteArrayInputStream( bos
+          .toByteArray() );
+      outputFile.setContents( bis, false, true, monitor );
+
+      bis.close();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }*/
+  }
+  
+  /*public boolean isSaveAsAllowed( )
+  {
+    return false;
+  }*/
+  
+  public CommandableWorkspace getWorkspace(){
+    return gmlReader.getGMLWorkspace();
   }
 
-  protected void loadInternal( final IProgressMonitor monitor,
-      final IStorageEditorInput input ) throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
+      throws Exception, CoreException
   {
     if( viewer == null )
       return;
@@ -65,14 +96,14 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
       String gmlType = br.readLine();
       String gmlSource = br.readLine();
       br.close();
-      
-      gmlReader = new GMLReader( gmlType, gmlSource, context );           
+
+      gmlReader = new GMLReader( gmlType, gmlSource, context );
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
         public void run()
         {
-          viewer.setGmlReader(gmlReader);
+          viewer.setGmlReader( gmlReader );
         }
       } );
     }
@@ -91,9 +122,9 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   }
 
   public synchronized void createPartControl( final Composite parent )
-  {    
+  {
     super.createPartControl( parent );
-    viewer = new GMLEditorTreeView( parent,this );
+    viewer = new GMLEditorTreeView( parent, this );
     load();
   }
 }

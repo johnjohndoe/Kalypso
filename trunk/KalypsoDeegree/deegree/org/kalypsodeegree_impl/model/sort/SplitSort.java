@@ -131,7 +131,7 @@ public class SplitSort implements FeatureList
     else if( object instanceof Feature )
     {
       Feature fe = (Feature)object;
-       GM_Envelope env = fe.getEnvelope();
+      GM_Envelope env = fe.getEnvelope();
       return env;
     }
     else
@@ -167,23 +167,29 @@ public class SplitSort implements FeatureList
     myRootContainer = null;
 
     GM_Envelope bbox = null;
+
     for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
     {
-      final Feature f = (Feature)iter.next();
+      final Object f = iter.next();
 
-      final GM_Envelope envelope = f.getEnvelope();
+      final GM_Envelope envelope = getEnvelope( f );
       if( bbox == null )
         bbox = envelope;
       else
         bbox = bbox.getMerged( envelope );
     }
-
-    myRootContainer = new SplitSortContainer( null, bbox );
-    for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+    if( bbox != null )
     {
-      final Object next = iter.next();
-      spacialAdd( getEnvelope( next ), next );
+      myRootContainer = new SplitSortContainer( null, bbox );
+      for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+      {
+        final Object next = iter.next();
+        GM_Envelope envelope = getEnvelope( next );
+        spacialAdd( envelope, next );
+      }
     }
+    else
+      myRootContainer = null;
   }
 
   /**
