@@ -7,18 +7,18 @@ import java.io.Serializable;
  * 
  * @author schlienger
  */
-public class ObservationDescriptorBean implements Serializable
+public class ObservationDataDescriptorBean implements Serializable
 {
   private String m_location;
 
   private String m_format;
 
-  public ObservationDescriptorBean()
+  public ObservationDataDescriptorBean()
   {
     this( "", "" );
   }
 
-  public ObservationDescriptorBean( final String location, final String format )
+  public ObservationDataDescriptorBean( final String location, final String format )
   {
     m_location = location;
     m_format = format;

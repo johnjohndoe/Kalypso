@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
-import org.kalypso.ogc.sensor.beans.ObservationDescriptorBean;
+import org.kalypso.ogc.sensor.beans.ObservationDataDescriptorBean;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.RepositoryException;
@@ -72,7 +72,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * @see org.kalypso.services.sensor.IObservationService#readData(org.kalypso.ogc.sensor.beans.ObservationBean)
    */
-  public ObservationDescriptorBean readData( ObservationBean observation )
+  public ObservationDataDescriptorBean readData( ObservationBean observation )
   {
     return null;
   }
@@ -80,7 +80,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * @see org.kalypso.services.sensor.IObservationService#writeData(org.kalypso.ogc.sensor.beans.ObservationBean, org.kalypso.ogc.sensor.beans.ObservationDescriptorBean)
    */
-  public void writeData( ObservationBean observation, ObservationDescriptorBean descriptor )
+  public void writeData( ObservationBean observation, ObservationDataDescriptorBean descriptor )
   {
     //
     }
