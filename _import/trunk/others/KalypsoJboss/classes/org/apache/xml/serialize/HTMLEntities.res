@@ -1,6 +1,6 @@
-# $Id: HTMLEntities.res,v 1.3 2000/08/30 18:59:20 arkin Exp $
+# $Id: HTMLEntities.res,v 1.1.1.1 2003/05/07 09:37:21 kalypso-dev Exp $
 #
-# @version $Revision: 1.3 $ $Date: 2000/08/30 18:59:20 $
+# @version $Revision: 1.1.1.1 $ $Date: 2003/05/07 09:37:21 $
 # @author <a href="mailto:arkin@intalio.com">Assaf Arkin</a>
 #
 # Character entity references for markup-significant
