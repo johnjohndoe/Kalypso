@@ -3,8 +3,10 @@ rm de/tuhh/wb/javagis/*class de/tuhh/wb/javagis/*/*class de/tuhh/wb/javagis/*/*/
 rm javac.out;
 #CLASSPATH=`cat jboss_libs_classpath`:.:
 CLASSPATH=.
-CLASSPATH=$CLASSPATH:bin/edbc.jar:bin/openroad.jar:../wadas-kalypso/lib/
+CLASSPATH=$CLASSPATH:bin/edbc.jar:bin/openroad.jar
 CLASSPATH=$CLASSPATH:bin/jbcl.jar
+CLASSPATH=$CLASSPATH:bin/braju.jar
+CLASSPATH=$CLASSPATH:../kalypsoe-src/
 CLASSPATH=$CLASSPATH:../wadas-kalypso/src/
 CLASSPATH=$CLASSPATH:../kalypso-filter/Source
 CLASSPATH=$CLASSPATH:bin/jbossall-client.jar
