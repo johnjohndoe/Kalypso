@@ -348,7 +348,8 @@ public class FeatureFactory
   public static FeatureProperty[] createDefaultFeatureProperty(
       final FeatureTypeProperty[] propTypes, final boolean createGeometry )
   {
-    final List results = new ArrayList();
+    // TODO handle occurency here and generate empty List or FeatureList as default
+      final List results = new ArrayList();
     for( int i = 0; i < propTypes.length; i++ )
     {
       final FeatureTypeProperty ftp = propTypes[i];
