@@ -2,7 +2,6 @@ package org.kalypso.ogc.gml.outline;
 
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.UserStyle;
-import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.IKalypsoLayer;
@@ -45,13 +44,12 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
       IKalypsoLayer layer = obj.getTheme().getLayer();
       if( !( layer instanceof KalypsoFeatureLayer ) )
         return null;
-
-      final FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();
+      
       final KalypsoUserStyle userStyle = obj.getStyle();
       final Rule[] rules = userStyle.getFeatureTypeStyles()[0].getRules();
       final RuleTreeObject[] result = new RuleTreeObject[rules.length];
       for( int i = 0; i < result.length; i++ )
-        result[i] = new RuleTreeObject( rules[i], userStyle, ft );
+        result[i] = new RuleTreeObject( rules[i], userStyle, layer );
       return result;
     }
     return null;
