@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
-   id="backupdeegree"
-   name="backupdeegree"
+   id="org.kalypso.deegree"
+   name="org.kalypso.deegree"
    version="1.0.0"
    provider-name="org.kalypso">
    <runtime>

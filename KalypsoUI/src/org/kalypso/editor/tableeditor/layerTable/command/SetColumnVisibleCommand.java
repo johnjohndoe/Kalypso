@@ -33,7 +33,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_model.setVisible( m_ftp, m_bVisible );
+    m_model.showColumn( m_ftp, m_bVisible );
   }
 
   /**
@@ -49,8 +49,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_model.setVisible( m_ftp, !m_bVisible );
-  
+    m_model.showColumn( m_ftp, !m_bVisible );
   }
 
   /**

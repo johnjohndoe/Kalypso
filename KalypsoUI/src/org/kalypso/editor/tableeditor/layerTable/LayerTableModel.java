@@ -20,49 +20,62 @@ public class LayerTableModel
   
   private final KalypsoFeatureLayer myLayer;
 
-  private final Map m_layerVisible = new HashMap();
+  private final Map m_ftpColumnMap = new HashMap();
 
-  public LayerTableModel( final KalypsoFeatureLayer layer, final String[] columns )
+  public LayerTableModel( final KalypsoFeatureLayer layer, final Column[] columns )
   {
     myLayer = layer;
-
-    final FeatureTypeProperty[] ftps = layer.getFeatureType().getProperties();
-    for( int i = 0; i < ftps.length; i++ )
-    {
-      boolean bVisible = false;
-      // is visible?
-      for( int j = 0; j < columns.length; j++ )
-      {
-        if( ftps[i].getName().equals( columns[j] ) )
-        {
-          bVisible = true;
-          break;
-        }
-      }
-
-      m_layerVisible.put( ftps[i], Boolean.valueOf( bVisible ) );
-    }
+    
+    for( int i = 0; i < columns.length; i++ )
+      m_ftpColumnMap.put( columns[i].ftp, columns[i] );
   }
 
   public KalypsoFeatureLayer getLayer()
   {
     return myLayer;
   }
-
-  public boolean isVisible( final FeatureTypeProperty ftp )
+  
+  public boolean isColumn( final FeatureTypeProperty ftp )
   {
-    final Boolean visible = (Boolean)m_layerVisible.get( ftp );
-    if( visible == null )
-      throw new IllegalArgumentException( "Column not found: " + ftp );
-
-    return visible.booleanValue();
+    return ( m_ftpColumnMap.get( ftp ) != null );
   }
-
-  public void setVisible( final FeatureTypeProperty ftp, final boolean bVisible )
+  
+  public void showColumn( final FeatureTypeProperty ftp, final boolean bShow ) throws LayerModelException
   {
-    m_layerVisible.put( ftp, Boolean.valueOf( bVisible ) );
+    if( bShow )
+    {
+      if( isColumn(ftp))
+        throw new LayerModelException( "Column exists already: " + ftp.getName() );
+      
+      m_ftpColumnMap.put( ftp, new Column( ftp, 100, false ) );
+    }
+    else
+    {
+      if( !isColumn(ftp) )
+        throw new LayerModelException( "Column doesnt exist: " + ftp.getName() );
+      
+      m_ftpColumnMap.remove( ftp );
+    }
+
+    fireColumnsChanged();
+  }
+  
+  public boolean isEditable( final FeatureTypeProperty ftp )
+  {
+    final Column column = (Column)m_ftpColumnMap.get( ftp );
+    if( column != null )
+      return column.isEditable;
     
-    fireColumnChanged( ftp );
+    return false;
+  }
+  
+  public int getInitialWidth( final FeatureTypeProperty ftp )
+  {
+    final Column column = (Column)m_ftpColumnMap.get( ftp );
+    if( column != null )
+      return column.initialWidth;
+    
+    return 0;
   }
   
   public void addModelListener( final ILayerTableModelListener l )
@@ -75,33 +88,17 @@ public class LayerTableModel
     m_listeners.remove( l );
   }
   
-  public void fireColumnChanged( final FeatureTypeProperty ftp )
-  {
-    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
-      ((ILayerTableModelListener)iter.next()).onColumnChanged(ftp);
-  }
-  
   public void fireRowsChanged( final Feature feature  )
   {
     for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
       ((ILayerTableModelListener)iter.next()).onRowsChanged( feature );
   }
 
-
-  public FeatureTypeProperty[] getVisibleProperties()
+  public void fireColumnsChanged(   )
   {
-    final Collection props = new ArrayList();
-
-    for( Iterator iter = m_layerVisible.entrySet().iterator(); iter.hasNext(); )
-    {
-      final Map.Entry entry = (Map.Entry)iter.next();
-      if( ((Boolean)entry.getValue()).booleanValue() )
-        props.add( entry.getKey() );
-    }
-    
-    return (FeatureTypeProperty[])props.toArray( new FeatureTypeProperty[props.size()] );
+    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+      ((ILayerTableModelListener)iter.next()).onColumnsChanged( );
   }
-
 
   public void addFeature( final Feature feature ) throws Exception
   {
@@ -122,9 +119,22 @@ public class LayerTableModel
     fireRowsChanged( feature );
   }
 
-  public boolean isEditable( final FeatureTypeProperty ftp )
+  public final static class Column
   {
-    // TODO: change xsd
-    return true;
+    public final boolean isEditable;
+    public final FeatureTypeProperty ftp;
+    public final int initialWidth;
+    
+    public Column( final FeatureTypeProperty ftpArg, final int intialWidthArg, final boolean isEditableArg )
+    {
+      ftp = ftpArg;
+      isEditable = isEditableArg;
+      initialWidth = intialWidthArg;
+    }
+  }
+  
+  public Column[] getColumns()
+  {
+    return (Column[])m_ftpColumnMap.values().toArray( new Column[m_ftpColumnMap.size()] );
   }
 }

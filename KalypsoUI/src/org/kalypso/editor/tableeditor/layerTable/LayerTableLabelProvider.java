@@ -10,6 +10,13 @@ import org.eclipse.swt.graphics.Image;
  */
 public class LayerTableLabelProvider implements ITableLabelProvider
 {
+  private LayerTable m_layerTable;
+
+  public LayerTableLabelProvider( final LayerTable layerTable )
+  {
+    m_layerTable = layerTable;
+  }
+  
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
@@ -23,7 +30,8 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public String getColumnText( Object element, int columnIndex )
   {
-    final Object property = ((Feature)element).getProperty( columnIndex );
+    final String name = m_layerTable.getFeatureTypePropertyFromIndex(columnIndex).getName();
+    final Object property = ((Feature)element).getProperty( name );
     return property == null ? "" : property.toString();
   }
 

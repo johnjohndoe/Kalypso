@@ -1,10 +1,13 @@
 package org.kalypso.editor.tableeditor.layerTable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
@@ -22,24 +25,24 @@ import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
-import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.factory.FactoryException;
 
 /**
  * @author bce
  */
-public class LayerTable implements ILayerTableModelListener, ISelectionProvider, ModellEventListener
+public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
+    ModellEventListener
 {
   private static Logger LOGGER = Logger.getLogger( LayerTable.class.getName() );
-  
+
   protected final TableViewer m_viewer;
 
   private LayerTableModel m_model = null;
 
   private final ICommandManager m_commandManager;
 
-  private MenuManager m_menu;
+  private IMenuManager m_menu;
 
   private Runnable m_refreshRunner = new Runnable()
   {
@@ -51,7 +54,12 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   private final ICellEditorFactory m_cellEditorFactory;
 
-  public LayerTable( final Composite parent, final ICommandManager commandManager, final ICellEditorFactory cellEditorFactory )
+  private Map m_ftp2ColumnMap = new HashMap();
+
+  private IMenuManager m_spaltenMenu;
+
+  public LayerTable( final Composite parent, final ICommandManager commandManager,
+      final ICellEditorFactory cellEditorFactory )
   {
     m_commandManager = commandManager;
     m_cellEditorFactory = cellEditorFactory;
@@ -59,7 +67,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer = new TableViewer( parent, SWT.MULTI /* | SWT.FULL_SELECTION */);
 
     m_viewer.setContentProvider( new LayerTableContentProvider() );
-    m_viewer.setLabelProvider( new LayerTableLabelProvider() );
+    m_viewer.setLabelProvider( new LayerTableLabelProvider( this ) );
 
     m_viewer.getTable().setHeaderVisible( true );
     m_viewer.getTable().setLinesVisible( true );
@@ -75,6 +83,8 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
     if( m_menu != null )
       m_menu.dispose();
+    if( m_spaltenMenu != null )
+      m_menu.dispose();
   }
 
   public LayerTableModel getModel()
@@ -84,10 +94,7 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
   public void setModel( final LayerTableModel model )
   {
-    final Table table = m_viewer.getTable();
-    final TableColumn[] columns = table.getColumns();
-    for( int i = 0; i < columns.length; i++ )
-      columns[i].dispose();
+    clearColumns();
 
     if( m_model != null )
     {
@@ -97,40 +104,101 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
 
     m_model = model;
 
-    if( model == null )
-      return;
+    if( model != null )
+    {
+      m_model.addModelListener( this );
+      m_model.getLayer().addModellListener( this );
+    }
 
-    m_model.addModelListener( this );
-    m_model.getLayer().addModellListener( this );
+    createColumns();
+    
+    final IAction[] actions = createActions();
+    
+    m_menu = refillMenu( m_menu, actions );
+    m_spaltenMenu = refillMenu( m_spaltenMenu, actions );
+    
+    m_viewer.getTable().setMenu( ((MenuManager)m_menu).createContextMenu( m_viewer.getTable() ) );
+  }
+  
+  private IAction[] createActions()
+  {
+    if( m_model != null )
+    {
+      final FeatureTypeProperty[] ftps = m_model.getFeatureType().getProperties();
 
+      final IAction[] actions = new IAction[ftps.length]; 
+      
+      for( int i = 0; i < ftps.length; i++ )
+        actions[i] = new ColumnAction( m_commandManager, this, ftps[i], m_model.getInitialWidth( ftps[i] ) != 0 );
+      
+      return actions;
+    }
+
+    return new IAction[] {};
+  }
+
+  private IMenuManager refillMenu( final IMenuManager oldMenu, final IAction[] actions )
+  {
+    if( oldMenu != null )
+    {
+      oldMenu.removeAll();
+      oldMenu.dispose();
+    }
+    
+    final IMenuManager menu = new MenuManager( "Spalten" );
+    
+    // create context menu
+    for( int i = 0; i < actions.length; i++ )
+      menu.add( actions[i] );
+    
+    return menu;
+  }
+
+  protected void clearColumns()
+  {
+    m_ftp2ColumnMap.clear();
     if( m_menu != null )
+    {
+      m_menu.removeAll();
       m_menu.dispose();
+    }
+    m_menu = null;
+    
+    final Table table = m_viewer.getTable();
+    final TableColumn[] columns = table.getColumns();
+    for( int i = 0; i < columns.length; i++ )
+      columns[i].dispose();
+  }
 
-    m_menu = new MenuManager( "Kontext", "context" );
+  protected void createColumns()
+  {
+    if( m_model == null )
+      return;
+    
+    final Table table = m_viewer.getTable();
 
-    final KalypsoFeatureLayer layer = model.getLayer();
-    final FeatureType featureType = layer.getFeatureType();
-    final FeatureTypeProperty[] featureTypeProperties = featureType.getProperties();
-    final String[] colProperties = new String[featureTypeProperties.length];
-    final CellEditor[] cellEditors = new CellEditor[featureTypeProperties.length];
-    for( int i = 0; i < featureTypeProperties.length; i++ )
+    final FeatureType featureType = m_model.getLayer().getFeatureType();
+    final LayerTableModel.Column[] columns = m_model.getColumns();
+
+    final String[] colProperties = new String[columns.length];
+    final CellEditor[] cellEditors = new CellEditor[columns.length];
+    for( int i = 0; i < columns.length; i++ )
     {
       final TableColumn tc = new TableColumn( table, SWT.CENTER );
       tc.setWidth( 100 );
 
-      final FeatureTypeProperty ftp = featureTypeProperties[i];
+      final FeatureTypeProperty ftp = columns[i].ftp;
       tc.setText( ftp.getName() );
       tc.setData( ftp );
+      tc.setWidth( m_model.getInitialWidth( ftp ) );
 
-      handleColumn( tc );
+      colProperties[i] = ftp.getName();
 
-      m_menu.add( new ColumnAction( m_commandManager, this, ftp, getModel().isVisible( ftp ) ) );
-
-      colProperties[i] = Integer.toString( i );
-
+      m_ftp2ColumnMap.put( ftp, tc );
+      
       try
       {
-        if( model.isEditable( ftp ) )
+        if( m_model.isEditable( ftp ) )
           cellEditors[i] = m_cellEditorFactory.createEditor( ftp.getType(), table, SWT.NONE );
       }
       catch( final FactoryException e )
@@ -140,43 +208,26 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
       }
     }
 
-    table.setMenu( m_menu.createContextMenu( table ) );
-
     m_viewer.setColumnProperties( colProperties );
     m_viewer.setCellEditors( cellEditors );
-    m_viewer.setInput( model );
-    m_viewer.setCellModifier( new LayerTableCellModifier( m_commandManager, model, featureType ) );
+    m_viewer.setInput( m_model );
+    m_viewer.setCellModifier( new LayerTableCellModifier( m_commandManager, m_model, featureType ) );
   }
-
-  protected void handleColumn( final TableColumn tc )
-  {
-    final boolean bVisible = m_model.isVisible( (FeatureTypeProperty)tc.getData() );
-    tc.setResizable( bVisible );
-    tc.setWidth( bVisible ? 100 : 0 );
-  }
-
+  
   /**
-   * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onColumnChanged(org.deegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.editor.tableeditor.layerTable.ILayerTableModelListener#onColumnsChanged()
    */
-  public void onColumnChanged( final FeatureTypeProperty ftp )
-  {
-    m_viewer.getControl().getDisplay().asyncExec( new Runnable()
+    public void onColumnsChanged( )
     {
-      public void run()
+      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
       {
-        final TableColumn[] columns = m_viewer.getTable().getColumns();
-        for( int i = 0; i < columns.length; i++ )
+        public void run()
         {
-          final TableColumn column = columns[i];
-          if( column.getData() == ftp )
-          {
-            handleColumn( column );
-            break;
-          }
+          clearColumns();
+          createColumns();
         }
-      }
-    } );
-  }
+      } );
+    }
 
   /**
    * 
@@ -196,7 +247,6 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
         m_viewer.setSelection( new StructuredSelection( feature ) );
       }
     } );
-
   }
 
   public ISelection getSelection()
@@ -228,11 +278,6 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.setSelection( selection );
   }
 
-  public IMenuManager getMenu()
-  {
-    return m_menu;
-  }
-
   /**
    * @see org.kalypso.ogc.event.ModellEventListener#onModellChange(org.kalypso.ogc.event.ModellEvent)
    */
@@ -241,4 +286,22 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_viewer.getControl().getDisplay().asyncExec( m_refreshRunner );
   }
 
+  public int getWidth( final FeatureTypeProperty ftp )
+  {
+    final TableColumn tc = (TableColumn)m_ftp2ColumnMap.get( ftp );
+    return tc.getWidth();
+  }
+
+  public IMenuManager getSpaltenMenu()
+  {
+    return m_spaltenMenu;
+  }
+
+  public FeatureTypeProperty getFeatureTypePropertyFromIndex( final int columnIndex )
+  {
+    if( m_viewer != null )
+      return (FeatureTypeProperty)m_viewer.getTable().getColumn(columnIndex).getData();
+    
+    return null;
+  }
 }

@@ -10,7 +10,7 @@ import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.util.command.ICommandManager;
 
 /**
- * Property ist die Nummer der Spalte = Index in den FeatureTypeProperties
+ * Property ist der Name der FeatureTypeProperty der entsprechenden Spalte
  * 
  * @author belger
  */
@@ -40,9 +40,7 @@ public class LayerTableCellModifier implements ICellModifier
 
   private FeatureTypeProperty getFeatureTypeProperty( final String property )
   {
-    final int index = Integer.parseInt(property);
-    
-    return m_type.getProperties()[index];
+    return m_type.getProperty( property );
   }
 
   /**
@@ -50,8 +48,7 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public Object getValue( final Object element, final String property )
   {
-    final int index = Integer.parseInt(property);
-    return ((Feature)element).getProperty( index );
+    return ((Feature)element).getProperty( property );
   }
 
   /**
@@ -59,10 +56,9 @@ public class LayerTableCellModifier implements ICellModifier
    */
   public void modify( final Object element, final String property, final Object value )
   {
-    final String name = getFeatureTypeProperty( property ).getName();
     final Feature feature = (Feature)((TableItem)element).getData();
     final KalypsoFeatureLayer layer = m_modell.getLayer();
-    m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, name, value ), null );
+    m_commandManager.postCommand( new ModifyFeatureCommand( layer, feature, property, value ), null );
   }
 
 }
