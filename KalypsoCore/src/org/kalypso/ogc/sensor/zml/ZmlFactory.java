@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,9 +58,7 @@ public class ZmlFactory
   private final static ObjectFactory m_objectFactory = new ObjectFactory();
 
   private final static SimpleDateFormat m_df = new SimpleDateFormat(
-      "yyyy.MM.dd HH:mm:ss" );
-
-  private final static NumberFormat m_nf = NumberFormat.getInstance();
+      "yyyy-MM-dd'T'HH:mm:ss" );
 
   private static ParserFactory m_parserFactory = null;
 
@@ -118,6 +115,9 @@ public class ZmlFactory
 
   /**
    * Supported types are listed in the types2parser.properties file.
+   * 
+   * TODO: noch das default format (_format) hinzufügen und eventuell die xs: Zeugs wegmachen
+   * Siehe properties datei
    * 
    * @param className
    * @return the XSD-Type for the given Java-Class
@@ -407,6 +407,10 @@ public class ZmlFactory
       sb.append( model.getElement( amount, axis ) );
   }
 
+  /**
+   * TODO: marc, check if the date format can be fetched from the properties here instead of using the m_df defined
+   * as field in this class.
+   */
   private static void buildStringDateAxis( final ITuppleModel model,
       final IAxis axis, final StringBuffer sb ) throws SensorException
   {
@@ -418,15 +422,19 @@ public class ZmlFactory
       sb.append( m_df.format( model.getElement( amount, axis ) ) );
   }
 
+  /**
+   * Uses the default toString() method of the elements.
+   * TODO: check if this always works fine for XML-Schema types
+   */
   private static void buildStringNumberAxis( final ITuppleModel model,
       final IAxis axis, final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( m_nf.format( model.getElement( i, axis ) ) ).append( ";" );
+      sb.append( model.getElement( i, axis ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( m_nf.format( model.getElement( amount, axis ) ) );
+      sb.append( model.getElement( amount, axis ) );
   }
 
   public static Marshaller getMarshaller( ) throws JAXBException
