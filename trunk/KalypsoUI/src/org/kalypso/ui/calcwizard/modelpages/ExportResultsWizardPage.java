@@ -51,6 +51,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -68,6 +69,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -354,28 +356,17 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       return;
     }
 
-    final FeatureList features = getFeatures( );
+		final FeatureList features = getFeatures( );
+    // TODO: maybe filterForValidTS
+    
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
     final List selectedFeatures = getSelectedFeatures( );
 
     MultiDocumentServiceWrapper metadocService = null;
-
     try
     {
       metadocService = new MultiDocumentServiceWrapper();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
 
-      ErrorDialog.openError( shell, "Berichtsablage",
-          "Berichtsablagedienst konnte nicht initialisiert werden.", e
-              .getStatus() );
-      return;
-    }
-
-    try
-    {
       final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard(
           features, selectedFeatures, nameProperty, metadocService
               .getDummyDoc(), metadocService.getDummyBean(), m_berichtExporters );
@@ -386,37 +377,32 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         final Feature[] choosenFeatures = wizard.getChoosenFeatures();
         final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
 
-        for( int i = 0; i < choosenExporter.length; i++ )
-        {
-          final String extension = choosenExporter[i].getExtension();
-          for( int j = 0; j < choosenFeatures.length; j++ )
+        final MultiDocumentServiceWrapper msw = metadocService;
+        final RunnableContextHelper helper = new RunnableContextHelper( getContainer() ) {
+          public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
           {
-            final DocBean doc = metadocService.getCopyBean( extension );
-            
-            final OutputStream os = new FileOutputStream( new File( doc.getLocation() ) );
             try
             {
-              choosenExporter[i].export( choosenFeatures[j], os );
+              exportDocuments( monitor, msw, choosenFeatures, choosenExporter );
             }
-            catch( final Exception e )
+            catch( final CoreException e )
             {
-              // error handling?
-              e.printStackTrace();
-              
-              metadocService.cancelBean( doc );
-              continue;
+              throw new InvocationTargetException( e );
             }
-            finally
-            {
-              IOUtils.closeQuietly( os );
-            }
-
-            metadocService.commitBean( doc );
-          }
-        }
+          }};
+        helper.runAndHandleOperation( shell, false, true, "Berichtsablage", "Ein oder mehrere Dokumente konnten nicht exportiert werden." );
       }
     }
-    catch( Exception e )
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+
+      ErrorDialog.openError( shell, "Berichtsablage",
+          "Berichtsablagedienst konnte nicht initialisiert werden.", e
+              .getStatus() );
+      return;
+    }
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -424,6 +410,63 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     {
       metadocService.dispose();
     }
+  }
+
+  protected void exportDocuments( final IProgressMonitor monitor, final MultiDocumentServiceWrapper metadocService, final Feature[] features, final IBerichtExporter[] exporter ) throws CoreException, InterruptedException
+  {
+    monitor.beginTask( "Berichtsablage" , exporter.length * features.length );
+    
+    final Collection stati = new LinkedList();
+    for( int i = 0; i < exporter.length; i++ )
+    {
+      final IBerichtExporter berichtExporter = exporter[i];
+      final String extension = berichtExporter.getExtension();
+      for( int j = 0; j < features.length; j++ )
+      {
+        monitor.setTaskName( "Berichtsablage - " + berichtExporter.toString() );
+        
+        try
+        {
+          final DocBean doc = metadocService.getCopyBean( extension );
+          OutputStream os = null;
+          try
+          {
+            os = new FileOutputStream( new File( doc.getLocation() ) );
+            berichtExporter.export( features[j], os );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+            
+            metadocService.cancelBean( doc );
+            
+            final String msg = e.getLocalizedMessage();
+            final String message = msg == null ? "Unbekannter Fehler" : msg;
+            
+            throw new CoreException( KalypsoGisPlugin.createErrorStatus( message, e ) );
+          }
+          finally
+          {
+            IOUtils.closeQuietly( os );
+          }
+
+          metadocService.commitBean( doc );
+        }
+        catch( final CoreException e )
+        {
+          stati.add( e.getStatus() );
+        }
+        
+        monitor.worked( 1 );
+        if( monitor.isCanceled() )
+          throw new InterruptedException(  );
+      }
+    }
+    
+    if( stati.size() == 0 )
+      return;
+    
+    throw new CoreException( new MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "Ein oder mehrere Dokumente konnten nicht exportiert werden.", null ) );
   }
 
   private IBerichtExporter[] createExporters( )

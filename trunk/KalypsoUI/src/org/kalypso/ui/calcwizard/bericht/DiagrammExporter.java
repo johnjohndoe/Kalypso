@@ -45,10 +45,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.io.ReaderUtilities;
@@ -59,7 +56,6 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.util.url.UrlResolver;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 
 /**
  * @author belger
@@ -69,7 +65,7 @@ public class DiagrammExporter extends AbstractBerichtExporter
   private static final String EXT = ".jpg";
 
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.deegree.model.feature.Feature)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.deegree.model.feature.Feature, java.io.OutputStream)
    */
   public void export( final Feature feature, final OutputStream os ) throws Exception
   {
@@ -79,20 +75,12 @@ public class DiagrammExporter extends AbstractBerichtExporter
     // - templatefile
     final String templateurl = arguments.getProperty( "template", null );
     
+    final int width = Integer.parseInt( arguments.getProperty( "width" , "800" ) );
+    final int height = Integer.parseInt( arguments.getProperty( "height" , "600" ) );
+    
     // - replacetokens / featureprops
     final Arguments tokens = arguments.getArguments( "tokens" );
-    final Properties replacetokens = new Properties();
-    for( final Iterator tokIt = tokens.entrySet().iterator(); tokIt.hasNext(); )
-    {
-      final Map.Entry entry = (Entry) tokIt.next();
-      final String tokenname = (String) entry.getKey();
-      final String featureProperty = (String) entry.getValue();
-      
-      final TimeseriesLinkType tslink = (TimeseriesLinkType) feature.getProperty( featureProperty );
-      final String href = tslink.getHref();
-      
-      replacetokens.setProperty( tokenname, href );
-    }
+    final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
     
     final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
     final URLConnection connection = url.openConnection();
@@ -102,12 +90,15 @@ public class DiagrammExporter extends AbstractBerichtExporter
     final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
     
     final DiagViewTemplate tpl = new DiagViewTemplate();
-    final ObservationChart chart = new ObservationChart( tpl );
     tpl.setBaseTemplate( xml, getContext() );
     
-    Thread.sleep( 1000 );
+    // TODO: wailt until template is loaded!
     
-    new ExportableChart( chart, EXT, 300, 300 ).exportDocument( os );
+    final ObservationChart chart = new ObservationChart( tpl );
+    
+    Thread.sleep( 2000 );
+    
+    new ExportableChart( chart, EXT, width, height ).exportDocument( os );
     
     chart.dispose();
     tpl.dispose();

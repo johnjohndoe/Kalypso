@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -60,6 +61,7 @@ import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
+import org.xml.sax.InputSource;
 
 /**
  * Observation Table Template Handling made easy
@@ -81,26 +83,56 @@ public class TableViewUtils
   }
 
   /**
+   * Loads the xml template from the given reader. Closes the reader.
+   * 
+   * @return table view template
+   * @throws JAXBException
+   */
+  public static ObstableviewType loadTableTemplateXML( final Reader reader ) throws JAXBException
+  {
+    try
+    {
+      return loadTableTemplateXML( new InputSource( reader ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
+  /**
    * Loads the xml template from the given stream. Closes the stream.
    * 
    * @param ins
    * @return table view template
    * @throws JAXBException
    */
-  public static ObstableviewType loadTableTemplateXML( final InputStream ins )
-      throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException
   {
     try
     {
-      final ObstableviewType baseTemplate = (ObstableviewType) OTT_OF
-          .createUnmarshaller().unmarshal( ins );
-
-      return baseTemplate;
+      return loadTableTemplateXML( new InputSource( ins ) );
     }
     finally
     {
       IOUtils.closeQuietly( ins );
     }
+  }
+  
+  /**
+   * Loads the xml template from the given inutsource
+   * 
+   * @param ins
+   * @return table view template
+   * @throws JAXBException
+   */
+  public static ObstableviewType loadTableTemplateXML( final InputSource ins )
+      throws JAXBException
+  {
+      final ObstableviewType baseTemplate = (ObstableviewType) OTT_OF
+          .createUnmarshaller().unmarshal( ins );
+
+      return baseTemplate;
   }
 
   /**
