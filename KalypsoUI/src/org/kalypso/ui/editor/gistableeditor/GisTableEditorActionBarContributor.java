@@ -19,11 +19,13 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     {
       final IMenuManager menuManager = getActionBars().getMenuManager();
       final IMenuManager tableMenu = menuManager
-          .findMenuUsingPath( "org.kalypso.editors.tableeditor.menu" );
-
-      final IMenuManager spaltenMenu = ((GisTableEditor)targetEditor).createSpaltenMenu();
-      spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das Menu überhaupt eingebaut wird */} );
-      tableMenu.appendToGroup( "spalten", spaltenMenu );
+          .findMenuUsingPath( "org.kalypso.ui.editors.tableeditor.menu" );
+      if( tableMenu != null )
+      {
+        final IMenuManager spaltenMenu = ((GisTableEditor)targetEditor).createSpaltenMenu();
+        spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das Menu überhaupt eingebaut wird */} );
+        tableMenu.appendToGroup( "spalten", spaltenMenu );
+      }
     }
   }
 }

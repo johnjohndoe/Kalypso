@@ -270,6 +270,12 @@
             name="Rechenfall"
             id="org.kalypso.wizard.newCalcCase">
       </wizard>
+      <wizard
+            icon="icons/kalypso_gmt.gif"
+            class="org.kalypso.ui.wizard.NewMapWizard"
+            category="org.kalypso.ui.wizardCategory"
+            name="Karte"
+            id="org.kalypso.wizard.newMap"/>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -383,6 +389,72 @@
       <application>
          <run class="org.kalypso.ui.application.KalypsoApplication"/>
       </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Kalypso Modell"
+            description="Kalypso Modell Kommandos"
+            visible="true"
+            id="org.kalypso.model">
+             <action
+               label="löschen"
+               tooltip="löscht die selektierte Modellvariante"
+               menubarPath="model/modelStart"
+               id="org.kalypso.action.model.delete"/>
+         <action
+               retarget="false"
+               label="Variante anlegen"
+               tooltip="legt eine Variante vom aktuelle gewählten Modell an"
+               menubarPath="model/modelStart"
+               id="org.kalypso.action.model.copy"/>
+
+         <action
+               label="zurückspeichern"
+               tooltip="Speichert die Änderungen am Modell auf den Server zurück"
+               menubarPath="model/modelStart"
+               id="org.kalypso.action.model.commit"/>
+         <action
+               label="aktualisieren"
+               tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
+               menubarPath="model/modelStart"
+               id="org.kalypso.action.model.update"/>
+
+         <action
+               label="vom Server laden"
+               tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
+               menubarPath="model/modelStart"
+               id="org.kalypso.action.model.checkout"/>
+
+      </actionSet>
+      <actionSet
+            label="Kalypso Rechenfall"
+            description="Kalypso Rechenfall Kommandos"
+            visible="true"
+            id="org.kalypso.actionSet.model">
+         <action
+               label="berechnen"
+               tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
+               menubarPath="calcCase/calcCaseStart"
+               id="org.kalypso.action.calcCase.run"/>
+         <action
+               label="löschen"
+               tooltip="löscht die selektierte Rechenvariante"
+               menubarPath="calcCase/calcCaseStart"
+               id="org.kalypso.action.calcCase.delete"/>
+         <action
+               label="Variante erstellen"
+               tooltip="legt eine Variante vom selektierten Rechenfall an"
+               menubarPath="calcCase/calcCaseStart"
+               id="org.kalypso.action.calcCase.copy"/>
+
+         <action
+               label="neu"
+               tooltip="legt einen neuen Rechenfall an"
+               menubarPath="calcCase/calcCaseStart"
+               id="org.kalypso.action.calcCase.new"/>
+
+      </actionSet>
    </extension>
 
 </plugin>
