@@ -80,8 +80,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
     if( s.getFirstElement() instanceof ThemeStyleTreeObject )
-      bEnable = true;
-
+      bEnable = true;    
     setEnabled( bEnable );
   }
 }

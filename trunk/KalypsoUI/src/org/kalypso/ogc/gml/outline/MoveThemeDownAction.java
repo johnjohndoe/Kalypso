@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.util.list.IListManipulator;
 
 /**
@@ -27,8 +28,9 @@ public class MoveThemeDownAction extends AbstractOutlineAction
     boolean bEnable = false;
     
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
-    if( !s.isEmpty() )
-    {
+      
+    if( !s.isEmpty() && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme))
+    {    	  
       final Object[] elements = getOutlineviewer().getContentProvider().getElements( getOutlineviewer().getMapModell() );
           
       bEnable = ( elements[elements.length - 1] != s.getFirstElement() ); 

@@ -47,9 +47,8 @@ public class RuleTabItemBuilder {
 	private KalypsoUserStyle userStyle = null;
 	private FeatureType featureType = null;
 		
-	private int focuedRuleItem = -1;
-	private int focusedSymbolizerItem = -1;
-	
+	private int focusedRuleItem = -1;
+	private int focusedSymbolizerItem = -1;	
 	
 	public RuleTabItemBuilder(Composite composite, Rule[] rules, KalypsoUserStyle userStyle, FeatureType featureType)
 	{	
@@ -57,7 +56,7 @@ public class RuleTabItemBuilder {
 		this.userStyle = userStyle;
 		this.featureType = featureType;		
 		this.rules = rules;		
-		globalComposite = new Composite(composite,SWT.NULL);
+		globalComposite = new Composite(composite,SWT.NULL);			
 	}	
 		
 	public void draw()
@@ -108,7 +107,7 @@ public class RuleTabItemBuilder {
 				public void valueChanged(PanelEvent event) {
 					rule.setTitle(((TextInputPanel)event.getSource()).getLabelText());
 					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));									
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();										
+					focusedRuleItem = ruleTabFolder.getSelectionIndex();										
 				}
 			});
 			
@@ -117,7 +116,7 @@ public class RuleTabItemBuilder {
 				public void valueChanged(PanelEvent event) {
 					rule.setName(((TextInputPanel)event.getSource()).getLabelText());
 					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));					
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
+					focusedRuleItem = ruleTabFolder.getSelectionIndex();						
 				}
 			});
 			
@@ -126,7 +125,7 @@ public class RuleTabItemBuilder {
 				public void valueChanged(PanelEvent event) {
 					rule.setMinScaleDenominator(((SliderPanel)event.getSource()).getSelection());
 					userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
+					focusedRuleItem = ruleTabFolder.getSelectionIndex();						
 				}
 			});			
 			SliderPanel maxDenominatorPanel = new SliderPanel(composite,"MaxDenomiator:",0,10000000,100000,SliderPanel.INTEGER,rule.getMaxScaleDenominator());
@@ -138,7 +137,7 @@ public class RuleTabItemBuilder {
 					for(int i=0; i<symbolizers.length; i++){
 						symbolizers[i].setMaxScaleDenominator(max);
 					}					
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();
+					focusedRuleItem = ruleTabFolder.getSelectionIndex();
 					
 //					PropertyIsLikeOperation operation = new PropertyIsLikeOperation(new PropertyName("NAME"),new Literal("E*"),'*','?','/');
 //					ComplexFilter filter = new ComplexFilter(operation);
@@ -169,7 +168,7 @@ public class RuleTabItemBuilder {
 							rule.removeSymbolizer(s[index]);
 							symbolizerTabFolder.getItem(index).dispose();																					
 							focusedSymbolizerItem = index;							
-							focuedRuleItem = ruleTabFolder.getSelectionIndex();							
+							focusedRuleItem = ruleTabFolder.getSelectionIndex();							
 							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));											
 						}	
 						draw();						
@@ -192,7 +191,7 @@ public class RuleTabItemBuilder {
 							}
 							rule.setSymbolizers(newOrderedObjects);
 							focusedSymbolizerItem = index+1;
-							focuedRuleItem = ruleTabFolder.getSelectionIndex();											
+							focusedRuleItem = ruleTabFolder.getSelectionIndex();											
 							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 							draw();
 						}
@@ -215,7 +214,7 @@ public class RuleTabItemBuilder {
 							}
 							rule.setSymbolizers(newOrderedObjects);
 							focusedSymbolizerItem = index-1;
-							focuedRuleItem = ruleTabFolder.getSelectionIndex();							
+							focusedRuleItem = ruleTabFolder.getSelectionIndex();							
 							userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
 							draw();	
 						}
@@ -230,7 +229,7 @@ public class RuleTabItemBuilder {
 					{
 						rule.addSymbolizer(symbolizer);											
 						userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));
-						focuedRuleItem = ruleTabFolder.getSelectionIndex();
+						focusedRuleItem = ruleTabFolder.getSelectionIndex();
 						focusedSymbolizerItem = rule.getSymbolizers().length-1;						
 						draw();
 					}									
@@ -266,14 +265,14 @@ public class RuleTabItemBuilder {
 			}			
 			if(rule.getSymbolizers().length == 0)
 				symbolizerTabFolder.setVisible(false);
-			if(focuedRuleItem == i && focusedSymbolizerItem!=-1)
+			if(focusedRuleItem == i && focusedSymbolizerItem!=-1)
 				symbolizerTabFolder.setSelection(focusedSymbolizerItem);
 		}
-		if(focuedRuleItem != -1)
-			ruleTabFolder.setSelection(focuedRuleItem);
+		if(focusedRuleItem != -1)
+			ruleTabFolder.setSelection(focusedRuleItem);
 		if(rules.length == 0)
-			ruleTabFolder.setVisible(false);
-				
+			ruleTabFolder.setVisible(false);				
+		
 		tabFolderComposite.pack(true);		
 	}
 	

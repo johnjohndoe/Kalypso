@@ -1,12 +1,17 @@
 package org.kalypso.ogc.gml.outline;
 
+import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.IMapModell;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.event.ModellEventListener;
+import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureLayer;
+import org.kalypso.ogc.gml.KalypsoUserStyle;
 
 /**
  * Dieser TreeContentProvider akzeptiert nur MapModell'e als Input.
@@ -21,17 +26,36 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
-  {
+  {  	
     if( parentElement instanceof IKalypsoTheme )
     {
       final IKalypsoTheme theme = (IKalypsoTheme)parentElement;
       final UserStyle[] styles = theme.getStyles();
-      final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
-      for( int i = 0; i < styles.length; i++ )
-        result[i] = new ThemeStyleTreeObject( theme, styles[i] );
-
-      return result;//( theme ).getStyles();
+      if(styles != null)
+      {
+	      final ThemeStyleTreeObject[] result = new ThemeStyleTreeObject[styles.length];
+	      for( int i = 0; i < styles.length; i++ )
+	        result[i] = new ThemeStyleTreeObject( theme, styles[i] );	
+	      return result;
+      }
     }
+    else if(parentElement instanceof ThemeStyleTreeObject)
+  	{
+  		ThemeStyleTreeObject obj 	= (ThemeStyleTreeObject)parentElement;
+  		IKalypsoLayer layer 		= obj.getTheme().getLayer();
+  		if( !( layer instanceof KalypsoFeatureLayer ) )
+  	        return null;
+  		else
+  		{
+  	        FeatureType ft = ( (KalypsoFeatureLayer)layer ).getFeatureType();  	  	
+			KalypsoUserStyle userStyle = obj.getStyle();
+			Rule[] rules = userStyle.getFeatureTypeStyles()[0].getRules();
+			RuleTreeObject[] result = new RuleTreeObject[rules.length];  		
+			for( int i = 0; i < result.length; i++ )
+		        result[i] = new RuleTreeObject(rules[i], userStyle, ft);
+			return result;  
+  		}
+  	}          
     return null;
   }
 
@@ -48,6 +72,13 @@ public class MapModellTreeContentProvider implements ITreeContentProvider, Model
    */
   public boolean hasChildren( final Object element )
   {
+  	if(element instanceof ThemeStyleTreeObject)
+  	{
+  		ThemeStyleTreeObject obj = (ThemeStyleTreeObject)element;
+  		UserStyle userStyle = obj.getStyle();
+  		if(userStyle.getFeatureTypeStyles()[0].getRules().length >0)
+  			return true;  		  	
+  	}  	
     return ( element instanceof IKalypsoTheme );
   }
 

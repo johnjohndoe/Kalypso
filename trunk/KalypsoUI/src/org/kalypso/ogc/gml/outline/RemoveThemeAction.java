@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
 import org.kalypso.util.list.IListManipulator;
 
 /**
@@ -26,6 +27,6 @@ public class RemoveThemeAction extends AbstractOutlineAction
   {
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
-    setEnabled( !s.isEmpty() );
+    setEnabled( !s.isEmpty()  && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme));
   }
 }

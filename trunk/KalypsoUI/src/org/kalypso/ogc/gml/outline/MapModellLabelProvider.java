@@ -1,6 +1,5 @@
 package org.kalypso.ogc.gml.outline;
 
-
 import org.deegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -15,9 +14,9 @@ public class MapModellLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
-  public Image getImage( final Object element )
-  {
-    return null;
+  public Image getImage( Object element )
+  { 	
+  	return null;
   }
 
   /**
@@ -68,5 +67,4 @@ public class MapModellLabelProvider implements ILabelProvider
   {
   // unused  
   }
-
 }

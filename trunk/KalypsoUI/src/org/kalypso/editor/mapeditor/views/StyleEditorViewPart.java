@@ -1,5 +1,6 @@
 package org.kalypso.editor.mapeditor.views;
 
+import org.deegree.graphics.sld.Rule;
 import org.deegree.model.feature.FeatureType;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -12,6 +13,7 @@ import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.outline.RuleTreeObject;
 import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
 
 /**
@@ -52,6 +54,11 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     guiBuilder = new SLDEditorGuiBuilder( parent, this );
   }
 
+  public void initStyleEditor( KalypsoUserStyle userStyle, FeatureType featureType, int index )
+  {
+    guiBuilder.buildSWTGui( userStyle, featureType, index);
+  }
+  
   public void initStyleEditor( KalypsoUserStyle userStyle, FeatureType featureType )
   {
     guiBuilder.buildSWTGui( userStyle, featureType );
@@ -87,5 +94,24 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     }
     else if( o instanceof IKalypsoTheme )
       initStyleEditor( null, null );
+    else if(o instanceof RuleTreeObject)
+    {
+    	RuleTreeObject obj = (RuleTreeObject)o;
+    	Rule indexRule = obj.getRule();
+    	Rule[] rules = obj.getStyle().getFeatureTypeStyles()[0].getRules();
+    	int index = -1;
+    	if(indexRule != null)
+		{
+			for(int i=0; i<rules.length; i++)
+			{
+				if(rules[i]== indexRule)
+				{
+					index = i;
+					break;
+				}					
+			}
+		}    	
+    	initStyleEditor( obj.getStyle(), obj.getFeatureType(), index);    	
+    }    
   }
 }
