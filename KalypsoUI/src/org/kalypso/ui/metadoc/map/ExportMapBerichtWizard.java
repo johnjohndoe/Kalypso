@@ -38,34 +38,41 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.eclipse.core.runtime.jobs;
+package org.kalypso.ui.metadoc.map;
 
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.ogc.gml.map.wizard.ExportMapOptionsPage;
+import org.kalypso.services.proxy.DocBean;
+import org.kalypso.ui.metadoc.ExportBerichtWizard;
 
 /**
- * MutexSchedulingRule
- * 
- * @author schlienger
+ * @author belger
  */
-public class MutexSchedulingRule implements ISchedulingRule
+public class ExportMapBerichtWizard extends ExportBerichtWizard
 {
-  /**
-   * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
-   */
-  public boolean contains( final ISchedulingRule rule )
+  private final ExportMapOptionsPage m_optionPage;
+
+  public ExportMapBerichtWizard(
+      final ExportMapOptionsPage page, final DocBean doc )
   {
-    // TODO2: geht auch nicht: verletzt die Rule-Regeln!
-//    return true;
-    // TODO: geändert von Belger: sonst gibts Probleme beim Laden der Zeitreihen
-    // --> Prüfen ob das immer noch der Fall ist?
-    return this == rule;
+    super( page, doc );
+
+    m_optionPage = page;
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
+  public void addPages( )
+  {
+    super.addPages();
+
+    addPage( m_optionPage );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
-   */
-  public boolean isConflicting( ISchedulingRule rule )
+  public boolean performFinish( )
   {
-    return this == rule;
+    m_optionPage.saveWidgetValues();
+
+    return super.performFinish();
   }
 }

@@ -88,7 +88,6 @@ public class RepositoriesExtensions
    * @param repositoryName
    * @param conf
    * @param readOnly
-   * @return
    * @throws CoreException
    */
   public static RepositoryFactoryConfig retrieveExtensionFor(

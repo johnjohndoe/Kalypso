@@ -71,10 +71,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-import org.eclipse.ui.internal.ide.IHelpContextIds;
 import org.eclipse.ui.internal.ide.misc.ResourceAndContainerGroup;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.ui.nature.ModelNature;
@@ -134,7 +132,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     composite.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL
         | GridData.HORIZONTAL_ALIGN_FILL ) );
 
-    WorkbenchHelp.setHelp( composite, IHelpContextIds.NEW_FOLDER_WIZARD_PAGE );
+//    WorkbenchHelp.setHelp( composite, IHelpContextIds.NEW_FOLDER_WIZARD_PAGE );
 
     resourceGroup = new ResourceAndContainerGroup(
         composite,

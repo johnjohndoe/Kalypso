@@ -86,6 +86,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
 
   public static final ImageDescriptor IMAGE_ICON_GTT = id( "icons/kalypso_gtt.gif" );
+  public static final ImageDescriptor IMAGE_ICON_GMT = id( "icons/kalypso_gmt.gif" );
 
   public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "etc/kalypso16.gif" );
   public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = id( "etc/kalypso32.gif" );

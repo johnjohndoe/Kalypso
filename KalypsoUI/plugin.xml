@@ -80,6 +80,8 @@
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.apache.ant" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.bce.eclipse.platform.contrib"/>
+      <import plugin="org.bce.eclipse.rcp.contrib"/>
    </requires>
 
    <extension
@@ -290,41 +292,43 @@
                label="Karte"
                path="additions"
                id="org.kalypso.ui.editors.mapeditor.menu">
+            <separator name="sep1"/>
+            <groupMarker name="export"/>
             <groupMarker
                   name="tools">
             </groupMarker>
             <separator
-                  name="sep">
+                  name="sep2">
             </separator>
             <groupMarker
                   name="actions">
             </groupMarker>
             <separator
-                  name="sep">
+                  name="sep3">
             </separator>
             <groupMarker
                   name="edit">
             </groupMarker>
          </menu>
          <action
-               label="Ausschnitt maximieren"
-               icon="icons/full/elcl16/kde_window_fullscreen.gif"
+               label="Berichtsablage..."
+               icon="icons/util/bericht.gif"
                style="push"
-               tooltip="maximiert den Kartenausschnitt"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
-               toolbarPath="karte/actions"
-               id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction">
+               tooltip="Exportiert die Karte in das Berichtswesen."
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ExportBerichtActionDelegate"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/export"
+               toolbarPath="karte/export"
+               id="org.kalypso.ui.editor.mapeditor.ExportAction">
          </action>
          <action
-               label="Ausschnitt vergrößern"
-               icon="icons/map/zoomin.gif"
-               style="radio"
-               tooltip="vergrößert den Kartenausschnitt"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               toolbarPath="karte/tools"
-               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
+               label="Exportieren..."
+               icon="icons/gistable/export_wiz.gif"
+               style="push"
+               tooltip="Die Karte exportieren"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ExportActionDelegate"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/export"
+               toolbarPath="karte/export"
+               id="org.kalypso.ui.editor.mapeditor.ExportAction">
          </action>
          <action
                label="Ausschnitt verkleinern"
@@ -335,6 +339,16 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
                toolbarPath="karte/actions"
                id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction">
+         </action>
+         <action
+               label="Ausschnitt maximieren"
+               icon="icons/full/elcl16/kde_window_fullscreen.gif"
+               style="push"
+               tooltip="maximiert den Kartenausschnitt"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
+               toolbarPath="karte/actions"
+               id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction">
          </action>
          <action
                state="true"
@@ -356,6 +370,16 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                toolbarPath="karte/tools"
                id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction">
+         </action>
+         <action
+               label="Ausschnitt vergrößern"
+               icon="icons/map/zoomin.gif"
+               style="radio"
+               tooltip="vergrößert den Kartenausschnitt"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               toolbarPath="karte/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
          </action>
          <action
                style="push"
@@ -698,6 +722,8 @@
          id="org.kalypso.repository.factories"
          name="Kalypso RepositoryFactories"
          point="org.kalypso.repository.factories">
+         <!-- TODO: Marc: Remove 'class' Attribut because of compilation-problems under linux
+         check if still everything works -->
       <repository
             factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"
             name="Lokales Verzeichnis">

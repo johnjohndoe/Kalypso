@@ -113,7 +113,7 @@ public class ResourcePool
         catch( final Exception e )
         {
           final RuntimeException iae = new IllegalArgumentException( "No Loader for type: "
-              + key.getType() );
+              + key.getType(), e );
           m_logger.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
         }
@@ -174,4 +174,10 @@ public class ResourcePool
       }
     }
   }
+  
+  public KeyInfo[] getInfos()
+  {
+    return (KeyInfo[])m_keyInfos.values().toArray( new KeyInfo[0] );
+  }
+  
 }

@@ -60,7 +60,7 @@ public interface IAddCalcCaseChoice
    * zurück
    * 
    * @param monitor
-   * @return
+   * @return Gewählte Rechenvariante
    * @throws CoreException
    */
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException;

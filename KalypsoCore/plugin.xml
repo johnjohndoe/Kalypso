@@ -41,7 +41,6 @@
          <export name="*"/>
       </library>
       <library name="kalypsocore.jar">
-         <packages prefixes="org.kalypso"/>
          <export name="*"/>
       </library>
       <library name="lib/ant.jar">

@@ -146,13 +146,6 @@ public class ConvenienceCSFactory
     return crs;
   }
 
-  /**
-   * 
-   * 
-   * @param name
-   * 
-   * @return
-   */
   public CoordinateSystem getCSByName( String name )
   {
 
@@ -2988,8 +2981,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3020,8 +3011,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
@@ -3054,8 +3043,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3086,8 +3073,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
@@ -3120,8 +3105,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3152,8 +3135,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
@@ -3186,8 +3167,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3219,8 +3198,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3251,8 +3228,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
@@ -3286,8 +3261,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3318,8 +3291,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
@@ -3352,8 +3323,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3384,8 +3353,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
@@ -3418,8 +3385,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3451,8 +3416,6 @@ public class ConvenienceCSFactory
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
-
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
@@ -3483,8 +3446,6 @@ public class ConvenienceCSFactory
     {
       return;
     }
-
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
     ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
