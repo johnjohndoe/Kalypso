@@ -51,7 +51,7 @@ public class DataCenterRepository extends AbstractRepository
    */
   public String getIdentifier( )
   {
-    return "datacenter";
+    return "datacenter://";
   }
 
   private DataCenterLevelItem getRootItem()

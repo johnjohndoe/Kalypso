@@ -66,7 +66,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    */
   public String getIdentifier( )
   {
-    return String.valueOf( m_ts.getID() );
+    return m_parent.getIdentifier() + "." + String.valueOf( m_ts.getID() );
   }
 
   /**
