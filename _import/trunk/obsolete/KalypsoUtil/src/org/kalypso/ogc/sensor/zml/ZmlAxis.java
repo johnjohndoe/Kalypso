@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.zml;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -11,10 +10,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.IZmlValuesLoader;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
-import org.kalypso.ogc.sensor.zml.values.ZmlValueFactory;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.parser.IParser;
-import org.kalypso.util.parser.ParserFactory;
 import org.kalypso.zml.AxisType;
 
 /**
@@ -24,8 +21,6 @@ import org.kalypso.zml.AxisType;
  */
 public class ZmlAxis extends DefaultAxis
 {
-  private static ParserFactory m_parserFactory = null;
-
   private final AxisType m_axisType;
 
   private IZmlValues m_values = null;
@@ -57,7 +52,7 @@ public class ZmlAxis extends DefaultAxis
 
     try
     {
-      m_parser = getParserFactory().createParser( m_type, m_format );
+      m_parser = ZmlFactory.getParserFactory().createParser( m_type, m_format );
     }
     catch( FactoryException e )
     {
@@ -93,7 +88,7 @@ public class ZmlAxis extends DefaultAxis
     IZmlValuesLoader loader;
     try
     {
-      loader = ZmlValueFactory.createLoader( context, m_axisType, this );
+      loader = ZmlFactory.createLoader( context, m_axisType, this );
     }
     catch( MalformedURLException e )
     {
@@ -126,29 +121,5 @@ public class ZmlAxis extends DefaultAxis
   public IParser getParser()
   {
     return m_parser;
-  }
-
-  /**
-   * Helper, man sollte es benutzen um auf die ParserFactory zugreifen zu können
-   */
-  private static ParserFactory getParserFactory()
-  {
-    if( m_parserFactory == null )
-    {
-      Properties props = new Properties();
-      try
-      {
-        props.load( ZmlAxis.class.getResourceAsStream( "resource/types2parser.properties" ) );
-      }
-      catch( IOException e )
-      {
-        // TODO: logging oder etwas?
-        throw new RuntimeException( e );
-      }
-
-      m_parserFactory = new ParserFactory( props, ZmlAxis.class.getClassLoader() );
-    }
-
-    return m_parserFactory;
   }
 }
