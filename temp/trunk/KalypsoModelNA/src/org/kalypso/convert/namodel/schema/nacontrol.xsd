@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.namodell.control" version="0.1" 
-	xmlns:na="org.kalypso.namodell.control" 
-	xmlns:gml="http://www.opengis.net/gml" 
-	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
+<schema targetNamespace="org.kalypso.namodell.control" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" elementFormDefault="qualified" version="0.1">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	
 	<element name="NAModellControl" type="na:_NAModellControlType"/>
 	<complexType name="_NAModellControlBaseType">
 		<complexContent>
@@ -18,12 +16,10 @@
 					<element name="description" type="string"/>
 					<element name="comment" type="string"/>
 					<element name="calctime" type="dateTime"/>
-
 					<element name="startsimulation" type="dateTime"/>
 					<element name="startforecast" type="dateTime"/>
 					<element name="endsimulation" type="dateTime"/>
-
-					<element name="timeStep" type="boolean"/>
+					<element name="timeStep" type="integer"/>
 					<element name="tmp" type="boolean"/>
 					<element name="pre" type="boolean"/>
 					<element name="sch" type="boolean"/>

@@ -54,7 +54,7 @@ public class NaModelCalcJob extends AbstractCalcJob
             // generiere ascii-dateien
             generateASCII(basedir, input);
             // starte berechnung
-            startCalculation(basedir);
+//            startCalculation(basedir);
             // ergebnisse aufbereiten
 
         } catch (Exception e)

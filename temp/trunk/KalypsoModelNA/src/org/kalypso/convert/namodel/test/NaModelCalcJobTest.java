@@ -25,7 +25,7 @@ public class NaModelCalcJobTest extends TestCase
 
     final String controlGMLResource = "data/nacontrol.gml";
 
-    public void testRun() throws IOException
+    public void testRun() throws Exception
     {
         File modellGML = File.createTempFile("NA_MODELL", ".gml");
         File controlGML = File.createTempFile("NA_CONTROL", ".gml");
@@ -43,6 +43,14 @@ public class NaModelCalcJobTest extends TestCase
                         .getPath()),
                 new CalcJobDataBean(NaModelCalcJob.CONTROL_ID, "Steuerdaten", controlGML
                         .getPath()) };
+        try
+        {
         job.run(baseDir, beans);
-    }
+        }
+        catch(Exception e)
+        {
+          e.printStackTrace();
+          throw e;
+        }
+        }
 }

@@ -120,7 +120,7 @@ public class KonfigWrite
   private static void appendResultInformation( GMLWorkspace modellWorkspace, StringBuffer b )
   {
     // knoten
-    final FeatureType nodeFT = modellWorkspace.getSchema().getFeatureType( "knoten" );
+    final FeatureType nodeFT = modellWorkspace.getSchema().getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
@@ -129,12 +129,12 @@ public class KonfigWrite
     }
     b.append( "99999\n" );
     // teilgebiete
-    final FeatureType catchmentFT = modellWorkspace.getSchema().getFeatureType( "knoten" );
+    final FeatureType catchmentFT = modellWorkspace.getSchema().getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = modellWorkspace.getFeatures( catchmentFT );
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( catchmentFEs[i], "generateResult", false ) )
-        b.append( catchmentFEs[i].getProperty( "num" ).toString() + "\n" );
+        b.append( catchmentFEs[i].getProperty( "inum" ).toString() + "\n" );
     }
     b.append( "99999\n" );
     // TODO startwerte fuer die kurzzeitsimulation
@@ -146,14 +146,14 @@ public class KonfigWrite
 
     //	File dest=new File(FileSystemUtils.getNaWorkDir(),FalstartFileName);
     //        FileWriter out = new FileWriter(startFile);
-    String system = "tis";//"sys";
-    String zustand = "eik";
+    String system = "we";//"sys";
+    String zustand = "nat";
 
     //	String projectPath=FileSystemUtils.getNaWorkDir().getAbsolutePath();
 
-    String startDate = FeatureHelper.getFormatedDate( controlFE, "startDate", "yyyy MM dd HH",
+    String startDate = FeatureHelper.getFormatedDate( controlFE, "startsimulation", "yyyy MM dd HH",
         "notset" );
-    String endDate = FeatureHelper.getFormatedDate( controlFE, "startDate", "yyyy MM dd HH",
+    String endDate = FeatureHelper.getFormatedDate( controlFE, "endsimulation", "yyyy MM dd HH",
         "notset" );
 
     b.append( "xxx\n" );
