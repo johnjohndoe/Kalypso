@@ -28,6 +28,10 @@ public class ParserFactory
 
   /**
    * Erzeugt den gewünschten Parser anhand vom type und formatSpec
+   * 
+   * @param type
+   * @param formatSpec
+   * @return parser
    * @throws FactoryException
    */
   public IParser createParser( final String type, final String formatSpec ) throws FactoryException

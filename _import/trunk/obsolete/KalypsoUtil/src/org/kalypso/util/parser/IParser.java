@@ -12,15 +12,31 @@ package org.kalypso.util.parser;
  */
 public interface IParser
 {
-  /** Liefert die Klasse der Objekte was dieser Parser unterstützt */
+  /**
+   * Liefert die Klasse der Objekte was dieser Parser unterstützt 
+   * @return class
+   */
   public Class getObjectClass();
 
-  /** Liefert der Format was beschreibt wie die Werte formatiert sind */
+  /**
+   * Liefert der Format was beschreibt wie die Werte formatiert sind 
+   * @return format string
+   */
   public String getFormat();
 
-  /** Liefert eine String Representation vom Objekt im gültigen Format */
+  /**
+   * Liefert eine String Representation vom Objekt im gültigen Format 
+   * @param obj
+   * @return string representation
+   * @throws ParserException
+   */
   public String toString( Object obj ) throws ParserException;
   
-  /** Erzeugt einen Objekt aus der String Representation */
+  /**
+   * Erzeugt einen Objekt aus der String Representation 
+   * @param text
+   * @return instance
+   * @throws ParserException
+   */
   public Object parse( String text ) throws ParserException;
 }
