@@ -32,6 +32,9 @@ public class ReaderUtilities
   /**
    * Kopiert den Inhalt eines Readers in einen Writer. Beide werden nach Ende
    * der Operation geschlossen.
+   * @param r
+   * @param w
+   * @throws IOException
    */
   public static final void readerCopy( final Reader r, final Writer w ) throws IOException
   {
@@ -54,6 +57,9 @@ public class ReaderUtilities
    * key der Properties wird durch seinen value ersetzt. Funktioniert nur
    * zeilenweise, d.h.</p>
    * <p>Performance schlecht: nur für Reader mit wenig Inhalt verwenden</p>
+   * @param r
+   * @param replaceProps
+   * @return string with replaced substrings
    * 
    * @throws IOException
    */

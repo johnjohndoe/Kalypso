@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import org.kalypso.psiadapter.PSICompactFactory;
+
 /**
  * MetaDocSerializer
  * 
@@ -31,12 +33,7 @@ public class MetaDocSerializer
   private final static String TAG_APPFILES = "AppFiles";
 
   /** date format for the date elements of the xml file */
-  // TODO: Marc PSICompactFactory has not been initialized (by getConnection) so,
-  // PSICompactFactory.getProperties() return null!
-//  private final static DateFormat DF = new SimpleDateFormat( PSICompactFactory.getProperties().getProperty( PSICompactFactory.PROP_METADOC_DF, "yyyy-MM-dd'T'HH:mm:ss" ) );
-  
-  // TODO: Marc: beware of the '' around the 'T' (auch in der ini von PSICompact!)
-  private final static DateFormat DF = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+  private final static DateFormat DF = new SimpleDateFormat( PSICompactFactory.getProperties().getProperty( PSICompactFactory.PROP_METADOC_DF, "yyyy-MM-dd'T'HH:mm:ss" ) );
   
   /**
    * Prepares the properties with some default value
