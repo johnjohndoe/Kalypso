@@ -5,3 +5,4 @@ NOperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.NOperationFilterCrea
 OperationFilterImpl=org.kalypso.ogc.sensor.filter.creators.OperationFilterCreator
 WqFilterImpl=org.kalypso.ogc.sensor.filter.creators.WQFilterCreator
 ZmlFilterImpl=org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator
+MergeFilterImpl=org.kalypso.ogc.sensor.filter.creators.MergeFilterCreator

@@ -3,12 +3,12 @@
 zmlFilters.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:vc="valuecomp.filters.zml.kalypso.org" type="W">
 
 	<valueFilter>
-		<vc:compBigger value="5.3" axisType="W" mode="inc"/>
-		<vc:compSmaller value="6.54" axisType="W" mode="exc"/>
-		<vc:compBetween from="2004-03-30" to="2004-04-24" axisType="date" modeFrom="inc" modeTo="exc"/>
+		<vc:compBigger value="5.3" axisType="W" modeIncl="true"/>
+		<vc:compSmaller value="6.54" axisType="W" modeIncl="false"/>
+		<vc:compBetween from="2004-03-30" to="2004-04-24" axisType="date" modeInclFrom="true" modeInclTo="false"/>
 		<zmlFilter>
 			<zml xlink:href="etwas"/>
 		</zmlFilter>
 	</valueFilter>
-
+	
 </wqFilter>
