@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.deegree_impl.model.geometry;
 
 import java.util.ArrayList;
@@ -93,8 +93,8 @@ final public class GeometryFactory
    */
   public static GM_Envelope createGM_Envelope( double minx, double miny, double maxx, double maxy )
   {
-    GM_Position min = createGM_Position( minx, miny );
-    GM_Position max = createGM_Position( maxx, maxy );
+    GM_Position min = createGM_Position( minx < maxx ? minx : maxx, miny < maxy ? miny : maxy );
+    GM_Position max = createGM_Position( minx > maxx ? minx : maxx, miny > maxy ? miny : maxy );
     return new GM_Envelope_Impl( min, max );
   }
 
@@ -120,7 +120,10 @@ final public class GeometryFactory
   public static GM_Position createGM_Position( double x, double y, double z )
   {
     return new GM_Position_Impl( new double[]
-    { x, y, z } );
+    {
+        x,
+        y,
+        z } );
   }
 
   /**
@@ -575,8 +578,12 @@ final public class GeometryFactory
     GM_Position max = bbox.getMax();
 
     GM_Position[] exteriorRing = new GM_Position[]
-    { min, new GM_Position_Impl( max.getX(), min.getY() ), max,
-        new GM_Position_Impl( min.getX(), max.getY() ), min };
+    {
+        min,
+        new GM_Position_Impl( max.getX(), min.getY() ),
+        max,
+        new GM_Position_Impl( min.getX(), max.getY() ),
+        min };
 
     return createGM_Surface( exteriorRing, null, new GM_SurfaceInterpolation_Impl(), crs );
   }
