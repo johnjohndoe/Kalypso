@@ -15,6 +15,7 @@ import org.kalypso.util.loader.DefaultLoaderFactory;
 import org.kalypso.util.loader.ILoaderFactory;
 import org.kalypso.util.pool.TypedKeyedPoolableObjectFactory;
 import org.kalypso.util.repository.DefaultRepositoryContainer;
+import org.kalypso.util.repository.RepositorySpecification;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
@@ -32,7 +33,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   // TODO private OutputLogger m_outputLogger = null;
 
-  private CS_CoordinateSystem myCoordinateSystem=null;
+  private CS_CoordinateSystem myCoordinateSystem = null;
   
   private final HashMap myPools = new HashMap();
   
@@ -42,9 +43,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
 
   private static final String POOL_PROPERTIES = "resources/pools.properties";
 
-  private DefaultRepositoryContainer m_tsRepositoryContainer;
+  private DefaultRepositoryContainer m_tsRepositoryContainer = null;
 
   private Properties m_ftpProperties;
+  
+  private final Properties m_zmlRepositoriesProperties = new Properties();
+  private static final String ZML_REPOSITORIES_PROPERTIES = "resources/zml_repositories.properties";
+
+  private RepositorySpecification[] m_repositoriesSpecification = null; 
 
   
   /**
@@ -68,12 +74,36 @@ public class KalypsoGisPlugin extends AbstractUIPlugin
     try
     {
       myPoolProperties.load( this.getClass().getResourceAsStream( POOL_PROPERTIES ) );
+      
+      m_zmlRepositoriesProperties.load( getClass().getResourceAsStream( ZML_REPOSITORIES_PROPERTIES ) );
+      prepareRepositoriesSpecifications();
     }
     catch( final IOException e )
     {
       e.printStackTrace();
     }
     
+  }
+
+  private void prepareRepositoriesSpecifications()
+  {
+    String[] available = m_zmlRepositoriesProperties.getProperty( "available" ).split(",");
+    
+    m_repositoriesSpecification = new RepositorySpecification[ available.length ];
+    
+    for( int i = 0; i < available.length; i++ )
+      m_repositoriesSpecification[i] = 
+        new RepositorySpecification( available[i],
+            m_zmlRepositoriesProperties.getProperty( available[i] ),
+            m_zmlRepositoriesProperties.getProperty( available[i] + "_FACTORY" ) );
+  }
+  
+  /**
+   * Liefert die Liste der Konfigurierte und Zugreifbare Zeitreihen Repositories
+   */
+  public RepositorySpecification[] getRepositoriesSpecifications()
+  {
+    return m_repositoriesSpecification;
   }
 
   public ImageDescriptor imageDescriptor( final String imageFilePath )
