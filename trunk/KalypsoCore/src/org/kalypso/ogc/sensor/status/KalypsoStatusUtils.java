@@ -77,7 +77,7 @@ public class KalypsoStatusUtils
    * @throws IllegalArgumentException
    *           if given axis is already a status axis
    */
-  public static IAxis getStatusAxisFor( final IAxis axis, final int pos )
+  public static IAxis createStatusAxisFor( final IAxis axis, final int pos )
       throws IllegalArgumentException
   {
     if( isStatusAxis( axis ) )

@@ -113,6 +113,8 @@ public class WQObservationFilter extends AbstractObservationFilter
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
+    // TODO: only take the W or the Q depending on which type we are
+    
     super.setValues( values );
   }
 

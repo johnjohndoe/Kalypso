@@ -52,6 +52,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     synchronized( m_curves )
     {
+//      System.out.println("Series count: " + m_curves.size() );
       return m_curves.size();
     }
   }
@@ -63,6 +64,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     synchronized( m_curves )
     {
+//      System.out.println( "Series name:" + ((XYCurveSerie) m_curves.get( series )).getName() );
       return ((XYCurveSerie) m_curves.get( series )).getName();
     }
   }

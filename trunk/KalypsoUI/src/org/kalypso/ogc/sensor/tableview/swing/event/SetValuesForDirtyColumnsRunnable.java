@@ -83,7 +83,7 @@ public class SetValuesForDirtyColumnsRunnable implements IRunnableWithProgress
               .hasNext(); )
             ((ITableViewColumn) itcol.next()).setDirty( false );
 
-          final ITuppleModel values = m_model.getValues( theme.getColumns() );
+          final ITuppleModel values = m_model.getValues( theme );
           
           obsAndValues.put( obs, values );
         }

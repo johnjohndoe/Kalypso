@@ -78,29 +78,20 @@ public class ZmlLoader extends AbstractLoader
       final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file == null )
         throw new IllegalArgumentException(
-            "Datei könnte nicht gefunden werden: " + url );
+            "Datei konnte nicht gefunden werden: " + url );
 
       final ObservationType xmlObs = ZmlFactory.createXML( (IObservation) data,
           null );
       
-      // TODO testing, remove
-//      final FileWriter wrtr = new FileWriter( new File("c:/temp/test.zml") );
-//      ZmlFactory.getMarshaller().marshal( xmlObs, wrtr );
-//      wrtr.close();
-
       // set contents of ZML-file
       final SetContentHelper helper = new SetContentHelper(  )
       {
         protected void write( final Writer writer ) throws Throwable
         {
-          System.out.println( "Marschalling started: " + url);
-          
           final Marshaller marshaller = ZmlFactory.getMarshaller();
           marshaller.setProperty( Marshaller.JAXB_ENCODING, getCharset() );
           
           marshaller.marshal( xmlObs, writer );
-          
-          System.out.println( "Marshalling finished." );
         }
       };
       helper.setFileContents(file, false, true, new NullProgressMonitor());

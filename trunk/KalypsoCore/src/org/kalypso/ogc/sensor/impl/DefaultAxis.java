@@ -108,10 +108,14 @@ public class DefaultAxis implements IAxis
 
     final IAxis other = (IAxis) obj;
 
+    // TODO: bin mir gar nicht sicher ob die Position doch wichtig ist!
+    // ist ziemlich schlecht die position nicht zu berücksichtigen!
+    // deswegen hier dieser Versuch mit position auch als criteria
+    //
     // Important: Axis' position is not relevant for two axes to be equal
     if( m_dataClass == other.getDataClass() && m_isKey == other.isKey()
         && m_label.equals( other.getName() ) && m_type.equals( other.getType() )
-        && m_unit.equals( other.getUnit() ) )
+        && m_unit.equals( other.getUnit() ) && m_position == other.getPosition() )
       return true;
 
     return false;
@@ -125,8 +129,9 @@ public class DefaultAxis implements IAxis
     final StringBuffer bf = new StringBuffer();
 
     // Important: Axis' position is not relevant for two axes to be equal
+    // TODO Gleiche Anmerkung hier wie für equals bez. position
     bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_label )
-        .append( m_type ).append( m_unit );
+        .append( m_type ).append( m_unit ).append( m_position );
 
     return bf.toString().hashCode();
   }
