@@ -5,6 +5,7 @@ import java.util.List;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,12 +25,14 @@ public class ChooseFeaturePage extends WizardPage
   private final FeatureTypeProperty m_ftp;
   private CheckboxTableViewer m_viewer;
   private final List m_selectedFeatures;
+  private final Object[] m_checkedFeatures;
 
-  public ChooseFeaturePage( final FeatureList features, final List selectedFeatures, final String nameProperty, final String pageName )
+  public ChooseFeaturePage( final FeatureList features, final List selectedFeatures, final Object[] checkedFeatures, final String nameProperty, final String pageName, final String title, final ImageDescriptor imageDescriptor )
   {
-    super( pageName );
+    super( pageName, title, imageDescriptor );
     m_features = features;
     m_selectedFeatures = selectedFeatures;
+    m_checkedFeatures = checkedFeatures;
     
     if( m_features != null && m_features.size() != 0 )
     {
@@ -49,7 +52,10 @@ public class ChooseFeaturePage extends WizardPage
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new FeatureLabelProvider( new StringModifier( m_ftp ) ) );
     m_viewer.setInput( m_features );
-    m_viewer.setSelection( new StructuredSelection( m_selectedFeatures ) );
+    if( m_selectedFeatures != null )
+      m_viewer.setSelection( new StructuredSelection( m_selectedFeatures ) );
+    if( m_checkedFeatures != null )
+      m_viewer.setCheckedElements( m_checkedFeatures );
 
     setControl( m_viewer.getControl() );
   }

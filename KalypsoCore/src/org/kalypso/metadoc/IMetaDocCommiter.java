@@ -12,6 +12,8 @@ import org.kalypso.metadoc.beans.DocBean;
  */
 public interface IMetaDocCommiter
 {
+  public static final String KEY_AUTOR = "KEY_AUTOR";
+  
   /**
    * Prepares the DocBean with the required Metainformation.
    * 

@@ -19,14 +19,14 @@ public class OcsExportWizardResourcesPage extends WizardExportResourcesPage
 {
   protected Button m_guessIdentifiersCheckBox;
 
-  private final static String STORE_GUESS_IDS = "OcsExportWizardResourcesPage.STORE_GUESS_IDS"; //$NON-NLS-1$
+//  private final static String STORE_GUESS_IDS = "OcsExportWizardResourcesPage.STORE_GUESS_IDS"; //$NON-NLS-1$
 
   public OcsExportWizardResourcesPage( final IStructuredSelection selection )
   {
     super( "Zeitreihen Selektion", selection );
     
     setTitle( "Zeitreihen Selektion" );
-    setDescription( "Wählen Sie die Dateien die auf dem Server zurückgespeichert werden sollen." );
+    setDescription( "Wählen Sie die Dateien die auf den Server zurückgespeichert werden sollen." );
   }
 
   /**

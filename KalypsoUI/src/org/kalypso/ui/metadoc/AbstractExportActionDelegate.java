@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.services.proxy.DocBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
+import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 
 /**
  * AbstractExportActionDelegate
@@ -32,7 +33,9 @@ public abstract class AbstractExportActionDelegate extends AbstractEditorActionD
   {
     try
     {
-      m_metadocService = new MetadocServiceWrapper( expDoc.getDocumentExtension() );
+      final String username = System.getProperty( "user.name" );
+      
+      m_metadocService = new MetadocServiceWrapper( expDoc.getDocumentExtension(), username );
       final DocBean doc = m_metadocService.getDoc();
 
       final Constructor constructor = wizardClass.getConstructor( CONS_SIGN );

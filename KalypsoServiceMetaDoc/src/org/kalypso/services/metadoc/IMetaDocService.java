@@ -17,10 +17,11 @@ public interface IMetaDocService extends Remote, IKalypsoService
    * Prepares a DocBean for a new document with the given extension.
    * 
    * @param extension
+   * @param username The user who send the request. Can be used for authentifikation and default values
    * @return the DocBean to fill and give back with a call to commitNewDocument( DocBean )
    * @throws RemoteException
    */
-  public DocBean prepareNewDocument( final String extension ) throws RemoteException;
+  public DocBean prepareNewDocument( final String extension, final String username ) throws RemoteException;
   
   /**
    * Commits the new document described by the given DocBean.

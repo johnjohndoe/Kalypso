@@ -16,6 +16,7 @@ import org.kalypso.util.io.CSV;
 public class ExportableLayerTable implements IExportableTableDocument
 {
   private final LayerTableViewer m_layerTable;
+
   private boolean m_onlyRows = false;
 
   public ExportableLayerTable( final LayerTableViewer layerTable )
@@ -28,10 +29,22 @@ public class ExportableLayerTable implements IExportableTableDocument
    */
   public void exportDocument( final OutputStream outs )
   {
-    final String[][] csv = m_layerTable.exportTable( m_onlyRows );
-    final PrintWriter pw = new PrintWriter( new OutputStreamWriter( outs ) );
-    CSV.writeCSV( csv, pw );
-    pw.close();
+    final LayerTableViewer layerTable = m_layerTable;
+    final boolean onlyRows = m_onlyRows;
+
+    final Runnable runnable = new Runnable()
+    {
+      public void run()
+      {
+        final String[][] csv = layerTable.exportTable( onlyRows );
+        final PrintWriter pw = new PrintWriter( new OutputStreamWriter( outs ) );
+        CSV.writeCSV( csv, pw );
+        pw.close();
+
+      }
+    };
+    
+    layerTable.getTable().getDisplay().syncExec( runnable );
   }
 
   /**
@@ -45,7 +58,7 @@ public class ExportableLayerTable implements IExportableTableDocument
   /**
    * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
    */
-  public String getDocumentExtension( )
+  public String getDocumentExtension()
   {
     return ".csv";
   }

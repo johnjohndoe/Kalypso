@@ -1,6 +1,5 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.io.OutputStream;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -9,7 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
@@ -39,20 +42,21 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.eclipse.util.SetContentHelper;
+import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.lang.reflect.ClassUtilities.ClassUtilityException;
+import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -63,23 +67,26 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.bericht.ExportWizardBerichtWizard;
-import org.kalypso.ui.metadoc.IExportableDocument;
-import org.kalypso.ui.metadoc.MetadocServiceWrapper;
+import org.kalypso.ui.calcwizard.bericht.IBerichtExporter;
+import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 
 /**
+ * 
+ * <p>Unterstützte Argument:</p>
+ * <p>exporterN:   Namen von Klassen, welche {@link org.kalypso.ui.calcwizard.bericht.IBerichtExporter} implementieren.</p>
+ * <p>            Aus diesen kann der Nutzer für den Brichtsexport auswählen</p>
+ * 
  * @author Belger
  */
-public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
-    ModellEventListener
+public class ExportResultsWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   // Beispiel:
   //   <page className="org.kalypso.ui.calcwizard.ViewResultsWizardPage"
@@ -110,6 +117,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
   private List m_calcCaseFolder = new ArrayList();
 
   private CheckboxTableViewer m_checklist;
+  
+  private IBerichtExporter[] m_berichtExporter;
 
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
 
@@ -117,7 +126,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
   private static final String PROP_PEGEL_NAME = "pegelNameProperty";
 
-  public ExportResultsWizardPage( )
+  public ExportResultsWizardPage()
   {
     super( "<ViewResultsWizardPage>" );
   }
@@ -125,7 +134,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
   }
@@ -144,30 +153,32 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       createExportPanel( rightSash );
       createDiagramPanel( rightSash );
 
-      final int mainWeight = Integer.parseInt( getArguments().getProperty(
-          PROP_MAINSASH, "50" ) );
-      final int rightWeight = Integer.parseInt( getArguments().getProperty(
-          PROP_RIGHTSASH, "50" ) );
+      final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
+      final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-      sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
+      sashForm.setWeights( new int[]
+      {
+          mainWeight,
+          100 - mainWeight } );
 
-      rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
+      rightSash.setWeights( new int[]
+      {
+          rightWeight,
+          100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
 
       setControl( sashForm );
-      
+
       postCreateControl();
 
       // Load Template for Grafix.exe
-      final String diagFileName = getArguments()
-          .getProperty( PROP_DIAGTEMPLATE );
-      final IFile diagFile = (IFile) getProject().findMember( diagFileName );
+      final String diagFileName = getArguments().getProperty( PROP_DIAGTEMPLATE );
+      final IFile diagFile = (IFile)getProject().findMember( diagFileName );
       try
       {
-        m_obsdiagviewType = DiagramTemplateUtils
-            .loadDiagramTemplateXML( diagFile.getContents() );
+        m_obsdiagviewType = DiagramTemplateUtils.loadDiagramTemplateXML( diagFile.getContents() );
       }
       catch( final Exception e )
       {
@@ -194,52 +205,25 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
     final Button button = new Button( buttonPanel, SWT.PUSH );
     button.setText( "Zeitreihe(n) bearbeiten" );
-    button
-        .setToolTipText( "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung" );
-    button.addSelectionListener( new GraficToolStarter() );
+    button.setToolTipText( "Öffnet die im Diagram dargestellten Zeitreihen zur Bearbeitung" );
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        startGrafik();
+      }
+    } );
 
     createIgnoreButtonPanel( buttonPanel );
-    
-//    final Label label = new Label( buttonPanel, SWT.NONE );
-//    label.setText( "Diagrammanzeige:" );
-//    final GridData gridData = new GridData();
-//    gridData.grabExcessHorizontalSpace = true;
-//    gridData.horizontalAlignment = GridData.END;
-//    label.setLayoutData( gridData );
-//
-//    final Button radioQ = new Button( buttonPanel, SWT.RADIO );
-//    radioQ.setText( "Abfluss" );
-//    radioQ.addSelectionListener( new SelectionAdapter()
-//    {
-//      /**
-//       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-//       */
-//      public void widgetSelected( SelectionEvent e )
-//      {
-//        setObsIgnoreType( TimeserieConstants.TYPE_WATERLEVEL );
-//      }
-//    } );
-//
-//    final Button radioW = new Button( buttonPanel, SWT.RADIO );
-//    radioW.setText( "Wasserstand" );
-//
-//    radioW.addSelectionListener( new SelectionAdapter()
-//    {
-//      /**
-//       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-//       */
-//      public void widgetSelected( SelectionEvent e )
-//      {
-//        setObsIgnoreType( TimeserieConstants.TYPE_RUNOFF );
-//      }
-//    } );
-//
-//    setObsIgnoreType( TimeserieConstants.TYPE_WATERLEVEL );
-//    radioW.setSelection( true );
   }
 
   private void createExportPanel( final Composite parent )
   {
+    m_berichtExporter = createExporter();
+    
     // noch einen ListViewer einfügen!
     final Composite topPanel = new Composite( parent, SWT.NONE );
     topPanel.setLayout( new GridLayout( 2, false ) );
@@ -259,14 +243,15 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         refreshDiagram();
       }
     } );
+    
+    final Composite buttonPanel = new Composite( topPanel, SWT.NONE );
+    buttonPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    buttonPanel.setLayout( new GridLayout() );
 
-    final Button exportPrognoseTS = new Button( topPanel, SWT.PUSH );
+    final Button exportPrognoseTS = new Button( buttonPanel, SWT.PUSH );
     exportPrognoseTS.setText( "Export Prognosen" );
-    exportPrognoseTS
-        .setToolTipText( "Exportiert die Prognosen der selektierten Rechenvariante" );
-    final GridData buttonGridData = new GridData();
-    buttonGridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
-    exportPrognoseTS.setLayoutData( buttonGridData );
+    exportPrognoseTS.setToolTipText( "Exportiert die Prognosen der selektierten Rechenvariante" );
+    exportPrognoseTS.setLayoutData( new GridData() );
     exportPrognoseTS.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -278,27 +263,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       }
     } );
 
-    final Group exportGroup = new Group( topPanel, SWT.NONE );
-    exportGroup.setText( "Berichtsablage" );
-    exportGroup.setLayout( new GridLayout() );
-    exportGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
-    final Button exportQDiagramm = new Button( exportGroup, SWT.CHECK );
-    exportQDiagramm.setText( "Durchflussgrafik" );
-
-    final Button exportWRadio = new Button( exportGroup, SWT.CHECK );
-    exportWRadio.setText( "Wasserstandsgrafik" );
-
-    final Button exportTableRadio = new Button( exportGroup, SWT.CHECK );
-    exportTableRadio.setText( "Tabelle" );
-
-    final Button exportMap = new Button( exportGroup, SWT.CHECK );
-    exportMap.setText( "Kartenansicht" );
-
-    final Button doItButton = new Button( topPanel, SWT.PUSH );
+    final Button doItButton = new Button( buttonPanel, SWT.PUSH );
+    doItButton.setLayoutData( new GridData() );
     doItButton.setText( "Bericht(e) ablegen" );
     doItButton
-        .setToolTipText( "Legt für alle aktivierten Rechenfälle und alle selektierten Pegel die ausgewählten Berichte ab." );
+        .setToolTipText( "Legt für alle aktivierten Rechenfälle Dokumente im Berichtswesen ab." );
     doItButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -309,69 +278,97 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         exportSelectedDocuments();
       }
     } );
+    
+    doItButton.setEnabled( !( m_berichtExporter == null || m_berichtExporter.length == 0  ) );
   }
 
   /**
    * Exports for all selected document types
    */
-  protected void exportSelectedDocuments( )
+  protected void exportSelectedDocuments()
   {
     final IFolder selectedCalcCase = getSelectedCalcCase();
 
     final Shell shell = getContainer().getShell();
     if( selectedCalcCase == null )
     {
-      MessageDialog.openWarning( shell, "Berichte exportieren",
-          "Keine Rechenvariante selektiert" );
+      MessageDialog.openWarning( shell, "Berichte exportieren", "Keine Rechenvariante selektiert" );
       return;
     }
-
+    
     final FeatureList features = getFeatures( false );
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
     final List selectedFeatures = getSelectedFeatures( false );
 
-    final IExportableDocument dummyDoc = new IExportableDocument()
-    {
-      public void exportDocument( final OutputStream outs ) throws Exception
-      {
-        // ignore
-      }
-
-      public String getDocumentExtension( )
-      {
-        return ".dummy";
-      }
-    };
-
-    MetadocServiceWrapper metadocService = null;
+    MultiDocumentServiceWrapper metadocService = null;
 
     try
     {
-      metadocService = new MetadocServiceWrapper( dummyDoc
-          .getDocumentExtension() );
+      metadocService = new MultiDocumentServiceWrapper();
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
 
       ErrorDialog.openError( shell, "Berichtsablage",
-          "Berichtsablagedienst konnte nicht initialisiert werden.", e
-              .getStatus() );
+          "Berichtsablagedienst konnte nicht initialisiert werden.", e.getStatus() );
       return;
     }
 
-    final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard(
-        features, selectedFeatures, nameProperty, dummyDoc, metadocService
-            .getDoc() );
-    final WizardDialog dialog = new WizardDialog( getContainer().getShell(),
-        wizard );
-    dialog.open();
+    try
+    {
+      final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features,
+          selectedFeatures, nameProperty, metadocService.getDummyDoc(), metadocService.getDoc(), m_berichtExporter );
+      final WizardDialog dialog = new WizardDialog( getContainer().getShell(), wizard );
+      if( dialog.open() == Window.OK )
+      {
+//        final Feature[] choosenFeatures = wizard.getChoosenFeatures();
+//        final IBerichtExporter[] choosenExporter = wizard.getChoosenExporter();
+//        
+      }
 
-    // die Metadaten Abfragen
+      // jeden gewünschten Typ exportieren
 
-    // jeden gewünschten Typ exportieren
+      // doit
+    }
+    finally
+    {
+      metadocService.dispose();
+    }
+  }
 
-    // doit
+  private IBerichtExporter[] createExporter()
+  {
+    final Collection exporters = new ArrayList();
+    
+    final Properties arguments = getArguments();
+    for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)aIt.next();
+      final String key = (String)entry.getKey();
+      final String exporterargs = (String)entry.getValue();
+      
+      if( key.startsWith( "exporter" ) )
+      {
+        try
+        {
+          final Properties props = PropertiesHelper.parseFromString( exporterargs, ';' );
+          final String classname = props.getProperty( "class" );
+          if( classname != null )
+          {
+            final IBerichtExporter exporter = (IBerichtExporter)ClassUtilities.newInstance( classname, IBerichtExporter.class, this.getClass().getClassLoader() );
+            exporter.setArguments( props );
+            exporters.add( exporter );
+          }
+        }
+        catch( final ClassUtilityException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+    
+    return (IBerichtExporter[])exporters.toArray( new IBerichtExporter[exporters.size()] );
   }
 
   private List chooseSelectedFeatures( final IFolder calcCase )
@@ -382,8 +379,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
     // view it!
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-    final FeatureType featureType = ((IKalypsoFeatureTheme) getMapModell()
-        .getActiveTheme()).getFeatureType();
+    final FeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell().getActiveTheme() )
+        .getFeatureType();
     final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
     if( ftp == null )
     {
@@ -391,10 +388,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       return null;
     }
 
-    final ILabelProvider labelProvider = new FeatureLabelProvider(
-        new StringModifier( ftp ) );
-    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer()
-        .getShell(), features, new ArrayContentProvider(), labelProvider,
+    final ILabelProvider labelProvider = new FeatureLabelProvider( new StringModifier( ftp ) );
+    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(),
+        features, new ArrayContentProvider(), labelProvider,
         "Die Daten folgender Pegel werden exportiert:" );
     dialog.setInitialElementSelections( selectedFeatures );
     dialog.setTitle( "Export Pegel: Rechenvariante " + calcCase.getName() );
@@ -408,7 +404,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * Allows user to export selected timeseries into repository. Handles UI
    * selection and delegates call to performPrognoseExport.
    */
-  protected void exportPrognoseTimeseries( )
+  protected void exportPrognoseTimeseries()
   {
     final IFolder selectedCalcCase = getSelectedCalcCase();
 
@@ -424,22 +420,19 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     if( featureList == null )
       return;
 
-    final String resultTsName = getArguments()
-        .getProperty( PROP_RESULT_TS_NAME );
-    final String prognoseTsName = getArguments().getProperty(
-        PROP_PROGNOSE_TS_NAME );
+    final String resultTsName = getArguments().getProperty( PROP_RESULT_TS_NAME );
+    final String prognoseTsName = getArguments().getProperty( PROP_PROGNOSE_TS_NAME );
 
-    final TSLinkWithName[] resultTss = getTimeseriesForProperty( "",
-        featureList, resultTsName, null );
-    final TSLinkWithName[] prognoseTss = getTimeseriesForProperty( "",
-        featureList, prognoseTsName, null );
+    final TSLinkWithName[] resultTss = getTimeseriesForProperty( "", featureList, resultTsName,
+        null );
+    final TSLinkWithName[] prognoseTss = getTimeseriesForProperty( "", featureList, prognoseTsName,
+        null );
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
       protected void execute( IProgressMonitor monitor ) throws CoreException
       {
-        performPrognoseExport( resultTss, prognoseTss, selectedCalcCase,
-            monitor );
+        performPrognoseExport( resultTss, prognoseTss, selectedCalcCase, monitor );
       }
     };
 
@@ -453,7 +446,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
       IStatus status = null;
       if( e.getTargetException() instanceof CoreException )
-        status = ((CoreException) e.getTargetException()).getStatus();
+        status = ( (CoreException)e.getTargetException() ).getStatus();
       ErrorDialog.openError( shell, "Export Prognose Zeitreihen",
           "Fehler beim Export der Zeitreihen", status );
     }
@@ -473,8 +466,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * @throws CoreException
    */
   protected void performPrognoseExport( final TSLinkWithName[] resultTss,
-      final TSLinkWithName[] prognoseTss, final IFolder calcCase,
-      final IProgressMonitor monitor ) throws CoreException
+      final TSLinkWithName[] prognoseTss, final IFolder calcCase, final IProgressMonitor monitor )
+      throws CoreException
   {
     if( resultTss.length != prognoseTss.length )
       throw new IllegalArgumentException( "Timeseries links not same length" );
@@ -500,8 +493,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
           final URL urlRS = resolver.resolveURL( context, lnkRS.href );
           final IObservation source = ZmlFactory.parseXML( urlRS, lnkRS.href );
 
-          final String destRef = ZmlURL.insertDateRange( lnkPG.href,
-              new DateRangeArgument( new Date(), new Date() ) );
+          final String destRef = ZmlURL.insertDateRange( lnkPG.href, new DateRangeArgument(
+              new Date(), new Date() ) );
           final URL urlPG = resolver.resolveURL( context, destRef );
 
           final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
@@ -523,8 +516,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
               System.out.println( "Observation saved on server: " + lnkPG.href );
             }
             else
-              System.out.println( "! Observation not server side: "
-                  + lnkPG.href );
+              System.out.println( "! Observation not server side: " + lnkPG.href );
           }
 
           monitor.worked( 1 );
@@ -534,8 +526,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       {
         e.printStackTrace();
 
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Export Prognose Zeitreihen", e ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Export Prognose Zeitreihen",
+            e ) );
       }
     }
     finally
@@ -544,7 +536,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
   }
 
-  private IFolder getSelectedCalcCase( )
+  private IFolder getSelectedCalcCase()
   {
     if( m_checklist == null )
       return null;
@@ -559,8 +551,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     return getter.getSelected();
   }
 
-  private void createMapPanel( final Composite parent ) throws Exception,
-      CoreException
+  private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
     final Composite mapPanel = new Composite( parent, SWT.NONE );
     mapPanel.setLayout( new GridLayout() );
@@ -569,46 +560,28 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  /**
-   * GraficToolStarter
-   * 
-   * @author schlienger
-   */
-  private class GraficToolStarter implements SelectionListener
+  protected void startGrafik()
   {
-    /**
-     * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-     */
-    public void widgetSelected( SelectionEvent e )
+    // maybe move all code to Main-Class?
+    final IFolder calcFolder = getCalcFolder();
+    final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
+
+    final ObsdiagviewType xml;
+    try
     {
-//      final TSLinkWithName[] links = getObservationsToShow( true );
+      xml = DiagramTemplateUtils.buildDiagramTemplateXML( m_diagTemplate );
+    }
+    catch( JAXBException e2 )
+    {
+      e2.printStackTrace();
+      return;
+    }
 
-      //      final LinkedDiagramTemplate lt = new LinkedDiagramTemplate();
-      //      lt.setBaseTemplate( m_obsdiagviewType, getContext() );
-      //      lt.setIgnoreType( )
-      //
-      //      KalypsoWizardHelper.updateDiagramTemplate( lt, links, getContext(),
-      // true );
-
-      final IFolder calcFolder = getCalcFolder();
-      final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
-
-      final ObsdiagviewType xml;
-      try
+    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    {
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        xml = DiagramTemplateUtils.buildDiagramTemplateXML( m_diagTemplate );
-      }
-      catch( JAXBException e2 )
-      {
-        e2.printStackTrace();
-        return;
-      }
-
-      // TODO: change to IRunnableWithProgress??
-      final WorkspaceModifyOperation mod = new WorkspaceModifyOperation( null )
-      {
-        protected void execute( final IProgressMonitor monitor )
-            throws CoreException, InvocationTargetException
+        try
         {
           monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
 
@@ -617,7 +590,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
           final IFile grafikOdt = grafikFolder.getFile( "grafik.odt" );
 
-          final SetContentHelper sct = new SetContentHelper(  )
+          final SetContentHelper sct = new SetContentHelper()
           {
             protected void write( Writer writer ) throws Throwable
             {
@@ -626,47 +599,37 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
           };
 
           if( !monitor.isCanceled() )
-          {
-            sct.setFileContents( grafikOdt,
-                false, false, new NullProgressMonitor() );
-          }
+            sct.setFileContents( grafikOdt, false, false, new NullProgressMonitor() );
 
           if( !monitor.isCanceled() )
-          {
-            try
-            {
-              GrafikLauncher.startGrafikODT( grafikOdt, grafikFolder, monitor );
-            }
-            catch( SensorException se )
-            {
-              se.printStackTrace();
-              throw new InvocationTargetException( se );
-            }
-            finally
-            {
-              monitor.done();
-            }
-          }
+            GrafikLauncher.startGrafikODT( grafikOdt, grafikFolder, monitor );
         }
-      };
+        catch( final SensorException se )
+        {
+          se.printStackTrace();
+          throw new InvocationTargetException( se );
+        }
+        catch( final CoreException ce )
+        {
+          ce.printStackTrace();
 
-      runAndHandleOperation( mod, "Grafik öffnen" );
-    }
+          throw new InvocationTargetException( ce );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
 
-    /**
-     * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-     */
-    public void widgetDefaultSelected( SelectionEvent e )
-    {
-      // empty
-    }
+    op.runAndHandleOperation( getShell(), "Hochwasser Vorhersage", "Grafik öffnen" );
   }
 
   /**
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere
    * Rechenfälle ausführen
    */
-  public void refreshDiagram( )
+  public void refreshDiagram()
   {
     // erstmal leer, damit das Diagramm gelöscht wird
     refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
@@ -685,7 +648,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     {
       try
       {
-        final IFolder calcCase = (IFolder) checkedCalcCases[i];
+        final IFolder calcCase = (IFolder)checkedCalcCases[i];
         final URL context = ResourceUtilities.createURL( calcCase );
         refreshDiagramForContext( obs, context );
       }
@@ -696,7 +659,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
   }
 
-  private Object[] getCheckedCalcCases( )
+  private Object[] getCheckedCalcCases()
   {
     if( m_checklist == null )
       return new Object[] {};
@@ -732,7 +695,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       {
         control.getDisplay().asyncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
             viewer.refresh();
           }
@@ -757,24 +720,22 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     /**
      * @return Returns the selected.
      */
-    public IFolder getSelected( )
+    public IFolder getSelected()
     {
       return m_selected;
     }
 
-    public Object[] getResults( )
+    public Object[] getResults()
     {
       return m_results;
     }
 
-    public void run( )
+    public void run()
     {
       m_results = m_cl.getCheckedElements();
-      final IStructuredSelection selection = (IStructuredSelection) m_cl
-          .getSelection();
+      final IStructuredSelection selection = (IStructuredSelection)m_cl.getSelection();
 
-      m_selected = (IFolder) (selection.isEmpty() ? null : selection
-          .getFirstElement());
+      m_selected = (IFolder)( selection.isEmpty() ? null : selection.getFirstElement() );
     }
   }
 }
