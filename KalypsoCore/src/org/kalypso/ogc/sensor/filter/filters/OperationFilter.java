@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.filter.filters;
 
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.runtime.IVariableArguments;
@@ -20,7 +21,7 @@ public class OperationFilter extends AbstractObservationFilter
 
   public final static int OPERATION_DURCH = 4;
 
-  private OperationFilterType m_baseFilter = null;
+  private IObservation m_baseobservation = null;
 
   private final int m_operation;
 
@@ -39,27 +40,30 @@ public class OperationFilter extends AbstractObservationFilter
     else if( operator.equals( "/" ) )
       m_operation = OPERATION_DURCH;
     else
-      throw new IllegalArgumentException( "unknown operator '" + operator
-          + "' in filter" );
-    m_baseFilter = filter;
+      throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
-   */
-  public ITuppleModel getValues( IVariableArguments args )
-      throws SensorException
+  public void initFilter( Object dummy, IObservation baseObs ) throws SensorException
   {
-    return new OperationTupplemodel( m_operand, m_operation, super
-        .getValues( args ) );
+    m_baseobservation = baseObs;
+    super.initFilter( dummy, baseObs );
   }
 
-  /**
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  {
+    return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  public void setValues( ITuppleModel values ) throws SensorException
+  public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName()
-        + ".setValues() wird zur Zeit nicht unterstuetzt." );
+        + " setValues() wird zur Zeit nicht unterstuetzt ." );
   }
+
 }

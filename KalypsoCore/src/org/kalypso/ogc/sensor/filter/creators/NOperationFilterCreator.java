@@ -12,20 +12,18 @@ import org.kalypso.zml.filters.NOperationFilterType;
 
 public class NOperationFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs )
+      throws SensorException
   {
-    final NOperationFilterType filter = (NOperationFilterType) aft;
+    final NOperationFilterType filter = (NOperationFilterType)aft;
     final List filters = filter.getFilter();
-    
     final IObservation[] innerObs = new IObservation[filters.size()];
     for( int i = 0; i < innerObs.length; i++ )
-      innerObs[i] = FilterCreatorHelper.resolveFilter(
-          (AbstractFilterType) filters.get( i ), baseObs );
+      innerObs[i] = FilterCreatorHelper.resolveFilter( (AbstractFilterType)filters.get( i ),
+          baseObs );
 
     final NOperationFilter nOperationFilter = new NOperationFilter( filter );
-    nOperationFilter.initFilter( innerObs, baseObs );
-    
+    nOperationFilter.initFilter( innerObs, innerObs[0] );
     return nOperationFilter;
   }
 }
