@@ -1,8 +1,12 @@
-package org.kalypso.util.repository.file;
+package org.kalypso.ogc.sensor.file;
+
+import java.io.FileFilter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.java.io.MultipleWildCardFileFilter;
+import org.kalypso.ogc.sensor.zml.ZmlFileRepository;
 import org.kalypso.util.repository.IRepository;
 import org.kalypso.util.repository.IRepositoryFactory;
 
@@ -10,7 +14,7 @@ import org.kalypso.util.repository.IRepositoryFactory;
  * @author schlienger
  *
  */
-public class FileRepositoryFactory implements IRepositoryFactory
+public class ObservationFileRepositoryFactory implements IRepositoryFactory
 {
   private String m_location = null;
   
@@ -41,7 +45,9 @@ public class FileRepositoryFactory implements IRepositoryFactory
    */
   public IRepository createRepository()
   {
-    // TODO: set the FileFilter here so that only ZML files are visible 
-    return new FileRepository( m_location, null );
+    String[] ZML_FILES = {"*.zml"};
+    FileFilter filter = new MultipleWildCardFileFilter( ZML_FILES, false, true, false );
+    
+    return new ZmlFileRepository( m_location, filter );
   }
 }
