@@ -9,6 +9,7 @@ import javax.xml.rpc.ServiceException;
 
 import org.kalypso.services.IServicesConstants;
 import org.kalypso.services.proxy.IObservationService;
+import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -23,15 +24,19 @@ public class OcsURLStreamHandler extends URLStreamHandler
    */
   protected URLConnection openConnection( final URL u ) throws IOException
   {
+    final String strUrl = u.toExternalForm();
+    
     // kalypso observation service protocol?
-    if( !u.toExternalForm().startsWith( IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE ) )
+    if( !strUrl.startsWith( IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE ) )
       return u.openConnection();
     
     try
     {
-      final IObservationService proxy = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+      final String id = strUrl.replaceFirst( IServicesConstants.URL_PROTOCOL_OBSERVATION_SERVICE, "" );
+
+      // TODO final ObservationBean ob = new ObservationBean( id );
       
-      
+      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
     }
     catch( ServiceException e )
     {
