@@ -1,12 +1,13 @@
-#Wed Oct 20 11:47:01 CEST 2004
+#Fri Oct 22 21:12:30 CEST 2004
+encoding//.prognose/Vorhersage-22-10-2004_19h28/calcCase.gml=UTF-8
 encoding//.templates/calcCase/ergebniskontrollePegel.gtt=UTF-8
 encoding//.templates/calcCase/calcCase.gmlOLD=UTF-8
 encoding//.prognose/prognose7/Ergebnisse/Zeitreihen/WV_SCHIRG.zml=UTF-8
 encoding//.prognose/prognose6/calcCase.gml=UTF-8
 encoding//.prognose/prognose12/calcCase.gml=UTF-8
 encoding//.prognose/prognose2/results.gml=UTF-8
-encoding//Rechenvarianten/r1/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose2/calcCase.gml=UTF-8
+encoding//Rechenvarianten/test/calcCase.gml=UTF-8
 encoding//.prognose/prognose5/results.gml=UTF-8
 encoding//.templates/calcCase/ergebniskontrollePegel.gmt=UTF-8
 encoding//.prognose/prognose9/calcCase.gml=UTF-8
@@ -22,7 +23,6 @@ encoding//Grunddaten/Tabellen/flussmodelle.gtt=UTF-8
 encoding//Grunddaten/Tabellen/einzugsgebiete.gtt=UTF-8
 encoding//.prognose/prognose4/results.gml=UTF-8
 encoding//.prognose/prognose8/calcCase.gml=UTF-8
-encoding//Rechenvarianten/r1/calcCase.gml=UTF-8
 encoding//.templates/calcCase/flusslauf.gtt=UTF-8
 encoding//.templates/calcCase/talsperren.gtt=UTF-8
 encoding//.prognose/prognose4/calcCase.gml=UTF-8
@@ -33,11 +33,9 @@ encoding//.templates/calcCase/zufluss.gmt=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//.templates/calcCase/table1.ott=UTF-8
 eclipse.preferences.version=1
-encoding//.prognose/prognose0/calcCase.gml=UTF-8
 encoding//.prognose/prognose10/calcCase.gml=UTF-8
 encoding//Grunddaten/Tabellen/Talsperren.gtt=UTF-8
 encoding//.prognose/prognose7/calcCase.gml=UTF-8
-encoding//Rechenvarianten/r1/zeitreihen/PG_BAUTZWB.zml=UTF-8
 encoding//.prognose/prognose3/results.gml=UTF-8
 encoding//.templates/calcCase/flusslauf.gmt=UTF-8
 encoding//.templates/calcCase/flusslauf.odt=UTF-8
