@@ -575,11 +575,12 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
             return false;
         }
 
-        if ( !envelope.equals( ( (GM_Object)other ).getEnvelope() ) ) {
+        // Bugfix: envelope maybe not yet valid
+        if ( !getEnvelope().equals( ( (GM_Object)other ).getEnvelope() ) ) {
             return false;
         }
 
-        if ( segments.size() != ( (GM_Curve)other ).getNumberOfCurveSegments() ) {
+        if ( getNumberOfCurveSegments() != ( (GM_Curve)other ).getNumberOfCurveSegments() ) {
             return false;
         }
 

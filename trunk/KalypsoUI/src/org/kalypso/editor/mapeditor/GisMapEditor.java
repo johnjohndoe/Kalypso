@@ -47,9 +47,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private IMapModell m_mapModell;
 
+  private static final int SELECTION_ID = 0x01;
+
   public GisMapEditor()
   {
-    myMapPanel = new MapPanel( this, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+    myMapPanel = new MapPanel( this, KalypsoGisPlugin.getDefault().getCoordinatesSystem(), SELECTION_ID );
   }
 
   public void dispose()

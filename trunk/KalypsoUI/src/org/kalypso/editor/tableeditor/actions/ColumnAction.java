@@ -3,17 +3,20 @@ package org.kalypso.editor.tableeditor.actions;
 import org.eclipse.jface.action.Action;
 import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.editor.tableeditor.layerTable.command.SetColumnVisibleCommand;
+import org.kalypso.util.command.ICommandTarget;
 
 public final class ColumnAction extends Action
 {
+  private final ICommandTarget m_commandTarget;
   private final LayerTableViewer m_viewer;
   private final String m_propertyName;
 
-  public ColumnAction( final LayerTableViewer viewer,
+  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer,
       final String propertyName )
   {
     super( propertyName );
 
+    m_commandTarget = commandTarget;
     m_viewer = viewer;
     m_propertyName = propertyName;
 
@@ -28,6 +31,6 @@ public final class ColumnAction extends Action
     final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand(
         m_viewer, m_propertyName, isChecked() );
 
-    m_viewer.postCommand( setColumnVisibleCommand, null );
+    m_commandTarget.postCommand( setColumnVisibleCommand, null );
   }
 }

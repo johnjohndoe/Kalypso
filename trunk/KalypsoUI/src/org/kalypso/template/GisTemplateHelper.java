@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gistableview.Gistableview;
 import org.xml.sax.InputSource;
 
 
@@ -29,5 +30,13 @@ public class GisTemplateHelper
     // TODO: create unmarschaller only once
     
     return (Gismapview)new ObjectFactory().createUnmarshaller().unmarshal( is );
+  }
+
+  public static Gistableview loadGisTableview( final IFile file ) throws CoreException, JAXBException
+  {
+    final InputSource is = new InputSource( file.getContents() );
+    is.setEncoding( file.getCharset() );
+
+    return (Gistableview)new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller().unmarshal( is );
   }
 }

@@ -10,11 +10,11 @@ import org.kalypso.ogc.gml.KalypsoFeature;
  */
 public class LayerTableLabelProvider implements ITableLabelProvider
 {
-  private LayerTableViewer m_layerTable;
+  private LayerTableViewer m_viewer;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
-    m_layerTable = layerTable;
+    m_viewer = layerTable;
   }
   
   /**
@@ -30,7 +30,11 @@ public class LayerTableLabelProvider implements ITableLabelProvider
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
-    final String name = m_layerTable.getPropertyName( columnIndex );
+    // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
+    if( m_viewer.getColumnCount() == 0 )
+      return "";
+    
+    final String name = m_viewer.getPropertyName( columnIndex );
     
     final Object property = ((KalypsoFeature)element).getProperty( name );
     return property == null ? "" : property.toString();

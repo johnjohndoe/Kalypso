@@ -3,7 +3,6 @@ package org.kalypso.eclipse.swt.custom;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
@@ -15,7 +14,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
@@ -82,14 +80,15 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
 
   private void startEditing( final KeyEvent ke )
   {
-    final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
-    if( !selection.isEmpty() )
+//    final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
+//    if( !selection.isEmpty() )
     {
       final int column = getColumn();
+      final Object element = getRow().getData();
 
       setVisible( false );
 
-      m_viewer.editElement( selection.getFirstElement(), column );
+      m_viewer.editElement( element, column );
       if( ke != null )
       {
       final Widget editorControl = m_viewer.getCellEditors()[column].getControl();
@@ -122,8 +121,8 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
    */
   public void widgetSelected( final SelectionEvent e )
   {
-    m_viewer.getTable().setSelection( new TableItem[]
-    { getRow() } );
+//    m_viewer.getTable().setSelection( new TableItem[]
+//    { getRow() } );
   }
 
   /**
