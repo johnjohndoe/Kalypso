@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.Vector;
 
 import org.deegree_impl.extension.ITypeHandler;
@@ -43,10 +44,10 @@ public class RangeSetTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
-   *      org.w3c.dom.Node)
+   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
-  public void marshall( Object object, Node node ) throws TypeRegistryException
+  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
+  
   {
     RangeSet rangeSet = (RangeSet)object;
     Document ownerDocument = node.getOwnerDocument();
@@ -70,9 +71,10 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
+   * 
+   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( Node node ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL context ) throws TypeRegistryException  
   {
     Node node_File = ( (Element)node ).getElementsByTagNameNS( NSRGC, "File" ).item( 0 );
     Node node_FileName = ( (Element)node_File ).getElementsByTagNameNS( NSRGC, "fileName" )
@@ -173,4 +175,7 @@ public class RangeSetTypeHandler implements ITypeHandler
     BigDecimal bd = new BigDecimal( Double.toString( d ) );
     return ( bd.setScale( scale, mode ) ).doubleValue();
   }
+
+
+
 }

@@ -1,5 +1,7 @@
 package org.kalypso.ogc.gml.typehandler;
 
+import java.net.URL;
+
 import org.deegree.xml.XMLTools;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
@@ -78,10 +80,10 @@ public class DiagramTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
-   *      org.w3c.dom.Node)
+   * 
+   * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
-  public void marshall( Object object, Node node ) throws TypeRegistryException
+  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
     try
     {
@@ -110,9 +112,10 @@ public class DiagramTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
+   * 
+   * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( Node node ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL context ) throws TypeRegistryException
   {
     try
     {

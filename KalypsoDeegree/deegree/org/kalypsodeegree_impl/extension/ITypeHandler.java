@@ -1,5 +1,7 @@
 package org.deegree_impl.extension;
 
+import java.net.URL;
+
 import org.w3c.dom.Node;
 
 /**
@@ -14,17 +16,26 @@ public interface ITypeHandler
   public String getTypeName();
 
   /**
-   * Serialisiert ein Object von diesem Typ als XML-Node
+   * Serialize object to xml node
    * 
+   * @param node
+   *          serialize the object into this node
+   * @param context
+   *          use this context for relative url
    * @param object
-   *          Dieses Objekt muss vom Typ {@link #getClassName()}sein.
+   *          object to serialize, it must be instanceof {@link #getClassName()}.
    */
-  public void marshall( final Object object, final Node node ) throws TypeRegistryException;
+  public void marshall( final Object object, final Node node, URL context )
+      throws TypeRegistryException;
 
   /**
-   * Erzeugt aus einem XML-Knoten ein Objekt vom Typen {@link #getClassName()}.
+   * creates an object of type {@link #getClassName()}from node. 
+   * @param node
+   *          unmnarshall this node to an object of type {@link #getClassName()}
+   * @param context
+   *          use this context for relative url
    */
-  public Object unmarshall( final Node node ) throws TypeRegistryException;
+  public Object unmarshall( final Node node, URL context ) throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname();

@@ -676,7 +676,8 @@ public class GMLFactory
       final Element element = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
       try
       {
-        typeHandler.marshall( value, element );
+//      TODO give context not null
+  typeHandler.marshall( value, element ,null);
       }
       catch( TypeRegistryException e )
       {
@@ -713,6 +714,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.12  2005/03/04 15:05:04  doemming
+ * *** empty log message ***
+ *
  * Revision 1.11  2005/02/28 13:34:14  doemming
  * *** empty log message ***
  * Revision 1.10 2005/02/15 17:52:53 belger *** empty

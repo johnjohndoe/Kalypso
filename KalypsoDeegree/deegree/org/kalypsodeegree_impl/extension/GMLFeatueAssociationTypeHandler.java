@@ -1,5 +1,7 @@
 package org.deegree_impl.extension;
 
+import java.net.URL;
+
 import org.deegree.model.feature.Feature;
 import org.deegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Node;
@@ -32,7 +34,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
    * @see org.deegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
    *      org.w3c.dom.Node)
    */
-  public void marshall( Object object, Node node ) throws TypeRegistryException
+  public void marshall( Object object, Node node,URL context  ) throws TypeRegistryException
   {
     throw new UnsupportedOperationException( "TODO implement it" );
   }
@@ -40,7 +42,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   /**
    * @see org.deegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node)
    */
-  public Object unmarshall( Node node ) throws TypeRegistryException
+  public Object unmarshall( Node node,URL context  ) throws TypeRegistryException
   {
     throw new UnsupportedOperationException( "TODO implement it" );
   }

@@ -739,8 +739,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
       // marshalling
       final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
           .getTypeHandlerForClassName( ftp.getType() );
-      typeHandler.marshall( customObject, element );
-
+// TODO give context not null
+      typeHandler.marshall( customObject, element ,null);
       GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
 
       Debug.debugMethodEnd();
