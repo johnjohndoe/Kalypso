@@ -467,7 +467,7 @@
             <groupMarker name="prognoseStart"/>
          </menu>
 		 <action
-	         label="Hochwasser Vorhersage durchführen"
+	         label="Vorhersage durchführen"
 	         icon="etc/kalypso16.gif"
 	         class="org.kalypso.ui.action.StartCalcWizardAction"
 	         menubarPath="org.kalypso.menu.model/prognoseStart"
@@ -478,17 +478,9 @@
                icon="icons/rechne.gif"
                tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.runCalcCase"/>               
+               id="org.kalypso.action.model.runCalcCase"/>
          <action
-               retarget="false"
-               label="Modellvariante anlegen"
-               icon="icons/util/copy_edit.gif"
-               class="org.kalypso.ui.action.CopyModelDelegate"
-               tooltip="legt eine Variante vom aktuelle gewählten Modell an"
-               menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.copyModel"/>
-         <action
-               label="Modell zurückspeichern"
+               label="Zurückspeichern"
                icon="icons/util/copy_r_co.gif"
                class="org.kalypso.ui.action.CommitModelDelegate"
                tooltip="Speichert die Änderungen am Modell auf den Server zurück"
@@ -503,12 +495,20 @@
                id="org.kalypso.action.model.updateModel"/>
          <action
                helpContextId="org.kalypso.manual.menu_modell"
-               label="Modelle vom Server laden"
+               label="Vom Server laden..."
                tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
                class="org.kalypso.ui.action.LoadServerModelDelegate"
                icon="icons/util/copy_l_co.gif"
                menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.checkoutModel"/>
+               id="org.kalypso.action.model.checkoutModel"/>               
+         <action
+               retarget="false"
+               label="Kopieren..."
+               icon="icons/util/copy_edit.gif"
+               class="org.kalypso.ui.action.CopyModelDelegate"
+               tooltip="legt eine Variante vom aktuelle gewählten Modell an"
+               menubarPath="org.kalypso.menu.model/modelStart"
+               id="org.kalypso.action.model.copyModel"/>
          <menu
                label="Rechenvariante"
                path="org.kalypso.menu.model"
@@ -517,14 +517,14 @@
          </menu>
 
          <action
-               label="archivieren"
+               label="Archivieren"
                class="org.kalypso.ui.action.CommitCalcCaseDelegate"
                icon="icons/util/copy_r_co.gif"
                tooltip="legt eine Rechenvariante auf dem Server ab"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.commitCalcCase"/>
          <action
-               label="vom Server laden"
+               label="Vom Server laden..."
                class="org.kalypso.ui.action.GetCalcCaseDelegate"
                icon="icons/util/copy_l_co.gif"
                tooltip="lädt eine vorhandene Rechenvariante vom Server"
@@ -532,12 +532,13 @@
                id="org.kalypso.action.model.getCalcCase"/>
          <action
                label="Zeitreihen aktualisieren"
-               class="org.kalypso.ui.action.UpdateCalcCaseTimeseries"
+               icon="icons/util/update.gif"
                tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
+               class="org.kalypso.ui.action.UpdateCalcCaseTimeseries"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.updateCalcCaseTimeseries"/>
          <action
-               label="kopieren..."
+               label="Kopieren..."
                class="org.kalypso.ui.action.CopyCalcCase"
                tooltip="legt eine Variante vom selektierten Rechenfall an"
                icon="icons/util/copy_edit.gif"
