@@ -64,6 +64,26 @@
 	</complexType>
 	<element name="nOperationFilter" type="filters:nOperationFilterType" substitutionGroup="filters:filter"/>
 
+	<!-- Filter: interpolation (interpolates the values using the date axis (ascending order) ) -->	
+	<complexType name="interpolationFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter" minOccurs="0"/>
+				</sequence>
+				<!-- which field of the date will be used for steping through the timeserie -->
+				<attribute type="string" name="calendarField"/>
+				<!-- amount of time for the step -->
+				<attribute type="int" name="amount"/>
+				<!-- when true, fills the model with defaultValue when no base value -->
+				<attribute type="boolean" name="forceFill"/>
+				<!-- default value to use when filling absent values -->
+				<attribute type="double" name="defaultValue"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="interpolationFilter" type="filters:interpolationFilterType" substitutionGroup="filters:filter" />
+
 	<!-- Filter: forecast (merges the tupples on the date axis in ascending order) -->	
 	<complexType name="forecastFilterType">
 		<complexContent>

@@ -43,17 +43,24 @@ public class ResourceUtilities
   public static URL createURL( final IResource resource )
       throws MalformedURLException
   {
-    final String strUrl;
+    String strUrl = createURLSpec( resource.getFullPath() );
     
     if( resource instanceof IContainer )
-      strUrl = PlatformURLResourceConnection.RESOURCE_URL_STRING + resource.getFullPath().toString()
-          + '/';
-    else
-      strUrl = PlatformURLResourceConnection.RESOURCE_URL_STRING + resource.getFullPath().toString();
+      strUrl += '/';
     
     return new URL( strUrl );
   }
   
+  /**
+   * Creates the string representation of an URL given an IPath.
+   * 
+   * @param path
+   * @return platform URL
+   */
+  public static String createURLSpec( final IPath path )
+  {
+    return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
+  }
 
   public static IFile findFileFromURL( final URL u )
   {

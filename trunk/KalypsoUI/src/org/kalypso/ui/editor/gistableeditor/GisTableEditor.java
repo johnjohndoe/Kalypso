@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -143,15 +144,18 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     load();
   }
 
-  protected final void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input)
       throws Exception
   {
+    if( !(input instanceof IFileEditorInput) )
+      throw new IllegalArgumentException( "Kann nur Dateien laden" );
+    
     if( m_layerTable == null )
       return;
 
     monitor.beginTask( "Vorlage laden", 1000 );
 
-    final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( input.getFile() );
+    final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ((IFileEditorInput) input).getFile() );
 
     final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );

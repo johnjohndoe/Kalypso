@@ -2,6 +2,7 @@ package org.kalypso.ui.editor.diagrameditor;
 
 import java.awt.Frame;
 import java.io.Writer;
+import java.net.URL;
 
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -13,6 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
@@ -156,7 +158,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
    *      org.eclipse.ui.IFileEditorInput)
    */
   protected void loadInternal( final IProgressMonitor monitor,
-      final IFileEditorInput input )
+      final IStorageEditorInput input )
   {
     monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
 
@@ -169,10 +171,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
         try
         {
           final ObsdiagviewType baseTemplate = ObservationTemplateHelper
-              .loadDiagramTemplateXML( input.getFile().getContents() );
+              .loadDiagramTemplateXML( input.getStorage().getContents() );
 
-          m_template.setBaseTemplate( baseTemplate, ResourceUtilities
-              .createURL( input.getFile() ) );
+          final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
+          m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
 
           // call-order is important: first set base template and then create
           // the chart

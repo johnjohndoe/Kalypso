@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -163,15 +164,18 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     virtualFrame.add( myMapPanel );
   }
 
-  protected final void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
       throws Exception, CoreException
   {
+    if( !(input instanceof IFileEditorInput) )
+      throw new IllegalArgumentException( "Kann nur Dateien laden" );
+    
     // prepare for exception
     setMapModell( null );
 
     monitor.beginTask( "Kartenvorlage laden", 2000 );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( input.getFile() );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( ((IFileEditorInput) input).getFile() );
 
     monitor.worked( 1000 );
 
