@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="kalypso-manual" default="all" basedir="..">
+<project name="kalypso-grafik-manual" default="all" basedir="..">
 
   <!-- Source properties -->
   <property name="help.dir" value="src" />
@@ -93,6 +93,18 @@
                excludes="**/CVS/**"
       />
     </copy>
+
+    <!--
+    <copy todir="${manual.dir}">
+      <fileset dir="${help.dir}" casesensitive="no">
+        <include name="**/*.*" />
+        <exclude name="**/CVS/**" />
+        <exclude name="*.xml" />
+        <exclude name="*.xsl" />
+        <exclude name="*.dtd" />
+      </fileset>
+    </copy>
+    -->
 
     <antcall target="pdfproc">
       <param name="pdfproc.out.dir" value="${build.pdf.dir}" />
