@@ -3,7 +3,7 @@ package org.kalypso.repository;
 import java.util.List;
 
 /**
- * Algemeine Interface für Repositories Container:
+ * Allgemeine Interface für Repositories Container:
  * <p>- Liste von Repositories
  * <p>- Handlung von Listeners
  * 
