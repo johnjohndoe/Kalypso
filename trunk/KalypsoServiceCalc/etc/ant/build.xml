@@ -231,13 +231,6 @@
       <param name="package_lib" value="KalypsoCore/lib" />
     </antcall>
 
-  	<!-- Changes by Marc: PSICompactAdapter brauchst du wahrscheinlich nicht -->
-  	<!--antcall target="package-a-plugin">
-      <param name="package_jar" value="KalypsoPSICompactAdapter.jar" />
-      <param name="package_bin" value="KalypsoPSICompactAdapter/build/bin" />
-      <param name="package_lib" value="KalypsoPSICompactAdapter/lib" />
-    </antcall-->
-
     <antcall target="package-a-project">
       <param name="aproject_jar" value="KalypsoCoreServices.jar" />
       <param name="aproject_bin" value="KalypsoCoreServices/build/bin" />
@@ -250,6 +243,11 @@
       <param name="aproject_lib" value="KalypsoSpreePlugin/lib" />
     </antcall>
 
+      <antcall target="package-a-project">
+      <param name="aproject_jar" value="KalypsoNA.jar" />
+      <param name="aproject_bin" value="KalypsoNA/build/bin" />
+      <param name="aproject_lib" value="KalypsoNA/lib" />
+    </antcall>
   </target>
 
 

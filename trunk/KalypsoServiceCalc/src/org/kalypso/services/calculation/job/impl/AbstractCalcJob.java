@@ -2,6 +2,7 @@ package org.kalypso.services.calculation.job.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobDataBean;
@@ -11,7 +12,9 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
  */
 public abstract class AbstractCalcJob implements ICalcJob
 {
-  private String m_message = "Warte auf ausführung...";
+  private Logger m_logger = Logger.getLogger( ICalcJob.class.getName() );
+  
+  private String m_message = "Warte auf Ausführung...";
   
   private int m_progress = -1;
   
@@ -77,5 +80,7 @@ public abstract class AbstractCalcJob implements ICalcJob
   protected void addResult( final CalcJobDataBean bean )
   {
     m_results.add( bean );
+    
+    m_logger.info( "Added result: " + bean.getPath() );
   }
 }
