@@ -19,6 +19,9 @@ public interface TimeserieConstants
   /** Temperatur */
   public final static String TYPE_TEMPERATURE = "T";
   
+  /** Datum */
+  public final static String TYPE_DATE = "date";
+  
   
   public final static String MD_WQ = "WQ-Parameter";
 

@@ -1,10 +1,10 @@
 package org.kalypso.ogc.sensor.timeseries.wq;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * A List of WechmannSets sorted according to the date of validity of the
@@ -15,21 +15,34 @@ import java.util.List;
  */
 public class WechmannSets
 {
-  private final List m_list;
+  private final SortedMap m_map;
 
   public WechmannSets( final WechmannSet[] wsets )
   {
-    m_list = new ArrayList();
-    m_list.addAll( Arrays.asList( wsets ) );
-
-    Collections.sort( m_list, new WechmannSetComparator() );
+    m_map = new TreeMap( new WechmannSetComparator() );
+    for( int i = 0; i < wsets.length; i++ )
+      m_map.put( wsets[i].getValidity(), wsets[i] );
   }
 
   public Iterator iterator()
   {
-    return m_list.iterator();
+    return m_map.values().iterator();
   }
-  
+
+  /**
+   * Returns the WechmannSet that is valid for the given date.
+   */
+  public WechmannSet getFor( final Date d )
+  {
+    final Date[] dates = (Date[])m_map.keySet().toArray( new Date[0] );
+    int i = Arrays.binarySearch( dates, d );
+
+    if( i < 0 )
+      i = -i - 1;
+
+    return (WechmannSet)m_map.get( dates[i] );
+  }
+
   /**
    * Returns a simple XML-Representation of this object.
    * 
@@ -38,14 +51,14 @@ public class WechmannSets
   public String toString()
   {
     final StringBuffer bf = new StringBuffer();
-    
+
     for( final Iterator it = iterator(); it.hasNext(); )
     {
       final WechmannSet ws = (WechmannSet)it.next();
 
       bf.append( ws );
     }
-    
+
     return bf.toString();
   }
 }

@@ -34,6 +34,24 @@ public class ObservationUtilities
   }
   
   /**
+   * Finds the axis of the given observation that has the given type. Returns the first axis found.
+   * 
+   * @param axes the list of axes to scan
+   * @param axisType the type of the axis which is searched
+   * @throws NoSuchElementException when no axis matches the name
+   */
+  public static IAxis findAxisWithType( final IAxis[] axes, final String axisType ) throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( axes[i].getType().equalsIgnoreCase( axisType ) )
+        return axes[i];
+    }
+    
+    throw new NoSuchElementException( "No axis found with type: " + axisType );
+  }
+  
+  /**
    * Helper that returns an axis which is compatible with specified Class of data
    */
   public static IAxis[] findAxis( final IAxis[] axes, final Class desired ) throws NoSuchElementException

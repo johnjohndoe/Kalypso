@@ -15,18 +15,9 @@ public class WechmannSetComparator implements Comparator
    */
   public int compare( Object o1, Object o2 )
   {
-    WechmannSet ws1 = (WechmannSet)o1;
-    WechmannSet ws2 = (WechmannSet)o2;
+    final WechmannSet ws1 = (WechmannSet)o1;
+    final WechmannSet ws2 = (WechmannSet)o2;
     
-    long t1 = ws1.getValidity().getTime();
-    long t2 = ws2.getValidity().getTime();
-    
-    if( t1 > t2 )
-      return 1;
-    
-    if( t1 < t2 )
-      return -1;
-    
-    return 0;
+    return ws1.getValidity().compareTo( ws2.getValidity() );
   }
 }

@@ -38,27 +38,32 @@ public class SimpleTuppleModel implements ITuppleModel
   }
 
   /**
-   * Copy constructor
+   * Constructor with model. A <code>DefaultTableModel</code> is used to back
+   * the values which are taken from the given model.
    */
   public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
   {
     m_axes = copyTupples.getAxisList();
-    
+
+    setFrom( copyTupples );
+  }
+
+  /**
+   * A <code>DefaultTableModel</code> is used to back the values which are
+   * taken from the given model.
+   */
+  public final void setFrom( final ITuppleModel copyTupples ) throws SensorException
+  {
     m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
-    
+
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
-      //Vector v = new Vector( m_axes.length );
-      
       for( int i = 0; i < m_axes.length; i++ )
       {
         final Object element = copyTupples.getElement( ix, m_axes[i] );
-        
-        //v.add( element );
+
         m_tupples.setValueAt( element, ix, m_axes[i].getPosition() );
       }
-      
-      //m_tupples.addRow( v );
     }
   }
 

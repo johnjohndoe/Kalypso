@@ -93,7 +93,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * Initialize the Service according to configuration.
    */
-  private void init() throws RemoteException
+  private final void init() throws RemoteException
   {
     m_lastId = 0;
 
