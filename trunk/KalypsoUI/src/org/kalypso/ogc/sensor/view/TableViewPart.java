@@ -1,8 +1,6 @@
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -20,8 +18,9 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
@@ -31,8 +30,6 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
-  protected final ObservationTableModel m_model = new ObservationTableModel();
-
   private final DefaultTableViewTemplate m_template = new DefaultTableViewTemplate();
 
   private ObservationTable m_table;
@@ -42,10 +39,10 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void createPartControl( final Composite parent )
   {
-    m_table = new ObservationTable( m_model );
+    m_table = new ObservationTable( new ObservationTableModel() );
     m_template.addTemplateEventListener( m_table );
 
-    // SWT-AWT Brücke für die Darstellung von JFreeChart
+    // SWT-AWT Brücke für die Darstellung von JTable
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
@@ -81,32 +78,26 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     m_template.removeAllColumns();
 
-    StructuredSelection selection = (StructuredSelection)event.getSelection();
+    final StructuredSelection selection = (StructuredSelection)event.getSelection();
 
-    if( !( selection.getFirstElement() instanceof IAdaptable ) )
+    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
       return;
 
-    IObservation obs = (IObservation)( (IAdaptable)selection.getFirstElement() )
-        .getAdapter( IObservation.class );
+    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
+    
+    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
     if( obs == null )
       return;
 
-    Calendar c = Calendar.getInstance();
-    Date to = c.getTime();
-    c.add( Calendar.DAY_OF_YEAR, -31 );
-    Date from = c.getTime();
+    final int days = Integer.valueOf( item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS ) ).intValue();
 
     synchronized( obs )
     {
-      System.out.println( "TableView enter " + obs );
-      
-      m_template.setObservation( obs, false, new DateRangeArgument( from, to ) );
-      
-      System.out.println( "TableView exit " + obs );
+      m_template.setObservation( obs, false, DateRangeArgument.createFromPastDays( days ) );
     }
 
     //    Job job = new ShowObservationJob( obs );

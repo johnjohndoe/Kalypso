@@ -70,13 +70,19 @@ public class ObservationFeatureCellEditor extends AbstractFeatureCellEditor impl
       final TimeseriesLink obslink = (TimeseriesLink)doGetValue();
       
       final ObservationLinkDialog dialog = new ObservationLinkDialog( control.getShell(), obslink, m_pp );
+      
+      boolean b = false;
+      
       if( dialog.open() == Window.OK )
       {
         doSetValue( dialog.getResult() );
-        return true;
+      
+        b = true;
       }
 
-      return false;
+      dialog.dispose();
+      
+      return b;
     }
   }
 

@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramCurve;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
@@ -107,16 +108,20 @@ public class ObservationTemplateHelper
    * 
    * @param odtFile
    *          the diagram template file.
+   * 
+   * @throws SensorException
    */
-  public static void openGrafik4odt( final IFile odtFile )
+  public static void openGrafik4odt( final IFile odtFile ) throws SensorException
   {
     openGrafik4odt( odtFile.getLocation().toFile(), odtFile.getProject() );
   }
 
   /**
+   * Opens the grafik tool using an observation template file.
    * 
+   * @throws SensorException if problems occur during operation.
    */
-  public static void openGrafik4odt( final File file, final IProject project )
+  public static void openGrafik4odt( final File file, final IProject project ) throws SensorException
   {
     // TODO: bessere konfigurierbarkeit von der Transformation?
     final InputStream xsl = ObservationTemplateHelper.class
@@ -153,9 +158,9 @@ public class ObservationTemplateHelper
       // delete the tmp vorlage right away
       tmp.deleteOnExit();
     }
-    catch( Exception e )
+    catch( Exception e ) // generic exception caught because of XMLHelper.xslTransform
     {
-      e.printStackTrace();
+      throw new SensorException( e );
     }
     finally
     {
@@ -244,8 +249,10 @@ public class ObservationTemplateHelper
    * 
    * @param tplFile
    *          the Grafik-Vorlage
+   * 
+   * @throws SensorException
    */
-  public static void openGrafik4tpl( final IFile tplFile )
+  public static void openGrafik4tpl( final IFile tplFile ) throws SensorException
   {
     try
     {
@@ -286,9 +293,9 @@ public class ObservationTemplateHelper
 
       Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V" + file.getAbsolutePath() );
     }
-    catch( Exception e )
+    catch( IOException e )
     {
-      e.printStackTrace();
+      throw new SensorException( e );
     }
   }
 }

@@ -42,6 +42,9 @@ public class ReloadAction extends FullAction implements ISelectionChangedListene
     try
     {
       rep.reload();
+      
+      // trick: direct call to update view
+      m_explorer.onRepositoryContainerChanged();
     }
     catch( RepositoryException e )
     {

@@ -1,15 +1,13 @@
 package org.kalypso.ogc.sensor.jface;
 
 import java.awt.Frame;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -21,28 +19,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationTimeSeries;
+import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
-import org.kalypso.ogc.sensor.tableview.rules.Rules;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
+import org.kalypso.util.factory.FactoryException;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
 /**
@@ -54,14 +47,17 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool( IObservation.class );
 
-  private final ObservationTableModel m_model = new ObservationTableModel();
-  
   private IPoolableObjectType m_key;
 
   private final TimeseriesLink m_timeserie;
 
-  private final TimeSeriesCollection m_tsCol = new TimeSeriesCollection();
-
+  private final DefaultDiagramTemplate m_diagTemplate = new DefaultDiagramTemplate();
+  private ObservationChart m_chart;
+  
+  private final DefaultTableViewTemplate m_tableTemplate = new DefaultTableViewTemplate();
+  private ObservationTable m_table;
+  
+  
   public ObservationLinkDialog( final Shell parentShell, final TimeseriesLink obslink,
       final IProjectProvider projectProvider )
   {
@@ -76,6 +72,12 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     startLoadTimeserie();
   }
 
+  public void dispose()
+  {
+    m_diagTemplate.removeTemplateEventListener( m_chart );
+    m_tableTemplate.removeTemplateEventListener( m_table );
+  }
+  
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
    */
@@ -108,29 +110,14 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
     if( oldObject == DUMMY_OBJECT )
     {
       final IObservation obs = (IObservation)m_pool.getObject( key, new NullProgressMonitor() );
-
-      final IAxis timeaxis = ObservationUtilities.findAxis( obs.getAxisList(), m_timeserie.getTimeaxis() );
-      final IAxis valueaxis = ObservationUtilities.findAxis( obs.getAxisList(), m_timeserie.getValueaxis() );
-
-      final List series = new ObservationTimeSeries( obs, timeaxis, new IAxis[]
-      { valueaxis }, null ).getSeries();
-
-      for( final Iterator it = series.iterator(); it.hasNext(); )
-        m_tsCol.addSeries( (TimeSeries)it.next() );
       
-      try
-      {
-        final DefaultTableViewTemplate tab = new DefaultTableViewTemplate( );
-        tab.setObservation( obs, false, null );
-        
-        // TODO: marc, check if still ok since refactoring...
-        m_model.setColumns( tab.getColumns(), null );
-      }
-      catch( final SensorException e )
-      {
-        // TODO error handling
-        e.printStackTrace();
-      }
+      final int days = KalypsoGisPlugin.getDefault().getPluginPreferences().getInt( IKalypsoPreferences.NUMBER_OF_DAYS );
+      
+      //m_diagTemplate.removeAllCurves();
+      m_diagTemplate.setObservation( obs, DateRangeArgument.createFromPastDays( days ) );
+      
+      //m_tableTemplate.removeAllColumns();
+      m_tableTemplate.setObservation( obs, false, DateRangeArgument.createFromPastDays( days ) );
     }
     else
     {
@@ -138,8 +125,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
       {
         if( bCannotReload )
         {
-          m_tsCol.removeAllSeries();
-          m_model.clearColumns();
+          m_diagTemplate.removeAllCurves();
+          m_tableTemplate.removeAllColumns();
         }
         else
           startLoadTimeserie();
@@ -180,15 +167,22 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private void createDiagram( final Composite parent )
   {
-    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    try
+    {
+      m_chart = new ObservationChart( m_diagTemplate );
+    }
+    catch( FactoryException e )
+    {
+      MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
+      return;
+    }
+    
+    m_diagTemplate.addTemplateEventListener( m_chart );
 
-    final Frame vFrame = SWT_AWT.new_Frame( composite );
-
-    final JFreeChart m_chart = ChartFactory
-        .createTimeSeriesChart( "", "Datum", "Wert", m_tsCol, false, false, false );
-
-    final ChartPanel chartPanel = new ChartPanel( m_chart );
+    ChartPanel chartPanel = new ChartPanel( m_chart );
     chartPanel.setMouseZoomable( true, false );
+
+    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     chartPanel.setVisible( true );
@@ -197,17 +191,16 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
 
   private void createTable( final Composite parent )
   {
-    final JTable table = new JTable( m_model );
-    table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
+    m_table = new ObservationTable( new ObservationTableModel() );
+    m_tableTemplate.addTemplateEventListener( m_table );
     
-    // TODO: habe MaskedNumber.class durch Double.class ersetzt. OK?
-    table.setDefaultRenderer( Double.class, new MaskedNumberTableCellRenderer() );
-    
-    m_model.setRules( new Rules() );
-
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+
     vFrame.setVisible( true );
-    table.setVisible( true );
-    vFrame.add( new JScrollPane( table ) );
+    m_table.setVisible( true );
+
+    final JScrollPane pane = new JScrollPane( m_table );
+    pane.setBorder( BorderFactory.createEmptyBorder() );
+    vFrame.add( pane );
   }
 }
