@@ -43,7 +43,7 @@ public class CalcJobBean implements Serializable
   
   public CalcJobBean()
   {
-  // empty 
+    // nur für wscompile
   }
   
   public CalcJobBean( final String id, final String description, final String type, final int state, final int progress, final String basedir, final CalcJobDataBean[] results )

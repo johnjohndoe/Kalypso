@@ -51,7 +51,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
-          + ModelNature.CONTROL_VIEW_FILE );
+          + ModelNature.CALCULATION_VIEW );
       m_featureComposite = new FeatureComposite( m_controlGML.getRootFeature(), new URL[]
       { viewURL } );
       setControl( m_featureComposite.createControl( parent, SWT.NONE ) );
