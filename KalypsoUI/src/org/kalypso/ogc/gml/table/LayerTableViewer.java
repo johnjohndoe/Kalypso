@@ -50,16 +50,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.kalypsodeegree.model.feature.Annotation;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -105,6 +95,16 @@ import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
+import org.kalypsodeegree.model.feature.Annotation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -199,6 +199,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       }
     }
   };
+
 
   /**
    * @param parent
@@ -360,7 +361,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     final Table table = getTable();
 
-    final TableColumn tc = new TableColumn( table, SWTUtilities.createStyleFromString( alignment ) );
+    final int alignmentInt = SWTUtilities.createStyleFromString( alignment );
+    final TableColumn tc = new TableColumn( table, alignmentInt );
+    tc.setAlignment( alignmentInt );
     tc.setData( COLUMN_PROP_NAME, propertyName );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht

@@ -75,8 +75,17 @@ public class ChangeSortingCommand implements ICommand
 
     if( m_oldPropertyName != null && m_oldPropertyName.equals( propertyName ) )
     {
-      m_newInverse = !m_oldInverse;
-      m_newPropertyName = m_oldPropertyName;
+      // falls bereits invers, ausschalten
+      if( m_oldInverse )
+      {
+        m_newPropertyName = null;
+        m_newInverse = false;
+      }
+      else
+      {
+        m_newInverse = true;
+        m_newPropertyName = m_oldPropertyName;
+      }
     }
     else
     {

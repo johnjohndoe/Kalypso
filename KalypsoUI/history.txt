@@ -6,6 +6,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
+- Gis-Tabelle: die Sortierung kann durch ein erneutes Drücken auf den Spaltenkopf wieder ausgestellt werden; also
+1. vorwärts, 2. rückwärts, 3. unsortiert
 - Bugfix: Die Keys der Gis-Tabellen wurden im Wizard nicht wieder freigegeben
 - TableView-Template kann jetzt Alignment (SWT-Konstanten für Spalten) und einen Formatstring (noch nicht unterstüzt) beinhalten
 - Bug #73: "Locals: Darstellung von , und . Sollten für allen Tabellen gleich sein (GIS Table: .)" behoben
