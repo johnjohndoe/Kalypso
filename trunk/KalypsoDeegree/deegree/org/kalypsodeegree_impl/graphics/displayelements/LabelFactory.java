@@ -199,7 +199,7 @@ public class LabelFactory {
 
 				// check if the label is to be centered within the intersection of
 				// the screen surface and the polygon geometry
-				if (pPlacement.isAuto()) {
+				if (pPlacement.isAuto()) {					
 					GM_Surface screenSurface = GeometryFactory.createGM_Surface (projection.getSourceRect(), null);
 					GM_Object intersection = screenSurface.intersection (geometry);
 					if (intersection != null) {
