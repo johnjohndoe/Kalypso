@@ -52,14 +52,14 @@
             extensions="gtt"/>
       <editor
             class="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
-            icon="icons/sample.gif"
+            icon="icons/observation_repository.ico"
             default="true"
             name="Kalypso Observation DiagramEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
             extensions="zml"/>
       <editor
             class="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
-            icon="icons/sample.gif"
+            icon="icons/observation_repository.ico"
             default="true"
             name="Kalypso Observation TableEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
@@ -72,18 +72,18 @@
             id="Kalypso"/>
       <view
             class="org.kalypso.util.repository.view.RepositoryExplorerPart"
-            icon="icons/sample.gif"
+            icon="icons/observation_repository.ico"
             category="Kalypso"
             name="Zeitreihen Repository"
             id="org.kalypso.util.repository.view.RepositoryExplorerPart"/>
       <view
-            icon="icons/sample.gif"
+            icon="icons/observation_repository.ico"
             class="org.kalypso.ogc.sensor.view.DiagramViewPart"
             category="Kalypso"
             name="Diagram QuickView"
             id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
       <view
-            icon="icons/sample.gif"
+            icon="icons/observation_repository.ico"
             class="org.kalypso.ogc.sensor.view.TableViewPart"
             category="Kalypso"
             name="Table QuickView"
