@@ -27,12 +27,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 
 /**
- * DOCUMENT ME!
  *
- * @author $author$
+ * @author von Dömming
  */
 public class XMLTools
 {
@@ -48,25 +48,21 @@ public class XMLTools
         return getAsDOM( new FileInputStream( file ) );
     }
 
-    public static Document getAsDOM( InputStream inStream )
+    public static Document getAsDOM( final InputStream inStream )
         throws Exception
     {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(  );
-        factory.setNamespaceAware( true );
+      return getAsDOM( new InputSource( inStream ) );
+    }
+    
+    public static Document getAsDOM( final InputSource inputSource ) throws Exception
+    {
+      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(  );
+      factory.setNamespaceAware( true );
 
-        DocumentBuilder docuBuilder = factory.newDocumentBuilder(  );
+      final DocumentBuilder docuBuilder = factory.newDocumentBuilder(  );
 
-        /*
-                 int blen=1000;
-                byte buffer[]=new byte[blen];
-                while(inStream.read(buffer,0,blen)>0)
-                {
-                        String text=new String(buffer);
-                        System.out.println(text);
-                }
-                */
-        Document dom = docuBuilder.parse( inStream );
-        return dom;
+      final Document dom = docuBuilder.parse( inputSource );
+      return dom;
     }
 
     public static Document getAsDOM( URL url ) throws Exception
