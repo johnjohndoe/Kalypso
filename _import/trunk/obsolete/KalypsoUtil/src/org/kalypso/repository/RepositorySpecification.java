@@ -19,12 +19,18 @@ public class RepositorySpecification
   private String m_maxCard;
 
   /**
-   * @param id specification id
-   * @param desc description that is shown to user when selecting repository factory
-   * @param factoryClass classname of the repository factory
-   * @param maxCard max cardinality of repositories of this type allowed to user
+   * @param id
+   *          specification id
+   * @param desc
+   *          description that is shown to user when selecting repository
+   *          factory
+   * @param factoryClass
+   *          classname of the repository factory
+   * @param maxCard
+   *          max cardinality of repositories of this type allowed to user
    */
-  public RepositorySpecification( final String id, final String desc, final String factoryClass, final String maxCard )
+  public RepositorySpecification( final String id, final String desc, final String factoryClass,
+      final String maxCard )
   {
     m_id = id;
     m_desc = desc;
@@ -46,16 +52,16 @@ public class RepositorySpecification
   {
     return m_maxCard;
   }
-  
+
   /**
    * Erzeugt eine Repository Factory für diese eine Spezifikation.
    * 
    * @throws ClassUtilityException
    */
-  public IRepositoryFactory createFactory( ) throws ClassUtilityException
+  public IRepositoryFactory createFactory( final ClassLoader cl ) throws ClassUtilityException
   {
     return (IRepositoryFactory)ClassUtilities.newInstance( m_factoryClass,
-        IRepositoryFactory.class, getClass().getClassLoader() );
+        IRepositoryFactory.class, cl );
   }
 
   /**

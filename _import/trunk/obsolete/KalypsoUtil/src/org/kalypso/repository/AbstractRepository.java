@@ -2,10 +2,12 @@ package org.kalypso.repository;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 /**
- * Abstract implementation of <code>IRepository</code> to provide basic functionality.
+ * Abstract implementation of <code>IRepository</code> to provide basic
+ * functionality.
  * 
  * @author schlienger
  */
@@ -17,6 +19,8 @@ public abstract class AbstractRepository implements IRepository
 
   private boolean m_readOnly;
 
+  private final Properties m_properties;
+
   /**
    * Default constructor, location is empty and readonly is true.
    */
@@ -24,13 +28,14 @@ public abstract class AbstractRepository implements IRepository
   {
     this( "", true );
   }
-  
+
   public AbstractRepository( final String location, final boolean readOnly )
   {
     m_location = location;
     m_readOnly = readOnly;
-    
+
     m_listeners = new Vector();
+    m_properties = new Properties();
   }
 
   /**
@@ -40,12 +45,12 @@ public abstract class AbstractRepository implements IRepository
   {
     return m_readOnly;
   }
-  
+
   public void setReadOnly( final boolean ro )
   {
     m_readOnly = ro;
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepository#addRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
@@ -106,7 +111,7 @@ public abstract class AbstractRepository implements IRepository
   {
     return getName();
   }
-  
+
   /**
    * This default implementation always returns null.
    * 
@@ -116,12 +121,38 @@ public abstract class AbstractRepository implements IRepository
   {
     return null;
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
   public IRepository getRepository()
   {
     return this;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#getProperty(java.lang.String,
+   *      java.lang.String)
+   */
+  public String getProperty( final String name, final String defaultValue )
+  {
+    return m_properties.getProperty( name, defaultValue );
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#getProperty(java.lang.String)
+   */
+  public String getProperty( final String name )
+  {
+    return m_properties.getProperty( name );
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#setProperty(java.lang.String,
+   *      java.lang.String)
+   */
+  public void setProperty( final String name, final String value )
+  {
+    m_properties.setProperty( name, value );
   }
 }

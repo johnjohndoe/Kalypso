@@ -31,6 +31,22 @@ public interface IRepository extends IRepositoryItem
   public IRepositoryItem findItem( final String id ) throws RepositoryException;
 
   /**
+   * Sets a property for this repository. Properties can be used internally, by the
+   * repository itself, or by its items.
+   */
+  public void setProperty( final String name, final String value );
+  
+  /**
+   * Returns the value of the given property or null if not set yet.
+   */
+  public String getProperty( final String name );
+  
+  /**
+   * Returns the value of the given property, or defaultValue if no value is set yet.
+   */
+  public String getProperty( final String name, final String defaultValue );
+
+  /**
    * Forces the reload of the whole Repository structure.
    */
   public void reload() throws RepositoryException;
