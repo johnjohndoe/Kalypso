@@ -97,14 +97,14 @@ public class ProxyFactory
 
     if( !m_proxies.containsKey( key ) )
     {
-      try
-      {
-        System.out.println( getClass().getClassLoader().loadClass( "javax.activation.DataSource" ) );
-      }
-      catch( ClassNotFoundException e1 )
-      {
-        e1.printStackTrace();
-      }
+//      try
+//      {
+//        System.out.println( getClass().getClassLoader().loadClass( "javax.activation.DataSource" ) );
+//      }
+//      catch( ClassNotFoundException e1 )
+//      {
+//        e1.printStackTrace();
+//      }
       
 //      // TODO TRICKY: we set the classloader because of a problem using jaxrpc at runtime
 //      // under Eclipse. It seems that the system class loader is explicitely used

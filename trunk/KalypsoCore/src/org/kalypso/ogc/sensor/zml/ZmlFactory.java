@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.proxy.ProxyFactory;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -36,6 +36,7 @@ import org.kalypso.util.parser.IParser;
 import org.kalypso.util.parser.ParserException;
 import org.kalypso.util.parser.ParserFactory;
 import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.XmlTypes;
 import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.AxisType;
@@ -56,9 +57,6 @@ import org.xml.sax.InputSource;
 public class ZmlFactory
 {
   private final static ObjectFactory OF = new ObjectFactory();
-
-  private final static SimpleDateFormat DF = new SimpleDateFormat(
-      "yyyy-MM-dd'T'HH:mm:ss" );
 
   private static ParserFactory m_parserFactory = null;
 
@@ -264,8 +262,13 @@ public class ZmlFactory
     final IObservation zmlObs = new SimpleObservation( identifier, obs
         .getName(), obs.isEditable(), target, metadata, axes, model );
 
+    // tricky: first check if a proxy has been specified in the url
+    final IObservation proxyObs = ProxyFactory.createProxyFrom( context, zmlObs );
+    
     // tricky: maybe make a filtered observation out of this one
-    return FilterFactory.createFilterFrom( context, zmlObs );
+    final IObservation filteredObs = FilterFactory.createFilterFrom( context, proxyObs );
+    
+    return filteredObs;
   }
 
   /**
@@ -326,10 +329,9 @@ public class ZmlFactory
       {
         final Map.Entry entry = (Entry) it.next();
 
-        final String mdKey = (String) entry.getKey(); //(String)it.next();
-        final String mdValue = (String) entry.getValue(); //obs.getMetadata().getProperty(
-        // mdKey );
-
+        final String mdKey = (String) entry.getKey();
+        final String mdValue = (String) entry.getValue();
+        
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
         mdType.setValue( mdValue );
@@ -408,23 +410,32 @@ public class ZmlFactory
   }
 
   /**
-   * TODO: marc, check if the date format can be fetched from the properties here instead of using the m_df defined
-   * as field in this class.
+   * TODO: marc, check if the date format can be fetched from the properties here
+   * 
+   * @param model
+   * @param axis
+   * @param sb
+   * @throws SensorException
    */
   private static void buildStringDateAxis( final ITuppleModel model,
       final IAxis axis, final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( DF.format( model.getElement( i, axis ) ) ).append( ";" );
+      sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) ).append( ";" );
 
     if( amount > 0 )
-      sb.append( DF.format( model.getElement( amount, axis ) ) );
+      sb.append( XmlTypes.PDATE.toString( model.getElement( amount, axis ) ) );
   }
 
   /**
    * Uses the default toString() method of the elements.
    * TODO: check if this always works fine for XML-Schema types
+   * 
+   * @param model
+   * @param axis
+   * @param sb
+   * @throws SensorException
    */
   private static void buildStringNumberAxis( final ITuppleModel model,
       final IAxis axis, final StringBuffer sb ) throws SensorException
