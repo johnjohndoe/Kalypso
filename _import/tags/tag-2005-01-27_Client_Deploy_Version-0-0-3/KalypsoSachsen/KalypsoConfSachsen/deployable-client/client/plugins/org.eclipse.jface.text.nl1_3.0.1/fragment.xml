@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<fragment
+    name="JFace Text NL Support"
+    id="org.eclipse.jface.text.nl1"
+    version="3.0.1"
+    plugin-id="org.eclipse.jface.text"
+    plugin-version="3.0.1"
+>
+<runtime>
+    <library name="nl1.jar"/>
+</runtime>
+</fragment>

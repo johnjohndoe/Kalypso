@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+	<!-- ********************************** -->
+ 	<!-- Wizard Pages 						-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="share_project_page_context">
+      <description>Esta página le ayuda a seleccionar el tipo de sitio de destino con el que desea conectar el proyecto.</description>
+   	</context>
+   	
+   	<context id="import_project_set_page_context">
+      <description>Esta página le ayuda a importar un conjunto de proyectos desde un archivo del sistema de archivos. Un conjunto de proyectos es una descripción ligera de un conjunto de proyectos compartidos. Puede utilizarse para reconstruir una formación de proyectos compartidos que tenga en el área de trabajo.</description>
+   	</context>
+	
+	<context id="export_project_set_page_context">
+      <description>Esta página le ayuda a exportar un conjunto de proyectos a un archivo que puede compartirse con los demás miembros del equipo. Un conjunto de proyectos es una descripción ligera de un conjunto de proyectos compartidos. Puede utilizarse para reconstruir una formación de proyectos compartidos que tenga en el área de trabajo.</description>
+   	</context>
+	
+	<context id="target_new_site_page_context">
+      <description>Esta página le ayuda a seleccionar el sitio al que debe conectarse el proyecto. Puede elegir un sitio existente de la lista o crear un sitio nuevo.</description>
+   	</context>
+	
+	<context id="target_mapping_selection_page_context">
+      <description>Esta página le ayuda a elegir la carpeta del sitio seleccionado a la que debe conectarse el proyecto. Puede elegir una carpeta existente o crear una carpeta nueva.</description>
+   	</context>
+   	
+    <context id="sync_resource_selection_page_context">
+      <description>Esta página le permite elegir los recursos que
+deben sincronizarse. </description>
+   	</context>
+	
+	
+ 	<!-- ********************************** -->
+ 	<!-- Preference Pages 					-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="ignore_preference_page_context" >
+      <description>Puede excluir ciertos recursos del control de versiones. Los recursos que coincidan con cualquier patrón habilitado no se liberarán. Los caracteres comodín '*' y '?' están permitidos. Estos valores no afectarán a los recursos que ya estén bajo el control de versiones.</description>
+      <topic label="Crear un patrón global de exclusión" href="tasks/tasks-100d1.htm"/>
+   	</context>
+
+ 	<context id="team_preference_page_context" >
+      <description>Esta página permite establecer la modalidad en la que se abrirá la vista Sincronizar.</description>
+      <topic label="Vista Sincronizar CVS" href="reference/ref-33.htm"/>
+   	</context>
+
+ 	<context id="file_type_preference_page_context" >
+      <description>Esta página permite asociar una extensión de archivo a su tipo de contenido (ASCII o binario). Este valor lo utilizan los proveedores de repositorios, como CVS</description>
+      <topic label="Establecer el tipo de contenido de una extensión de archivo" href="tasks/tasks-team-1.htm"/>
+   	</context>
+   	   	  	
+   	<!-- ********************************** -->
+ 	<!-- TargetMenuActions 					-->
+ 	<!-- ********************************** -->
+	
+	<context id="target_get_action_context">
+   		<description>Descarga desde el sitio los recursos seleccionados al área de trabajo.</description>
+   	</context>
+
+ 	<context id="target_put_action_context">
+   		<description>Carga desde el área de trabajo los recursos seleccionados al sitio.</description>
+   	</context>
+   	
+   	<context id="target_synchronize_action_context">
+   		<description>Muestra las diferencias existentes entre el estado del sitio local y remoto de los recursos seleccionados en la vista Sincronizar.</description>
+   	</context>
+   	
+   	<context id="target_getas_action_context">
+   		<description>Descarga desde el sitio los recursos seleccionados al área de trabajo. Puede especificar el nombre local de los recursos.</description>
+   	</context>
+   	
+   	<context id="target_getasproject_action_context">
+   		<description>Descarga desde el sitio los recursos seleccionados al área de trabajo. Se crea un proyecto en el área de trabajo para cada uno de los elementos seleccionados.</description>
+   	</context>
+   	
+   	<context id="target_disconnect_action_context">
+   		<description>Descarta los sitios de destino seleccionados de la lista de sitios recordados.</description>
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- TargetCatchupReleaseViewer			-->
+ 	<!-- ********************************** -->
+	
+	<context id="target_catchup_release_viewer_context">
+   		<description>Esta vista muestra los cambios entrantes, salientes y conflictivos.</description>
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- TargetActions						-->
+ 	<!-- ********************************** -->
+   	
+   	<context id="sync_get_action_context">
+   		<description>Descarga desde el sitio los recursos seleccionados al área de trabajo.</description>
+   	</context>
+   	
+   	<context id="sync_put_action_context">
+   		<description>Carga desde el área de trabajo los recursos seleccionados al sitio.</description>
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- Views					            -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="site_explorer_view_context">
+      <description>La vista Explorador de sitio permite examinar el contenido de los sitios de destino conocidos y descargar recursos remotos en el área de trabajo local.</description>
+   	</context>
+
+ 	<context id="sync_view_context">
+      <description>La vista Sincronizar permite realizar la sincronización del contenido local del área de trabajo con un repositorio o destino remotos.</description>
+      <topic label="Vista Sincronizar CVS" href="reference/ref-33.htm"/>
+   	</context>
+   	   	
+   	<!-- ********************************** -->
+ 	<!-- SiteExplorerViewActions		    -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="add_site_action_context">
+      <description>Crea un sitio de destino nuevo para cargar o descargar recursos.</description>
+   	</context>
+   	
+   	<context id="new_folder_action_context">
+      <description>Crea una carpeta nueva en el sitio de destino.</description>
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- SyncViewActions				    -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="refresh_action_context">
+      <description>Renueva el contenido de la vista.</description>
+   	</context>
+
+   	<context id="open_action_context">
+      <description>Muestra la comparación del contenido local y remoto del archivo en el visor de comparación.</description>
+   	</context>
+   	 	
+   	<context id="expandall_action_context">
+      <description>Expande completamente todos los elementos seleccionados.</description>
+   	</context>
+   	
+   	<context  id="remove_action_context">
+      <description>Elimina de la vista Sincronizar los elementos seleccionados.</description>
+   	</context>
+   	
+   	<context  id="navigator_show_action_context">
+      <description>Selecciona y pone de relieve los elementos seleccionados en la vista Navegador.</description>
+   	</context>
+ 
+</contexts>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the GettingStarted -->
+<!-- ========================== -->
+<toc label="入門">
+   <topic label="基礎指導教學" href="gettingStarted/qs-01.htm">
+      <topic label="工作台" href="gettingStarted/qs-02a.htm"/>
+      <topic label="編輯器和視圖" href="gettingStarted/qs-02b.htm">
+         <topic label="編輯器" href="gettingStarted/qs-02d.htm"/>
+         <topic label="視圖" href="gettingStarted/qs-02e.htm"/>
+      </topic>
+          
+      <topic label="簡式專案" href="gettingStarted/qs-07a.htm">
+         <topic label="使用「檔案」功能表" href="gettingStarted/qs-07b.htm"/>
+         <topic label="使用蹦現功能表" href="gettingStarted/qs-07c.htm"/>
+         <topic label="使用「新建」按鈕" href="gettingStarted/qs-07d.htm"/>
+      </topic>
+ 
+      <topic label="關閉編輯器" href="gettingStarted/qs-10b.htm"/>
+
+      <topic label="導覽資源" href="gettingStarted/qs-12.htm">
+         <topic label="在導覽器中開啟資源" href="gettingStarted/qs-12b.htm"/>
+         <topic label="移至" href="gettingStarted/qs-12c.htm"/>
+         <topic label="進入" href="gettingStarted/qs-12d.htm"/>
+      </topic>
+
+      <topic label="檔案" href="gettingStarted/qs-13.htm"/>
+
+      <topic label="匯出檔案" href="gettingStarted/qs-24a.htm">
+         <topic label="拖放或複製並貼上" href="gettingStarted/qs-24b.htm"/>
+         <topic label="「匯出」精靈" href="gettingStarted/qs-24c.htm"/>
+      </topic>
+
+      <topic label="匯入檔案" href="gettingStarted/qs-31a.htm">
+         <topic label="拖放或複製並貼上" href="gettingStarted/qs-31b.htm"/>
+         <topic label="「匯入」精靈" href="gettingStarted/qs-31c.htm"/>
+      </topic>
+
+      <topic label="刪除資源" href="gettingStarted/qs-32.htm"/>
+
+      <topic label="使用其他編輯器" href="gettingStarted/qs-34a.htm">
+         <topic label="外部編輯器" href="gettingStarted/qs-34b.htm"/>
+         <topic label="內嵌的編輯器" href="gettingStarted/qs-34c.htm"/>
+         <topic label="在工作台之外編輯檔案" href="gettingStarted/qs-34d.htm"/>
+	 </topic>
+
+      <topic label="複製、重新命名和移動
+" href="gettingStarted/qs-35.htm">
+         <topic label="複製" href="gettingStarted/qs-35b.htm"/>
+         <topic label="重新命名" href="gettingStarted/qs-35c.htm"/>
+         <topic label="移動" href="gettingStarted/qs-35d.htm"/>
+      </topic>
+
+      <topic label="搜尋" href="gettingStarted/qs-36.htm">
+         <topic label="起始搜尋" href="gettingStarted/qs-36a.htm"/>
+         <topic label="「搜尋」視圖" href="gettingStarted/qs-36b.htm"/>
+      </topic>
+
+      <topic label="作業和標記" href="gettingStarted/qs-37-2b.htm">
+         <topic label="不相關的作業" href="gettingStarted/qs-37-2d.htm"/>
+         <topic label="相關的作業" href="gettingStarted/qs-37-2d2.htm"/>
+         <topic label="開啟檔案" href="gettingStarted/qs-37-2f.htm"/>
+      </topic>
+
+      <topic label="書籤" href="gettingStarted/qs-37-3b.htm">
+         <topic label="新增和檢視書籤" href="gettingStarted/qs-37-3c.htm"/>
+         <topic label="使用書籤" href="gettingStarted/qs-37-3e.htm"/>
+        <topic label="移除書籤" href="gettingStarted/qs-37-3f.htm"/>
+      </topic>
+
+      <topic label="重新排列視圖和編輯器" href="gettingStarted/qs-39.htm">
+         <topic label="放置游標" href="gettingStarted/qs-39c.htm"/>
+         <topic label="重新排列視圖" href="gettingStarted/qs-39d.htm"/>
+         <topic label="並列編輯器" href="gettingStarted/qs-39e.htm"/>
+         <topic label="重新排列附加標籤的視圖" href="gettingStarted/qs-39f.htm" />
+         <topic label="最大化" href="gettingStarted/qs-39g.htm"/>
+      </topic>
+
+      <topic label="快速視圖" href="gettingStarted/qs-40.htm">
+         <topic label="建立快速視圖" href="gettingStarted/qs-40a.htm"/>
+         <topic label="使用快速視圖" href="gettingStarted/qs-40b.htm"/>
+      </topic>
+
+      <topic label="視景" href="gettingStarted/qs-43.htm">
+         <topic label="新視景" href="gettingStarted/qs-43b.htm"/>
+         <topic label="新視窗" href="gettingStarted/qs-43c.htm"/>
+         <topic label="儲存視景" href="gettingStarted/qs-43e.htm"/>
+         <topic label="配置視景" href="gettingStarted/qs-43f.htm"/>
+      </topic>
+
+      <topic label="比較" href="gettingStarted/qs-52.htm">
+         <topic label="簡單比較" href="gettingStarted/qs-52c.htm"/>
+         <topic label="瞭解比較" href="gettingStarted/qs-52d.htm"/>
+         <topic label="使用比較" href="gettingStarted/qs-52e.htm"/>
+      </topic>
+
+      <topic label="本端歷程" href="gettingStarted/qs-55.htm"/>
+	  
+	  <topic label="回應 UI" href="gettingStarted/qs-responsiveUI.htm"/>	
+
+      <topic label="結束工作台" href="gettingStarted/qs-55b.htm"/>
+
+   </topic>
+   
+   <anchor id="gs_afterbasic" />
+
+   <topic label="團隊 CVS 指導教學" href="gettingStarted/qs-60_team.htm">
+      <topic label="設定 CVS 儲存庫" href="gettingStarted/qs-60a_setup.htm"/>
+      <topic label="從離線作業開始" href="gettingStarted/qs-61c_offline.htm"/>
+
+      <topic label="共用專案" href="gettingStarted/qs-61d_repoloca.htm">
+         <topic label="指定儲存庫位置" href="gettingStarted/qs-61d_repolocb.htm"/>
+         <topic label="儲存庫位置" href="gettingStarted/qs-61e_whatisloc.htm"/>
+         <topic label="共用專案" href="gettingStarted/qs-61f_syncproject.htm"/>
+      </topic>
+
+      <topic label="與另一使用者共同作業" href="gettingStarted/qs-64a_another.htm">
+         <topic label="移出專案" href="gettingStarted/qs-64b_fredadd.htm"/>
+         <topic label="另一位使用者進行變更" href="gettingStarted/qs-64b_fredmod.htm"/>
+         <topic label="建立我們的變更" href="gettingStarted/qs-64c_catch_mod.htm"/>
+         <topic label="處理衝突的變更" href="gettingStarted/qs-64c_catch_sync_view.htm"/>
+         <topic label="取代" href="gettingStarted/qs-70_replace.htm"/>
+         <topic label="版本化" href="gettingStarted/qs-74_version.htm"/>
+         <topic label="快速檢視" href="gettingStarted/qs-74_review.htm"/>
+      </topic>
+
+   </topic>
+
+   <anchor id="gs_afterteam" />
+
+   <topic label="Ant 和外部工具指導教學" href="gettingStarted/qs-80_ant.htm">
+     <topic label="Eclipse Ant 基礎" href="gettingStarted/qs-81_basics.htm">
+       <topic label="建立 Ant 建置檔" href="gettingStarted/qs-82_create.htm"/>
+       <topic label="編輯 Ant 建置檔" href="gettingStarted/qs-83_edit.htm"/>
+       <topic label="執行 Ant 建置檔" href="gettingStarted/qs-84_run_ant.htm"/>
+       <topic label="儲存及重複使用 Ant 選項" href="gettingStarted/qs-85_ant_configs.htm"/>
+       <topic label="使用 Ant 視圖" href="gettingStarted/qs-85a_ant_view.htm"/>
+     </topic>
+     <topic label="Eclipse 中的 Ant 使用案例" href="gettingStarted/qs-86_use_cases.htm">     
+       <topic label="部署 Eclipse 外掛程式" href="gettingStarted/qs-87_plugin_deploy.htm">
+         <topic label="建立 HelloWorld 外掛程式" href="gettingStarted/qs-88_create_plugin.htm"/>
+         <topic label="產生 build.xml 檔" href="gettingStarted/qs-89_generate_buildxml.htm"/>
+         <topic label="為外掛程式建置 .jar 檔" href="gettingStarted/qs-90_build_jar.htm"/>
+         <topic label="其他外掛程式部署選項" href="gettingStarted/qs-91_build_options.htm"/>
+       </topic>      
+       <topic label="將 Ant 建置檔當作專案建置器" href="gettingStarted/qs-92_project_builders.htm">
+         <topic label="建立專案建置器 Ant 建置檔" href="gettingStarted/qs-93_project_builder.htm"/>
+         <topic label="執行專案建置器" href="gettingStarted/qs-94_run_pj.htm"/>       
+       </topic>      
+     </topic>	
+     <topic label="外部工具" href="gettingStarted/qs-95_external_tools.htm">
+       <topic label="非 Ant 的專案建置器" href="gettingStarted/qs-96_non_ant_pjs.htm"/>
+       <topic label="獨立式外部工具" href="gettingStarted/qs-97_standalone_ets.htm"/>
+     </topic>	
+   </topic>
+   
+   <anchor id="gs_afterant" />
+   
+</toc>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?> 
+<welcomePage 
+	title="Eclipse-Plattform"
+	format="nowrap">
+	<intro>Auf dieser Seite können Sie sich mit der Eclipse-Workbench vertraut machen.
+Zum Einstieg lesen Sie die Abschnitte unten, und klicken Sie auf die angegebenen Links. </intro>
+
+<item><b>Installierte Features</b>
+Mehr über die in der Workbench installierten Features erfahren Sie, indem Sie die Optionen<action pluginId="org.eclipse.ui.ide"  class="org.eclipse.ui.actions.QuickStartAction">Hilfe > Willkommen...</action>
+und dann das entsprechende Feature auswählen.</item>
+
+<item><b>Perspektiven, Sichten und Editoren</b>
+Ein Fenster enthält eine oder mehrere Perspektiven. Eine Perspektive
+besteht aus Sichten (wie beispielsweise der Sicht "Navigator") und
+Editoren, mit denen Sie Ihre Ressourcen bearbeiten können.
+Am linken äußeren Rand des Fensters befindet sich eine
+Direktaufrufleiste, über die Sie neue Perspektiven öffnen und
+zwischen bereits geöffneten Perspektiven wechseln können. Die Perspektive, in der Sie gegenwärtig arbeiten, ist im Fenstertitel
+angegeben. In der Direktaufrufleiste ist ihr Symbol wie eine gedrückte
+Schaltfläche dargestellt.</item>
+
+<item><b>Perspektiven konfigurieren</b>
+Sie können Sichten und Editoren in der ganzen Workbench versetzen, indem Sie deren Titelleisten ziehen. Außerdem können Sie
+durch Auswahl der Optionen 'Fenster > Sicht anzeigen' weitere
+Sichten zur aktuellen Perspektive hinzufügen.
+Um eine Perspektive in ihren Ausgangszustand zurückzusetzen, wählen Sie die Optionen<action pluginId="org.eclipse.ui"  class="org.eclipse.ui.internal.ResetPerspectiveAction">Fenster > Perspektive zurücksetzen</action> aus. 
+
+Nachdem Sie eine Perspektive angeordnet haben, können Sie sie durch
+Auswahl der Optionen "Fenster > Perspektive speichern unter..." speichern. 
+Die Sichten, Perspektiven und Operationen im Menü "Neu", die für
+diese Perspektive aufgerufen werden, können Sie anpassen. Hierzu wählen Sie die Optionen<action pluginId="org.eclipse.ui"  class="org.eclipse.ui.internal.EditActionSetsAction">Fenster > Perspektive anpassen...</action> aus.  Außerdem können Sie eine Sicht in eine
+Schnellsicht umwandeln, indem Sie sie auf die Direktaufrufleiste
+ziehen, die sich am linken äußeren Rand des Fensters befindet. </item> 
+
+<item><b>In CVS-Team mitarbeiten</b>
+Um Mitglied in einem CVS-Entwicklungsteam zu werden, öffnen Sie die Perspektive<action pluginId="org.eclipse.team.cvs.ui" class="org.eclipse.team.internal.ccvs.ui.actions.ShowCVSPerspectiveAction">CVS-Repository durchsuchen</action>. Anschließend geben Sie die Position des
+CVS-Repositories an. Hierzu wählen Sie im Kontextmenü der Sicht 'CVS-Repositories' die Optionen<action pluginId="org.eclipse.team.cvs.ui" class="org.eclipse.team.internal.ccvs.ui.repo.NewCVSRepositoryAction">Neu > Repositoryposition...</action> aus. Wenn der Positionsassistent geöffnet wird, geben
+Sie die Details zum
+CVS-Repository ein, und klicken Sie auf 'Fertig stellen'. 
+
+In der Sicht 'CVS-Repositories' wird eine Repositoryposition angezeigt. Erweitern Sie die Position,
+und erweitern Sie anschließend die HEAD-Verzweigung. Es wird nun eine Liste der in diesem Repository vorhandenen Module angezeigt. Wählen Sie ein Modul aus, und wählen Sie dann im Kontextmenü die Option
+<b>Als Projekt auschecken</b> aus. Hierdurch wird das
+Modul aus dem CVS-Repository ausgecheckt und ein Projekt mit dem angegebenen Namen im Arbeitsbereich erstellt.</item>
+
+<item><b>Ant-Erstellungsdatei ausführen</b>
+Klicken Sie auf 'Ant-Erstellungsdatei, Ausführen > Externe Tools > Externe Tools...'. Wählen Sie für den Startkonfigurationstyp die Einstellung 'Ant-Erstellung' aus, und klicken Sie auf 'Neu'. Suchen Sie nach der Erstellungsdatei im Feld 'Position', und klicken Sie dann auf 'Ausführen'.</item>
+
+<item><b>Weiterführende Informationen</b>
+Weitere Einzelheiten können Sie im <topic id="/org.eclipse.platform.doc.user/toc.xml">Workbench-Benutzerhandbuch</topic> nachlesen. Lesen Sie <topic href="/org.eclipse.platform.doc.user/reference/ref-anticons.htm">Symbole für externe Tools und Ant</topic>, um die verschiedenen Elemente für externe Tools und Ant kennen zu lernen.
+</item>
+
+
+</welcomePage>

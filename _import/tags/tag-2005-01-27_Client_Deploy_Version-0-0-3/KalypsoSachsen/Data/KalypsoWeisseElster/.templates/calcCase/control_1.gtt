@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="/" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href=".nacontrol_1.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column editable="false" name="name" width="82"/>
+        <column editable="false" name="description" width="100"/>
+        <column editable="true" name="automaticCallibration" width="66"/>
+        <column editable="true" name="CatchmentsFaktn" width="99"/>
+        <column editable="true" name="CatchmentsBianf" width="95"/>
+        <column editable="true" name="CatchmentsFaktorAigw" width="116"/>
+        <column editable="true" name="CatchmentsFaktorRetobTetint" width="88"/>
+        <column editable="true" name="KMChannelsFaktorRnf" width="100"/>
+        <column editable="true" name="KMChannelsFaktorRkf" width="100"/>
+    </layer>
+</gistableview>
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="programm_start">
+  <?dbhh topicname="Allgemeines" topicid="2"?>
+
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Beschreibung der Startseite</primary>
+      </indexterm></date>
+  </chapterinfo>
+
+  <title id="view_prognose">Programm-Start</title>
+
+  <para>Der Programm-Start von KALYPSO ist abhängig von den Zugriffsrechten
+  des Benutzers. Die Benutzerrechte sind dabei klassifiziert nach den in <xref
+  linkend="anwendungsfaelle" /> beschriebenen Anwendungsfällen und Anwendern.
+  Die Benutzerrechte werden dabei innerhalb des Programmsystems PSICompact
+  verwaltet und lediglich als Information an KALYPSO weitergereicht.</para>
+
+  <para>Der Programm-Start von KALYPSO erfolgt entweder durch Doppelklick auf
+  das Desktop-Symbol KALYPSO.</para>
+
+  <section id="kalypso_startseite">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO-Konzept</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Startseite</title>
+
+    <para id="dummy5">Nach dem Programm-Start von KALYPSO öffnet sich die
+    Startseite, die in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut
+    wird.</para>
+
+    <figure id="pic_kalypso_startseite">
+      <title>KALYPSO Startseite LHWZ Sachsen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/KALYPSO_startseite.png" scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Von der Startseite kann direkt die Hochwasservorhersage
+    (Anwendungsfall: Hochwasserbetrieb) angestoßen werden. Der Modellname wird
+    per Mausklick ausgewählt und die Kartenansicht zeigt das Einzugsgebiet des
+    selektierten Modells farblich hervorgehoben an. Anschließend kann die
+    Vorhersage bzw. der Wizard mit Drücken des Buttons <guibutton>Hochwasser
+    Vorhersage starten</guibutton> gestartet werden.</para>
+
+    <para>Die in <xref linkend="pic_kalypso_startseite" /> dargestellte
+    Startseite identifiziert den Benutzer als Experten, indem oberhalb des
+    Ansichtsfensters drei Buttons zur Ansichtsauswahl zur Verfügung
+    stehen:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Hochwasser Vorhersage: KALYPSO-Startseite mit Zugang zu den
+        Vorhersage-Wizards</para>
+      </listitem>
+
+      <listitem>
+        <para>KALYPSO Modeler: Programmoberfläche für den Expertenmodus</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen-Ablage: Oberfläche zur Verwaltung von
+        Zeitreihen</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Der Wechsel in den Expertenmodus erfolgt durch Mausklick auf den
+    Button KALYPSO Modeler. Sofern sich ein einfacher Anwender eingeloggt hat,
+    dann besteht keine Möglichkeit der Ansichtsauswahl. Dem einfachen Anwender
+    steht ausschließlich die <guibutton>Hochwasser Vorhersage</guibutton>
+    Ansicht zur Verfügung.</para>
+  </section>
+</chapter>

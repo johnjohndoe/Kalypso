@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- F1 on F1 -->
+   <context  id="f1Shell" >
+      <description>Se proporciona ayuda emergente (&quot;infopop&quot;) contextual para muchas interfaces, entre ellas, vistas, asistentes, campos, recuadros de selección, botones y elementos de menú. Para acceder a esta ayuda, active el elemento pulsando en él o utilizando la tecla de tabulación, y luego pulse F1.
+
+Algunas ayudas emergentes incluyen enlaces que permiten acceder a temas de la ayuda en línea, donde hay más información sobre el elemento.
+
+Esta ayuda emergente se ha abierto porque ha pulsado F1 mientras ya estaba abierta una ayuda emergente.</description>
+   </context>
+
+<!-- Preference page for help browsers -->
+   <context  id="prefPageBrowsers" >
+      <description>Permite seleccionar un navegador web.  El navegador web que seleccione será el que se tome por omisión a la hora de visualizar el contenido de la ayuda.</description>
+	  <topic label="Diálogo Preferencias" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Path to custom browser on preference page for help browsers -->
+   <context  id="prefPageCustomBrowserPath" >
+      <description>Cuando seleccione el navegador web personalizado, especifique la vía de acceso al programa navegador que lo lanza.  Si el programa está disponible en la vía de acceso del sistema, solo deberá especificar el nombre del programa.
+
+Si el programa no acepta el URL como el último parámetro, puede utilizar la serie %1 indicar la posición del parámetro URL en el mandato.</description>
+      <topic label="Diálogo Preferencias" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Application server preference page -->
+   <context  id="prefPageAppServer" >
+      <description>Estos valores permiten alterar temporalmente la dirección de la interfaz de red y el número de puerto que utilizará el <b>servidor de aplicaciones</b> interno.  Cambie los valores cuando el puerto que esté intentando utilizar esté ocupado o cuando haya cambiado su dirección IP.
+
+Para determinar automáticamente la dirección de la interfaz, deje el campo de sistema principal <b>en blanco</b>.
+
+Para utilizar el puerto asignado dinámicamente por el sistema, especifique <b>0</b> en el campo de puerto.
+
+En circunstancias normales, utilice los valores <b>Por omisión</b>.</description>
+      <topic label="Diálogo Preferencias" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+</contexts>

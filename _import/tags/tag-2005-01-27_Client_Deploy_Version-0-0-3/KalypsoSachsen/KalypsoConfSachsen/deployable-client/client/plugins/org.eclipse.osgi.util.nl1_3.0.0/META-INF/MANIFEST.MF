@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Name: %nlFragmentName
+Bundle-SymbolicName: org.eclipse.osgi.util.nl1 ;singleton=true
+Bundle-Version: 3.0.0
+Bundle-ClassPath: nl1.jar
+Bundle-Vendor: %nlProviderName
+Fragment-Host: org.eclipse.osgi.util;bundle-version="[3.0.0,4.0.0)"
+Bundle-Localization: nl_fragment

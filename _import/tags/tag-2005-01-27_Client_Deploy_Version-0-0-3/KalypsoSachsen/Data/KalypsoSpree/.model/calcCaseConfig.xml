@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<createTransformations logFile="calcCase.log">
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:modell.gml"/>
+			<argument name="output" value=":calcdir:calcCase.gml"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/steuerparameter.gft"/>
+			<argument name="output" value=":calcdir:Steuerparameter.gft"/>
+		</transformation>
+
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Anfangsvolumen.gtt"/>
+			<argument name="output" value=":calcdir:Anfangsvolumen.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Bodenfeuchten.gtt"/>
+			<argument name="output" value=":calcdir:Bodenfeuchten.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Flusslaufparameter.gtt"/>
+			<argument name="output" value=":calcdir:Flusslaufparameter.gtt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Gesamtansicht.gmt"/>
+			<argument name="output" value=":calcdir:Gesamtansicht.gmt"/>
+		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.templates/Diagramm.odt"/>
+			<argument name="output" value=":calcdir:Zeitreihen/Diagramm.odt"/>
+		</transformation>
+	</createTransformations>
+	
+<!-- Einzugsgebiete -->
+	<updateTransformations logFile="calcCase.log">
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Einzugsgebiet"/>
+			<argument name="sourceObservation1" value="Niederschlag_gemessen"/>
+			<argument name="sourceObservation2" value="Niederschlag_prognose"/>
+			<argument name="targetObservation" value="Niederschlag_rechnung"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+	
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Einzugsgebiet"/>
+			<argument name="sourceObservation1" value="Wasserstand_gemessenEingang"/>
+			<argument name="targetObservation" value="Wasserstand_gemessen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+	
+	<!-- Flusslaufmodelle -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="FlusslaufModell"/>
+			<argument name="sourceObservation1" value="Wasserstand_gemessenEingang"/>
+			<argument name="targetObservation" value="Wasserstand_gemessen"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+	
+	<!-- Talsperre -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Talsperre"/>
+			<argument name="sourceObservation1" value="Abgabe_eingang"/>
+			<argument name="rangeMode1" value="start-stop"/>
+			<argument name="targetObservation" value="Abgabe"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+	
+	<!-- Flutung -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Flutung"/>
+			<argument name="sourceObservation1" value="Abfluss_eingang"/>
+			<argument name="rangeMode1" value="start-stop"/>
+			<argument name="targetObservation" value="Abfluss"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+	
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":calcdir:calcCase.gml"/>
+			<argument name="feature" value="Zufluss"/>
+			<argument name="sourceObservation1" value="Abfluss_eingang"/>
+			<argument name="targetObservation" value="Abfluss"/>
+			<argument name="rangeMode1" value="start-stop"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+	</updateTransformations>
+	
+	<afterCalcTransformations logFile="calcCase.log">
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcdir:Ergebnisse/calcCase.gml"/>
+			<argument name="output" value=":calcdir:calcCase.gml"/>
+		</transformation>
+	</afterCalcTransformations>
+</calcCaseConfig>

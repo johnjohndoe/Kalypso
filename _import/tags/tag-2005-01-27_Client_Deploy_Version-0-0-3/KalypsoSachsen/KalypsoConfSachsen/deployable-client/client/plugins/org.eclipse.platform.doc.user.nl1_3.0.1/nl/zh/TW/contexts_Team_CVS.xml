@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+   
+	<!-- ********************************** -->
+ 	<!-- TagSelectionDialog 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="replace_tag_selection_dialog_context">
+   		<description>您已選擇以分支或版本標示取代選取的資源。這個對話框可讓您選取要用於這項作業的標示。所選取的資源將被標示了選取標示的資源所取代。如果所要的標示未出現在「版本」或「分支」的清單中，請執行「從儲存庫重新整理」或「配置標示」，以自動或手動尋找存在儲存庫中的標示。停用「遞迴到子資料夾」選項會將作業限制為只針對選取的資料夾（及其直屬子項）及選取的檔案。</description>
+   		<topic label="取代在工作台的資源" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="compare_tag_selection_dialog_context">
+   		<description>您已選擇比較選取的資源與分支或版本標示。這個對話框可讓您選取要用於這項作業的標示。所選取的資源將會與被標示了選取標示的資源相互比較。如果所要的標示未出現在「版本」或「分支」的清單中，請執行「從儲存庫重新整理」或「配置標示」，以自動或手動尋找存在儲存庫中的標示。</description>
+        <topic label="比較資源和儲存庫的版本" href="tasks/tasks-101.htm" />
+   	</context>
+   	
+   	<context id="tag_remote_with_existing_dialog_context">
+   		<description>您已選擇以現有的分支或版本標示來標示選取的資源。這個對話框可讓使用者選取要用於這項作業的標示。如果標示已存在任何選取的資源的另一個修訂版上，它將會被移至選項中的修訂版。如果所要的標示未出現在「版本」或「分支」的清單中，請執行「從儲存庫重新整理」或「配置標示」，以自動或手動尋找存在儲存庫中的標示。停用「遞迴到子資料夾」選項會將作業限制為只針對選取的資料夾（及其直屬子項）及選取的檔案。</description>
+        <topic label="移動版本標示" href="tasks/tasks-105c.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- TagAsVersionDialog 				-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="tag_as_version_dialog_context">
+   		<description>請輸入要標示到選取的資源之版本名稱。</description>
+   		<topic label="建立專案的版本" href="tasks/tasks-100.htm" />
+   	</context>
+   	
+   	<!-- ********************************** -->
+ 	<!-- WizardPages 						-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="sharing_autoconnect_page_context">
+   		<description>此本端專案具有與其關聯的 CVS 資訊，但不是登錄為 CVS 專案。這個頁面顯示與本端專案相關聯的 CVS 資訊。按一下「完成」，會將這個專案登錄為 CVS 專案，並啟用 CVS 功能表指令的使用。如果啟用了「完成時驗證連線」，將會嘗試連線至伺服器。</description>
+		<topic label="使用另一個 CVS 工具所移出的專案" href="tasks/tasks-117a.htm" />
+   	</context>
+   	
+   	<context id="sharing_select_repository_page_context">
+   		<description>請從現有儲存庫清單中選取要您需要的儲存庫，或指示要建立新的儲存庫位置。
+</description>
+ 		<topic label="使用 CVS 來共用新專案" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_new_repository_page_context">
+   		<description>請輸入要連接的儲存庫的識別資訊，以及存取這個儲存庫時所需要的使用者和連線資訊。</description>
+   		<topic label="新建儲存庫位置精靈" href="reference/ref-40.htm"/>
+		<topic label="CVS 儲存庫" href="concepts/concepts-27c.htm"/>
+		<topic label="建立 CVS 儲存庫位置" href="tasks/tasks-92.htm"/>
+	   	<topic label="捨棄 CVS 儲存庫位置" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="sharing_module_page_context">
+   		<description>請指定共用本端專案的遠端模組。
+您可以選擇用專案名稱作為提供給遠端模組的名稱、指定一個自訂模組路徑，或選取一個現有的模組。
+在前兩個情況中，名稱都是相對於儲存庫根目錄，如果遠端模組不存在，就會建立它。</description>
+		<topic label="使用 CVS 來共用新專案" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="sharing_tag_selection_page_context">
+   		<description>正在共用的專案已存在遠端。這個頁面可讓您選取要共用專案的分支。
+如果所需的分支不是 HEAD 且未出現在分支清單中，請執行「從儲存庫重新整理」或「配置標示」來自動或手動尋找在儲存庫中的標示。
+</description>
+		<topic label="使用 CVS 來共用新專案" href="tasks/tasks-117.htm" />
+   	</context>
+   	
+ 	<context id="sharing_sync_page_context">
+   		<description>請視察共用的資源，決定應該共用哪些資源，應該忽略哪些資源。
+按一下「完成」會提供一個選項來確定所有送出變更。
+</description>
+		<topic label="使用 CVS 來共用新專案" href="tasks/tasks-117.htm" />
+   	</context>
+
+ 	<context id="patch_selection_page_context">
+   		<description>請指定您想在其中儲存修補程式輸出的位置。</description>
+ 		<topic label="使用修補程式" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="patch_options_page_context">
+   		<description>請指定用來產生修補程式的各種選項。</description>
+   		<topic label="使用修補程式" href="tasks/tasks-68c.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_selection_page_context">
+   		<description>請選取要套用至所選取檔案的模式。自動模式將會選擇二進位或 CVS 喜好設定中指定的預設 ASCII 模式，視使用「團隊」檔案類型登錄所決定的檔案類型而定。</description>
+		<topic label="設定 CVS 關鍵字替代模式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_summary_page_context">
+   		<description>列出其模式依據精靈輸入而需要變更的檔案。其模式不需要變更的那些檔案可選擇性地併入清單中。您可以修改與清單中的檔案相關聯的模式，方法為按一下檔案的模式，然後從清單中選取。</description>
+		<topic label="設定 CVS 關鍵字替代模式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_shared_page_context">
+   		<description>選擇是否要考慮對已經與儲存庫共用的檔案進行變更。如果併入共用檔案已被停用，則將只會考慮已新增至 CVS 控制的新檔案。</description>
+		<topic label="設定 CVS 關鍵字替代模式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+
+ 	<context id="keyword_substituton_changed_page_context">
+   		<description>選擇是否要考慮對包含送出變更的檔案進行模式變更。</description>
+ 		<topic label="設定 CVS 關鍵字替代模式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+   	
+    <context id="keyword_substituton_commit_comment_page_context">
+   		<description>將檔案從二進位轉換到 ASCII 所產生的任何行終止器變更，都會由這項作業確定。輸入註解來說明這項確認的內容。</description>
+		<topic label="設定 CVS 關鍵字替代模式" href="tasks/tasks-cvs-11.htm" />
+   	</context>
+  
+ 	<context id="merge_start_page_context">
+   		<description>從清單中，選取將作為合併作業之開始（基本）點的專案版本。
+如果無法使用標示，請嘗試從儲存庫重新整理或配置標示。</description>
+		<topic label="從分支合併" href="tasks/tasks-100b.htm" />
+   		<topic label="「合併」精靈" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+ 	<context id="merge_end_page_context">
+   		<description>從清單中，選取將充當合併之終點的版本或分支。</description>
+		<topic label="從分支合併" href="tasks/tasks-100b.htm" />
+   		<topic label="「合併」精靈" href="reference/ref-41a.htm"/> 
+   	</context>
+   	
+   	<context id="checkout_module_selection_context">
+   		<description>請指定一或多個要移出的遠端模組。
+您可以輸入模組路徑，也可以選擇一或多個要移出的現有遠端模組。
+在啟用選取現有模組的選項之前，不會提取現有的模組。
+</description>
+		<topic label="從 CVS 儲存庫移出專案" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_configuration_context">
+   		<description>請指定如何移出所選的模組。
+如果是一或多個所選的模組，您可以選擇在現有的專案或資料夾中，移出成為專案或資料夾。
+如果是在遠端模組中沒有 .project 檔的單一選項，您可以選擇利用「新建專案」精靈來配置專案。
+</description>
+		<topic label="從 CVS 儲存庫移出專案" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_location_selection_context">
+   		<description>請指定在本端檔案系統中的專案位置。
+如果是單一專案，位置就是專案目錄的位置。
+如果是多重專案，位置就是專案母項目錄的位置。
+</description>
+		<topic label="從 CVS 儲存庫移出專案" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="checkout_tag_selection_page_context">
+   		<description>請指定移出的模組所用的標示。</description>
+   		<topic label="從 CVS 儲存庫移出專案" href="tasks/tasks-96.htm" />
+   	</context>
+   	
+   	<context id="update_tag_selection_page_context">
+   		<description>請指定這項更新所用的標示。
+</description>
+   		<topic label="取代在工作台的資源" href="tasks/tasks-103.htm" />
+   	</context>
+   	
+   	<context id="checkout_into_resource_selection_page_context">
+   		<description>請選取將建立所選模組下的母項資料夾。
+當移出單一模組時，您也可以指定要建立的資料夾名稱。
+</description>
+   		<topic label="將資料夾移出到現有的專案中" href="tasks/tasks-96b.htm"/> 
+   	</context>
+   	
+   	<context id="restore_from_repository_file_selection_page_context">
+   		<description>瀏覽已經從儲存庫刪除的檔案，並檢查要還原到本端工作區的每一個檔案的修訂。</description>
+		<topic label="從儲存庫還原已刪除的檔案" href="tasks/tasks-105a.htm" />
+   	</context>
+   	
+   	<context id="working_set_folder_selection_page_context">
+        <description>選取您要新增至工作集來作為專案的資料夾。</description>
+        <topic label="探索分支和版本標示" href="tasks/tasks-110.htm" />
+    </context>
+    
+   	<!-- ********************************** -->
+ 	<!-- TeamMenuActions 					-->
+ 	<!-- ********************************** -->
+	
+	<context  id="manage_action_context" >
+      <description>這些指令可讓您執行版本/配置管理作業。</description>
+	</context>
+  
+	<context id="team_synchronize_action_context">
+   		<description>在「同步化」視圖中顯示所選取資源的本端與遠端狀態之間的任何差異。</description>
+   		<topic label="使用 CVS 來共用新專案" href="tasks/tasks-117.htm"/>
+ 		<topic label="與儲存庫同步化" href="tasks/tasks-115.htm"/>
+	 	<topic label="更新" href="tasks/tasks-113.htm"/>
+	 	<topic label="確定" href="tasks/tasks-114.htm"/>
+   	</context>
+   	
+   	<context id="team_synchronize_outgoing_action_context">
+  		<description>在「同步化」視圖中顯示任何具有送出變更的所選取資源的本端與遠端狀態之間的任何差異。</description>
+		<topic label="與儲存庫同步化" href="tasks/tasks-115.htm"/>
+	 	<topic label="確定" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_commit_action_context">
+    		<description>將所選取資源中的任何送出變更確認到伺服器。</description>
+   		<topic label="確定" href="tasks/tasks-114.htm"/>
+   	</context>
+
+ 	<context id="team_update_action_context">
+   		<description>以任何遠端變更更新選取的資源。</description>
+   		<topic label="更新" href="tasks/tasks-113.htm"/>
+   	</context>
+
+ 	<context id="team_create_patch_action_context">
+   		<description>建立修補程式，其在被套用至與本端資源相同的基礎時，將會複製選取的資源。</description>
+   		<topic label="使用修補程式" href="tasks/tasks-68c.htm"/>
+   	</context>
+
+ 	<context id="team_tag_as_version_action_context">
+   		<description>以使用者所提供的版本名稱標示儲存庫中的所選取資源。</description>
+   		<topic label="建立專案的版本" href="tasks/tasks-100.htm"/>
+   		<topic label="將儲存庫中的專案版本化" href="tasks/tasks-118.htm"/>
+   	</context>
+
+ 	<context id="team_branch_action_context">
+   		<description>使用選取的資源作為基礎來建立分支，並選擇性地將本端資源更新為在新分支上。</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+ 		<topic label="分支化" href="tasks/tasks-100a.htm"/>
+   	</context>
+
+ 	<context id="team_merge_action_context">
+   		<description>從一個分支合併變更到另一個分支中。</description>
+   		<topic label="CVS" href="reference/ref-47.htm"/>
+   	</context>
+
+ 	<context id="team_set_keyword_mode_action_context">
+   		<description>設定所選取資源的關鍵字替代模式。</description>
+   		<topic label="設定副檔名的內容類型" href="tasks/tasks-team-1.htm"/>
+   	</context>
+
+ 	<context id="team_disconnect_action_context">
+   		<description>切斷專案與 CVS 控制的連線，並選擇性地刪除 CVS 資料夾。</description>
+		<topic label="捨棄 CVS 儲存庫位置" href="tasks/tasks-94.htm"/>
+   	</context>
+
+ 	<context id="team_add_action_context">
+   		<description>將選取的資源新增至 CVS 控制，以便能加以確認及共用。</description>
+   	</context>
+
+ 	<context id="team_ignore_action_context">
+   		<description>忽略選取的資源，使它們不會被考慮納入版本控制。</description>
+   	</context>
+
+   	<context id="team_restore_from_repository_action_context">
+   		<description>載入已經從儲存庫刪除的檔案內容，以便還原它們。</description>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Other Menu Actions 				-->
+ 	<!-- ********************************** -->
+	
+	<context id="compare_with_tag_action_context">
+   		<description>將標示了使用者指定的版本或分支標示的對應遠端資源，與選取的資源比較。</description>
+   		<topic label="比較資源" href="tasks/tasks-68.htm"/>
+	 	<topic label="比較資源和儲存庫的版本" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_with_latest_action_context">
+   		<description>將具有相同標示或在相同分支上的對應遠端資源，與選取的資源比較。</description>
+   	</context>
+
+   	<context id="compare_with_revision_action_context">
+   		<description>比較選取的檔案與使用者指定的檔案修訂版。</description>
+   		<topic label="比較資源" href="tasks/tasks-68.htm"/>
+	 	<topic label="比較資源和儲存庫的版本" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+ 	<context id="replace_with_tag_action_context">
+   		<description>以標示了使用者指定的版本或分支標示的對應遠端資源，取代選取的資源。</description>
+	 	<topic label="取代在工作台的資源" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	 <context id="replace_with_latest_action_context">
+   		<description>以具有相同標示或在相同分支上的對應遠端資源，取代選取的資源。</description>
+   	</context>
+    
+   	<context id="replace_with_revision_action_context">
+   		<description>以使用者指定的檔案修訂取代選取的檔案。</description>
+   		<topic label="「導覽器」視圖" href="reference/ref-27.htm"/>
+	 	<topic label="取代在工作台的資源" href="tasks/tasks-103.htm"/>
+   	</context>
+   	
+   	<context id="checkout_into_action_context">
+   		<description>將選取的資料夾移出到現有的專案中。</description>
+   		<topic label="將資料夾移出到現有的專案中" href="tasks/tasks-96b.htm"/>
+   	</context>
+   	
+   	<context id="checkout_as_action_context">
+   		<description>將選取的資料夾移出到使用者配置的專案中。這個新專案的名稱可以與預設名稱不同。</description>
+   	</context>
+   	
+   	<context id="checkout_as_project_action_context">
+   		<description>將選取的資料夾移出到對應於每一個遠端資料夾名稱的專案中。</description>
+   		<topic label="從 CVS 儲存庫移出專案" href="tasks/tasks-96.htm"/>
+   	</context>
+
+   	<context id="checkout_module_action_context">
+   		<description>將選取的模組移出到本端工作區中。</description>
+   	</context>
+   	   	
+   	<context id="open_remote_file_action_context">
+   		<description>在編輯器中開啟所選取遠端檔案的內容。</description>
+   	</context>
+
+ 	<context id="show_in_history_action_context">
+   		<description>在歷程視圖中顯示選取的本端或遠端檔案的修訂歷程。</description>
+   		<topic label="檢視檔案的修訂歷程" href="tasks/tasks-119.htm"/>
+   	</context>
+
+    <context id="confirm_merge_action_context">
+   		<description>將選取的資源標示為已合併。這樣會變更本端資源的基礎，以符合衝突的送入變更的基礎，以便確定本端資源中的變更。只有在以手動方式接受任何應保留的送入變更後，才應該這麼做。</description>
+   		<topic label="更新" href="tasks/tasks-113.htm"/>
+   	</context>
+   	
+    <context id="select_new_action_context">
+   		<description>選取所有新增且尚未加入到 CVS 控制項的資源。</description>
+   	</context>
+   	
+ 	<context id="compare_remote_resources_action_context">
+   		<description>互相比較兩個選取的遠端資源。</description>
+   		<topic label="比較資源" href="tasks/tasks-68.htm"/>
+	 	<topic label="比較資源和儲存庫的版本" href="tasks/tasks-101.htm"/>
+   	</context>
+   	
+   	<context id="compare_remote_with_tag_action_context">
+   		<description>將選取的資源與同一個資源的另一個分支或版本相互比較。</description>
+   	</context>
+   	
+   	<context id="copy_repository_name_action_context">
+   		<description>將選取的儲存庫位置的名稱複製到剪貼簿。</description>
+   	</context>
+   	
+   	<context id="remove_root_action_context">
+   		<description>從「儲存庫視圖」移除選取的儲存庫位置。</description>
+   	</context>
+   	
+   	<context id="add_to_branch_context">
+   		<description>將選取的專案新增至這個視圖中的分支清單。這項作業只會將專案新增至視圖中的分支，不會影響儲存庫本身。</description>
+   	</context>
+   	
+   	<context id="move_remote_tag_action_context">
+   		<description>以現有的使用者指定標示來標示選取的資源，並在必要時移動標示。</description>
+   	</context>
+   	
+   	<context id="tag_remote_action_context">
+   		<description>以使用者指定的標示來標示選取的資源。</description>
+   	</context>
+
+   	<context id="show_comment_in_history_action_context">
+   		<description>在個別的文字窗格內顯示所選取項目的完整多行註解。</description>
+   		<topic label="CVS 資源歷程視圖" href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="show_tag_in_history_action_context">
+   		<description>在個別的清單窗格內顯示所選取項目的完整標示清單。</description>
+   		<topic label="CVS 資源歷程視圖" href="reference/ref-32a.htm"/>
+   	</context>
+   	
+   	<context id="tag_with_existing_action_context">
+   		<description>以現有的使用者指定標示來標示選取的資源，並在必要時移動標示。</description>
+   	</context>
+   	
+   	<context id="select_working_set_action_context">
+   		<description>這個過濾器會從其名稱與選定工作集中的專案不符的視圖中，移除所有的根資料夾。</description>
+   	</context>
+   	
+   	<context id="deselect_working_set_action_context">
+   		<description>這個動作會移除目前所安裝的工作集過濾器。</description>
+   	</context>
+   	
+    <context id="edit_working_set_action_context">
+   		<description>這個動作會編輯目前所安裝的工作集過濾器。</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- TagConfiguration 					-->
+ 	<!-- ********************************** -->
+	
+	<context id="refresh_tags_action_context">
+   		<description>聯絡伺服器來重新整理這個視圖中所顯示的分支和版本標示</description>
+   		<topic label="探索分支和版本標示" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context id="refresh_remote_project_selection_page_context">
+   		<description>聯絡伺服器來重新整理已勾選資料夾的分支和版本標示</description>
+   		<topic label="探索分支和版本標示" href="tasks/tasks-110.htm"/>
+   	</context>
+   	
+	<context  id="tag_configuration_overview" >
+   		<description>配置顯示在工作台中的分支和版本。藉由瀏覽遠端 CVS 檔案以尋找標示，您可以選擇性地從每一個檔案上的標示清單中選取應記住及不必記住哪些標示。您也可以選擇會自動查驗標示的檔案。
+</description>
+   		<topic label="探索分支和版本標示" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+    <context  id="tag_configuration_refreshlist" >
+      <description>此清單列示會自動查驗標示的檔案。依預設，.project 檔案是會查驗的。但在有些案例中，其他檔案可能有更完整的標示歷程而應該查驗。
+</description>
+      <topic label="探索分支和版本標示" href="tasks/tasks-110.htm"/>
+   	</context>
+   
+   	<context  id="tag_configuration_refreshaction" >
+      <description>這將會從尚未配置成自動搜尋標示的檔案中提取分支和版本標示。如果您預期看到的標示未出現，請嘗試將檔案清單變更成透過標示配置對話框查驗。</description>
+      <topic label="探索分支和版本標示" href="tasks/tasks-110.htm"/>
+   	</context>
+
+ 	<!-- ********************************** -->
+ 	<!-- Watch/Edit							-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="team_edit_action_context" >
+      <description>通知伺服器您想要編輯這個檔案。</description>
+   	</context>
+   	
+   	<context  id="team_unedit_action_context" >
+      <description>通知伺服器您已經沒有在編輯這個檔案，並將內容回復到原先衍生檔案的基礎修訂的內容。</description>
+   	</context>
+   	
+   	<context  id="team_show_editors_action_context" >
+      <description>在「CVS 編輯器」視圖中顯示選定資源的所有編輯器及其任何子項。</description>
+   	</context>
+   	
+   	<context  id="cvs_editors_view_context" >
+      <description>這個視圖會顯示一或多個檔案的所有已登錄編輯器。</description>
+   	</context>
+   	
+   	<context  id="editors_dialog_context" >
+      <description>這個對話框會顯示您要求編輯之檔案的所有的已登錄編輯器。</description>
+   	</context>
+   	
+   	<context  id="watch_edit_preference_page_context" >
+      <description>這個頁面支援 CVS 監視/編輯的配置。啟用監視/編輯時，會使得從伺服器移出的所有檔案都變成唯讀。如果編輯檔案，就可以寫入檔案，並且會傳送一份編輯通知給伺服器。</description>
+   	</context>
+   	
+ 	<!-- ********************************** -->
+ 	<!-- Dialogs					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context id="release_comment_dialog_context">
+       <description>輸入註解來說明這項確認的內容。</description>
+    </context>
+   	<context id="user_validation_dialog_context">
+      <description>在這個對話框中輸入登入儲存庫的適當資訊。</description> 
+    </context>
+    <context id="tag_local_as_version_dialog_context">
+      <description>請輸入將套用到存在本端環境的修訂版之版本標示名稱。
+</description>
+    </context>
+    <context id="branch_dialog_context">
+		<description>這個對話框可讓您指定要建立的分支名稱，並可選擇性地藉由將本端資源的標示更新為新建的分支標示，讓您開始在分支中工作。</description>
+    </context>
+    <context id="add_to_cvsignore_context">
+    	<description>在對話框中選擇如何新增已選取資源到 .cvsignore 檔案。針對每個系統不處理的資源，會在其上層目錄建立 包含在對話框中指定型樣的 .cvsignore 檔案 。這並不會影響已在版本控制下的資源。</description>
+    </context>
+    <context id="add_to_version_control_dialog_context">
+    	<description>選取在確定前應該將哪些新資源新增至版本控制項。在這個對話框中所列出的資源裡，如果有任何資源並沒有先加入，就不會對伺服器確定它們。</description>
+    </context>
+    <context id="disconnect_action_context">
+    	<description>這個對話框可讓您切斷專案與 CVS 控制項的連線。保存 CVS meta 資訊時，就能夠輕易將專案與其他 CVS 工具重新共用或一起使用。</description>
+    </context>
+    <context id="history_filter_dialog_context">
+        <description>這個對話框可讓您指定許多過濾器，來減少「歷程視圖」中所顯示的項目數。</description>
+    </context>
+    <context id="date_tag_dialog_context">
+        <description>這個對話框可讓您指定一個日期標示，以便用來擷取當時在儲存庫中的資源。</description>
+    </context>
+    <context id="keyboard_interactive_dialog_context">
+        <description>這個對話框可讓您執行 CVS 連線用鍵盤來交談的鑑別。</description>
+    </context>
+    
+ 	<!-- ********************************** -->
+ 	<!-- Preference Pages 					-->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="prune_empty_directories_pref" >
+      <description>變更時，在同步化視圖啟用刪改空值目錄。雖然刪改的目錄不會顯示在工作台，在儲存庫中仍實際存有空值目錄。
+</description>
+   	</context>
+   	
+   	<context  id="quietness_level_pref" >
+      <description>設定針對指令的 CVS 列印狀態資訊總數。在「有點安靜」模式中，會禁止列印不重要的參考訊息。重要性的考量是根據每個指令。 在「非常安靜」模式中，除了絕對必要完成的指令之外，所有輸出皆會禁止。 在「非常安靜」模式中，某些 CVS 伺服器可能無法通訊一些已發生的重要錯誤資訊。您可以考量使用「有點安靜」模式替代。
+</description>
+   	</context>
+   	
+  	<context  id="compression_level_pref" >
+      <description>於伺服器支援的情況下，在與伺服器通訊上設定壓縮層次。層次 1 是最小壓縮（通訊速度較慢，但是所需的 CPU 較少），層次 9 是最大壓縮（通訊速度較快，但是所需的 CPU 較多）。</description>
+   	</context>
+
+	<context  id="default_keywordmode_pref" >
+      <description>將預設關鍵字替代模式設為用於 ASCII 檔案。</description>
+      <topic label="設定 CVS 關鍵字替代模式" href="tasks/tasks-cvs-11.htm"/>
+   	</context>
+   	
+	<context  id="comms_timeout_pref" >
+      <description>設定等待連接到 CVS 伺服器的時間總數（以秒為單位）。
+</description>
+   	</context>
+   	
+   	<context  id="consider_content_pref" >
+      <description>為比較與同步 CVS 資源設定預設比較方法。依預設，乃是使用時間戳記來比較 CVS 檔案，而且這是最快的方法。不過，在某些情況下，經由比較檔案內容可得到較為精確的比較。這個設定可以從比較編輯器或同步化視圖中輪換。
+</description>
+   	</context>
+   	
+	<context  id="replace_deletion_of_unmanaged_pref" >
+      <description>從儲存庫取代為資源時，允許刪除不在 CVS 控制項的資源。
+</description>
+   	</context>
+   	
+    <context  id="save_dirty_editors_pref" >
+      <description>配置當執行 CVS 作業時有具有未儲存變更之開啟編輯器時會發生什麼情況。</description>
+   	</context>
+   	
+   	<context  id="treat_new_files_as_binary_pref" >
+      <description>設定所有的新檔案是否都要被視為二進位檔案。如果停用，則會使用「團隊」檔案內容類型喜好設定來決定檔案類型。</description>
+      <topic label="設定副檔名的內容類型" href="tasks/tasks-team-1.htm"/>
+   	</context>
+   	
+   	<context  id="determine_server_version" >
+      <description>設定在第一次連線時是否應該查詢伺服器版本，以決定相容性。</description>
+   	</context>
+
+   	<context  id="confirm_move_tag" >
+      <description>設定使用者在執行要求將現有標示移除的標示作業時，是否要提示使用者進行確認。</description>
+   	</context>
+   	
+   	<context  id="line_end_pref" >
+      <description>設定從伺服器下載檔案時，要將文字檔的行尾轉換成平台行尾，或保留不變。</description>
+   	</context>
+
+   	<context  id="console_preference_page_context" >
+      <description>這個頁面支援 CVS 主控台的配置。可以設定的內容是輸出顏色和字型。您也可以將主控台配置為在有輸出時自動開啟。</description>
+   	</context>
+
+   	<context  id="ext_preference_page_context" >
+      <description>這個頁面支援 EXT 連線參數的配置。</description>
+      <topic label="CVS" href="reference/ref-47.htm"/>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	
+   	<context id="ext_preference_rsh_context">
+		<description>將呼叫此程式以連接遠端 CVS 伺服器。
+RSH 指令是使用下列呼叫型樣來呼叫：&lt;CVS_RSH&gt; &lt;Parameters&gt; &lt;CVS_SERVER&gt;</description> 
+	</context>
+	
+	<context id="ext_preference_param_context">
+		<description>預設參數型樣為 {host} -l {user}。您可使用 {host}、{user}、{password} 與 {port} 來修改它。</description>
+	</context>
+	
+	<context id="ext_preference_server_context">
+		<description>這是遠端 CVS 伺服器程式的名稱。
+僅在遠端 CVS 伺服器名稱與預設值不同時，才變更這個設定
+</description>
+	</context>
+
+   	<context  id="decorators_preference_page_context" >
+      <description>這個頁面支援 CVS 標籤和圖示裝飾的配置。</description>
+      <topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+      <topic label="啟用 CVS 資源裝飾" href="tasks/tasks-107b.htm"/>
+   	</context>
+   	
+   	<context  id="password_management_preference_page_context" >
+      <description>這個頁面可讓您檢視哪些儲存庫位置快取了鑑別資訊，且可讓您清除這項資訊。
+</description>
+		<topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+   	</context>
+   	   	   	   	
+   	<!-- ********************************** -->
+ 	<!-- Views					            -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="console_view_context" >
+      <description>這個視圖顯示 CVS 作業的輸出。</description>
+      <topic label="利用 CVS 進行團隊程式設計" href="concepts/concepts-26.htm"/>
+   	</context>
+   	<context  id="repositories_view_context" >
+      <description>這個視圖可讓您瀏覽已知 CVS 儲存庫的內容，以及將模組移出到本端工作區中作為專案。</description>
+		<topic label="「CVS 儲存庫」視圖" href="reference/ref-32.htm"/>
+		<topic label="重新整理「CVS 儲存庫」視圖" href="tasks/tasks-93.htm"/>
+   	</context>
+   	<context  id="resource_history_view_context" >
+      <description>這個視圖顯示在 CVS 控制下的檔案之修訂歷程。</description>
+      <topic label="CVS 資源歷程視圖" href="reference/ref-32a.htm"/>
+      <topic label="檢視檔案的修訂歷程" href="tasks/tasks-119.htm"/>
+   	</context>
+   	<context  id="catchup_release_viewer_context" >
+      <description>這個視圖顯示收到、送出及衝突的變更。
+</description>
+      <topic label="CVS 同步化視圖" href="reference/ref-33.htm"/>
+		<topic label="與儲存庫同步化" href="tasks/tasks-115.htm"/>
+   	</context>
+   	<context  id="compare_revision_view_context" >
+      <description>這個視圖允許本端檔案副本與儲存庫中修訂的比較。
+以修訂而言，可用的動作有「取得內容」和「取得修訂」。雖然兩者取代本端檔案為遠端修訂內容，「取得修訂」將會「重複複製」本端檔案。這表示檔案變更無法確定能回到儲存庫。
+</description>
+   	</context>
+    <context  id="annotate_view_context" >
+      <description>這個視圖會顯示 CVS 儲存庫中檔案的使用者和修訂註釋。
+</description>
+   	</context>
+   	
+   	
+   	<!-- ********************************** -->
+ 	<!-- Actions					        -->
+ 	<!-- ********************************** -->
+ 	
+ 	<context  id="get_file_revision_action_context" >
+      <description>將檔案的修訂載入到工作區中。檔案將會「重複複製」，而且無法對使用者確定變更能至儲存庫。
+</description>
+   	</context>
+ 	<context  id="get_file_contents_action_context" >
+      <description>將檔案的內容載入到工作區中。本端檔案的基礎修訂將不會變更而且檔案會成為變動過的檔案。如果您想要回復檔案內容至之前的修訂，請執行此行動。
+</description>
+   	</context>
+   	<context  id="get_annotate_action_context" >
+      <description>在所選的資源上執行 CVS 註釋指令。這個指令會顯示資源，且每行都會附註提供者和修訂。</description>
+   	</context>
+   	<context  id="new_repository_location_action_context" >
+      <description>建立新的 CVS 儲存庫位置，並將它新增至「CVS 儲存庫」視圖。</description>
+      <topic label="建立儲存庫位置" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="new_dev_eclipse repository_location_action_context" >
+      <description>為 dev.eclipse.org 建立新的 CVS 儲存庫位置，並將它新增至「CVS 儲存庫」視圖。</description>
+      <topic label="建立儲存庫位置" href="tasks/tasks-92.htm"/>
+   	</context>
+   	<context  id="show_remote_folders_action_context" >
+      <description>切換「CVS 儲存庫」視圖以顯示資料夾。</description>
+      <topic label="「CVS 儲存庫」視圖" href="reference/ref-32.htm"/>
+   	</context>
+   	<context  id="show_remote_modules_action_context" >
+      <description>切換「CVS 儲存庫」視圖以顯示定義於 CVSROOT/模組檔案的模組。</description>
+      <topic label="「CVS 儲存庫」視圖" href="reference/ref-32.htm"/>
+   	</context>
+   		
+   	<!-- ********************************** -->
+ 	<!-- Sync Actions					    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="sync_commit_action_context" >
+      <description>將選取的送出變更確認到 CVS 儲存庫。不會確認有衝突的變更；如果要確認它們，您必須使用「置換並確認」動作。</description>
+   	</context>
+   	
+   	<context id="sync_forced_commit_action_context">
+      <description>將選取的衝突及送入變更確認到 CVS 儲存庫。不會確認無衝突的送出變更；如果要確認它們，您必須使用「確認」動作。</description>
+   	</context>
+	
+	<context id="sync_update_action_context">
+      <description>從 CVS 儲存庫取得選取的送入變更。不會更新有衝突的變更；如果要更新它們，您必須使用「置換並更新」動作。</description>
+   	</context>
+	
+	<context id="sync_forced_update_action_context">
+      <description>從 CVS 儲存庫取得選取的衝突及送出變更。不會更新無衝突的送入變更；如果要更新它們，您必須使用「更新」動作。如果其中某些選取的資源無法自動合併（亦即，它們沒有字行上的衝突），則您可以選擇執行自動合併，或是取代為遠端內容。</description>
+   	</context>
+	
+	<context id="sync_add_action_context">
+      <description>將選取的資源新增至 CVS 控制。</description>
+   	</context>
+	
+	<context id="sync_ignore_action_context">
+      <description>將選取的資源新增至適當的 .cvsignore 檔。將不再考慮對這些資源進行儲存庫作業。</description>
+   	</context>
+	
+	<context id="merge_update_action_context">
+      <description>從 CVS 儲存庫取得選取的送入變更。不會更新有衝突的變更；如果要更新它們，您必須使用「置換並更新」動作。</description>
+   	</context>
+	
+	<context id="merge_forced_update_action_context">
+      <description>從 CVS 儲存庫取得選取的衝突變更。不會更新無衝突的送入變更；如果要更新它們，您必須使用「更新」動作。如果其中某些選取的資源無法自動合併（亦即，它們沒有字行上的衝突），則您可以選擇執行自動合併，或是取代為遠端內容。</description>
+   	</context>
+	
+	<context id="merge_update_with_joinaction_context">
+      <description>從 CVS 儲存庫取得選取的衝突變更。不會更新無衝突的送入變更；如果要更新它們，您必須使用「更新」動作。在執行合併時，難以偵測衝突是否可自動合併（亦即，它們沒有字行上的衝突）。如果您認為該檔案可自動合併，則您可以使用這個動作。然後您就可以選擇要執行自動合併或是以遠端內容取代。</description>
+   	</context>
+
+   	<!-- ********************************** -->
+ 	<!-- Properties pages				    -->
+ 	<!-- ********************************** -->
+ 	
+   	<context id="repository_location_property_page_context" >
+      <description>這個頁面顯示儲存庫位置的內容，並可讓您修改連線方法、使用者名稱及密碼。如果在這個頁面上更改了內容，則會對所有與此位置共用的專案更改該內容。</description>
+      <topic label="變更 CVS 儲存庫位置的內容" href="tasks/tasks-95.htm"/>
+   	</context>
+   	
+   	<context id="repository_encoding_property_page_context" >
+      <description>這個頁面可讓您設定伺服器所用的檔案系統編碼來代管儲存庫。
+適當地設定這個項目可確保檔名和確定訊息都會適當翻譯。
+這個設定不會影響檔案內容。
+</description>
+   	</context>
+
+   	<context id="project_property_page_context" >
+      <description>這個頁面顯示專案的 CVS 內容。您可以將專案的 CVS 共用資訊變更到另一個相容的儲存庫位置。</description>
+      <topic label="變更專案的共用" href="tasks/tasks-117b.htm"/>
+   	</context>
+   	
+   	<context id="folder_property_page_context" >
+      <description>這個頁面顯示資料夾的 CVS 內容。</description>
+   	</context>
+   	
+   	<context id="file_property_page_context" >
+      <description>這個頁面顯示檔案的 CVS 內容。</description>
+   	</context>
+   		
+</contexts>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="CVS - Fusionar de una rama a otra">
+
+	<intro 
+		href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+		<description>
+Esta hoja de apuntes lanzará asistentes automáticamente, realizar acciones y le guiará a través de los distintos pasos necesarios para fusionar cambios de una rama de CVS en otra rama o en HEAD. Para obtener más información acerca de cómo utilizar hojas de apuntes o para ver una lista de las hojas de apuntes disponibles pulse sobre la ayuda (?). Para empezar a trabajar con esta hoja de apuntes, pulse el botón "Pulse aquí para empezar", situado más abajo.</description>
+	</intro>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Determinar la información de rama y versión">
+		<description>
+En este paso debe determinar el nombre de la rama o la versión que contiene los cambios y la versión de la que se creó la rama. Esta es una tarea manual; deberá llevarla a cabo y pulsar el botón "Pulse aquí para finalizar" y así pasar al paso siguiente.
+	 
+		</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Cargar el destino en el área de trabajo">
+		<description>
+Seleccione el proyecto y elija Sustituir por &gt; Otra rama o versión del menú de contexto. A continuación, seleccione la rama por la que la desea sustituir. En este paso, debe asegurarse de que el destino se ha cargado en el área de trabajo. Esta es una tarea manual; deberá llevarla a cabo y pulsar el botón "Pulse aquí para finalizar" y así pasar al paso siguiente.
+	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm" 
+		title="Fusionar detalles">
+		<description>
+Seleccione el proyecto, elija Equipo &gt; Fusionar y cumplimente el asistente. En este paso se especifican los detalles de la fusión.  Esta es una tarea manual; deberá llevarla a cabo y pulsar el botón "Pulse aquí para finalizar" y así pasar al paso siguiente.
+	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Trabajar con el editor de fusiones">
+		<description>
+Fusione los cambios manualmente en el editor de fusiones. En este paso se cargan los cambios necesarios en el área de trabajo. Esta es una tarea manual; deberá llevarla a cabo y pulsar el botón "Pulse aquí para finalizar" y así pasar al paso siguiente.
+	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="Comprometer los cambios">
+		<description>
+Seleccione Equipo &gt; Sincronizar con depósito y después comprometa todos los cambios en el depósito. Este paso finaliza la transferencia de los cambios del área de trabajo al depósito CVS. Esta es una tarea manual; deberá llevarla a cabo y pulsar el botón "Pulse aquí para finalizar" y así pasar al paso siguiente.
+	</description>
+	</item>
+
+</cheatsheet>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- F1 on F1 -->
+   <context  id="f1Shell" >
+      <description>La guida &quot;a comparsa&quot;, sensibile al contesto, viene
+fornita per varie interfacce, incluse viste, procedure guidate, campi, caselle di
+controllo, pulsanti e voci di menu. Per accedere alla Guida, attivare la voce
+facendo clic su di essa o utilizzando il tasto TAB e premere F1.
+
+Alcune informazioni a comparsa includono collegamenti ad argomenti della guida in linea dove è possibile
+trovare ulteriori informazioni relative alla voce.
+
+Questo aiuto a comparsa è stato visualizzato perché è stato premuto il tasto F1 mentre un'altro aiuto a comparsa
+era già aperto.</description>
+   </context>
+
+<!-- Preference page for help browsers -->
+   <context  id="prefPageBrowsers" >
+      <description>Consente la selezione di un browser Web.  Il browser Web selezionato verrà considerato il browser predefinito per la visualizzazione
+degli argomenti della guida.</description>
+	  <topic label="Finestra Preferenze" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Path to custom browser on preference page for help browsers -->
+   <context  id="prefPageCustomBrowserPath" >
+      <description>Quando viene selezionato un browser web personalizzato nell'elenco, indicare il percorso
+del programma utilizzato per avviare il browser.  Se il programma è contenuto nel percorso di sistema, sarà possibile
+specificare solo il nome del programma.
+
+Se il programma non accetta l'URL come ultimo parametro, è possibile utilizzare la stringa %1 per indicare la posizione
+del parametro URL nel comando.</description>
+      <topic label="Finestra Preferenze" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+<!-- Application server preference page -->
+   <context  id="prefPageAppServer" >
+      <description>Queste impostazioni consentono di sostituire l'indirizzo dell'interfaccia di rete e il numero della porta
+che verranno utilizzati dal <b>server di applicazioni</b> interno.  Modificare le impostazioni se la porta che si desidera
+utilizzare è già in uso o se l'indirizzo IP è stato modificato.
+
+Per determinare automaticamente l'indirizzo dell'interfaccia, lasciare <b>vuoto</b> il campo host.
+
+Per utilizzare la porta assegnata dinamicamente dal sistema, specificare <b>0</b> nel campo porta.
+
+In circostanza normali, utilizzare le impostazioni <b>predefinite</b>.</description>
+      <topic label="Finestra Preferenze" href="/org.eclipse.platform.doc.user/reference/ref-72.htm"/>
+   </context>
+
+</contexts>

@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Generated-from: 1095333190000;type=2
+Bundle-Name: %Plugin.name
+Bundle-SymbolicName: org.eclipse.ui; singleton=true
+Bundle-Version: 3.0.1
+Bundle-ClassPath: ui.jar
+Bundle-Activator: org.eclipse.ui.internal.UIPlugin
+Bundle-Vendor: %Plugin.providerName
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.ui.internal
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.help,
+ org.eclipse.swt;reprovide=true,
+ org.eclipse.jface;reprovide=true,
+ org.eclipse.ui.workbench;reprovide=true
+Eclipse-AutoStart: true

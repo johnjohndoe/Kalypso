@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Generated-from: 1095333186000;type=2
+Bundle-Name: %appserver_plugin_name
+Bundle-SymbolicName: org.eclipse.help.appserver; singleton=true
+Bundle-Version: 3.0.0
+Bundle-ClassPath: appserver.jar
+Bundle-Activator: org.eclipse.help.internal.appserver.AppserverPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Provide-Package: org.eclipse.help.internal.appserver
+Require-Bundle: org.eclipse.core.runtime
+Eclipse-AutoStart: true

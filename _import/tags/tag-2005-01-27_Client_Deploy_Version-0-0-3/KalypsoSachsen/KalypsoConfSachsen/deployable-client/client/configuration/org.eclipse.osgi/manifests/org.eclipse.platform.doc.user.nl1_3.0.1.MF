@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Generated-from: 1092667448000;type=4
+Bundle-Name: Eclipse Workbench User Guide NL Support
+Bundle-SymbolicName: org.eclipse.platform.doc.user.nl1
+Bundle-Version: 3.0.1
+Bundle-ClassPath: $nl$/
+Fragment-Host: org.eclipse.platform.doc.user;bundle-version="[3.0.1,4.0.0)"
+Bundle-Localization: plugin
