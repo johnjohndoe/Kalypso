@@ -51,3 +51,12 @@ Version ...
   ausgewertet.
   (Im Vorhersagemodus ist weiterhin der RootNode fuer jede WizzardPage
    im .naControl.gml festgelegt)
+
+- Weisse Elster Vorhersage:
+  Es wird pro WizzardPage nur ein PegelKnoten berechnet.
+  Wenn wir im Grundmodell weitere Knoten als "ErgebnisKnoten" setzen, 
+  dann wuerden diese auch Berechnet, ich halte dies aber fuer nicht sinnvoll.
+  Vielleicht koennen wir da spaeter eine bessere Loesung liefern, z.B. initial alle
+  Pegel berechnen, verbunden mit einer optimierung, die bisher auch noch fehlt.
+  Dann wuerden für alle WizzardSeiten zu Beginn (optimierte)Ergebnisse vorliegen.
+ 
