@@ -1,9 +1,9 @@
 package org.kalypso.ogc.sensor.loaders;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
+
+import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -84,19 +84,26 @@ public class ZmlLoader extends AbstractLoader
           null );
       
       // TODO testing, remove
-      final FileWriter wrtr = new FileWriter( new File("c:/temp/test.zml") );
-      ZmlFactory.getMarshaller().marshal( xmlObs, wrtr );
-      wrtr.close();
+//      final FileWriter wrtr = new FileWriter( new File("c:/temp/test.zml") );
+//      ZmlFactory.getMarshaller().marshal( xmlObs, wrtr );
+//      wrtr.close();
 
       // set contents of ZML-file
-      final SetContentHelper thread = new SetContentHelper(  )
+      final SetContentHelper helper = new SetContentHelper(  )
       {
         protected void write( final Writer writer ) throws Throwable
         {
-          ZmlFactory.getMarshaller().marshal( xmlObs, writer );
+          System.out.println( "Marschalling started: " + url);
+          
+          final Marshaller marshaller = ZmlFactory.getMarshaller();
+          marshaller.setProperty( Marshaller.JAXB_ENCODING, getCharset() );
+          
+          marshaller.marshal( xmlObs, writer );
+          
+          System.out.println( "Marshalling finished." );
         }
       };
-      thread.setFileContents(file, false, true, new NullProgressMonitor());
+      helper.setFileContents(file, false, true, new NullProgressMonitor());
     }
     catch( Throwable e ) // generic exception caught for simplicity
     {

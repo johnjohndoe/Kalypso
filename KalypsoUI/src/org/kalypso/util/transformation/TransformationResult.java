@@ -48,7 +48,7 @@ public class TransformationResult
     if( !hasMessages() )
       return Status.OK_STATUS;
     
-    final String msg = m_summary + "\n" + "Siehe Logdatei: " + m_logFile.getFullPath().toOSString();
+    final String msg = m_summary + "\n" + "Siehe Details oder Logdatei: " + m_logFile.getFullPath().toOSString();
     
     return new LogStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, msg, null, m_logFile );
   }

@@ -19,6 +19,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
  */
 public class WQTuppleModel extends AbstractTuppleModel
 {
+  private final static Double NaN = new Double( Double.NaN );
+  private final static Double ZERO = new Double( 0 );
+  
   private final ITuppleModel m_model;
 
   private final IAxis[] m_axes;
@@ -97,32 +100,48 @@ public class WQTuppleModel extends AbstractTuppleModel
       {
         Object value = null;
 
-        final Date d = (Date) m_model.getElement( index, m_dateAxis );
+        Date d = null;
+        try
+        {
+          d = (Date) m_model.getElement( index, m_dateAxis );
+        }
+        catch( ClassCastException e )
+        {
+          e.printStackTrace();
+        }
 
         final WechmannSet set = m_wsets.getFor( d );
-         
+
         if( set != null )
         {
-        if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
-        {
-          final double w = ((Number) m_model.getElement( index, m_srcAxis ))
-              .doubleValue();
-          value = new Double( WechmannFunction.computeQ( set.getForW( w ), w ) );
-        }
-        else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-        {
-          final double q = ((Number) m_model.getElement( index, m_srcAxis ))
-              .doubleValue();
-          try
+          if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
           {
-            value = new Double( WechmannFunction.computeW( set.getForQ( q ), q ) );
+            final double w = ((Number) m_model.getElement( index, m_srcAxis ))
+                .doubleValue();
+
+            double q = WechmannFunction.computeQ( set.getForW( w ), w );
+            // just leave 3 decimals
+            // TODO Q only has 3 decimals, is this ok?
+            q = ((double)((int)(q * 1000))) / 1000;
+            value = new Double( q );            
           }
-          catch( WechmannException e )
+          else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
           {
-            value = new Double( Double.NaN );
+            final double q = ((Number) m_model.getElement( index, m_srcAxis ))
+                .doubleValue();
+            try
+            {
+              value = new Double( WechmannFunction.computeW( set.getForQ( q ),
+                  q ) );
+            }
+            catch( WechmannException e )
+            {
+              value = NaN;
+            }
           }
         }
-        }
+        else
+          value = ZERO;
 
         m_values.put( objIndex, value );
 
@@ -187,7 +206,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   {
     if( axis.equals( m_destAxis ) )
       return -1; // TODO: check if ok, always returning -1 here. Should be ok,
-                 // since indexOf only makes sensor for key axes
+    // since indexOf only makes sensor for key axes
 
     return m_model.indexOf( element, axis );
   }

@@ -40,7 +40,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   public static final String TOOLTIP = "Geben Sie hier die Bezeichnung des Rechenfalls ein";
 
-  private SimpleDateFormat m_format = new SimpleDateFormat( "dd-MM-yyyy_HH'h'mm" );
+  private static final SimpleDateFormat m_format = new SimpleDateFormat( "yyyy-MM-dd_HH'h'mm" );
 
   protected String m_name;
 
