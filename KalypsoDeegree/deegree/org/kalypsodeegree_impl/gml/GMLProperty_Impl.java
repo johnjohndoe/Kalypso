@@ -159,10 +159,10 @@ public class GMLProperty_Impl implements GMLProperty
   public String getName()
   {
     Debug.debugMethodBegin( this, "getName" );
-
-    String s = element.getNodeName();
     Debug.debugMethodEnd();
-    return s;
+    return element.getNamespaceURI()+":"+element.getLocalName();
+//    String s = element.getNodeName();
+//    return s;
   }
 
   /**
@@ -533,6 +533,9 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2004/11/16 10:44:16  doemming
+ * *** empty log message ***
+ *
  * Revision 1.5  2004/10/07 14:09:13  doemming
  * *** empty log message ***
  *
