@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.kalypso.java.properties.PropertiesHelper;
@@ -20,11 +21,12 @@ import org.kalypso.zml.AxisType.ValueLinkType;
  * should be as follows:
  * <p>
  * <pre>
- * href="TYPE=...#LOCATION=...#COLUMN=..."
+ * href="TYPE=...#LOCATION=...#COLUMN=...#LINE=..."
  * </pre>
  * TYPE: type of the path: relative (to the zml file) or absolute
  * LOCATIOM: the path
  * COLUMN: the column number into which the values for the axis can be found
+ * LINE: [optional, default 1] the line number to begin at
  * 
  * @author schlienger
  */
@@ -41,6 +43,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValues
   private final String m_type;
   private final int m_column;
   private final URL m_url;
+  private final int m_line;
 
   /**
    * Constructor, parses the href from the valueLink.
@@ -57,6 +60,9 @@ public class ValueLink implements IZmlValuesLoader, IZmlValues
     
     m_type = hrefProps.getProperty( "TYPE" );
     m_column = Integer.valueOf( hrefProps.getProperty("COLUMN") ).intValue() - 1;
+    
+    final String sline = hrefProps.getProperty( "LINE" );
+    m_line = sline == null ? 1 : Integer.valueOf(sline).intValue();
     
     // depending on path type, complement with currentPath
     if( m_type.equals( "relative" ) )
@@ -75,7 +81,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValues
       m_csv = (CSV)m_model.getPoolObject( m_url );
       if( m_csv == null )
       {
-        m_csv = new CSV( new InputStreamReader( m_url.openStream() ), m_valueLink.getSeparator() );
+        m_csv = new CSV( new InputStreamReader( m_url.openStream() ), m_valueLink.getSeparator(), m_line );
         m_model.putPoolObject( m_url, m_csv );
       }
 
@@ -123,6 +129,7 @@ public class ValueLink implements IZmlValuesLoader, IZmlValues
     }
     catch( ParserException e )
     {
+      // TODO handling
       throw new RuntimeException( e );
     }
   }
@@ -150,8 +157,12 @@ public class ValueLink implements IZmlValuesLoader, IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#indexOf(java.lang.Object)
    */
-  public int indexOf( final Object obj )
+  public int indexOf( final Object obj ) 
   {
-    return ((Integer)m_helper.get( obj )).intValue();
+    Integer iobj = (Integer)m_helper.get( obj );
+    if( iobj == null )
+      return -1;
+    
+    return iobj.intValue();
   }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obsdiagview.template.kalypso.org
+.\obsdiagview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Mein Diagramm</title>
+	<legend title="Legend" visible="true"/>
+
+	<axis id="d" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="w" label="Wert" unit="m" direction="vertical" position="left" />
+
+   	<curve id="C1" name=" " linktype="zml" xlink:type="simple" xlink:href="" xlink:actuate="onRequest">
+	   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   	<mapping observation-axis="Wert" diagram-axis="w" />
+   	</curve>
+	   	
+	<curve id="C2" name="" linktype="zml" xlink:type="simple" xlink:href="" xlink:actuate="onRequest">
+		<mapping observation-axis="Datum" diagram-axis="d" />
+		<mapping observation-axis="Wert" diagram-axis="w" />
+   	</curve>
+   	
+</obsdiagview>

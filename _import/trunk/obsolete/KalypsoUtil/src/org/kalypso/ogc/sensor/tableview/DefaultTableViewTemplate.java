@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.tableview;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.tableview.template.Rules;
 
 /**
  * A default implementation that works directly with one IObsevartion. That is, it delivers
@@ -42,5 +43,13 @@ public class DefaultTableViewTemplate implements ITableViewTemplate
     }
     
     return m_cols;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewTemplate#getRules()
+   */
+  public Rules getRules()
+  {
+    return new Rules();
   }
 }

@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.tableview.renderer;
+package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Component;
 import java.text.DateFormat;

@@ -157,6 +157,9 @@ public class ObservationTableModel extends AbstractTableModel
       ITuppleModel values = m_columns[columnIndex - 1].getObservation().getValues( m_args );
       int index = values.indexOf( obj, m_columns[columnIndex - 1].getSharedAxis() );
 
+      if( index == -1 )
+        return null;
+      
       // Now we can retrieve the element using value axis
       return values.getElement( index, m_columns[columnIndex - 1].getValueAxis().getPosition() );
     }

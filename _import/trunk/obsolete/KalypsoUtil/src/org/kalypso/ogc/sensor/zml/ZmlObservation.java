@@ -86,7 +86,7 @@ public class ZmlObservation implements IObservation
       catch( Exception e )
       {
         // TODO: how to handle this correctly?
-        e.printStackTrace();
+        throw new RuntimeException( e );
       }
     }
 

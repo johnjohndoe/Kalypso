@@ -1,4 +1,4 @@
-package org.kalypso.ogc.sensor.tableview.renderer;
+package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,6 +32,9 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
         hasFocus, row, column );
 
     final MaskedNumber mn = (MaskedNumber)value;
+    
+    if( mn == null )
+      return label;
     
     TableModel tm = table.getModel();
     if( tm instanceof ObservationTableModel )

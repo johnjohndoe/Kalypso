@@ -38,7 +38,7 @@ public class ObservationTimeSeries extends TimeSeriesCollection
 
         for( int j = 0; j < model.getCount(); j++ )
         {
-          s.add( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
+          s.addOrUpdate( new FixedMillisecond( (Date)model.getElement( j, dateAxis.getPosition() ) ),
               ((MaskedNumber)model.getElement( j, valueAxis[i].getPosition() ) ).doubleValue() );
         }
 

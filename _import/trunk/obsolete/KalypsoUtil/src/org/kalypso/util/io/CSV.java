@@ -21,15 +21,22 @@ public class CSV
 
   private final Vector m_lines = new Vector();
 
+  private final int m_line;
+
   /**
    * Constructor. Fetches the file and closes the reader;
    * 
+   * @param reader
+   * @param split the string used for spliting each line into chunks
+   * @param line the line number to start reading the values at
+   * 
    * @throws IOException
    */
-  public CSV( final Reader reader, final String split ) throws IOException
+  public CSV( final Reader reader, final String split, final int line ) throws IOException
   {
     m_reader = reader;
     m_split = split;
+    m_line = line;
 
     fetchFile();
   }
@@ -42,6 +49,15 @@ public class CSV
     BufferedReader r = new BufferedReader( m_reader );
 
     String line = r.readLine();
+
+    // steps over the lines until start-line-number is reached
+    int lineNR = 1;
+    while( lineNR < m_line && line != null )
+    {
+      line = r.readLine();
+      lineNR++;
+    }
+    
     while( line != null )
     {
       m_lines.add( line.split( m_split ) );
