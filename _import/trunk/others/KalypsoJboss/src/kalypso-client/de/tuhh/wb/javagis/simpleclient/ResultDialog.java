@@ -5,6 +5,7 @@ import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.VectorSet;
 import org.xml.sax.helpers.AttributesImpl;
 
+import de.tuhh.wb.javagis.tools.I18n;
 
 import java.awt.GridLayout;
 import java.awt.Dimension;
@@ -40,7 +41,7 @@ public class ResultDialog extends JScrollPane implements ActionListener//,MouseL
 	super();
 	this.panel=new JPanel();
 	this.myTableModel=new ResultDialogModel();
-	addRow=new JButton("add point");
+	addRow=new JButton(I18n.get("KF_addNode"));
 	addRow.setToolTipText("<html>note: you can visualize at maximum 10 graphs at one time with the graphic-tool<br><i>you may produce more than 10 results and load them manually with the graphic-tool</i></html>");
 	panel.add(addRow);
 	jTable=new JTable(myTableModel);

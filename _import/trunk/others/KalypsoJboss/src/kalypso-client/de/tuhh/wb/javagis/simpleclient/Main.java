@@ -29,13 +29,14 @@ import java.util.Vector;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import de.tuhh.wb.javagis.tools.I18n;
 
 //import de.tuhh.wb.javagis.simulation.I_FilerImpl;
 
 public class Main extends JFrame implements ActionListener,WindowListener,KalypsoXmlImportListener
 {    
     public final String OUT_DIR="results_kalypso";
-
+    
     private final static String CONF_FILE="kalypso.conf";
     private static Main main;
     private JButton start;
@@ -66,13 +67,12 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
 
     public static void main(String[] args) throws Exception
     {
-
 	File configFile=new File("kalypsoMain.conf");
-
+	
 	props=new Properties();
 	try
 	    {
-		props.load(new FileInputStream(configFile));		    
+		props.load(new FileInputStream(configFile));
 	    }
 	catch(Exception e)
 	    {
@@ -84,37 +84,55 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
     
     public Main()
     {
-	super("Kalypso");
+	super("KalypsoForecast");
 	this.rainStationFileNames=new HashSet();
 	this.tempStationFileNames=new HashSet();
 	start=new JButton("START");
   	start.setActionCommand("startSimulation");
 	start.addActionListener(this);
 
-	jGraphic=new JButton("graphic");
+	jGraphic=new JButton(I18n.get("KF_runGraphic"));//"graphic");
 	jGraphic.setActionCommand("runGraphicTool");
 	jGraphic.addActionListener(this);
 
-	jLog=new JButton("view");
+	jLog=new JButton(I18n.get("KF_viewLog"));//"view");
   	jLog.setActionCommand("viewLog");
 	jLog.addActionListener(this);
-
+	
 	getContentPane().setLayout(null);
-	modelVersion=new FileDialog("model",false);
+
+	modelVersion=new FileDialog("model",I18n.get("KF_ChooseModel"),false);//"model",false);
+
 	rootNode=new RootNodeDialog();
-	simulationDir=new FileDialog("resultDir",true);
-	lzPathDir=new FileDialog("lzpath",true);
+	simulationDir=new FileDialog("resultDir",I18n.get("KF_resultDir"),true);//"resultDir",true);
+	lzPathDir=new FileDialog("lzpath",I18n.get("KF_lzSimPath"),true);//"lzpath",true);
 	visualizeNodes=new VisualizeNodesDialog();
 	visualizeAreas=new VisualizeAreasDialog();
  	nodes=new ResultDialog();
  	catchments=new CatchmentDialog();
 	times=new SimulationTimeDialog();
 	timeStep=new TimeStepDialog();
-	rainStations=new StationFileDialog(StationFileDialog.RAIN_KEY,"rain-sequences");
-	tempStations=new StationFileDialog(StationFileDialog.TEMP_KEY,"temperature-sequences");
+	rainStations=new StationFileDialog(StationFileDialog.RAIN_KEY,I18n.get("KF_rainSequence"));
+	tempStations=new StationFileDialog(StationFileDialog.TEMP_KEY,I18n.get("KF_temperatureSequence"));
 
-	add("control parameter",modelVersion,10,10);
-	add("initial condition (path to 'lzsim')",lzPathDir,10,70);
+	add(I18n.get("KF_controlParameter"),modelVersion,10,10);
+	add(I18n.get("KF_initialCondition"),lzPathDir,10,70);
+	add(null,rootNode,10,130);
+	add("     ",visualizeAreas,360,295);
+	add(I18n.get("KF_parametersToVisualize:"),visualizeNodes,230,295);
+	add(I18n.get("KF_resultCatchments"),catchments,360,70);
+	add(I18n.get("KF_resultNodes"),nodes,260,70);
+	add(I18n.get("KF_timeOfSimulation"),times,500,10);
+	add(null,timeStep,500,120);
+	add(I18n.get("KF_rainSequenceForecast"),rainStations,10,370);
+	add(I18n.get("KF_temperatureSequenceForecast"),tempStations,430,370);
+	add(I18n.get("KF_resultDirectory"),simulationDir,500,170);
+	add(I18n.get("KF_runSimulation"),start,750,250);
+	add(I18n.get("KF_Logging"),jLog,660,250);
+	
+	/*
+        add("control parameter",modelVersion,10,10);
+        add("initial condition (path to 'lzsim')",lzPathDir,10,70);
 	add(null,rootNode,10,130);
 	add("     ",visualizeAreas,360,295);
 	add("parameters to visualize:",visualizeNodes,230,295);
@@ -127,6 +145,7 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
 	add("result directory",simulationDir,500,170);
 	add("run simulation",start,750,250);
 	add("logging",jLog,660,250);
+	 */
 	
 	setSize(900,660);
 	setVisible(true);	
@@ -198,7 +217,9 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
 
 		rainStationFileNames.clear();
 		tempStationFileNames.clear();
-		filter.exportASCIIFiles(modelXmlFile,inpFiles.getPath(),rootNode.getNode(),tempStationFileNames,rainStationFileNames);		
+
+		filter.exportASCIIFiles(modelXmlFile,inpFiles.getPath(),rootNode.getNode(),tempStationFileNames,rainStationFileNames,rainStationFileNames);		
+		
 		LogView.println("\nRain-Stations: "+rainStationFileNames.toString());
 		LogView.println("\nTemp-Stations: "+tempStationFileNames.toString());
 		
@@ -270,6 +291,7 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
 	writer.write("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
 	writer.write(gto.toXmlString());
 	writer.close();	
+	System.out.println("stored forecast configuration");
     }
 
     private void loadFromXml()
@@ -283,12 +305,13 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
         catch(Exception e)
             {
 		System.out.println(e.getMessage());
-                System.out.println("could not load configuration");
+                System.out.println("could not load forecast configuration");
             }
     }
-
+    
     public void importObject(GisTransferObject gto)
     {	
+	System.out.println("DEBUG: GTO-TableName:"+gto.getTableName());
 	if("KalypsoConfigutarion".equals(gto.getTableName()))
 	    {
 		modelVersion.loadFromGto(gto);
@@ -343,7 +366,8 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
 			File klimadatDir = new File(simulationDir.getFile(),"klima.dat");
 			if(!klimadatDir.exists())
 			    klimadatDir.mkdirs();
-			String fileName=new String(gto.getSimpleProperty("m_fileName"));
+			//			String fileName=new String(gto.getSimpleProperty("m_fileName"));
+			String fileName=TimeSeriesGenerator.name2FileName(new String(gto.getSimpleProperty("m_stationName")));
 			if(fileName!=null && rainStationFileNames.contains(fileName))
 			    {
 				TimeSeriesGenerator rainSeries=new TimeSeriesGenerator(klimadatDir,times.getStartDate(),times.getEndDate());
@@ -356,8 +380,10 @@ public class Main extends JFrame implements ActionListener,WindowListener,Kalyps
 			File klimadatDir = new File(simulationDir.getFile(),"klima.dat");
 			if(!klimadatDir.exists())
 			    klimadatDir.mkdirs();
-			String fileName=new String(gto.getSimpleProperty("m_fileName"));
-			if(fileName!=null && tempStationFileNames.contains(fileName))			    
+			//			String fileName=new String(gto.getSimpleProperty("m_fileName"));
+			String fileName=TimeSeriesGenerator.name2FileName(new String(gto.getSimpleProperty("m_stationName")));
+			
+			if(fileName!=null && tempStationFileNames.contains(fileName))
 			    {
 				TimeSeriesGenerator tempSeries=new TimeSeriesGenerator(klimadatDir,times.getStartDate(),times.getEndDate());
 				tempSeries.importObject(gto);

@@ -30,7 +30,7 @@ import de.tuhh.wb.javagis.view.netview.GisNetView;
 import de.tuhh.wb.javagis.view.projectview.ProjectView;
 import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
 import de.tuhh.wb.javagis.view.Tutorial;
-import com.borland.jbcl.layout.*;
+
 import java.awt.event.*;
 import java.lang.ClassLoader;
 import de.tuhh.wb.javagis.view.ConfigurationView;

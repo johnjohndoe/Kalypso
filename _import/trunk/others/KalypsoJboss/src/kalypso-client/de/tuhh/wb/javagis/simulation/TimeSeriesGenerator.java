@@ -82,7 +82,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 			ignore=new Boolean(vs.getSimpleProperty("ignore",row));
 			System.out.println(name);
 			if(!ignore.booleanValue())
-			    rainStations.put(name,file);
+			    rainStations.put(name2FileName(name),file);
 		    }
 	    }
 	// load tempstations
@@ -96,7 +96,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 			ignore=new Boolean(vs.getSimpleProperty("ignore",row));
 			System.out.println(name);
 			if(!ignore.booleanValue())
-			    tempStations.put(name,file);
+			    tempStations.put(name2FileName(name),file);
 		    }
 	    }
     }
@@ -112,7 +112,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 
     public void generateLeftRainStations()
     {
-	LogView.println("generate series from relative sequences without corresponding database series:");
+	LogView.println("generate rain series from relative sequences without corresponding database series:");
 	String name=null;
 	File file=null;
 	for(Enumeration e=rainStations.keys();e.hasMoreElements();)
@@ -123,7 +123,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 		    {
 			RainTimeSeries sequence=new RainTimeSeries(myStartDate,myEndDate);
 			sequence.loadFromRelativASCII(myForecastDate,file);
-			sequence.toAsciiFile(new File(myDestinationDir,name));
+			sequence.toAsciiFile(new File(myDestinationDir,name+".kz")); // relative rain is always short time
 		    }
 		catch(Exception err)
 		    {
@@ -133,6 +133,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 	    }	
 	name=null;
 	file=null;
+	LogView.println("generate temp series from relative sequences without corresponding database series:");
  	for(Enumeration e=tempStations.keys();e.hasMoreElements();)
 	    {
 		name=(String)e.nextElement();
@@ -141,7 +142,7 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 		    {
 		        TempTimeSeries sequence=new TempTimeSeries(myStartDate,myEndDate);
 			sequence.loadFromRelativASCII(myForecastDate,file);
-			sequence.toAsciiFile(new File(myDestinationDir,name));
+			sequence.toAsciiFile(new File(myDestinationDir,name+".tem")); // relative temperatur
 		    }
 		catch(Exception err)
 		    {
@@ -343,7 +344,8 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 					    }
 				    }	    
 			    }
-			switch(status)
+
+			    switch(status)
 			    {
 			    case RAIN:
 				if(rainStations.containsKey(stationName))
@@ -355,13 +357,14 @@ public class TimeSeriesGenerator implements KalypsoXmlImportListener
 			    case TEMP:
 				if(tempStations.containsKey(stationName))
 				    {
-					sequence.loadFromRelativASCII(myForecastDate,(File)tempStations.get(stationName));
+					//	relative evaporation does not make sense
+					// sequence.loadFromRelativASCII(myForecastDate,(File)tempStations.get(stationName));
 					tempStations.remove(stationName);
 				    }
 				break;
 			    default:
 				break;
-			    }
+			    }			    
 			sequence.toAsciiFile(timeSeriesFile);		    
 		    }
 

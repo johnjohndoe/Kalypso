@@ -382,6 +382,7 @@ public class SimulationDialog extends JInternalFrame implements ActionListener,I
 		if("rainStation".equals(gto.getTableName()))
 		    {
 			System.out.println("processing rainStation");
+
 			File klimadatDir = new File(targetDir,"klima.dat");
 			if(!klimadatDir.exists())
 			    klimadatDir.mkdirs();

@@ -15,7 +15,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Date;
 import java.util.Vector;
-
+import de.tuhh.wb.javagis.tools.I18n;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.event.TableModelEvent;
@@ -41,7 +41,7 @@ public class CatchmentDialog extends JScrollPane implements ActionListener//,Mou
 	this.panel=new JPanel();
 	this.myTableModel=new CatchmentDialogModel();
 
-	addRow=new JButton("add area");
+	addRow=new JButton(I18n.get("KF_addArea"));
 	addRow.setToolTipText("<html>note: you can visualize at maximum 10 graphs at one time with the graphic-tool<br><i>you may produce more than 10 results and load them manually with the graphic-tool</i></html>");
 
 	panel.add(addRow);

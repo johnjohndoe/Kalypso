@@ -10,6 +10,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.JFileChooser;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
+import de.tuhh.wb.javagis.tools.I18n;
 
 public class FileDialog extends JPanel implements ActionListener
 {
@@ -17,11 +18,13 @@ public class FileDialog extends JPanel implements ActionListener
     JButton button;
     JFileChooser fileChooser;    
     String myTitle;
-    
-    public FileDialog(String title,boolean onlyDirs)
+    String myKey;
+
+    public FileDialog(String key,String title,boolean onlyDirs)
     {
 	super();
 	myTitle=title;
+	myKey=key;
 	fileChooser=new JFileChooser();
 	if(onlyDirs)
 	    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -50,18 +53,18 @@ public class FileDialog extends JPanel implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-	int returnVal = fileChooser.showDialog(this, "choose "+myTitle);
+	int returnVal = fileChooser.showDialog(this,I18n.get("KF_choose")+" "+myTitle);
 	if(returnVal == JFileChooser.APPROVE_OPTION)
 	    {
 		file=fileChooser.getSelectedFile();
 		updateButton();
-	    }		
+	    }
     }
 
     public void loadFromGto(GisTransferObject gto)
     {
-	String fileName=gto.getSimpleProperty("file_"+myTitle);
-	String dirName=gto.getSimpleProperty("template_dir_"+myTitle);
+	String fileName=gto.getSimpleProperty("file_"+myKey);
+	String dirName=gto.getSimpleProperty("template_dir_"+myKey);
 	if(fileName!=null)
 	    file=new File(fileName);
 	if(dirName!=null)
@@ -71,7 +74,7 @@ public class FileDialog extends JPanel implements ActionListener
     
     public void storeToGto(GisTransferObject gto) throws Exception
     {
-	gto.addSimpleProperty("file_"+myTitle,file.toString());
-	gto.addSimpleProperty("template_dir_"+myTitle,fileChooser.getCurrentDirectory().toString());
+	gto.addSimpleProperty("file_"+myKey,file.toString());
+	gto.addSimpleProperty("template_dir_"+myKey,fileChooser.getCurrentDirectory().toString());
     }
 }

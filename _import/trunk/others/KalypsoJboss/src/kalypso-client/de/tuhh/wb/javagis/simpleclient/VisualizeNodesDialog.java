@@ -20,6 +20,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import de.tuhh.wb.javagis.tools.I18n;
 
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 

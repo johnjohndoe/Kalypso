@@ -11,7 +11,8 @@ CLASSPATH=$CLASSPATH:bin/javaGis1-ejb.jar:bin/javaGis2-ejb.jar:bin/javaGis3-ejb.
 #CLASSPATH=$CLASSPATH:../wadas-kalypso/src
 
 echo CLASSPATH=$CLASSPATH
-javac -d bin de/tuhh/wb/javagis/simpleclient/Main.java 2>javac.out 
+javac -deprecation -d bin de/tuhh/wb/javagis/simpleclient/Main.java 2>javac.out 
+#javac -d bin de/tuhh/wb/javagis/simpleclient/Main.java 2>javac.out 
 #javac Test.java 2>javac.out 
 echo -e "fertig\n\a";
 less javac.out

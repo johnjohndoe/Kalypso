@@ -1,6 +1,8 @@
 package de.tuhh.wb.javagis.simpleclient;
 import javax.swing.table.AbstractTableModel;
 import java.util.Vector;
+import de.tuhh.wb.javagis.tools.I18n;
+
 public class ResultDialogModel extends AbstractTableModel 
 {
     Vector rows;
@@ -22,7 +24,7 @@ public class ResultDialogModel extends AbstractTableModel
 
     public String getColumnName(int columnIndex) 
     {
-	return "<html>nodes<br>No.</html>";
+	return "<html>"+I18n.get("KF_nodes")+"<br>No.</html>";
     }
 
     public int getRowCount()

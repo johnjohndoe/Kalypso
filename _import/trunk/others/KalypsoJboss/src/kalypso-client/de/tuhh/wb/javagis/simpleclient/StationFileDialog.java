@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Date;
 import java.util.Vector;
+import de.tuhh.wb.javagis.tools.I18n;
 
 import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
@@ -50,7 +51,7 @@ public class StationFileDialog extends JScrollPane implements ActionListener//,M
 	ignoreTemplate=new Vector();
 
 	showInResults=new Vector();
-	addStation=new JButton("add Station");
+	addStation=new JButton(I18n.get("KF_addStation"));
 	addStation.setActionCommand("addStation");
 	addStation.addActionListener(this);
 	update();
@@ -61,15 +62,15 @@ public class StationFileDialog extends JScrollPane implements ActionListener//,M
 	//	removeAll();
 	panel.removeAll();
 	//	panel.setLayout(new GridLayout(stationNames.size()+2,4));
-	JLabel jStation=new JLabel("station (filename)");
+	JLabel jStation=new JLabel(I18n.get("KF_stationFileName"));
 	jStation.setToolTipText("<html>filename must correspond to the filenames"
 				+"<br>in the <b>catchments table</b> <u>and</u> in"
 				+"<br>in the <b>stations table</b>."
 				+"<br><b>filenames are always <u>case sensitivity</u></b>.</html>");
 	add2View(jStation);
-	add2View(new JLabel("forecast-sequence"));
+	add2View(new JLabel(I18n.get("KF_sequenceForecast")));
 
-	JLabel ignoreLabel= new JLabel("use template ");
+	JLabel ignoreLabel= new JLabel(I18n.get("KF_useTemplate"));
 	ignoreLabel.setToolTipText("<html>selected means:"+
 				   "<li>before forecast time use DB-series"+
 				   "<br>after that use file-series</li>"+
@@ -115,7 +116,7 @@ public class StationFileDialog extends JScrollPane implements ActionListener//,M
 		    {
 			int row=Integer.parseInt(command.substring(7));
 			// chose FileName:
-			int returnVal = fileChooser.showDialog(this, "choose "+myTitle+" sequence");
+			int returnVal = fileChooser.showDialog(this, I18n.get("KF_choose")+" "+myTitle);
 			if(returnVal == JFileChooser.APPROVE_OPTION)
 			    {
 				fileNames.set(row,fileChooser.getSelectedFile());
@@ -140,7 +141,7 @@ public class StationFileDialog extends JScrollPane implements ActionListener//,M
 
     public void addStation()
     {
-	JTextField field=new JTextField("new station");
+	JTextField field=new JTextField(I18n.get("KF_newStation"));
 	stationNames.add(field);
 	field.addActionListener(this);
 	fileNames.add(new File(fileChooser.getCurrentDirectory(),"default.txt"));

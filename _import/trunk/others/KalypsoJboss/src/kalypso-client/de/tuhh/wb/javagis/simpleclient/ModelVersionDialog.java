@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import de.tuhh.wb.javagis.tools.I18n;
 
 public class ModelVersionDialog extends JPanel
 {
@@ -17,7 +18,7 @@ public class ModelVersionDialog extends JPanel
     public ModelVersionDialog()
     {
 	super();
-	text=new JLabel("ModelVersion:");
+	text=new JLabel(I18n.get("KF_ModelVersion"));
 	field=new JTextField("0",8);
 	add(text);
 	add(field);

@@ -3,6 +3,8 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
+import de.tuhh.wb.javagis.tools.I18n;
+
 public class RootNodeDialog extends JPanel
 {
     JLabel text;
@@ -11,7 +13,7 @@ public class RootNodeDialog extends JPanel
     public RootNodeDialog()
     {
 	super();
-	text=new JLabel("    RootNode:");
+	text=new JLabel("    "+I18n.get("KF_RootNode"));
 	field=new JTextField("7170",8);
 	add(text);
 	add(field);

@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import de.tuhh.wb.javagis.tools.I18n;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -39,7 +40,7 @@ public class SimulationTimeDialog extends JPanel implements ActionListener
 	startOffset.setToolTipText("<html>set time before forecast<br>Format: "+OFFSET_FORMAT+"</html>");
 	endOffset=new JTextField("2 0");
  	endOffset.setToolTipText("<html>set time of forecast<br>Format: "+OFFSET_FORMAT+"</html>");
-	resetTime=new JButton("update Time");
+	resetTime=new JButton(I18n.get("KF_updateTime"));
 
 	startDate.addActionListener(this);
 	startDate.setActionCommand("date");
@@ -54,13 +55,13 @@ public class SimulationTimeDialog extends JPanel implements ActionListener
 	resetTime.addActionListener(this);
 	resetTime.setActionCommand("button");
 
-	add(new JLabel("start of simulation"));
+	add(new JLabel(I18n.get("KF_startOfSimulation")));
 	add(startDate);
 	add(startOffset);
-	add(new JLabel("begin of forecast"));
+	add(new JLabel(I18n.get("KF_beginOfForecast")));
 	add(forecastDate);
 	add(resetTime);
-	add(new JLabel("end of simulation"));
+	add(new JLabel(I18n.get("KF_endOfSimulation")));
 	add(endDate);
 	add(endOffset);
 	doLayout();
