@@ -46,8 +46,10 @@ import javax.xml.bind.Unmarshaller;
 
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistryException;
+import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -74,7 +76,7 @@ public class ObservationLinkHandler implements ITypeHandler
    */
   public String getClassName()
   {
-    return TimeseriesLink.class.getName();
+    return TimeseriesLinkType.class.getName();
   }
 
   /**
@@ -82,16 +84,14 @@ public class ObservationLinkHandler implements ITypeHandler
    */
   public String getTypeName()
   {
-    return getNamespaceUri() + ":" + getElementName();
+    return getNamespaceUri() + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkType.class );
   }
   
   private String getElementName()
   {
-    final String className = getClassName();
-    final int dotIndex = className.lastIndexOf( '.' );
-    return className.substring( dotIndex + 1 );
+    return ClassUtilities.getOnlyClassName( TimeseriesLink.class );
   }
-
+  
   private String getNamespaceUri()
   {
     return "obslink.zml.kalypso.org";
@@ -121,7 +121,6 @@ public class ObservationLinkHandler implements ITypeHandler
     try
     {
     	final NodeList childNodes=((Element)node).getElementsByTagNameNS(getNamespaceUri(),getElementName());
-//      final NodeList childNodes = node.getChildNodes();
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
         final Node child = childNodes.item( i );
