@@ -318,6 +318,10 @@ public class FileUtilities
    */
   public static String nameWithoutExtension( final String fileName )
   {
-    return fileName.substring( 0, fileName.lastIndexOf( '.' ) );
+    final int lastIndexOf = fileName.lastIndexOf( '.' );
+    if( lastIndexOf == -1 )
+      return fileName;
+    
+    return fileName.substring( 0, lastIndexOf );
   }
 }

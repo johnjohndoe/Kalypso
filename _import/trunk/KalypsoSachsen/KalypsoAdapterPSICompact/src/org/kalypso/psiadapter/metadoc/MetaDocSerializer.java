@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.kalypso.psiadapter.PSICompactFactory;
-
 /**
  * MetaDocSerializer
  * 
@@ -18,22 +16,27 @@ public class MetaDocSerializer
 {
   private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
   
-  private final static String TAG_FOLTERDATA = "FolderData";
-  private final static String TAG_HEADER = "";
-  private final static String TAG_IMPORTMODE = "";
-  private final static String TAG_RECORD = "";
-  private final static String TAG_DOKUMENTTYP = "";
-  private final static String TAG_ERSTELLER = "";
-  private final static String TAG_AUTOR = "";
-  private final static String TAG_REGION = "";
-  private final static String TAG_EINGANGSDATUM = "";
-  private final static String TAG_ERSTELLUNGSDATUM = "";
-  private final static String TAG_ENDEGDATUM = "";
-  private final static String TAG_VERSENDEN = "";
-  private final static String TAG_APPFILES = "";
+  private final static String TAG_FOLDERDATA = "FolderData";
+  private final static String TAG_HEADER = "Header";
+  private final static String TAG_IMPORTMODE = "ImportMode";
+  private final static String TAG_RECORD = "Record";
+  private final static String TAG_DOKUMENTTYP = "Dokumenttyp";
+  private final static String TAG_ERSTELLER = "Ersteller";
+  private final static String TAG_AUTOR = "Autor";
+  private final static String TAG_REGION = "Region";
+  private final static String TAG_EINGANGSDATUM = "Eingangsdatum";
+  private final static String TAG_ERSTELLUNGSDATUM = "Erstellungsdatum";
+  private final static String TAG_ENDEGDATUM = "EndeGDatum";
+  private final static String TAG_VERSENDEN = "Versenden";
+  private final static String TAG_APPFILES = "AppFiles";
 
   /** date format for the date elements of the xml file */
-  private final static DateFormat DF = new SimpleDateFormat( PSICompactFactory.getProperties().getProperty( PSICompactFactory.PROP_METADOC_DF, "yyyy-MM-ddTHH:mm:ss" ) );
+  // TODO: Marc PSICompactFactory has not been initialized (by getConnection) so,
+  // PSICompactFactory.getProperties() return null!
+//  private final static DateFormat DF = new SimpleDateFormat( PSICompactFactory.getProperties().getProperty( PSICompactFactory.PROP_METADOC_DF, "yyyy-MM-dd'T'HH:mm:ss" ) );
+  
+  // TODO: Marc: beware of the '' around the 'T' (auch in der ini von PSICompact!)
+  private final static DateFormat DF = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
   
   /**
    * Prepares the properties with some default value
@@ -44,12 +47,12 @@ public class MetaDocSerializer
    */
   public static void prepareProperties( final Properties props )
   {
-    props.setProperty( TAG_DOKUMENTTYP, "xs:string" );
-    props.setProperty( TAG_ERSTELLER, "xs:string" );
-    props.setProperty( TAG_AUTOR, "xs:string" );
-    props.setProperty( TAG_ERSTELLUNGSDATUM, "xs:dateTime" );
-    props.setProperty( TAG_ENDEGDATUM, "xs:dateTime" );
-    props.setProperty( TAG_VERSENDEN, "xs:int" );
+    props.setProperty( TAG_DOKUMENTTYP, "string" );
+    props.setProperty( TAG_ERSTELLER, "string" );
+    props.setProperty( TAG_AUTOR, "string" );
+    props.setProperty( TAG_ERSTELLUNGSDATUM, "dateTime" );
+    props.setProperty( TAG_ENDEGDATUM, "dateTime" );
+    props.setProperty( TAG_VERSENDEN, "integer" );
   }
   
   /**
@@ -63,7 +66,7 @@ public class MetaDocSerializer
   public static void buildXML( final Properties props, final Writer writer, final String fileName ) throws IOException
   {
     writer.write( XML_HEADER );
-    writer.write( "<" + TAG_FOLTERDATA + ">" );
+    writer.write( "<" + TAG_FOLDERDATA + ">" );
     writer.write( "<" + TAG_HEADER + ">" );
     writer.write( "<" + TAG_IMPORTMODE + ">" + 1 + "</" + TAG_IMPORTMODE + ">" );
     writer.write( "</" + TAG_HEADER + ">" );
@@ -83,6 +86,6 @@ public class MetaDocSerializer
     writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES + ">" );
 
     writer.write( "</" + TAG_RECORD + ">" );
-    writer.write( "</" + TAG_FOLTERDATA + ">" );
+    writer.write( "</" + TAG_FOLDERDATA + ">" );
   }
 }
