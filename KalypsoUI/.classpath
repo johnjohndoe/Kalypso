@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/"/>
-	<classpathentry exported="true" sourcepath="J:/hyd5309/Development/Java/jfreechart/jfreechart-0.9.21/source" kind="lib" path="lib/jfreechart-0.9.21.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-0.9.21.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_observation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_calculation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_metadoc.jar"/>

@@ -42,7 +42,7 @@ public class TransformationHelper
       throw new TransformationException( "Could not create Transformation: " + trans.getClassName(), e );
     }
   }
-  
+
   /** Führt alle Transformationen einer Transformationen Liste aus */
   public static void doTranformations( final TransformationList trans,
       final IProgressMonitor monitor ) throws TransformationException

@@ -14,7 +14,9 @@ public class MutexSchedulingRule implements ISchedulingRule
    */
   public boolean contains( ISchedulingRule rule )
   {
-    return this == rule;
+    return true;
+    // TODO: geändert von Belger: sonst gibts Probleme beim Laden der Zeitreihen
+//    return this == rule;
   }
 
   /**

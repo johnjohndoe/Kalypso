@@ -29,4 +29,11 @@
 			<argument name="targetFolder" value="calcdir:zeitreihen"/>
 		</transformation>
 	</updateTransformations>
+	
+	<afterCalcTransformations>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":calcDir:Ergebnisse/calcCase.gml"/>
+			<argument name="output" value=":calcdir:calcCase.gml"/>
+		</transformation>
+	</afterCalcTransformations>
 </calcCaseConfig>

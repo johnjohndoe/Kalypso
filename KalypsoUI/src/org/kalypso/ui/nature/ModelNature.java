@@ -56,6 +56,7 @@ import org.kalypso.model.xml.CalcCaseConfigType;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
+import org.kalypso.model.xml.TransformationList;
 import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.ProxyFactory;
@@ -106,6 +107,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /** Standardddifferenz des Simulationsstarts vor dem Vorhersagezeitpunkt */
   private static final String META_PROP_DEFAULT_SIMHOURS = "DEFAULT_SIMHOURS";
+
+  private static final int TRANS_TYPE_UPDTAE = 0;
+
+  private static final int TRANS_TYPE_CREATE = 1;
+
+  private static final int TRANS_TYPE_AFTERCALC = 2;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -271,36 +278,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void createCalculationCaseInFolder( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    monitor.beginTask( "Rechenfall erzeugen", 2000 );
-
-    // Protokolle ersetzen
-    try
-    {
-      FolderUtilities.mkdirs( folder );
-
-      final CalcCaseConfigType trans = readCalcCaseConfig( folder );
-
-      monitor.worked( 1000 );
-
-      // daten transformieren
-      TransformationHelper.doTranformations( trans.getCreateTransformations(),
-          new SubProgressMonitor( monitor, 1000 ) );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-
-      throw e;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Erzeugen des Rechenfalls\n" + e.getLocalizedMessage(), e ) );
-    }
-
-    monitor.done();
+    doCalcTransformation( "Rechenfall erzeugen", TRANS_TYPE_CREATE, folder, monitor );
   }
 
   /**
@@ -311,9 +289,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void updateCalcCase( final IFolder folder, final IProgressMonitor monitor )
       throws CoreException
   {
-    monitor.beginTask( "Rechenfall aktualisieren", 2000 );
+    doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_UPDTAE, folder, monitor );
+  }
 
-    // Protokolle ersetzen
+  /**
+   * Führt eine Transformation auf einem Rechenfall durch
+   * 
+   * @throws CoreException
+   */
+  private void doCalcTransformation( final String taskName, final int type, final IFolder folder,
+      final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( taskName, 2000 );
+
     try
     {
       final CalcCaseConfigType trans = readCalcCaseConfig( folder );
@@ -321,8 +309,30 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       monitor.worked( 1000 );
 
       // Daten transformieren
-      TransformationHelper.doTranformations( trans.getUpdateTransformations(),
-          new SubProgressMonitor( monitor, 1000 ) );
+      TransformationList transList = null;
+      switch( type )
+      {
+      case TRANS_TYPE_UPDTAE:
+        transList = trans.getUpdateTransformations();
+        break;
+
+      case TRANS_TYPE_CREATE:
+        transList = trans.getCreateTransformations();
+        break;
+
+      case TRANS_TYPE_AFTERCALC:
+        transList = trans.getAfterCalcTransformations();
+        break;
+
+      default:
+        transList = null;
+        break;
+      }
+      
+      if( transList == null )
+        return;
+
+      TransformationHelper.doTranformations( transList, new SubProgressMonitor( monitor, 1000 ) );
     }
     catch( final CoreException e )
     {
@@ -335,7 +345,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       e.printStackTrace();
 
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Fehler beim Aktualisieren des Rechenfalls\n" + e.getLocalizedMessage(), e ) );
+          taskName + ": " + e.getLocalizedMessage(), e ) );
     }
 
     monitor.done();
@@ -577,16 +587,18 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       {
         protected void write( final Writer w ) throws Throwable
         {
-          FileInputStream fis = null;
+          
+          InputStreamReader reader = null;
           try
           {
-            fis = new FileInputStream( serverfile );
-            CopyUtils.copy( fis, w );
+            final FileInputStream fis = new FileInputStream( serverfile );
+            reader = new InputStreamReader( fis, getCharset() );
+            CopyUtils.copy( reader, w );
           }
           finally
           {
-            if( fis != null )
-              fis.close();
+            if( reader != null )
+              reader.close();
           }
         }
       };
@@ -733,7 +745,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       runCalculation( folder, monitor );
       return;
     }
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 4000 );
+    monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
 
     final CoreException cancelException = new CoreException( new Status( IStatus.CANCEL,
         KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
@@ -859,6 +871,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             ICalcServiceConstants.OUTPUT_DIR_NAME );
         retrieveOutput( serveroutputdir, outputfolder, results, new SubProgressMonitor( monitor,
             1000 ) );
+
+        doCalcTransformation( "Rechenfall aktualisieren", TRANS_TYPE_AFTERCALC, folder, new SubProgressMonitor( monitor, 1000 ) );
+
         return;
 
       case ICalcServiceConstants.CANCELED:
