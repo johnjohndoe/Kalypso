@@ -31,7 +31,7 @@ public class CalibarationConfig
     final String queryBaseCatchment = FeatureHelper.getAsString(rootFeature, "Catchments" );
     String[] propNamesI = new String[]
     {
-        "CatchmentsBianf",
+        "CatchmentsBianf",// TODO banf!!
         "CatchmentsFaktorRetobTetint",
         "CatchmentsFaktn",
         "CatchmentsFaktorAigw" };
