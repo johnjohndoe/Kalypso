@@ -7,7 +7,8 @@ import java.util.List;
 /**
  * @author schlienger
  */
-public abstract class AbstractTemplateEventProvider implements ITemplateEventProvider
+public abstract class AbstractTemplateEventProvider implements
+    ITemplateEventProvider
 {
   private final List m_listeners = new ArrayList();
 
@@ -16,11 +17,14 @@ public abstract class AbstractTemplateEventProvider implements ITemplateEventPro
    */
   public void fireTemplateChanged( TemplateEvent evt )
   {
-    for( Iterator it = m_listeners.iterator(); it.hasNext(); )
+    synchronized( m_listeners )
     {
-      ITemplateEventListener l = (ITemplateEventListener)it.next();
+      for( Iterator it = m_listeners.iterator(); it.hasNext(); )
+      {
+        ITemplateEventListener l = (ITemplateEventListener) it.next();
 
-      l.onTemplateChanged( evt );
+        l.onTemplateChanged( evt );
+      }
     }
   }
 
@@ -29,7 +33,10 @@ public abstract class AbstractTemplateEventProvider implements ITemplateEventPro
    */
   public void addTemplateEventListener( ITemplateEventListener l )
   {
-    m_listeners.add( l );
+    synchronized( m_listeners )
+    {
+      m_listeners.add( l );
+    }
   }
 
   /**
@@ -37,6 +44,9 @@ public abstract class AbstractTemplateEventProvider implements ITemplateEventPro
    */
   public void removeTemplateEventListener( ITemplateEventListener l )
   {
-    m_listeners.remove( l );
+    synchronized( m_listeners )
+    {
+      m_listeners.remove( l );
+    }
   }
 }

@@ -77,24 +77,22 @@ public class ObservationTableEditor extends AbstractEditorPart implements
   {
     super.createPartControl( parent );
 
-    m_model = new ObservationTableModel();
-    m_model.setRules( m_template );
-
-    m_table = new ObservationTable( m_model );
-    m_template.addTemplateEventListener( m_table );
-
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
+    
+    m_model = new ObservationTableModel();
+    m_model.setRules( m_template );
+    m_table = new ObservationTable( m_model );
 
+    m_template.addTemplateEventListener( m_table );
     m_template.addTemplateEventListener( this );
 
-    vFrame.setVisible( true );
-    m_table.setVisible( true );
-
     final JScrollPane pane = new JScrollPane( m_table );
-    //pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
+    
+    vFrame.setVisible( true );
+    //m_table.setVisible( true );
   }
 
   /**
@@ -217,6 +215,7 @@ public class ObservationTableEditor extends AbstractEditorPart implements
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage) storage;
+        Thread.sleep(500);
         m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
             "zml", false, null );
       }
