@@ -68,7 +68,6 @@ import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.legend.LegendElement;
 import org.kalypsodeegree.graphics.legend.LegendElementCollection;
 import org.kalypsodeegree.graphics.legend.LegendException;
-import org.kalypsodeegree.graphics.legend.LegendView;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Style;
@@ -213,18 +212,6 @@ public class LegendFactory
 
   /**
    * 
-   * 
-   * @return
-   */
-  public static LegendView createLegendView( LegendElementCollection[] collection )
-  {
-    Debug.debugMethodBegin();
-    Debug.debugMethodEnd();
-    return null;
-  }
-
-  /**
-   * 
    * @param sld
    * @param width
    * @param height
@@ -277,7 +264,9 @@ public class LegendFactory
         name = new String( name.replace( ':', '_' ).getBytes(), "UTF-8" );
       }
       catch( Exception e )
-      {}
+      {
+        //
+      }
       System.out.println( "creating: " + name );
       le = createLegendElement( style, width, height, "" );
       bi_temp = le.exportAsImage();
@@ -445,11 +434,6 @@ public class LegendFactory
 
   }
 
-  /**
-   * 
-   * @param operationID
-   * @return
-   */
   private String getOperationString( int operationID )
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "getOperationString(int)" );
@@ -518,17 +502,11 @@ public class LegendFactory
     return this.label;
   }
 
-  /**
-   * @return
-   */
   protected String getLegendTitle()
   {
     return this.legendtitle;
   }
 
-  /**
-   * @param string
-   */
   private void setLegendTitle( String title )
   {
     try
@@ -536,7 +514,9 @@ public class LegendFactory
       this.legendtitle = new String( title.getBytes(), "UTF-8" );
     }
     catch( Exception e )
-    {}
+    {
+    //  
+    }
   }
 
   /**

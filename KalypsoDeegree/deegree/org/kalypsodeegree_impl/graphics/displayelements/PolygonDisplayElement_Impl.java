@@ -338,7 +338,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
           g2.fill( area );
         }
         catch( Exception e )
-        {}
+        {
+        //  
+        }
       }
     }
 
@@ -379,7 +381,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
           g2.draw( area );
         }
         catch( Exception e )
-        {}
+        {
+        //  
+        }
       }
     }
   }

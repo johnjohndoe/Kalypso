@@ -97,12 +97,6 @@ public class LabelOptimizer extends AbstractOptimizer
   private boolean[][] candidates;
 
   /**
-   * Creates a new instance of LabelOptimizer.
-   */
-  public LabelOptimizer()
-  {}
-
-  /**
    * Creates a new instance of LabelOptimizer for the given <tt>Themes</tt>.
    * 
    * @param themes
@@ -291,7 +285,6 @@ public class LabelOptimizer extends AbstractOptimizer
    * <tt>Label</tt>s.
    * <p>
    * 
-   * @return
    */
   private double objectiveFunction()
   {

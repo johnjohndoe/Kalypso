@@ -118,10 +118,6 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
     this.collection.add( legendElement );
   }
 
-  /**
-   * 
-   * @return
-   */
   public LegendElement[] getLegendElements()
   {
     return (LegendElement[])collection.toArray( new LegendElement[collection.size()] );
@@ -141,8 +137,6 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
 
   /**
    * returns the title of the <tt>LegendElement</tt>
-   * 
-   * @return
    */
   public String getTitle()
   {
@@ -159,9 +153,6 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
     return this.collection.size();
   }
 
-  /**
-   * @return
-   */
   public BufferedImage exportAsImage() throws LegendException
   {
     Debug.debugMethodBegin( "LegendElementCollection_Impl", "exportAsImage" );
@@ -176,7 +167,6 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
 
     LegendElement[] le = getLegendElements();
     BufferedImage[] imagearray = new BufferedImage[le.length];
-    BufferedImage bi = null;
 
     for( int i = 0; i < le.length; i++ )
     {

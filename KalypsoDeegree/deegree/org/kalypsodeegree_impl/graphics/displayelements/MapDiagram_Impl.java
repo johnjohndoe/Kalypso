@@ -98,5 +98,7 @@ class MapDiagram_Impl extends LocalizedDisplayElement_Impl implements MapDiagram
    * renders the DisplayElement to the submitted graphic context
    */
   public void paint( Graphics g, GeoTransform projection )
-  {}
+  {
+    //
+  }
 }

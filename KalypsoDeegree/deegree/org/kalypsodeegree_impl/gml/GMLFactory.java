@@ -121,7 +121,7 @@ public class GMLFactory
    * @param element
    *          DOM Element containing a GMLGeometry
    */
-  public synchronized static GMLGeometry createGMLGeometry( Element element ) throws GMLException
+  public synchronized static GMLGeometry createGMLGeometry( Element element )
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLGeometry" );
 
@@ -219,7 +219,7 @@ public class GMLFactory
    * @param geo
    *          point
    */
-  private static GMLPoint createGMLPoint( GM_Point geo, GMLDocument doc ) throws GMLException
+  private static GMLPoint createGMLPoint( GM_Point geo, GMLDocument doc )
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
@@ -570,16 +570,6 @@ public class GMLFactory
 
   /**
    * creates a GMLFeature from a XML Element
-   * 
-   * @deprecated
-   */
-  public static GMLFeature createGMLFeature( Element element ) throws GMLException
-  {
-    return null;
-  }
-
-  /**
-   * creates a GMLFeature from a XML Element
    */
   public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature )
       throws GMLException
@@ -620,15 +610,6 @@ public class GMLFactory
   public static GMLFeatureCollection createGMLFeatureCollection( String name )
   {
     return new GMLFeatureCollection_Impl( name );
-  }
-
-  /**
-   * creates a GMLFeatureCollection from a XML Element
-   */
-  public static GMLFeatureCollection createGMLFeatureCollection( Element element )
-      throws GMLException
-  {
-    return null;
   }
 
   public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature )
@@ -714,6 +695,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.14  2005/03/13 12:52:15  belger
+ * *** empty log message ***
+ *
  * Revision 1.13  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *
