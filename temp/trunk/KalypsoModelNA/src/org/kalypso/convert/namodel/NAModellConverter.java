@@ -21,7 +21,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author doemming
  */
-public class Main
+public class NAModellConverter
 {
     private GMLSchema m_schema;
 
@@ -106,7 +106,7 @@ public class Main
         }
     }
 
-    public Main(NAConfiguration conf) throws Exception
+    public NAModellConverter(NAConfiguration conf) throws Exception
     {
         m_conf = conf;
         m_schema = new GMLSchema(conf.getSchemaURL());
@@ -140,14 +140,14 @@ public class Main
 
     public static Feature asciiToFeature(NAConfiguration conf) throws Exception
     {
-        Main main = new Main(conf);
+        NAModellConverter main = new NAModellConverter(conf);
         return main.getParseManager().asciiToFeature();
     }
 
     public static void featureToAscii(NAConfiguration conf, GMLWorkspace workspace)
             throws Exception
     {
-        Main main = new Main(conf);
+        NAModellConverter main = new NAModellConverter(conf);
         main.write(workspace);
     }
 

@@ -45,8 +45,6 @@ public class ChannelManager extends AbstractManager
     m_kmParameterFT = schema.getFeatureType( "KMParameter" );
   }
 
-
-
   /**
    * 
    * @throws Exception
@@ -56,8 +54,6 @@ public class ChannelManager extends AbstractManager
   {
     List result=new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader(url.openConnection().getInputStream()));// new FileReader( file ) );
-    
-//    LineNumberReader reader = new LineNumberReader( new FileReader( file ) );
     Feature fe=null;
     while( (fe=readNextFeature( reader ))!=null)
       result.add(fe);
@@ -94,7 +90,7 @@ public class ChannelManager extends AbstractManager
       createProperties( propCollector, line, 2 );
       // parse kalinin-miljukov-parameter
       HashMap kmPropCollector = new HashMap();
-      // List kmParameterFeatures=new ArrayList();
+
       for( int i = 0; i < 5; i++ )
       {
         Feature kmParameterFeature = createFeature( m_kmParameterFT);
@@ -127,23 +123,11 @@ public class ChannelManager extends AbstractManager
     Iterator iter = channelList.iterator();
     while( iter.hasNext() )
       writeFeature( writer,(Feature)iter.next() );
-//    Feature kmChannelCol = (Feature)rootFeature.getProperty( "KMChannelCollectionMember" );
-//    List kmChannelList = (List)kmChannelCol.getProperty( "kmChannelMember" );
-//    Iterator iter = kmChannelList.iterator();
-//    while( iter.hasNext() )
-//      writeFeature( writer,(Feature)iter.next() );
-
-//    Feature vChannelCol = (Feature)rootFeature
-//        .getProperty( "VirtualChannelCollectionMember" );
-//    List vChannelList = (List)vChannelCol.getProperty( "virtualChannelMember" );
-//    iter = vChannelList.iterator();
-//    while( iter.hasNext() )
-//      writeFeature(writer, (Feature)iter.next() );
   }
 
   private void writeFeature( Writer writer, Feature feature ) throws IOException
   {
-
+    
     writer.write( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )

@@ -6,9 +6,13 @@ F:\kalypso\nacontrol.xsd" fid="ID000000">
 	<description>Beschreibung</description>
 	<comment>Kommentar</comment>
 	<calctime>2001-12-17T09:30:47-05:00</calctime>
-	<startsimulation>2000-12-17T09:30:47-05:00</startsimulation>
-	<startforecast>2001-12-17T09:30:47-05:00</startforecast>
-	<endsimulation>2002-12-17T09:30:47-05:00</endsimulation>
+<!-- 
+1995 09 01 00
+1995 09 15 00
+-->
+	<startsimulation>1995-09-01T00:00:00-02:00</startsimulation>
+	<startforecast>1995-09-04T12:00:00-02:00</startforecast>
+	<endsimulation>1995-09-15T00:00:00-02:00</endsimulation>
 	<timeStep>24</timeStep>
 	<tmp>true</tmp>
 	<pre>1</pre>

@@ -68,6 +68,8 @@
 					<element name="num" type="string"></element>
 					<element name="generateResult" type="boolean"/>
         			<element name="downStreamChannelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="1"/>
+					<element name="zproz" type="float"/>
+					<element name="verzweigungNodeMember" type="na:NodeAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>

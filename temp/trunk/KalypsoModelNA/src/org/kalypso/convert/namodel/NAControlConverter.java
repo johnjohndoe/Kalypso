@@ -10,7 +10,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureHelper;
 
-public class KonfigWrite
+public class NAControlConverter
 {
   private static final String NL = System.getProperty( "line.separator" );
 
