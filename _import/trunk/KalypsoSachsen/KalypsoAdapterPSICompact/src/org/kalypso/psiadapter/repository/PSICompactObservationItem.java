@@ -13,7 +13,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.WechmannSet;
-import org.kalypso.ogc.sensor.timeseries.wq.WechmannSets;
+import org.kalypso.ogc.sensor.timeseries.wq.WechmannGroup;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -178,11 +178,9 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   }
 
   /**
-   * TODO: explain why synchronized (see ZmlObservation)
-   * 
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public synchronized IAxis[] getAxisList()
+  public IAxis[] getAxisList()
   {
     if( m_axes == null )
     {
@@ -211,7 +209,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public synchronized ITuppleModel getValues( final IVariableArguments args )
+  public ITuppleModel getValues( final IVariableArguments args )
       throws SensorException
   {
     if( !( args instanceof DateRangeArgument ) )
@@ -282,7 +280,7 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
    * 
    * @throws WechmannException
    */
-  public static WechmannSets readWQParams( final WQParamSet[] pset ) throws WechmannException
+  public static WechmannGroup readWQParams( final WQParamSet[] pset ) throws WechmannException
   {
     final WechmannSet[] wsets = new WechmannSet[pset.length];
     for( int i = 0; i < pset.length; i++ )
@@ -296,6 +294,6 @@ public class PSICompactObservationItem extends PSICompactItem implements IObserv
       wsets[i] = new WechmannSet( pset[i].getValidFrom(), wps );
     }
 
-    return new WechmannSets( wsets );
+    return new WechmannGroup( wsets );
   }
 }
