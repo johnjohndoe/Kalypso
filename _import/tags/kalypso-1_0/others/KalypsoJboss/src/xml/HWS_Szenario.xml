@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="HWS_Szenario" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>HWS Szenario</name>
+	<description>Zusammenstellung der hydrologischen Bedingungen der Hochwasserereignisse und der topographischen Gegebenheiten des Einsatzgebietes.</description>
+	<package>de.tuhh.wb.javagis.model.hwsszenario</package>
+
+	<objectClass ID="hydro">
+		<name>Hydrological situation</name>
+		<description>early warning time, hight of peak of floodwave of floodevents (of different annuality)</description>
+		<simpleProperty key="sz_floodName">
+			<name>Name of floodevent (annuality)</name>
+			<description>Recognisable name (annuality: 30-year flood)) of the hydrological szenario</description>
+			<type>java.lang.String</type>
+		</simpleProperty>
+		<simpleProperty key="sz_annuality">
+			<name>Annuality</name>
+			<description>the annuality of the flood event as \"every X years\"</description>
+			<unit>Years</unit>
+			<type>java.lang.Integer</type>
+		</simpleProperty>
+		<simpleProperty key="sz_peakHight">
+			<name>Maximum hight of watertabel [mNN, mMSL]</name>
+			<description>maximum expected hight of watertabel at absolute altitude [mNN: meters above NN, mMSL: meters above mean sea level]</description>
+			<unit>mMSL</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sz_alarmTime">
+			<name>Early warning time</name>
+			<description>remaining time between \"setup decicion incident\" and \"activation point\" (i.e. time, at which shelter funciton of the system starts)</description>
+			<unit>h</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+
+		<vectorSet key="sz_topography">
+			<name>Topography of the flood protection line</name>
+			<description>Data sets describing the topographic situation, to be used for calculating the necessary hight and area of the protection system</description>
+			<simpleProperty key="v_sz_devLength">
+				<name>Lenth of \"mean hight\" segment</name>
+				<description>length of the protection line, where topographic hight stays within an intervall of 0.20 m</description>
+				<unit>m</unit>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_sz_topHight">
+				<name>Mean hight of length segment [mNN, mMSL]</name>
+				<description>mean hight of surface of the length segmen, where topographic hight stays within an interval of 0.2 m</description>
+				<unit>mMSL</unit>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+		</vectorSet>
+		
+	</objectClass>		
+</theme>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 U (http://www.xmlspy.com) by Anoby (have no company :-() -->
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="HWS_Combination" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <name>HWS_Combination</name>
+  <description>bind here Systemdata to a Szenario and logistical set for simulation</description>
+  <package>de.tuhh.wb.javagis.model.hwscombination</package>
+  <objectClass ID="combination">
+    <name>SimulationCase</name>
+    <description>bind here Systemdata to a Szenario and logistical set for simulation</description>
+    <simpleProperty key="co_systemVersion">
+      <name>Version of SystemData</name>
+      <description>Systemdata's version-ID, to use for simulation</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="co_szenarioVersion">
+      <name>Version of SzenarioData</name>
+      <description>Szenariodata's version-ID, to use for simulation</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>
+    <simpleProperty key="co_logisticsVersion">
+      <name>Version of SystemData</name>
+      <description>LogisticalSetData's version-ID, to use for simulation</description>
+      <type>java.lang.Integer</type>
+    </simpleProperty>  </objectClass>
+</theme>

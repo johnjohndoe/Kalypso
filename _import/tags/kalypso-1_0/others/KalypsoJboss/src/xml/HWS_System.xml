@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme xsi:noNamespaceSchemaLocation="MetaDataModel.xsd" ID="HWS_System" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>HWS System</name>
+	<description>Spezifikationen von mobilen Hochwasserschutzsystemen</description>
+	<package>de.tuhh.wb.javagis.model.hwssystem</package>
+	<objectClass ID="sysdata">
+		<name>Systemdaten</name>
+		<description>detailed technical figures of characteristics an capabilities of the system</description>
+		<simpleProperty key="sy_name">
+			<name>System name</name>
+			<description>Recognisable name (product name) of the mobile flood protection system</description>
+			<type>java.lang.String</type>
+		</simpleProperty>
+		<simpleProperty key="sy_storeType">
+			<name>Stored in place</name>
+			<description>\"in place system\" (system stored at site protection) or \"out of place system\" (system stored in separate stroage area)</description>
+			<type>java.lang.Boolean</type>
+		</simpleProperty>
+		<simpleProperty key="sy_setupType">
+			<name>Setup manually</name>
+			<description>system to be set up \"manually\" or \"automatically\" i.e. by any means of (Antrieb)</description>
+			<type>java.lang.Boolean</type>
+		</simpleProperty>
+		<simpleProperty key="sy_combVer">
+			<name>Elements combine vertically</name>
+			<description>necessary hight of protective wall is reached by placing singel elements on top of each other</description>
+			<type>java.lang.Boolean</type>
+		</simpleProperty>
+		<simpleProperty key="sy_combHor">
+			<name>Elements combine horizontally</name>
+			<description>necessary length protective wall is reached by placing pane elements one beside the other</description>
+			<type>java.lang.Boolean</type>
+		</simpleProperty>
+		<vectorSet key="sy_specificSetupTime">
+			<name>SpecificSetUpTime</name>
+			<description>Data trippels to describe the setup time, depending on manpower (number of people) an area of protection \"wall\" (square meter)</description>
+			<simpleProperty key="v_sy_setupTime">
+				<name>Setup time for specific setup situation</name>
+				<description>time needed for setting up a certain area with a certain number of people</description>
+				<unit>h</unit>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_sy_wallArea">
+				<name>Area of protection wall for specific setup situation</name>
+				<description>area of protection system to be set up in a certain time by a certain number of people</description>
+				<unit>m2/s</unit>
+				<type>java.lang.Float</type>
+			</simpleProperty>
+			<simpleProperty key="v_sy_setupStaff">
+				<name>Number of people for specific setup</name>
+				<description>nummber of people needed to set up a certain area of protection system in a certain time</description>
+				<type>java.lang.Integer</type>
+			</simpleProperty>
+		</vectorSet>
+
+<!--	</objectClass>
+	<objectClass ID="handling">
+		<name>Handling data</name>
+		<description>Figures needed for analysing the handling characteristics of the protection system</description>
+/-->
+		<simpleProperty key="sy_weLength">
+			<name>Length of wall element</name>
+			<description>Length of one element of proctective pane</description>
+			<unit>m</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sy_weHight">
+			<name>Higth of wall element</name>
+			<description>Hight of one element of proctective pane</description>
+			<unit>m</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sy_weWidth">
+			<name>Width of wall element</name>
+			<description>Width of one element of proctective pane</description>
+			<unit>m</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sy_weMass">
+			<name>Mass of wall element</name>
+			<description>Mass of one element of proctective pane</description>
+			<unit>kg</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sy_fieldLength">
+			<name>Field length of system</name>
+			<description>Lenth of one field of protective wall (including post and pane)</description>
+			<unit>m</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sy_peMass">
+			<name>Specific mass of post element</name>
+			<description>Specific mass of one post element in mass per meter</description>
+			<unit>kg/m</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+		<simpleProperty key="sy_peLengthFactor">
+			<name>Length fector of post element</name>
+			<description>Factor describing the total lenth of a post element as multiple of length above surface (f.e. 1.33 for one third of length below surface)</description>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+
+<!--	</objectClass>
+	<objectClass ID="storage">
+		<name>Storage data</name>
+		<description>Figures describing the storage characteristics</description>
+/-->
+		<simpleProperty key="sy_storageSpace">
+			<name>Specific storage space</name>
+			<description>Necessary storage space as cubic meter ver square meter</description>
+			<unit>m3/m2</unit>
+			<type>java.lang.Float</type>
+		</simpleProperty>
+
+	</objectClass>		
+	
+</theme>
