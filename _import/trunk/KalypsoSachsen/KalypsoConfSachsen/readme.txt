@@ -31,6 +31,8 @@ KalypsoConfSachsen
         |------------------- \tomcatStuff                                  
 
 
+* Die Variable ${workspace} muss Ant bekannt sein (Siehe Eclipse Preferences,
+  Ant, Runtime)
 * Die default targets der einzelene build-Dateien sind für 
   ein Kundendeploy ausgelegt
 * Alle Deploy-Dateien werden in das 'deploy'-Verzeichnis unter 

@@ -17,6 +17,7 @@
 		<echo message="Creating the required directories...." />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${dist.data}" />
+		<mkdir dir="${dist.prognose}" />
 	</target>
 
 	<target name="clean" description="Removes the build directories">
