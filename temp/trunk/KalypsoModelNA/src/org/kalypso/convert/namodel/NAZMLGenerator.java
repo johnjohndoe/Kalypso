@@ -248,7 +248,6 @@ public class NAZMLGenerator
       Object value = values.getElement( i, valueAxis );
       writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
     }
-
   }
 
   private static IAxis getAxis( IObservation observation, String axisLabel )

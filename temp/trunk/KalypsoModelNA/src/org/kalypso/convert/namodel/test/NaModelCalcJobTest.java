@@ -16,9 +16,9 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
  */
 public class NaModelCalcJobTest extends TestCase
 {
-  final String modellGMLResource = "data/namodell.gml";
-
-  final String controlGMLResource = "data/nacontrol.gml";
+//  final String modellGMLResource = "data/namodell.gml";
+//
+//  final String controlGMLResource = "data/nacontrol.gml";
 
   // TODO: andreas: hier ist Dein alter Test:
   //  public void testRun() throws Exception
@@ -67,7 +67,8 @@ public class NaModelCalcJobTest extends TestCase
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
-    File baseDir = new File( "C:\\simulation\\test" );
+//    File baseDir = new File( "C:\\simulation\\test" );
+    File baseDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\CalcJob-1-1099380062187" );
 //    File baseDir = FileUtilities.createNewTempDir( "NA_Simulation" );
 //    baseDir.mkdirs();
 
@@ -83,11 +84,11 @@ public class NaModelCalcJobTest extends TestCase
 
     CalcJobDataBean[] beans = new CalcJobDataBean[]
     {
-        new CalcJobDataBean( NaModelCalcJob.MODELL_ID, "Modelldaten", "./calcCase.gml" ),
-        new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "./nacontrol.gml" ),
-        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "./Niederschlag/" ),
-        new CalcJobDataBean( "ZuflussDir", "zufluesse", "./Zufluss/" ),
-        new CalcJobDataBean( "PegelDir", "pegel", "./Pegel/" ), };
+        new CalcJobDataBean( NaModelCalcJob.MODELL_ID, "Modelldaten", "calc/calcCase.gml" ),
+        new CalcJobDataBean( NaModelCalcJob.CONTROL_ID, "Steuerdaten", "calc/nacontrol_1300.gml" ),
+        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "calc/Niederschlag/" ),
+        new CalcJobDataBean( "ZuflussDir", "zufluesse", "calc/Zufluss/" ),
+        new CalcJobDataBean( "PegelDir", "pegel", "calc/Pegel/" ), };
     try
     {
       final NaModelCalcJob job = new NaModelCalcJob();
