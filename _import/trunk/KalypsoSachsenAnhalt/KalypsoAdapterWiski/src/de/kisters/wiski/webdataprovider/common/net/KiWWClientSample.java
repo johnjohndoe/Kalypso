@@ -36,7 +36,6 @@ public final class KiWWClientSample
    */
   public static void main( String[] args )
   {
-
     try
     {
 
@@ -59,7 +58,7 @@ public final class KiWWClientSample
         rmiUrl = "rmi://10.123.123.66:10991/KiWWDataProvider";
       }
       
-      BCEHelper.configureProxy( "", "" );
+      BCEHelper.configureProxy( "schlienger", "lba7cfi8" );
 
       KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
           .lookup( rmiUrl );
