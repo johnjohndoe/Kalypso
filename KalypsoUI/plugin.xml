@@ -94,21 +94,10 @@
             <separator name="spalten"/>
          </menu>
       </editorContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <viewerContribution
-            targetID="org.kalypso.editors.tableeditor.contextMenu"
-            id="org.kalypso.editors.tableeditor.popupMenu">
-         <menu
-               label="Menu"
-               path="org.kalypso.editors.tableeditor.popMenu"
-               id="org.kalypso.editors.tableeditor.popMenu.menu"/>
-         <action
-               label="AddRow"
-               class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
-               id="org.kalypso.tableeditor.AddRowAction"/>
-         <action
+      <editorContribution
+            targetID="org.kalypso.editor.mapeditor.GisMapEditor"
+            id="org.kalypso.ogc.widgets.GisMapEditorActionDelegate">
+                     <action
                toolbarPath="karte"
                label="volle Ausdehnung"
                tooltip="Zoom to fullextent"
@@ -124,7 +113,11 @@
                tooltip="vergrößert den Kartenausschnitt"
                style="push"
                id="org.kalypso.editor.mapeditor.action.ZoomOutAction"/>
-         <action
+            </editorContribution>
+      <editorContribution
+            targetID="org.kalypso.editor.mapeditor.GisMapEditor"
+            id="org.kalypso.ogc.widget.GisMapEditorWidgetActionDelegate">
+                     <action
                disabledIcon="icons/full/elcl16/kde_14_rectangle.gif"
                toolbarPath="karte"
                label="Ausschnitt vergrößern"
@@ -141,7 +134,22 @@
                class="org.kalypso.ogc.widgets.PanToWidget"
                style="radio"
                id="org.kalypso.editor.mapeditor.action.PanAction"/>
-      </viewerContribution>
+            </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="org.kalypso.editors.tableeditor.contextMenu"
+            id="org.kalypso.editors.tableeditor.popupMenu">
+         <menu
+               label="Menu"
+               path="org.kalypso.editors.tableeditor.popMenu"
+               id="org.kalypso.editors.tableeditor.popMenu.menu"/>
+         <action
+               label="AddRow"
+               class="org.kalypso.editor.tableeditor.actions.AddRowActionDelagate"
+               id="org.kalypso.tableeditor.AddRowAction"/>
+        </viewerContribution>
    </extension>
 
 </plugin>
