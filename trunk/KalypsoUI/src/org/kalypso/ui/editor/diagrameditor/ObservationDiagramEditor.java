@@ -55,6 +55,9 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
         | SWT.EMBEDDED ) );
 
+    // listener on template in order to set dirty flag when template changes
+    m_template.addTemplateEventListener( this );
+
     try
     {
       m_obsChart = new ObservationChart( m_template );
@@ -167,10 +170,6 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
   {
     monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
 
-    //    final Runnable runnable = new Runnable()
-    //    {
-    //      public void run( )
-    //      {
     try
     {
       final IStorage storage = input.getStorage();
@@ -196,24 +195,10 @@ public class ObservationDiagramEditor extends AbstractEditorPart implements
     {
       e.printStackTrace();
     }
-    //      }
-    //    };
-    //
-    //    try
-    //    {
-    //      SwingUtilities.invokeAndWait( runnable );
-    //    }
-    //    catch( Exception e ) // generic exception caught for simplicity
-    //    {
-    //      e.printStackTrace();
-    //    }
     finally
     {
       monitor.done();
     }
-
-    // listener on template in order to set dirty flag when template changes
-    m_template.addTemplateEventListener( ObservationDiagramEditor.this );
   }
 
   /**
