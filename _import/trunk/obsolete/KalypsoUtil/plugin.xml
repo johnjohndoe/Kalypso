@@ -39,6 +39,9 @@
       <library name="lib/xsdlib.jar">
          <export name="*"/>
       </library>
+      <library name="lib/kalypsodeegree.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>
