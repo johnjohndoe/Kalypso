@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.kalypso.manual"
-   name="Kalypso - Manual"
+   id="org.kalypso.grafikmanual"
+   name="Kalypso - Grafik - Manual"
    version="0.0.2"
    provider-name="kalypso.org">
 
