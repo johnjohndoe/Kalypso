@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -45,6 +45,7 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  * wird im control kein rotnode angegeben so wird das netz fuer die zu
  * generierenden ergebnisse erstellt
  * vorhandene ergebnisse oberhalb der zu berechneneden knoten werden als zufluss gerechnet.
+ * Wobei zu generierende Ergebnisse stets neu berechnet werden und niemals als Zufluss dienen.
  */
 public class NetFileManager extends AbstractManager
 {
@@ -84,7 +85,7 @@ public class NetFileManager extends AbstractManager
     super( conf.getNetFormatURL() );
     m_conf = conf;
     m_urlUtilities = new UrlUtilities();
-
+    NetElement.setNetAsciiFormats(getAsciiFormats());
   }
 
   public String mapID( int id, FeatureType ft )
@@ -92,6 +93,11 @@ public class NetFileManager extends AbstractManager
     return ft.getName() + id;
   }
 
+  /**
+ * 
+ * importing ascii file to gml-modell
+ * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
+ */
   public Feature[] parseFile( URL url ) throws Exception
   {
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
@@ -103,6 +109,9 @@ public class NetFileManager extends AbstractManager
     return (Feature[])valueCol.toArray( new Feature[valueCol.size()] );
   }
 
+  /**
+   * importing ascii part 2 : the nodeList
+   */
   private void readNodeList( LineNumberReader reader ) throws Exception
   {
     String line;
@@ -215,6 +224,9 @@ public class NetFileManager extends AbstractManager
     }
   }
 
+  /**
+   * importing ascii part 1 : the network
+   */
   private void readNet( LineNumberReader reader, HashMap nodeCollector ) throws Exception
   {
     HashMap propCollector = new HashMap();
@@ -288,32 +300,22 @@ public class NetFileManager extends AbstractManager
   }
 
   /*
-   * (non-Javadoc)
+   * generate ascii netfile from gml workspace
    * 
    * @see org.kalypso.convert.namodel.AbstractManager#writeFile(java.io.Writer,
    *      org.deegree.model.feature.GMLWorkspace)
    */
-  public void writeFile( Writer writer, GMLWorkspace workspace ) throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
-    // 9001
-    //
-    //
-
     //    x -> rootNode
     //    |
     //    O -> virtueller Strang generiert NR xxx
     //    |
     //    x -> virtueller knoten generiert NR 10000
 
-    //    final Feature wasterootNodeFE =
-    // workspace.getFeature(m_nodeFT,"Node10000");
-
-    // generate virtual Elements
-
-    // generiere abhaengigkeitsstruktur:
-    final HashMap netElements = new HashMap();
-    // netzelemente generieren
+    // list of channels
     final List channelList = new ArrayList();
+    // fill it
     final Feature[] vChannelFeatures = workspace.getFeatures( m_conf.getVChannelFT() );
     for( int i = 0; i < vChannelFeatures.length; i++ )
       channelList.add( vChannelFeatures[i] );
@@ -321,24 +323,27 @@ public class NetFileManager extends AbstractManager
     for( int i = 0; i < kmChannelFeatures.length; i++ )
       channelList.add( kmChannelFeatures[i] );
 
+    // list of network elements
+    final HashMap netElements = new HashMap();
+    NetElement.setDefaultGmlWorkSpace(workspace);
+    // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = (Feature[])channelList.toArray( new Feature[channelList.size()] );
-
     for( int i = 0; i < channelFEs.length; i++ )
-      netElements.put( channelFEs[i].getId(), new NetElement( channelFEs[i] ) );
-    // abhaengigkeiten hinzufuegen
-    //     knoten-knoten
+      netElements.put( channelFEs[i].getId(), new NetElement( this, channelFEs[i] ) );
+    
+    // find dependencies
+    //   dependency: node - node
     final Feature[] nodeFEs = workspace.getFeatures( m_conf.getNodeFT() );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       Feature upStreamNodeFE = nodeFEs[i];
       Feature upStreamChannelFE = workspace.resolveLink( upStreamNodeFE, "downStreamChannelMember" );
-
       Feature downStreamNodeFE = workspace.resolveLink( upStreamNodeFE, "verzweigungNodeMember" );
       if( downStreamNodeFE == null )
         continue;
       Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE,
           "downStreamChannelMember" );
-      //search upstreamchannel
+      // search upstreamchannel
       // set dependency
       if( upStreamChannelFE == downStreamChannelFE )
       {
@@ -350,7 +355,7 @@ public class NetFileManager extends AbstractManager
       NetElement downStreamElement = (NetElement)netElements.get( downStreamChannelFE.getId() );
       downStreamElement.addUpStream( upStreamElement );
     }
-    //     strang-knoten
+    //   dependency: channel - node
 
     for( int i = 0; i < channelFEs.length; i++ )
     {
@@ -381,7 +386,7 @@ public class NetFileManager extends AbstractManager
 
       downStreamElement.addUpStream( upStreamElement );
     }
-    //     ez -> ez
+    //   dependency:   catchment -> catchment
     Feature[] catchmentFEs = workspace.getFeatures( m_conf.getCatchemtFT() );
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
@@ -426,49 +431,70 @@ public class NetFileManager extends AbstractManager
       }
     }
 
-    //
+    
+    // find root elements
+    final List rootNetElements = new ArrayList();
     final Feature rootNodeFE = workspace.getFeature( m_conf.getRootNodeId() );
     // fuer root node soll immer ein result generiert werden und fuer das
     // ergebnis auch in eine zml geschrieben werden.
-    final List rootNetElements = new ArrayList();
     // falls rootnode angegeben hierfuer auch ein ergebnis generieren
     if( rootNodeFE != null )
     {
+      // if rootnode is set, net and results are generated for this 
+      // root node only 
       final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty(
           "generateResult", new Boolean( true ) );
       rootNodeFE.setProperty( createResultProp );
       addRootNode( workspace, rootNodeFE, rootNetElements, netElements,
        channelFEs );
     }
-    else
+    else // no root node given -> alle results nodes will act as root node
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         Feature nodeFE = nodeFEs[i];
         if( FeatureHelper.booleanIsTrue( nodeFE, "generateResult", false ) )
           addRootNode( workspace, nodeFE, rootNetElements, netElements, channelFEs );
       }
-    //    netElements
-    final StringBuffer buffer = new StringBuffer();
+    
+        
     final List nodeCollector = new ArrayList();
-
-    // alles oberhalb der rootNetElemente
+    
+    // generate net file for upstream of root net elements
+//    for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
+//    {
+//      NetElement rootElement = (NetElement)iter.next();
+//      rootElement.berechneOberlauf( buffer, nodeCollector );
+//    }
+    // generate net for root net elements
     for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
     {
       NetElement rootElement = (NetElement)iter.next();
-      rootElement.berechneOberlauf( workspace, buffer, nodeCollector );
+      rootElement.berechne(asciiBuffer, nodeCollector, true );
     }
-    // rootNetElements
+    // generate net for root channels
+    final List processedRootNodes=new ArrayList(); 
     for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
     {
       NetElement rootElement = (NetElement)iter.next();
-      rootElement.berechne( workspace, buffer, nodeCollector, true );
+      List downStreamNetElements = rootElement.getDownStreamNetElements();
+      boolean needsDownStreamElement=true;
+      for( Iterator iterator = downStreamNetElements.iterator(); iterator.hasNext(); )
+      {        
+        NetElement downStreamElement = (NetElement)iterator.next();
+        if(downStreamElement.isCalculated() && !downStreamElement.resultExists())
+          needsDownStreamElement=false;
+      }
+      if(needsDownStreamElement)
+        rootElement.writeRootChannel(asciiBuffer,processedRootNodes);
     }
-    buffer.append( "99999\n" );
-    appendNodeList( workspace, nodeCollector, buffer );
-    buffer.append( "99999\n" );
-    writer.write( buffer.toString() );
+    asciiBuffer.getNetBuffer().append( "99999\n" );
+    appendNodeList( workspace, nodeCollector, asciiBuffer );
+    asciiBuffer.getNetBuffer().append( "99999\n" );
   }
 
+  /**
+   * adds a feature to the list of root net elements
+   */
   private List addRootNode( GMLWorkspace workspace, Feature rootNodeFE, List rootNetElements,
       HashMap netElements, Feature[] channelFEs )
   {
@@ -505,7 +531,7 @@ public class NetFileManager extends AbstractManager
     return rootNetElements;
   }
 
-  private void appendNodeList( GMLWorkspace workspace, List nodeCollector, StringBuffer buffer )
+  private void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer )
       throws Exception, Exception
   {
     Iterator iter = nodeCollector.iterator();
@@ -540,17 +566,17 @@ public class NetFileManager extends AbstractManager
       if( zuflussLink != null )
         izuf = 5;
 
-      buffer.append( toAscii( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
-      buffer.append( toAscii( String.valueOf( izug ), "i5" ) );
-      buffer.append( toAscii( String.valueOf( iabg ), "i5" ) );
-      buffer.append( toAscii( String.valueOf( iueb ), "i5" ) );
-      buffer.append( toAscii( String.valueOf( izuf ), "i5" ) );
-      buffer.append( toAscii( String.valueOf( ivzwg ), "i5" ) + "\n" );
+      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( izug ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( iabg ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( iueb ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( izuf ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( String.valueOf( ivzwg ), "i5" ) + "\n" );
 
       if( ivzwg != 0 )
       {
-        buffer.append( toAscii( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
-        buffer.append( toAscii( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
+        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
+        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAscii( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
       }
       if( izuf != 0 )
       {
@@ -568,194 +594,16 @@ public class NetFileManager extends AbstractManager
           NAZMLGenerator.createFile( writer, NAZMLGenerator.NA_ZUFLUSS_EINGABE, observation );
           writer.close();
         }
-        buffer.append( "    1234\n" ); // dummyLine
-        buffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
+        asciiBuffer.getNetBuffer().append( "    1234\n" ); // dummyLine
+        asciiBuffer.getNetBuffer().append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
       }
     }
     // ENDKNOTEN
-    buffer.append( "10000    0    0    0    0    0\n" );
+    asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" );
   }
 
   private String getZuflussEingabeDateiString( Feature nodeFE )
   {
     return "Z_" + FeatureHelper.getAsString( nodeFE, "num" ) + ".zufluss";
-  }
-
-  public class NetElement
-  {
-    public final static int UNCALCULATED = 1;
-
-    public final static int CALCULATED = 2;
-
-    private final List m_upStreamDepends = new ArrayList();
-
-    private final List m_downStreamDepends = new ArrayList();
-
-    private final Feature m_channelFE;
-
-    private static final String ANFANGSKNOTEN = "    9001";
-
-    private static final String ENDKNOTEN = "   10000";
-
-    private int m_status = UNCALCULATED;
-
-    private final UrlUtilities m_urlUtils = new UrlUtilities();
-
-    public NetElement( Feature channelFE )
-    {
-      m_channelFE = channelFE;
-    }
-
-    public Feature getChannel()
-    {
-      return m_channelFE;
-    }
-
-    /**
-     * @param isRootElement
-     *          upstream from root node, only first channel is not upstream from
-     *          rootnode
-     */
-    public void berechne( GMLWorkspace workspace, StringBuffer buffer, List nodeList,
-        boolean isRootElement ) throws IOException, Exception
-    {
-      if( m_status == CALCULATED )
-        return;
-
-      // falls hier schon ein ergebnis vorliegt wird dieses als zulauf verwendet
-      // strangID 9001 knotenID
-      final Feature knotU = workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
-      final boolean resultExists = resultExists( knotU );
-      if( !resultExists )
-        berechneOberlauf( workspace, buffer, nodeList );
-
-      // berechne mich
-      write( workspace, buffer, nodeList, resultExists, isRootElement );
-      generateTimeSeries( workspace );
-      m_status = CALCULATED;
-    }
-
-    public void berechneOberlauf( GMLWorkspace workspace, StringBuffer buffer, List nodeList )
-        throws Exception
-    {
-      for( Iterator iter = m_upStreamDepends.iterator(); iter.hasNext(); )
-      {
-        // berechne oberlauf
-        NetElement element = (NetElement)iter.next();
-        element.berechne( workspace, buffer, nodeList, false );
-      }
-    }
-
-    private void generateTimeSeries( GMLWorkspace workspace ) throws IOException, Exception
-    {
-      Feature[] catchmentFeatures = workspace.resolveWhoLinksTo( m_channelFE, m_conf
-          .getCatchemtFT(), "entwaesserungsStrangMember" );
-      for( int i = 0; i < catchmentFeatures.length; i++ )
-      {
-        final Feature feature = catchmentFeatures[i];
-        final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
-        final URL linkURL = m_urlUtils.resolveURL( m_conf.getGMLModelURL(), link.getHref() );
-        final String tsFileName = CatchmentManager.getNiederschlagEingabeDateiString( feature );
-        final File targetFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileName );
-        final File parent = targetFile.getParentFile();
-        if( !parent.exists() )
-          parent.mkdirs();
-
-        if( !DEBUG )
-        {
-
-          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
-          final FileWriter writer = new FileWriter( targetFile );
-          NAZMLGenerator.createFile( writer, NAZMLGenerator.NA_LINK_N, observation );
-          writer.close();
-        }
-      }
-    }
-
-    private void addDownStream( NetElement downStreamElement )
-    {
-      if( !m_downStreamDepends.contains( downStreamElement ) )
-        m_downStreamDepends.add( downStreamElement );
-    }
-
-    public void addUpStream( NetElement upStreamElement )
-    {
-      if( !m_upStreamDepends.contains( upStreamElement ) )
-        m_upStreamDepends.add( upStreamElement );
-      upStreamElement.addDownStream( this );
-    }
-
-    /**
-     * writes part of netfile
-     * 
-     * @param isRootElement
-     *          false: this is a source node
-     */
-    public void write( GMLWorkspace workspace, StringBuffer buffer, List nodeList,
-        boolean resultExists, boolean isRootElement )
-    {
-      //      System.out.println( "calculate: " + m_channelFE.getId() );
-      //   obererknoten:
-      buffer.append( toAscci( m_channelFE, 12 ) );
-
-      final Feature knotU = workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
-
-      if( !resultExists || isRootElement )
-      {
-        Feature[] features = workspace.getFeatures( m_conf.getNodeFT() );
-        Feature knotO = null;
-        for( int i = 0; i < features.length; i++ )
-        {
-          if( m_channelFE == workspace.resolveLink( features[i], "downStreamChannelMember" ) )
-          {
-            knotO = features[i];
-            continue;
-          }
-        }
-        List catchmentList = new ArrayList();
-        Feature[] Cfeatures = workspace.getFeatures( m_conf.getCatchemtFT() );
-        for( int i = 0; i < Cfeatures.length; i++ )
-        {
-          if( m_channelFE == workspace.resolveLink( Cfeatures[i], "entwaesserungsStrangMember" ) )
-            catchmentList.add( Cfeatures[i] );
-        }
-        // oberer knoten
-        if( knotO != null )
-          buffer.append( toAscci( knotO, 11 ) );
-        else
-          buffer.append( ANFANGSKNOTEN );
-
-        // unterhalb des rootnodes letzter strang zum endknoten
-        // ohne teilgebiete
-        //        if( knotO != null && m_conf.getRootNodeId().equals( knotO.getId() ) )
-        if( isRootElement )
-        {
-          buffer.append( ENDKNOTEN );
-          buffer.append( " 0\n" ); // no catchments
-        }
-        else
-        {
-          // normaler strang, evt. mit teilgebieten
-          buffer.append( toAscci( knotU, 11 ) );
-          buffer.append( " " + catchmentList.size() + "\n" );
-          for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
-          {
-            Feature catchmentFE = (Feature)iter.next();
-            buffer.append( toAscci( catchmentFE, 12 ) + "\n" );
-          }
-        }
-        if( knotO != null && !nodeList.contains( knotO ) )
-          nodeList.add( knotO );
-      }
-      else
-      // result exists
-      {
-        buffer.append( ANFANGSKNOTEN );
-        buffer.append( toAscci( knotU, 11 ) );
-        buffer.append( " 0\n" ); // no catchments
-      }
-      if( !nodeList.contains( knotU ) )
-        nodeList.add( knotU );
-    }
   }
 }

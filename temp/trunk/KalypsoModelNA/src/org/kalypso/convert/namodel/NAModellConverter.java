@@ -186,20 +186,25 @@ public class NAModellConverter
 
   public void write( GMLWorkspace workspace ) throws Exception
   {
+    AsciiBuffer asciiBuffer=new AsciiBuffer();
 
-    Writer writer = new FileWriter( m_conf.getCatchmentFile() );
-    m_catchmentManager.writeFile( writer, workspace );
-    writer.close();
-    Writer writer2 = new FileWriter( m_conf.getChannelFile() );
-    m_gerinneManager.writeFile( writer2, workspace );
-    writer2.close();
+    m_nodeManager.writeFile( asciiBuffer, workspace );
+    m_catchmentManager.writeFile( asciiBuffer, workspace );
+    m_gerinneManager.writeFile( asciiBuffer, workspace );
 
     Writer writer3 = new FileWriter( m_conf.getNetFile() );
-    m_nodeManager.writeFile( writer3, workspace );
+    writer3.write(asciiBuffer.getNetBuffer().toString());
     writer3.close();
-
+    
+    Writer writer = new FileWriter( m_conf.getCatchmentFile() );
+    writer.write(asciiBuffer.getCatchmentBuffer().toString());
+    writer.close();
+    
+    Writer writer2 = new FileWriter( m_conf.getChannelFile() );
+    writer2.write(asciiBuffer.getChannelBuffer().toString());
+    writer2.close();
   }
-
+  
   public static Feature asciiToFeature( NAConfiguration conf ) throws Exception
   {
     NAModellConverter main = new NAModellConverter( conf );

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +20,7 @@ import org.deegree_impl.gml.schema.GMLSchema;
 import org.deegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.deegree_impl.model.feature.FeatureHelper;
+import org.kalypso.convert.ASCIIHelper;
 
 /**
  * @author doemming
@@ -151,91 +151,88 @@ public class CatchmentManager extends AbstractManager
     // handle timeseries: convert to zmllink
     FeatureProperty ts = (FeatureProperty)propCollector.get( "kurzzeit" );
     String tsFileString = (String)ts.getValue();
-    String relativeZmlPath="Niederschlag/Niederschlag_"+feature.getId()+".zml";
-    File orgTsFile = new File( m_conf.getAsciiBaseDir(),"klima.dat/"+tsFileString );
-    // repository LINK 
+    String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml";
+    File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString );
+    // repository LINK
     // is absolute
     // do copy
-    Object link = NAZMLGenerator
-        .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_LINK_N, m_conf
-            .getGmlBaseDir(),relativeZmlPath, false ,false);
-    FeatureProperty niederschlagZRRepositoryProp = FeatureFactory.createFeatureProperty( "niederschlagZRRepository",
-        link );
+    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_LINK_N,
+        m_conf.getGmlBaseDir(), relativeZmlPath, false, false );
+    FeatureProperty niederschlagZRRepositoryProp = FeatureFactory.createFeatureProperty(
+        "niederschlagZRRepository", link );
     propCollector.put( "niederschlagZRRrepository", niederschlagZRRepositoryProp );
-    // calculation LINK 
+    // calculation LINK
     // is relative
     // no copy
 
-    Object relativeLink = NAZMLGenerator
-    .copyToTimeseriesLink( orgTsFile.toURL(), NAZMLGenerator.NA_LINK_N, m_conf
-        .getGmlBaseDir(),relativeZmlPath, true ,true);
+    Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
+        NAZMLGenerator.NA_LINK_N, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
     FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
         relativeLink );
     propCollector.put( "niederschlagZR", niederschlagZRProp );
 
     // continue reading
 
-    
     Collection collection = propCollector.values();
     setParsedProperties( feature, collection );
     line = reader.readLine();
     return feature;
   }
 
-  public void writeFile( Writer writer, GMLWorkspace workspace ) throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
     Feature rootFeature = workspace.getRootFeature();
     Feature col = (Feature)rootFeature.getProperty( "CatchmentCollectionMember" );
     List list = (List)col.getProperty( "catchmentMember" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
-      writeFeature( writer, workspace, (Feature)iter.next() );
+    {
 
-    //    ExtFeature[] features = getAllFeatures();
-    //    for( int i = 0; i < features.length; i++ )
-    //    {
-    //      writeFeature( features[i] );
-    //    }
+      final Feature catchmentFE = (Feature)iter.next();
+      if( asciiBuffer.writeFeature( catchmentFE ) )
+        writeFeature( asciiBuffer, workspace, catchmentFE );
+    }
   }
 
-  private void writeFeature( Writer writer, GMLWorkspace workSpace, Feature feature )
+  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, Feature feature )
       throws Exception
   {
     // 0-2
     for( int i = 0; i <= 2; i++ )
-      writer.write( toAscci( feature, i ) + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
 
     StringBuffer b = new StringBuffer();
-    b.append( toAscii( FeatureHelper.getAsString(feature, "pns" ), "a1" )) ;
+    b.append( ASCIIHelper.toAscii( FeatureHelper.getAsString( feature, "pns" ), "a1" ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
-    b.append( " " + toAscii(FeatureHelper.getAsString(feature, "faktn" ), "f5.2" ) + "\n" );
+    b.append( " " + ASCIIHelper.toAscii( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" )
+        + "\n" );
     // 5
-    b.append("std.tmp std.ver\n");
-    writer.write( b.toString() );
-    
+    b.append( "std.tmp std.ver\n" );
+    asciiBuffer.getCatchmentBuffer().append( b.toString() );
+
     // 5-8
     for( int i = 5; i <= 8; i++ )
-      writer.write( toAscci( feature, i ) + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
 
-    Double banf = (Double)feature.getProperty("faktorBianf");
-    
+    Double banf = (Double)feature.getProperty( "faktorBianf" );
+
     // 9
     List list = (List)feature.getProperty( "bodenkorrekturmember" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
       Feature fe = (Feature)iter.next();
-      if(banf!=null)
+      if( banf != null )
       {
-        fe.setProperty(FeatureFactory.createFeatureProperty("banf",banf));
+        fe.setProperty( FeatureFactory.createFeatureProperty( "banf", banf ) );
       }
-      writer.write( toAscci( fe, 9 ) + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + "\n" );
     }
     // 10-12
     for( int i = 10; i <= 12; i++ )
     {
-      writer.write( toAscci( feature, i ) + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
     }
     // 13-14
     List gwList = (List)feature.getProperty( "grundwasserabflussMember" );
@@ -247,10 +244,10 @@ public class CatchmentManager extends AbstractManager
       Feature linkedFE = workSpace.resolveLink( fe, "ngwzu" );
       if( linkedFE == null )
         throw new Exception( "broken NA-Modell: grundwasserabfluss in unbekanntes Teilgebiet: #"
-            + FeatureHelper.getAsString(fe, "ngwzu" ));
+            + FeatureHelper.getAsString( fe, "ngwzu" ) );
       if( linkedFE == null )
         line13.append( "\nbroken NA-Modell: grundwasserabfluss in unbekanntes Teilgebiet: #"
-            + FeatureHelper.getAsString(fe, "ngwzu" ));
+            + FeatureHelper.getAsString( fe, "ngwzu" ) );
       else
       {
 
@@ -260,13 +257,13 @@ public class CatchmentManager extends AbstractManager
       }
 
     }
-    writer.write( line13 + "\n" );
-    writer.write( line14 + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( line13 + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( line14 + "\n" );
     // 15
 
-    writer.write( toAscci( feature, 15 ) + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 15 ) + "\n" );
     // kommentarZeile
-    writer.write( "ende gebietsdatensatz" + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( "ende gebietsdatensatz" + "\n" );
 
   }
 
@@ -283,6 +280,6 @@ public class CatchmentManager extends AbstractManager
 
   public static String getNiederschlagEingabeDateiString( Feature feature )
   {
-    return "C_" + FeatureHelper.getAsString(feature, "inum" ) + ".niederschlag";
+    return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".niederschlag";
   }
 }

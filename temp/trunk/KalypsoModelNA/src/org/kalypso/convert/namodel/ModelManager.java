@@ -5,7 +5,6 @@
 package org.kalypso.convert.namodel;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.net.URL;
 
 import org.deegree.model.feature.Feature;
@@ -43,9 +42,8 @@ public class ModelManager extends AbstractManager {
 	/* (non-Javadoc)
 	 * @see org.kalypso.convert.AbstractManager#writeFile(java.io.Writer)
 	 */
-	public void writeFile(Writer writer,GMLWorkspace workspace)
+	public void writeFile(AsciiBuffer asciiBuffer,GMLWorkspace workspace)
 	{
 	// nothing to do
 	}
-
 }

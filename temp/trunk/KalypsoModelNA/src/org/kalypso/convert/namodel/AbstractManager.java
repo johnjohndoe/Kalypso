@@ -3,7 +3,6 @@ package org.kalypso.convert.namodel;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +17,7 @@ import org.deegree.model.feature.FeatureProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.GMLWorkspace;
 import org.deegree_impl.model.feature.FeatureFactory;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.convert.ASCIIHelper;
 
 /**
  * @author doemming
@@ -27,21 +26,20 @@ public abstract class AbstractManager
 {
   private final static HashMap m_map = new HashMap();
 
-  // (stringID, intID)
-  // und
-  // (intDI,stringID)
-
-  //  public final Feature m_rootFeature;
-
   private static final HashMap m_allFeatures = new HashMap(); // (stringID,feature)
 
   private String[] m_asciiFormat;
 
+  public String[] getAsciiFormats()
+  {
+    return m_asciiFormat;
+  }
+  
   public AbstractManager( URL parseDefinition ) throws IOException
   {
       if( parseDefinition != null )
       readParseDefinition( parseDefinition );
-    //    m_rootFeature = rootFeature;
+
   }
 
   public Feature getFeature( int id, FeatureType ft )
@@ -121,9 +119,7 @@ public abstract class AbstractManager
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public abstract void writeFile( Writer writer, GMLWorkspace workspace ) throws Exception;
-
-  private final static Pattern patternBrackets = Pattern.compile( "[\\(|\\)]" );
+  public abstract void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception;
 
   public void createProperties( HashMap propCollector, String line, int formatLine )
       throws Exception
@@ -137,7 +133,7 @@ public abstract class AbstractManager
     line = line + "                                                ";
     List nameCollector = new ArrayList();
     StringBuffer pattern = new StringBuffer( "^" );
-    String[] formats = patternBrackets.split( formatLine );
+    String[] formats = ASCIIHelper.patternBrackets.split( formatLine );
     for( int i = 0; i < formats.length; i++ )
     {
       String format = formats[i];
@@ -163,27 +159,12 @@ public abstract class AbstractManager
 
   }
 
-  private final static Pattern pFortranFormat = Pattern
-      .compile( "(a|A|i|I|f|F)([0-9]*)\\.?([0-9]*)" );
-
-  private final static Pattern pSpaceFormat = Pattern.compile( "_*" );
-
-  private final static Pattern pPairFormat = Pattern.compile( "^.+,.+$" );
-
-  private final static String textRegExp = "[a-zA-Z0-9_\\. ]";
-
-  private final static String freeFormat = "\\s*[\\\\a-zA-Z0-9_:\\.-]+\\s*";
-
-  private final static String decimalPoint = "[ \\.]";
-
-  private final static String decimalValue = "[0-9 ]";
-
   private String getRegExp( String string, List nameCollector )
   {
-    Matcher m = pPairFormat.matcher( string );
+    Matcher m = ASCIIHelper.pPairFormat.matcher( string );
     if( m.matches() )
       return "(" + getPairRegExp( string, nameCollector ) + ")";
-    m = pSpaceFormat.matcher( string );
+    m = ASCIIHelper.pSpaceFormat.matcher( string );
     if( m.matches() )
     {
       return string.replace( '_', ' ' );
@@ -201,16 +182,16 @@ public abstract class AbstractManager
     final String format = s[1];
 
     if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
-      return freeFormat;
-    Matcher m = pFortranFormat.matcher( format );
+      return ASCIIHelper.freeFormat;
+    Matcher m = ASCIIHelper.pFortranFormat.matcher( format );
     if( m.matches() )
     {
       String type = m.group( 1 );
       String regExpChar = "";
       if( "aA".indexOf( type ) >= 0 )
-        regExpChar = textRegExp;
+        regExpChar = ASCIIHelper.textRegExp;
       if( "iIfF".indexOf( type ) >= 0 )
-        regExpChar = decimalValue;
+        regExpChar = ASCIIHelper.decimalValue;
 
       String charMax = m.group( 2 ); // gesamt anzahl stellen
       String decimalPlace = m.group( 3 ); // Nachkommastellen
@@ -221,121 +202,17 @@ public abstract class AbstractManager
       }
       int max = Integer.parseInt( charMax );
       int decimal = Integer.parseInt( decimalPlace );
-      return regExpChar + "{1," + ( max - decimal - 1 ) + "}" + decimalPoint + regExpChar + "{"
+      return regExpChar + "{1," + ( max - decimal - 1 ) + "}" + ASCIIHelper.decimalPoint + regExpChar + "{"
           + ( decimal ) + "}";
     }
     throw new UnsupportedOperationException();
   }
 
-  public String toAscci( Feature feature, int formatLine )
+  public String toAscci( Feature feature, int formatLineIndex )
   {
-    StringBuffer result = new StringBuffer( "" );
-
-    String[] formats = patternBrackets.split( m_asciiFormat[formatLine] );
-    for( int i = 0; i < formats.length; i++ )
-    {
-      String format = formats[i];
-      Matcher m = pPairFormat.matcher( format );
-      if( m.matches() )
-        result.append( toAsciiValue( feature, format ) );
-      m = pSpaceFormat.matcher( format );
-      if( m.matches() )
-        result.append( format.replace( '_', ' ' ) );
-    }
-
-    return result.toString();
+    return ASCIIHelper.toAsciiLine(feature,m_asciiFormat[formatLineIndex]); 
   }
-
-  private String toAsciiValue( Feature feature, String pairFormat )
-  {
-    if( "".equals( pairFormat ) )
-      return "";
-    final String[] s = pairFormat.split( "," );
-    if( "todo".equals( s[0] ) )
-      return "(TODO:" + s[0] + ")";
-    if( "IGNORE".equals( s[0] ) )
-      return "";
-    //        System.out.println(s[0]);
-    Object property = feature.getProperty( s[0] );
-
-    if( property == null )
-      return "(" + s[0] + "==NULL ?)";
-    String value = property.toString(); // PropertyName
-
-    final String format = s[1];
-    return toAscii( value, format );
-  }
-
-  public String toAscii( String value, String format )
-  {
-    if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
-      return value;
-    Matcher m = pFortranFormat.matcher( format );
-    if( m.matches() )
-    {
-      String type = m.group( 1 );
-
-      String charMax = m.group( 2 ); // gesamt anzahl stellen
-      int max = Integer.parseInt( charMax );
-      String decimalPlace = m.group( 3 ); // Nachkommastellen
-      int decimal;
-      StringBuffer result = new StringBuffer( "" );
-      for( int i = 0; i < max; i++ )
-        result.append( " " );
-      if( value == null || "".equals( value ) )
-        return result.toString();
-      if( !"".equals( decimalPlace ) )
-        decimal = Integer.parseInt( decimalPlace );
-      else
-      {
-        if( "aA".indexOf( type ) >= 0 ) //TEXT
-        {
-          return ( result.replace( 0, value.length(), value ) ).toString();
-        }
-        decimal = 0;
-      }
-
-      boolean found = false;
-      while( !found )
-      {
-        int pointPos = value.indexOf( '.' );
-        if( pointPos < 0 && decimal > 0 ) // da fehlt ein Komma
-        {
-          value = value + ".0";
-          continue;
-        }
-        if( pointPos < 0 && decimal == 0 )
-        {
-          found = true;
-          continue;
-        }
-        int points = value.length() - pointPos - 1;
-        if( points == decimal )
-        {
-          found = true;
-          continue;
-        }
-
-        if( points > decimal ) // zuviele Nachkommastellen
-        {
-          value = value.substring( 0, value.length() - 1 );
-          continue;
-        }
-        if( points < decimal ) // zuwenig Nachkommastellen
-        {
-          value = value + "0";
-          continue;
-        }
-
-      }
-
-      value = value.trim();
-      return ( result.replace( max - value.length(), max, value ) ).toString();
-    }
-    throw new UnsupportedOperationException();
-
-  }
-
+  
   public void setParsedProperties( Feature feature, Collection collection )
   {
     FeatureType ft = feature.getFeatureType();

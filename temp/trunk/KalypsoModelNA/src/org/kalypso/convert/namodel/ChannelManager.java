@@ -3,8 +3,6 @@ package org.kalypso.convert.namodel;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +22,7 @@ import org.deegree_impl.model.feature.FeatureFactory;
  */
 public class ChannelManager extends AbstractManager
 {
-  private static final int VIRTUALCHANNEL = 0;
+  public static final int VIRTUALCHANNEL = 0;
 
   private static final int KMCHANNEL = 1;
 
@@ -107,47 +105,45 @@ public class ChannelManager extends AbstractManager
       throw new UnsupportedOperationException( "ChannelType " + art + " is not supported" );
     }
     Collection collection = propCollector.values();
-    setParsedProperties( feature, collection );
-    StringWriter writer = new StringWriter();
-    writeFeature( writer, feature );
-    System.out.println( writer.toString() );
+    setParsedProperties( feature, collection );        
     return feature;
   }
 
-  public void writeFile( Writer writer, GMLWorkspace workspace ) throws IOException
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace )
   {
     Feature rootFeature = workspace.getRootFeature();
     Feature channelCol = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCol.getProperty( "channelMember" );
-    Iterator iter = channelList.iterator();
+    Iterator iter = channelList.iterator();    
     while( iter.hasNext() )
-      writeFeature( writer, (Feature)iter.next() );
+    {
+      Feature channelFE=(Feature)iter.next();
+      if(asciiBuffer.writeFeature(channelFE))
+        writeFeature(  asciiBuffer, channelFE);
+    }
   }
 
-  private void writeFeature( Writer writer, Feature feature ) throws IOException
+  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) 
   {
-
-    writer.write( toAscci( feature, 0 ) + "\n" );
+    asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )
-      writer.write( VIRTUALCHANNEL + "\n" );
+      asciiBuffer.getChannelBuffer().append( VIRTUALCHANNEL + "\n" );
     else if( "KMChannel".equals( ft.getName() ) )
     {
-      writer.write( KMCHANNEL + "\n" );
+      asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" );
 
-      writer.write( toAscci( feature, 2 ) + "\n" );
+      asciiBuffer.getChannelBuffer().append( toAscci( feature, 2 ) + "\n" );
       List kmFeatures = (List)feature.getProperty( KMParameterpropName );
       for( int i = 0; i < kmFeatures.size(); i++ )
       {
         Feature kmFE = (Feature)kmFeatures.get( i );
-
-        writer.write( toAscci( kmFE, 3 ) + "\n" );
+        asciiBuffer.getChannelBuffer().append( toAscci( kmFE, 3 ) + "\n" );
       }
     }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii"
           + feature.toString() );
-
   }
 
   public String mapID( int id, FeatureType ft )
