@@ -7,8 +7,7 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import javax.swing.event.EventListenerList;
 
 import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
-import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -81,7 +80,7 @@ public class ColorPalette
         {          
           filterPatternDialog.setColor(((ColorBox)event.getSource()).getColor());
           filterPatternDialog.open();
-          if(filterPatternDialog.getReturnCode()  ==  Dialog.OK)
+          if(filterPatternDialog.getReturnCode()  ==  Window.OK)
           {
             ((ColorBox)event.getSource()).setColor(filterPatternDialog.getColor());            
           }
