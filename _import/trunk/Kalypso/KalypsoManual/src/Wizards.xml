@@ -172,8 +172,7 @@
       (<xref linkend="we_ndata" />):</para>
 
       <figure id="we_ndata">
-        <title>Kontrolle der Niederschlagszeitreihen
-        (Gebietsniederschläge)</title>
+        <title>Kontrolle der Niederschlagszeitreihen (Ombrometer)</title>
 
         <screenshot>
           <mediaobject>
@@ -182,6 +181,17 @@
             </imageobject>
           </mediaobject>
         </screenshot>
+      </figure>
+
+      <figure>
+        <title>Kontrolle der Niederschlagszeitreihen
+        (Gebietsniederschläge)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/we_4a.png" scale="30" />
+          </imageobject>
+        </mediaobject>
       </figure>
 
       <para><orderedlist>
@@ -214,9 +224,9 @@
       <guibutton>weiter</guibutton> das Prognosefenster (<xref
       linkend="we_berechnung" />) im oberen Bereich des Fensters befindet sich
       die Information über den Pegel, an dem die aktuelle Prognose
-      durchgeführt wird. Im Kartenfenster wird ein Ausschnitt des
-      Einzuggebietes dargestellt, der den aktuell zu berechnenden Pegel
-      anzeigt (Pegelname). Die Tabelle dient zur Angabe der bei der Prognose
+      durchgeführt wird. Im Kartenfenster wird eine schematische Ansicht des
+      Einzuggebietes dargestellt, in der alle Vorhersage- und Zuflusspegel
+      angezeigt werden. Die Tabelle dient zur Angabe der bei der Prognose
       veränderlichen Modellparameter.</para>
 
       <figure id="we_berechnung">
@@ -235,34 +245,46 @@
 
       <itemizedlist>
         <listitem>
-          <para>Anfangsinhalt Bodenspeicher (multiplikativ)</para>
+          <para>Bianf: Anfangsinhalt Bodenspeicher</para>
 
           <para>kann in den Grenzen von 0,0 (Speicher leer) bis 1,0 (Speicher
-          voll) variiert werden</para>
+          voll) variiert werden.</para>
         </listitem>
 
         <listitem>
-          <para>Anfangs-Grundwasserstand (multiplikativ)</para>
+          <para>FaktorAigw: Anfangs-Grundwasserstand (multiplikativ)</para>
 
           <para>Der Anfangs-Grundwasserstand (abhänigig vom Teilgebiet) wird
-          mit einem Faktor multipliziert</para>
+          mit einem Faktor multipliziert.</para>
         </listitem>
 
         <listitem>
-          <para>Niederschlagsfaktor (multiplikativ)</para>
+          <para>Faktn: Niederschlagsfaktor (multiplikativ)</para>
 
-          <para>Alle Niederschlagshöhen der Eingangszeitreihe werden mit einem
-          Faktor multipliziert</para>
+          <para>Alle Niederschlagshöhen der Eingangszeitreihe
+          (Gebietsniederschlag) werden mit einem Faktor multipliziert.</para>
         </listitem>
 
         <listitem>
-          <para>Retention Oberflächenabfluss und Interflow
-          (multiplikativ)</para>
+          <para>FaktorRetobRetint: Faktor für Retentionskonstanten
+          Oberflächenabfluss und Interflow</para>
+
+          <para>Die Retentionskonstanten für Oberflächenabfluss und Interflow
+          werden gemeinsam mit dem angegebenen Wert multipliziert.</para>
         </listitem>
 
         <listitem>
-          <para>Gerinneparameter (n: Anzahl der Speicher, k:
-          Retentionskonstante der Speicher)</para>
+          <para>FaktorRnf: Faktor der Speicheranzahl (Gerinnespeicher)</para>
+
+          <para>Die Anzahl der Gerinnespeicher wird mit dem angegbenen Wert
+          multipliziert</para>
+        </listitem>
+
+        <listitem>
+          <para>FaktorRkf: Faktor für Retentionskonstante (Gerinne)</para>
+
+          <para>Die Retentionskonstanten für die Gerinneelemente werden mit
+          dem angegeben Wert multipliziert</para>
         </listitem>
       </itemizedlist>
 
@@ -312,7 +334,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/we_schema1.png" scale="50" />
+            <imagedata fileref="img/we_schema1.png" scale="60" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -388,6 +410,13 @@
       <guibutton>Bericht(e) ablegen</guibutton> werden die Ergebnisse der
       Vorhersage-Berechnungen für alle Pegel der ausgewählten Variante(n) auf
       dem Server abgelegt.</para>
+
+      <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
+      <guimenu>Export Prognosen</guimenu> auf dem Server (PSICompact)
+      gespeichert werden. Es erscheint ein Auswahlfenster, in dem diejenigen
+      Ausgabequerschnitte gewählt werden können, für die Zeitreihen
+      herausgeschrieben werden. Die Ablage der Zeitreihen erfolgt nur für den
+      Vorhersage-Zeitraum.</para>
     </section>
   </section>
 
@@ -742,6 +771,13 @@
       <guibutton>Bericht(e) ablegen</guibutton> werden die Ergebnisse der
       Vorhersage-Berechnungen für alle Pegel des Modells auf dem Server
       abgelegt.</para>
+
+      <para>Die berechneten Ergebniszeitreihen können über die Schaltfläche
+      <guimenu>Export Prognosen</guimenu> auf dem Server (PSICompact)
+      gespeichert werden. Es erscheint ein Auswahlfenster, in dem diejenigen
+      Ausgabequerschnitte gewählt werden können, für die Zeitreihen
+      herausgeschrieben werden. Die Ablage der Zeitreihen erfolgt nur für den
+      Vorhersage-Zeitraum.</para>
     </section>
   </section>
 </chapter>
