@@ -13,9 +13,9 @@
     <!-- Init -->
     <target name="init">
       <!-- NA-Modell -->
-       <!-- <property name="model" value="NA_Modell"/> -->
-       <!-- <property name="model" value="NA_Control"/> --> 
-       <property name="model" value="NA_SimulationCase"/> 
+    	<!-- <property name="model" value="NA_Modell"/> --> 
+    	<!-- <property name="model" value="NA_Control"/> -->  
+        <property name="model" value="NA_SimulationCase"/>   
 
       <!-- HWS Timm Ruben -->
      <!--  <property name="model" value="NA_Control"/> -->
@@ -96,14 +96,16 @@
         <mkdir dir="${xml.src.dir}"/>
         <mkdir dir="${xsl-target.dir}"/>
         <mkdir dir="${client.build.dir}"/>
-        <mkdir dir="${log4j.path}"/>
+        <mkdir dir="${log4j.path}"/>    	
     </target>
+	
     <target name="compile-client" depends="prepare">
         <javac srcdir="${client.src.dir}" destdir="${client.build.dir}"
             includes="**/*.java" debug="on">
             <classpath refid="project.class.path"/>
         </javac>
     </target>
+	
     <target name="prepare-java-sources" depends="prepare">
         <java fork="true" failonerror="true"
             classpath="${lib.dir}/xt.jar:${lib.dir}/xercesImpl.jar"
@@ -138,17 +140,20 @@
   <fileset dir="${java-template.dir}"/>
   </copy>
     -->
+    	
     </target>
     <target name="seperate" depends="prepare-java-sources">
-        <exec executable="perl" dir="${bin.dir}" failonerror="true">
+
+    	<exec executable="perl" dir="${bin.dir}" failonerror="true">
             <arg line="${bin.dir}/extractJavaSource.pl"/>
             <arg line="${java.dir}/"/>
             <arg line="${xsl-target.dir}/idManagerSource.java"/>
             <arg line="${xsl-target.dir}/versionSource.java"/>
             <arg line="${xsl-target.dir}/source.java"/>
             <arg line="${xsl-target.dir}/vectorSets.java"/>
-            <!--
-      <arg line="${xsl-target.dir}/IdManagerBean.java"/>
+         </exec>
+
+<!--      <arg line="${xsl-target.dir}/IdManagerBean.java"/>
 	
       <arg line="${xsl-target.dir}/VersionLocal.java"/>
 
@@ -167,7 +172,7 @@
       <arg line="${xsl-target.dir}/GisTransferObject.java"/>
       <arg line="${xsl-target.dir}/Tools.java"/>
 -->
-        </exec>
+     
         <copy todir="${java.dir}">
             <fileset dir="${kalypso.src.dir}"/>
         </copy>
@@ -194,19 +199,12 @@
     <!-- Run EJBDoclet -->
  
     <target name="ejbdoclet" depends="seperate">
-        <taskdef name="ejbdoclet" classname="xdoclet.ejb.EjbDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path};${lib.dir}/j2ee.jar"/>
-        <ejbdoclet sourcepath="${java.dir};${log4j.path}" destdir="${generated.java.dir}"
-            classpathref="project.class.path" excludedtags="@version,@author"
-            ejbspec="2.0"  force="${xdoclet.force}"  >
-     	 <!--
-     	       excludedtags="@version,@author"
-     	       ejbspec="2.0"
-     	       force="${xdoclet.force}">
-         -->
-            <!-- 
-      destdir="${generated.java.dir}" 
-      where to put generated files 
-      -->
+ <taskdef name="ejbdoclet" classname="xdoclet.ejb.EjbDocletTask" classpath="${xdoclet.jar.path};${log4j.jar.path};${ant.jar.path};${lib.dir}/j2ee.jar"/>
+ <ejbdoclet sourcepath="${java.dir};${log4j.path}" destdir="${generated.java.dir}" 
+    	classpathref="project.class.path" excludedtags="@version,@author"
+            ejbspec="2.0"  force="${xdoclet.force}">
+  
+     	
             <!--
       It's good practice to put interfaces in a separate "interfaces"
       package than in EJB bean implementations, but if you don't like it
@@ -359,8 +357,9 @@
     </target>
     <!-- Create EJB-JAR file -->
     <target name="ejb-jar" depends="compile-ejbs,correctPrimKey">
-        <jar jarfile="${ejb.generic.file}">
-            <fileset dir="${kalypso.classes.dir}"/>
+        <jar  jarfile="${ejb.generic.file}">
+            
+        	<fileset dir="${kalypso.classes.dir}"/>
             <fileset dir="${ejb.classes.dir}"/>
             <fileset dir="${ejb.dir}" includes="META-INF/**"/>
         </jar>
