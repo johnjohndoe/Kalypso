@@ -23,12 +23,14 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.renderer.DateTableCellRenderer;
-import org.kalypso.ogc.sensor.renderer.NumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.renderer.DateTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
+import org.kalypso.util.status.MaskedNumber;
 
 /**
  * @author schlienger
@@ -50,7 +52,10 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
     JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
-    table.setDefaultRenderer( Double.class, new NumberTableCellRenderer() );
+    table.setDefaultRenderer( MaskedNumber.class, new MaskedNumberTableCellRenderer() );
+    
+    // TODO: als Testzweck hier, später komplett entfernen?
+    m_model.setRules( new Rules() );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );

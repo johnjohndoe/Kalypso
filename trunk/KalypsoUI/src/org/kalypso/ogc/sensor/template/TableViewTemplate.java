@@ -5,8 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.kalypso.ogc.sensor.tableview.template.RenderingRule;
+import org.kalypso.ogc.sensor.tableview.template.Rules;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.template.obstableview.TypeRenderingRule;
 
 /**
  * A TableViewTemplate that uses a template file.
@@ -85,5 +88,20 @@ public class TableViewTemplate
   protected IFile getFile()
   {
     return m_file;
+  }
+  
+  /**
+   * Returns the rendering rules (packed into a Rules object)
+   */
+  public Rules getRules()
+  {
+    List xrules = getBaseTemplate().getRules().getRenderingrule();
+    
+    RenderingRule[] rules = new RenderingRule[ xrules.size() ];
+    
+    for( int i = 0; i < rules.length; i++ )
+      rules[i] = RenderingRule.createRenderingRule( (TypeRenderingRule)xrules.get(i) );
+    
+    return new Rules( rules );
   }
 }
