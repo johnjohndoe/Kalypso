@@ -3,13 +3,15 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
-	
+
+	<!-- Wrapper für TimeSeriesLinkType um diesen als Element ins Modell einzubinden -->	
 	<complexType name="TimeseriesLinkType">
 		<sequence>
 			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
 		</sequence>
 	</complexType>
-	
+
+	<!-- Eigentliches Spree-Modell -->	
 	<element name="SpreeModell" type="spree:_SpreeModellType"/>
 	<complexType name="_SpreeModellType">
 		<complexContent>

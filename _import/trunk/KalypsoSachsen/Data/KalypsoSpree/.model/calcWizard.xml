@@ -2,9 +2,9 @@
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-<!-- KONTROLLE DER ZEITREIHEN -->
+	<!-- Phase 1: KONTROLLE DER ZEITREIHEN -->
 
-	<!-- Kontrolle N -->
+	<!-- Kontrolle Niederschlag -->
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
 
@@ -76,9 +76,10 @@
        	<arg name="maximizeMap" value="true"/>
     </page>
 
-<!-- KALIBRIERUNG -->
 
-	<!-- Eingabe NA-Modelle -->
+	<!-- Phase 2: Berechnung und Anpassen der Anfangsbedingungen -->
+
+	<!-- Eingabe Anfangsbodenfeuchten der N-A Modelle -->
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
@@ -101,7 +102,7 @@
        	<arg name="maximizeMap" value="true"/>
     </page>
 
-	<!-- Eingabe Talsperren -->
+	<!-- Eingabe Anfangsvolumina der Talsperren -->
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
@@ -124,7 +125,7 @@
        	<arg name="maximizeMap" value="true"/>
     </page>
 
-	<!-- Eingabe Flusslaufmodelle -->
+	<!-- Eingabe Parameter der Flusslaufmodelle -->
     <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
@@ -146,7 +147,8 @@
        	<arg name="maximizeMap" value="true"/>
     </page>
 
-	<!-- Ergebnisablage -->
+	<!-- Phase 3: Ergebnisdarstellung und Ablage -->
+
 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
