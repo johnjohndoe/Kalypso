@@ -4,10 +4,24 @@
  */
 package org.kalypso.editor.styleeditor;
 
+import java.io.File;
+import java.io.StringReader;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.deegree.graphics.sld.Rule;
+import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.deegree.graphics.sld.Symbolizer;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.xml.XMLTools;
 import org.deegree_impl.graphics.sld.Rule_Impl;
+import org.deegree_impl.graphics.sld.SLDFactory;
+import org.deegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
 import org.deegree_impl.services.wfs.filterencoding.Literal;
 import org.deegree_impl.services.wfs.filterencoding.PropertyIsLikeOperation;
@@ -21,6 +35,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.editor.styleeditor.dialogs.FilterDialog;
@@ -32,6 +47,7 @@ import org.kalypso.editor.styleeditor.panels.SliderPanel;
 import org.kalypso.editor.styleeditor.panels.TextInputPanel;
 import org.kalypso.ogc.event.ModellEvent;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.w3c.dom.Document;
 
 /**
  * @author Administrator
@@ -247,17 +263,56 @@ public class RuleTabItemBuilder {
 				}
 			});
 				
-			Button button = new Button(composite,SWT.NULL);
-			final FilterDialog filterDialog = new FilterDialog(composite.getShell());
-			button.addSelectionListener(new SelectionListener() {
-				public void widgetSelected(SelectionEvent e) {
-					filterDialog.open();			
+//			Button button = new Button(composite,SWT.NULL);
+//			final FilterDialog filterDialog = new FilterDialog(composite.getShell());
+//			button.addSelectionListener(new SelectionListener() {
+//				public void widgetSelected(SelectionEvent e) {
+//					filterDialog.open();			
+//				}
+//				public void widgetDefaultSelected(SelectionEvent e) {
+//					widgetSelected(e);
+//				}
+//			});
+			
+			// ******* SAVING THE SLD-STYLE
+			Button saveButton = new Button(composite,SWT.NULL);
+			saveButton.setText("Save");
+			final FileDialog saveDialog = new FileDialog(composite.getShell(), SWT.SAVE);
+			final String[] filterExtension = new String[1];
+			filterExtension[0] = "sld";
+			saveDialog.setFilterExtensions(filterExtension);
+			saveButton.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {						 
+					try {
+						// get current contents
+						String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
+						sldContents += ((KalypsoUserStyle)userStyle).exportAsXML();
+						sldContents += 	"</NamedLayer></StyledLayerDescriptor>";
+						StyledLayerDescriptor sld =  SLDFactory.createSLD(sldContents);
+						// write XML Document the valid way
+						Document doc = XMLTools.parse(new StringReader(((StyledLayerDescriptor_Impl)sld).exportAsXML()));						
+						Source source = new DOMSource(doc);
+						String filename = saveDialog.open();
+						File file = null;
+						if(filename.indexOf(".") == -1)
+							file = new File(filename + "." + filterExtension[0]);
+						else
+							file = new File(filename.substring(0,filename.indexOf("."))+ "." + filterExtension[0]);																
+					    Result result = new StreamResult(file);
+					    Transformer xformer = TransformerFactory.newInstance().newTransformer();
+					    xformer.transform(source, result);
+					            											
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}								
 				}
 				public void widgetDefaultSelected(SelectionEvent e) {
 					widgetSelected(e);
 				}
 			});
 			
+			// ******* DISPLAY ALL symbolizers
 			for(int j=0; j<rule.getSymbolizers().length; j++){
 				new SymbolizerTabItemBuilder(symbolizerTabFolder,rule.getSymbolizers()[j],userStyle,featureType); 								
 			}			
