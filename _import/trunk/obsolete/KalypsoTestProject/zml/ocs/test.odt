@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Test (über WebService)</title>
+	<legend title="Legende" visible="true"/>
+
+	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="w" datatype="xs:double" label="Pegel" unit="m" direction="vertical" position="left" />
+
+   	<curve id="C1" name="Test" linktype="zml" xlink:href="TYPE=absolute#LOCATION=kalypso-ocs:file://Pc242/KalypsoServer/data/mirrored/SomeObservations/flutungen/QV_BWALDE.zml" xlink:actuate="onRequest">
+	   	<mapping observation-axis="Datum" diagram-axis="d" />
+	   	<mapping observation-axis="Wert" diagram-axis="w" />
+   	</curve>
+   
+</obsdiagview>
