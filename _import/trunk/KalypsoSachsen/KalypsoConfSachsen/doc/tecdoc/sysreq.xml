@@ -5,37 +5,61 @@
 	
 	<para>
 		Die diesem Kapitel werden die Systemvoraussetzungen für den Betrieb der
-		&fhs; beschrieben.
+		Software beschrieben.
 	</para>
 	
 	<section id="tecdoc:sysreq:hardware">
 		<title>Hardware</title>
 		
-		<para>
-			Die Software wurde auf einem PC mit folgender Austattung getestet:
-			
-			<itemizedlist>
-				<listitem><para>Betriebssystem Windows NT4 (SP6a) und 2000 (SP2)</para></listitem>
-				<listitem><para>CPU Pentium II 500 MHZ und bessere</para></listitem>
-				<listitem><para>512 MB RAM</para></listitem>
-			</itemizedlist>
-			
-			Auf allen Systemen die diese Spezifikation erfüllen oder übertreffen kann die 
-			&fhs; eingesetzt werden.
-		</para>
+		<section>
+			<title>Server</title>
+			<para>Der Server ist schon Einsatzfähig bei den herkomlichen
+				Spezifikationen (z.B. Pentium 4, 512 MB RAM, 40 GB HDD). Nicht
+				desto trotz, folgende optimale Eigenschaften verbessern
+				die System Antwortzeit erheblich: Dual Pentium 4, 2 GB RAM, 
+				130 GB HDD. Replizierte Hardware würde auch für bessere
+				Ausfalsicherheit sorgen.</para>
+		</section>
+		
+		<section>
+			<title>Client</title>
+			<para>Der Client soll einen herkomlichen Rechner sein, allerdings 
+				sind mind. 512 MB RAM empfohlen.</para>
+		</section>
+
+		<section>
+			<title>Netzwerk</title>
+			<para>Ein 100 MB LAN ist vorrausgesetzt.</para>
+		</section>
 	</section>
 	
 	<section id="tecdoc:sysreq:software">
 		<title>Software</title>
 		
-		<para>
-			Aufgrund der Programmierung der &fhs; in der Programmiersprache &java;, kann die
-			Software prinzipiell auf allen System eingesetzt werden, für welche ein
-			JavaRuntimeEnvironment, Version 1.4 vorhanden ist. Aufgrund einiger weniger
-			Plattformabhängigen Funktionen (siehe <xref linkend="tecdoc:port"/>) müssen Teile 
-			der Software auf die entsprechende Zielplatform portiert werden. Dies betrifft 
-			insbesondere den Rechenkern kwert.exe, welcher ein Windows-Betriebssystem voraussetzt, 
-			sowie das Installationsskript, welches für Windows NT, 2000, XP ausgelegt ist.
-		</para>
+		<section>
+			<title>Server</title>
+			<para>Aufgrund der Programmierung von Kalypso-Dienste in der 
+				Programmiersprache &java; ist die Software auf allen Systemen
+				die eine Java Runtime Umgebung (ab Version 1.4) akzeptieren
+				einsetzbar.
+			</para>
+			<para>Die Modellplugins und deren Rechenkern stellen speziellen
+				Anforderung an die Laufzeitumgebung. Das Spreemodell z.B.
+				ist ein DOS-Programm und benötigt somit eine Windows Umgebung.</para>
+		</section>
+		
+		<section>
+			<title>Client</title>
+			<para>Aufgrund der Programmierung von Kalypso in der 
+				Programmiersprache &java; und mit Verwendung der &platform;, 
+				kann die Software prinzipiell auf allen System eingesetzt 
+				werden, für welche ein Java Runtime Umgebung (ab Version 1.4) 
+				und die &platform; vorhanden ist. </para>
+			<para>
+				Allerdings, um die volle Funktion benutzen zu können (Anstoß und 
+				Editierung der Diagramme mit dem Grafik-Tool), ist der Einsatz
+				der Software unter Windows NT/2000/XP vorgesehen.
+			</para>
+		</section>
 	</section>
 </chapter>	

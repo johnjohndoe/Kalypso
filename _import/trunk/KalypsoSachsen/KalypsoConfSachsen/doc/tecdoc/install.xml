@@ -1,26 +1,162 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <chapter id="tecdoc:install">
-	<title>Installation und Auslieferung der Software</title>
-	
+	<title>Installation und Konfiguration der Software</title>
+
 	<para>
-		Wie bereits in <xref linkend="tecdoc:compile"/> beschrieben, wird eine ausführbare
-		Installation mittels des Ant-Skriptes (Target/Ziel namens 'TODO ???') erstellt.
+		In diesem Kapitel werden die Installation und der Konfiguration von Kalypso
+		Client und Server beschrieben.
 	</para>
+
+	<section>
+		<title>Client</title>
+		
+		<section>
+			<title>Installation</title>
+			<para>
+				Die Eclipse-RCP aus der Ziparchiv in das Zielverzeichnis extrahieren. Dort
+				die Kalypso-Feature und die 5 Kalypso-Plugins hinkopieren.
+			</para>
+		</section>
+			
+		<section>
+			<title>Konfiguration</title>
+			<para>Jeder Client braucht lediglich zu wissen, wo die 
+				Konfigurationsdatei zentral liegt (URL). Pro Client gibt es 
+				normalerweise eine Liste von URL für jede alternative 
+				Konfigurationsdatei. Sollte die erste Konfigurationsdatei nicht 
+				zur Verfügung stehen, versucht es der Client mit der nächste, 
+				usw., bis es klappt. </para>
+			<para> Die Konfigurationsdatei ist wie eine Properties-Datei (oder 
+				ini-Datei) aufgebaut. Siehe die 
+				<filename>kalypso-client.ini</filename> Datei im 
+				KalypsoConfSachsen Projekt. Die Konfigurationsdatei soll auf 
+				dem Kalypso Server unter /KalypsoConf kopiert werden. Dabei 
+				muss Tomcat mit dem Verzeichnis KalypsoConf konfiguriert 
+				werden. Um dies zu tun, einfach 'KalypsoConf' als Verzeichnis 
+				installieren (Tomcat manager benutzen) und anschliessend die 
+				Anwendung 'KalypsoConf' starten. Beispiel für die URL: 
+				http://LFUG-KV-01:8080/KalypsoConf/kalypso-client.ini </para>
+			<para> Nach dem ersten Start muss Kalypso konfiguriert werden. In 
+				das Menü <guimenu>Fenster</guimenu>, 
+				<guimenuitem>Einstellungen</guimenuitem> klicken und in das 
+				Dialog der Eintrag <guilabel>Kalypso</guilabel> selektieren. 
+				Dort müssen Sie die Konfiguration anpassen, u.a. der oder die 
+				Pfad(e) zu der(/n) Kalypso-Server. </para>
+		</section>
+	</section>
+
+	<section>
+		<title>Server</title>
+		<para> Dieses Abschnitt beschreibt die Installation und Konfiguration 
+			der Kalypso Server. Als erster Schritt wird nochmals dargestellt, 
+			wie die Verzeichnis Struktur auf dem Server definiert werden kann. 
+			<mediaobject> <imageobject> <imagedata 
+			fileref="img/kalypso-server-dirs.png" format="PNG"/> 
+			</imageobject> </mediaobject> </para>
+		<section>
+			<title>Java Runtime installieren</title>
+			<para> Die Java Runtime auf dem Server kopieren (oder das 
+				Installprogramm bneutzen). </para>
+		</section>
+		<section>
+			<title>Freigabe</title>
+			<para>Eine Freigabe auf das Temp-Verzeichnis mit Lese- und 
+				Schreiberechte für Jeder muss erzeugt werden. Manche Dateien 
+				werden auf diese Art und Weise zwischen Clients und Server 
+				ausgetauscht. Dieses Verzeichnis kann irgendwo erstellt werden. 
+				Es muss nur (mit der Freigabe) von jede Arbeitsplatz aus 
+				zugreifbar sein. Beispiel: 
+				KALYPSO_SERVER_TMP=\\lfug-kv-01\kalypso </para>
+		</section>
+		<section>
+			<title>Tomcat aufsetzen</title>
+			<section>
+				<title>Installation</title>
+				<para>Tomcat (ab Version 5.0.28) installieren (Install-Programm 
+					benutzen). </para>
+			</section>
+			<section>
+				<title>Abhängigkeiten</title>
+				<para>Die libs (*.jar) aus dem KalypsoCoreServices Projekt in 
+					$CATALINA_HOME/common/lib kopieren. </para>
+			</section>
+			<section>
+				<title>Sicherheitseinstellungen</title>
+				<para>Die Datei <filename>catalina.policy</filename> editieren 
+					und die Sicherheitseinstellungen anpassen (Siehe das 
+					KalypsoConfSachsen-Projekt). Java Permissions richtig 
+					setzen, u.a. für das definierte Temp-Verzeichnis anpassen. 
+					Achtung: Groß/Kleinschreibung (Siehe Kommentar in Datei). 
+					</para>
+			</section>
+			<section>
+				<title>Tomcat starten</title>
+				
+				<para>Sie können Tomcat über zwei Mechanismen starten: entweder 
+					mit Batch-Dateien oder als Windows-Dienst.
+				</para>
+				
+				<section>
+					<title>über Batch-Dateien</title>
+					<para>Die Batch-Dateien <filename>kalypso_server_start.bat</filename> und 
+						<filename>kalypso_server_stop.bat</filename> müssen mit dem
+						Pfad (entspr. der Freigabe) vom Temp-Verzeichnis angepasst werden.
+						</para>
+				</section>
+				<section>
+					<title>als Service einrichten</title>
+					<para>Die <filename>service.bat</filename> Datei aus dem 
+						Verzeichnis <filename>CATALINA_HOME\bin</filename> 
+						ausgeführen. </para>
+					<para>Die notwendige Parameter mittels 
+						<filename>TomcatService.reg</filename> reg-Datei setzen 
+						(Konfiguration mittels tomcat5w.exe) </para>
+					<para>Um Zugriff auf die UNC-Pfade zu erhalten muss der 
+						Dienst unter einen Domainenbenutzer gestartet 
+						werden.</para>
+				</section>
+			</section>
+		</section>
+		
+		<section>
+			<title>kalypso-client.ini</title>
+			
+			<para> In webapps/KalypsoConf (unter Tomcat) muss es diese Datei 
+				geben. Dort die URLs der eingesetzte Services prüfen. </para>
+		</section>
+		
+		<section>
+			<title>manager.xml und admin.xml</title>
+			<para> Diese Dateien (in CATALINA_HOME/conf/catalina/localhost) 
+				prüfen. Der Gesamtpfad von Tomcat ist dort angeben. Pfad prüfen 
+				und gegebenfalls anpassen damit es mit dem tatsächlichen Pfad 
+				stimmt. </para>
+		</section>
+		
+		<section>
+			<title>Konfiguration der Kalypso-Dienste</title>
+			<para> Der Server wird über System-Properties konfiguriert 
+				(betrifft eig. jeder Service): - kalypso.server.tempdir: (nicht 
+				repliziert) - kalypso.server.datadir: (repliziert) - 
+				kalypso.server.confdir: (nicht repliziert) Konvention: die 
+				Konfiguration einer Service liegt unter 
+				kalypso.server.confdir/&lt;service_name&gt;/*.* </para>
+				
+				<para>
+				Die Kalypso Services benötigen verschiedene gesetzte 
+				System-Properties (Pfade auf die Datenverzeichnisse) -> siehe 
+				configuration_server.txt Zusätzlich muss in der catalina.policy 
+				den entsprechenden Services Zugriff auf genau diese Pfade und 
+				Properties gewährt werden. Das setzen der System-Properties 
+				geschieht zur Zeit über eine spezielle kalypso_server_start.bat 
+				Wichtig: die Pfadangabe für die System-Properties wie 
+				kalypso.server.tempdir muss aus Client Sicht auch reichbar 
+				sein. D.h. man muss den freigegebene Pfad benutzen. Beispiel: 
+				kalypso.server.tempdir=\\Pc242\KalypsoServer Wenn dies nicht 
+				der Fall ist, können die Dateipfade die vom Server zurück 
+				gegeben werden nicht vom Client gelöst werden. </para>
+		</section>
+	</section>
 	
-	<para>
-		Im wesentlichen besteht die Installation des Programmes aus dem Kopieren
-		der generierten Jar-Dateien auf den Zielrechner. Zu diesem Zweck wurde
-		ein Installationsprogramm erstellt, welches die Dateien an einen vom Benutzer zu 
-		wählenden Ort kopiert und entsprechende Verknüfungen im Start-Menü erstellt.
-	</para>
-	
-	<para>
-		Der FLYS-Workspace speichert die Daten in eine Datei in das Home-Verzeichnis der Benutzer unten
-		<filename class="directory">USER_HOME/.fhs/workspace.ws</filename>.
-	</para>
-	
-	<para>
-		Der Installationsprozess läuft dann wie folgt ab: TODO
-	</para>
 </chapter>	

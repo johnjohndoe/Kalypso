@@ -1,4 +1,4 @@
-In diesem Projekt befinden sich allgemein Utilitie Klassen und Helper Funktionen.
+In diesem Projekt befinden sich allgemein Utility-Klassen und Helper Funktionen.
 
 Es soll keine Abhängigkeiten zu anderen Projekten geben.
 

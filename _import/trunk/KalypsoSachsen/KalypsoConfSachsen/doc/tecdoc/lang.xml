@@ -12,11 +12,11 @@
 	
 	<section>
 		<title>Modell-Rechenkerne</title>
-		<para>Die Änderungen am Spreemodell-Rechenkern damit es ohne die 
-			ursprüngliche Programmoberfläche zurecht kommt wurden von der Firma 
+		<para>Die Änderungen am Spreemodell-Rechenkern, damit es ohne die 
+			ursprüngliche Programmoberfläche zurecht kommt, wurden von der Firma 
 			BCE an der Firma WASY beauftragt. Somit konnte die vollständige 
 			Einbindung als Serverseitiges Modul (im sog. Kalypso Spree Plugin) 
-			gewährleistet. </para>
+			gewährleistet.</para>
 			
 		<para>Kalypso-NA wurde bereits als oberflächenloses Rechenkern konzipiert und 
 			verlangte daher keine Anpassung im Code.
@@ -26,7 +26,27 @@
 	<section>
 		<title>Kalypso Server</title>
 		
-		<para></para>
+		<para>Der Kalypso Server besteht aus Web Dienste die in einem J2EE
+			Container (Apache Tomcat) laufen. Vier Dienste stehen den Clients
+			zur Verfügung:
+			<orderedlist>
+				<listitem>
+					<para>KalypsoUserService: liefert benutzerabhängige 
+						Berechtigungen.</para>
+				</listitem>
+				<listitem>
+					<para>KalypsoCalcService: verwaltet den Start von
+						Modellberechnungen und liefert Ergebnisse.</para>
+				</listitem>
+				<listitem>
+					<para>KalypsoObsService: verwaltet die operative Daten.</para>
+				</listitem>
+				<listitem>
+					<para>KalypsoMetaDocService: erlaubt die Veröffentlichung
+						von Dokumente (z.B. Grafiken oder Tabellen).</para>
+				</listitem>
+			</orderedlist>
+			</para>
 	</section>
 		
-</chapter>	
+</chapter>

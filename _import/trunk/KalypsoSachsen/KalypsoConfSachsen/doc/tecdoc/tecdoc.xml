@@ -87,7 +87,6 @@
 	
 	<!ENTITY file_lang SYSTEM "lang.xml">
 	<!ENTITY file_tools SYSTEM "tools.xml">
-	<!ENTITY file_libs SYSTEM "libs.xml">
 	<!ENTITY file_compile SYSTEM "compile.xml">
 	<!ENTITY file_source SYSTEM "source.xml">
 	<!ENTITY file_port SYSTEM "port.xml">
@@ -150,11 +149,9 @@
 	&file_lang;
 	&file_source;
 	&file_tools;
-	&file_libs;
 	&file_compile;
 	&file_install;
 	&file_sysreq;
-	&file_port;
 
 	<!-- Keine Tabellen/Abbildungen vorhanden <lot/> -->
 

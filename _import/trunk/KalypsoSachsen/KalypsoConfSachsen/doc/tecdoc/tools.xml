@@ -52,7 +52,7 @@
 		<para>
 			Alle Dokumentationen wurden im &xml;-Schema &docbook;&docbook_ftn; erstellt. Aus den &docbook;-
 			Sourcen wurden dann mit Hilfe von XSL-Transformationen die verschiedenen Versionen der
-			Handbücher generiert (z.B. &html;, &pdf;&pdf_ftn; und &javahelp;&javahelp_ftn;).
+			Handbücher generiert (z.B. &pdf;&pdf_ftn;).
 		</para>
 		
 		<para>
