@@ -8,13 +8,12 @@ import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.metadoc.IMetaDocCommiter;
+import org.kalypso.metadoc.beans.DocBean;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypso.services.metadoc.DocBean;
-import org.kalypso.services.metadoc.IMetaDocCommiter;
 import org.kalypso.services.metadoc.IMetaDocService;
 
 /**
@@ -31,7 +30,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   
   private final Logger m_logger;
 
-  private File m_publishDir;
+  private final Properties m_props = new Properties();
   
   private IMetaDocCommiter m_commiter;
 
@@ -72,34 +71,15 @@ public class KalypsoMetaDocService implements IMetaDocService
     final File conf = new File( ServiceConfig.getConfDir(),
         "IMetaDocService/metadocService.properties" );
 
-    final Properties props;
     InputStream stream = null;
     try
     {
       stream = new FileInputStream( conf );
 
-      props = new Properties();
-      props.load( stream );
-
-      final String path = props.getProperty( PROP_PUBLISH_DIR );
-      if( path == null )
-        throw new IllegalStateException("Invalid configuration: publish-directory is null");
+      m_props.load( stream );
       
-      // look for the publish-directory
-      m_publishDir = new File( path );
-      if( !m_publishDir.exists() )
-      {
-        m_logger.warning( "Publish-directory <" + path + "> doesn't exist. Will try to create it." );
-        boolean b = m_publishDir.mkdirs();
-        
-        if( !b )
-          throw new IllegalStateException( "Invalid configuration: publish-directory does not exist and could not be created: " + path );
-        
-        m_logger.info( "Publish-directory <" + path + "> successfully created." );
-      }
-
       // try to instanciate our commiter
-      final String className = props.getProperty( PROP_COMMITER );
+      final String className = m_props.getProperty( PROP_COMMITER );
       m_commiter = (IMetaDocCommiter) ClassUtilities.newInstance( className, IMetaDocCommiter.class, getClass().getClassLoader() );
     }
     catch( Exception e ) // generic exception caught for simplicity
@@ -130,7 +110,7 @@ public class KalypsoMetaDocService implements IMetaDocService
 
       final DocBean db = new DocBean( f.getAbsolutePath() );
       
-      m_commiter.prepareMetainf( db );
+      m_commiter.prepareMetainf( m_props, db );
       
       return db;
     }
@@ -143,7 +123,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
 
   /**
-   * @see org.kalypso.services.metadoc.IMetaDocService#rollbackNewDocument(org.kalypso.services.metadoc.DocBean)
+   * @see org.kalypso.services.metadoc.IMetaDocService#rollbackNewDocument(org.kalypso.metadoc.beans.DocBean)
    */
   public void rollbackNewDocument( final DocBean mdb )
   {
@@ -154,24 +134,18 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
   
   /**
-   * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(org.kalypso.services.metadoc.DocBean)
+   * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(org.kalypso.metadoc.beans.DocBean)
    */
   public void commitNewDocument( final DocBean mdb ) throws RemoteException
   {
     try
     {
-      final File src = new File( mdb.getLocation() );
-      final File dest = new File( m_publishDir + File.separator + src.getName() );
+      final File docFile = new File( mdb.getLocation() );
       
-      FileUtils.copyFileToDirectory( src, m_publishDir );
-      
-      // overwrite location
-      mdb.setLocation( dest.getAbsolutePath() );
-      
-      m_commiter.commitDocument( mdb );
+      m_commiter.commitDocument( m_props, mdb );
       
       // delete temp file
-      src.delete();
+      docFile.delete();
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

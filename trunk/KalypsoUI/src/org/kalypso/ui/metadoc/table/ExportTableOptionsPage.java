@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.table.wizard;
+package org.kalypso.ui.metadoc.table;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;

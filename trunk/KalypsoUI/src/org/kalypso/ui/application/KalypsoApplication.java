@@ -41,11 +41,15 @@ public class KalypsoApplication implements IPlatformRunnable
     
     rights = chooseRight( rights /*, username */);
     
+    
     if( rights == null )
       return null;
     
     for( int i = 0; i < rights.length; i++ )
-      System.out.println( "'" + rights[i] + "'" );
+      System.out.println( "Rights dump: '" + rights[i] + "'" );
+    
+    // TODO REMOVE
+    rights = new String[]{ IUserServiceConstants.RIGHT_ADMIN };
     
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }

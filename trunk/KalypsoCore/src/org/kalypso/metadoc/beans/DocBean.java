@@ -1,4 +1,4 @@
-package org.kalypso.services.metadoc;
+package org.kalypso.metadoc.beans;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -3,6 +3,7 @@ package org.kalypso.services.metadoc;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.kalypso.metadoc.beans.DocBean;
 import org.kalypso.services.IKalypsoService;
 
 /**

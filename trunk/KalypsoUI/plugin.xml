@@ -437,18 +437,6 @@
 
                
       </viewContribution>
-      <viewContribution
-            targetID="org.eclipse.ui.views.ResourceNavigator"
-            id="org.kalypso.ui.resource.vc2">
-         <action
-               toolbarPath="additions"
-               label="Cache löschen"
-               icon="icons/sample.gif"
-               class="org.kalypso.ui.navigator.ClearCacheActionDelegate"
-               tooltip="Löscht den Cache (Zwischengespeicherte Dateien)"
-               menubarPath="additions"
-               id="org.kalypso.ui.navigator.ClearCacheActionDelegate"/>
-      </viewContribution>
 
    </extension>
    <extension
