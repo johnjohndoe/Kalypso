@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="tomcatdeploy" default="deploy" basedir=".">
+
+	<!-- TODO: define following properties in your importing script:
+	
+	<property name="workspace" value="" />
+	<property name="tomcat.manager.url" value="" />
+	<property name="tomcat.username" value="" />
+	<property name="tomcat.password" value="" />
+	<property name="service.name" value="" />
+	<property name="war.path" value="" />
+	
+	-->
+	
+	<property name="jwsdp" value="${workspace}/JWSDPInstallation/jwsdp" />
+
+	<path id="ant.classpath">
+		<fileset dir="${jwsdp}/jaxrpc/lib" includes="*.jar" />
+		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="*.jar" />
+		<fileset file="${workspace}/KalypsoBuild/common-tomcat/catalina-ant.jar" />
+	</path>
+
+	<target name="deploy" description="Deploys a Web application">
+
+		<echo message="Deploying the web application..." />
+		<echo message="URL: ${tomcat.manager.url}" />
+		<echo message="UNAME: ${tomcat.username}" />
+		<echo message="PWD: ${tomcat.password}" />
+		<echo message="PATH: /${service.name}" />
+		<echo message="WAR: ${war.path}" />
+
+		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" war="${war.path}" />
+	</target>
+
+	<target name="undeploy" description="Undeploys a Web application">
+		<echo message="Undeploying the web application..." />
+		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
+	</target>
+
+	<target name="redeploy" description="Undeploys and deploys a Web aplication">
+		<antcall target="undeploy" />
+		<antcall target="deploy" />
+	</target>
+
+	<target name="start" description="Starts a Web application">
+		<echo message="Starting the application...." />
+		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
+	</target>
+
+	<target name="stop" description="Stops a Web application">
+		<echo message="Stopping the application...." />
+		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
+	</target>
+
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="ant.classpath" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="ant.classpath" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpathref="ant.classpath" />
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpathref="ant.classpath" />
+
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="ant.classpath" />
+	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask" classpathref="ant.classpath" />
+
+</project>
