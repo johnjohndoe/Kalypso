@@ -54,6 +54,9 @@ public class SpreeInputWorker
 
   /**
    * Erzeugt aus den InputBeans eine HashMap der Form [id |-> bean]
+   * 
+   * @param input
+   * @return map
    */
   public static Map hashInput( final CalcJobDataBean[] input )
   {
@@ -71,9 +74,13 @@ public class SpreeInputWorker
    * <p>
    * Converts inputfiles to nativefiles and reads control parameters
    * </p>
+   * @param tmpdir
+   * @param input
+   * @param props
+   * @param logwriter
+   * @param tsmap
    * 
    * @return Location of native files
-   * @throws IOException
    * @throws IOException
    */
   public static File createNativeInput( final File tmpdir,
@@ -291,7 +298,15 @@ public class SpreeInputWorker
     }
   }
 
-  /** Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map) */
+  /**
+   * Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map)
+   *  
+   * @param inputdir
+   * @param inputMap
+   * @param tsmap
+   * @return tabelle
+   * @throws IOException
+   */
   public static TSMap readZML( final File inputdir, final Map inputMap,
       final TSMap tsmap ) throws IOException
   {
@@ -334,14 +349,14 @@ public class SpreeInputWorker
         // passiert, wenn es keine entsprechende Axen giebt
         nse.printStackTrace();
 
-        throw new CalcJobServiceException( "Fehlerhafte Eingabedateien", nse );
+        throw new CalcJobServiceException( "Fehlerhafte Eingabedateien: " + obsFile.getAbsolutePath(), nse );
       }
       catch( final SensorException se )
       {
         se.printStackTrace();
 
         throw new CalcJobServiceException(
-            "Fehler beim Einlesen der Zeitreihen: ", se );
+            "Fehler beim Einlesen der Zeitreihen: " + obsFile.getAbsolutePath(), se );
       }
     }
 
@@ -452,6 +467,11 @@ public class SpreeInputWorker
 
   /**
    * Gibt die Datei zum entsprechenden index zurück
+   * 
+   * @param id
+   * @param input
+   * @param basedir
+   * @return file
    * 
    * @throws CalcJobServiceException
    */
