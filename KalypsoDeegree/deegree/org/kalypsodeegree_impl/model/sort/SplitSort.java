@@ -79,6 +79,8 @@ public class SplitSort implements FeatureList
 
   public List query( GM_Envelope queryEnv, List result )
   {
+    if(result==null)
+      result=new ArrayList();
     if( myRootContainer != null )
       myRootContainer.query( queryEnv, result );
     return result;
@@ -86,6 +88,8 @@ public class SplitSort implements FeatureList
 
   public List query( GM_Position pos, List result )
   {
+    if(result==null)
+      result=new ArrayList();
     return query( GeometryFactory.createGM_Envelope( pos, pos ), result );
   }
 
@@ -120,10 +124,6 @@ public class SplitSort implements FeatureList
 
   protected static GM_Envelope getEnvelope( Object object )
   {
-    if( object instanceof DisplayContext )
-    {
-      return getEnvelope( ( (DisplayContext)object ).getFeature() );
-    }
     if( object instanceof DisplayElement )
     {
       DisplayElement de = (DisplayElement)object;
@@ -184,7 +184,7 @@ public class SplitSort implements FeatureList
       if( bbox == null )
         bbox = envelope;
       else
-        bbox = bbox.merge( envelope );
+        bbox = bbox.getMerged( envelope );
     }
 
     myRootContainer = new SplitSortContainer( null, bbox );

@@ -219,7 +219,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
         final double scale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
 
-        myModell.paintSelected( gr, p, bbox, scale, -1 );
+        myModell.paintSelected( gr, p, bbox, scale, 0 );
         gr.setXORMode( Color.red );
         myModell.paintSelected( gr, p, bbox, scale, m_selectionID );
         gr.setPaintMode();

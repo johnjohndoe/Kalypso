@@ -296,7 +296,7 @@ public GM_Envelope getFullExtentBoundingBox()
           if( result == null )
             result=boundingBox;         
           else        
-            result=result.merge( boundingBox );  
+            result=result.getMerged( boundingBox );  
         }
         catch( final Exception e )
         {
