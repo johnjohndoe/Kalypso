@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obstableview.template.kalypso.org
-E:\user\schlienger\dev\kalypso\KalypsoCore\etc\schemas\template\obstableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-	<observation linktype="zml" xlink:href="LOCATION=beispiel.zml" >
+	<observation linktype="zml" xlink:href="beispiel.zml" >
 		<column id="c1" editable="true" width="50" axis="Pegel1" />
 	
 	<!--	<column id="c2" editable="true" width="50" axis="Pegel2" />-->
 	</observation>
 <!--	
-	<observation linktype="zml" xlink:href="LOCATION=inline.zml" >
+	<observation linktype="zml" xlink:href="inline.zml" >
 		<column id="c3" editable="true" width="50" axis="Pegel" />
 	</observation>
 	-->

@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-	<observation linktype="zml" xlink:href="LOCATION=kalypso-ocs:Spree://2004/W_SCHIRG.zml?filter(wq*W)">
+	<observation linktype="zml" xlink:href="kalypso-ocs:Spree://2004/W_SCHIRG.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;&gt;&lt;/wqFilter&gt;&lt;/filter&gt;">
 		<column id="c1" axis="Wert" />
 		<column id="c2" axis="Q" />
 	</observation>
 
-	<!-- wie die Darstellung erfolgt -->
-	<rules>
-		<renderingrule mask="01">
-			<foregroundcolor>0;0;0</foregroundcolor>
-			<backgroundcolor>0;153;0</backgroundcolor>
-			<tooltip>ok</tooltip>
-		</renderingrule>
-
-		<renderingrule mask="02">
-			<foregroundcolor>0;0;0</foregroundcolor>
-			<backgroundcolor>255;128;0</backgroundcolor>
-			<tooltip>eventuell nicht geeignet</tooltip>
-		</renderingrule>
-
-		<renderingrule mask="04">
-			<foregroundcolor>0;0;0</foregroundcolor>
-			<backgroundcolor>255;0;0</backgroundcolor>
-			<tooltip>nicht geeignet</tooltip>
-		</renderingrule>
-
-	</rules>
 </obstableview>
