@@ -23,27 +23,24 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
+import org.kalypso.ogc.sensor.tableview.template.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.template.Rules;
+import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
 import org.kalypso.util.status.MaskedNumber;
 
 /**
+ * Table QuickView.
+ * 
  * @author schlienger
- *  
  */
 public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
   protected final ObservationTableModel m_model = new ObservationTableModel();
-
-  public TableViewPart()
-  {
-  //
-  }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -158,6 +155,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   }
 
   /**
+   * Specific job for showing observation in table quickview.
    * 
    * @author schlienger
    */
@@ -167,7 +165,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 
     public ShowObservationJob( final IObservation obs )
     {
-      super( "Table QuickView Update" );
+      super( "Aktualisierung von Tabelle-QuickView" );
 
       m_obs = obs;
 
@@ -192,8 +190,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       }
       catch( SensorException e )
       {
-        // TODO handling
-        e.printStackTrace();
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden der Tabellendaten", e );
       }
 
       return Status.OK_STATUS;

@@ -6,7 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.java.io.MultipleWildCardFileFilter;
+import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.util.repository.IRepository;
 import org.kalypso.util.repository.IRepositoryFactory;

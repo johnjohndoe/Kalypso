@@ -1,13 +1,19 @@
 package org.kalypso.ogc.sensor.template;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationProvider;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.plugin.KalypsoGisPlugin;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.ObstableviewType.ColumnpairType;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 
@@ -17,27 +23,30 @@ import org.kalypso.util.pool.ResourcePool;
  * 
  * @author schlienger
  */
-public class ColumnPair implements ITableViewColumn
+public class ColumnPair implements ITableViewColumn, IPoolListener
 {
-  private static final Object DUMMY_OBJECT = new Object();
-  
-  private final TableViewTemplate m_template;
+  private final static Object DUMMY_OBJECT = new Object();
 
-  private PoolableObjectType m_key = null;
-  
-  private IObservationProvider m_provider = null;
+  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool(
+      IObservationProvider.class );
 
   private final ColumnpairType m_col;
+  private final PoolableObjectType m_key;
 
-  public ColumnPair( final TableViewTemplate template, final ObstableviewType.ColumnpairType col )
+  private IObservation m_obs = null;
+
+  private final TableViewTemplate m_template;
+
+  public ColumnPair( final ObstableviewType.ColumnpairType col, final IProject project, final TableViewTemplate template )
   {
-    m_template = template;
     m_col = col;
-  }
+    m_template = template;
 
-  public String getLinktype()
-  {
-    return m_col.getLinktype();
+    // load the associated observation
+    m_key = new PoolableObjectType( m_col.getLinktype(), m_col.getHref(), project );
+
+    Job job = new BorrowObjectJob( "Daten für Tabelle laden", m_pool, this, m_key, DUMMY_OBJECT );
+    job.schedule();
   }
 
   /**
@@ -65,38 +74,11 @@ public class ColumnPair implements ITableViewColumn
   }
 
   /**
-   * Returns the key associated with this column
-   */
-  public PoolableObjectType getKey()
-  {
-    if( m_key == null )
-      m_key = new PoolableObjectType( m_col.getLinktype(), m_col.getHref(), m_template.m_file.getProject() );
-
-    return m_key;
-  }
-
-  /**
-   * Schedule the job for borrowing the object that 'lies under' this column
-   */
-  public void startBorrowObjectJob( ResourcePool pool, IPoolListener listener )
-  {
-    new BorrowObjectJob( "Load Column for Table", pool, listener, getKey(), DUMMY_OBJECT ).schedule();
-  }
-
-  /**
-   * Specifies whether this column in invalid or not
-   */
-  public boolean isInvalid( Object oldObject )
-  {
-    return oldObject == DUMMY_OBJECT || m_provider == oldObject;
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.tableview.ITableViewColumn#getName()
    */
   public String getName()
   {
-    return m_provider.getValueAxis().getLabel();
+    return m_col.getValueAxis();
   }
 
   /**
@@ -104,27 +86,37 @@ public class ColumnPair implements ITableViewColumn
    */
   public IObservation getObservation()
   {
-    return m_provider.getObservation();
-  }
-
-  public void setProvider( IObservationProvider p )
-  {
-    m_provider= p;
+    return m_obs;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getSharedAxis()
+   * @see org.kalypso.ogc.sensor.tableview.ITableObservationProvider#getSharedAxis()
    */
   public IAxis getSharedAxis()
   {
-    return m_provider.getSharedAxis();
+    return ObservationUtilities.findAxis( m_obs, m_col.getSharedAxis() );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getValueAxis()
+   * @see org.kalypso.ogc.sensor.tableview.ITableObservationProvider#getValueAxis()
    */
   public IAxis getValueAxis()
   {
-    return m_provider.getValueAxis();
+    return ObservationUtilities.findAxis( m_obs, m_col.getValueAxis() );
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#onObjectInvalid(org.kalypso.util.pool.ResourcePool,
+   *      org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, boolean)
+   */
+  public void onObjectInvalid( final ResourcePool source, final IPoolableObjectType key,
+      final Object oldObject, final boolean bCannotReload ) throws Exception
+  {
+      if( oldObject == DUMMY_OBJECT || m_obs == oldObject )
+      {
+        m_obs = (IObservation)m_pool.getObject( m_key, new NullProgressMonitor() );
+        
+        m_template.columnLoaded( this );
+      }
   }
 }
