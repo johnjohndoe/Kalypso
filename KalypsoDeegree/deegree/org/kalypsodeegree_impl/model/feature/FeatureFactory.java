@@ -56,6 +56,7 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.extension.ITypeHandler;
 import org.deegree_impl.extension.TypeRegistrySingleton;
+import org.deegree_impl.gml.schema.Mapper;
 import org.deegree_impl.model.feature.xlink.XLinkArc;
 import org.deegree_impl.model.feature.xlink.XLinkResource;
 import org.deegree_impl.model.geometry.GMLAdapter;
@@ -393,25 +394,8 @@ public class FeatureFactory
 
     //		System.out.println("Object"+o.getClass().toString());
     if( o instanceof String )
-    {
-      String string = (String)o;
-      if( "java.lang.String".equals( type ) )
-        return string;
-      if( "java.lang.Float".equals( type ) )
-        return new Float( string );
-      if( "java.lang.Double".equals( type ) )
-        return new Double( string );
-      if( "java.lang.Integer".equals( type ) )
-      {
-        double value = Double.parseDouble( string );
-        Integer integer = new Integer( (int)value );
-        if( integer.intValue() != value )
-          throw new Exception();
-        return integer;
-      }
-      if( "java.lang.Boolean".equals( type ) )
-        return new Boolean( string );
-    }
+    	return Mapper.mapXMLValueToJava((String)o,type);
+    	
     if( o instanceof GMLGeometry && type.startsWith( "org.deegree.model.geometry." ) )
       return GMLAdapter.wrap( (GMLGeometry)o );
     if( o instanceof GMLGeometry)
