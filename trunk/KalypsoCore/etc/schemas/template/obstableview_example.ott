@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="obstableview.template.kalypso.org
+.\obstableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!-- die Liste der Zeitreihen -->
+	<columnpair id="c1" editable="true" width="50" sharedAxis="Datum" valueAxis="Pegel1" linktype="zml" xlink:href="TYPE=relative#LOCATION=zml/Beispiel/beispiel.zml"/>
+	<!-- test mit absolutespfad -->
+	<columnpair id="c2" editable="true" width="100" sharedAxis="Datum" valueAxis="Pegel2" linktype="zml" xlink:href="TYPE=absolute#LOCATION=file://PC072/C/Programme/eclipse-3.0/runtime-workspace/KalypsoTestProject/zml/Beispiel/beispiel.zml"/>
+	<!-- wie die Darstellung erfolgt -->
+	<rules>
+		<renderingrule mask="01">
+		   <foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>0;153;0</backgroundcolor>
+			<tooltip>ok</tooltip>
+		</renderingrule>
+		<renderingrule mask="02">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>255;128;0</backgroundcolor>
+			<tooltip>eventuell nicht geeignet</tooltip>
+		</renderingrule>
+		<renderingrule mask="04">
+			<foregroundcolor>0;0;0</foregroundcolor>
+			<backgroundcolor>255;0;0</backgroundcolor>
+			<tooltip>nicht geeignet</tooltip>
+		</renderingrule>
+	</rules>
+</obstableview>

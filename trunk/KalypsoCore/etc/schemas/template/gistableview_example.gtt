@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="gistableview.template.kalypso.org
+.\gistableview.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<layer id="argls" linktype="shape"  xlink:type="simple" xlink:href="RESOURCE#shapes/example#unknown" xlink:actuate="onRequest">
+			<column name="flaeche" editable="true" width="100"/>
+			<column name="featureID" editable="false" width="0"/>
+		</layer>
+</gistableview>
