@@ -17,10 +17,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.eclipse.jface.viewers.ICellEditorFactory;
+import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.editor.tableeditor.GisTableEditor;
 import org.kalypso.editor.tableeditor.actions.ColumnAction;
 import org.kalypso.ogc.event.ModellEvent;
@@ -64,13 +66,18 @@ public class LayerTable implements ILayerTableModelListener, ISelectionProvider,
     m_editor = editor;
     m_cellEditorFactory = cellEditorFactory;
 
-    m_viewer = new TableViewer( parent, SWT.MULTI /* | SWT.FULL_SELECTION */);
+    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.MULTI /* | SWT.FULL_SELECTION */);
 
     m_viewer.setContentProvider( new LayerTableContentProvider() );
     m_viewer.setLabelProvider( new LayerTableLabelProvider( this ) );
 
-    m_viewer.getTable().setHeaderVisible( true );
-    m_viewer.getTable().setLinesVisible( true );
+    // init table
+    
+    final Table table = m_viewer.getTable();
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+    
+    new ExcelLikeTableCursor( m_viewer, SWT.BORDER );
   }
 
   public void dispose()
