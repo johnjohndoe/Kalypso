@@ -37,18 +37,23 @@ public class ObservationTable extends JTable implements ITemplateEventListener
   /**
    * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
-  public synchronized void onTemplateChanged( TemplateEvent evt )
+  public void onTemplateChanged( TemplateEvent evt )
   {
     try
     {
       if( evt.getType() == TemplateEvent.TYPE_ADD && evt.getObject() instanceof ITableViewColumn )
       {
+        System.out.println( "onTemplateChange.addColumn" );
+        
         ITableViewColumn col = (ITableViewColumn)evt.getObject();
         m_model.addColumn( col );
       }
 
       if( evt.getType() == TemplateEvent.TYPE_REMOVE_ALL )
+      {
+        System.out.println( "onTemplateChange.clearColumns" );
         m_model.clearColumns();
+      }
     }
     catch( SensorException e )
     {

@@ -219,6 +219,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
   /**
    * Called when the context menu is about to open.
+   * @param menu
    */
   protected void fillContextMenu( final IMenuManager menu )
   {
@@ -232,7 +233,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   }
 
   /**
-   * Utility method that checks if given selection is a <code>IRepository</code>.
+   * @param selection
+   * @return checks if given selection is a <code>IRepository</code>. Returns a repository or null if no repository is selected.
    */
   public IRepository isRepository( final ISelection selection )
   {
@@ -248,7 +250,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   }
 
   /**
-   * Returns the IObservation object when the selection is an IAdaptable object
+   * @param selection
+   * @return the IObservation object when the selection is an IAdaptable object
    * that get deliver an IObservation.
    */
   public IObservation isObservationSelected( final ISelection selection )
@@ -326,7 +329,8 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   }
 
   /**
-   * Returns the repository container
+   * Returns 
+   * @return the repository container
    */
   public IRepositoryContainer getRepositoryContainer()
   {
