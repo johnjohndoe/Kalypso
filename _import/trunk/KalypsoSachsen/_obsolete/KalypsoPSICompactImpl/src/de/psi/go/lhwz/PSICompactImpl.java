@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -40,6 +41,8 @@ import org.xml.sax.InputSource;
  */
 public class PSICompactImpl implements PSICompact
 {
+  private static final String PROP_DISTRIB_PATH = "distributePath";
+
   private final static ArchiveData[] EMPTY_DATA = new ArchiveData[0];
   
   private final Map m_id2obj;
@@ -55,6 +58,7 @@ public class PSICompactImpl implements PSICompact
   private boolean m_init = false;
 
   private Properties m_conf;
+
 
   public PSICompactImpl( )
   {
@@ -608,12 +612,29 @@ public class PSICompactImpl implements PSICompact
    * @see de.psi.go.lhwz.PSICompact#copyanddistributeFile(java.io.File,
    *      java.lang.String)
    */
-  public boolean copyanddistributeFile( File source, String destination )
+  public boolean copyanddistributeFile( final File source, final String destination )
       throws ECommException
   {
     testInitDone();
 
-    return false;
+    final String basepath = m_conf.getProperty( PROP_DISTRIB_PATH, null );
+    if( basepath == null )
+      return false;
+    
+    final File dir = new File( basepath );
+    final File destfile = new File( dir, destination );
+    destfile.getParentFile().mkdirs();
+    try
+    {
+      FileUtils.copyFile( source , destfile );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+    
+    return true;
   }
 
   /**
