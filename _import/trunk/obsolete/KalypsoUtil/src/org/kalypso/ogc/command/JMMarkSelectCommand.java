@@ -66,8 +66,6 @@ public class JMMarkSelectCommand implements ICommand
         else 
             myListFe = selector.select( mySelectPos, myTheme,mySelectionId );
    
-        if( myListFe.isEmpty(  ) )
-            throw new Exception( "NOP cammand" );
         myTheme.getLayer().fireModellEvent(null);        
     }
 
