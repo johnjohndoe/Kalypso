@@ -260,7 +260,7 @@ public class ShapeSerializer
         {
             1,
             1,
-            FeatureType.UNBOUND_OCCURENCY }, null, null );
+            FeatureType.UNBOUND_OCCURENCY }, null, new HashMap() );
 
     return FeatureFactory.createFeature( "root", collectionFT );
   }

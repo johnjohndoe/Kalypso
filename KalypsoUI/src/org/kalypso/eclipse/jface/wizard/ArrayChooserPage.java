@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.jface.wizard;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -60,8 +60,11 @@ import org.eclipse.swt.widgets.Composite;
 public class ArrayChooserPage extends WizardPage
 {
   private final Object m_chooseables;
+
   private CheckboxTableViewer m_viewer;
+
   private Object[] m_selected;
+
   private Object[] m_checked;
 
   /**
@@ -76,8 +79,10 @@ public class ArrayChooserPage extends WizardPage
   {
     this( chooseables, null, null, pageName, title, titleImage );
   }
-  
-  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final String pageName, final String title, final ImageDescriptor titleImage )
+
+  public ArrayChooserPage( final Object chooseables, final Object[] selected,
+      final Object[] checked, final String pageName, final String title,
+      final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -101,51 +106,54 @@ public class ArrayChooserPage extends WizardPage
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
-    
+
     m_viewer = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_viewer.setLabelProvider( new LabelProvider() );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setInput( m_chooseables );
-    
+
     if( m_selected != null )
       m_viewer.setSelection( new StructuredSelection( m_selected ) );
     if( m_checked != null )
       m_viewer.setCheckedElements( m_checked );
-    
+
     final Composite buttonpanel = new Composite( panel, SWT.RIGHT );
-    buttonpanel.setLayout( new GridLayout( 2, false ) );
-    final GridData buttonpaneldata = new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL );
+    buttonpanel.setLayout( new GridLayout( 2, true ) );
+    final GridData buttonpaneldata = new GridData( GridData.HORIZONTAL_ALIGN_END
+        | GridData.GRAB_HORIZONTAL );
     buttonpaneldata.grabExcessHorizontalSpace = true;
     buttonpanel.setData( buttonpaneldata );
-    
-    final CheckboxTableViewer viewer = m_viewer;
-    
-    final Button selectAll = new Button( buttonpanel, SWT.PUSH );
-    selectAll.setText( "&Alle wählen" );
-    selectAll.addSelectionListener( new SelectionAdapter() { /**
-     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-     */
-    public void widgetSelected( SelectionEvent e )
-    {
-      viewer.setAllChecked( true );
-    }} );
 
-    final Button deselectAll = new Button( buttonpanel, SWT.PUSH );
-    deselectAll.setText( "Alle a&bwählen" );
-    deselectAll.addSelectionListener( new SelectionAdapter() { /**
-     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-     */
-    public void widgetSelected( SelectionEvent e )
-    {
-      viewer.setAllChecked( false );
-    }} );
-    
+    createSelectButton( buttonpanel, m_viewer, true );
+    createSelectButton( buttonpanel, m_viewer, false );
+
     setControl( panel );
   }
-  
+
   public Object[] getChoosen()
   {
     return m_viewer.getCheckedElements();
   }
+
+  private static void createSelectButton( final Composite parent, final CheckboxTableViewer viewer,
+      final boolean select )
+  {
+    final Button button = new Button( parent, SWT.PUSH );
+
+    button.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    button.setText( select ? "&Alle wählen" : "Alle a&bwählen" );
+
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        viewer.setAllChecked( select );
+      }
+    } );
+  }
+
 }

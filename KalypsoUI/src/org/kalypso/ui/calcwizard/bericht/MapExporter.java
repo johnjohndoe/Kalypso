@@ -50,15 +50,6 @@ import org.deegree.model.feature.Feature;
 public class MapExporter extends AbstractBerichtExporter
 {
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.AbstractBerichtExporter#export(org.deegree.model.feature.Feature)
-   */
-  public void export( Feature feature ) throws Exception
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.deegree.model.feature.Feature, java.io.OutputStream)
    */
   public void export( Feature feature, OutputStream os ) throws Exception

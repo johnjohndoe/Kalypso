@@ -278,13 +278,12 @@ public class GrafikLauncher
    * @param writer
    * @param monitor
    * 
-   * @throws SensorException
    * @throws CoreException
    * @throws IOException
    */
   private static void odt2tpl( final ObsdiagviewType odt, final IFolder dest,
       final Writer writer, final IProgressMonitor monitor )
-      throws SensorException, CoreException, IOException
+      throws CoreException, IOException
   {
     final UrlResolver urlRes = new UrlResolver();
     final URL context = ResourceUtilities.createURL( dest.getParent() );

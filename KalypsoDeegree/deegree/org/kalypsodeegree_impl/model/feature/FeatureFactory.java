@@ -61,6 +61,7 @@
 package org.deegree_impl.model.feature;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -142,7 +143,7 @@ public class FeatureFactory
     for( int i = 0; i < defaultOccurs.length; i++ )
       defaultOccurs[i] = 1;
     return createFeatureType( name, DEFAULTNAMESPACE, properties, defaultOccurs, defaultOccurs,
-        null, null );
+        null, new HashMap() );
   }
 
   public static FeatureType createFeatureType( String name, String namespace,
