@@ -60,7 +60,9 @@ public class PSICompactCommiter implements IMetaDocCommiter
       distDocFile = distDocFile.replace( '\\', '/' );
       String distXmlFile = dist + xmlFile.getName();
       distXmlFile = distXmlFile.replace( '\\', '/' );
-      
+
+      // todo: das doc wird gleich nach dieser Operation gelöscht
+      // ist das ok? wenn ja, bitte kommentar hier einfügen
       PSICompactFactory.getConnection().copyanddistributeFile( docFile, distDocFile );
       PSICompactFactory.getConnection().copyanddistributeFile( xmlFile, distXmlFile );
     }

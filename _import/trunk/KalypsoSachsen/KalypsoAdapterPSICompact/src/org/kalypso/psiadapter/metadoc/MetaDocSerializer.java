@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.metadoc.IMetaDocCommiter;
 
 /**
  * MetaDocSerializer
@@ -69,7 +70,8 @@ public class MetaDocSerializer
         + serviceProps.getProperty( TAG_REGION, "Region" ) );
     props.setProperty( TAG_ERSTELLER, "string;"
         + serviceProps.getProperty( TAG_ERSTELLER, "Ersteller" ) );
-    props.setProperty( TAG_AUTOR, "string;Autor" );
+    props.setProperty( TAG_AUTOR, "string;"
+        + serviceProps.getProperty( IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
     props.setProperty( TAG_ERSTELLUNGSDATUM, "date;"
         + DFDATE.format( new Date() ) );
     props.setProperty( TAG_ENDEGDATUM, "date;" + DFDATE.format( new Date() ) );
