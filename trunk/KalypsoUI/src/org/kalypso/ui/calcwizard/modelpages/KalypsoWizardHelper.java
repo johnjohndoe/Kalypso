@@ -1,6 +1,5 @@
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -12,19 +11,14 @@ import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
 import org.kalypso.java.util.PropertiesHelper;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagramTemplateFactory;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
-import org.kalypso.ogc.sensor.diagview.impl.DiagramCurve;
 import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramCurve;
-import org.kalypso.ogc.sensor.tableview.impl.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewColumn;
 import org.kalypso.ogc.sensor.tableview.template.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
-import org.kalypso.util.url.UrlResolver;
 import org.kalypso.util.xml.xlink.JAXBXLink;
 import org.kalypso.zml.obslink.TimeseriesLink;
 
@@ -47,9 +41,12 @@ public class KalypsoWizardHelper
    * TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
-   *   &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *   &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   * 
+   *    &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *    &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
+   *  
    * </pre>
+   * 
    * @param props
    * @return array of TimeserieFeatureProps
    */
@@ -79,15 +76,14 @@ public class KalypsoWizardHelper
    * @param props
    * @param features
    * @param template
-   * @param useResolver
    * 
    * @param context
    * @throws SensorException
    */
   public static void updateDiagramTemplate(
       final TimeserieFeatureProps[] props, final List features,
-      final IDiagramTemplate template, final boolean useResolver,
-      final URL context ) throws SensorException
+      final IDiagramTemplate template, final URL context )
+      throws SensorException
   {
     template.removeAllCurves();
 
@@ -108,31 +104,31 @@ public class KalypsoWizardHelper
           mappings
               .setProperty( obsLink.getValueaxis(), props[i]._diagValueAxis );
 
-          if( !useResolver )
-          {
-            final IObservation obs;
-            try
-            {
-              final URL url = UrlResolver.resolveURL( context, obsLink
-                  .getHref() );
-
-              obs = ZmlFactory.parseXML( url, obsLink.getHref() );
-            }
-            catch( MalformedURLException e )
-            {
-              throw new SensorException( e );
-            }
-
-            final DiagramCurve curve = new DiagramCurve( name + " ("
-                + props[i]._linkColumn + ')', obs, mappings, template, null );
-
-            template.addCurve( curve );
-          }
-          else
+          //          if( !useResolver )
+          //          {
+          //            final IObservation obs;
+          //            try
+          //            {
+          //              final URL url = UrlResolver.resolveURL( context, obsLink
+          //                  .getHref() );
+          //
+          //              obs = ZmlFactory.parseXML( url, obsLink.getHref() );
+          //            }
+          //            catch( MalformedURLException e )
+          //            {
+          //              throw new SensorException( e );
+          //            }
+          //
+          //            final DiagramCurve curve = new DiagramCurve( name + " ("
+          //                + props[i]._linkColumn + ')', obs, mappings, template, null );
+          //
+          //            template.addCurve( curve );
+          //          }
+          //          else
           {
             final LinkedDiagramCurve curve = new LinkedDiagramCurve( obsLink
                 .getLinktype(), new JAXBXLink( obsLink ), name + " ("
-                + props[i]._linkColumn + ')', mappings, template );
+                + props[i]._linkColumn + ')', mappings, template, context );
 
             template.addCurve( curve );
           }
@@ -147,13 +143,12 @@ public class KalypsoWizardHelper
    * @param props
    * @param features
    * @param template
-   * @param useResolver
    * @param context
    * @throws SensorException
    */
   public static void updateTableTemplate( final TimeserieFeatureProps[] props,
       final List features, final LinkedTableViewTemplate template,
-      final boolean useResolver, final URL context ) throws SensorException
+      final URL context ) throws SensorException
   {
     for( final Iterator it = features.iterator(); it.hasNext(); )
     {
@@ -167,33 +162,33 @@ public class KalypsoWizardHelper
 
         if( obsLink != null )
         {
-          if( !useResolver )
+          //          if( !useResolver )
+          //          {
+          //            final IObservation obs;
+          //            try
+          //            {
+          //              final URL url = UrlResolver.resolveURL( context, obsLink
+          //                  .getHref() );
+          //
+          //              obs = ZmlFactory.parseXML( url, obsLink.getHref() );
+          //            }
+          //            catch( MalformedURLException e )
+          //            {
+          //              throw new SensorException( e );
+          //            }
+          //
+          //            final TableViewColumn col = new TableViewColumn( name + " ("
+          //                + props[i]._linkColumn + ')', obs, true, 50, obsLink
+          //                .getTimeaxis(), obsLink.getValueaxis(), null );
+          //
+          //            template.addColumn( col );
+          //          }
+          //          else
           {
-            final IObservation obs;
-            try
-            {
-              final URL url = UrlResolver.resolveURL( context, obsLink
-                  .getHref() );
-
-              obs = ZmlFactory.parseXML( url, obsLink.getHref() );
-            }
-            catch( MalformedURLException e )
-            {
-              throw new SensorException( e );
-            }
-
-            final TableViewColumn col = new TableViewColumn( name + " ("
-                + props[i]._linkColumn + ')', obs, true, 50, obsLink
-                .getTimeaxis(), obsLink.getValueaxis(), null );
-
-            template.addColumn( col );
-          }
-          else
-          {
-            final LinkedTableViewColumn col = new LinkedTableViewColumn( name
+            final LinkedTableViewColumn col = new LinkedTableViewColumn( template, name
                 + " (" + props[i]._linkColumn + ')', obsLink.getLinktype(),
                 new JAXBXLink( obsLink ), true, 50, obsLink.getTimeaxis(),
-                obsLink.getValueaxis() );
+                obsLink.getValueaxis(), context );
 
             template.addColumn( col );
           }

@@ -33,6 +33,7 @@ public class DefaultTableViewTemplate implements ITableViewTemplate
     if( axes.length == 0 )
       return;
     
+    // actually just the first key axis is relevant in our case
     final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( axes );
     
     // do not continue if no key axis

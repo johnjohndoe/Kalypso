@@ -198,16 +198,18 @@
          <action
                toolbarPath="tabelle"
                label="Zeile hinzufügen"
-               tooltip="Fügt eine Zeile am Ende der Tabelle ein"
+               icon="icons/gistable/add_row.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.AddRowActionDelagate"
+               tooltip="Fügt eine Zeile am Ende der Tabelle ein"
                style="push"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
                id="org.kalypso.ui.editors.tableeditor.AddRowAction"/>
          <action
                toolbarPath="tabelle"
                label="Zeile(n) löschen"
-               tooltip="Löscht die selektierte(n) Zeile(n)"
+               icon="icons/gistable/rem_row.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.RemoveRowsActionDelegate"
+               tooltip="Löscht die selektierte(n) Zeile(n)"
                style="push"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
                id="org.kalypso.ui.editors.tableeditor.RemoveRowsAction">
@@ -330,6 +332,26 @@
         style="radio"
         id="org.kalypso.ui.editor.mapeditor.action.ToggleSelectAction"/>
 	  </editorContribution>
+      <editorContribution
+            targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
+            id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
+         <action
+               toolbarPath="table"
+               label="Zeile hinzufügen"
+               tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
+               icon="icons/obstable/add_row.gif"
+               class="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"
+               style="push"
+               id="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"/>
+         <action
+               toolbarPath="table"
+               label="Zeile entfernen"
+               tooltip="Entfernt die ausgewählte Zeile"
+               icon="icons/obstable/rem_row.gif"
+               class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
+               style="push"
+               id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"/>
+      </editorContribution>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">

@@ -36,7 +36,6 @@ import org.kalypso.ogc.gml.widgets.SingleElementSelectWidget;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.IDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.diagview.template.LinkedDiagramTemplate;
 import org.kalypso.ogc.sensor.template.ObservationTemplateHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.template.gistableview.Gistableview;
@@ -76,8 +75,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   private IDiagramTemplate m_diagTemplate = null;
 
   private ObservationChart m_obsChart = null;
-
-  private boolean m_useResolver = false;
 
   public MapAndTableWizardPage()
   {
@@ -176,9 +173,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
       // actually creates the template
       m_diagTemplate = ObservationTemplateHelper.loadDiagramTemplate( diagFile );
 
-      // TODO tricky: to be ameliorated once pool geschichte is better!!!
-      ( (LinkedDiagramTemplate)m_diagTemplate ).setUseResolver( m_useResolver );
-
       final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
@@ -272,8 +266,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
 
       try
       {
-        KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate,
-            m_useResolver, getContext() );
+        KalypsoWizardHelper.updateDiagramTemplate( tsProps, selectedFeatures, m_diagTemplate, getContext() );
       }
       catch( final SensorException e )
       {

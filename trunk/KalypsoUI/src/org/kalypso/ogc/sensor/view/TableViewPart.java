@@ -4,9 +4,8 @@ import java.awt.Frame;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -15,9 +14,7 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.impl.DefaultTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
@@ -86,15 +83,11 @@ public class TableViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final IRunnableWithProgress runnable = new IRunnableWithProgress()
+    final Runnable runnable = new Runnable()
     {
-      public void run( IProgressMonitor monitor )
+      public void run( )
       {
-        monitor.beginTask( "TableView Update", 2 );
-
         m_template.removeAllColumns();
-
-        monitor.worked( 1 );
 
         final StructuredSelection selection = (StructuredSelection) event
             .getSelection();
@@ -114,18 +107,14 @@ public class TableViewPart extends ViewPart implements
 
           m_template.setObservation( obs, false, DateRangeArgument
               .createFromPastDays( days ) );
-
-          monitor.worked( 1 );
         }
-
-        monitor.done();
       }
     };
 
     try
     {
-      final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-      service.busyCursorWhile( runnable );
+      // execute this in the swing ui thread because we are using a swing component (JTable)
+      SwingUtilities.invokeLater( runnable );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

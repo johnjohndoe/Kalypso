@@ -2,9 +2,9 @@ package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.swing.SwingUtilities;
+
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -13,9 +13,7 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.progress.IProgressService;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.impl.DefaultDiagramTemplate;
@@ -94,12 +92,10 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final IRunnableWithProgress runnable = new IRunnableWithProgress()
+    final Runnable runnable = new Runnable()
     {
-      public void run( IProgressMonitor monitor )
+      public void run()
       {
-        monitor.beginTask( "DiagramView Update", 2 );
-        
         m_template.removeAllCurves();
 
         final StructuredSelection selection = (StructuredSelection) event
@@ -121,15 +117,13 @@ public class DiagramViewPart extends ViewPart implements
           m_template.setObservation( obs, DateRangeArgument
               .createFromPastDays( days ) );
         }
-        
-        monitor.done();
       }
     };
 
     try
     {
-      final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-      service.busyCursorWhile( runnable );
+      // execute this in the swing ui thread because we are using a swing component (JFreeChart)
+      SwingUtilities.invokeLater( runnable );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

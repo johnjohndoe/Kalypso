@@ -3,6 +3,7 @@ package org.kalypso.ui.editor.diagrameditor;
 import java.awt.Frame;
 
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -36,7 +37,8 @@ public class ObservationDiagramEditor extends AbstractEditorPart
     super.createPartControl( parent );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
 
     JTextField txt = new JTextField( "Daten werden geladen..." );
     txt.setEditable( false );
@@ -48,7 +50,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     super.dispose();
 
@@ -60,41 +62,59 @@ public class ObservationDiagramEditor extends AbstractEditorPart
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
+  protected void doSaveInternal( IProgressMonitor monitor,
+      IFileEditorInput input )
   {
-  // todo
+    // todo
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected void loadInternal( final IProgressMonitor monitor,
+      final IFileEditorInput input )
   {
+    monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
+
+    final Runnable runnable = new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          m_template = ObservationTemplateHelper.loadDiagramTemplate( input
+              .getFile() );
+
+          m_obsChart = new ObservationChart( m_template );
+          m_template.addTemplateEventListener( m_obsChart );
+
+          m_diagFrame.removeAll();
+
+          final ChartPanel chartPanel = new ChartPanel( m_obsChart );
+          chartPanel.setMouseZoomable( true, false );
+          m_diagFrame.add( chartPanel );
+
+          m_diagFrame.setVisible( true );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    };
+
     try
     {
-      monitor.beginTask( "Vorlage Laden", 2 );
-      
-      m_template = ObservationTemplateHelper.loadDiagramTemplate( input.getFile() );
-
-      m_obsChart = new ObservationChart( m_template );
-      m_template.addTemplateEventListener( m_obsChart );
-
-      monitor.worked( 1 );
-
-      m_diagFrame.removeAll();
-
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart );
-      chartPanel.setMouseZoomable( true, false );
-      m_diagFrame.add( chartPanel );
-
-      m_diagFrame.setVisible( true );
-
-      monitor.worked( 1 );
+      SwingUtilities.invokeAndWait( runnable );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
+    }
+    finally
+    {
+      monitor.done();
     }
   }
 }

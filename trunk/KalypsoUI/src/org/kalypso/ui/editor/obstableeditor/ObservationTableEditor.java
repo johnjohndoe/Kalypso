@@ -3,6 +3,7 @@ package org.kalypso.ui.editor.obstableeditor;
 import java.awt.Frame;
 
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -29,6 +30,22 @@ public class ObservationTableEditor extends AbstractEditorPart
   private ObservationTable m_table;
 
   /**
+   * @return Returns the model.
+   */
+  public ObservationTableModel getModel( )
+  {
+    return m_model;
+  }
+  
+  /**
+   * @return Returns the table.
+   */
+  public ObservationTable getTable( )
+  {
+    return m_table;
+  }
+  
+  /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPartControl( final Composite parent )
@@ -38,7 +55,8 @@ public class ObservationTableEditor extends AbstractEditorPart
     m_table = new ObservationTable( m_model );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     m_table.setVisible( true );
@@ -51,41 +69,61 @@ public class ObservationTableEditor extends AbstractEditorPart
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     super.dispose();
-    
+
     if( m_template != null )
       m_template.removeTemplateEventListener( m_table );
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
+  protected void doSaveInternal( IProgressMonitor monitor,
+      IFileEditorInput input )
   {
-  // TODO: implement it
+    // TODO: implement it
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#load()
    */
-  protected void loadInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected void loadInternal( final IProgressMonitor monitor,
+      final IFileEditorInput input )
   {
+    monitor.beginTask( "Laden", IProgressMonitor.UNKNOWN );
+
+    final Runnable runnable = new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          m_template = ObservationTemplateHelper.loadTableViewTemplate( input
+              .getFile() );
+          m_template.addTemplateEventListener( m_table );
+          m_model.setRules( m_template );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+    };
+
     try
     {
-      monitor.beginTask( "Laden", 1 );
-      
-      m_template = ObservationTemplateHelper.loadTableViewTemplate( input.getFile() );
-      m_template.addTemplateEventListener( m_table );
-      m_model.setRules( m_template );
-      
-      monitor.worked(1);
+      SwingUtilities.invokeAndWait( runnable );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
+    }
+    finally
+    {
+      monitor.done();
     }
   }
 }

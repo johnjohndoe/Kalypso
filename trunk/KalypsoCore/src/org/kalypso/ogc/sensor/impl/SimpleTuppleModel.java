@@ -22,6 +22,7 @@ public class SimpleTuppleModel implements ITuppleModel
 
   /**
    * Constructor with axes, empty data
+   * @param axes
    */
   public SimpleTuppleModel( final IAxis[] axes )
   {
@@ -30,6 +31,8 @@ public class SimpleTuppleModel implements ITuppleModel
 
   /**
    * Constructor with data
+   * @param axes
+   * @param values
    */
   public SimpleTuppleModel( final IAxis[] axes, final Object[][] values )
   {
@@ -40,6 +43,8 @@ public class SimpleTuppleModel implements ITuppleModel
   /**
    * Constructor with model. A <code>DefaultTableModel</code> is used to back
    * the values which are taken from the given model.
+   * @param copyTupples
+   * @throws SensorException
    */
   public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
   {
@@ -51,6 +56,8 @@ public class SimpleTuppleModel implements ITuppleModel
   /**
    * A <code>DefaultTableModel</code> is used to back the values which are
    * taken from the given model.
+   * @param copyTupples
+   * @throws SensorException
    */
   public final void setFrom( final ITuppleModel copyTupples ) throws SensorException
   {
@@ -85,16 +92,27 @@ public class SimpleTuppleModel implements ITuppleModel
   {
     m_tupples.addRow( tupple );
   }
-
+  
+  /**
+   * Inserts the tupple at given position.
+   * 
+   * @param index
+   * @param tupple
+   */
+  public void insertTupple( final int index, final Object[] tupple )
+  {
+    m_tupples.insertRow( index, tupple );
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
    *      org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( Object element, IAxis axis )
+  public int indexOf( final Object element, final IAxis axis )
   {
     for( int i = 0; i < m_tupples.getRowCount(); i++ )
     {
-      if( m_tupples.getValueAt( i, axis.getPosition() ) == element )
+      if( m_tupples.getValueAt( i, axis.getPosition() ).equals( element ) )
         return i;
     }
 
