@@ -1,6 +1,6 @@
 package de.tuhh.wb.javagis.view.trafoview;
 
-import java.awt.BorderLayout;
+//import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,8 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.JComboBox;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
+//import java.awt.GridLayout;
+//import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.Color;
 import java.awt.Insets;
 import java.util.Vector;
@@ -57,8 +59,10 @@ public class TrafoView
 	//private JPanel infoPanel=new JPanel();
 	//private JLabel infoInput=new JLabel();
 	//private JLabel infoTrafo=new JLabel();
-	private JButton button_selectInputFile = new JButton(I18n.get("TrafoView.Choose"));
-	private JButton button_selectOutputFile = new JButton(I18n.get("TrafoView.Choose"));
+	private JButton button_selectInputFile =
+		new JButton(I18n.get("TrafoView.Choose"));
+	private JButton button_selectOutputFile =
+		new JButton(I18n.get("TrafoView.Choose"));
 	private static TrafoView instance = null;
 
 	public static void openTrafoView() {
@@ -100,7 +104,7 @@ public class TrafoView
 		getContentPane().add(startTrafo,BorderLayout.SOUTH);*/
 
 		makeView();
-		setSize(500, 150);
+		setSize(600, 150);
 
 		updateStatus();
 		//updateInfoPanel();
@@ -110,27 +114,71 @@ public class TrafoView
 	}
 
 	private void makeView() {
+		
+		GridBagLayout gbl = new GridBagLayout();
+		GridBagConstraints gbc;
+		getContentPane().setLayout(gbl);
 
 		Vector transformations = getTransformations();
 		jComboBox_Transformations = new JComboBox(transformations);
 		jComboBox_Transformations.setRenderer(new MyCellRenderer());
+		gbc=makegbc(1,1,2,1);
+		gbc.weightx=100;
+		gbc.fill=GridBagConstraints.HORIZONTAL;
+		gbl.setConstraints(jComboBox_Transformations,gbc);
+		getContentPane().add(jComboBox_Transformations);
 
 		button_selectInputFile.setActionCommand("select InputFile");
 		button_selectInputFile.addActionListener(this);
 		button_selectInputFile.setBackground(Color.white);
 		button_selectInputFile.setBorderPainted(false);
 		button_selectInputFile.setMargin(new Insets(0, 0, 0, 0));
+		gbc=makegbc(1,0,2,1);
+		gbc.weightx=100;
+		gbc.fill=GridBagConstraints.HORIZONTAL;
+		gbl.setConstraints(button_selectInputFile,gbc);
+		getContentPane().add(button_selectInputFile);
 
 		button_selectOutputFile.setActionCommand("select OutputFile");
 		button_selectOutputFile.addActionListener(this);
 		button_selectOutputFile.setBackground(Color.white);
 		button_selectOutputFile.setBorderPainted(false);
 		button_selectOutputFile.setMargin(new Insets(0, 0, 0, 0));
+		gbc=makegbc(1,2,2,1);
+		gbc.weightx=100;
+		gbc.fill=GridBagConstraints.HORIZONTAL;
+		gbl.setConstraints(button_selectOutputFile,gbc);
+		getContentPane().add(button_selectOutputFile);
+		
+		gbc=makegbc(0,0,1,1);
+		gbc.fill=GridBagConstraints.NONE;
+		gbc.anchor=GridBagConstraints.WEST;
+		gbl.setConstraints(label_selectInputFile,gbc);
+		getContentPane().add(label_selectInputFile);
+		
+		gbc=makegbc(0,1,1,1);
+		gbc.fill=GridBagConstraints.NONE;
+		gbc.anchor=GridBagConstraints.WEST;
+		gbl.setConstraints(label_selectTransformation,gbc);
+		getContentPane().add(label_selectTransformation);
+		
+		gbc=makegbc(0,2,1,1);
+		gbc.fill=GridBagConstraints.NONE;
+		gbc.anchor=GridBagConstraints.WEST;
+		gbl.setConstraints(label_selectOutputFile,gbc);
+		getContentPane().add(label_selectOutputFile);
 
 		startTrafo.setActionCommand("startTrafo");
 		startTrafo.addActionListener(this);
+		gbc=makegbc(2,3,0,0);
+		gbc.fill=GridBagConstraints.NONE;
+		gbc.anchor=GridBagConstraints.SOUTHEAST;
+		gbl.setConstraints(startTrafo,gbc);
+		getContentPane().add(startTrafo);
+		
+		pack();
 
-		buttonPanel.setLayout(new GridLayout(3, 2));
+		/*buttonPanel.setLayout(new GridLayout(3, 2));
 		buttonPanel.add(label_selectInputFile);
 		buttonPanel.add(button_selectInputFile);
 		buttonPanel.add(label_selectTransformation);
@@ -139,11 +187,11 @@ public class TrafoView
 		buttonPanel.add(button_selectOutputFile);
 
 		startPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		startPanel.add(startTrafo);
+		startPanel.add(startTrafo);*/
 
-		getContentPane().setLayout(new GridLayout(2, 1));
-		getContentPane().add(buttonPanel);
-		getContentPane().add(startPanel);
+		//getContentPane().setLayout(new GridLayout(2, 1));
+		//getContentPane().add(buttonPanel);
+		//getContentPane().add(startPanel);
 	}
 
 	private Vector getTransformations() {
@@ -184,6 +232,16 @@ public class TrafoView
 		} else {
 			startTrafo.setEnabled(false);
 		}
+	}
+
+	private GridBagConstraints makegbc(int x, int y, int width, int height) {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = x;
+		gbc.gridy = y;
+		gbc.gridwidth = width;
+		gbc.gridheight = height;
+		gbc.insets = new Insets(1, 1, 1, 1);
+		return gbc;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -267,7 +325,10 @@ public class TrafoView
 						if (trafo instanceof String) {
 							String trafoName = (String) trafo;
 							if (trafoName.equals("shape_2_gml")) {
-								String newInputFile = inputFile.getPath().replaceAll("\\.shp","");
+								String newInputFile =
+									inputFile.getPath().replaceAll(
+										"\\.shp",
+										"");
 								Shape2GML shape2GML =
 									new Shape2GML(
 										newInputFile,
@@ -291,12 +352,15 @@ public class TrafoView
 					}
 					WaitingDialog.waitingDialogDispose();
 					gp.setVisible(false);
-					if(outputFile.exists()){
-					JOptionPane.showMessageDialog(
-						instance,
-						I18n.get("TrafoView.FinishMessage")+"\n"+I18n.get("TrafoView.FinishMessage_OutputFile")+outputFile.getPath(),
-						I18n.get("TrafoView.FinishMessageTitle"),
-						JOptionPane.INFORMATION_MESSAGE);
+					if (outputFile.exists()) {
+						JOptionPane.showMessageDialog(
+							instance,
+							I18n.get("TrafoView.FinishMessage")
+								+ "\n"
+								+ I18n.get("TrafoView.FinishMessage_OutputFile")
+								+ outputFile.getPath(),
+							I18n.get("TrafoView.FinishMessageTitle"),
+							JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 			});
