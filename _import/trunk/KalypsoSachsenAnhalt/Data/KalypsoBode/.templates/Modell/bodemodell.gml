@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- mit relativem Pfad: wird von XML-Spy verstanden
 <BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell .model/schema/bodemodell.xsd">
+-->
+<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/bodemodell.xsd">
   <bodepegel:PegelCollectionAssociation>
     <bodepegel:PegelCollection fid="PegelCollection0">
       <gml:boundedBy>

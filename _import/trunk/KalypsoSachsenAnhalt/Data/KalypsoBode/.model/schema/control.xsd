@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.spree.control" version="0.1" xmlns:spree="org.kalypso.spree.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<element name="SpreeControl" type="spree:_SpreeControlType"/>
 	<complexType name="_SpreeControlBaseType">
 		<complexContent>

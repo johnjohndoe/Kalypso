@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
     <observation linktype="zml" ns1:href="Zeitreihen/Abfluss_Pegel/Hadmersleben.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c1" name="Q - Hadmersleben" width="50"/>
+        <column axis="Abfluss" editable="true" id="c1" name="Hadmersleben" width="50"/>
     </observation>
     <observation linktype="zml" ns2:href="Zeitreihen/Abfluss_Pegel/Silberhütte.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c2" name="Q - Silberhütte" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Silberhütte" width="50"/>
     </observation>
     <observation linktype="zml" ns3:href="Zeitreihen/Abfluss_Pegel/Meisdorf.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c3" name="Q - Meisdorf" width="50"/>
+        <column axis="Abfluss" editable="true" id="c3" name="Meisdorf" width="50"/>
     </observation>
     <observation linktype="zml" ns4:href="Zeitreihen/Abfluss_Pegel/Wegeleben.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c4" name="Q - Wegeleben" width="50"/>
+        <column axis="Abfluss" editable="true" id="c4" name="Wegeleben" width="50"/>
     </observation>
     <observation linktype="zml" ns5:href="Zeitreihen/Abfluss_Pegel/Thale.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c5" name="Q - Thale" width="50"/>
+        <column axis="Abfluss" editable="true" id="c5" name="Thale" width="50"/>
     </observation>
     <observation linktype="zml" ns6:href="Zeitreihen/Abfluss_Pegel/Staßfurt.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c6" name="Q - Staßfurt" width="50"/>
+        <column axis="Abfluss" editable="true" id="c6" name="Staßfurt" width="50"/>
     </observation>
     <observation linktype="zml" ns7:href="Zeitreihen/Abfluss_Pegel/Hasselfelde.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c7" name="Q - Hasselfelde" width="50"/>
+        <column axis="Abfluss" editable="true" id="c7" name="Hasselfelde" width="50"/>
     </observation>
     <observation linktype="zml" ns8:href="Zeitreihen/Abfluss_Pegel/Steinerne_Renne.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c8" name="Q - Steinerne Renne" width="50"/>
+        <column axis="Abfluss" editable="true" id="c8" name="Steinerne Renne" width="50"/>
     </observation>
     <observation linktype="zml" ns9:href="Zeitreihen/Abfluss_Pegel/Nienhagen.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c9" name="Q - Nienhagen" width="50"/>
+        <column axis="Abfluss" editable="true" id="c9" name="Nienhagen" width="50"/>
     </observation>
     <observation linktype="zml" ns10:href="Zeitreihen/Abfluss_Pegel/Oschersleben.zml" xmlns:ns10="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c10" name="Q - Oschersleben" width="50"/>
+        <column axis="Abfluss" editable="true" id="c10" name="Oschersleben" width="50"/>
     </observation>
     <observation linktype="zml" ns11:href="Zeitreihen/Abfluss_Pegel/Mahndorf.zml" xmlns:ns11="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c11" name="Q - Mahndorf" width="50"/>
+        <column axis="Abfluss" editable="true" id="c11" name="Mahndorf" width="50"/>
     </observation>
     <observation linktype="zml" ns12:href="Zeitreihen/Abfluss_Pegel/Hausneindorf.zml" xmlns:ns12="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c12" name="Q - Hausneindorf" width="50"/>
+        <column axis="Abfluss" editable="true" id="c12" name="Hausneindorf" width="50"/>
     </observation>
     <observation linktype="zml" ns13:href="Zeitreihen/Abfluss_Pegel/Elend.zml" xmlns:ns13="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c13" name="Q - Elend" width="50"/>
+        <column axis="Abfluss" editable="true" id="c13" name="Elend" width="50"/>
     </observation>
     <observation linktype="zml" ns14:href="Zeitreihen/Abfluss_Pegel/Trautenstein.zml" xmlns:ns14="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c14" name="Q - Trautenstein" width="50"/>
+        <column axis="Abfluss" editable="true" id="c14" name="Trautenstein" width="50"/>
     </observation>
     <observation linktype="zml" ns15:href="Zeitreihen/Abfluss_Pegel/Wendefurth.zml" xmlns:ns15="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c15" name="Q - Wendefurth" width="50"/>
+        <column axis="Abfluss" editable="true" id="c15" name="Wendefurth" width="50"/>
     </observation>
     <observation linktype="zml" ns16:href="Zeitreihen/Abfluss_Pegel/Königshütte.zml" xmlns:ns16="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c16" name="Q - Königshütte" width="50"/>
+        <column axis="Abfluss" editable="true" id="c16" name="Königshütte" width="50"/>
     </observation>
     <observation linktype="zml" ns17:href="Zeitreihen/Abfluss_Pegel/Ditfurt.zml" xmlns:ns17="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c17" name="Q - Ditfurt" width="50"/>
+        <column axis="Abfluss" editable="true" id="c17" name="Ditfurt" width="50"/>
     </observation>
     <rules>
         <renderingrule mask="2">

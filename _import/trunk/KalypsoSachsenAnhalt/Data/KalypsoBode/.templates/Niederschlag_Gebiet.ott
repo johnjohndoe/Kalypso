@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
     <observation linktype="zml" ns1:href="Zeitreihen/Niederschlag_Gebiet/Silberhütte.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c1" name="N - Silberhütte" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c1" name="Silberhütte" width="50"/>
     </observation>
     <observation linktype="zml" ns2:href="Zeitreihen/Niederschlag_Gebiet/Mahndorf.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c2" name="N - Mahndorf" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c2" name="Mahndorf" width="50"/>
     </observation>
     <observation linktype="zml" ns3:href="Zeitreihen/Niederschlag_Gebiet/Königshütte.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c3" name="N - Königshütte" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c3" name="Königshütte" width="50"/>
     </observation>
     <observation linktype="zml" ns4:href="Zeitreihen/Niederschlag_Gebiet/Steinerne_Renne.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c4" name="N - Steinerne Renne" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c4" name="Steinerne Renne" width="50"/>
     </observation>
     <observation linktype="zml" ns5:href="Zeitreihen/Niederschlag_Gebiet/Meisdorf.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c5" name="N - Meisdorf" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c5" name="Meisdorf" width="50"/>
     </observation>
     <observation linktype="zml" ns6:href="Zeitreihen/Niederschlag_Gebiet/Hasselfelde.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c6" name="N - Hasselfelde" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c6" name="Hasselfelde" width="50"/>
     </observation>
     <observation linktype="zml" ns7:href="Zeitreihen/Niederschlag_Gebiet/Elend.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c7" name="N - Elend" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c7" name="Elend" width="50"/>
     </observation>
     <observation linktype="zml" ns8:href="Zeitreihen/Niederschlag_Gebiet/Trautenstein.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c8" name="N - Trautenstein" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c8" name="Trautenstein" width="50"/>
     </observation>
     <observation linktype="zml" ns9:href="Zeitreihen/Niederschlag_Gebiet/Oschersleben.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c9" name="N - Oschersleben" width="50"/>
+        <column axis="Niederschlag" editable="true" id="c9" name="Oschersleben" width="50"/>
     </observation>
     <rules>
         <renderingrule mask="2">
