@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5565513.052730593" left="5193663.44325543" right="5419943.966659291" top="5717000.574000965"/>
+    <layers active="ID_1">
+        <layer name="Ombrometer" visible="true" featurePath="ombrometerMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/ombrometer.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Ombrometer" ns1:actuate="onRequest" ns1:href="project:/.styles/ombrometer.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+             <layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="calcCase.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="Teilgebiete" ns5:actuate="onRequest" ns5:href="project:/.styles/teilgebieteNiederschlag.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+

@@ -100,6 +100,10 @@
 			<argument name="input" value=":project:.model/.info.txt"/>
 			<argument name="output" value=":calcdir:Pegel/.info.txt"/>
 		</transformation>
+		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+			<argument name="input" value=":project:.model/.info.txt"/>
+			<argument name="output" value=":calcdir:Ombrometer/.info.txt"/>
+		</transformation>
 
     <!-- Transformationen fuer den ExpertenModus -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
@@ -130,6 +134,18 @@
 	</createTransformations>
 	
 	<updateTransformations>	
+	<!-- Ombrometer -->
+		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+			<argument name="gml" value=":project:ombrometer.gml"/>
+			<argument name="feature" value="Ombrometer"/>
+			<argument name="sourceObservation1" value="NRepository"/>
+			<argument name="targetObservation" value="N"/>
+			<argument name="targetFolder" value=":calcdir:"/>
+			<argument name="startsim" value=":startsim:"/>
+			<argument name="startforecast" value=":startforecast:"/>
+			<argument name="endsim" value=":endsim:"/>
+		</transformation>
+
 			<!-- Zufluesse -->
 	<transformation className="org.kalypso.util.transformation.ObservationResolver">
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
@@ -157,7 +173,7 @@
 			<argument name="gml" value=":calcdir:calcCase.gml"/>
 			<argument name="feature" value="Catchment"/>
 			<argument name="sourceObservation1" value="niederschlagZRRepository"/>
-<!--			<argument name="sourceObservation2" value="niederschlagZRRepositoryVorhersage"/> -->
+			<argument name="sourceObservation2" value="niederschlagZRRepositoryVorhersage"/>
 			<argument name="targetObservation" value="niederschlagZR"/>
 			<argument name="targetFolder" value=":calcdir:"/>
 			<argument name="startsim" value=":startsim:"/>
