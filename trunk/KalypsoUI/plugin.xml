@@ -52,14 +52,14 @@
             extensions="gtt"/>
       <editor
             class="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
-            icon="icons/observation_repository.ico"
+            icon="icons/kalypso_odt.gif"
             default="true"
             name="Kalypso Observation DiagramEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationDiagramEditor"
             extensions="odt"/>
       <editor
             class="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
-            icon="icons/observation_repository.ico"
+            icon="icons/kalypso_ott.gif"
             default="true"
             name="Kalypso Observation TableEditor"
             id="org.kalypso.ogc.sensor.editor.ObservationTableEditor"
@@ -72,18 +72,18 @@
             id="Kalypso"/>
       <view
             class="org.kalypso.util.repository.view.RepositoryExplorerPart"
-            icon="icons/observation_repository.ico"
+            icon="icons/observation_repository.gif"
             category="Kalypso"
             name="Zeitreihen Repository"
             id="org.kalypso.util.repository.view.RepositoryExplorerPart"/>
       <view
-            icon="icons/observation_repository.ico"
+            icon="icons/kalypso_odt.gif"
             class="org.kalypso.ogc.sensor.view.DiagramViewPart"
             category="Kalypso"
             name="Diagram QuickView"
             id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
       <view
-            icon="icons/observation_repository.ico"
+            icon="icons/kalypso_ott.gif"
             class="org.kalypso.ogc.sensor.view.TableViewPart"
             category="Kalypso"
             name="Table QuickView"
@@ -327,7 +327,7 @@
                id="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate"
                menubarPath="additions"
 	           toolbarPath="additions" 
-               icon="icons/sample.gif" 
+               icon="icons/grafik-icon.gif" 
                tooltip="%PopupMenu.ResourceNav.GrafikVorlageTooltip" 
                class="org.kalypso.ogc.sensor.view.resourceNavigator.GrafikViewActionDelegate" 
                enablesFor="1"> 
