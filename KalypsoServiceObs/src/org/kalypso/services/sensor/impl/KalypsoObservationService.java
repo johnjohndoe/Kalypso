@@ -134,9 +134,8 @@ public class KalypsoObservationService implements IObservationService
       return rep.hasChildren();
     }
 
-    // TODO also for other itembeans
-
-    return false;
+    final IRepositoryItem item = (IRepositoryItem)m_mapId2Obj.get( new Integer( parent.getId() ) );
+    return item.hasChildren();
   }
 
   /**
@@ -144,6 +143,7 @@ public class KalypsoObservationService implements IObservationService
    */
   public ItemBean[] getChildren( final ItemBean parent )
   {
+    // IRepository
     if( parent instanceof RepositoryBean )
     {
       final IRepository rep = (IRepository)m_mapId2Obj.get( new Integer( parent.getId() ) );
@@ -164,8 +164,26 @@ public class KalypsoObservationService implements IObservationService
       
       return beans;
     }
+    
+    // Standard IRepositoryItem
+    final IRepositoryItem item = (IRepositoryItem)m_mapId2Obj.get( new Integer( parent.getId() ) );
+    
+    if( m_mapObj2Obj.containsKey( item ) )
+      return (ItemBean[])m_mapObj2Obj.get( item );
+    
+    final IRepositoryItem[] children = item.getChildren();
+    final ItemBean[] beans = new ItemBean[ children.length ];
+    
+    for( int i = 0; i < beans.length; i++ )
+    {
+      beans[i] = new ItemBean( m_lastId++, children[i].getName() );
+      m_mapId2Obj.put( new Integer( beans[i].getId() ), children[i] );
+    }
 
-    return null;
+    m_mapObj2Obj.put( item, beans );
+    
+    return beans;
+    //return null;
   }
 
   /**
