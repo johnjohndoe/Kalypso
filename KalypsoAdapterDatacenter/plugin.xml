@@ -26,6 +26,10 @@
             conf="jdbc:edbc://pc072:II7/bce_pc072::kalypso/INGRES#ingres#ingres"
             name="DataCenter"
             factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"/>
+      <repository
+            conf="jdbc:edbc://134.28.87.20:WB7/elbe::abwb_v2/INGRES#ingres#ingres42"
+            name="DataCenterTUHH"
+            factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"/>
    </extension>
 
 </plugin>

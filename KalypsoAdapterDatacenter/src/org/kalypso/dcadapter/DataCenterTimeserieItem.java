@@ -72,7 +72,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( ) throws RepositoryException
+  public IRepositoryItem getParent() throws RepositoryException
   {
     return m_parent;
   }
