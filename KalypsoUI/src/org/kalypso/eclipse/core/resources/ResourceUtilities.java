@@ -133,6 +133,8 @@ public class ResourceUtilities
   }
 
   /**
+   * TODO does this work? seems not...
+   * 
    * Returns the currently selected project from the navigator.
    * @return list of selected projects
    */

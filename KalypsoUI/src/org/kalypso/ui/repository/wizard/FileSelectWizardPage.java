@@ -47,6 +47,7 @@ public class FileSelectWizardPage extends WizardPage
     m_ffe = new FileFieldEditor( "FILE", "Datei:", sub );
     m_ffe.setPreferenceStore( m_store );
     m_ffe.loadDefault();
+    m_ffe.setEmptyStringAllowed( false );
     
     final GridLayout gridLayout = new GridLayout( 4, true );
     sub.setLayout( gridLayout );
