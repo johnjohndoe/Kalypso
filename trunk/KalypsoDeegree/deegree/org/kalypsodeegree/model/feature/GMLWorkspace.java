@@ -17,6 +17,15 @@ public interface GMLWorkspace extends ModellEventProvider
   public FeatureType[] getFeatureTypes();
 
   public Feature[] getFeatures( FeatureType ft );
-
+/**
+ * resolves the associationlink to a feature, maxOccurs =1
+ */
   public Feature resolveLink( Feature srcFeature, String linkPropertyName );
+  /**
+   * resolves the associationlink to a feature, maxOccurs >1
+   */
+  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName );
+
+  public Feature getFeature( FeatureType ft,String id );
+
 }
