@@ -13,7 +13,7 @@ public class SetSelectedAction extends AbstractObservationTableAction
 {
   public SetSelectedAction( ObservationTable table )
   {
-    super( table, "Selektierte Werte setzen", "Setzt Werte der Spalte auf dem selektierte Wert, welche selektiert sind" );
+    super( table, "Selektierte Werte setzen", "Setzt Werte der Spalte auf den selektierten Wert, welche selektiert sind" );
   }
 
   /**

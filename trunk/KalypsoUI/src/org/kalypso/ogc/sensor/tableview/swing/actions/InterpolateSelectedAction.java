@@ -17,7 +17,7 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
     super(
         table,
         "Werte interpolieren",
-        "Interpoliert die Werte der Spalte zwischen den erst- und den letzt-selektierten Wert" );
+        "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
   }
 
   /**

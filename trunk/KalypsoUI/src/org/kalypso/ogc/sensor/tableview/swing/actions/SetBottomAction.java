@@ -16,7 +16,7 @@ public class SetBottomAction extends AbstractObservationTableAction
     super(
         table,
         "Werte unterhalb setzen",
-        "Setzt Werte der Spalte auf dem selektierte Wert, welche unterhalb davon liegen" );
+        "Führt den selektierten Wert für alle nachfolgenden fort" );
   }
 
   /**
