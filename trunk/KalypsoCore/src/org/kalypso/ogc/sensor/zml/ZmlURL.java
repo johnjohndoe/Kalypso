@@ -14,6 +14,14 @@ import org.kalypso.util.xml.XmlTypes;
  */
 public class ZmlURL
 {
+  private final static String TAG_FROM1 = "<from>";
+
+  private final static String TAG_FROM2 = "</from>";
+
+  private final static String TAG_TO1 = "<to>";
+
+  private final static String TAG_TO2 = "</to>";
+
   private ZmlURL( )
   {
     // do not instanciate
@@ -48,15 +56,58 @@ public class ZmlURL
   }
 
   /**
+   * Inserts the date range or replaces the one if existing. The date range is
+   * inserted in the from-to specification in the query part of the url.
+   * 
+   * @param str
+   * @param dra
+   * @return string containing the given date range
+   */
+  public static String insertDateRange( final String str,
+      final DateRangeArgument dra )
+  {
+    // first replace the date range spec (does nothing if not present)
+    String tmpUrl = str.replaceFirst( TAG_FROM1 + ".*" + TAG_FROM2, "" );
+    tmpUrl = tmpUrl.replaceFirst( TAG_TO1 + ".*" + TAG_TO2, "" );
+
+    String[] strs = tmpUrl.split( "\\?", 2 );
+
+    tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra ) + strs[1];
+
+    return tmpUrl;
+  }
+
+  /**
+   * Builds the String representation of the given date range. Constructs a
+   * simple XML representation in the format:
+   * 
+   * <pre>
+   *  	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
+   * </pre>
+   * 
+   * @param dra
+   * @return string
+   */
+  public static String buildDateRangeSpec( final DateRangeArgument dra )
+  {
+    final StringBuffer bf = new StringBuffer();
+
+    bf.append( TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) )
+        .append( TAG_FROM2 );
+    bf.append( TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) )
+        .append( TAG_TO2 );
+
+    return bf.toString().replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
+  }
+
+  /**
    * Checks if the string contains the from-to specification and eventually
    * creates the corresponding DateRangeArgument.
    * 
    * <pre>
-   * 
-   *  The format of the from-to specification should be as follows:
-   *  
-   *  ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
-   *  
+   *      The format of the from-to specification should be as follows:
+   *      
+   *      ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
    * </pre>
    * 
    * @param str
@@ -64,11 +115,6 @@ public class ZmlURL
    */
   public static DateRangeArgument checkDateRange( final String str )
   {
-    final String TAG_FROM1 = "<from>";
-    final String TAG_FROM2 = "</from>";
-    final String TAG_TO1 = "<to>";
-    final String TAG_TO2 = "</to>";
-
     String from = null;
 
     int f1 = str.indexOf( TAG_FROM1 );
