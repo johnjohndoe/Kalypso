@@ -26,7 +26,8 @@ public class ZmlLoader extends AbstractLoader
   {
     String type = source.getProperty( "TYPE" );
     String location = source.getProperty( "LOCATION" );
-    String axis = source.getProperty( "AXIS" );
+    String sharedAxis = source.getProperty( "SHARED_AXIS" );
+    String valueAxis = source.getProperty( "VALUE_AXIS" );
     
     monitor.beginTask( "Laden von ZML-Datei von " + location, 2 );
     
@@ -36,7 +37,7 @@ public class ZmlLoader extends AbstractLoader
     {
     if( type.equals( "relative" ) )
     {
-      // Anstatt InputStream --> Reader mit Encoding erstellen und an ZmlObservation geben
+      // TODO: Anstatt InputStream --> Reader mit Encoding erstellen und an ZmlObservation geben
       ins = project.getFile( location ).getContents();
     }
     else if( type.equals( "absolute" ) )
@@ -55,7 +56,7 @@ public class ZmlLoader extends AbstractLoader
     
     monitor.worked( 1 );
     
-    return new DefaultObservationProvider( obs, ObservationUtilities.findAxis( obs, axis ) );
+    return new DefaultObservationProvider( obs, ObservationUtilities.findAxis( obs, sharedAxis ), ObservationUtilities.findAxis( obs, valueAxis ) );
   }
 
   /**

@@ -5,7 +5,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationProvider;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.template.obstableview.ObstableviewType.ColumnType;
+import org.kalypso.template.obstableview.ObstableviewType.ColumnpairType;
 import org.kalypso.util.pool.BorrowObjectJob;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -17,19 +17,19 @@ import org.kalypso.util.pool.ResourcePool;
  * 
  * @author schlienger
  */
-public class TableViewColumn implements ITableViewColumn
+public class ColumnPair implements ITableViewColumn
 {
   private static final Object DUMMY_OBJECT = new Object();
   
   private final TableViewTemplate m_template;
 
-  private final ColumnType m_col;
-
   private PoolableObjectType m_key = null;
   
   private IObservationProvider m_provider = null;
 
-  public TableViewColumn( final TableViewTemplate template, final ObstableviewType.ColumnType col )
+  private final ColumnpairType m_col;
+
+  public ColumnPair( final TableViewTemplate template, final ObstableviewType.ColumnpairType col )
   {
     m_template = template;
     m_col = col;
@@ -107,16 +107,24 @@ public class TableViewColumn implements ITableViewColumn
     return m_provider.getObservation();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationProvider#getDisplayAxis()
-   */
-  public IAxis getDisplayAxis()
-  {
-    return m_provider.getDisplayAxis();
-  }
-
   public void setProvider( IObservationProvider p )
   {
     m_provider= p;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getSharedAxis()
+   */
+  public IAxis getSharedAxis()
+  {
+    return m_provider.getSharedAxis();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationProvider#getValueAxis()
+   */
+  public IAxis getValueAxis()
+  {
+    return m_provider.getValueAxis();
   }
 }
