@@ -7,10 +7,13 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.io.CSV;
+import org.kalypso.util.io.ITabledValues;
+import org.kalypso.util.io.RegexCSV;
 import org.kalypso.util.parser.IParser;
 import org.kalypso.util.parser.ParserException;
 import org.kalypso.zml.AxisType.ValueLinkType;
@@ -20,7 +23,7 @@ import org.kalypso.zml.AxisType.ValueLinkType;
  */
 public class ZmlLinkValues implements IZmlValues
 {
-  private final CSV m_csv;
+  private final ITabledValues m_csv;
 
   private final IParser m_parser;
 
@@ -36,10 +39,7 @@ public class ZmlLinkValues implements IZmlValues
     final Properties hrefProps = PropertiesHelper.parseFromString( vl.getHref(), '#' );
 
     final String type = hrefProps.getProperty( "TYPE" );
-    m_column = Integer.valueOf( hrefProps.getProperty( "COLUMN" ) ).intValue() - 1;
-
-    final String sline = hrefProps.getProperty( "LINE" );
-    final int line = sline == null ? 1 : Integer.valueOf( sline ).intValue();
+    m_column = vl.getColumn();
 
     URL url = null;
 
@@ -49,8 +49,16 @@ public class ZmlLinkValues implements IZmlValues
     else
       url = new URL( hrefProps.getProperty( "LOCATION" ) );
 
-    // stream is closed in CSV()
-    m_csv = new CSV( new InputStreamReader( url.openStream() ), vl.getSeparator(), line );
+    if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
+    {
+      // stream is closed in CSV()
+      m_csv = new CSV( new InputStreamReader( url.openStream() ), vl.getSeparator(), vl.getLine() );
+    }
+    else
+    {
+      m_csv = new RegexCSV( new InputStreamReader( url.openStream() ), Pattern.compile( vl
+          .getRegexp() ), vl.getLine() );
+    }
   }
 
   /**

@@ -31,6 +31,9 @@
 					<xs:complexContent>
 						<xs:extension base="xlink:SimpleLinkType">
 							<xs:attribute name="separator" type="xs:string" use="optional" default=";"/>
+							<xs:attribute name="regexp" type="xs:string" use="optional" default=""/>
+							<xs:attribute name="column" type="xs:int" use="required"/>
+							<xs:attribute name="line" type="xs:int" use="optional" default="1"/>
 						</xs:extension>
 					</xs:complexContent>
 				</xs:complexType>

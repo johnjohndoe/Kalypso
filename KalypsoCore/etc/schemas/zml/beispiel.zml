@@ -34,7 +34,7 @@
 		es in der CSV-Datei zu finden ist.
 	-->
 	<axis name="Pegel2" type="pegel" unit="m" datatype="TYPE=xs:double">
-		<valueLink separator=" " xlink:href="TYPE=relative#LOCATION=beispiel.values.txt#COLUMN=2"/>
+		<valueLink separator=" " column="2" xlink:href="TYPE=relative#LOCATION=beispiel.values.txt"/>
 	</axis>
 
 </observation>
