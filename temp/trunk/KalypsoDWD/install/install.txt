@@ -19,5 +19,7 @@ KalypsoDWD generiert aus DWD-Rasterdateien ZML-Dateien fuer das Zeitreihenreposi
 5. evt. kalypsoDWD.bat anpassen
 6. kalypsoDWD.bat mittels cronjob regelmaessig aufrufen
 
+die datei "lm_2004_11_09_00" ist eine Beispiel DWD-Rasterdatei.
+
 Nov. 2004
 v.doemming@tuhh.de 
