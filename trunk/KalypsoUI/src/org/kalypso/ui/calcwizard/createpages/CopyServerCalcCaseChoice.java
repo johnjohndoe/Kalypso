@@ -77,8 +77,24 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
+    final Label nameLabel = new Label( panel, SWT.NONE );
+    nameLabel.setLayoutData( new GridData() );
+    nameLabel.setText( "neue Bezeichnung:" );
+    nameLabel.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
+
+    final Text edit = new Text( panel, SWT.BORDER );
+    edit.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    edit.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
+    edit.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        setName( edit.getText() );
+      }
+    } );
+    
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
+    label.setText( "auf dem Server vorliegende Hochwasser-Vorhersagen:" );
 
     final ListViewer viewer = new ListViewer( panel, SWT.BORDER );
     viewer.setContentProvider( new ArrayContentProvider() );
@@ -102,22 +118,6 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
       }
     } );
     m_viewer = viewer;
-
-    final Label nameLabel = new Label( panel, SWT.NONE );
-    nameLabel.setLayoutData( new GridData() );
-    nameLabel.setText( "Bezeichnung:" );
-    nameLabel.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
-
-    final Text edit = new Text( panel, SWT.BORDER );
-    edit.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    edit.setToolTipText( AddNewCalcCaseChoice.TOOLTIP );
-    edit.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        setName( edit.getText() );
-      }
-    } );
 
     m_control = panel;
 
@@ -180,6 +180,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
 
     final IFolder folder = nature.getPrognoseFolder();
+
     if( m_name.length() == 0 )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Geben Sie einen Namen für die Vorhersage ein", null ) );
@@ -187,14 +188,14 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     final IFolder calcCaseFolder = folder.getFolder( m_name );
     if( calcCaseFolder.exists() )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Eine Vorhersage mit diesem namen existiert bereits: " + m_name, null ) );
+          "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
 
     if( m_dir == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
 
     // quellverzeichnis holen
-    m_synchronizer.getFolder( m_dir );
+    m_synchronizer.getFolder( m_dir, ModelNature.PROGNOSE_FOLDER + "/" + m_name );
 
     return calcCaseFolder;
   }

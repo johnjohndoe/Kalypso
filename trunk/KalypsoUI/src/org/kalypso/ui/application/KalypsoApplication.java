@@ -33,7 +33,7 @@ public class KalypsoApplication implements IPlatformRunnable
     try
     {
       final IUserService service = prepareService();
-      rights = service.getRights( username );
+      rights = service == null ? null : service.getRights( username ); // todo avoid nullpointerexception
     }
     catch( final Throwable e1 )
     {
@@ -69,7 +69,7 @@ public class KalypsoApplication implements IPlatformRunnable
         if( dialog.open() != Window.OK )
           break;
 
-        if( !"arglgargl".equals( dialog.getValue() ) )
+        if( "arglgargl".equals( dialog.getValue() ) )
         {
           choosenRights = new String[] { IUserServiceConstants.RIGHT_ADMIN };
           break;

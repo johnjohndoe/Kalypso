@@ -219,7 +219,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)theme;
 
         final List selectedFeatures = GetSelectionVisitor.getSelectedFeatures( kft.getWorkspace(),
-            kft.getFeatureType(), SELECTION_ID );
+            kft.getFeatureType(), getSelectionID() );
 
         // TODO: wants tsProps instead of null
         if( selectedFeatures.size() > 0 )

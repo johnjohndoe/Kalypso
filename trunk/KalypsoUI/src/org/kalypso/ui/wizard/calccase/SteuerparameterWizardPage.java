@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -57,9 +58,9 @@ public class SteuerparameterWizardPage extends WizardPage
   private IFolder m_currentCalcCase;
 
   public SteuerparameterWizardPage( final IProjectProvider pp,
-      final boolean overrideCanFlipToNextPage )
+      final boolean overrideCanFlipToNextPage, final ImageDescriptor image )
   {
-    super( "EditCalcCaseControlPage", "Steurparameter", null );
+    super( "EditCalcCaseControlPage", "Steuerparameter", image );
 
     m_projectProvider = pp;
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
