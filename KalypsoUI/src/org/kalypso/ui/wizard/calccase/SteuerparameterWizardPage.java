@@ -72,11 +72,16 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       final IProject project = m_projectProvider.getProject();
 
+      // gleich mal den Workspace auf das default setzen
+      final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
+      m_workspace = nature.loadOrCreateControl( null );
+
       // Vorlage auslesen
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
           + ModelNature.CONTROL_VIEW_PATH );
-      
-      final Feature f = m_workspace == null ? null : m_workspace.getRootFeature();
+
+      final Feature f = m_workspace.getRootFeature();
+
       m_featureComposite = new FeatureComposite( f, new URL[]
       { viewURL } );
 
@@ -114,6 +119,10 @@ public class SteuerparameterWizardPage extends WizardPage
     catch( final MalformedURLException e )
     {
       // ERROR handling
+      e.printStackTrace();
+    }
+    catch( CoreException e )
+    {
       e.printStackTrace();
     }
   }
@@ -216,21 +225,22 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * Setzt dne aktuellen Rechenfall, ist dort schon eine .calculation vorhanden,
    * wird diese geladen, sonst die default.
+   * 
    * @throws CoreException
    */
   public void setFolder( final IFolder currentCalcCase ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_projectProvider.getProject().getNature(
         ModelNature.ID );
-    
+
     GMLWorkspace workspace = nature.loadOrCreateControl( currentCalcCase );
     setWorkspace( workspace );
   }
-  
+
   public void setWorkspace( final GMLWorkspace workspace )
   {
     m_workspace = workspace;
-    
+
     if( m_featureComposite != null )
     {
       m_featureComposite.setFeature( workspace.getRootFeature() );

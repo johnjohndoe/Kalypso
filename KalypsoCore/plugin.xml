@@ -52,6 +52,7 @@
       <import plugin="org.eclipse.core.runtime" export="false"/>
       <import plugin="org.kalypso.deegree"/>
       <import plugin="org.kalypso.util"/>
+      <import plugin="org.apache.ant"/>
    </requires>
 
 </plugin>

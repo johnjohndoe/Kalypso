@@ -12,6 +12,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.apache.commons.io.CopyUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree_impl.gml.schema.Mapper;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -48,6 +50,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.eclipse.util.SetContentThread;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
@@ -61,6 +64,7 @@ import org.kalypso.services.proxy.CalcJobDataBean;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.transformation.TransformationHelper;
+import org.kalypso.util.url.UrlResolver;
 import org.xml.sax.InputSource;
 
 /**
@@ -97,7 +101,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public static final String CONTROL_TEMPLATE_GML_PATH = MODELLTYP_FOLDER + "/"
       + CONTROL_TEMPLATE_NAME;
 
-  public static final String CONTROL_TEMPLATE_XSD_PATH = MODELLTYP_FOLDER + "/schema/control.xsd";
+  private static final String META_PROP_VALID_HOURS = "VALID_FORECAST_HOURS";
+
+  /** Standardddifferenz des Simulationsstarts vor dem Vorhersagezeitpunkt */
+  private static final String META_PROP_DEFAULT_SIMHOURS = "DEFAULT_SIMHOURS";
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -578,12 +585,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
 
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
-      final URL schemaURL = new URL( "platform:/resource/" + getProject().getName() + "/"
-          + CONTROL_TEMPLATE_XSD_PATH );
 
-      // TODO: ReplaceTokens
+      final IUrlResolver urlResolver = configureTokensForcontrol();
 
-      return GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
+      return GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
     }
     catch( final Exception e )
     {
@@ -592,6 +597,61 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
           "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
     }
+  }
+
+  public IUrlResolver configureTokensForcontrol() throws CoreException
+  {
+    final IUrlResolver urlResolver = new UrlResolver();
+    
+    final String user = System.getProperty( "user.name", "<Benutzer konnte nicht ermittelt werden>" );
+    urlResolver.addReplaceToken( "user", user );
+
+    final Date now = new Date();
+    
+    urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now, "dateTime" ) );
+
+    // auf x stunden vorher runden! hängt von der Modellspec ab
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime( now );
+    // erstmal auf die letzte Stunde runden
+    cal.set( Calendar.MINUTE, 0 );
+    cal.set( Calendar.SECOND, 0 );
+    cal.set( Calendar.MILLISECOND, 0 );
+    
+    // jetzt solange ganze stunden abziehen, bis der Wert ins Zeitvalidierungsschema passt
+    int count = 0;
+    while( !validateTime( cal ) )
+    {
+      cal.add( Calendar.HOUR_OF_DAY, -1 );
+      
+      // nach 24h spätestens abbrechen!
+      count++;
+      if( count == 24 )
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal, null ) );
+    }
+    
+    final Date forecastTime = cal.getTime();
+    urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml( forecastTime, "dateTime" ) );
+
+    // standardzeit abziehen
+    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
+    cal.add( Calendar.HOUR_OF_DAY, -simDiff );
+    final Date simTime = cal.getTime();
+    urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime, "dateTime" ) );
+    
+    return urlResolver;
+  }
+
+  /** stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt */
+  private boolean validateTime( final Calendar cal )
+  {
+    // todo: wäre schöner, wenn das besser parametrisiert werden könnte
+    // z.B. ein Groovy-Skript aus der Modelspec o.ä.
+    final String validHours = m_metadata.getProperty( META_PROP_VALID_HOURS, "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" );
+    
+    final int hour = cal.get( Calendar.HOUR_OF_DAY );
+    
+    return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1 ;
   }
 
   public void runCalculation( final IFolder folder, final IProgressMonitor monitor)
