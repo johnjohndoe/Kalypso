@@ -27,7 +27,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id("icons/repository/repository_add.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id("icons/repository/repository_remove.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id("icons/util/settings.gif");
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = id("icons/repository/repository_reload.gif");
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = id("icons/util/update.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = id("icons/util/tree_collapse_all.gif");
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = id("icons/util/tree_expand_all.gif");
   public static final ImageDescriptor IMAGE_ZML_UPLOAD = id("icons/repository/zml_upload.gif");

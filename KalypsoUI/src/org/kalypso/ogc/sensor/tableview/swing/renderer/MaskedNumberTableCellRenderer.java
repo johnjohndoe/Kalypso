@@ -5,8 +5,10 @@ import java.awt.Component;
 import java.awt.Font;
 import java.text.NumberFormat;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
@@ -20,6 +22,11 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 {
   private final static NumberFormat nf = NumberFormat.getInstance();
 
+  public MaskedNumberTableCellRenderer()
+  {
+    setHorizontalAlignment( SwingConstants.RIGHT );
+  }
+  
   /**
    * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
    *      java.lang.Object, boolean, boolean, int, int)
@@ -35,29 +42,42 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     if( n == null )
       return label;
 
-    final RenderingRule[] r = ((ObservationTableModel) table.getModel()).findRules( row, column );
+    final RenderingRule[] r = ((ObservationTableModel) table.getModel())
+        .findRules( row, column );
 
     String ttext = "";
 
+    label.setBackground( null );
+    if( isSelected )
+    {
+      if( hasFocus )
+        label.setBackground( Color.LIGHT_GRAY );
+      else
+        label.setBackground( Color.YELLOW );
+    }
+    
     for( int i = 0; i < r.length; i++ )
     {
+      // TOOLTIP
+      ttext += r[i].getTooltipText() + " ";
+
       // FONT
       final Font f = r[i].getFont();
-      if( f != null )
-        label.setFont( f );
+      label.setFont( f );
 
-      // TOOLTIP
-      ttext += r[i].getTooltipText();
-
-      // FOREGROUND
-      final Color fgc = r[i].getForegroundColor();
-      if( fgc != null )
+      final Icon ic = r[i].getIcon();
+      label.setIcon( ic );
+      
+      if( !isSelected )
+      {
+        // FOREGROUND
+        final Color fgc = r[i].getForegroundColor();
         label.setForeground( fgc );
 
-      // BACKGROUND
-      final Color bgc = r[i].getBackgroundColor();
-      if( bgc != null )
+        // BACKGROUND
+        final Color bgc = r[i].getBackgroundColor();
         label.setBackground( bgc );
+      }
     }
 
     label.setToolTipText( ttext );

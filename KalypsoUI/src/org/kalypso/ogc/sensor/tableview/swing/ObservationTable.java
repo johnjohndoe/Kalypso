@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.Date;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableCellRenderer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.internal.Workbench;
@@ -16,6 +15,7 @@ import org.kalypso.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
+import org.kalypso.ogc.sensor.tableview.swing.marker.ForecastLabelMarker;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.ITemplateEventListener;
@@ -28,12 +28,9 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class ObservationTable extends JTable implements ITemplateEventListener
 {
-  private final static Color FORECAST_BG = new Color( 0, 0, 255, 50);
-  private final static String FORECAST_TT = "Begin der Vorhersage";
-  private final static Icon FORECAST_ICON = new ImageIcon( ObservationTable.class.getResource("resource/warning_small.gif") );
-  
   protected final ObservationTableModel m_model;
   protected final DateTableCellRenderer m_dateRenderer;
+  private MaskedNumberTableCellRenderer m_nbRenderer;
 
   public ObservationTable( final ObservationTableModel model )
   {
@@ -44,7 +41,11 @@ public class ObservationTable extends JTable implements ITemplateEventListener
 
     m_dateRenderer = new DateTableCellRenderer();
     setDefaultRenderer( Date.class, m_dateRenderer );
-    setDefaultRenderer( Number.class, new MaskedNumberTableCellRenderer() );
+    
+    m_nbRenderer = new MaskedNumberTableCellRenderer();
+    setDefaultRenderer( Number.class, m_nbRenderer );
+    setDefaultRenderer( Double.class, m_nbRenderer );
+    setDefaultRenderer( Float.class, m_nbRenderer );
 
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
@@ -93,13 +94,20 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     }
   }
   
+  /**
+   * @see javax.swing.JTable#getCellRenderer(int, int)
+   */
+  public TableCellRenderer getCellRenderer( int row, int column )
+  {
+    final TableCellRenderer renderer = super.getCellRenderer( row, column );
+    return renderer;
+  }
+  
   protected void checkForecast( final IObservation obs )
   {
     // check if observation is a vorhersage
     final DateRangeArgument dr = TimeserieUtils.isForecast( obs );
     if( dr != null )
-    {
-      m_dateRenderer.addMarker( dr.getFrom(), FORECAST_BG, null, FORECAST_ICON, FORECAST_TT );
-    }
+      m_dateRenderer.addMarker( new ForecastLabelMarker( dr ) );
   }
 }

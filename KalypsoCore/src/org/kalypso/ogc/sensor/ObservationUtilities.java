@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.util.factory.FactoryException;
@@ -278,7 +279,7 @@ public class ObservationUtilities
           tupple[destAxes[j].getPosition()] = values.getElement( i, srcAxis );
         else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
           tupple[destAxes[j].getPosition()] = new Integer(
-              KalypsoStatusUtils.BIT_OK );
+              KalypsoStati.BIT_OK );
       }
 
       model.addTupple( tupple );

@@ -97,7 +97,9 @@ public abstract class SetContentThread extends CatchThread
     return m_charset;
   }
   
-  /** Exceptions, welche beim Schreiben des Files entstehen */
+  /** 
+   * @return Exceptions, welche beim Schreiben des Files entstehen
+   */
   public CoreException getFileException( )
   {
     // zum Glück wissen wir, dass es nur eine CoreException sein kann

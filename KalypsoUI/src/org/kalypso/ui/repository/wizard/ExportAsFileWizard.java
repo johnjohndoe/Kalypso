@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -47,8 +49,16 @@ public class ExportAsFileWizard extends Wizard
   {
     super.addPages();
     
+    final IProject[] projects = ResourceUtilities.getSelectedProjects();
+    final String fileName;
+    
+    if( projects.length > 0 )
+      fileName = projects[0].getFullPath().toOSString();
+    else
+      fileName = DEFAULT_FILE;
+    
     m_page1 = new DateRangeInputWizardPage();
-    m_page2 = new FileSelectWizardPage( "fileselect", DEFAULT_FILE );
+    m_page2 = new FileSelectWizardPage( "fileselect", fileName );
     
     addPage( m_page1 );
     addPage( m_page2 );
@@ -72,6 +82,8 @@ public class ExportAsFileWizard extends Wizard
   {
     final DateRangeArgument dateRange = m_page1.getDateRange();
     final String filePath = m_page2.getFilePath();
+    
+    DEFAULT_FILE = filePath;
     
     FileOutputStream outs = null;
     try

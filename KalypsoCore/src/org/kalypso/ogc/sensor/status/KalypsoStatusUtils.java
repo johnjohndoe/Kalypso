@@ -2,33 +2,15 @@ package org.kalypso.ogc.sensor.status;
 
 import java.util.NoSuchElementException;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
 /**
  * Utility class for the handling of status information within Kalypso
  * 
- * <p>
- * <b>Hinweise zu den internen Verbrauch von BitMask für den Tagging von Werte
- * (Themengegliedert) </b>:
- * 
- * <pre>
- *     Gültigkeit
- *     0x01 - Für Berechnung ok
- *     0x02 - Für Berechnung eventuell nicht geeignet
- *     0x04 - Für Berechnung nicht geeignet
- *     
- *     Benutzer Eingabe
- *     0x08 - benötigt
- *     0x10 - gesperrt
- *     
- *     Typ
- *     0x12 - gemessene
- *     0x14 - vorhergesagte
- *     
- *     Änderungen vom Benutzer
- *     0x1F - vom Benutzer geändert
- * </pre>
  * 
  * @author schlienger
  */
@@ -42,22 +24,11 @@ public class KalypsoStatusUtils
 
   public final static String STATUS_AXIS_UNIT = "";
 
-  public final static int BIT_OK = 0x01;
-
-  public final static int BIT_MAYBE = 0x02;
-
-  public final static int BIT_NOT = 0x04;
-
-  public final static int BIT_REQUIRED = 0x08;
-
-  public final static int BIT_LOCKED = 0x10;
-
-  public final static int BIT_MEASURE = 0x12;
-
-  public final static int BIT_FORECAST = 0x14;
-
-  public final static int BIT_USER_MODIFIED = 0x1F;
-
+  private final static Icon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ) );
+  private final static Icon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ) );
+  private final static Icon ICON_ERROR = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
+  private final static Icon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ) );
+  
   private KalypsoStatusUtils( )
   {
     // not to be instanciated
@@ -139,5 +110,41 @@ public class KalypsoStatusUtils
   public static boolean checkMask( final int mask, final int bit )
   {
     return (mask & bit) == bit;
+  }
+  
+  /**
+   * @param mask
+   * @return the icon that best fits the mask, or null if no fit
+   */
+  public static Icon getIconFor( final int mask )
+  {
+    if( checkMask( mask, KalypsoStati.BIT_NOT ) )
+      return ICON_ERROR;
+    
+    if( checkMask( mask, KalypsoStati.BIT_MAYBE ) )
+      return ICON_QUESTION;
+
+    if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
+      return ICON_WRITE;
+    
+    return null;
+  }
+  
+  /**
+   * @param mask
+   * @return the tooltip that best fits the mask, or null if no fit
+   */
+  public static String getTooltipFor( final int mask )
+  {
+    if( checkMask( mask, KalypsoStati.BIT_NOT ) )
+      return "Nicht geeignet";
+    
+    if( checkMask( mask, KalypsoStati.BIT_MAYBE ) )
+      return "Eventuell nicht geeignet";
+
+    if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
+      return "Vom Benutzer geändert";
+    
+    return null;
   }
 }
