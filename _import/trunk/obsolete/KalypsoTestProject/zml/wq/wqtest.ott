@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<obstableview xmlns="obstableview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
-
-	<observation linktype="zml" xlink:href="kalypso-ocs:Spree://2004/W_SCHIRG.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;&gt;&lt;/wqFilter&gt;&lt;/filter&gt;">
-		<column id="c1" axis="Wert" />
-		<column id="c2" axis="Q" />
-	</observation>
-
-</obstableview>
