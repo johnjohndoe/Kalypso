@@ -2,6 +2,7 @@ package org.kalypso.ui.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -20,19 +21,33 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class KalypsoApplication implements IPlatformRunnable
 {
+  private Logger m_logger = Logger.getLogger( KalypsoApplication.class.getName() );
+  
   /**
    * @see org.eclipse.core.runtime.IPlatformRunnable#run(java.lang.Object)
    */
   public Object run( final Object args ) throws Exception
   {
-    final String[] rights = chooseRight( KalypsoGisPlugin.getDefault()
-        .getUserRights() /* , username */);
+    final String[] userRights = KalypsoGisPlugin.getDefault()
+        .getUserRights();
+
+    final StringBuffer userMsg = new StringBuffer( "Rights got from Server:" );
+    if( userRights != null )
+    {
+      for( int i = 0; i < userRights.length; i++ )
+        userMsg.append( "\n'" + userRights[i] + "'" );
+    }
+    m_logger.info( userMsg.toString() );
+
+    final String[] rights = chooseRight( userRights );
 
     if( rights == null )
       return null;
 
+    final StringBuffer chooseMsg = new StringBuffer( "Choosen rights:" );
     for( int i = 0; i < rights.length; i++ )
-      System.out.println( "Rights dump: '" + rights[i] + "'" );
+      chooseMsg.append( "\n'" + rights[i] + "'" );
+    m_logger.info( chooseMsg.toString() );
 
     return startWorkbench( new KalypsoWorkbenchAdvisor( rights ) );
   }

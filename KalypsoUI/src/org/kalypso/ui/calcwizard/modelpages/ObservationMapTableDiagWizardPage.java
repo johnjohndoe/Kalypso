@@ -119,7 +119,7 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 //    panel.setLayout( new GridLayout( ) );
 //    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
-    final Control diagramControl = initDiagramTable( parent );
+    final Control diagramControl = initZmlTable( parent );
     diagramControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
 //    final Button btnSave = new Button( panel, SWT.PUSH );
@@ -149,10 +149,10 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow()
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
    */
-  protected TSLinkWithName[] getObservationsToShow( )
+  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( false );
+    return getObservationsFromMap( false, onlySelected );
   }
 }

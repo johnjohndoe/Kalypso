@@ -251,7 +251,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     {
       public void checkStateChanged( CheckStateChangedEvent event )
       {
-        refreshTimeseries();
+        refreshDiagram();
       }
     } );
 
@@ -351,7 +351,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       return;
     }
 
-    final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, nameProperty, dummyDoc, metadocService.getDoc() );
+    final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard( features, selectedFeatures, nameProperty, dummyDoc, metadocService.getDoc() );
     final WizardDialog dialog = new WizardDialog( getContainer().getShell(), wizard );
     dialog.open();
 
@@ -613,11 +613,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   /**
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere
    * Rechenfälle ausführen
+   * 
    */
-  public void refreshTimeseries()
+  public void refreshDiagram()
   {
     // erstmal leer, damit das Diagramm gelöscht wird
-    refreshObservationsForContext( new TSLinkWithName[] {}, getContext() );
+    refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
 
     final Object[] checkedCalcCases = getCheckedCalcCases();
     if( checkedCalcCases == null || checkedCalcCases.length == 0 )
@@ -627,7 +628,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     // ändern wird
     // es werden einfach die links vom aktuellen Modell gegen alle
     // selektierten Rechenfälle aufgelöst
-    final TSLinkWithName[] obs = getObservationsToShow();
+    final TSLinkWithName[] obs = getObservationsToShow( true );
 
     for( int i = 0; i < checkedCalcCases.length; i++ )
     {
@@ -635,7 +636,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       {
         final IFolder calcCase = (IFolder)checkedCalcCases[i];
         final URL context = ResourceUtilities.createURL( calcCase );
-        refreshObservationsForContext( obs, context );
+        refreshDiagramForContext( obs, context );
       }
       catch( final MalformedURLException e )
       {
@@ -660,11 +661,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow()
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
    */
-  protected TSLinkWithName[] getObservationsToShow()
+  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( false );
+    return getObservationsFromMap( false, onlySelected );
   }
 
   public void setCalcCaseFolder( final Collection folders )

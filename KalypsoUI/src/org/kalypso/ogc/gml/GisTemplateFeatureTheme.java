@@ -14,6 +14,7 @@ import org.deegree.model.feature.FeatureList;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
+import org.deegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -243,6 +244,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           final FeatureList featureList = m_theme.getFeatureList();
           if( featureList != null && featureList.size() > 0 )
           {
+            featureList.accept( new UnselectFeatureVisitor( m_selectionID ) );
+            
             ((Feature)featureList.get( 0 )).select( m_selectionID );
           }
         }

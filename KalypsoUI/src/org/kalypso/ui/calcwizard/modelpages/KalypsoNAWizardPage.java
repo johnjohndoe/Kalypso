@@ -145,10 +145,10 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   }
 
   /**
-   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow()
+   * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#getObservationsToShow(boolean)
    */
-  protected TSLinkWithName[] getObservationsToShow()
+  protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
-    return getObservationsFromMap( true );
+    return getObservationsFromMap( true, onlySelected );
   }
 }

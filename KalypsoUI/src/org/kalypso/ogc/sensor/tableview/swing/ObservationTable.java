@@ -9,6 +9,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.java.swing.table.SelectAllCellEditor;
@@ -90,7 +92,13 @@ public class ObservationTable extends JTable implements ITemplateEventListener
     }
     catch( Throwable e )
     {
-      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e.toString() );
+      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
+      final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
+      if( shell != null )
+        MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
+      else
+        System.out.println( "Aktualisierungsfehler"+ e.toString() );
+      // TODO: sometimes there is no shell!! (Wizard!) -> maybe use Swing MessageBox in this context?
     }
   }
   

@@ -188,6 +188,6 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
    */
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
-    // TODO Auto-generated method stub
+    //
   }
 }

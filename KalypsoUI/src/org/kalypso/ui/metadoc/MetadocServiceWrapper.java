@@ -38,13 +38,13 @@ public class MetadocServiceWrapper
     {
       e.printStackTrace();
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Rechendienstes", e ) );
+          "Fehler beim Aufruf des Berichtsablage-Dienstes", e ) );
     }
     catch( final ServiceException e )
     {
       e.printStackTrace();
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Rechendienst konnte nicht initialisiert werden", e ) );
+          "Berichtsablage-Dienst konnte nicht initialisiert werden", e ) );
     }
   }
   

@@ -432,7 +432,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public void resourceChanged( final IResourceChangeEvent event )
   {
     final IResourceDelta delta = event.getDelta();
-    final IResourceDelta metadataDelta = delta.findMember( getMetadataFile().getFullPath() );
+    final IFile metadataFile = getMetadataFile();
+    if( delta == null || metadataFile == null )
+      return;
+    
+    final IResourceDelta metadataDelta = delta.findMember( metadataFile.getFullPath() );
     if( metadataDelta == null )
       return;
 

@@ -342,8 +342,6 @@ public class CalcWizard implements IWizard, IProjectProvider
           else
             monitor.worked( 1000 );
 
-          // TODO: nur einmal machen?
-          // sonst mit dem aktuellen Rechenfall resetten
           addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
 
           resetResultPage( m_addCalcCasePage.getCalcCases() );
@@ -407,7 +405,10 @@ public class CalcWizard implements IWizard, IProjectProvider
 
     final IWizardPage wizardPage = (IWizardPage)m_pages.get( index + 1 );
     if( wizardPage instanceof AbstractCalcWizardPage )
-      ((AbstractCalcWizardPage)wizardPage).refreshTimeseries();
+    {
+      ((AbstractCalcWizardPage)wizardPage).refreshDiagram();
+      ((AbstractCalcWizardPage)wizardPage).refreshZMLTable();
+    }
     
     return wizardPage;
   }

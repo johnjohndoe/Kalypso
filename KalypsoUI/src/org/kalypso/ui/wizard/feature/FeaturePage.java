@@ -66,7 +66,6 @@ public class FeaturePage extends WizardPage
    */
   public boolean canFlipToNextPage()
   {
-    // TODO: wenn feature-edit valid ist
     if( m_overrideCanFlipToNextPage )
       return isPageComplete();
 

@@ -438,7 +438,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       return null;
     
     double ratio = getRatio();
-    // TODO besser loesen
+    // todo besser loesen
     if(Double.isNaN(ratio))
       return env; 
       
