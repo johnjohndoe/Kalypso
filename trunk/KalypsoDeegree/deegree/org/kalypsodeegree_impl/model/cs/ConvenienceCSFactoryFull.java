@@ -494,24 +494,12 @@ public class ConvenienceCSFactoryFull
 
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String[] getKnownCS()
   {
     String[] array = new String[systems.size()];
     return (String[])systems.keySet().toArray( array );
   }
 
-  /**
-   * 
-   * 
-   * @param name
-   * 
-   * @return
-   */
   public CoordinateSystem getCSByName( String name )
   {
     return (CoordinateSystem)systems.get( name );

@@ -36,59 +36,68 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.table.wizard;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.map.wizard;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.IOUtils;
 import org.bce.eclipse.jface.wizard.SaveFileWizardPage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.internal.UIPlugin;
-import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.metadoc.table.ExportTableOptionsPage;
-import org.kalypso.util.io.CSV;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author belger
  */
-public class ExportTableWizard extends Wizard
+public class ExportMapWizard extends Wizard
 {
-  private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage(
-      "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT );
+  private final ExportMapOptionsPage m_optionPage;
+
   private final SaveFileWizardPage m_filePage;
 
-  private final LayerTableViewer m_layerTable;
-
-  public ExportTableWizard( final LayerTableViewer layerTable )
+  public ExportMapWizard( final GisMapEditor editor )
   {
+    final String[] writerFormatNames = ImageIO.getWriterFormatNames();
     final Map formats = new HashMap();
-    formats.put( "Comma Separated Values (CSV)", "csv" );
-    
-    m_filePage = new SaveFileWizardPage(
-        "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT, "Export Ziel", formats );
-    
+    for( int i = 0; i < writerFormatNames.length; i++ )
+    {
+      final String string = writerFormatNames[i];
+      formats.put( string, string );
+    }
+
+    m_filePage = new SaveFileWizardPage( "fileMapExport", "Karte exportieren",
+        ImageProvider.IMAGE_ICON_GMT, "", formats );
+
+    final MapPanel mapPanel = editor.getMapPanel();
+    final int width = mapPanel.getWidth();
+    final int height = mapPanel.getHeight();
+    m_optionPage = new ExportMapOptionsPage( mapPanel, "optionsMapExport", "Karte exportieren",
+        ImageProvider.IMAGE_ICON_GTT, width, height );
+
     final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
     if( section == null )
       section = workbenchSettings.addNewSection( "ExportTableWizard" );//$NON-NLS-1$
     setDialogSettings( section );
-    
-    setWindowTitle( "Export" );
 
-    m_layerTable = layerTable;
+    setWindowTitle( "Export" );
   }
 
   /**
@@ -97,35 +106,46 @@ public class ExportTableWizard extends Wizard
   public void addPages()
   {
     super.addPages();
-    
+
     addPage( m_filePage );
     addPage( m_optionPage );
   }
 
   public boolean performFinish()
   {
-    final SaveFileWizardPage filePage = m_filePage;
-    final ExportTableOptionsPage optionPage = m_optionPage;
-    
-    final LayerTableViewer layerTable = m_layerTable;
+    final String filepath = m_filePage.getDestinationValue();
+    final File file = new File( filepath );
+
+    final ExportMapOptionsPage optionPage = m_optionPage;
+
+    optionPage.setDestinationFormat( m_filePage.getDestinationFormat().toString() );
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
+        FileOutputStream os = null;
         try
         {
-          final File destinationFile = new File( filePage.getDestinationValue() );
-          final boolean onlySelected = optionPage.getOnlySelected();
+          os = new FileOutputStream( file );
 
-          final String[][] csv = layerTable.exportTable( onlySelected );
-          final PrintWriter pw = new PrintWriter( new FileWriter( destinationFile ) );
-          CSV.writeCSV(csv, pw);
-          pw.close();
+          optionPage.exportDocument( os );
+          if( optionPage.isResult() )
+            MessageDialog
+                .openInformation( getContainer().getShell(), "Export",
+                    "Export erfolgreich abgeschlossen. Karte wurde in Datei " + filepath
+                        + " abgelegt." );
+          else
+            MessageDialog.openError( getContainer().getShell(), "Export",
+                "Fehler beim Export der Karte. Bild wurde nicht exportiert." );
         }
         catch( final IOException e )
         {
           throw new InvocationTargetException( e, "Fehler beim Export\n" + e.getLocalizedMessage() );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( os );
         }
       }
     };
@@ -133,7 +153,7 @@ public class ExportTableWizard extends Wizard
     try
     {
       getContainer().run( false, false, runnable );
-      
+
       m_filePage.saveWidgetValues();
       m_optionPage.saveWidgetValues();
     }

@@ -6,6 +6,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
+- PoolView (in neuem Projekt KalypsoDebug), welche den Zustand des Pools anzeigt
+- Exporte (Datei und Bericht) für Karte
 - FeatureTable: unterstützt jetzt editieren durch Dialog-Popups -> innere Features werden über einen Feature-Dialog editiert
 - FeatureDialog (z.B. bei Bearbeiten im Baum): unterstützt jetzt auch 'innere' Features. Standarmässig werden
 diese als Tabellen bzw. innere Gruppen dargestellt. Über die Vorlage wäre auch ein editieren innerer Featueres

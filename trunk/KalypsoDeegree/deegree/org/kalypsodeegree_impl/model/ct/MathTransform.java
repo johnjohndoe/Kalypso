@@ -297,6 +297,8 @@ public interface MathTransform
 
 final class MathTransformExport extends RemoteObject implements CT_MathTransform
 {
+  private static final long serialVersionUID = 3689629194468602931L;
+
   /**
    * The originating adapter.
    */
@@ -330,7 +332,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Gets flags classifying domain points within a convex hull.
    */
-  public CT_DomainFlags getDomainFlags( final double[] ord ) throws RemoteException
+  public CT_DomainFlags getDomainFlags( final double[] ord )
   //  {return adapters.export(MathTransform.this.getDomainFlags(new
   // ConvexHull(ord)));}
   {
@@ -340,7 +342,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Gets transformed convex hull.
    */
-  public double[] getCodomainConvexHull( final double[] ord ) throws RemoteException
+  public double[] getCodomainConvexHull( final double[] ord )
   {
     throw new UnsupportedOperationException( "Convex hull not yet implemented" );
   }
@@ -348,7 +350,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Gets a Well-Known text representation of this object.
    */
-  public String getWKT() throws RemoteException
+  public String getWKT()
   {
     throw new UnsupportedOperationException( "WKT parsing not yet implemented" );
   }
@@ -356,7 +358,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Gets an XML representation of this object.
    */
-  public String getXML() throws RemoteException
+  public String getXML()
   {
     throw new UnsupportedOperationException( "XML parsing not yet implemented" );
   }
@@ -364,7 +366,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Gets the dimension of input points.
    */
-  public int getDimSource() throws RemoteException
+  public int getDimSource()
   {
     return transform.getDimSource();
   }
@@ -372,7 +374,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Gets the dimension of output points.
    */
-  public int getDimTarget() throws RemoteException
+  public int getDimTarget()
   {
     return transform.getDimTarget();
   }
@@ -380,7 +382,7 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   /**
    * Tests whether this transform does not move any points.
    */
-  public boolean isIdentity() throws RemoteException
+  public boolean isIdentity()
   {
     return transform.isIdentity();
   }

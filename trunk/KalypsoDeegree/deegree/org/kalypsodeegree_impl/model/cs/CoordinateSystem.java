@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.units.Unit;
@@ -304,6 +303,8 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
    */
   class Export extends Info.Export implements CS_CoordinateSystem, Serializable
   {
+    private static final long serialVersionUID = 3834591023795352117L;
+
     /**
      * Construct a remote object.
      */
@@ -315,7 +316,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     /**
      * Dimension of the coordinate system.
      */
-    public int getDimension() throws RemoteException
+    public int getDimension()
     {
       return CoordinateSystem.this.getDimension();
     }
@@ -323,7 +324,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     /**
      * Gets axis details for dimension within coordinate system.
      */
-    public CS_AxisInfo getAxis( final int dimension ) throws RemoteException
+    public CS_AxisInfo getAxis( final int dimension ) 
     {
       return adapters.export( CoordinateSystem.this.getAxis( dimension ) );
     }
@@ -331,7 +332,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     /**
      * Gets units for dimension within coordinate system.
      */
-    public CS_Unit getUnits( final int dimension ) throws RemoteException
+    public CS_Unit getUnits( final int dimension )
     {
       return adapters.export( CoordinateSystem.this.getUnits( dimension ) );
     }
@@ -339,7 +340,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     /**
      * Gets default envelope of coordinate system.
      */
-    public PT_Envelope getDefaultEnvelope() throws RemoteException
+    public PT_Envelope getDefaultEnvelope()
     {
       return adapters.PT.export( CoordinateSystem.this.getDefaultEnvelope() );
     }

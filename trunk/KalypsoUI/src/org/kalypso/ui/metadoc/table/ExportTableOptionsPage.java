@@ -40,11 +40,6 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.table;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -93,40 +88,12 @@ public class ExportTableOptionsPage extends WizardPage
     restoreWidgetValues();
   }
 
-  /**
-   * Returns the name of a container with a location that encompasses
-   * targetDirectory. Returns null if there is no conflict.
-   * 
-   * @param targetDirectory
-   *          the path of the directory to check.
-   * @return the conflicting container name or <code>null</code>
-   */
-  protected boolean isContainerConflicting( String targetDirectory )
-  {
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IPath testPath = new Path( targetDirectory );
-
-    if( root.getLocation().isPrefixOf( testPath ) )
-      return true;
-
-    IProject[] projects = root.getProjects();
-
-    for( int i = 0; i < projects.length; i++ )
-    {
-      if( projects[i].getLocation().isPrefixOf( testPath ) )
-        return true;
-    }
-
-    return false;
-  }
-
   private void createExportOptionsGroup( final Composite parent )
   {
     final Group optionsGroup = new Group( parent, SWT.NONE );
     final GridLayout layout = new GridLayout();
     optionsGroup.setLayout( layout );
-    optionsGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL
-        | GridData.GRAB_HORIZONTAL ) );
+    optionsGroup.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     optionsGroup.setText( "Export Optionen" );
     optionsGroup.setFont( parent.getFont() );
 

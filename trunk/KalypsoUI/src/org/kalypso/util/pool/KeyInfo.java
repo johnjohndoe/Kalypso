@@ -56,7 +56,7 @@ import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ui.KalypsoGisPlugin;
 
-final class KeyInfo extends Job implements ILoaderListener
+public final class KeyInfo extends Job implements ILoaderListener
 {
   protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
 
@@ -116,11 +116,6 @@ final class KeyInfo extends Job implements ILoaderListener
   public boolean removeListener( final IPoolListener l )
   {
     return m_listeners.remove( l );
-  }
-
-  public Object getObject()
-  {
-    return m_object;
   }
 
   /**
@@ -209,5 +204,20 @@ final class KeyInfo extends Job implements ILoaderListener
     b.append("  key: "+m_key+"\n");
     b.append("  number of listeners: "+m_listeners.size()+"\n");
     return b.toString();
+  }
+  
+  public IPoolableObjectType getKey()
+  {
+    return m_key;
+  }
+
+  public int getListeners()
+  {
+    return m_listeners.size();
+  }
+  
+  public Object getObject()
+  {
+    return m_object;
   }
 }

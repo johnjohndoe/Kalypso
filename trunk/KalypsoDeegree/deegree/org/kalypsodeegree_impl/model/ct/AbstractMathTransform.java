@@ -95,12 +95,6 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 public abstract class AbstractMathTransform implements MathTransform
 {
   /**
-   * Construct a math transform.
-   */
-  public AbstractMathTransform()
-  {}
-
-  /**
    * Returns a human readable name, if available. If no name is available in the
    * specified locale, then this method returns a name in an arbitrary locale.
    * If no name is available in any locale, then this method returns
@@ -114,6 +108,8 @@ public abstract class AbstractMathTransform implements MathTransform
    */
   protected String getName( final Locale locale )
   {
+    locale.getClass();
+    
     return null;
   }
 
@@ -151,8 +147,8 @@ public abstract class AbstractMathTransform implements MathTransform
       ptDst.setLocation( ord[0], ord[1] );
       return ptDst;
     }
-    else
-      return new Point2D.Double( ord[0], ord[1] );
+
+    return new Point2D.Double( ord[0], ord[1] );
   }
 
   /**
@@ -224,7 +220,7 @@ public abstract class AbstractMathTransform implements MathTransform
    * Transforme une forme géométrique. Cette méthode copie toujours les
    * coordonnées transformées dans un nouvel objet. La plupart du temps, elle
    * produira un objet {@link GeneralPath}. Elle peut aussi retourner des
-   * objets {@link Line2D}ou {@link QuadCurve2D}si une telle simplification
+   * objets {@link java.awt.geom.Line2D}ou {@link java.awt.geom.QuadCurve2D} si une telle simplification
    * est possible.
    * 
    * @param shape
@@ -559,12 +555,6 @@ public abstract class AbstractMathTransform implements MathTransform
   protected abstract class Inverse extends AbstractMathTransform
   {
     /**
-     * Construct an inverse math transform.
-     */
-    public Inverse()
-    {}
-
-    /**
      * Gets the dimension of input points. The default implementation returns
      * the dimension of output points of the enclosing math transform.
      */
@@ -645,8 +635,8 @@ public abstract class AbstractMathTransform implements MathTransform
         final Inverse that = (Inverse)object;
         return Utilities.equals( this.inverse(), that.inverse() );
       }
-      else
-        return false;
+
+      return false;
     }
 
     /**

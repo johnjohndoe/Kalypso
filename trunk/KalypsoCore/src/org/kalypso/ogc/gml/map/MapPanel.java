@@ -36,59 +36,65 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypsodeegree.graphics.RenderException;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
+import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
  * @author vdoemming
- *  
+ * 
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener
 {
+  private static final long serialVersionUID = 1L;
+
   public final static String WIDGET_ZOOM_IN = "ZOOM_IN";
+
   public final static String WIDGET_ZOOM_IN_RECT = "ZOOM_IN_RECT";
+
   public final static String WIDGET_PAN = "PAN";
+
   public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE";
+
   public final static String WIDGET_SELECT = "SELECT";
+
   public final static String WIDGET_UNSELECT = "UNSELECT";
+
   public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
+
   public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
-  
+
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
 
   /** WIDGET_... -> widget */
   private Map m_widgets = new HashMap();
-  
+
   /** widget -> WIDGET_... */
   private Map m_widgetIDs = new HashMap();
 
@@ -104,7 +110,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private boolean validMap = false;
 
-  private IMapModell myModell = null;
+  private IMapModell m_model = null;
 
   private final WidgetManager myWidgetManager;
 
@@ -113,18 +119,20 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   private GM_Envelope m_boundingBox = new GM_Envelope_Impl();
 
   private final int m_selectionID;
+
   private GM_Envelope m_wishBBox;
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final int selectionID )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs,
+      final int selectionID )
   {
     m_selectionID = selectionID;
-    
+
     // set empty Modell:
     setMapModell( new MapModell( crs ) );
     myWidgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( myWidgetManager );
     addMouseMotionListener( myWidgetManager );
-    addComponentListener(this);
+    addComponentListener( this );
     setVisible( true );
   }
 
@@ -132,15 +140,15 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     removeMouseListener( myWidgetManager );
     removeMouseMotionListener( myWidgetManager );
-    myModell.removeModellListener( this );
+    m_model.removeModellListener( this );
   }
-  
+
   public void setWidget( final String id, final IWidget widget )
   {
     m_widgets.put( id, widget );
     m_widgetIDs.put( widget, id );
   }
-  
+
   public void setOffset( int dx, int dy ) // used by pan method
   {
     xOffset = dx;
@@ -167,10 +175,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     paintWidget( g );
   }
 
-  private void paintMap( Graphics g )
+  private void paintMap( final Graphics g )
   {
-    //    TODO paintWMS(g); //
-    if( myModell == null || myModell.getThemeSize() == 0 ) // no maps ...
+    // TODO paintWMS(g); //
+
+    // to avoid threading issues, get reference once
+    final IMapModell model = m_model;
+
+    if( model == null || model.getThemeSize() == 0 ) // no maps ...
     {
       g.setColor( Color.white );
       g.fillRect( 0, 0, getWidth(), getHeight() );
@@ -186,50 +198,20 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     { // update dimension
       m_height = getHeight();
       m_width = getWidth();
-      //setBoundingBox( getBoundingBox() );
-      //setValidAll( false );
+      // setBoundingBox( getBoundingBox() );
+      // setValidAll( false );
     }
 
     if( !hasValidMap() || mapImage == null )
     {
-      mapImage = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB );
-
-      final Graphics gr = mapImage.getGraphics();
-      gr.setColor( Color.white );
-      gr.fillRect( 0, 0, getWidth(), getHeight() );
-      setValidMap( true );
-      gr.setColor( Color.black );
-      gr.setClip( 0, 0, getWidth(), getHeight() );
-
-      try
+      final Rectangle clipBounds = g.getClipBounds();
+      if( clipBounds != null )
       {
-        if( g.getClipBounds() == null )
-        {
-          throw new RenderException( "no clip bounds defined for graphic context" );
-        }
-
-        int x = g.getClipBounds().x;
-        int y = g.getClipBounds().y;
-        int w = g.getClipBounds().width;
-        int h = g.getClipBounds().height;
-        m_projection.setDestRect( x - 2, y - 2, w + x, h + y );
-
-        final GeoTransform p = getProjection();
-        final GM_Envelope bbox = getBoundingBox();
-
-        final double scale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
-
-        myModell.paintSelected( gr, p, bbox, scale, 0 );
-        gr.setXORMode( Color.red );
-        myModell.paintSelected( gr, p, bbox, scale, m_selectionID );
-        gr.setPaintMode();
+        mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(), getHeight(), model, m_selectionID );
+        setValidMap( mapImage != null );
       }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-      gr.dispose();
     }
+
     // paint selection ?
     /*
      * if( !hasValidSelection() ) { selectionImage = new BufferedImage(
@@ -252,7 +234,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final int bottom = Math.min( getHeight(), yOffset + getHeight() );
 
       g.setColor( getBackground() );
-      //g.setColor( Color.black );
+      // g.setColor( Color.black );
 
       g.fillRect( 0, 0, left, getHeight() ); // left
       g.fillRect( left, 0, right - left, top ); // top
@@ -263,11 +245,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     // draw map:
     g.drawImage( mapImage, xOffset, yOffset, null );
     // draw selection:
-    //g.setXORMode( Color.red );
-    //    g.drawImage( selectionImage, xOffset, yOffset, null );
+    // g.setXORMode( Color.red );
+    // g.drawImage( selectionImage, xOffset, yOffset, null );
     // draw highlights:
-    //g.setXORMode( Color.green );
-    //    g.drawImage( highlightImage, xOffset, yOffset, null );
+    // g.setXORMode( Color.green );
+    // g.drawImage( highlightImage, xOffset, yOffset, null );
     g.setPaintMode();
   }
 
@@ -278,16 +260,16 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private void paintWidget( Graphics g )
   {
-    //    Image widgetImage = new BufferedImage( getWidth(), getHeight(),
+    // Image widgetImage = new BufferedImage( getWidth(), getHeight(),
     // BufferedImage.TYPE_INT_ARGB );
-    //    Graphics gr = widgetImage.getGraphics();
+    // Graphics gr = widgetImage.getGraphics();
     g.setColor( Color.red );
     g.setClip( 0, 0, getWidth(), getHeight() );
 
     myWidgetManager.paintWidget( g );
 
-    //    g.drawImage( widgetImage, 0, 0, null );
-    //    gr.dispose();
+    // g.drawImage( widgetImage, 0, 0, null );
+    // gr.dispose();
   }
 
   public void setValidMap( boolean status )
@@ -300,31 +282,31 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return validMap;
   }
 
-//  private void setValidSelection( boolean status )
-//  {
-//    validSelection = status;
-//  }
+  // private void setValidSelection( boolean status )
+  // {
+  // validSelection = status;
+  // }
 
-//  private boolean hasValidSelection()
-//  {
-//    return validSelection;
-//  }
+  // private boolean hasValidSelection()
+  // {
+  // return validSelection;
+  // }
 
-//  private void setValidHighlight( boolean status )
-//  {
-//    validHighlight = status;
-//  }
+  // private void setValidHighlight( boolean status )
+  // {
+  // validHighlight = status;
+  // }
 
-//  private boolean hasValidHighlight()
-//  {
-//    return validHighlight;
-//  }
+  // private boolean hasValidHighlight()
+  // {
+  // return validHighlight;
+  // }
 
   private void setValidAll( boolean status )
   {
     setValidMap( status );
-//    setValidSelection( status );
-//    setValidHighlight( status );
+    // setValidSelection( status );
+    // setValidHighlight( status );
   }
 
   /**
@@ -332,7 +314,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public IMapModell getMapModell()
   {
-    return myModell;
+    return m_model;
   }
 
   /**
@@ -340,24 +322,24 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void setMapModell( final IMapModell modell )
   {
-    if( myModell != null )
-      myModell.removeModellListener( this );
+    if( m_model != null )
+      m_model.removeModellListener( this );
 
-    myModell = modell;
+    m_model = modell;
 
-    if( myModell != null )
-      myModell.addModellListener( this );
+    if( m_model != null )
+      m_model.addModellListener( this );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
-  {  
+  {
     setValidAll( false );
     clearOffset();
   }
-  
+
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
   {
     double ratio = m_height / m_width;
@@ -376,82 +358,19 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
-  
+
   /**
-   * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0
-   * specification
+   * calculates the current map scale (denominator) as defined in the OGC SLD
+   * 1.0.0 specification
    * 
    * @return scale of the map
-   */  
+   */
   public double getCurrentScale()
   {
-    return calcScale(getWidth(), getHeight());
+    return MapModellHelper.calcScale( m_model, getBoundingBox(), getWidth(), getHeight() );
   }
 
-  /**
-   * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0
-   * specification
-   * 
-   * @return scale of the map
-   */
-  private double calcScale( final int mapWidth, final int mapHeight )
-  {
-    try
-    {
-      final CS_CoordinateSystem epsg4326crs = myModell.getCoordinatesSystem();
-      
-      GM_Envelope bbox = getBoundingBox();
-      if( bbox == null )
-        return 0.0;
-      
-      if( !myModell.getCoordinatesSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
-      {
-        // transform the bounding box of the request to EPSG:4326
-        final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
-        bbox = transformer.transformEnvelope( bbox, epsg4326crs );
-      }
-      
-      if( bbox == null )
-        return 0.0;
 
-      final double dx = bbox.getWidth() / mapWidth;
-      final double dy = bbox.getHeight() / mapHeight;
-
-      // create a box on the central map pixel to determine its size in meters
-      final GM_Position min = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
-          * ( mapWidth / 2d - 1 ), bbox.getMin().getY() + dy * ( mapHeight / 2d - 1 ) );
-      final GM_Position max = GeometryFactory.createGM_Position( bbox.getMin().getX() + dx
-          * ( mapWidth / 2d ), bbox.getMin().getY() + dy * ( mapHeight / 2d ) );
-      final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
-
-      // default pixel size defined in SLD specs is 28mm
-      final double scale = distance / 0.00028;      
-      return scale;
-    }
-    catch( final Exception e )
-    {
-      Debug.debugException( e, "Exception occured when calculating scale!" );
-    }
-
-    return 0.0;
-  }
-
-  /**
-   * calculates the distance in meters between two points in EPSG:4326
-   * coodinates .
-   */
-  private double calcDistance( double lon1, double lat1, double lon2, double lat2 )
-  {
-    double r = 6378.137;
-    double rad = Math.PI / 180d;
-    double cose = 0;
-
-    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 )
-        * Math.cos( rad * lon2 ) * Math.cos( rad * ( lat1 - lat2 ) );
-    double dist = r * Math.acos( cose );
-
-    return dist * 1000;
-  }
 
   public GeoTransform getProjection()
   {
@@ -475,15 +394,15 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   private GM_Envelope adjustBoundingBox( GM_Envelope env )
   {
     if( env == null )
-      env = myModell.getFullExtentBoundingBox();
+      env = m_model.getFullExtentBoundingBox();
     if( env == null )
       return null;
-    
+
     double ratio = getRatio();
     // todo besser loesen
-    if(Double.isNaN(ratio))
-      return env; 
-      
+    if( Double.isNaN( ratio ) )
+      return env;
+
     double minX = env.getMin().getX();
     double minY = env.getMin().getY();
 
@@ -572,7 +491,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     if( m_wishBBox != null )
       setBoundingBox( m_wishBBox );
     else
-    setBoundingBox(getBoundingBox());
+      setBoundingBox( getBoundingBox() );
   }
 
   /**
@@ -583,6 +502,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     if( m_wishBBox != null )
       setBoundingBox( m_wishBBox );
     else
-    setBoundingBox(getBoundingBox());
+      setBoundingBox( getBoundingBox() );
   }
 }
