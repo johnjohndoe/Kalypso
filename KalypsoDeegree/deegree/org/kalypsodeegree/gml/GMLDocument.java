@@ -47,7 +47,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * 
@@ -117,6 +116,9 @@ public interface GMLDocument extends Document
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.7  2004/11/23 12:57:44  belger
+ * *** empty log message ***
+ *
  * Revision 1.6  2004/11/22 01:29:50  doemming
  * *** empty log message ***
  *
