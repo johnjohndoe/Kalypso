@@ -85,4 +85,6 @@ public interface ColorMapEntry {
 	void setLabel(String label);
   
   net.opengis.sld.ColorMapEntry exportAsXML() throws Exception;
+  
+  Object clone();
 }

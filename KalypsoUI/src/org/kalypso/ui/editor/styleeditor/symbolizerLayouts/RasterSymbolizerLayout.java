@@ -40,9 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,9 +47,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable;
 import org.kalypso.ui.editor.styleeditor.panels.ModeSelectionComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
@@ -74,17 +75,6 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
-
-    // ***** Label Group
-    /*
-     * Group labelGroup = new Group( composite, SWT.NULL ); GridData
-     * labelGroupData = new GridData(); labelGroupData.widthHint = 210;
-     * labelGroupData.heightHint = 246; labelGroup.setLayoutData( labelGroupData );
-     * labelGroup.setLayout( compositeLayout ); labelGroup.layout();
-     * 
-     * Label label = new Label( labelGroup, SWT.NULL ); label.setText(
-     * MessageBundle.STYLE_EDITOR_ERROR_NO_IMPLEMENTATION );
-     */
 
     // ***** ColorMap Group
     Group colorMapGroup = new Group( composite, SWT.NULL );
@@ -111,5 +101,7 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // ***** Table
+    Composite tableComposite = new Composite( colorMapGroup, SWT.NULL );
+    new ColorMapEntryTable( tableComposite, userStyle, rasterSymbolizer );
   }
 }

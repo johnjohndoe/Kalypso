@@ -21,6 +21,10 @@ public class RectifiedGridCoverage {
 		this.gridDomain = gridDomain;
 		this.rangeSet = rangeSet;
 	}
+  
+  public static String getName(){
+    return "RectifiedGridCoverage";
+  }
 
 	/**
 	 * @return Returns the gridDomain.
