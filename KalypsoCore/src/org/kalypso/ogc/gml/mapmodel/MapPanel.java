@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 import org.deegree.graphics.RenderException;
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
@@ -17,7 +18,6 @@ import org.deegree_impl.model.ct.GeoTransformer;
 import org.deegree_impl.model.geometry.GM_Envelope_Impl;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.deegree_impl.tools.Debug;
-import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.util.command.ICommandTarget;
@@ -289,7 +289,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {  

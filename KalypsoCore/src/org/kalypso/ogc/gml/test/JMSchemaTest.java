@@ -6,11 +6,14 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureType;
@@ -50,8 +53,8 @@ public class JMSchemaTest extends TestCase
 
   public void loadSchemaAndCompareIt( String xsdName, final String compareFile ) throws Exception
   {
-  
-    final GMLSchema jmSchema = new GMLSchema(  getClass().getResource( xsdName ) ) ;
+
+    final GMLSchema jmSchema = new GMLSchema( getClass().getResource( xsdName ) );
 
     final FeatureType[] ftps = jmSchema.getFeatureTypes();
     final String result = toString( 0, ftps );
@@ -87,9 +90,9 @@ public class JMSchemaTest extends TestCase
   {
     try
     {
-    	loadSchemaAndCompareIt( "spreemodell/modell.xsd", "spreemodell/modell.txt" );
-//      loadSchemaAndCompareIt( "namodellV3.xsd", "namodellV3.txt" );
-//      loadSchemaAndCompareIt( "namodellV2.xsd", "namodellV2.txt" );
+      loadSchemaAndCompareIt( "spreemodell/modell.xsd", "spreemodell/modell.txt" );
+      //      loadSchemaAndCompareIt( "namodellV3.xsd", "namodellV3.txt" );
+      //      loadSchemaAndCompareIt( "namodellV2.xsd", "namodellV2.txt" );
     }
     catch( Exception e )
     {
@@ -100,12 +103,14 @@ public class JMSchemaTest extends TestCase
 
   public void testSpreeModellGML() throws Exception
   {
-  	URL modellURL=getClass().getResource("spreemodell/modell.gml");
-  	URL schemaURL=getClass().getResource("spreemodell/modell.xsd");
-  		//loadAndWriteGML( , "spreemodell/modell.gml" );
- 	Feature fe=GmlSerializer.deserializeFeature(modellURL,schemaURL);
- 	FileWriter writer=new FileWriter("/tmp/modell_out.gml");
- 	GmlSerializer.serializeFeature(writer,fe,null);
+    URL modellURL = getClass().getResource( "spreemodell/modell.gml" );
+    URL schemaURL = getClass().getResource( "spreemodell/modell.xsd" );
+    final Feature fe = GmlSerializer.createGMLWorkspace( modellURL, schemaURL ).getRootFeature();
+    final File file = File.createTempFile( "mode:out", ".gml" );
+    file.deleteOnExit();
+
+    final FileWriter writer = new FileWriter( file );
+    GmlSerializer.serializeFeature( writer, fe, null );
   }
 
   //  
@@ -122,12 +127,15 @@ public class JMSchemaTest extends TestCase
 
   private void loadAndWriteGML( final String xsdFile, final String gmlFile ) throws Exception
   {
-//    InputSource schemaSource = new InputSource( getClass().getResourceAsStream( xsdFile ) );
-//    InputSource gmlSource = new InputSource( getClass().getResourceAsStream( gmlFile ) );
+    //    InputSource schemaSource = new InputSource(
+    // getClass().getResourceAsStream( xsdFile ) );
+    //    InputSource gmlSource = new InputSource( getClass().getResourceAsStream(
+    // gmlFile ) );
     ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     CS_CoordinateSystem crs = Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
 
-    KalypsoFeatureLayer[] layers = GmlSerializer.deserialize(  getClass().getResource( xsdFile ),getClass().getResource( gmlFile ), crs, null );
+    KalypsoFeatureLayer[] layers = GmlSerializer.deserialize( getClass().getResource( xsdFile ),
+        getClass().getResource( gmlFile ), crs, null );
 
     System.out.println( "GML loaded" );
     File outFile = File.createTempFile( "test_parse", "gml" );
@@ -151,63 +159,85 @@ public class JMSchemaTest extends TestCase
 
   private String toString( int indent, FeatureType ft )
   {
-    
-    String result = getIndent( indent ) + "--+"+ft.getNamespace()+":"+ft.getName()+" FeatureType ";
+
+    String result = getIndent( indent ) + "--+" + ft.getNamespace() + ":" + ft.getName()
+        + " FeatureType ";
+    result=result+ annotationToString(indent,ft.getAnnotationMap());
     FeatureType[] childs = ft.getChildren();
 
-    result=result+getIndent( indent +1) + "-+props:"+toString( indent ,ft, ft.getProperties() );
-    
-    if(childs!=null && childs.length > 0 )
-    result = result + toString( indent + 1, childs );
+    result = result + getIndent( indent + 1 ) + "-+props:"
+        + toString( indent, ft, ft.getProperties() );
+
+    if( childs != null && childs.length > 0 )
+      result = result + toString( indent + 1, childs );
 
     return result;
   }
 
-  private String toString( int indent,FeatureType parent, FeatureTypeProperty[] ftps )
+  private String annotationToString( final int indent, final Map annotationMap )
+  {
+    StringBuffer result=new StringBuffer();
+    for( final Iterator iter = annotationMap.values().iterator(); iter.hasNext(); )
+    {
+      final Annotation entry = (Annotation)iter.next();
+      result.append(getIndent(indent)+"lang:  "+entry.getLang());
+      result.append(getIndent(indent)+"label: "+entry.getLabel());
+      result.append(getIndent(indent)+"toolt: "+entry.getTooltip());
+      result.append(getIndent(indent)+"descr: "+entry.getDescription());
+    }                    
+    return result.toString();
+  }
+
+  private String toString( int indent, FeatureType parent, FeatureTypeProperty[] ftps )
   {
     String result = "";
 
     for( int i = 0; i < ftps.length; i++ )
     {
-      result = result + toString( indent + 1, parent,ftps[i] );
+      result = result + toString( indent + 1, parent, ftps[i] );
     }
 
     return result;
   }
 
-  private String toString( int indent,FeatureType parent, FeatureTypeProperty ftp )
+  private String toString( int indent, FeatureType parent, FeatureTypeProperty ftp )
   {
-    int ftpPos=parent.getPropertyPosition(ftp.getNamespace()+":"+ftp.getName());
-    int maxOccurs=parent.getMaxOccurs(ftpPos);
-    int minOccurs=parent.getMinOccurs(ftpPos);
-    String result =  getIndent( indent," +"+ ftp.getNamespace()+":"+ftp.getName(),55) + ftp.getType();
-    //    String result = ( getIndent( indent ) +" +"+ ftp.getNamespace()+":"+ftp.getName() + "                                                                     " )
+    int ftpPos = parent.getPropertyPosition( ftp.getNamespace() + ":" + ftp.getName() );
+    int maxOccurs = parent.getMaxOccurs( ftpPos );
+    int minOccurs = parent.getMinOccurs( ftpPos );
+    String result = getIndent( indent, " +" + ftp.getNamespace() + ":" + ftp.getName(), 55 )
+        + ftp.getType();
+    result=result+ annotationToString(indent,ftp.getAnnotationMap());
+    //    String result = ( getIndent( indent ) +" +"+
+    // ftp.getNamespace()+":"+ftp.getName() + " " )
     //        .substring( 0, indent + 55 )
     //        + ftp.getType();
 
     if( ftp instanceof FeatureAssociationTypeProperty )
     {
-        
-        FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
-        FeatureType linkedFT=fatp.getAssociationFeatureType();
-        result = result+ getIndent( indent,"",55) + " -->"+linkedFT.getNamespace()+":"+linkedFT.getName();
+
+      FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
+      FeatureType linkedFT = fatp.getAssociationFeatureType();
+      result = result + getIndent( indent, "", 55 ) + " -->" + linkedFT.getNamespace() + ":"
+          + linkedFT.getName();
     }
     if( ftp instanceof XLinkFeatureTypeProperty )
       result = result + toString( (XLinkFeatureTypeProperty)ftp );
 
     if( ftp instanceof EnumerationFeatureTypeProperty )
       result = result + toString( (EnumerationFeatureTypeProperty)ftp );
-    String max= maxOccurs==FeatureType.UNBOUND_OCCURENCY ? "unbounded":""+maxOccurs;
-    result = result + " ["+minOccurs+".."+max+"]";
+    String max = maxOccurs == FeatureType.UNBOUND_OCCURENCY ? "unbounded" : "" + maxOccurs;
+    result = result + " [" + minOccurs + ".." + max + "]";
 
     return result;
   }
-  
+
   private String getIndent( int indent, String text, int distance )
   {
-  return ( getIndent( indent ) +text+ "                                                                     " )
+    return ( getIndent( indent ) + text + "                                                                     " )
         .substring( 0, indent + distance );
-}
+  }
+
   private String toString( final XLinkFeatureTypeProperty xlinkftp )
   {
     return " [" + xlinkftp.toString() + "]";

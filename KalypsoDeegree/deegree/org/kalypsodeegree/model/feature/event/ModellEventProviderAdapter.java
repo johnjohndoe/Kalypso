@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.event;
+package org.deegree.model.feature.event;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +12,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
   private final Collection myListeners = new ArrayList();
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventProvider#addModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+   * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
    */
   public void addModellListener( ModellEventListener listener )
   {
@@ -20,7 +20,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+   * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
    */
   public void removeModellListener( ModellEventListener listener )
   {
@@ -28,7 +28,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void fireModellEvent( ModellEvent event )
   {

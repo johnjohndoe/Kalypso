@@ -7,14 +7,14 @@ import java.util.List;
 
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Position;
 import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapPanel;
 import org.kalypso.util.command.ICommand;
@@ -240,6 +240,11 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   protected final void postCommand( final ICommand command, final Runnable runAfterCommand )
   {
     m_commandPoster.postCommand( command, runAfterCommand );
+  }
+  
+  public ICommandTarget getCommandTarget( )
+  {
+    return m_commandPoster;
   }
 
   public void onModellChange( final ModellEvent modellEvent )

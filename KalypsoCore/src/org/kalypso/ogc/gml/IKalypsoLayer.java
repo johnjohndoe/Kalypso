@@ -1,9 +1,9 @@
 package org.kalypso.ogc.gml;
 
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProvider;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

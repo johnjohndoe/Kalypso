@@ -2,6 +2,8 @@
  */
 package org.deegree_impl.gml.schema;
 
+import java.util.Map;
+
 import org.deegree_impl.model.feature.FeatureTypeProperty_Impl;
 
 
@@ -17,9 +19,9 @@ public class CustoumFeatureTypeProperty extends FeatureTypeProperty_Impl
 	/**
 	 * 
 	 */
-	CustoumFeatureTypeProperty(String name, String namespace, String type, boolean nullable) 
+	CustoumFeatureTypeProperty(String name, String namespace, String type, boolean nullable,Map annotation) 
 	{
-		super(name, namespace, type, nullable);
+		super(name, namespace, type, nullable,annotation);
 	}
 
 }

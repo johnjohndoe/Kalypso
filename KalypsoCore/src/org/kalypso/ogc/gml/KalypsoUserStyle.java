@@ -2,11 +2,11 @@ package org.kalypso.ogc.gml;
 
 import org.deegree.graphics.sld.FeatureTypeStyle;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.xml.Marshallable;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProvider;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
 
 /**
  * Wrapped UserStyle to provide fireModellEvent Method

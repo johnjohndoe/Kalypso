@@ -1,7 +1,3 @@
-/**
- * TODO: license definieren
- */
-
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
@@ -14,7 +10,7 @@ import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
-import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.util.command.ICommand;
 
@@ -23,9 +19,6 @@ import org.kalypso.util.command.ICommand;
  */
 public class EditFeatureWidget extends AbstractWidget
 {
-  // todo: replace with customized factory?
-  private final FeatureviewHelper m_featureControlHelper = new FeatureviewHelper();
-
   private Point m_point;
 
   private Shell m_shell;
@@ -55,7 +48,7 @@ public class EditFeatureWidget extends AbstractWidget
         final KalypsoFeatureLayer featureLayer = (KalypsoFeatureLayer)activeLayer;
         featureLayer.getSort().query( position, null );
 
-        // TODO: schlimmer hack!
+        // todo: Sollte so etwas nicht eine Zentrale Stelle machen?
         final GeoTransform transform = getMapPanel().getProjection();
         final double gisRadius = transform.getSourceX( m_point.getX() + 20 ) - position.getX();
 
@@ -72,21 +65,16 @@ public class EditFeatureWidget extends AbstractWidget
 
   private void editFeature( final KalypsoFeatureLayer layer, final Feature feature )
   {
-    // TODO: ok abbrechen
     if( m_shell != null && feature != null )
     {
-      // TODO: uncomment this line
-//      final FeatureviewHelper helper = m_featureControlFactory;
-      // nur zu Debug Zwecken jedesmal eine neue Factory machen
-      final FeatureviewHelper helper = new FeatureviewHelper();
+      final FeatureComposite helper = new FeatureComposite( feature );
       
       final Shell shell = m_shell;
       shell.getDisplay().asyncExec( new Runnable()
       {
         public void run()
         {
-          final FeatureviewDialog dialog = new FeatureviewDialog( shell, layer, feature, 
-              helper );
+          final FeatureviewDialog dialog = new FeatureviewDialog( shell, layer, helper, getCommandTarget() );
           dialog.open();
         }
       } );

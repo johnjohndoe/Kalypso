@@ -11,6 +11,8 @@ import org.deegree.graphics.legend.LegendElement;
 import org.deegree.graphics.legend.LegendElementCollection;
 import org.deegree.graphics.sld.Rule;
 import org.deegree.graphics.sld.UserStyle;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree_impl.graphics.legend.LegendElementCollection_Impl;
 import org.deegree_impl.graphics.legend.LegendFactory;
 import org.deegree_impl.graphics.sld.FeatureTypeStyle_Impl;
@@ -26,8 +28,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
 
 /**
  * @author Administrator

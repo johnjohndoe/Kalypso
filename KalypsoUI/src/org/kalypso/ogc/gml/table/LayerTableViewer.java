@@ -12,6 +12,8 @@ import javax.xml.bind.JAXBException;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -41,8 +43,6 @@ import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
 import org.kalypso.ogc.gml.PoolableKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
 import org.kalypso.ogc.gml.table.celleditors.ICellEditorFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
@@ -466,7 +466,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

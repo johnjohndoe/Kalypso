@@ -15,14 +15,20 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  */
 public class CopyTransformation extends AbstractTransformation
 {
- /**
+  /** Eingabedatei: Absoluter Pfad im Workspace */
+ public final static String PROP_INPUT = "input";
+ 
+  /** Ausgabedatei: Absoluter Pfad im Workspace */
+ public final static String PROP_OUTPUT = "output";
+
+/**
   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, org.eclipse.core.runtime.IProgressMonitor)
   */
   public void transformIntern( final Properties properties, final IProgressMonitor monitor ) throws TransformationException
   {
     monitor.beginTask( "Transform", 2000 );
     
-    final String input = properties.getProperty( "input" );
+    final String input = properties.getProperty( PROP_INPUT );
     final String output = properties.getProperty( "output" );
 
     if( input == null )

@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.outline;
 
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -16,7 +17,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
-import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.command.ICommand;
@@ -112,7 +112,7 @@ public class GisMapOutlineViewer implements ISelectionProvider,
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

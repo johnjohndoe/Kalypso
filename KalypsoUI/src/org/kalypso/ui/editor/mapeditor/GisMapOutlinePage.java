@@ -1,5 +1,6 @@
 package org.kalypso.ui.editor.mapeditor;
 
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -24,7 +25,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
-import org.kalypso.ogc.gml.event.ModellEvent;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -310,7 +310,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( ModellEvent modellEvent )
   {

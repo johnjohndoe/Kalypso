@@ -3,7 +3,7 @@
 <xs:schema targetNamespace="xml.model.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="xml.model.kalypso.org">
 	<xs:complexType name="transformationType">
 		<xs:sequence>
-			<xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="argument" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:attribute name="name" type="xs:string" use="required"/>
 					<xs:attribute name="value" type="xs:string" use="required"/>
@@ -12,10 +12,16 @@
 		</xs:sequence>
 		<xs:attribute name="className" type="xs:string" use="required"/>
 	</xs:complexType>
-	<xs:element name="transformationConfig">
+	<xs:complexType name="transformationList">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="transformation" type="transformationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="calcCaseConfig">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="transformation" type="transformationType" maxOccurs="unbounded"/>
+				<xs:element name="createTransformations" type="transformationList"/>
+				<xs:element name="updateTransformations" type="transformationList"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

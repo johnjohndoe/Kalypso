@@ -13,6 +13,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 public class NewCalculationCaseWizard extends BasicNewResourceWizard
 {
   private NewCalculationCaseCreateFolderPage m_createFolderPage;
+  private SteuerparameterWizardPage m_createControlPage;
 
   
   
@@ -58,7 +59,10 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenfall", getSelection() );
+    m_createControlPage = new SteuerparameterWizardPage( "Steuerparameter", m_createFolderPage );
+    
     addPage( m_createFolderPage );
+    addPage( m_createControlPage );
   }
 
   /**
@@ -72,12 +76,15 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       return false;
     
     // jetzt die Zeitreihen aktualisieren
-    // TODO: 
+    if( !m_createControlPage.saveControl( folder ) )
+      return false;
 
     // im Navigator zeigen
     selectAndReveal( folder );
 
     return true;
   }
+  
+  
   
 }

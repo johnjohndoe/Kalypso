@@ -44,7 +44,9 @@
 package org.deegree_impl.model.feature;
 
 import java.io.Serializable;
+import java.util.Map;
 
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -61,7 +63,8 @@ import org.deegree.model.feature.FeatureTypeProperty;
  */
 public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializable
 {
-
+  private final Map m_annotationMap;
+  
   private final String m_namespace;
   
   private final String name;
@@ -74,8 +77,9 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    * initializes a FeatureTypeProperty with its name its associated type and a
    * boolean variable that says if the propetry maybe <tt>null</tt>
    */
-  protected FeatureTypeProperty_Impl( String name,String namespace, String type, boolean nullable)
+  protected FeatureTypeProperty_Impl( String name,String namespace, String type, boolean nullable,Map annotationMap)
   {
+    m_annotationMap=annotationMap;
     this.name = name;
     m_namespace=namespace;
     this.type = type;
@@ -128,12 +132,31 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   {
     return type.startsWith("org.deegree.model.geometry.") && !type.endsWith("Envelope");
   }
+
+  /**
+   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
+   */
+  public Annotation getAnnotation( String lang )
+  {
+    return (Annotation)m_annotationMap.get(lang);
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureTypeProperty#getAnnotationMap()
+   */
+  public Map getAnnotationMap()
+  {
+    return m_annotationMap;
+  }
  
 }
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.4  2004/10/09 18:41:20  belger
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/10/07 14:09:16  doemming
  * *** empty log message ***
  *

@@ -5,8 +5,8 @@
 package org.kalypso.ogc.gml.command;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.event.ModellEventProvider;
 import org.kalypso.ogc.gml.KalypsoFeatureLayer;
-import org.kalypso.ogc.gml.event.ModellEventProvider;
 import org.kalypso.util.command.ICommand;
 
 /**

@@ -3,7 +3,9 @@ package org.deegree_impl.gml.schema;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree_impl.extension.ITypeHandler;
@@ -25,6 +27,8 @@ public class FeatureTypeBuilder
 {
   private GMLSchema m_schema;
 
+  private final Map m_annotationMap=new HashMap();
+  
   private final List m_enumeration = new ArrayList();
 
   private final List m_featureProtoTypes = new ArrayList();
@@ -43,7 +47,7 @@ public class FeatureTypeBuilder
 
   private boolean m_isFeatureAssociation = false;
 
-private boolean m_isCutoumType = false;
+  private boolean m_isCustomType = false;
 
   public FeatureTypeBuilder( GMLSchema schema, Node node ) throws Exception
   {
@@ -109,9 +113,9 @@ private boolean m_isCutoumType = false;
     if( typeHandler != null )
     {
       m_typeName = typeHandler.getClassName();
-//      if(m_typeName==null)
-//      	System.out.println("debug");
-      m_isCutoumType=true;
+      //      if(m_typeName==null)
+      //      	System.out.println("debug");
+      m_isCustomType = true;
       return;
     }
     // type is XML SCHEMA TYPE // TODO let typeHandler do this
@@ -139,43 +143,45 @@ private boolean m_isCutoumType = false;
     if( ( (Element)cNode ).getLocalName().equals( "complexType" ) )
     {
       String baseType = XMLHelper.getGMLBaseType( schema, cNode );
-      if(baseType!=null)
+      if( baseType != null )
       { // a GMLBaseType
-      	m_typeName=baseType;
+        m_typeName = baseType;
         //        m_typeName = "org.deegree.model.Feature";
         GMLSchemaFactory.map( schema, cNode, this );
         return;
       }
       else
       {
-      	NodeList custoumElement = ((Element)cNode).getElementsByTagNameNS(XMLHelper.XMLSCHEMA_NS,"element");
-///////////     
-      	Node custoumNode=custoumElement.item(0);
-    
-      	SchemaAttribute innerTypeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( custoumNode,
-        "type" ) );
-      	setTypeName(innerTypeAttribute);
-      	return;
-//      	custoumNode.getAttributes();xx
-//      	final String typeName = typeAttribute.getValue();
-//        final String valueNS = typeAttribute.getValueNS();
-//
-//        // is registred type ?
-//        final String typename = valueNS + ":" + typeName;
-//
-//      	final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
-//	        .getTypeHandlerForTypeName( typename );
-//	    if( typeHandler != null )
-//	    {
-//	      m_typeName = typeHandler.getClassName();
-//	      if(m_typeName==null)
-//	      	System.out.println("debug");
-//	      m_isCutoumType=true;
-//	      return;
-//	    }
-//      	custoum
-      	// a custoum base type ?
-      	///////////
+        NodeList custoumElement = ( (Element)cNode ).getElementsByTagNameNS(
+            XMLHelper.XMLSCHEMA_NS, "element" );
+        ///////////
+        Node custoumNode = custoumElement.item( 0 );
+
+        SchemaAttribute innerTypeAttribute = new SchemaAttribute( schema, XMLHelper
+            .getAttributeNode( custoumNode, "type" ) );
+        setTypeName( innerTypeAttribute );
+        return;
+        //      	custoumNode.getAttributes();xx
+        //      	final String typeName = typeAttribute.getValue();
+        //        final String valueNS = typeAttribute.getValueNS();
+        //
+        //        // is registred type ?
+        //        final String typename = valueNS + ":" + typeName;
+        //
+        //      	final ITypeHandler typeHandler =
+        // TypeRegistrySingleton.getTypeRegistry()
+        //	        .getTypeHandlerForTypeName( typename );
+        //	    if( typeHandler != null )
+        //	    {
+        //	      m_typeName = typeHandler.getClassName();
+        //	      if(m_typeName==null)
+        //	      	System.out.println("debug");
+        //	      m_isCutoumType=true;
+        //	      return;
+        //	    }
+        //      	custoum
+        // a custoum base type ?
+        ///////////
       }
     }
     else if( ( (Element)cNode ).getLocalName().equals( "simpleType" ) )
@@ -247,17 +253,17 @@ private boolean m_isCutoumType = false;
       if( associateableFeatureType instanceof FeatureType )
       {
         ftp = (FeatureType)associateableFeatureType;
-        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp );
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp,m_annotationMap );
       }
       if( associateableFeatureType instanceof FeatureTypeBuilder )
       {
         ftp = ( (FeatureTypeBuilder)associateableFeatureType ).toFeatureType();
-        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp );
+        return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true, ftp,m_annotationMap );
       }
       if( associateableFeatureType instanceof Node )
-      { 
+      {
         return new FeatureAssociationTypeProperty_Impl( m_name, m_namespace, m_typeName, true,
-            m_schema,(Node)associateableFeatureType );
+            m_schema, (Node)associateableFeatureType ,m_annotationMap);
         //Object o=m_schema.getMappedType((Node)associateableFeatureType);
         //  x ftp=(FeatureType)o;
       }
@@ -265,18 +271,18 @@ private boolean m_isCutoumType = false;
     }
     if( m_enumeration.size() > 0 )
       return new EnumerationFeatureTypeProperty( m_name, m_namespace, m_typeName, true,
-          m_enumeration.toArray() );
+          m_enumeration.toArray(),m_annotationMap );
 
     if( isXLink() )
     {
       return m_XLinkProp;
     }
-    if(m_typeName==null)
-    	System.out.println("debug");
-    
-    if(m_isCutoumType)
-    	return new CustoumFeatureTypeProperty(m_name, m_namespace, m_typeName, true );
-    return FeatureFactory.createFeatureTypeProperty( m_name, m_namespace, m_typeName, true );
+    if( m_typeName == null )
+      System.out.println( "debug" );
+
+    if( m_isCustomType )
+      return new CustoumFeatureTypeProperty( m_name, m_namespace, m_typeName, true,m_annotationMap );
+    return FeatureFactory.createFeatureTypeProperty( m_name, m_namespace, m_typeName, true,m_annotationMap );
   }
 
   public FeatureType toFeatureType()
@@ -321,7 +327,7 @@ private boolean m_isCutoumType = false;
         maxOccurs[i] = Integer.parseInt( max );
     }
     return FeatureFactory.createFeatureType( m_name, m_namespace, ftProperties, minOccurs,
-        maxOccurs );
+        maxOccurs,m_annotationMap );
   }
 
   public boolean isFeaturePropertyType()
@@ -351,7 +357,7 @@ private boolean m_isCutoumType = false;
       //        <attributeGroup name="simpleLink">
       //        <attribute name="type" type="string" fixed="simple" form="qualified"/>
       m_XLinkProp = new XLinkFeatureTypeProperty( m_name, m_namespace,
-          XLinkFeatureTypeProperty.XLINK_SIMPLE, true );
+          XLinkFeatureTypeProperty.XLINK_SIMPLE, true,m_annotationMap );
 
       //        <attribute ref="xlink:href" use="optional"/>
       //        <attribute ref="xlink:role" use="optional"/>
@@ -371,12 +377,19 @@ private boolean m_isCutoumType = false;
     m_isFeatureAssociation = true;
   }
 
-/**
- * @return
- */
-public boolean isCustoumType() 
-{
-	return m_isCutoumType;
-}
+  /**
+   * @return
+   */
+  public boolean isCustoumType()
+  {
+    return m_isCustomType;
+  }
 
+  public void addAnnotation( Annotation annotation )
+  {
+      String lang=annotation.getLang();
+      if(lang!=null && lang.length() > 0 )
+       m_annotationMap.put(lang, annotation);
+  }
+  
 }

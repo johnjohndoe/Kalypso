@@ -1,6 +1,7 @@
 package org.deegree_impl.model.feature;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,8 @@ import org.deegree.model.feature.FeatureAssociationTypeProperty;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.GMLWorkspace;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.deegree_impl.gml.schema.GMLSchema;
 
 /**
@@ -119,5 +122,31 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         return (Feature[]) list.toArray(new Feature[list.size()]);
     }
 
-    
+    private final Collection m_listener = new ArrayList();
+
+    /**
+     * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+     */
+    public void addModellListener( final ModellEventListener listener )
+    {
+      m_listener.add( listener );
+    }
+
+    /**
+     * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypso.ogc.gml.event.ModellEventListener)
+     */
+    public void removeModellListener( final ModellEventListener listener )
+    {
+      m_listener.remove( listener );
+    }
+
+    /**
+     * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypso.ogc.gml.event.ModellEvent)
+     */
+    public void fireModellEvent( final ModellEvent event )
+    {
+      for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
+        ((ModellEventListener)iter.next()).onModellChange(event);
+    }
+   
 }

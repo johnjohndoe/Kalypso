@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben
  * 
- * @author gernot
+ * @author Belger
  */
 public final class GmlSerializer
 {
@@ -260,38 +260,5 @@ public final class GmlSerializer
    //      throw new GmlSerializeException( "Fehler beim laden von GML", e );
 
  }
-
-  public static Feature deserializeFeature( final URL gmlURL, final URL schemaURL ) throws Exception
-  {
-  	// load schema
-  	final GMLSchema schema = new GMLSchema( schemaURL );
-    // load gml
-    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL ) );
-    final GMLFeature gmlFeature = gml.getRootFeature();
-    final FeatureType[] types = schema.getFeatureTypes();
-    final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
-    return feature;
-    //    GMLHelper.checkCrs( feature, targetCrs );
-
-    // optimize layers
-    //      for( final Iterator iter = layerMap.values().iterator(); iter.hasNext();
-    // )
-    //      {
-    //        final KalypsoFeatureLayer layer = (KalypsoFeatureLayer)iter.next();
-    //        layer.optimize();
-    //      }
-    //      if( monitor != null )
-    //        monitor.worked( 1000 );
-    //
-    //      return (KalypsoFeatureLayer[])layerMap.values().toArray(
-    //          new KalypsoFeatureLayer[layerMap.size()] );
-    //    }
-    //    catch( final Exception e )
-    //    {
-    //      e.printStackTrace();
-    //
-    //      throw new GmlSerializeException( "Fehler beim laden von GML", e );
-
-  }
 
 }

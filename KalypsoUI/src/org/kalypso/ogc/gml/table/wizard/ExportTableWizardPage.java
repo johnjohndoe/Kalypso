@@ -1,4 +1,4 @@
-package org.kalypso.ui.editor.gistableeditor.actions;
+package org.kalypso.ogc.gml.table.wizard;
 
 import java.io.File;
 import java.util.ArrayList;

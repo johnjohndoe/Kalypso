@@ -4,10 +4,10 @@ import java.awt.Graphics;
 
 import org.deegree.graphics.sld.UserStyle;
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProvider;
 
 /**
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>

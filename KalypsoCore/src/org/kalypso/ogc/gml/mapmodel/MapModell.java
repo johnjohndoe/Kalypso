@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.IKalypsoLayer;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProvider;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -350,7 +350,7 @@ public GM_Envelope getFullExtentBoundingBox()
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {

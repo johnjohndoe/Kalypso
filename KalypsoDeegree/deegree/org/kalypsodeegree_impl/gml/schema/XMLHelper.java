@@ -19,6 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.deegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -310,4 +311,16 @@ public class XMLHelper {
 		final String baseName = getGMLBaseType(typeSchema, contentNode);
 		return baseName;
 	}
+
+  public static String getStringFromChildElement( final Element elt, final String namespace, final String eltName )
+  {
+    final NodeList nlL = elt.getElementsByTagNameNS( namespace, eltName );
+    if( nlL.getLength() > 0 )
+    {
+      final Element innerElt = (Element)nlL.item( 0 );
+      return XMLTools.getStringValue(innerElt);
+    }
+
+    return null;
+  }
 }

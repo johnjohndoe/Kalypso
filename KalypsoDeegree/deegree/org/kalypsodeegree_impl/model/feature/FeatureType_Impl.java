@@ -45,7 +45,9 @@ package org.deegree_impl.model.feature;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.deegree.model.feature.Annotation;
 import org.deegree.model.feature.FeatureType;
 import org.deegree.model.feature.FeatureTypeProperty;
 
@@ -81,10 +83,12 @@ class FeatureType_Impl implements FeatureType, Serializable
   private final HashMap m_posOfFTP;
 
   private int m_defaultGeometryPropPos = -1;
-
+  private final Map m_annotationsMap;
+  
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
-      int[] minOccurs, int[] maxOccurs )
+      int[] minOccurs, int[] maxOccurs,Map annotationMap )
   {
+    m_annotationsMap=annotationMap;
     this.m_name = name;
     m_namespace = namespace;
     this.m_properties = properties;
@@ -194,5 +198,21 @@ class FeatureType_Impl implements FeatureType, Serializable
   public int getDefaultGeometryPropertyPosition()
   {
     return m_defaultGeometryPropPos;
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getAnnotation(java.lang.String)
+   */
+  public Annotation getAnnotation( String langKey )
+  {
+    return (Annotation)m_annotationsMap.get(langKey);
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureType#getAnnotationMap()
+   */
+  public Map getAnnotationMap()
+  {
+    return m_annotationsMap;
   }
 }

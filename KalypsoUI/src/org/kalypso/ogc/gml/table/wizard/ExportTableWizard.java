@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.editor.gistableeditor.actions.ExportTableWizardPage;
 
 /**
  * @author belger

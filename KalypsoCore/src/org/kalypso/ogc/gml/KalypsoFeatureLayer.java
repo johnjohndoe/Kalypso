@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
 import org.deegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.event.ModellEvent;
-import org.kalypso.ogc.gml.event.ModellEventListener;
-import org.kalypso.ogc.gml.event.ModellEventProviderAdapter;
 import org.kalypso.ogc.gml.sort.KalypsoFeatureSort;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -176,7 +176,7 @@ public class KalypsoFeatureLayer implements IKalypsoLayer
   }
 
   /**
-   * @see org.kalypso.ogc.gml.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.kalypso.ogc.gml.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
