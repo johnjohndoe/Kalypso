@@ -100,10 +100,6 @@ public class LabelChoiceFactory
    * <tt>LabelDisplayElement</tt>.
    * <p>
    * 
-   * @param element
-   * @param g
-   * @param projection
-   * @return
    */
   static ArrayList createLabelChoices( LabelDisplayElement element, Graphics2D g,
       GeoTransform projection )
@@ -489,7 +485,6 @@ public class LabelChoiceFactory
           break;
         }
         default:
-        {}
         }
 
         boxStartX = lastX;

@@ -72,7 +72,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import net.opengis.sld.ObjectFactory;
@@ -204,25 +203,12 @@ public class SLDFactory
     return sld;
   }
 
-  /**
-   * @param name
-   * @param title
-   * @param version
-   * @param abstract_
-   * @param layers
-   * @return
-   */
   public static StyledLayerDescriptor createStyledLayerDescriptor( String name, String title,
       String version, String abstract_, Layer[] layers )
   {
     return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
   }
 
-  /**
-   * @param layers
-   * @param version
-   * @return
-   */
   public static StyledLayerDescriptor createStyledLayerDescriptor( Layer[] layers, String version )
   {
     return new StyledLayerDescriptor_Impl( layers, version );
@@ -695,7 +681,7 @@ public class SLDFactory
   /**
    *  
    */
-  public static NamedStyle createNamedStyle( String name ) throws XMLParsingException
+  public static NamedStyle createNamedStyle( String name )
   {
     return new NamedStyle_Impl( name );
   }
@@ -807,7 +793,7 @@ public class SLDFactory
    *  
    */
   public static NamedLayer createNamedLayer( String name,
-      LayerFeatureConstraints layerFeatureConstraints, Style[] styles ) throws XMLParsingException
+      LayerFeatureConstraints layerFeatureConstraints, Style[] styles )
   {
     return new NamedLayer_Impl( name, layerFeatureConstraints, styles );
   }
@@ -1217,7 +1203,7 @@ public class SLDFactory
         }
         else if( symbolizerName.equals( "RasterSymbolizer" ) )
         {
-          symbolizerList.add( createRasterSymbolizer( symbolizerElement, min, max ) );
+          symbolizerList.add( createRasterSymbolizer( symbolizerElement ) );
         }
       }           
     }
@@ -1720,14 +1706,7 @@ public class SLDFactory
     return ( new CssParameter_Impl( name, pvt ) );
   }
   
-  /**
-   * 
-   * 
-   * @param element
-   * 
-   * @return
-   */
-  private static RasterSymbolizer createRasterSymbolizer( Element element, double min, double max )
+  private static RasterSymbolizer createRasterSymbolizer( Element element )
   {
     try
     {
