@@ -22,9 +22,6 @@ public class KrigingRelation
 		return m_factor;
 	}
 
-	/**
-	 * @param d
-	 */
 	public void setFactor(final double factor) 
 	{
 	   m_factor=factor;
