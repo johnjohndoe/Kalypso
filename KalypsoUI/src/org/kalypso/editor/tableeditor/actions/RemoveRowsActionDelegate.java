@@ -4,9 +4,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.editor.tableeditor.GisTableEditor;
-import org.kalypso.editor.tableeditor.layerTable.LayerTable;
-import org.kalypso.editor.tableeditor.layerTable.command.RemoveRowsCommand;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
 import org.kalypso.java.util.Arrays;
+import org.kalypso.ogc.command.RemoveFeaturesCommand;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.util.command.ICommand;
 
@@ -18,14 +18,14 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
   public void run( final IAction action )
   {
     final GisTableEditor editor = getEditor();
-    final LayerTable layerTable = editor.getLayerTable();
+    final LayerTableViewer layerTable = editor.getLayerTable();
 
     final IStructuredSelection selection = (IStructuredSelection)editor.getSelection();
     final KalypsoFeature[] features = (KalypsoFeature[])Arrays.castArray( selection.toArray(),
         new KalypsoFeature[selection.size()] );
 
-    final ICommand command = new RemoveRowsCommand( layerTable.getModel(), features );
-    editor.getTheme().postCommand( command, null );
+    final ICommand command = new RemoveFeaturesCommand( layerTable.getTheme().getLayer(), features );
+    editor.getLayerTable().getTheme().postCommand( command, null );
   }
 
   /**
@@ -33,7 +33,7 @@ public class RemoveRowsActionDelegate extends GisTableAbstractActionDelagate
    */
   protected boolean isEnabled( final ISelection selection )
   {
-    return getEditor().getTheme() != null && !selection.isEmpty();
+    return getEditor().getLayerTable().getTheme() != null && !selection.isEmpty();
   }
 
   /**

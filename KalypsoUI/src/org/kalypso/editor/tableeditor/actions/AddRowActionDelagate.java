@@ -4,9 +4,9 @@ import org.deegree.model.feature.FeatureType;
 import org.deegree_impl.model.feature.FeatureFactory;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.editor.tableeditor.layerTable.LayerTable;
-import org.kalypso.editor.tableeditor.layerTable.LayerTableModel;
-import org.kalypso.editor.tableeditor.layerTable.command.AddRowCommand;
+import org.kalypso.editor.tableeditor.layerTable.LayerTableViewer;
+import org.kalypso.ogc.command.AddFeatureCommand;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeature;
 import org.kalypso.util.command.ICommand;
 
@@ -20,10 +20,11 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
    */
   public void run( final IAction action )
   {
-    final LayerTable layerTable = getEditor().getLayerTable();
-    final LayerTableModel model = layerTable.getModel();
+    final LayerTableViewer layerTable = getEditor().getLayerTable();
 
-    final FeatureType featureType = model.getFeatureType();
+    final IKalypsoTheme theme = layerTable.getTheme();
+    
+    final FeatureType featureType = theme.getLayer().getFeatureType();
     final Object[] properties = new Object[featureType.getProperties().length];
 
     final KalypsoFeature feature = new KalypsoFeature( FeatureFactory.createFeature( "x",
@@ -37,8 +38,8 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
       }
     };
 
-    final ICommand command = new AddRowCommand( model, feature );
-    getEditor().getTheme().postCommand( command, r );
+    final ICommand command = new AddFeatureCommand( theme.getLayer(), feature );
+    layerTable.postCommand( command, r );
   }
 
   /**
@@ -46,7 +47,7 @@ public class AddRowActionDelagate extends GisTableAbstractActionDelagate
    */
   protected boolean isEnabled( final ISelection selection )
   {
-    return getEditor().getTheme() != null;
+    return getEditor().getLayerTable().getTheme() != null;
   }
 
   /**
