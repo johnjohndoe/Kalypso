@@ -198,6 +198,34 @@ public class FileUtilities
     file.delete();
   }
 
+  /**
+   * Creates a temp directory in java.io.tmpdir.
+   * 
+   * @see FileUtilities#createNewTempDir( String, File )
+   */
+  public static File createNewTempDir( final String prefix )
+  {
+    return createNewTempDir( prefix, new File( System.getProperty( "java.io.tmpdir" ) ) );
+  }
+  
+  /**
+   * Creates a temp directory inside the given one. It uses <code>System.currentTimeMillis</code>
+   * for naming the new temp dir. This method can hang a little while in the case the directory it tries
+   * to create already exist.
+   */
+  public static File createNewTempDir( final String prefix, final File parentDir )
+  {
+    while( true )
+    {
+      final File newDir = new File( parentDir, prefix + System.currentTimeMillis() );
+      if( newDir.mkdir() )
+        return newDir;
+    }
+  }
+  
+  /**
+   * @deprecated use <code>FileUtilities#createNewTempDir(String)</code> instead
+   */
   public static File createRandomTmpDir( final String prefix )
   {
     final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );

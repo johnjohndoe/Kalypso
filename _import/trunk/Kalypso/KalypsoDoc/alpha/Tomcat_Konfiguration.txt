@@ -49,3 +49,9 @@ Die Kalypso Services benötigen verschiedene gesetzte System-Properties (Pfade au
 Zusätzlich muss in der catalina.policy den entsrpechenden Services Zugriff auf genau diese Pfade und Properties gewährt werden.
 
 Das setzen der System-Properties geschieht zur Zeit über eine spezielle kalypso_server_start.bat
+
+Wichtig: die Pfadangabe für die System-Properties wie kalypso.server.tempdir muss aus Client
+Sicht auch reichbar sein. D.h. man muss den freigegebene Pfad benutzen. Beispiel:
+kalypso.server.tempdir=\\Pc242\KalypsoServer
+Wenn dies nicht der Fall ist, können die Dateipfade die vom Server zurück gegeben werden 
+nicht vom Client gelöst werden.
