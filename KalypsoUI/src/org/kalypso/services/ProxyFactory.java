@@ -97,10 +97,19 @@ public class ProxyFactory
 
     if( !m_proxies.containsKey( key ) )
     {
-      // TODO TRICKY: we set the classloader because of a problem using jaxrpc at runtime
-      // under Eclipse. It seems that the system class loader is explicitely used
-      // by the jaxrpc jars and that's bad because it doesn't find the plugins runtime libs.
-      if( Thread.currentThread().getContextClassLoader() != getClass().getClassLoader() )
+      try
+      {
+        System.out.println( getClass().getClassLoader().loadClass( "javax.activation.DataSource" ) );
+      }
+      catch( ClassNotFoundException e1 )
+      {
+        e1.printStackTrace();
+      }
+      
+//      // TODO TRICKY: we set the classloader because of a problem using jaxrpc at runtime
+//      // under Eclipse. It seems that the system class loader is explicitely used
+//      // by the jaxrpc jars and that's bad because it doesn't find the plugins runtime libs.
+//      if( Thread.currentThread().getContextClassLoader() != getClass().getClassLoader() )
         Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
       
       final String strProxyClass = m_conf.getProperty( KALYPSO_PROXY_BASE ) + "." + serviceName
