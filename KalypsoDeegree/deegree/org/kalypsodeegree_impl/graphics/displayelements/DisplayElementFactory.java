@@ -114,7 +114,8 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles,GMLWorkspace workspace )
+  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles,
+      GMLWorkspace workspace )
   {
     Debug.debugMethodBegin( "DisplayElementFactory", "getDisplayElement" );
 
@@ -240,7 +241,7 @@ public class DisplayElementFactory
 
       if( geometry != null )
       {
-        // check if virtuel property
+        // check if virtual property
         if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
           geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(),
               workspace );
@@ -254,7 +255,7 @@ public class DisplayElementFactory
 
       // if the geometry property is null, do not build a DisplayElement
 
-      if( geoProperty == null )
+      if( geoProperty == null && !( symbolizer instanceof RasterSymbolizer ) )
       {
         return null;
       }
