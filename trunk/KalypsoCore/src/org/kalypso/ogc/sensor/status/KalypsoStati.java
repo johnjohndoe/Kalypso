@@ -43,11 +43,11 @@ public interface KalypsoStati
   /** User input is LOCKED for this value */
   public final static int BIT_LOCKED = 0x10;
 
-  /** Value is a MEASURE */
-  public final static int BIT_MEASURE = 0x20;
-
-  /** Value is a FORECAST */
-  public final static int BIT_FORECAST = 0x40;
+//  /** Value is a MEASURE */
+//  public final static int BIT_MEASURE = 0x20;
+//
+//  /** Value is a FORECAST */
+//  public final static int BIT_FORECAST = 0x40;
 
   /** Value has been MODIFIED by user */
   public final static int BIT_USER_MODIFIED = 0x80;
