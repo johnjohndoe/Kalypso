@@ -252,7 +252,7 @@ public class SaveFileWizardPage extends WizardPage
     final Label label = new Label( targetGroup, SWT.NONE );
     label.setText( "Format:" );
 
-    m_formatViewer = new ComboViewer( targetGroup, SWT.BORDER );
+    m_formatViewer = new ComboViewer( targetGroup, SWT.BORDER | SWT.READ_ONLY | SWT.DROP_DOWN );
     m_formatViewer.setContentProvider( new ArrayContentProvider() );
     m_formatViewer.setLabelProvider( new LabelProvider() );
     m_formatViewer.setInput( m_formats.keySet() );
@@ -315,7 +315,14 @@ public class SaveFileWizardPage extends WizardPage
     if( selectedFileName != null )
     {
       setErrorMessage( null );
-      setDestinationValue( selectedFileName );
+      
+      final String newFileName;
+      if( selectedFileName.indexOf( '.' ) == -1 )
+        newFileName = selectedFileName + "." + m_formats.get( getDestinationFormat() );
+      else
+        newFileName = selectedFileName;
+      
+      setDestinationValue( newFileName );
     }
   }
 
