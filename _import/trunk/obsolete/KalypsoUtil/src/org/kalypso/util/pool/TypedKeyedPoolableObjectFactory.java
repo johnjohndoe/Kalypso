@@ -28,9 +28,9 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
    */
   public Object makeObject( Object key ) throws Exception
   {
-    IPoolableObjectType objType = testTypeOfKey( key );
+    final IPoolableObjectType objType = testTypeOfKey( key );
     
-    ILoader loader = m_factory.getLoaderInstance( objType.getType(), m_classLoader );
+    final ILoader loader = m_factory.getLoaderInstance( objType.getType(), m_classLoader );
     
     return loader.load( objType.getSource(), objType.getHelper() );
   }
@@ -66,7 +66,11 @@ public class TypedKeyedPoolableObjectFactory implements KeyedPoolableObjectFacto
    */
   public void passivateObject( Object key, Object arg1 ) throws Exception
   {
-    testTypeOfKey( key );
+    final IPoolableObjectType objType = testTypeOfKey( key );
+    
+    final ILoader loader = m_factory.getLoaderInstance( objType.getType(), m_classLoader );
+    
+    // TODO: Loader.passivate
   }
 
   private IPoolableObjectType testTypeOfKey( Object key )
