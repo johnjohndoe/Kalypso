@@ -16,14 +16,25 @@ public class Mapper
 	
 	    if( "PointPropertyType".equals( name ) )
 	        return "org.deegree.model.geometry.GM_Point";
-	
+
+      if( "MultiPointPropertyType".equals( name ) )
+        return "org.deegree.model.geometry.GM_MultiPoint";
+
 	    if( "PolygonPropertyType".equals( name ) )
 	        return "org.deegree.model.geometry.GM_Polygon";
 	
-	    if( "LineStringPropertyType".equals( name ) )
+      if( "MultiPolygonPropertyType".equals( name ) )
+        return "org.deegree.model.geometry.GM_MultiSurface";
+
+      if( "LineStringPropertyType".equals( name ) )
 	        return "org.deegree.model.geometry.GM_LineString";
 	
-	    return null;
+
+      if( "MultiLineStringPropertyType".equals( name ) )
+        return "org.deegree.model.geometry.GM_MultiCurve";
+
+      System.out.println("add mapping for "+name+" in "+ Mapper.class.toString());
+      return null;
 	}
 
 	public static String mapXMLSchemaType2JavaType( String name )

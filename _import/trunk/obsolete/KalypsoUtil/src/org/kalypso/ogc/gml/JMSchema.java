@@ -70,7 +70,7 @@ public class JMSchema
 
         Node node = mySchema.getDocumentElement(  );
         NamedNodeMap nodeMap = node.getAttributes(  );
-        System.out.println( "NamesSpaces: " );
+ //       System.out.println( "NamesSpaces: " );
 
         for( int i = 0; i < nodeMap.getLength(  ); i++ )
         {
@@ -80,7 +80,7 @@ public class JMSchema
                 if( "http://www.w3.org/2000/xmlns/".equals( attribute.getNamespaceURI(  ) ) )
                 {
                      ns.put( attribute.getLocalName(  ), attribute.getNodeValue(  ) );
-                    System.out.println( attribute.getLocalName(  ) + " -> " + attribute.getNodeValue(  ) );
+       //             System.out.println( attribute.getLocalName(  ) + " -> " + attribute.getNodeValue(  ) );
                 }
             }
             catch( Exception e )

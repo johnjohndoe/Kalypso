@@ -91,14 +91,14 @@ public class JMFeatureTypeBuilder
 		else if (
 			"http://www.opengis.net/gml".equals(typeAttribute.getValueNS()))
 		{
-			System.out.println("GML Schema Type");
+	//		System.out.println("GML Schema Type");
 			myTypeName =
 				Mapper.mapGMLSchemaType2JavaType(typeAttribute.getValue());
 		}
 		// local SchemaType
 		else if (mySchema.getTargetNS().equals(typeAttribute.getValueNS()))
 		{
-			System.out.println("local Schema Type");
+	//		System.out.println("local Schema Type");
 			Node cNode = getContentNode(mySchema, typeAttribute.getValue());
 			if (((Element) cNode).getLocalName().equals("complexType"))
 			{
@@ -149,7 +149,7 @@ public class JMFeatureTypeBuilder
 	public void add(JMFeatureTypeBuilder featureProtoType)
 	{
 		myFeatureProtoTypes.add(featureProtoType);
-		System.out.println("implement...");
+	
 	}
 
 	public void addEnumerationObject(Object object)

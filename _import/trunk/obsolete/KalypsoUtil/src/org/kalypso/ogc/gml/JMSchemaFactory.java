@@ -99,32 +99,32 @@ public class JMSchemaFactory
 		JMFeatureTypeBuilder collector)
 		throws Exception
 	{
-		if(node.getNodeType()==Node.ELEMENT_NODE)
-		    System.out.println( "map node:" + XMLTools.toString( node ) );
+//		if(node.getNodeType()==Node.ELEMENT_NODE)
+//		    System.out.println( "map node:" + XMLTools.toString( node ) );
 		switch (getType(schema, node))
 		{
 			case COMPLEX_TYPE :
-				System.out.println("COMPLEX_TYPE");
+//				System.out.println("COMPLEX_TYPE");
 
 				break;
 
 			case COMPLEX_CONTENT :
-				System.out.println("COMPLEX_CONTENT");
+//				System.out.println("COMPLEX_CONTENT");
 
 				break;
 
 			case EXTENSION :
-				System.out.println("EXTENSION");
+//				System.out.println("EXTENSION");
 
 				break;
 
 			case SEQUENCE :
-				System.out.println("SEQUENCE");
+//				System.out.println("SEQUENCE");
 
 				break;
 
 			case ELEMENT_REF :
-				System.out.println("ELEMENT_REF");
+//				System.out.println("ELEMENT_REF");
 				{
 					JMAttribute refAttribute =
 						new JMAttribute(
@@ -161,7 +161,7 @@ public class JMSchemaFactory
 				{
 					Element element = (Element) node;
 
-					System.out.println("RESTRICTION_TYPE");
+//					System.out.println("RESTRICTION_TYPE");
 					if (element.hasAttribute("base"))
 					{
 						JMAttribute baseAttribute =
@@ -179,7 +179,7 @@ public class JMSchemaFactory
 			case ENUMERATION_TYPE :
 				{
 					Element element = (Element) node;
-					System.out.println("ENUMERATION_TYPE");
+//					System.out.println("ENUMERATION_TYPE");
 					if (element.hasAttribute("value"))
 					{
 						JMAttribute valueAttribute =
@@ -197,7 +197,7 @@ public class JMSchemaFactory
 				break;
 
 			case IGNORED_TYPE :
-				System.out.println("IGNORED_TYPE");
+//				System.out.println("IGNORED_TYPE");
 
 				//nothing to do
 				break;
@@ -311,12 +311,12 @@ public class JMSchemaFactory
 	}
 */
   
-	private static void info(String text, Node node)
-	{
-		System.out.println(text + ":\n");
-		System.out.println(" LocalNome:" + node.getLocalName());
-		System.out.println(" NodeName:" + node.getNodeName());
-		System.out.println(" NodeValue:" + node.getNodeValue());
-		System.out.println(" NSURI:" + node.getNamespaceURI());
-	}
+//	private static void info(String text, Node node)
+//	{
+//		System.out.println(text + ":\n");
+//		System.out.println(" LocalNome:" + node.getLocalName());
+//		System.out.println(" NodeName:" + node.getNodeName());
+//		System.out.println(" NodeValue:" + node.getNodeValue());
+//		System.out.println(" NSURI:" + node.getNamespaceURI());
+//	}
 }
