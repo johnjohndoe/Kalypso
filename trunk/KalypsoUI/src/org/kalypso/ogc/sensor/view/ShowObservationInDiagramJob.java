@@ -8,14 +8,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.jfreechart.ObservationTimeSeries;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationTimeSeries;
 import org.kalypso.plugin.KalypsoGisPlugin;
 
 /**
+ * Job that takes care of fetching data and updating the dataset for the jfreechart.
+ * 
  * @author schlienger
- *
  */
 public class ShowObservationInDiagramJob extends Job
 {
@@ -45,7 +47,7 @@ public class ShowObservationInDiagramJob extends Job
 
     try
     {
-      m_tsCol.addSeries( new ObservationTimeSeries( m_obs, from, to ) );
+      m_tsCol.addSeries( new ObservationTimeSeries(m_obs, new DateRangeArgument( from, to ) ) );
     }
     catch( SensorException e )
     {

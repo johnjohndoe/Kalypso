@@ -26,10 +26,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.ogc.sensor.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.swing.ObservationTableModel;
-import org.kalypso.plugin.KalypsoGisPlugin;
+import org.kalypso.ogc.sensor.tableview.DefaultTableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.util.adapter.IAdaptable;
 import org.kalypso.util.repository.view.RepositoryExplorerPart;
 
@@ -40,8 +40,7 @@ import org.kalypso.util.repository.view.RepositoryExplorerPart;
 public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
   protected final ObservationTableModel m_model = new ObservationTableModel();
-  
-  
+
   public TableViewPart()
   {
   //
@@ -55,7 +54,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     JTable table = new JTable( m_model );
     table.setDefaultRenderer( Date.class, new DateTableCellRenderer() );
     table.setDefaultRenderer( Double.class, new DoubleTableCellRenderer() );
-    
+
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
@@ -72,7 +71,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void dispose()
   {
     getSite().getPage().removePartListener( this );
-    
+
     super.dispose();
   }
 
@@ -83,20 +82,21 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   {
   // noch nix
   }
- 
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   public void selectionChanged( SelectionChangedEvent event )
   {
-    m_model.setObservation( null, null );
-    
+    m_model.setColumns( null );
+
     StructuredSelection selection = (StructuredSelection)event.getSelection();
-    
+
     if( !( selection.getFirstElement() instanceof IAdaptable ) )
       return;
-    
-    IObservation obs = (IObservation)((IAdaptable)selection.getFirstElement()).getAdapter( IObservation.class );
+
+    IObservation obs = (IObservation)( (IAdaptable)selection.getFirstElement() )
+        .getAdapter( IObservation.class );
     if( obs == null )
       return;
 
@@ -118,7 +118,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-    // nada
+  // nada
   }
 
   /**
@@ -127,7 +127,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart)part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -144,9 +144,9 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void partOpened( IWorkbenchPart part )
   {
-    // Siehe partActivated...
+  // Siehe partActivated...
   }
-  
+
   /**
    * 
    * @author schlienger
@@ -154,41 +154,35 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   private class ShowObservationJob extends Job
   {
     private final IObservation m_obs;
-    
+
     public ShowObservationJob( final IObservation obs )
     {
       super( "Table QuickView Update" );
-      
+
       m_obs = obs;
-      
+
       setPriority( Job.SHORT );
     }
-    
+
     /**
      * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     protected IStatus run( IProgressMonitor monitor )
     {
-      try
-      {
-        Calendar c = Calendar.getInstance();
-        Date to = c.getTime();
-        c.add( Calendar.DAY_OF_YEAR, -31 );
-        Date from = c.getTime();
+      Calendar c = Calendar.getInstance();
+      Date to = c.getTime();
+      c.add( Calendar.DAY_OF_YEAR, -31 );
+      Date from = c.getTime();
 
-        m_model.setObservation( m_obs, m_obs.getValues(from, to) );
-      }
-      catch( SensorException e )
-      {
-        return new Status( IStatus.ERROR,
-            KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0,
-            "Fehler während die Aktualisierung des Diagramms", e );
-      }
-      
+      DefaultTableViewTemplate tab = new DefaultTableViewTemplate( m_obs );
+
+      m_model.setArguments( new DateRangeArgument( from, to ) );
+      m_model.setColumns( tab.getColumns() );
+
       return Status.OK_STATUS;
     }
   }
-  
+
   /**
    * Helper: formatiert das Datum auf eine richtige Art und Weise
    * 
@@ -197,35 +191,39 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   private static class DateTableCellRenderer extends DefaultTableCellRenderer
   {
     private final static DateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
-    
+
     /**
-     * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+     * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+     *      java.lang.Object, boolean, boolean, int, int)
      */
     public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,
         boolean hasFocus, int row, int column )
     {
-      JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
-      
+      JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected,
+          hasFocus, row, column );
+
       label.setText( df.format( value ) );
-      
+
       return label;
     }
   }
-  
+
   private static class DoubleTableCellRenderer extends DefaultTableCellRenderer
   {
     private final static NumberFormat nf = NumberFormat.getInstance();
-    
+
     /**
-     * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+     * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+     *      java.lang.Object, boolean, boolean, int, int)
      */
     public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,
         boolean hasFocus, int row, int column )
     {
-      JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
-      
-      label.setText( nf.format(value) );
-      
+      JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected,
+          hasFocus, row, column );
+
+      label.setText( nf.format( value ) );
+
       return label;
     }
   }

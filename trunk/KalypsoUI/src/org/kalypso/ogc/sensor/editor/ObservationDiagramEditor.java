@@ -14,7 +14,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.kalypso.editor.AbstractEditorPart;
 import org.kalypso.ogc.sensor.view.ShowObservationInDiagramJob;
-import org.kalypso.ogc.sensor.zml.ZmlFileObservation;
+import org.kalypso.ogc.sensor.zml.ZmlObservation;
 
 /**
  * @author schlienger
@@ -69,7 +69,7 @@ public class ObservationDiagramEditor extends AbstractEditorPart
 
     try
     {
-      ZmlFileObservation obs = new ZmlFileObservation( input.getName(), input.getStorage().getContents() );
+      ZmlObservation obs = new ZmlObservation( input.getName(), input.getStorage().getContents() );
 
       setDirty( false );
 
