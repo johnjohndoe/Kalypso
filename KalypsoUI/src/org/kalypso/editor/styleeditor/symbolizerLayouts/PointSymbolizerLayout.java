@@ -65,7 +65,7 @@ public class PointSymbolizerLayout extends SymbolizerLayout{
 				
 		if(tabFolderComposite != null)
 			tabFolderComposite.dispose();
-		tabFolderComposite = new Composite(composite, SWT.EMBEDDED);		
+		tabFolderComposite = new Composite(composite, SWT.NULL);		
 		tabFolderComposite.setLayout(new FormLayout());			
 		tabFolderComposite.layout();
 		

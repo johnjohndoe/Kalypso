@@ -66,7 +66,7 @@ public class RuleTabItemBuilder {
 		if(tabFolderComposite != null)
 			tabFolderComposite.dispose();
 		
-		tabFolderComposite = new Composite(globalComposite, SWT.EMBEDDED);	
+		tabFolderComposite = new Composite(globalComposite, SWT.NULL);	
 		tabFolderComposite.setLayout(new FormLayout());
 		tabFolderComposite.layout();
 		
@@ -108,8 +108,7 @@ public class RuleTabItemBuilder {
 				public void valueChanged(PanelEvent event) {
 					rule.setTitle(((TextInputPanel)event.getSource()).getLabelText());
 					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));									
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();					
-					draw();
+					focuedRuleItem = ruleTabFolder.getSelectionIndex();										
 				}
 			});
 			
@@ -127,8 +126,7 @@ public class RuleTabItemBuilder {
 						userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
 						System.out.println(((Rule_Impl)rule).exportAsXML());
 					
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();	
-					draw();
+					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
 				}
 			});
 			
@@ -137,8 +135,7 @@ public class RuleTabItemBuilder {
 				public void valueChanged(PanelEvent event) {
 					rule.setMinScaleDenominator(((SliderPanel)event.getSource()).getSelection());
 					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
-					focuedRuleItem = ruleTabFolder.getSelectionIndex();	
-					draw();
+					focuedRuleItem = ruleTabFolder.getSelectionIndex();						
 				}
 			});			
 			SliderPanel maxDenominatorPanel = new SliderPanel(composite,"MaxDenomiator:",0,10000000,100000,SliderPanel.INTEGER,rule.getMaxScaleDenominator());
@@ -156,9 +153,7 @@ public class RuleTabItemBuilder {
 //					rule.setFilter(filter);
 					
 					System.out.println(((Rule_Impl)rule).exportAsXML());
-					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));
-					
-					draw();
+					userStyle.fireModellEvent(new ModellEvent(ModellEvent.STYLE_CHANGE));						
 				}
 			});
 			
@@ -272,8 +267,7 @@ public class RuleTabItemBuilder {
 			ruleTabFolder.setSelection(focuedRuleItem);
 		if(rules.length == 0)
 			ruleTabFolder.setVisible(false);
-		
-		//ruleTabFolder.pack(true);
+				
 		tabFolderComposite.pack(true);		
 	}
 	
