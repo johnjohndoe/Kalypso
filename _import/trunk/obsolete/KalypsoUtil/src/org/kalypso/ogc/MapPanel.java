@@ -479,13 +479,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
    */
   public void componentHidden( ComponentEvent e )
-  {}
+  {
+  //  
+  }
 
   /**
    * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
    */
   public void componentMoved( ComponentEvent e )
-  {}
+  {
+  //  
+  }
 
   /**
    * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)

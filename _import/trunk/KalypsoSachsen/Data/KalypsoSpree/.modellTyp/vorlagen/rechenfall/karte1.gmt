@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gismapview xmlns="gismapview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
+<gismapview xmlns="gismapview.template.kalypso.org">
+	<extent bottom="50.99678799998588" left="14.340792728726877" right="14.986512202195462" top="51.53907066733935"/>
 	<layers>
-		<layer name="Vorhersagepegel (N-A Modell)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Einzugsgebiet" linktype="gml">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/namodelle.sld#STYLE=NA-Modelle" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
+		<layer name="Vorhersagepegel (N-A Modell)" visible="true" id="0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+			<ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=styles/namodelle.sld#STYLE=NA-Modelle#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
-
-		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/schoeps_loebauer_wasser#SRS=EPSG:31469" linktype="shape">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=sachsenrivers" linktype="style" />
+		<layer name="Gewässerverlauf" visible="true" id="1" linktype="shape" ns3:actuate="onRequest" ns3:href="SRS=EPSG:31469#PATH=shapes/schoeps_loebauer_wasser#SERVICE=RESOURCE#" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+			<ns4:style linktype="style" ns3:actuate="onRequest" ns3:href="PATH=styles/styles.sld#STYLE=sachsenrivers#" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
 		</layer>
 	</layers>
 </gismapview>

@@ -1,37 +1,3 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gismapview xmlns="gismapview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<extent bottom="1245.0" left="123.4" right="456.7" top="111.1"/>
-	<layers>
-		<layer name="Eingabepegel (Talsperren)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Talsperre" linktype="gml">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/talsperren.sld#STYLE=Talsperren" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
-		</layer>
+<gismapview xmlns="gismapview.template.kalypso.org"><extent bottom="50.99678799998588" left="14.321018045204871" right="15.006286885717467" top="51.53907066733935"/><layers><layer name="Eingabepegel (Talsperren)" visible="true" id="0" linktype="gml" ns1:actuate="onRequest" ns1:href="PATH=modell.gml#LAYER=Talsperre#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"><ns2:style linktype="style" ns1:actuate="onRequest" ns1:href="PATH=styles/talsperren.sld#STYLE=Talsperren#" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/></layer><layer name="Vorhersagepegel (N-A Modell)" visible="true" id="1" linktype="gml" ns3:actuate="onRequest" ns3:href="PATH=modell.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink"><ns4:style linktype="style" ns3:actuate="onRequest" ns3:href="PATH=styles/namodelle.sld#STYLE=NA-Modelle#" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/></layer><layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="2" linktype="gml" ns5:actuate="onRequest" ns5:href="PATH=modell.gml#LAYER=Flusslaufmodell#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink"><ns6:style linktype="style" ns5:actuate="onRequest" ns5:href="PATH=styles/flusslaufmodelle.sld#STYLE=Flusslaufmodelle#" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/></layer><layer name="Eingabepegel (Zuflusse)" visible="true" id="3" linktype="gml" ns7:actuate="onRequest" ns7:href="PATH=modell.gml#LAYER=Zufluss#SERVICE=RESOURCE#XSD=.modellTyp/modell.xsd#" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink"><ns8:style linktype="style" ns7:actuate="onRequest" ns7:href="PATH=styles/zufluesse.sld#STYLE=Zufluesse#" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/></layer><layer name="Gewässerverlauf" visible="true" id="4" linktype="shape" ns9:actuate="onRequest" ns9:href="SRS=EPSG:31469#PATH=shapes/schoeps_loebauer_wasser#SERVICE=RESOURCE#" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink"><ns10:style linktype="style" ns9:actuate="onRequest" ns9:href="PATH=styles/styles.sld#STYLE=sachsenrivers#" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/></layer><layer name="Gewässer Sachsen" visible="false" id="5" linktype="shape" ns11:actuate="onRequest" ns11:href="SRS=EPSG:31469#PATH=shapes/gew_sachsen#SERVICE=RESOURCE#" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink"><ns12:style linktype="style" ns11:actuate="onRequest" ns11:href="PATH=styles/styles.sld#STYLE=sachsenrivers#" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/></layer><layer name="Sachsen Landesgrenzen" visible="false" id="6" linktype="shape" ns13:actuate="onRequest" ns13:href="SRS=EPSG:31469#PATH=shapes/sachsen#SERVICE=RESOURCE#" ns13:type="simple" xmlns:ns13="http://www.w3.org/1999/xlink"><ns14:style linktype="style" ns13:actuate="onRequest" ns13:href="PATH=styles/landesgrenzen.sld#STYLE=Landesgrenzen#" ns13:type="simple" xmlns:ns14="types.template.kalypso.org"/></layer><layer name="TK25_02" visible="false" id="7" linktype="wms" ns15:actuate="onRequest" ns15:href="LAYERS=Topografie#SERVICE=http://ibpm.bjoernsen.de/cgi-bin/mapserv401?map=/usr/local/httpd/htdocs/lhwz/mapserver/demo.map&amp;#" ns15:type="simple" xmlns:ns15="http://www.w3.org/1999/xlink"/></layers></gismapview>
 
-		<layer name="Vorhersagepegel (N-A Modell)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Einzugsgebiet" linktype="gml">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/namodelle.sld#STYLE=NA-Modelle" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
-		</layer>
-
-		<layer name="Vorhersagepegel (Flußlaufmodell)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Flusslaufmodell" linktype="gml">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/flusslaufmodelle.sld#STYLE=Flusslaufmodelle" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
-		</layer>
-
-		<layer name="Eingabepegel (Zuflusse)" visible="true" id="layer2" xlink:type="simple" xlink:actuate="onRequest" xlink:href="SERVICE=RESOURCE#PATH=modell.gml#XSD=.modellTyp/modell.xsd#LAYER=Zufluss" linktype="gml">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest" xlink:href="PATH=styles/zufluesse.sld#STYLE=Zufluesse" linktype="style" xmlns:ns1="types.xml.kalypso.org"/>
-		</layer>
-
-		<layer name="Gewässerverlauf" visible="true" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/schoeps_loebauer_wasser#SRS=EPSG:31469" linktype="shape">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=sachsenrivers" linktype="style" />
-		</layer>
-
-		<layer name="Gewässer Sachsen" visible="false" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/gew_sachsen#SRS=EPSG:31469" linktype="shape">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/styles.sld#STYLE=sachsenrivers" linktype="style" />
-		</layer>
-
-		<layer name="Sachsen Landesgrenzen" visible="false" id="layer1" xlink:type="simple" xlink:actuate="onRequest"  xlink:href="SERVICE=RESOURCE#PATH=shapes/sachsen#SRS=EPSG:31469" linktype="shape">
-			<kalypso:style xlink:type="simple" xlink:actuate="onRequest"  xlink:href="PATH=styles/landesgrenzen.sld#STYLE=Landesgrenzen" linktype="style" />
-		</layer>
-
-		<layer name="TK25_02" visible="true" id="layer26" xlink:type="simple" xlink:actuate="onRequest" 
-			xlink:href="SERVICE=http://ibpm.bjoernsen.de/cgi-bin/mapserv401?map=/usr/local/httpd/htdocs/lhwz/mapserver/demo.map&amp;#LAYERS=Topografie" linktype="wms">
-		</layer>
-	</layers>
-</gismapview>
