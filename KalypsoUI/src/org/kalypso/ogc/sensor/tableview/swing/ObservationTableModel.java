@@ -331,6 +331,8 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
+   * Adds a row that contains only the value for the shared column.
+   * 
    * @param object
    *          the object for the value of the common column
    * @return the index at which row was added
@@ -344,6 +346,24 @@ public class ObservationTableModel extends AbstractTableModel
     m_valuesModel.insertRow( index, new Object[m_columns.length] );
 
     fireTableDataChanged();
+    
+    return index;
+  }
+  
+  /**
+   * Adds a whole row, including the common column.
+   * 
+   * @param row common column should be at position 0 in the vector
+   * @return index where row was added
+   */
+  public int addRow( final Vector row )
+  {
+    final int index = addRow( row.get(0) );
+    
+    for( int i = 1; i < row.size(); i++ )
+    {
+      m_valuesModel.setValueAt( row.get(i), index, i - 1 );
+    }
     
     return index;
   }
@@ -364,6 +384,7 @@ public class ObservationTableModel extends AbstractTableModel
       row.add( m_valuesModel.getValueAt( index, col ) );
     
     m_valuesModel.removeRow( index );
+    m_commonColumn.remove( row.get(0) );
     
     fireTableDataChanged();
     
