@@ -110,15 +110,6 @@ public class FileItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    //    try
-    //    {
-    //      return m_file.toURL().toExternalForm();
-    //    }
-    //    catch( MalformedURLException e )
-    //    {
-    //      throw new IllegalStateException( e.getLocalizedMessage() );
-    //    }
-
     return m_rep.getIdentifier()
         + ":/"
         + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace('\\', '/');

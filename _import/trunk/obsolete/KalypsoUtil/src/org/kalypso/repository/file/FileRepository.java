@@ -134,33 +134,6 @@ public class FileRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    //    // both lowercase to be sure comparison is done homogeneously
-    //    final String rootURL = getIdentifier().toLowerCase();
-    //    final String mid = id.toLowerCase();
-    //    
-    //    if( !mid.startsWith( rootURL ) )
-    //      throw new RepositoryException( "File <" + mid + "> seems not to be part
-    // of the repository: "
-    //          + m_root );
-    //
-    //    final String path = m_root.getAbsolutePath() + File.separator +
-    // mid.replaceFirst( rootURL, "" );
-    //
-    //    final File f = new File( path );
-    //
-    //    if( !f.exists() )
-    //      throw new RepositoryException( "File <" + mid + "> does not exist!" );
-    //
-    //    if( !m_filter.accept( f ) )
-    //      throw new RepositoryException( "File <" + mid + "> does not fit filter!"
-    // );
-    //
-    //    if( !FileUtilities.isChildOf( m_root, f ) )
-    //      throw new RepositoryException( "File <" + mid
-    //          + "> is not part of this File Repository starting at:" + m_root );
-    //
-    //    return createItem( f );
-
     // both lowercase to be sure comparison is done homogeneously
     final String baseId = getIdentifier().toLowerCase();
     final String itemId = id.toLowerCase();
@@ -168,8 +141,7 @@ public class FileRepository extends AbstractRepository
     final String scheme = baseId + ":/"; 
     
     if( !itemId.startsWith( scheme ) )
-      throw new RepositoryException( "File <" + id
-          + "> seems not to be part of the repository: " + m_root );
+      return null;
 
     // absolute path of the root (replace backslashes on windows with forward slashes)
     final String strRoot = m_root.getAbsolutePath().replace( '\\', '/' );
@@ -178,14 +150,13 @@ public class FileRepository extends AbstractRepository
     final File f = new File( path );
 
     if( !f.exists() )
-      throw new RepositoryException( "File <" + id + "> does not exist!" );
+      return null;
 
     if( !m_filter.accept( f ) )
-      throw new RepositoryException( "File <" + id + "> does not fit filter!" );
+      return null;
 
     if( !FileUtilities.isChildOf( m_root, f ) )
-      throw new RepositoryException( "File <" + id
-          + "> is not part of this File Repository starting at:" + m_root );
+      return null;
 
     return createItem( f );
   }

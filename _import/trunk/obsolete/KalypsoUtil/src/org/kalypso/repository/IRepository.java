@@ -27,10 +27,8 @@ public interface IRepository extends IRepositoryItem
   /**
    * Finds the item that has the given id.
    * @param id
-   * @return item
-   * 
+   * @return item, or null if not found
    * @throws RepositoryException
-   *           if item could not be found
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException;
 

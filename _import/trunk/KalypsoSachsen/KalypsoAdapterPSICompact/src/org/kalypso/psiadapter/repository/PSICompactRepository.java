@@ -170,9 +170,6 @@ public class PSICompactRepository extends AbstractRepository
   {
     final IRepositoryItem item = findItemRecursive( m_psiRoot, id );
 
-    if( item == null )
-      throw new RepositoryException( "Item <" + id + "> could not be found!" );
-
     return item;
   }
 
@@ -180,7 +177,7 @@ public class PSICompactRepository extends AbstractRepository
    * Helper: finds using recursion. Returns null when not found
    * @param item
    * @param id
-   * @return item
+   * @return item or null if not found
    * 
    * @throws RepositoryException
    */

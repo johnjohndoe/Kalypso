@@ -8,7 +8,7 @@
 	<axis id="d" datatype="xs:date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="w" datatype="xs:double" label="Pegel" unit="m" direction="vertical" position="left" />
 
-   	<curve id="C1" name="Test" linktype="zml" xlink:href="LOCATION=kalypso-ocs:Spree://Andere/PA_SCHIRG.zml" >
+   	<curve id="C1" name="Test" linktype="zml" xlink:href="LOCATION=kalypso-ocs:Spree://2004/QV_BWALDE.zml" >
 	   	<mapping observation-axis="Datum" diagram-axis="d" />
 	   	<mapping observation-axis="Wert" diagram-axis="w" />
    	</curve>
