@@ -556,8 +556,19 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IFile targetfile = targetfolder.getFile( beanPath );
       FolderUtilities.mkdirs( targetfile.getParent() );
+
       if( targetfile.exists() ) // loeschen, auch wenn er gerade geladen ist
-        targetfile.delete( true, false, new NullProgressMonitor() );
+      {
+        try
+        {
+          targetfile.delete( true, false, new NullProgressMonitor() );
+        }
+        catch( Exception e )
+        {
+          System.out.println( "could not delete File: " + targetfile.getFullPath() );
+          e.printStackTrace();
+        }
+      }
       System.out.println( "Write: " + serverfile.getAbsolutePath() );
       final SetContentThread thread = new SetContentThread( targetfile, true, false, false,
           new NullProgressMonitor() )
