@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoDataCenterAdapter" default="compile" basedir=".">
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="lib.dir" value="${basedir}/lib" />
+
+	<property name="build.dir" value="${basedir}/build/bin" />
+	<property name="javadoc.dir" value="${basedir}/build/javadoc" />
+	<property name="deploy.dir" value="${basedir}/build/deploy" />
+
+	<property name="jarname" value="KalypsoDC.jar" />
+
+
+	<!-- put here all libraries project needs -->
+	<path id="classpath">
+		<pathelement path="${build.dir}" />
+		<pathelement path="${deploy.dir}" />
+	</path>
+
+	<!-- INIT -->
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${javadoc.dir}" />
+		<mkdir dir="${deploy.dir}" />
+	</target>
+
+	<!-- CLEANUP -->
+	<target name="cleanup" description="cleans generated stuff">
+		<delete>
+			<fileset dir="${build.dir}" includes="*/**" />
+			<fileset dir="${javadoc.dir}" includes="*/**" />
+			<fileset dir="${deploy.dir}" includes="*/**" />
+		</delete>
+	</target>
+
+	<!-- COMPILE -->
+	<target name="compile" depends="init" description="compile code">
+		<javac srcdir="${src.dir}" source="1.4" destdir="${build.dir}" excludes="**/*Test*" debug="off" deprecation="off" optimize="on">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<!-- JAR -->
+	<target name="jar" depends="compile">
+
+		<pathconvert property="jar-cp" pathsep=" " refid="classpath" dirsep="/">
+			<map from="${basedir}" to="." />
+		</pathconvert>
+
+		<copy todir="${deploy.dir}">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
+		
+		<jar jarfile="${deploy.dir}/${jarname}">
+
+			<fileset dir="${build.dir}" includes="**/*" />
+
+			<manifest>
+				<attribute name="Class-Path" value="${jar-cp}" />
+			</manifest>
+		</jar>
+
+	</target>
+
+	<!-- DEPLOY -->
+	<target name="deploy" depends="jar">
+
+		<copy todir="../KalypsoUI/lib">
+			<fileset dir="${deploy.dir}" includes="*.jar" />
+		</copy>
+	</target>
+
+	<!-- JAVADOC
+NOTE: be sure to have javadoc.exe in the path when run under Eclipse -->
+	<target name="javadoc" depends="init" description="Erzeugt die Quellcode-Documentation">
+		<javadoc destdir="${javadoc.dir}" excludepackagenames="*Test*" classpathref="classpath" private="yes" author="true" version="true" use="true" packagenames="*" defaultexcludes="yes">
+
+			<fileset dir="${src.dir}" defaultexcludes="yes">
+				<include name="*/**" />
+				<exclude name="**/*Test*" />
+			</fileset>
+		</javadoc>
+
+	</target>
+
+</project>

@@ -33,6 +33,14 @@ public class DataCenterTimeserieItem implements IRepositoryItem
   }
 
   /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
+  }
+  
+  /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier( )

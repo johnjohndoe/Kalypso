@@ -36,6 +36,14 @@ public class DataCenterChannelItem implements IRepositoryItem
   {
     return m_channel.getName();
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
+  }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()

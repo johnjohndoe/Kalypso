@@ -103,4 +103,12 @@ public class DataCenterLevelItem implements IRepositoryItem
   {
     return null;
   }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
+  }
 }

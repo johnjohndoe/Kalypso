@@ -5,6 +5,7 @@ import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
 import com.bce.datacenter.db.IngresDatabase;
+import com.bce.datacenter.db.common.Level;
 
 /**
  * DataCenterRepository
@@ -14,6 +15,7 @@ import com.bce.datacenter.db.IngresDatabase;
 public class DataCenterRepository extends AbstractRepository
 {
   private final IngresDatabase m_database;
+  private DataCenterLevelItem m_root;
 
   /**
    * @param fac
@@ -33,7 +35,6 @@ public class DataCenterRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -42,7 +43,7 @@ public class DataCenterRepository extends AbstractRepository
    */
   public void reload( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
+    m_root = null;
   }
 
   /**
@@ -50,17 +51,23 @@ public class DataCenterRepository extends AbstractRepository
    */
   public String getIdentifier( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return "datacenter";
   }
 
+  private DataCenterLevelItem getRootItem()
+  {
+    if( m_root == null )
+      m_root = new DataCenterLevelItem(this, null, Level.getRoot(m_database.getConnection()));
+
+    return m_root;
+  }
+  
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
   public boolean hasChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return getRootItem().hasChildren();
   }
 
   /**
@@ -68,7 +75,6 @@ public class DataCenterRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return getRootItem().getChildren();
   }
 }
