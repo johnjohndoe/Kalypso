@@ -49,6 +49,8 @@ public class OperationTupplemodel implements ITuppleModel
   {
     // Andreas: ObservationUtilities already has this function so I removed FilterHelper
     IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
+    if(index>=m_baseModel.getCount())
+      return null;
     Object object = m_baseModel.getElement( index, a );
     if( object == null || object instanceof Date )
       return object;
