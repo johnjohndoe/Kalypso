@@ -43,13 +43,13 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     if( m_viewer.getColumnCount() == 0 )
       return "";
     
-    final Feature kalypsoFeature = (Feature)element;
+    final Feature feature = (Feature)element;
 
     final AbstractFeatureCellEditor cellEditor = (AbstractFeatureCellEditor)m_viewer.getCellEditors()[columnIndex];
     if( cellEditor == null )
       return "<kein Renderer vorhanden>";
     
-    return cellEditor.renderLabel( kalypsoFeature );
+    return cellEditor.renderLabel( feature );
   }
 
   /**

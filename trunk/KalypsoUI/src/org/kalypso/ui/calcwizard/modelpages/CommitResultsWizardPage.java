@@ -298,7 +298,7 @@ public class CommitResultsWizardPage extends AbstractCalcWizardPage implements M
       {
         workspace.accept( new FeatureVisitor()
         {
-          public boolean visit( final Feature f ) throws Throwable
+          public boolean visit( final Feature f )
           {
             if( f.isSelected( SELECTION_ID ) )
             {

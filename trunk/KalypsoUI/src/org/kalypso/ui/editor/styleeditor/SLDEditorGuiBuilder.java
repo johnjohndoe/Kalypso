@@ -41,8 +41,6 @@ import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ControlRulePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
-import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
-import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 
 /**
  * @author F.Lindemann

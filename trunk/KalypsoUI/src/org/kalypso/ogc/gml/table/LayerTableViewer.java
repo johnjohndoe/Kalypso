@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
 import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.deegree.model.feature.event.ModellEvent;
 import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,6 +60,7 @@ import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.factory.FactoryException;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ?ndert
@@ -76,7 +82,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final ICellEditorFactory m_cellEditorFactory;
 
-  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
+      new DefaultCommandManager(), null );
 
   private final int m_selectionID;
 
@@ -84,19 +91,14 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private final Color m_unselectColor;
 
-  private final IProject m_project;
-
   private final TableCursor m_tableCursor;
 
   private final boolean m_bCursorSelects;
 
-  // TODO: fals true, gibts ne endlosschleife -> debuggen!
-  private boolean m_isFeatureSelectionSynchron = false;
-
   private final LayerTableSorter m_sorter = new LayerTableSorter();
 
   protected final ICommandTarget m_templateTarget;
-  
+
   protected boolean m_isApplyTemplate = false;
 
   /**
@@ -118,12 +120,13 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     {
       // column selected - need to sort
       final TableColumn tableColumn = (TableColumn)e.widget;
-      
-      m_templateTarget.postCommand( new ChangeSortingCommand( LayerTableViewer.this, tableColumn ), null ); 
+
+      m_templateTarget.postCommand( new ChangeSortingCommand( LayerTableViewer.this, tableColumn ),
+          null );
     }
   };
 
-  private ControlListener m_headerControlListener = new ControlAdapter() 
+  private ControlListener m_headerControlListener = new ControlAdapter()
   {
 
     /**
@@ -133,12 +136,13 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     {
       if( m_isApplyTemplate == true )
         return;
-      
+
       final TableColumn tc = (TableColumn)e.widget;
 
-      // kann nicht r?ckg?ngig gemacht werden, sorgt aber daf?r, dass der Editor dirty ist
+      // kann nicht r?ckg?ngig gemacht werden, sorgt aber daf?r, dass der Editor
+      // dirty ist
       final int width = tc.getWidth();
-      if( width != ((Integer)tc.getData( COLUMN_PROP_WIDTH )).intValue() )
+      if( width != ( (Integer)tc.getData( COLUMN_PROP_WIDTH ) ).intValue() )
       {
         m_templateTarget.postCommand( new InvisibleCommand(), null );
         tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
@@ -146,14 +150,15 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     }
   };
 
+  private final IProject m_project;
 
   /**
    * @param bCursorSelects
    *          falls true, wird immer die unter dem Cursor liegende Zeile
    *          selektiert
    */
-  public LayerTableViewer( final Composite parent, final ICommandTarget templateTarget, final IProject project,
-      final ICellEditorFactory cellEditorFactory, final int selectionID,
+  public LayerTableViewer( final Composite parent, final ICommandTarget templateTarget,
+      final IProject project, final ICellEditorFactory cellEditorFactory, final int selectionID,
       final boolean bCursorSelects )
   {
     super( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
@@ -185,26 +190,29 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   public void assignSelectionToFeatures()
   {
-    // TODO reanable
-//    // clear selection
-//    final Feature[] allFeatures = kalypsoFeatureLayer.getAllFeatures();
-//    for( int i = 0; i < allFeatures.length; i++ )
-//    {
-//      final Feature feature = allFeatures[i];
-//      feature.unselect( m_selectionID );
-//    }
-//
-//    final IStructuredSelection sel = (IStructuredSelection)getSelection();
-//    for( final Iterator selIt = sel.iterator(); selIt.hasNext(); )
-//    {
-//      final Feature kf = (Feature)selIt.next();
-//      kf.select( m_selectionID );
-//    }
-//
-//    kalypsoFeatureLayer.fireModellEvent( new ModellEvent( kalypsoFeatureLayer,
-//        ModellEvent.SELECTION_CHANGED ) );
+    final IKalypsoFeatureTheme theme = getTheme();
+
+    // clear selection
+    final UnselectFeatureVisitor unselectvisitor = new UnselectFeatureVisitor( m_selectionID );
+    try
+    {
+      theme.getFeatureList().accept( unselectvisitor );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
+
+    final IStructuredSelection sel = (IStructuredSelection)getSelection();
+    for( final Iterator selIt = sel.iterator(); selIt.hasNext(); )
+    {
+      final Feature kf = (Feature)selIt.next();
+      kf.select( m_selectionID );
+    }
+
+    theme.fireModellEvent( new ModellEvent( theme, ModellEvent.SELECTION_CHANGED ) );
   }
-  
+
   public boolean isCursorSelects()
   {
     return m_bCursorSelects;
@@ -241,7 +249,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   public void applyTableTemplate( final Gistableview tableView, final URL context )
   {
     m_isApplyTemplate = true;
-    
+
     clearColumns();
     setTheme( null );
 
@@ -249,14 +257,14 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     {
       final LayerType layer = tableView.getLayer();
       setTheme( new GisTemplateFeatureTheme( layer, context ) );
-  
+
       final SortType sort = layer.getSort();
       if( sort != null )
       {
         m_sorter.setPropertyName( sort.getPropertyName() );
         m_sorter.setInverse( sort.isInverse() );
       }
-      
+
       final List columnList = layer.getColumn();
       for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
       {
@@ -264,9 +272,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
         addColumn( ct.getName(), ct.getWidth(), ct.isEditable(), false );
       }
     }
-    
+
     refresh();
-    
+
     m_isApplyTemplate = false;
   }
 
@@ -277,7 +285,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
   private void setTheme( final IKalypsoFeatureTheme theme )
   {
-    // TODO: change to GMLWorkspace!
     final IKalypsoTheme oldTheme = (IKalypsoTheme)getInput();
 
     if( oldTheme != null )
@@ -304,7 +311,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       columns[i].dispose();
   }
 
-  public void addColumn( final String propertyName, final int width, final boolean isEditable, final boolean bRefresh )
+  public void addColumn( final String propertyName, final int width, final boolean isEditable,
+      final boolean bRefresh )
   {
     final Table table = getTable();
 
@@ -314,12 +322,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setWidth( width );
-    
+
     setColumnText( tc );
-    
+
     tc.addSelectionListener( m_headerListener );
     tc.addControlListener( m_headerControlListener );
-    
+
     if( bRefresh )
       refresh();
   }
@@ -328,11 +336,11 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     final String propertyName = (String)tc.getData( COLUMN_PROP_NAME );
     final String sortPropertyName = m_sorter.getPropertyName();
-    
+
     String text = propertyName;
-    if( propertyName.equals(sortPropertyName) )
+    if( propertyName.equals( sortPropertyName ) )
       text += " " + ( m_sorter.isInverse() ? "\u00ab" : "\u00bb" );
-    
+
     tc.setText( text );
   }
 
@@ -352,7 +360,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     if( isDisposed() )
       return;
-    
+
     // zuerst alle celleditoren neu berechnen
     // hack, weil man getCellEditors nicht vern?nftig ?berschreiben kann
     refreshCellEditors();
@@ -362,10 +370,10 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
       setColumnText( columns[i] );
-    
+
     super.refresh();
 
-    // und die tableitems einf?rben
+    // und die tableitems einfärben
     final TableItem[] items = getTable().getItems();
     for( int i = 0; i < items.length; i++ )
     {
@@ -404,39 +412,38 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final CellEditor[] editors = new CellEditor[columns.length];
 
     final IKalypsoTheme theme = (IKalypsoTheme)getInput();
-    if( theme == null )
+    final FeatureType featureType = theme == null ? null : getTheme().getFeatureType();
+    if( featureType == null )
     {
       setCellEditors( editors );
       return;
     }
-
     
-//    final FeatureType featureType = layer.getFeatureType();
-//    for( int i = 0; i < editors.length; i++ )
-//    {
-//      final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
-//      final FeatureTypeProperty ftp = featureType.getProperty( propName );
-//      if( ftp != null )
-//      {
-//        if( m_cellEditorFactory.isCellEditorKnown( ftp ) )
-//        {
-//          try
-//          {
-//            editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
-//          }
-//          catch( final FactoryException e )
-//          {
-//            LOGGER.log( Level.SEVERE, "Could not create cellEditor for type: " + ftp.getType(), e );
-//          }
-//        }
-//
-//        if( editors[i] == null )
-//          LOGGER.warning( "No cellEditor found for type: " + ftp.getType() );
-//
-//      }
-//    }
-//
-//    setCellEditors( editors );
+    for( int i = 0; i < editors.length; i++ )
+    {
+      final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      final FeatureTypeProperty ftp = featureType.getProperty( propName );
+      if( ftp != null )
+      {
+        if( m_cellEditorFactory.isCellEditorKnown( ftp ) )
+        {
+          try
+          {
+            editors[i] = m_cellEditorFactory.createEditor( ftp, m_project, table, SWT.NONE );
+          }
+          catch( final FactoryException e )
+          {
+            LOGGER.log( Level.SEVERE, "Could not create cellEditor for type: " + ftp.getType(), e );
+          }
+        }
+
+        if( editors[i] == null )
+          LOGGER.warning( "No cellEditor found for type: " + ftp.getType() );
+
+      }
+    }
+
+    setCellEditors( editors );
   }
 
   /**
@@ -470,28 +477,28 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-//    final List selFeatures = new ArrayList();
-//    if( m_isFeatureSelectionSynchron )
-//    {
-//      // Feature-Selection auf Selection ?bertragen
-//      final Feature[] allFeatures = ( (KalypsoFeatureLayer)getTheme().getLayer() )
-//          .getAllFeatures();
-//      for( int i = 0; i < allFeatures.length; i++ )
-//      {
-//        final Feature feature = allFeatures[i];
-//        if( feature.isSelected( m_selectionID ) )
-//          selFeatures.add( feature );
-//      }
-//    }
-//
-//    if( !isDisposed() )
-//      getControl().getDisplay().asyncExec( new Runnable()
-//      {
-//        public void run()
-//        {
-//          handleModelChanged( selFeatures );
-//        }
-//      } );
+    final List selFeatures = new ArrayList();
+
+    // Feature-Selection auf Selection übertragen
+    final FeatureList featureList = getTheme().getFeatureList();
+    if( featureList != null )
+    {
+      for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
+      {
+        final Feature f = (Feature)iter.next();
+        if( f.isSelected( m_selectionID ) )
+          selFeatures.add( f );
+      }
+    }
+
+    if( !isDisposed() )
+      getControl().getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          handleModelChanged( selFeatures );
+        }
+      } );
   }
 
   /** muss im SWT-Event-Thread ausgef?hrt werden */
@@ -499,11 +506,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   {
     refresh();
 
-    if( m_isFeatureSelectionSynchron )
-    {
-      // super, damits keinen loop gibt
+    final IStructuredSelection selection = (IStructuredSelection)getSelection();
+    if( !newSelection.equals( selection.toList() ) )
       setSelection( new StructuredSelection( newSelection ), false );
-    }
   }
 
   public boolean isDisposed()
@@ -570,7 +575,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
     final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
 
-    ((GisTemplateFeatureTheme)getTheme()).fillLayerType( layer, "id", true );
+    ( (GisTemplateFeatureTheme)getTheme() ).fillLayerType( layer, "id", true );
 
     tableTemplate.setLayer( layer );
 
@@ -590,7 +595,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
       columns.add( columnType );
     }
-    
+
     final LayerTableSorter sorter = (LayerTableSorter)getSorter();
     final String propertyName = sorter.getPropertyName();
     if( propertyName != null )
@@ -600,13 +605,13 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       sort.setInverse( sorter.isInverse() );
       layer.setSort( sort );
     }
-    
+
     return tableTemplate;
   }
 
   public void saveData( final IProgressMonitor monitor ) throws CoreException
   {
-    ((GisTemplateFeatureTheme)getTheme()).saveFeatures( monitor  );
+    ( (GisTemplateFeatureTheme)getTheme() ).saveFeatures( monitor );
   }
 
   /**
@@ -614,44 +619,43 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    if( m_isFeatureSelectionSynchron )
-      assignSelectionToFeatures();
+    assignSelectionToFeatures();
   }
 
   public String[][] exportTable( final boolean onlySelected )
   {
     Object[] features;
-    
+
     if( onlySelected )
     {
       final IStructuredSelection sel = (IStructuredSelection)getSelection();
-      features = sel.toArray(  );
+      features = sel.toArray();
     }
     else
       features = getTheme().getFeatureList().toFeatures();
 
-    final Collection lines = new ArrayList(); 
+    final Collection lines = new ArrayList();
 
     final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
-    
+
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
-    
+
     final String[] firstLine = new String[columns.length];
     for( int j = 0; j < columns.length; j++ )
       firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
     lines.add( firstLine );
-    
+
     for( int i = 0; i < features.length; i++ )
     {
       final String[] line = new String[columns.length];
-      
+
       for( int j = 0; j < columns.length; j++ )
         line[j] = labelProvider.getColumnText( features[i], j );
 
       lines.add( line );
     }
-    
+
     return (String[][])lines.toArray( new String[features.length][] );
   }
 }

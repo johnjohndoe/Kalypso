@@ -99,14 +99,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             context );
         m_styleNames[i] = styleType.getStyle();
       }
-
-      pool.addPoolListener( this, m_layerKey );
     }
     else
     {
-      m_styleKeys = null;
-      m_styleNames = null;
+      m_styleKeys = new PoolableObjectType[] {};
+      m_styleNames = new String[] {};
     }
+
+    pool.addPoolListener( this, m_layerKey );
   }
 
   /**
@@ -194,7 +194,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       styledLayerType.getDepends();
 
       final List stylesList = styledLayerType.getStyle();
-      IPoolableObjectType[] styleKeys = m_styleKeys;
+      final IPoolableObjectType[] styleKeys = m_styleKeys;
       for( int j = 0; j < styleKeys.length; j++ )
       {
         StyleType styleType = extentFac.createStyledLayerTypeStyleType();
@@ -227,41 +227,40 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_theme.dispose();
           m_theme = null;
         }
-        
+
         m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
         m_theme.addModellListener( this );
-        
+
         m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
         // jetzt immer die styles noch mal holen
+        // das ist nicht ok! was ist, wenn inzwischen neue styles vom user
+        // hinzugefügt wurden?
         // das ist nicht ok! was ist, wenn inzwischen neue styles vom user hinzugef?gt wurden?
         for( int i = 0; i < m_styleKeys.length; i++ )
           pool.addPoolListener( this, m_styleKeys[i] );
-        
+
         fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
       }
-      
+
       // styles
-      if( m_styleKeys != null && m_styleNames != null )
+      for( int i = 0; i < m_styleKeys.length; i++ )
       {
-        for( int i = 0; i < m_styleKeys.length; i++ )
+        final IPoolableObjectType styleKey = m_styleKeys[i];
+        if( pool.equalsKeys( styleKey, key ) )
         {
-          final IPoolableObjectType styleKey = m_styleKeys[i];
-          if( pool.equalsKeys( styleKey, key ) )
+          final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
+          final UserStyle style = sld.findUserStyle( m_styleNames[i] );
+          if( style != null && m_theme != null )
+            m_theme.addStyle( new KalypsoUserStyle( style ) );
+          else
           {
-            final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
-            final UserStyle style = sld.findUserStyle( m_styleNames[i] );
-            if( style != null && m_theme != null )
-              m_theme.addStyle( new KalypsoUserStyle( style ) );
-            else
-            {
-              // error handling?
-            }
-        
-            fireModellEvent( null );
-            
-            break;
+            // error handling?
           }
+
+          fireModellEvent( null );
+
+          break;
         }
       }
     }
@@ -303,7 +302,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getWorkspace();
-    
+
     return null;
   }
 
@@ -314,7 +313,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getFeatureType();
-    
+
     return null;
   }
 
@@ -324,7 +323,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public void addStyle( KalypsoUserStyle style )
   {
     if( m_theme != null )
-      m_theme.addStyle(style);
+      m_theme.addStyle( style );
   }
 
   /**
@@ -332,8 +331,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void removeStyle( KalypsoUserStyle style )
   {
-  if( m_theme != null )
-    m_theme.removeStyle(style);
+    if( m_theme != null )
+      m_theme.removeStyle( style );
   }
 
   /**

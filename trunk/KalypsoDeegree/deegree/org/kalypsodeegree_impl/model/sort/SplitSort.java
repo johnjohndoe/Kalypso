@@ -11,6 +11,7 @@ import org.deegree.graphics.displayelements.DisplayElement;
 import org.deegree.graphics.transformation.GeoTransform;
 import org.deegree.model.feature.Feature;
 import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureVisitor;
 import org.deegree.model.geometry.GM_Envelope;
 import org.deegree.model.geometry.GM_Object;
 import org.deegree.model.geometry.GM_Position;
@@ -372,5 +373,18 @@ public class SplitSort implements FeatureList
   public Feature[] toFeatures()
   {
     return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
+  }
+
+  /**
+   * @see org.deegree.model.feature.FeatureList#accept(org.deegree.model.feature.FeatureVisitor)
+   */
+  public void accept( final FeatureVisitor visitor ) throws Throwable
+  {
+    for( final Iterator iter = m_objects.iterator(); iter.hasNext(); )
+    {
+      final Object object = iter.next();
+      if( object instanceof Feature )
+        visitor.visit( (Feature)object );
+    }
   }
 }

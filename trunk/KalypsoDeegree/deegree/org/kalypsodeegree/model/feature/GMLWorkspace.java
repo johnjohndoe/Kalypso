@@ -38,13 +38,13 @@ public interface GMLWorkspace extends ModellEventProvider
   public URL getContext();
   
   /** Visit all Features of the given FeatureType */
-  public void accept( final FeatureVisitor fv, final FeatureType ft, final int depth ) throws Throwable;
+  public void accept( final FeatureVisitor fv, final FeatureType ft, final int depth );
 
   /** Visit the given feature */
-  public void accept( final FeatureVisitor fv, final Feature feature, final int depth ) throws Throwable;
+  public void accept( final FeatureVisitor fv, final Feature feature, final int depth );
 
   /** Visit alle features in the given list */
-  public void accept( final FeatureVisitor fv, final List features, final int depth ) throws Throwable;
+  public void accept( final FeatureVisitor fv, final List features, final int depth );
 
   public FeatureType getFeatureType( String featureName );
 

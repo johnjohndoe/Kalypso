@@ -65,15 +65,15 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     m_commandManager.undo();
   }
-  public void accept( FeatureVisitor fv, Feature feature, int depth ) throws Throwable
+  public void accept( FeatureVisitor fv, Feature feature, int depth )
   {
     m_workspace.accept( fv, feature, depth );
   }
-  public void accept( FeatureVisitor fv, FeatureType ft, int depth ) throws Throwable
+  public void accept( FeatureVisitor fv, FeatureType ft, int depth )
   {
     m_workspace.accept( fv, ft, depth );
   }
-  public void accept( FeatureVisitor fv, List features, int depth ) throws Throwable
+  public void accept( FeatureVisitor fv, List features, int depth )
   {
     m_workspace.accept( fv, features, depth );
   }

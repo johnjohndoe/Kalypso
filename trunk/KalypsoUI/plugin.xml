@@ -178,71 +178,42 @@
                label="Tabelle"
                path="additions"
                id="org.kalypso.ui.editors.tableeditor.menu">
-            <separator name="tabelle"/>
+            <groupMarker name="tabelle"/>
             <separator name="spalten"/>
+            <separator name="edit"/>
          </menu>
          <action
+               toolbarPath="tabelle"
                label="Berichtsablage..."
-               class="org.kalypso.ui.editor.gistableeditor.actions.ExportBerichtActionDelegate"
+               icon="icons/gistable/export_wiz.gif"
                tooltip="Die Tabelle in das Berichtswesen exportieren..."
+               class="org.kalypso.ui.editor.gistableeditor.actions.ExportBerichtActionDelegate"
                style="push"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
                id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
           <action
-               label="Exportieren..."
-               class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
-               tooltip="Die Tabelle exportieren"
-               style="push"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
+                toolbarPath="tabelle"
+                label="Exportieren..."
+                icon="icons/gistable/export_wiz.gif"
+                tooltip="Die Tabelle exportieren"
+                class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
+                style="push"
+                menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+                id="org.kalypso.ui.editor.gistableeditor.ExportAction"/>
          <action
-               toolbarPath="tabelle"
-               label="Zeile hinzufügen"
-               icon="icons/gistable/add_row.gif"
-               class="org.kalypso.ui.editor.gistableeditor.actions.AddRowActionDelagate"
-               tooltip="Fügt eine Zeile am Ende der Tabelle ein"
-               style="push"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editors.tableeditor.AddRowAction"/>
-         <action
-               toolbarPath="tabelle"
-               label="Zeile(n) löschen"
-               icon="icons/gistable/rem_row.gif"
-               class="org.kalypso.ui.editor.gistableeditor.actions.RemoveRowsActionDelegate"
-               tooltip="Löscht die selektierte(n) Zeile(n)"
-               style="push"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editors.tableeditor.RemoveRowsAction">
-         </action>
-         <action
-               toolbarPath="tabelle"
+               toolbarPath="edit"
                label="Daten speichern"
-               class="org.kalypso.ui.editor.gistableeditor.actions.SaveDataActionDelagate"
+               icon="icons/gistable/save_edit.gif"
                tooltip="Speichert die Daten der Tabelle"
+               class="org.kalypso.ui.editor.gistableeditor.actions.SaveDataActionDelagate"
                style="push"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
+               menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
                id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
             <enablement>
                <objectState
                      value="true"
                      name="isLayerDirty"/>
             </enablement>
-         </action>
-         <action
-               toolbarPath="tabelle"
-               label="Bearbeitung beenden"
-               tooltip="Beendet das Editieren der Tabellendaten"
-               class="org.kalypso.ui.editor.gistableeditor.actions.StartEditingActionDelagate"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.StartEditingAction">
-         </action>
-         <action
-               toolbarPath="tabelle"
-               label="Bearbeitung starten"
-               tooltip="Startet das Editieren der Tabellendaten"
-               class="org.kalypso.ui.editor.gistableeditor.actions.StartEditingActionDelagate"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.StartEditingAction">
          </action>
          <menu
                label="Spalten"
