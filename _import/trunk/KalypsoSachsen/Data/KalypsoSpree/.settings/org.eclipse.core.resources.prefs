@@ -1,10 +1,11 @@
-#Tue Oct 19 17:53:20 CEST 2004
+#Wed Oct 20 11:47:01 CEST 2004
 encoding//.templates/calcCase/ergebniskontrollePegel.gtt=UTF-8
 encoding//.templates/calcCase/calcCase.gmlOLD=UTF-8
 encoding//.prognose/prognose7/Ergebnisse/Zeitreihen/WV_SCHIRG.zml=UTF-8
 encoding//.prognose/prognose6/calcCase.gml=UTF-8
 encoding//.prognose/prognose12/calcCase.gml=UTF-8
 encoding//.prognose/prognose2/results.gml=UTF-8
+encoding//Rechenvarianten/r1/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose2/calcCase.gml=UTF-8
 encoding//.prognose/prognose5/results.gml=UTF-8
 encoding//.templates/calcCase/ergebniskontrollePegel.gmt=UTF-8
@@ -36,6 +37,7 @@ encoding//.prognose/prognose0/calcCase.gml=UTF-8
 encoding//.prognose/prognose10/calcCase.gml=UTF-8
 encoding//Grunddaten/Tabellen/Talsperren.gtt=UTF-8
 encoding//.prognose/prognose7/calcCase.gml=UTF-8
+encoding//Rechenvarianten/r1/zeitreihen/PG_BAUTZWB.zml=UTF-8
 encoding//.prognose/prognose3/results.gml=UTF-8
 encoding//.templates/calcCase/flusslauf.gmt=UTF-8
 encoding//.templates/calcCase/flusslauf.odt=UTF-8
