@@ -22,15 +22,14 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="MonatCollection" type="bodecommon:MonatCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<element name="MonatCollection" type="bodecommon:MonatCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="MonatCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="bodecommon:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="gml:boundedBy"/>
 					<element ref="bodecommon:MonatMember" minOccurs="12" maxOccurs="12"/>
 				</sequence>
-			</restriction>
+			</extension >
 		</complexContent>
 	</complexType>
 	<element name="MonatMember" type="bodecommon:MonatAssociationType" substitutionGroup="gml:featureMember"/>
