@@ -61,10 +61,10 @@ public class GmlLoader extends AbstractLoader implements IPoolListener
       throw new LoaderException( "Layer not found: " + source );
     }
 
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
-      throw new LoaderException(source.toString(), e );
+      throw new LoaderException( "Konnte die folgende Resource nicht laden: " + source.toString(), e );
     }
   }
 

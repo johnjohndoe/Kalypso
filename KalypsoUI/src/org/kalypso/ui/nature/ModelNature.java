@@ -76,13 +76,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private static final String MODELLTYP_MODELSPEC_XML = MODELLTYP_FOLDER + "/" + "modelspec.xml";
 
-
   public static final String ID = "org.kalypso.ui.ModelNature";
 
   private static final String METADATA_FILE = ".metadata";
 
   public static final String CALCULATION_FILE = ".calculation";
-  
+
   public static final String CONTROL_VIEW_FILE = MODELLTYP_FOLDER + "/control.template";
 
   private static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
@@ -96,6 +95,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   private Map m_calcJobMap = new HashMap();
 
   public static final String CONTROL_TEMPLATE_GML = MODELLTYP_FOLDER + "/" + CALCULATION_FILE;
+
   public static final String CONTROL_TEMPLATE_XSD = MODELLTYP_FOLDER + "/schema/control.xsd";
 
   /**
@@ -220,75 +220,130 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return ( calcFile != null && calcFile.exists() && calcFile instanceof IFile );
   }
 
-  /** Erzeugt für dieses Projekt einen neuen Rechenfall im angegebenen Ordner */
-  public static void createCalculationCaseInFolder( final IFolder folder,
-      final IProgressMonitor monitor ) throws CoreException
+  public static CalcCaseConfigType readCalcCaseConfig( final IFolder folder ) throws CoreException
   {
-    monitor.beginTask( "Rechenfall erzeugen", 2000 );
-    
     final IProject project = folder.getProject();
-    
+
     final IFile tranformerConfigFile = project.getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
-    
-    // Protokolle ersetzen
     try
     {
-      final ReplaceTokens replaceReader = new ReplaceTokens( new InputStreamReader( tranformerConfigFile
-          .getContents(), tranformerConfigFile.getCharset() ) ); 
-      
+      // Protokolle ersetzen
+      final ReplaceTokens replaceReader = new ReplaceTokens( new InputStreamReader(
+          tranformerConfigFile.getContents(), tranformerConfigFile.getCharset() ) );
+
       configureReplaceTokensForCalcCase( folder, replaceReader );
 
-      final CalcCaseConfigType trans = (CalcCaseConfigType)new ObjectFactory()
-          .createUnmarshaller().unmarshal( new InputSource( replaceReader ) );
-
-      monitor.worked( 1000 );
-      
-      // daten transformieren
-      TransformationHelper.doTranformations( trans.getCreateTransformations(), new SubProgressMonitor( monitor, 1000 ) );
+      return (CalcCaseConfigType)new ObjectFactory().createUnmarshaller()
+          .unmarshal( new InputSource( replaceReader ) );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      
+
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Lesen der Rechenfallkonfiguration: "
+              + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Lesen der Rechenfallkonfiguration: "
+              + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
+    }
+  }
+
+  /** Erzeugt einen neuen Rechenfall im angegebenen Ordner */
+  public static void createCalculationCaseInFolder( final IFolder folder,
+      final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Rechenfall erzeugen", 2000 );
+
+    // Protokolle ersetzen
+    try
+    {
+      final CalcCaseConfigType trans = readCalcCaseConfig( folder );
+
+      monitor.worked( 1000 );
+
+      // daten transformieren
+      TransformationHelper.doTranformations( trans.getCreateTransformations(),
+          new SubProgressMonitor( monitor, 1000 ) );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
-      
+
       throw e;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Erzeugen des Rechenfalls\n" + e.getLocalizedMessage(), e ) );
+
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Erzeugen des Rechenfalls\n" + e.getLocalizedMessage(), e ) );
     }
-    
+
     monitor.done();
   }
 
-  private static void configureReplaceTokensForCalcCase( final IFolder calcFolder, final ReplaceTokens replaceTokens )
+  /** Aktualisiert einen vorhandenen Rechenfall 
+   * @throws CoreException*/
+  public static void updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Rechenfall erzeugen", 2000 );
+
+    // Protokolle ersetzen
+    try
+    {
+      final CalcCaseConfigType trans = readCalcCaseConfig( folder );
+
+      monitor.worked( 1000 );
+
+      // daten transformieren
+      TransformationHelper.doTranformations( trans.getUpdateTransformations(),
+          new SubProgressMonitor( monitor, 1000 ) );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Fehler beim Aktualisieren des Rechenfalls\n" + e.getLocalizedMessage(), e ) );
+    }
+
+    monitor.done();
+  }
+
+  private static void configureReplaceTokensForCalcCase( final IFolder calcFolder,
+      final ReplaceTokens replaceTokens )
   {
     replaceTokens.setBeginToken( ':' );
     replaceTokens.setEndToken( ':' );
-    
-    final Token timeToken = new ReplaceTokens.Token( );
+
+    final Token timeToken = new ReplaceTokens.Token();
     timeToken.setKey( "SYSTEM_TIME" );
-    timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" )
-        .format( new Date( System.currentTimeMillis() ) ) );
-    
+    timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).format( new Date( System
+        .currentTimeMillis() ) ) );
+
     replaceTokens.addConfiguredToken( timeToken );
 
-    final Token calcdirToken = new ReplaceTokens.Token( );
+    final Token calcdirToken = new ReplaceTokens.Token();
     calcdirToken.setKey( "calcdir" );
     calcdirToken.setValue( calcFolder.getFullPath().toString() + "/" );
-    
+
     replaceTokens.addConfiguredToken( calcdirToken );
 
-    final Token projectToken = new ReplaceTokens.Token( );
+    final Token projectToken = new ReplaceTokens.Token();
     projectToken.setKey( "project" );
     projectToken.setValue( calcFolder.getProject().getFullPath().toString() + "/" );
-    
+
     replaceTokens.addConfiguredToken( projectToken );
   }
 
@@ -410,91 +465,95 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-//  private void putCalcCaseOutputData( final IFolder folder, final URL[] results,
-//      final IProgressMonitor monitor ) throws CoreException
-//  {
-//    monitor.beginTask( "Ergebnisdaten werden abgelegt", 2000 );
-//
-//    final Modelspec modelspec = getModelspec();
-//
-//    final List outputList = modelspec.getOutput();
-//    int count = 0;
-//    if( results == null || results.length < outputList.size() )
-//      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-//          "Ergebnisdaten passen nicht zur Modellspezifikation", null ) );
-//
-//    final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
-//    if( resultsFolder.exists() )
-//      resultsFolder.delete( false, true, new SubProgressMonitor( monitor, 1000 ) );
-//
-//    resultsFolder.create( false, true, null );
-//
-//    for( final Iterator iter = outputList.iterator(); iter.hasNext(); )
-//    {
-//      try
-//      {
-//        final ModelspecType.OutputType output = (ModelspecType.OutputType)iter.next();
-//        final String path = output.getPath();
-//
-//        final IFile file = resultsFolder.getFile( path );
-//        final PipedInputStream pis = new PipedInputStream();
-//        final PipedOutputStream pos = new PipedOutputStream( pis );
-//
-//        final int index = count;
-//        final Thread readThread = new Thread( "Ergebnis lesen: " + path )
-//        {
-//          public void run()
-//          {
-//            try
-//            {
-//              final URL url = results[index];
-//              //            jobmonitor.beginTask( "URL lesen: " + url.toExternalForm(),
-//              // IProgressMonitor.UNKNOWN );
-//
-//              final InputStream urlStream = url.openStream();
-//              StreamUtilities.streamCopy( urlStream, pos );
-//
-//              pos.close();
-//            }
-//            catch( final IOException e )
-//            {
-//              e.printStackTrace();
-//              //            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-//              //                "Fehler beim Zugriff auf Ergebnisdaten", e );
-//            }
-//            finally
-//            {
-//              if( pos != null )
-//                try
-//                {
-//                  pos.close();
-//                }
-//                catch( IOException e )
-//                {
-//                  e.printStackTrace();
-//                  //                return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(),
-//                  // 0,
-//                  //                    "Fehler beim Zugriff auf Ergebnisdaten", e );
-//                }
-//            }
-//
-//            //          return Status.OK_STATUS;
-//          }
-//        };
-//        readThread.start();
-//
-//        file.create( pis, false, null );
-//      }
-//      catch( final Exception e )
-//      {
-//        e.printStackTrace();
-//      }
-//
-//      count++;
-//    }
-//
-//    monitor.worked( 1000 );
-//  }
+  //  private void putCalcCaseOutputData( final IFolder folder, final URL[]
+  // results,
+  //      final IProgressMonitor monitor ) throws CoreException
+  //  {
+  //    monitor.beginTask( "Ergebnisdaten werden abgelegt", 2000 );
+  //
+  //    final Modelspec modelspec = getModelspec();
+  //
+  //    final List outputList = modelspec.getOutput();
+  //    int count = 0;
+  //    if( results == null || results.length < outputList.size() )
+  //      throw new CoreException( new Status( IStatus.ERROR,
+  // KalypsoGisPlugin.getId(), 0,
+  //          "Ergebnisdaten passen nicht zur Modellspezifikation", null ) );
+  //
+  //    final IFolder resultsFolder = folder.getFolder( CALC_RESULT_FOLDER );
+  //    if( resultsFolder.exists() )
+  //      resultsFolder.delete( false, true, new SubProgressMonitor( monitor, 1000 )
+  // );
+  //
+  //    resultsFolder.create( false, true, null );
+  //
+  //    for( final Iterator iter = outputList.iterator(); iter.hasNext(); )
+  //    {
+  //      try
+  //      {
+  //        final ModelspecType.OutputType output =
+  // (ModelspecType.OutputType)iter.next();
+  //        final String path = output.getPath();
+  //
+  //        final IFile file = resultsFolder.getFile( path );
+  //        final PipedInputStream pis = new PipedInputStream();
+  //        final PipedOutputStream pos = new PipedOutputStream( pis );
+  //
+  //        final int index = count;
+  //        final Thread readThread = new Thread( "Ergebnis lesen: " + path )
+  //        {
+  //          public void run()
+  //          {
+  //            try
+  //            {
+  //              final URL url = results[index];
+  //              // jobmonitor.beginTask( "URL lesen: " + url.toExternalForm(),
+  //              // IProgressMonitor.UNKNOWN );
+  //
+  //              final InputStream urlStream = url.openStream();
+  //              StreamUtilities.streamCopy( urlStream, pos );
+  //
+  //              pos.close();
+  //            }
+  //            catch( final IOException e )
+  //            {
+  //              e.printStackTrace();
+  //              // return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+  //              // "Fehler beim Zugriff auf Ergebnisdaten", e );
+  //            }
+  //            finally
+  //            {
+  //              if( pos != null )
+  //                try
+  //                {
+  //                  pos.close();
+  //                }
+  //                catch( IOException e )
+  //                {
+  //                  e.printStackTrace();
+  //                  // return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(),
+  //                  // 0,
+  //                  // "Fehler beim Zugriff auf Ergebnisdaten", e );
+  //                }
+  //            }
+  //
+  //            // return Status.OK_STATUS;
+  //          }
+  //        };
+  //        readThread.start();
+  //
+  //        file.create( pis, false, null );
+  //      }
+  //      catch( final Exception e )
+  //      {
+  //        e.printStackTrace();
+  //      }
+  //
+  //      count++;
+  //    }
+  //
+  //    monitor.worked( 1000 );
+  //  }
 
   public static void runPrognose( final Shell shell, final String name )
   {
@@ -583,126 +642,142 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public String startCalculation( final IFolder calcFolder, final IProgressMonitor monitor )
       throws InvocationTargetException
   {
-//    try
-//    {
-      if( m_calcJobMap.containsValue( calcFolder ) )
-        throw new InvocationTargetException( null,
-            "Dieser Rechenfall wird zur Zeit bereits gerechnet" );
+    //    try
+    //    {
+    if( m_calcJobMap.containsValue( calcFolder ) )
+      throw new InvocationTargetException( null,
+          "Dieser Rechenfall wird zur Zeit bereits gerechnet" );
 
-      monitor.beginTask( "Modellrechnung starten", 2000 );
+    monitor.beginTask( "Modellrechnung starten", 2000 );
 
-      // die Dateien suchen und erzeugen
-//      final URL[] input = getCalcCaseInputData( calcFolder, new SubProgressMonitor( monitor, 1000 ) );
+    // die Dateien suchen und erzeugen
+    //      final URL[] input = getCalcCaseInputData( calcFolder, new
+    // SubProgressMonitor( monitor, 1000 ) );
 
-      // start job
-      // TODO
-//      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-//      final String jobID = calcService.createJob( getCalcType(), calcFolder.getName(), input );
-//
-//      monitor.worked( 1000 );
-//
-//      m_calcJobMap.put( jobID, calcFolder );
-//
-//      return jobID;
-      return "";
-//    }
-//    catch( final CalcJobServiceException e )
-//    {
-//      e.printStackTrace();
-//
-//      throw new InvocationTargetException( e, "Rechenlauf konnte nicht gestartet werden" );
-//    }
+    // start job
+    // TODO
+    //      final CalcJobService calcService =
+    // KalypsoGisPlugin.getDefault().getCalcService();
+    //      final String jobID = calcService.createJob( getCalcType(),
+    // calcFolder.getName(), input );
+    //
+    //      monitor.worked( 1000 );
+    //
+    //      m_calcJobMap.put( jobID, calcFolder );
+    //
+    //      return jobID;
+    return "";
+    //    }
+    //    catch( final CalcJobServiceException e )
+    //    {
+    //      e.printStackTrace();
+    //
+    //      throw new InvocationTargetException( e, "Rechenlauf konnte nicht
+    // gestartet werden" );
+    //    }
   }
 
   public void stopCalculation( final String jobID )
   {
     jobID.getClass();
-//    final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-//
-//    try
-//    {
-//      calcService.cancelJob( jobID );
-//      calcService.removeJob( jobID );
-//    }
-//    catch( final CalcJobServiceException e )
-//    {
-//      e.printStackTrace();
-//    }
-//    finally
-//    {
-//      m_calcJobMap.remove( jobID );
-//    }
+    //    final CalcJobService calcService =
+    // KalypsoGisPlugin.getDefault().getCalcService();
+    //
+    //    try
+    //    {
+    //      calcService.cancelJob( jobID );
+    //      calcService.removeJob( jobID );
+    //    }
+    //    catch( final CalcJobServiceException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
+    //    finally
+    //    {
+    //      m_calcJobMap.remove( jobID );
+    //    }
   }
 
-//  public synchronized CalcJobDescription checkCalculation( final String jobID )
-//      throws CoreException
-//  {
-//    try
-//    {
-//      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-//
-//      final CalcJobDescription description = calcService.getJobDescription( jobID );
-//
-//      return description;
-//    }
-//    catch( final CalcJobServiceException cse )
-//    {
-//      m_calcJobMap.remove( jobID );
-//
-//      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-//          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, cse ) );
-//    }
-//  }
+  //  public synchronized CalcJobDescription checkCalculation( final String jobID
+  // )
+  //      throws CoreException
+  //  {
+  //    try
+  //    {
+  //      final CalcJobService calcService =
+  // KalypsoGisPlugin.getDefault().getCalcService();
+  //
+  //      final CalcJobDescription description = calcService.getJobDescription( jobID
+  // );
+  //
+  //      return description;
+  //    }
+  //    catch( final CalcJobServiceException cse )
+  //    {
+  //      m_calcJobMap.remove( jobID );
+  //
+  //      throw new CoreException( new Status( IStatus.ERROR,
+  // KalypsoGisPlugin.getId(), 0,
+  //          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, cse ) );
+  //    }
+  //  }
 
   public void retrieveCalculation( final String jobID ) //throws CoreException
   {
     jobID.getClass();
-//    try
-//    {
-//      final CalcJobService calcService = KalypsoGisPlugin.getDefault().getCalcService();
-//      final CalcJobDescription description = calcService.getJobDescription( jobID );
-//
-//      if( description.getState() != CalcJobStatus.FINISHED )
-//        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-//            "Berechnung nicht beendet: ID=" + jobID, null ) );
-//
-//      final IFolder folder = (IFolder)m_calcJobMap.get( jobID );
-//
-//      final URL[] results = calcService.retrieveResults( jobID );
-//
-//      putCalcCaseOutputData( folder, results, new NullProgressMonitor() );
-//
-//      calcService.removeJob( jobID );
-//    }
-//    catch( CalcJobServiceException e )
-//    {
-//      e.printStackTrace();
-//
-//      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-//          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, null ) );
-//    }
-//    finally
-//    {
-//      m_calcJobMap.remove( jobID );
-//    }
+    //    try
+    //    {
+    //      final CalcJobService calcService =
+    // KalypsoGisPlugin.getDefault().getCalcService();
+    //      final CalcJobDescription description = calcService.getJobDescription(
+    // jobID );
+    //
+    //      if( description.getState() != CalcJobStatus.FINISHED )
+    //        throw new CoreException( new Status( IStatus.ERROR,
+    // KalypsoGisPlugin.getId(), 0,
+    //            "Berechnung nicht beendet: ID=" + jobID, null ) );
+    //
+    //      final IFolder folder = (IFolder)m_calcJobMap.get( jobID );
+    //
+    //      final URL[] results = calcService.retrieveResults( jobID );
+    //
+    //      putCalcCaseOutputData( folder, results, new NullProgressMonitor() );
+    //
+    //      calcService.removeJob( jobID );
+    //    }
+    //    catch( CalcJobServiceException e )
+    //    {
+    //      e.printStackTrace();
+    //
+    //      throw new CoreException( new Status( IStatus.ERROR,
+    // KalypsoGisPlugin.getId(), 0,
+    //          "Fehler beim Prüfen des Rechenstatus: ID=" + jobID, null ) );
+    //    }
+    //    finally
+    //    {
+    //      m_calcJobMap.remove( jobID );
+    //    }
   }
 
   public GMLWorkspace getDefaultControl() throws CoreException
   {
     try
     {
-      final URL gmlURL = new URL( "platform:/resource/" + getProject().getName() + "/" + CONTROL_TEMPLATE_GML ); 
-      final URL schemaURL = new URL( "platform:/resource/" + getProject().getName() + "/" + CONTROL_TEMPLATE_XSD );
+      final URL gmlURL = new URL( "platform:/resource/" + getProject().getName() + "/"
+          + CONTROL_TEMPLATE_GML );
+      final URL schemaURL = new URL( "platform:/resource/" + getProject().getName() + "/"
+          + CONTROL_TEMPLATE_XSD );
 
       // TODO: ReplaceTokens
-      
+
       return GmlSerializer.createGMLWorkspace( gmlURL, schemaURL );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
     }
   }
 

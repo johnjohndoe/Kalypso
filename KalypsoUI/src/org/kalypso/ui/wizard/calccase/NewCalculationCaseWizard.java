@@ -44,8 +44,6 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   private NewCalculationCaseCreateFolderPage m_createFolderPage;
   private SteuerparameterWizardPage m_createControlPage;
 
-  
-  
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
@@ -55,30 +53,6 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     super.init( workbench, currentSelection );
     setWindowTitle( "neuer Rechenfall" );
     setNeedsProgressMonitor( true );
-  }
-
-  /**
-   * @see org.eclipse.ui.wizards.newresource.BasicNewResourceWizard#initializeDefaultPageImageDescriptor()
-   */
-  protected void initializeDefaultPageImageDescriptor()
-  {
-    super.initializeDefaultPageImageDescriptor();
-  //    String iconPath = "icons/full/";//$NON-NLS-1$
-
-  // TODO: set Icon
-  //    try
-  //    {
-  //      URL installURL = Platform.getPlugin( PlatformUI.PLUGIN_ID
-  // ).getDescriptor().getInstallURL();
-  //      URL url = new URL( installURL, iconPath + "wizban/newfolder_wiz.gif"
-  // );//$NON-NLS-1$
-  //      ImageDescriptor desc = ImageDescriptor.createFromURL( url );
-  //      setDefaultPageImageDescriptor( desc );
-  //    }
-  //    catch( MalformedURLException e )
-  //    {
-  //      // Should not happen. Ignore.
-  //    }
   }
 
   /**
@@ -129,14 +103,14 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         try
         {
           monitor.beginTask( IDEWorkbenchMessages
-              .getString( "WizardNewFolderCreationPage.progress" ), 4000 ); //$NON-NLS-1$
+              .getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
           ContainerGenerator generator = new ContainerGenerator( containerPath );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
 
           ModelNature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           
-          
+          // .calculation schreiben
           SetContentThread thread = null;
           try
           {
@@ -166,6 +140,9 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
           final Throwable throwable = thread.getThrown();
           if( throwable != null )
             throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Schreiben der Kontrolldatei.\n" + throwable.getLocalizedMessage(), throwable ) );
+          monitor.worked( 1000 );
+          
+          ModelNature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
         }
         finally
         {
