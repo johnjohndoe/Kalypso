@@ -36,13 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd.raster.test;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.CopyUtils;
 import org.kalypso.dwd.raster.ForecastGeneratorConfigurator;
+import org.kalypso.java.io.FileUtilities;
 
 /**
  * @author doemming
@@ -51,11 +58,34 @@ public class ForecastGeneratorConfiguratorTest extends TestCase
 {
   public void testForecastGeneratorConfigurator()
   {
-    final String[] a2 = new String[]
+    final File tmpDir = FileUtilities.createNewTempDir( "TMP_forecastConfigurator" );
+    final InputStream modellStream = getClass().getResourceAsStream( "modell.gml" );
+    final File modellFile = new File( tmpDir, "modell.gml" );
+    final InputStream dwdBaseStream = getClass().getResourceAsStream( "lm_inv_slug" );
+    final File dwdBaseFile = new File( tmpDir, "lm_inv_slug" );
+
+    try
     {
-        "c:\\\\TMP\\raster\\modell.gml",
-        "c:\\\\TMP\\raster\\base.dwd",
-    };
-    ForecastGeneratorConfigurator.main( a2 );
+      final FileWriter modellWriter = new FileWriter( modellFile );
+      final FileWriter dwdBaseWriter = new FileWriter( dwdBaseFile );
+      CopyUtils.copy( modellStream, modellWriter );
+      CopyUtils.copy( dwdBaseStream, dwdBaseWriter );
+      modellWriter.close();
+      dwdBaseWriter.close();
+
+      final String[] a2 = new String[]
+      {
+          modellFile.getCanonicalPath(),
+          dwdBaseFile.getCanonicalPath()
+      //        "c:\\\\TMP\\raster\\modell.gml",
+      //        "c:\\\\TMP\\raster\\base.dwd",
+      };
+      ForecastGeneratorConfigurator.main( a2 );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+      fail( e.getMessage() );
+    }
   }
 }

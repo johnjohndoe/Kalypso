@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd.raster;
 
 import java.io.File;
@@ -72,6 +72,7 @@ import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConfType.CatchmentType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -136,7 +137,8 @@ public class ForecastGeneratorConfigurator
 
     try
     {
-      ForecastGeneratorConfigurator raster2ZML = new ForecastGeneratorConfigurator( baseRasterFile, modelFile );
+      ForecastGeneratorConfigurator raster2ZML = new ForecastGeneratorConfigurator( baseRasterFile,
+          modelFile );
       raster2ZML.init();
       raster2ZML.createConf();
     }
@@ -209,7 +211,8 @@ public class ForecastGeneratorConfigurator
     conf.setCreateZMLFile( true );
     conf.setInputFolder( "in" );
     conf.setOutputFolder( "out" );
-    conf.setDeleteInputRasterAfterProcessing(false);
+    conf.setProcessedRasterDir( "" );
+    conf.setDefaultStatusValue( Integer.toString( KalypsoStati.BIT_OK ) );
     final List catchmentList = conf.getCatchment();
 
     for( Iterator iter = set.iterator(); iter.hasNext(); )
@@ -233,7 +236,7 @@ public class ForecastGeneratorConfigurator
     final Writer writer = new FileWriter( confFile );
     marshaller.marshal( conf, writer );
     writer.close();
-    System.out.println("wrote configuration to "+confFile.getCanonicalPath());
+    System.out.println( "wrote configuration to " + confFile.getCanonicalPath() );
   }
 
   private DWDRaster createFakeRaster( DWDRaster pointGeoRaster, int max, GeoTransformer transformer )

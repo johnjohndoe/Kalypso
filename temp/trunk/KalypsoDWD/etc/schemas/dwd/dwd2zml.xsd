@@ -6,7 +6,10 @@
               <xs:element name="inputFolder" type="xs:string"/>
               <xs:element name="outputFolder" type="xs:string"/>
               <xs:element name="createZMLFile" type="xs:boolean"/>
-              <xs:element name="deleteInputRasterAfterProcessing" type="xs:boolean"/>
+              <xs:element name="defaultStatusValue" type="xs:string"/>
+              <xs:element name="processedRasterDir" type="xs:string">
+              <!-- -->
+              </xs:element>
                 <xs:element name="catchment" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.update;
 
 import java.io.File;
@@ -71,6 +71,12 @@ public class UpdateModell
   private final static String FILTER_WQ = "?" + UpdateHelper.createWQFilter();
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
+
+  private static final double DEFAULT_N = 0;
+
+  private static final double DEFAULT_Q = 0;
+
+  private static final double DEFAULT_W = 0;
 
   public static void main( String[] args )
   {
@@ -124,18 +130,19 @@ public class UpdateModell
 
   private static void updateCatchments( Feature[] features ) throws Exception
   {
+    String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, DEFAULT_N, true );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       // messung
       TimeseriesLink linkMessung = NAZMLGenerator
           .generateobsLink( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell
-              + feature.getId() );
+              + feature.getId() + interpolationFilter );
       setTSLink( feature, "niederschlagZRRepository", linkMessung );
       // vorhersage
       TimeseriesLink linkVorhersage = NAZMLGenerator
           .generateobsLink( WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE
-              + feature.getId() + ".zml" );
+              + feature.getId() + ".zml" + interpolationFilter );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkVorhersage );
       // berechnung
       TimeseriesLink linkBerechnung = NAZMLGenerator
@@ -368,7 +375,8 @@ public class UpdateModell
       if( type.indexOf( "Z" ) > -1 )
       {
         //zuflussRep
-        String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, 0, true );
+        String interpolationFilter = "?"
+            + UpdateHelper.createInterpolationFilter( 1, DEFAULT_Q, true );
         TimeseriesLink zuflussRep = NAZMLGenerator
             .generateobsLink( "project:/.model/zeitreihen/Q_leer.zml" + interpolationFilter );
         setTSLink( fe, "zuflussZRRepository", zuflussRep );
@@ -424,7 +432,8 @@ public class UpdateModell
       //pegelRep
       if( type.indexOf( "P" ) > -1 )
       {
-        String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, 0, true );
+        String interpolationFilter = "?"
+            + UpdateHelper.createInterpolationFilter( 1, DEFAULT_W, true );
         if( available )
         {
           TimeseriesLink pegelRep = NAZMLGenerator

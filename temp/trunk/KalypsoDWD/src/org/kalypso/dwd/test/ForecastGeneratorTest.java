@@ -36,13 +36,24 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd.test;
 
-import org.kalypso.dwd.ForecastGenerator;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.FileUtils;
+import org.kalypso.dwd.ForecastGenerator;
+import org.kalypso.dwd.dwdzml.DwdzmlConf;
+import org.kalypso.dwd.dwdzml.ObjectFactory;
 
 /**
  * @author doemming
@@ -51,7 +62,50 @@ public class ForecastGeneratorTest extends TestCase
 {
   public void test()
   {
-    final String[] args=new String[]{"C:\\TMP\\raster\\raster.conf"};
-    ForecastGenerator.main(args);
+    try
+    {
+      //      final String foreCastName = "lm_2004_10_22_00";
+      final String foreCastName = "lm_2004_11_10_00";
+      //      final String foreCastName = "lm_2004_11_09_00";
+      //      final String foreCastName = "lm_2004_11_08_00";
+      final InputStream rasterConfAsStream = getClass().getResourceAsStream( "raster.conf" );
+      final ObjectFactory fac = new ObjectFactory();
+      final Unmarshaller unmarshaller = fac.createUnmarshaller();
+      final DwdzmlConf conf = (DwdzmlConf)unmarshaller.unmarshal( rasterConfAsStream );
+      final String inputFolder = conf.getInputFolder();
+
+      final InputStream dataAsStream = getClass().getResourceAsStream( foreCastName );
+      final File tmpDir = new File( inputFolder );
+      if( !tmpDir.exists() )
+      {
+        tmpDir.mkdirs();
+      }
+      else
+      {
+        FileUtils.cleanDirectory( tmpDir );
+      }
+      final File dataFile = new File( tmpDir, foreCastName );
+      final FileWriter dataWriter = new FileWriter( dataFile );
+      CopyUtils.copy( dataAsStream, dataWriter );
+      dataWriter.close();
+
+      final Marshaller marshaller = fac.createMarshaller();
+      final File rasterConfFile = new File( tmpDir, "raster.conf" );
+      final FileWriter confWriter = new FileWriter( rasterConfFile );
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      marshaller.marshal( conf, confWriter );
+      confWriter.close();
+
+      final String[] args = new String[]
+      { rasterConfFile.getCanonicalPath()
+      //      "C:\\TMP\\raster\\raster.conf"
+      };
+      ForecastGenerator.main( args );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      fail( e.getMessage() );
+    }
   }
 }

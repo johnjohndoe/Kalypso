@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd;
 
 import java.io.File;
@@ -59,6 +59,7 @@ import java.util.TreeMap;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.FileUtils;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConfType.CatchmentType;
@@ -67,6 +68,7 @@ import org.kalypso.dwd.dwdzml.DwdzmlConfType.CatchmentType;
  * 
  * ForecastGenerator generates zml-forecast timeseries from dwd raster formated
  * files. parameters must be provided via configuration file.
+ * 
  * @author doemming
  */
 public class ForecastGenerator
@@ -90,7 +92,8 @@ public class ForecastGenerator
   }
 
   /**
-   * @param args: configurationfile
+   * @param args:
+   *          configurationfile
    */
   public static void main( String[] args )
   {
@@ -103,7 +106,7 @@ public class ForecastGenerator
         generator.init();
         generator.generateForecast();
       }
-      
+
       catch( IOException e )
       {
         e.printStackTrace();
@@ -116,7 +119,7 @@ public class ForecastGenerator
       {
         e.printStackTrace();
       }
-  
+
     }
   }
 
@@ -126,7 +129,7 @@ public class ForecastGenerator
     m_storage = new RasterStorage();
   }
 
-  public void init() throws JAXBException 
+  public void init() throws JAXBException
   {
     final ObjectFactory o = new ObjectFactory();
     final Unmarshaller unmarshaller = o.createUnmarshaller();
@@ -146,21 +149,31 @@ public class ForecastGenerator
       final List posList = catchment.getRasterPos();
       createTimserie( fid, posList );
     }
-    if(m_conf.isDeleteInputRasterAfterProcessing())
+
+    final String processedRasterDir = m_conf.getProcessedRasterDir();
+    System.out.println( "processed file " + rasterFile.getCanonicalPath() );
+    if( processedRasterDir != null && processedRasterDir.length() > 0 )
     {
-      System.out.println("deleting processed file "+rasterFile.getCanonicalPath());
+      File processedRasterStorage = new File( processedRasterDir );
+      if( !processedRasterStorage.exists() )
+        processedRasterStorage.mkdirs();
+      FileUtils.copyFile( rasterFile, new File( processedRasterStorage, rasterFile.getName() ) );
+      System.out.println( "copied processed file to " + processedRasterStorage.getCanonicalPath() );
       rasterFile.delete();
+      System.out.println( "removed processed file " + rasterFile.getCanonicalPath() );
     }
     else
     {
-      System.out.println("processed file "+rasterFile.getCanonicalPath());
-      System.out.println("processed file will NOT be delete (see configuration)");
+      System.out.println( "processed file " + rasterFile.getCanonicalPath() );
+      System.out.println( "processed file will NOT be delete (see configuration)" );
     }
   }
 
   private boolean createTimserie( String id, List posList ) throws IOException
   {
     System.out.println( "Feature: " + id + " has " + posList.size() + " rasterpoints" );
+    final String statusValue = m_conf.getDefaultStatusValue() == null ? "" : m_conf
+        .getDefaultStatusValue();
     final SortedMap zr = new TreeMap();
     createTimserie( zr, posList, DWDRaster.KEY_RAIN );
     createTimserie( zr, posList, DWDRaster.KEY_SNOW );
@@ -171,8 +184,8 @@ public class ForecastGenerator
       final Date date = (Date)iter.next();
       final Double value = (Double)zr.get( date );
       final double niederschlag = value.doubleValue() / 100d;
-      csvBuffer.append( m_zmlDF.format( date ) + "," + m_decimalFormat.format( niederschlag )
-          + "\n" );
+      csvBuffer.append( m_zmlDF.format( date ) + "," + m_decimalFormat.format( niederschlag ) + ","
+          + statusValue + "\n" );
     }
     final File ascciZmlFile = new File( m_conf.getOutputFolder(), id + ".csv" );
     if( ascciZmlFile.exists() )
