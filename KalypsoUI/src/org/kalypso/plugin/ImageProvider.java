@@ -1,6 +1,7 @@
 package org.kalypso.plugin;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Convenience class for storing references to image descriptors used by the
@@ -10,12 +11,7 @@ public class ImageProvider
 {
   public static final ImageDescriptor id( final String location )
   {
-    return KalypsoGisPlugin.getDefault().imageDescriptor( location );
-  }
-
-  public static final ImageDescriptor id( final String pluginID, final String location )
-  {
-    return KalypsoGisPlugin.getDefault().imageDescriptor( pluginID, location );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.ui", location );
   }
   
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
@@ -28,5 +24,5 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMOUT = id( "icons/full/elcl16/kde_viewmag-.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_PAN = id( "icons/full/elcl16/kde_move.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_FULLEXTENT = id( "icons/full/elcl16/kde_window_fullscreen.gif" );
-
 }
+
