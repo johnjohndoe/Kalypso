@@ -14,7 +14,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/relaxngDatatype.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xsdlib.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/kalypsodeegree.jar"/>
+	<classpathentry exported="true" sourcepath="/backupdeegree/deegree" kind="lib" path="lib/kalypsodeegree.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deegree/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-awt-util.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deegree/batik/lib/batik-css.jar"/>
