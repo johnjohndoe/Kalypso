@@ -1,68 +1,43 @@
 package de.tuhh.wb.javagis.view.netview;
 
-import javax.swing.table.AbstractTableModel;
-import javax.swing.*;
-import de.tuhh.wb.javagis.tools.I18n;
-
-//import de.tuhh.wb.javagis.model.ElementSession;
-
-import de.tuhh.wb.javagis.view.ViewManager;
-
-import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
-
-import java.util.Hashtable;
-
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Vector;
 
-import java.util.Enumeration;
-
-import java.awt.geom.Point2D;
-
-import java.awt.Image;
-
-import java.awt.Graphics;
-
-import java.awt.event.ComponentEvent;
-
-import java.awt.event.ComponentListener;
-
-import javax.swing.JFrame;
-
-import javax.swing.JScrollPane;
-
-import javax.swing.JPanel;
-
-import javax.swing.JCheckBoxMenuItem;
-
-import javax.swing.JInternalFrame;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-
-import java.awt.event.MouseListener;
-
-import java.awt.event.MouseEvent;
-
-import java.awt.event.MouseMotionListener;
-
-import java.awt.event.ActionListener;
-
-import java.awt.event.ActionEvent;
-
-import java.awt.Color;
-
-import java.awt.Font;
-
-import java.awt.Graphics2D;
-
-import java.awt.BasicStroke;
-
-import java.awt.GridLayout;
-
-import de.tuhh.wb.javagis.data.*;
-
 import javax.ejb.ObjectNotFoundException;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
-import java.awt.HeadlessException;
+import de.tuhh.wb.javagis.data.GisObject;
+import de.tuhh.wb.javagis.data.GisObjectClass;
+import de.tuhh.wb.javagis.data.GisRelation;
+import de.tuhh.wb.javagis.data.GisRelationClass;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.ViewManager;
 
 public class GisNetView
 	extends JInternalFrame

@@ -22,11 +22,22 @@
  */
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.components;
 
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.Adjustable;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JTextField;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 /**
  *  JSpinField is a numeric field with 2 spin buttons to increase or decrease

@@ -1,15 +1,15 @@
 package de.tuhh.kalypso.data.strand;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.util.Iterator;
+import java.util.Vector;
+
 import de.tuhh.kalypso.data.node.Node;
 import de.tuhh.kalypso.util.Printf;
 import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
 import de.tuhh.kalypso.util.xmlParser.VectorSet;
-
-import java.util.Vector;
-import java.util.Iterator;
-import java.io.StreamTokenizer;
-import java.io.IOException;
-import java.io.BufferedWriter;
 /** This class Rhb.java holds the data for a strand which represents a reservoir.
  * A Reservoir always describes a discharge waterlevel relationship. It can not
  * only discharge water in the out node but also to different target node. This

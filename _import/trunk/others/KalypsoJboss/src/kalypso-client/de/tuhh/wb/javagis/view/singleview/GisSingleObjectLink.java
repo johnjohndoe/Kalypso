@@ -1,11 +1,9 @@
 package de.tuhh.wb.javagis.view.singleview;
 
 
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-import de.tuhh.wb.javagis.view.ViewManager;
+import javax.swing.JButton;
 
 import de.tuhh.wb.javagis.data.GisElement;
 

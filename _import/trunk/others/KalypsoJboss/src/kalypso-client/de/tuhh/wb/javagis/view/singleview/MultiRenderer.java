@@ -4,27 +4,16 @@ package de.tuhh.wb.javagis.view.singleview;
 
 
 
-import java.awt.*;
+import java.awt.Component;
 
-import java.awt.event.*;
-
-import javax.swing.*;
-
-import javax.swing.table.*;
-
-import javax.swing.event.*;
-
-import java.text.DateFormat;
-
-import java.util.Date;
-
-import java.text.SimpleDateFormat;
-
-import de.tuhh.wb.javagis.view.tableview.DateRenderer;
-
-import de.tuhh.wb.javagis.view.tableview.TableCellRendererBce;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import de.tuhh.wb.javagis.data.TSLink;
+import de.tuhh.wb.javagis.view.tableview.DateRenderer;
+import de.tuhh.wb.javagis.view.tableview.TableCellRendererBce;
 
 public class MultiRenderer extends DefaultTableCellRenderer {
 

@@ -20,13 +20,25 @@
  */
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
-import java.text.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *  JCalendar is a bean for choosing a day.

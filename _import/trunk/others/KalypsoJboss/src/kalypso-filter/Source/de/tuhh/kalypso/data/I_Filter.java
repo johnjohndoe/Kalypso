@@ -7,9 +7,8 @@
 package de.tuhh.kalypso.data;
 
 import java.io.File;
-import java.util.Vector;
-import java.util.Hashtable;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 public interface I_Filter
 {

@@ -1,14 +1,11 @@
 package de.tuhh.wb.tools.gui;
 
 import javax.swing.JButton;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
-//import javax.swing.Icon;
+import javax.swing.event.AncestorListener;
 
-//import de.tuhh.wb.tools.prefs.I18n;
-//import de.tuhh.wb.tools.prefs.Symbols;
-import de.tuhh.wb.tools.event.GuiElement;
 import de.tuhh.wb.tools.event.GuiAction;
+import de.tuhh.wb.tools.event.GuiElement;
 
 public class GuiButton extends JButton implements GuiElement,AncestorListener
 {

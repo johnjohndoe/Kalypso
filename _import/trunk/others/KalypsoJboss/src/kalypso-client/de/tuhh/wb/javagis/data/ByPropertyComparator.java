@@ -1,5 +1,6 @@
 package de.tuhh.wb.javagis.data;
 import java.util.Comparator;
+
 import javax.ejb.ObjectNotFoundException;
 
 public class ByPropertyComparator implements Comparator

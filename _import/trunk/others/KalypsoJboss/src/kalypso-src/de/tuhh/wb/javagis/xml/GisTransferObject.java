@@ -1,15 +1,17 @@
 package de.tuhh.wb.javagis.xml;
 
-import de.tuhh.wb.javagis.model.Tools;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import de.tuhh.wb.javagis.model.Tools;
 
 public class GisTransferObject
 {

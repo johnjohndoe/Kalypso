@@ -1,13 +1,14 @@
 
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.table.TableCellRenderer;
-import javax.swing.JLabel;
-import java.util.Date;
-import javax.swing.JTable;
+import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.awt.*;
+import java.util.Date;
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
 public class DateRenderer extends JLabel
                         implements TableCellRenderer {

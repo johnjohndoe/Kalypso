@@ -2,66 +2,20 @@
 
 package de.tuhh.wb.javagis.view.singleview;
 
-import de.tuhh.wb.javagis.data.event.ElementClassListener;
-
-import javax.swing.event.InternalFrameListener;
-
-import javax.swing.event.InternalFrameEvent;
-
-import javax.swing.event.TableModelEvent;
-
-import javax.swing.JInternalFrame;
-
-import javax.swing.JPanel;
-
-import javax.swing.JScrollPane;
-
-import javax.swing.JCheckBox;
-
-import javax.swing.JComponent;
-
-import javax.swing.JLabel;
-
-import javax.swing.SwingConstants;
-
-import javax.swing.JButton;
-
-import javax.swing.JTable;
-
-
-
-import java.util.Vector;
-
-
-
 import java.awt.Dimension;
-
 import java.awt.GridLayout;
 
-import java.awt.GridBagLayout;
-
-import java.awt.GridBagConstraints;
-
-
-
-import java.awt.event.ActionListener;
-
-import java.awt.event.ActionEvent;
-
-
-
-import de.tuhh.wb.javagis.Main;
-
-import de.tuhh.wb.javagis.view.ViewManager;
-
-import de.tuhh.wb.javagis.view.ValueEditor;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.TableModelEvent;
 
 import de.tuhh.wb.javagis.data.GisElement;
-
-import de.tuhh.wb.javagis.data.GisObject;
-
-import de.tuhh.wb.javagis.data.GisRelation;
-
+import de.tuhh.wb.javagis.data.event.ElementClassListener;
+import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.view.tableview.TableCellRendererBce;
 
 

@@ -5,8 +5,6 @@ import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Properties;
-
 import javax.rmi.PortableRemoteObject;
 
 //public final class Lookup {

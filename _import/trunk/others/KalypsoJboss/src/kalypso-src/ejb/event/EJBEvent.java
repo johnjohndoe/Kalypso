@@ -1,6 +1,6 @@
 package ejb.event;
 
-import javax.ejb.Handle;
+
 
 public class EJBEvent implements java.io.Serializable {
     

@@ -1,12 +1,10 @@
 package de.tuhh.kalypso.data.node;
 
-import de.tuhh.kalypso.util.Printf;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
-import java.text.NumberFormat;
+
+import de.tuhh.kalypso.util.Printf;
 
 /** The class HydroData.java contains all hydrologically relevant data for a node.
  * There are six different Types of in- or outflowing water to or form a  node.

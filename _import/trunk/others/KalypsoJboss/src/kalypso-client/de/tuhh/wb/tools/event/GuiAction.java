@@ -1,16 +1,14 @@
 package de.tuhh.wb.tools.event;
 
-import javax.swing.event.EventListenerList;
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.EventListener;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.Iterator;
 
-//import de.tuhh.wb.jm.Debug;
-//import de.tuhh.wb.tools.prefs.I18n;
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.event.EventListenerList;
 
 import de.tuhh.wb.tools.gui.GuiButton;
 import de.tuhh.wb.tools.gui.GuiMenuItem;

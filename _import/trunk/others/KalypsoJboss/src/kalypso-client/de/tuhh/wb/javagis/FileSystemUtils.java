@@ -1,11 +1,11 @@
 package de.tuhh.wb.javagis;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import de.tuhh.wb.javagis.view.LogView;
 
 public class FileSystemUtils

@@ -1,18 +1,7 @@
 package de.tuhh.wb.javagis.model;
 
-import java.lang.*;
-import javax.ejb.CreateException;
-import javax.ejb.EntityBean;
-import javax.ejb.EntityContext;
-import javax.ejb.FinderException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 
-import de.tuhh.wb.javagis.model.BasePointTransfer;
-import de.tuhh.wb.javagis.property.VectorSet;
-import de.tuhh.wb.javagis.model.VersionLocal;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 
 public interface ElementLocal extends javax.ejb.EJBLocalObject

@@ -6,16 +6,18 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.beans.*;
-import java.util.*;
-import java.text.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.applet.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.*;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.JLocaleChooser;
 
 public class JCalendarField extends JPanel implements PropertyChangeListener
 {

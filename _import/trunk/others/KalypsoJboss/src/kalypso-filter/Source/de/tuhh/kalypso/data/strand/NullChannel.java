@@ -1,7 +1,7 @@
 package de.tuhh.kalypso.data.strand;
 
 
-import java.io.BufferedWriter;
+
 
 /** The class NullChannel.java is only created for consistancy. It has no data,
  * meaning there is no retention in this type of strand and the flood function

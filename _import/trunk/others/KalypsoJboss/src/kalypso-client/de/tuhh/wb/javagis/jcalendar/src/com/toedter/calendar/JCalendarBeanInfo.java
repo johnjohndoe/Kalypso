@@ -24,10 +24,17 @@
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
 import java.awt.Image;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditorManager;
+import java.beans.SimpleBeanInfo;
 import java.util.Locale;
-import java.beans.*;
-import javax.swing.*;
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.*;
+
+import javax.swing.JPanel;
+
+import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.LocaleEditor;
 
 /**
  * A BeanInfo class for JCalendar.

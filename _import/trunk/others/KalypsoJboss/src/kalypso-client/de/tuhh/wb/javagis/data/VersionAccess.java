@@ -1,5 +1,4 @@
 package de.tuhh.wb.javagis.data;
-import de.tuhh.wb.javagis.data.event.VersionListener;
 import java.io.File;
 import java.util.Vector;
 public interface  VersionAccess

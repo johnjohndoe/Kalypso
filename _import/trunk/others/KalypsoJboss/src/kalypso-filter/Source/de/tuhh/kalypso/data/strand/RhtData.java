@@ -1,19 +1,16 @@
 package de.tuhh.kalypso.data.strand;
 
-import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.util.Printf;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
-import java.util.Vector;
-import java.util.Iterator;
-import java.io.StreamTokenizer;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.text.ParseException;
+import java.io.StreamTokenizer;
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Vector;
+
+import de.tuhh.kalypso.util.Printf;
 
 /** The class RhtData.java holds the data for all sesional functions of a reservoir.
  *

@@ -1,6 +1,8 @@
 package datacenter.zeitreihen;
 
-import com.ca.openroad.*;
+import com.ca.openroad.COMException;
+import com.ca.openroad.ParameterData;
+import com.ca.openroad.RemoteServer;
 
 
 /**

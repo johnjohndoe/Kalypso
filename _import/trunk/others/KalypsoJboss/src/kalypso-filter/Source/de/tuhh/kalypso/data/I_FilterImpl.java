@@ -6,20 +6,16 @@ package de.tuhh.kalypso.data;
 */
 
 
-import javax.swing.JFileChooser;
 import java.io.File;
-import java.io.FileWriter;
-import java.util.Vector;
+import java.util.HashSet;
 import java.util.Hashtable;
-import java.io.IOException;
+
+import javax.swing.JFileChooser;
+
 import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.strand.Strand;
+import de.tuhh.kalypso.data.timeseries.Timeseries;
 import de.tuhh.kalypso.util.LogFile;
 import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
-import javax.swing.JOptionPane;
-import de.tuhh.kalypso.data.timeseries.Timeseries;
-import java.util.HashSet;
-
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 
 public class I_FilterImpl implements I_Filter

@@ -1,13 +1,11 @@
 package de.tuhh.kalypso.data.node;
 
+import java.util.Iterator;
+
+import de.tuhh.kalypso.data.NodeTable;
+import de.tuhh.kalypso.data.StrandTable;
 import de.tuhh.kalypso.data.Wc;
 import de.tuhh.kalypso.data.strand.Strand;
-import de.tuhh.kalypso.data.StrandTable;
-import de.tuhh.kalypso.data.NodeTable;
-import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
-import de.tuhh.kalypso.data.strand.Strand;
-
-import java.util.Iterator;
 
 /** The Node Class holds the data for a node. A node is defined by its node number.
  *  If the node is an intersection, in- or/and outflowing stands are attached to

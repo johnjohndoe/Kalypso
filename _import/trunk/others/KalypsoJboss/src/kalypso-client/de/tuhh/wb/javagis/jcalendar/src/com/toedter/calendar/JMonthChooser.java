@@ -22,12 +22,21 @@
  */
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.beans.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
-import java.text.*;
-import javax.swing.*;
+import java.awt.Adjustable;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 
 /**
  *  JMonthChooser is a bean for choosing a month.

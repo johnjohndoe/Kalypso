@@ -1,13 +1,11 @@
 package de.tuhh.wb.tools.gui;
 
 import javax.swing.JMenuItem;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
-//import de.tuhh.wb.jm.Debug;
-//import de.tuhh.wb.tools.prefs.I18n;
-import de.tuhh.wb.tools.event.GuiElement;
 import de.tuhh.wb.tools.event.GuiAction;
+import de.tuhh.wb.tools.event.GuiElement;
 
 public class GuiMenuItem extends JMenuItem implements GuiElement, AncestorListener
 {

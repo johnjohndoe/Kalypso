@@ -1,24 +1,21 @@
 package de.tuhh.wb.javagis.AutomateCalibration;
 
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.util.TimeZone;
-import java.util.Date;
-
-import java.util.TreeMap;
-import java.util.SortedMap;
-import java.util.Vector;
-import java.util.Iterator;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import java.io.LineNumberReader;
-import java.io.FileReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.SortedMap;
+import java.util.TimeZone;
+import java.util.TreeMap;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GageTimeSeries {
 

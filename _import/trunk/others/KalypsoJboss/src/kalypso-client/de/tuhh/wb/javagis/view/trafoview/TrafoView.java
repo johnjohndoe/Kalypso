@@ -1,17 +1,23 @@
 package de.tuhh.wb.javagis.view.trafoview;
 
-import de.tuhh.wb.javagis.tools.xml.ServiceTools;
-import de.tuhh.wb.javagis.view.ViewManager;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.JInternalFrame;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import de.tuhh.wb.javagis.tools.I18n;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.tools.xml.ServiceTools;
+import de.tuhh.wb.javagis.view.ViewManager;
 
 public class TrafoView extends JInternalFrame implements InternalFrameListener,ActionListener
 {

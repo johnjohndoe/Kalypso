@@ -1,17 +1,13 @@
 package de.tuhh.kalypso.util.xmlParser;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
-import org.xml.sax.InputSource;
+import java.io.IOException;
 
-import org.xml.sax.ContentHandler;
+import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.apache.xerces.parsers.SAXParser;
-import java.io.StringReader;
-import org.xml.sax.InputSource;
 
 public class XmlImport 
 {

@@ -1,20 +1,18 @@
 package de.tuhh.kalypso.data.riverbasin;
 
-import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
-import de.tuhh.kalypso.data.strand.Strand;
-import de.tuhh.kalypso.data.RbTable;
-import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.Wc;
-import de.tuhh.kalypso.util.KeyGenerator;
-import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
-import de.tuhh.kalypso.util.xmlParser.VectorSet;
-
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.HashMap;
-import java.io.File;
-import java.io.BufferedWriter;
-import java.io.IOException;
+
+import de.tuhh.kalypso.data.RbTable;
+import de.tuhh.kalypso.data.Wc;
+import de.tuhh.kalypso.data.strand.Strand;
+import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
+import de.tuhh.kalypso.util.xmlParser.VectorSet;
+import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
 /** The class Rb.java holds the data of a riverbaisn in a catchment area. The data
  * describes the surface and underground properties of an rb. Per definition ( Kalypso )
  * a river basin is always connected to the out node of a strand. The object river basin

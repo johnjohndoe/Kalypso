@@ -23,11 +23,13 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.components;
 
-import java.beans.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 
 /**
  * JLocaleChooser is a bean for choosing locales.

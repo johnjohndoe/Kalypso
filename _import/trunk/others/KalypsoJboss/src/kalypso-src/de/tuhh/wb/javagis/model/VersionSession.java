@@ -1,29 +1,17 @@
 package de.tuhh.wb.javagis.model;
 
-import java.lang.*;
-import java.rmi.RemoteException;
-import javax.ejb.EJBObject;
-import javax.ejb.CreateException;
-import javax.ejb.RemoveException;
-import javax.ejb.FinderException;
-import javax.ejb.EJBException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Collection;
-import java.util.Iterator;
-import org.xml.sax.SAXException;
 import java.io.IOException;
-import de.tuhh.wb.javagis.model.BasePointTransfer;
+import java.rmi.RemoteException;
+import java.util.Hashtable;
+import java.util.Vector;
 
+import javax.ejb.CreateException;
+import javax.ejb.EJBObject;
+import javax.ejb.FinderException;
+import javax.ejb.RemoveException;
+import javax.naming.NamingException;
 
-import de.tuhh.wb.javagis.property.VectorSet;
-
-import de.tuhh.wb.javagis.xml.GisTransferObject;
-import java.io.PrintWriter;
+import org.xml.sax.SAXException;
  
 public interface VersionSession extends EJBObject
 {

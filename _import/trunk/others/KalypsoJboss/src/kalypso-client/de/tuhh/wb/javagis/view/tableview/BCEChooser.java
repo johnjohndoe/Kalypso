@@ -1,16 +1,17 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.JTable;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JButton;
+import javax.swing.JTable;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import de.tuhh.wb.javagis.data.TSLink;
 import timeserieSelection.CSelectTSFrame;
-
-import de.tuhh.wb.javagis.data.GisElementClass;
-import de.tuhh.wb.javagis.data.Version;
+import de.tuhh.wb.javagis.data.TSLink;
 
 public class BCEChooser {
 

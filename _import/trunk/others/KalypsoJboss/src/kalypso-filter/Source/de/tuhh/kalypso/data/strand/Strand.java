@@ -1,19 +1,16 @@
 package de.tuhh.kalypso.data.strand;
 
-import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.Wc;
-import de.tuhh.kalypso.data.NodeTable;
-import de.tuhh.kalypso.data.RbTable;
-import de.tuhh.kalypso.data.riverbasin.Rb;
-import de.tuhh.kalypso.util.Printf;
-import de.tuhh.kalypso.util.KeyGenerator;
-
-import java.util.Vector;
-import java.lang.String;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
+
+import de.tuhh.kalypso.data.NodeTable;
+import de.tuhh.kalypso.data.RbTable;
+import de.tuhh.kalypso.data.Wc;
+import de.tuhh.kalypso.data.node.Node;
+import de.tuhh.kalypso.data.riverbasin.Rb;
+import de.tuhh.kalypso.util.KeyGenerator;
 import de.tuhh.kalypso.util.LogFile;
+import de.tuhh.kalypso.util.Printf;
 
 /** The Class Strand.java holds the data for a strand of the rainfall-run-off-model
  * Kalypso. A strand always connects two nodes and it can have four differnet

@@ -23,8 +23,8 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.components;
 
-import java.beans.*;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Property editor for locales.

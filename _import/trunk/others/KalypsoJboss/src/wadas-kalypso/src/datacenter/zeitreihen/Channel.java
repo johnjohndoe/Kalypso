@@ -1,10 +1,10 @@
 package datacenter.zeitreihen;
 
-import java.sql.*;
+import java.sql.ResultSet;
 import java.util.Vector;
 
-import datacenter.persistent.*;
-import datacenter.tree.Container;
+import datacenter.persistent.Database;
+import datacenter.persistent.Persistent;
 
 
 /**

@@ -1,9 +1,10 @@
 package de.tuhh.wb.tools.event;
 
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
+
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
 
 public class Topic
 {

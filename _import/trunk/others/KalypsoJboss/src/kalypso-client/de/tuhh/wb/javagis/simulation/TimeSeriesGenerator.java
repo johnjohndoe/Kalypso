@@ -1,22 +1,15 @@
 package de.tuhh.wb.javagis.simulation;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
 import java.io.File;
-import java.util.Properties;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
-//import FileSystemUtils;
-
-import de.tuhh.wb.javagis.view.LogView;
-import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
-import de.tuhh.wb.javagis.xml.GisTransferObject;
-import de.tuhh.wb.javagis.xml.VectorSet;
-import de.tuhh.kalypso.data.I_FilterImpl;
-import datacenter.persistent.Database;
 import de.tuhh.wb.javagis.simpleclient.StationFileDialog;
+import de.tuhh.wb.javagis.view.LogView;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
+import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
+import de.tuhh.wb.javagis.xml.VectorSet;
 
 public class TimeSeriesGenerator implements KalypsoXmlImportListener
 {

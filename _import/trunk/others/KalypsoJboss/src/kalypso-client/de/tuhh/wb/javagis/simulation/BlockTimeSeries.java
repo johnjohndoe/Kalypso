@@ -1,36 +1,22 @@
 package de.tuhh.wb.javagis.simulation;
 
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import java.util.Properties;
-import java.util.Enumeration;
-
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.GregorianCalendar;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.FileReader;
-
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TreeMap;
-import java.util.SortedMap;
-import java.util.LinkedHashMap;
-
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Iterator;
-import java.text.SimpleDateFormat;
-import java.text.DecimalFormat;
-import java.text.DateFormat;
-import java.text.ParsePosition;
-import de.tuhh.wb.javagis.view.LogView;
+import java.util.SortedMap;
+import java.util.TimeZone;
+import java.util.TreeMap;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BlockTimeSeries {
 	//    SortedMap myTable;

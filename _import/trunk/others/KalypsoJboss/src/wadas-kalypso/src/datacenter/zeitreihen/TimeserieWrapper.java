@@ -2,19 +2,24 @@ package datacenter.zeitreihen;
 
 
 
-import java.sql.*;
-
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-
-import java.io.*;
-
 import java.util.StringTokenizer;
-
-import com.braju.format.*;
-
 import java.util.TimeZone;
 
-import datacenter.persistent.*;
+import com.braju.format.Format;
+import com.braju.format.Parameters;
+
+import datacenter.persistent.Database;
 
 
 

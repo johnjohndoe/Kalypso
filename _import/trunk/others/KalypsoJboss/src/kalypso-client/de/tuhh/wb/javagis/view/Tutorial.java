@@ -1,20 +1,22 @@
 package de.tuhh.wb.javagis.view;
 
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.tree.TreeSelectionModel;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.ImageIcon;
-import java.net.URL;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URL;
+
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JFrame;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeSelectionModel;
 
 public class Tutorial extends JFrame {
     private JEditorPane htmlPane;

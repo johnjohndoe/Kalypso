@@ -1,7 +1,8 @@
 package de.tuhh.wb.javagis.view.netview;
 
-import de.tuhh.wb.javagis.model.BasePointTransfer;
 import java.awt.geom.Point2D;
+
+import de.tuhh.wb.javagis.model.BasePointTransfer;
 public class GisPoint extends Point2D.Double
 {
     public GisPoint(BasePointTransfer bp)

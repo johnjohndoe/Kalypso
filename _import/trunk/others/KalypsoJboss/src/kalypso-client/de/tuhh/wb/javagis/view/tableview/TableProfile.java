@@ -1,15 +1,16 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Vector;
+
 import javax.swing.JOptionPane;
-import java.io.File;
+
 import de.tuhh.wb.javagis.data.TrippelKeyHash;
-import de.tuhh.wb.javagis.view.LogView;
 import de.tuhh.wb.javagis.tools.I18n;
 
 public class TableProfile

@@ -7,7 +7,6 @@ package de.tuhh.wb.javagis.view.singleview;
 import javax.swing.table.AbstractTableModel;
 
 import de.tuhh.wb.javagis.data.GisElement;
-
 import de.tuhh.wb.javagis.data.GisElementClass;
 
 

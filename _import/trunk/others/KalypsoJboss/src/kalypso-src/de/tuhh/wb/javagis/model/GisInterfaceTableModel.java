@@ -1,8 +1,6 @@
 package de.tuhh.wb.javagis.model;
 
-import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
 
 public interface GisInterfaceTableModel
 {

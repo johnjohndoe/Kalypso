@@ -1,26 +1,9 @@
 package de.tuhh.wb.javagis.simpleclient;
 import java.awt.GridLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.util.Date;
-import java.util.Vector;
 
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
-import javax.swing.event.TableModelEvent;
-import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import de.tuhh.wb.javagis.tools.I18n;
+import javax.swing.JPanel;
 
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 

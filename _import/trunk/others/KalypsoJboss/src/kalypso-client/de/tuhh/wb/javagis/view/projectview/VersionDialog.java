@@ -1,32 +1,27 @@
 package de.tuhh.wb.javagis.view.projectview;
 
-import java.util.Vector;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.JInternalFrame;
-import javax.swing.*;
-import javax.swing.JLabel;
-import javax.swing.tree.*;
-
-import java.awt.event.ActionListener;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-
-import javax.swing.event.InternalFrameListener;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
 import de.tuhh.wb.javagis.data.VersionAccess;
-import de.tuhh.wb.javagis.data.VersionAccessImpl;
-import de.tuhh.wb.javagis.view.ViewManager;
 import de.tuhh.wb.javagis.data.event.VersionListener;
-import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
 import de.tuhh.wb.javagis.tools.I18n;
-import ejb.event.EJBEvent;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import de.tuhh.wb.javagis.view.LogView;
+import de.tuhh.wb.javagis.view.ViewManager;
+import ejb.event.EJBEvent;
 
 public class VersionDialog extends JInternalFrame implements ActionListener, VersionListener,InternalFrameListener
 {

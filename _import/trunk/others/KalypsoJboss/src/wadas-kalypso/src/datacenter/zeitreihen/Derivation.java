@@ -1,8 +1,11 @@
 package datacenter.zeitreihen;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.ResultSet;
 
-import datacenter.persistent.*;
+import datacenter.persistent.Database;
+import datacenter.persistent.Persistent;
+import datacenter.persistent.PersistentException;
 
 /**
  * Derivation represent specific timeseries for a channel.

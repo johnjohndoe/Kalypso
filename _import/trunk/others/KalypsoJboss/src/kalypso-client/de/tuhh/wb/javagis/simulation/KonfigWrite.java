@@ -1,26 +1,17 @@
 package de.tuhh.wb.javagis.simulation;
 
 import java.io.File;
-import java.util.Properties;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
-import de.tuhh.wb.javagis.FileSystemUtils;
-
-import de.tuhh.wb.javagis.xml.XmlImport;
-import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
-import de.tuhh.wb.javagis.xml.GisTransferObject;
-import de.tuhh.wb.javagis.xml.VectorSet;
-import de.tuhh.kalypso.data.I_FilterImpl;
-import de.tuhh.wb.javagis.view.LogView;
-
-import de.tuhh.kalypso.data.timeseries.Timeseries;
-
+import java.util.Enumeration;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.tuhh.wb.javagis.FileSystemUtils;
+import de.tuhh.wb.javagis.view.LogView;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
+import de.tuhh.wb.javagis.xml.VectorSet;
 
 
 public class KonfigWrite

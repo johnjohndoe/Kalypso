@@ -1,24 +1,23 @@
 package de.tuhh.kalypso.util.xmlParser;
 
-import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
-import de.tuhh.kalypso.data.StrandTable;
-import de.tuhh.kalypso.data.WcTable;
+
+import org.xml.sax.SAXException;
+
 import de.tuhh.kalypso.data.RbTable;
-import de.tuhh.kalypso.data.NodeTable;
+import de.tuhh.kalypso.data.StrandTable;
+import de.tuhh.kalypso.data.Wc;
+import de.tuhh.kalypso.data.WcTable;
+import de.tuhh.kalypso.data.node.HydroData;
+import de.tuhh.kalypso.data.node.Node;
 import de.tuhh.kalypso.data.riverbasin.Rb;
 import de.tuhh.kalypso.data.strand.Strand;
 import de.tuhh.kalypso.data.strand.StrandData;
-import de.tuhh.kalypso.data.Wc;
 import de.tuhh.kalypso.util.LogFile;
-import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.node.HydroData;
-import java.util.Vector;
-import java.io.IOException;
-import org.xml.sax.SAXException;
-import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
-import java.util.Iterator;
+import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
 
 public class GisTransferManager implements KalypsoXmlImportListener
 {

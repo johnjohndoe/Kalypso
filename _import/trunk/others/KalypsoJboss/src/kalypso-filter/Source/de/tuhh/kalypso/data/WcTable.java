@@ -1,17 +1,12 @@
 package de.tuhh.kalypso.data;
 
-import de.tuhh.kalypso.data.strand.Strand;
-import de.tuhh.kalypso.util.LogFile;
-import de.tuhh.kalypso.util.KeyGenerator;
-
-import java.io.IOException;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
+
+import de.tuhh.kalypso.data.strand.Strand;
 
 /** The class WcTable.java contains all existing watercourses in this program. The
  * implementation of the HashSet asures that the a watercourse only exists once.

@@ -23,10 +23,8 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.components;
 
-import java.util.Locale;
 import java.awt.Image;
-import java.beans.*;
-import javax.swing.*;
+import java.beans.SimpleBeanInfo;
 
 
 /**

@@ -2,8 +2,7 @@ package de.tuhh.wb.javagis;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+
 import de.tuhh.wb.javagis.view.LogView;
 
 public class SystemExecute extends Thread

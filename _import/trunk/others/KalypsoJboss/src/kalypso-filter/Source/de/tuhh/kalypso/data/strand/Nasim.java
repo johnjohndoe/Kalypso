@@ -1,8 +1,8 @@
 package de.tuhh.kalypso.data.strand;
 
-import java.util.Vector;
-import java.io.StreamTokenizer;
 import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.util.Vector;
 /** The class NasimData.java represents an other data foramt for channel data. It
  * is not directly used for calcualtion in Kalypso. If the nasim data is assigned
  * all fields have to be filled with data.

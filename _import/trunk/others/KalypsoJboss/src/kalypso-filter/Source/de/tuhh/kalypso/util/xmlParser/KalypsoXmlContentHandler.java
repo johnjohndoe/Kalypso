@@ -1,13 +1,9 @@
 package de.tuhh.kalypso.util.xmlParser;
 
 import java.util.Hashtable;
-import java.io.IOException;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-import org.apache.xerces.parsers.SAXParser;
 
 public class KalypsoXmlContentHandler extends DefaultHandler
 {

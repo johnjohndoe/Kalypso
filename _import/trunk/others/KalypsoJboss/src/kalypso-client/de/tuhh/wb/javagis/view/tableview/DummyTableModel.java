@@ -1,19 +1,12 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.table.AbstractTableModel;
-
-//import java.util.Hashtable;
-
 import java.util.Vector;
 
-//import java.util.Enumeration;
+import javax.swing.table.AbstractTableModel;
 
-//import javax.swing.table.AbstractTableModel;
-
-import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
-
-import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+import de.tuhh.wb.javagis.tools.I18n;
 
 
 

@@ -1,6 +1,8 @@
 package de.tuhh.wb.javagis.simpleclient;
-import javax.swing.table.AbstractTableModel;
 import java.util.Vector;
+
+import javax.swing.table.AbstractTableModel;
+
 import de.tuhh.wb.javagis.tools.I18n;
 
 public class ResultDialogModel extends AbstractTableModel 

@@ -1,13 +1,9 @@
 package de.tuhh.wb.javagis.data.event;
 
-import de.tuhh.wb.javagis.data.DoubleKeyHash;
-import de.tuhh.wb.javagis.data.TrippelKeyHash;
-
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Enumeration;
+import java.util.List;
+
+import de.tuhh.wb.javagis.data.TrippelKeyHash;
 import ejb.event.EJBEvent;
 public class KalypsoEventManager
 {

@@ -1,6 +1,5 @@
 package de.tuhh.wb.javagis.data;
 
-import de.tuhh.wb.javagis.Main;
 import java.util.Vector;
 
 public class KeyObjectVector

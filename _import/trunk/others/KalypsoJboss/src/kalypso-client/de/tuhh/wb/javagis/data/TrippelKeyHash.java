@@ -1,7 +1,7 @@
 package de.tuhh.wb.javagis.data;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
 
 public class TrippelKeyHash
 {

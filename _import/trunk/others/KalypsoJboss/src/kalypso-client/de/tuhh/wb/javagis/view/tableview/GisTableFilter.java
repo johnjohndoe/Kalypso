@@ -1,25 +1,18 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JLabel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import de.tuhh.wb.javagis.view.SingleEditorField;
+import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.SingleEditorField;
 
 public class GisTableFilter extends JPanel implements ItemListener
 {

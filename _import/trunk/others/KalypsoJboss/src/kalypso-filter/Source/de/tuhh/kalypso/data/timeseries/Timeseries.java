@@ -6,21 +6,21 @@
 
 package de.tuhh.kalypso.data.timeseries;
 
-import java.util.TreeMap;
-import java.util.Set;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Iterator;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.text.FieldPosition;
-import java.util.Date;
-import java.util.Calendar;
-import java.io.StreamTokenizer;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
+import java.text.FieldPosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Vector;
 
 public class Timeseries
 {

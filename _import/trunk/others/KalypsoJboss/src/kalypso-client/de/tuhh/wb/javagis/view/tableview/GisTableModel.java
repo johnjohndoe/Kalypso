@@ -1,26 +1,21 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.table.AbstractTableModel;
-
-//import de.tuhh.wb.javagis.model.ElementSession;
-//import java.util.Hashtable;
-import java.util.Vector;
-//import java.util.Enumeration;
-import de.tuhh.wb.javagis.view.GisView;
-import de.tuhh.wb.javagis.tools.I18n;
-
-import de.tuhh.wb.javagis.data.*;
-import de.tuhh.wb.javagis.data.event.ElementClassListener;
-//import javax.swing.JButton;
-import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//import java.text.DateFormat;
-//import java.util.Date;
 import java.util.Comparator;
+import java.util.Vector;
 
 import javax.ejb.ObjectNotFoundException;
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.table.AbstractTableModel;
+
+import de.tuhh.wb.javagis.data.ByPropertyComparator;
+import de.tuhh.wb.javagis.data.GisElement;
+import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.data.GisObjectClass;
+import de.tuhh.wb.javagis.data.Version;
+import de.tuhh.wb.javagis.data.event.ElementClassListener;
+import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.GisView;
 
 public class GisTableModel extends AbstractTableModel implements GisInterfaceTableModel, ElementClassListener
 {

@@ -4,43 +4,17 @@ package de.tuhh.wb.javagis.view.tableview;
 
 
 
-import javax.swing.DefaultCellEditor;
-
-import javax.swing.JLabel;
-
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JTable;
-
-import java.text.DateFormat;
-
-import java.text.SimpleDateFormat;
-
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-
 import javax.swing.JCheckBox;
-
-import javax.swing.JDialog;
-
-import java.awt.*;
-
-import java.awt.event.*;
-
-
-
-import java.util.Calendar;
-
-import java.util.TimeZone;
-
-import java.util.Locale;
-
-
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JCalendar;
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JMonthChooser;
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JCalendarField;
+import javax.swing.JTable;
 
  /*
 

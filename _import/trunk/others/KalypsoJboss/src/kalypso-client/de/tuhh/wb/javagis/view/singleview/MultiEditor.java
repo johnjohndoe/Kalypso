@@ -4,47 +4,26 @@ package de.tuhh.wb.javagis.view.singleview;
 
 
 
-import java.awt.*;
-
-import java.awt.event.*;
-
-import javax.swing.*;
-
-import javax.swing.table.*;
-
-import javax.swing.event.*;
-
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Insets;
 import java.util.EventObject;
 
-
-
-import java.util.Calendar;
-
-import java.util.TimeZone;
-
-import java.util.Locale;
-
-
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JCalendar;
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JMonthChooser;
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JCalendarField;
-
-
-
-import de.tuhh.wb.javagis.view.tableview.DateEditor;
-
-import de.tuhh.wb.javagis.view.tableview.DateChooser;
-
-import de.tuhh.wb.javagis.view.tableview.TableCellEditorBCE;
-
-import de.tuhh.wb.javagis.view.tableview.BCEChooser;
-
-import de.tuhh.wb.javagis.data.TSLink;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.CellEditorListener;
+import javax.swing.table.TableCellEditor;
 
 import de.tuhh.wb.javagis.data.GisElement;
+import de.tuhh.wb.javagis.view.tableview.BCEChooser;
+import de.tuhh.wb.javagis.view.tableview.DateChooser;
+import de.tuhh.wb.javagis.view.tableview.DateEditor;
+import de.tuhh.wb.javagis.view.tableview.TableCellEditorBCE;
 
 
 public class MultiEditor implements TableCellEditor {

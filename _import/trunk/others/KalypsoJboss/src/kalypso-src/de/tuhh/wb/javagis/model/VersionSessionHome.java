@@ -1,6 +1,5 @@
 package de.tuhh.wb.javagis.model;
 
-import java.lang.*;
 
 public interface VersionSessionHome extends javax.ejb.EJBHome
 {

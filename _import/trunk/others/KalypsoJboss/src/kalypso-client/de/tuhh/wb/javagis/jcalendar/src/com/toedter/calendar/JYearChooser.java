@@ -23,13 +23,11 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.util.Calendar;
 
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.*;
+import javax.swing.JFrame;
+
+import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.JSpinField;
 
 /**
  * JYearChooser is a bean for choosing a year.

@@ -23,10 +23,16 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.components;
 
-import java.util.Locale;
 import java.awt.Image;
-import java.beans.*;
-import javax.swing.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditorManager;
+import java.beans.SimpleBeanInfo;
+import java.util.Locale;
+
+import javax.swing.JComboBox;
 
 
 /**

@@ -1,37 +1,30 @@
 package timeserieSelection;
-import de.tuhh.wb.javagis.data.TSLink;
-
-import java.util.Enumeration;
-import javax.swing.*;
-
-import javax.swing.event.*;
-
-import javax.swing.tree.*;
-
 import java.awt.BorderLayout;
-
-import de.tuhh.wb.javagis.view.ViewManager;
-
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 
-
-
-import datacenter.persistent.*;
-
-import datacenter.tree.*;
-
-import datacenter.zeitreihen.*;
-
-
-
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JMenu;
-
-import javax.swing.JMenuItem;
-
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
+import datacenter.tree.Container;
+import datacenter.tree.Level;
+import datacenter.zeitreihen.Channel;
+import datacenter.zeitreihen.Derivation;
+import de.tuhh.wb.javagis.data.TSLink;
 import de.tuhh.wb.javagis.tools.I18n;
 
 

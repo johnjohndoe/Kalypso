@@ -1,29 +1,17 @@
 package de.tuhh.wb.javagis.data;
 
-import javax.naming.InitialContext;
-import javax.rmi.PortableRemoteObject;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-//import de.tuhh.wb.javagis.model.na.VersionSessionHome;
-//import de.tuhh.wb.javagis.model.na.VersionSession;
-//import de.tuhh.wb.javagis.data.VersionSessionHome;// reflectionApi ..
-//import de.tuhh.wb.javagis.model.VersionSession;
-
-import java.io.File;
-import de.tuhh.wb.javagis.Main;
-import de.tuhh.wb.javagis.view.netview.GisPoint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.*;
-import javax.swing.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import de.tuhh.wb.javagis.view.netview.GisNetModel;
-import de.tuhh.wb.javagis.view.tableview.GisTableModel;
-import de.tuhh.wb.javagis.view.JobRequest;
 import javax.ejb.ObjectNotFoundException;
+
+import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.view.netview.GisNetModel;
+import de.tuhh.wb.javagis.view.netview.GisPoint;
+import de.tuhh.wb.javagis.view.tableview.GisTableModel;
 import de.tuhh.wb.tools.event.ActionManager;
 
 public class Version implements ActionListener {

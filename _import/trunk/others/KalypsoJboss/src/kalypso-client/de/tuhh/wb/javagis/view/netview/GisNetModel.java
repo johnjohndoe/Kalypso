@@ -1,29 +1,28 @@
 package de.tuhh.wb.javagis.view.netview;
 
-import javax.swing.table.AbstractTableModel;
-
-//import de.tuhh.wb.javagis.model.ElementSession;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.HashSet;
-import java.util.Enumeration;
-
-import java.awt.geom.Point2D;
-import java.awt.Image;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.BasicStroke;
-import java.awt.Font;
-import de.tuhh.wb.javagis.data.*;
-import de.tuhh.wb.javagis.data.event.*;
-import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
-import de.tuhh.wb.javagis.view.netview.GisNetView;
-import javax.swing.JCheckBoxMenuItem;
-import java.awt.event.ActionListener;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.util.HashSet;
+import java.util.Vector;
+
 import javax.ejb.ObjectNotFoundException;
+import javax.swing.JCheckBoxMenuItem;
+
+import de.tuhh.wb.javagis.data.GisElement;
+import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.data.GisObject;
+import de.tuhh.wb.javagis.data.GisObjectClass;
+import de.tuhh.wb.javagis.data.GisRelation;
+import de.tuhh.wb.javagis.data.GisRelationClass;
+import de.tuhh.wb.javagis.data.event.ElementClassListener;
+import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 
 public class GisNetModel implements ActionListener,ElementClassListener
 {

@@ -1,13 +1,15 @@
 
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JTable;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JTable;
+
 import de.tuhh.wb.javagis.data.TSLink;
 
 public class TableCellEditorBCE extends DefaultCellEditor {

@@ -2,59 +2,18 @@ package de.tuhh.wb.javagis.view.netview;
 
 
 
-import javax.swing.table.AbstractTableModel;
-
-
-
-//import de.tuhh.wb.javagis.model.ElementSession;
-
-import java.util.Hashtable;
-
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.util.Vector;
 
-import java.util.Enumeration;
-
-import java.awt.Dimension;
-
-import java.awt.geom.Point2D;
-
-import java.awt.Image;
-
-import java.awt.Graphics;
-
-import java.awt.Component;
-
-import java.awt.event.ComponentEvent;
-
-import java.awt.event.ComponentListener;
-
-import javax.swing.JFrame;
-
-import javax.swing.JScrollPane;
-
+import javax.ejb.ObjectNotFoundException;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
-
-import javax.swing.JInternalFrame;
-
-import javax.swing.JOptionPane;
-
-import java.awt.event.MouseListener;
-
-import java.awt.event.MouseEvent;
-
-import java.awt.event.MouseMotionListener;
-
-import java.awt.Color;
-
-import java.awt.Font;
-
-
-
-import de.tuhh.wb.javagis.data.*;
-
-import javax.ejb.ObjectNotFoundException;
+import de.tuhh.wb.javagis.data.GisObjectClass;
 
 
 

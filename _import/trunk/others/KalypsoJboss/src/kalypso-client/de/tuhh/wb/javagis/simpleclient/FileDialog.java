@@ -1,16 +1,14 @@
 package de.tuhh.wb.javagis.simpleclient;
-import java.io.File;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.JFileChooser;
-import de.tuhh.wb.javagis.xml.GisTransferObject;
+import javax.swing.JPanel;
+
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
 
 public class FileDialog extends JPanel implements ActionListener
 {

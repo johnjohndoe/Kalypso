@@ -1,42 +1,29 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.JInternalFrame;
-
-import javax.swing.table.TableModel;
-
 import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Vector;
 
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.TableModelEvent;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import de.tuhh.wb.javagis.Main;
-import de.tuhh.wb.javagis.view.ViewManager;
-import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
-
-import de.tuhh.wb.javagis.data.GisElement;
 import de.tuhh.wb.javagis.data.GisElementClass;
 import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.ViewManager;
 
 public class GisInnerVectorSetTableView extends JInternalFrame implements InternalFrameListener,ActionListener,MouseListener
 {

@@ -1,36 +1,24 @@
 package de.tuhh.wb.javagis.data;
 
-import javax.swing.table.AbstractTableModel;
-import javax.swing.*;
-/*
- import de.tuhh.wb.javagis.model.ElementSession;
- import de.tuhh.wb.javagis.model.ObjectSession;
- import de.tuhh.wb.javagis.model.RelationSession;
- */
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.List;
-import java.awt.image.BufferedImage;
-import java.awt.geom.Point2D;
-import java.awt.Toolkit;
-import java.awt.Image;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.MediaTracker;
-import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import javax.swing.JButton;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.net.URL;
-import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
-import de.tuhh.wb.javagis.data.event.TableListener;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
+
+import javax.ejb.ObjectNotFoundException;
+import javax.swing.ImageIcon;
+
 import de.tuhh.wb.javagis.data.event.ElementClassListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.data.event.TableListener;
 import de.tuhh.wb.javagis.tools.I18n;
-import javax.ejb.ObjectNotFoundException;
-import java.lang.ClassLoader;
 
 public abstract class GisElementClass implements TableListener
 {

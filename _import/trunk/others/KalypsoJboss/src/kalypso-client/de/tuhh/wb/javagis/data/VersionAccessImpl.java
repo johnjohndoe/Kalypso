@@ -1,9 +1,9 @@
 package de.tuhh.wb.javagis.data;
 
-import de.tuhh.wb.javagis.data.event.VersionListener;
 import java.io.File;
-import de.tuhh.wb.javagis.Main;
 import java.util.Vector;
+
+import de.tuhh.wb.javagis.Main;
 
 public class VersionAccessImpl implements VersionAccess
 {

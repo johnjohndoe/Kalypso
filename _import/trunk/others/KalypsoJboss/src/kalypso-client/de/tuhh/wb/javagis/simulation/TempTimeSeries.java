@@ -1,30 +1,16 @@
 package de.tuhh.wb.javagis.simulation;
 
 import java.io.File;
-import java.util.Properties;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.FileReader;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TreeMap;
-import java.util.SortedMap;
-
-import java.util.Iterator;
-import java.text.SimpleDateFormat;
-import java.text.DecimalFormat;
 import java.text.DateFormat;
-import java.text.ParsePosition;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-//wadas-kalypso
 import de.tuhh.wb.javagis.view.LogView;
-
-import datacenter.zeitreihen.Channel;
-import datacenter.zeitreihen.TimeserieWrapper;
 
 public class TempTimeSeries extends SimpleTimeSeries
 {

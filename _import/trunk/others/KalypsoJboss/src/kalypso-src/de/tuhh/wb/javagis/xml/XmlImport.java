@@ -1,17 +1,14 @@
 package de.tuhh.wb.javagis.xml;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import org.xml.sax.InputSource;
+import java.io.IOException;
 
-import org.xml.sax.ContentHandler;
+import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.apache.xerces.parsers.SAXParser;
-import java.io.StringReader;
 
 
 public class XmlImport 

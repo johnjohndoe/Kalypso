@@ -22,11 +22,23 @@
  */
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *  JCalendar is a bean for entering a date by choosing the year, month and day.

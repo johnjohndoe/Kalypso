@@ -23,16 +23,27 @@
 
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.beans.*;
-import java.util.*;
-import java.text.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.applet.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.swing.AbstractAction;
+import javax.swing.JApplet;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.JLocaleChooser;
 //import jcalendar.src.com.incors.plaf.kunststoff.*;
 
 /**

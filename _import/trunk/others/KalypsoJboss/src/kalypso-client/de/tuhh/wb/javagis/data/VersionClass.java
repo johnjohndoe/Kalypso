@@ -1,41 +1,21 @@
 package de.tuhh.wb.javagis.data;
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.naming.InitialContext;
-import javax.rmi.PortableRemoteObject;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.Collection;
-import java.util.Hashtable;
+import java.io.PrintWriter;
 import java.util.Enumeration;
-import javax.ejb.SessionBean;
+import java.util.Hashtable;
+import java.util.Vector;
+
 import javax.ejb.EJBObject;
-
-import de.tuhh.wb.javagis.Main;
-import de.tuhh.wb.javagis.FileSystemUtils;
-import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
-
-import de.tuhh.wb.javagis.view.netview.GisPoint;
-
-import de.tuhh.wb.javagis.model.BasePointTransfer;         
-import de.tuhh.wb.javagis.model.VersionSession;
-
-//import de.tuhh.wb.javagis.model.ElementSession;
-//import de.tuhh.wb.javagis.model.ObjectSession;
-//import de.tuhh.wb.javagis.model.RelationSession;
-
-import java.lang.reflect.*;
-
-import  de.tuhh.wb.javagis.view.netview.GisNetModel;
-import  de.tuhh.wb.javagis.view.tableview.GisTableModel;
-import  de.tuhh.wb.javagis.view.JobRequest;
-
 import javax.ejb.ObjectNotFoundException;
+import javax.naming.InitialContext;
 
+import de.tuhh.wb.javagis.FileSystemUtils;
+import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.model.VersionSession;
+import de.tuhh.wb.javagis.view.netview.GisPoint;
 import ejb.event.EJBEvent;
 import ejb.event.EJBEventListener;
 import ejb.event.EJBEventManager;

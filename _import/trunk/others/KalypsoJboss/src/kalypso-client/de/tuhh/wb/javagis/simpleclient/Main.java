@@ -1,35 +1,32 @@
 package de.tuhh.wb.javagis.simpleclient;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JComponent;
-import de.tuhh.wb.javagis.view.LogView;
 
+import datacenter.persistent.Database;
 import de.tuhh.kalypso.data.I_FilterImpl;
 import de.tuhh.wb.javagis.FileSystemUtils;
 import de.tuhh.wb.javagis.simulation.KonfigWrite;
 import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.LogView;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.XmlImport;
-import datacenter.persistent.Database;
-import java.util.Properties;
-import java.util.HashSet;
-import java.util.Vector;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import de.tuhh.wb.javagis.tools.I18n;
 
 //import de.tuhh.wb.javagis.simulation.I_FilerImpl;
 

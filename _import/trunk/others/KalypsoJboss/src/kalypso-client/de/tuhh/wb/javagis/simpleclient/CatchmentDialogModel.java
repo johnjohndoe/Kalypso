@@ -1,7 +1,7 @@
 package de.tuhh.wb.javagis.simpleclient;
-import javax.swing.table.AbstractTableModel;
 import java.util.Vector;
-import de.tuhh.wb.javagis.tools.I18n;
+
+import javax.swing.table.AbstractTableModel;
 public class CatchmentDialogModel extends AbstractTableModel 
 {
     Vector rows;

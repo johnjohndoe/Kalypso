@@ -1,11 +1,5 @@
 package de.tuhh.wb.javagis.view.netview;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.BasicStroke;
-
-
-import java.awt.Color;
 import java.util.Vector;
 
 public class GisSymbol

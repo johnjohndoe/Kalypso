@@ -1,22 +1,16 @@
 package de.tuhh.wb.javagis;
 
-import de.tuhh.wb.javagis.view.ViewManager;
-import de.tuhh.wb.javagis.view.LogView;
-import de.tuhh.wb.javagis.tools.I18n;
-import de.tuhh.wb.javagis.view.ConfigurationView;
-
-import de.tuhh.wb.javagis.data.VersionClass;
-import de.tuhh.wb.javagis.data.Version;
-import de.tuhh.wb.javagis.data.VersionAccessImpl;
-import de.tuhh.wb.javagis.data.VersionAccess;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.util.Properties;
-import datacenter.persistent.Database;
-import timeserieSelection.CSelectTSFrame;
-import timeserieSelection.CTSStruct;
 
+import timeserieSelection.CSelectTSFrame;
+import datacenter.persistent.Database;
+import de.tuhh.wb.javagis.data.VersionClass;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.ConfigurationView;
+import de.tuhh.wb.javagis.view.LogView;
+import de.tuhh.wb.javagis.view.ViewManager;
 import ejb.util.Lookup;
 
 public class Main

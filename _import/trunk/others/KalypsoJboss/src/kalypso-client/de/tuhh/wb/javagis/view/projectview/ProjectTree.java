@@ -1,27 +1,6 @@
 package de.tuhh.wb.javagis.view.projectview;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JInternalFrame;
-import javax.swing.*;
-import javax.swing.tree.*;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-
-
-import de.tuhh.wb.javagis.data.VersionAccess;
-import de.tuhh.wb.javagis.data.Version;
-
-import de.tuhh.wb.javagis.data.VersionAccessImpl;
-import de.tuhh.wb.javagis.view.JobRequest;
-import de.tuhh.wb.javagis.data.event.VersionListener;
-import ejb.event.EJBEvent;
+import javax.swing.JPanel;
 
 public class ProjectTree extends JPanel// implements ActionListener, MouseListener, VersionListener
 {

@@ -1,45 +1,47 @@
 package de.tuhh.wb.javagis.AutomateCalibration;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.Vector;
-import org.w3c.dom.*;
-import java.util.StringTokenizer;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.FileOutputStream;
-import java.util.Date;
+import java.io.PrintWriter;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.Vector;
 
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.JInternalFrame;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import de.tuhh.wb.javagis.FileSystemUtils;
+import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.tools.xml.ServiceTools;
 import de.tuhh.wb.javagis.view.ViewManager;
-import de.tuhh.wb.javagis.FileSystemUtils;
-import de.tuhh.wb.javagis.Main;
-import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 //import de.tuhh.wb.javagis.simulation.BlockTimeSeries;
 
 public class SCE_KALYPSO

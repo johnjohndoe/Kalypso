@@ -1,9 +1,10 @@
 package de.tuhh.wb.javagis.simpleclient;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import de.tuhh.wb.javagis.xml.GisTransferObject;
+
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
 
 public class RootNodeDialog extends JPanel
 {

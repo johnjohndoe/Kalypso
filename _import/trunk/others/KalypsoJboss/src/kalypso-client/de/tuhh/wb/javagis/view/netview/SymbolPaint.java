@@ -1,10 +1,8 @@
 package de.tuhh.wb.javagis.view.netview;
 
-import java.awt.Image;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Component;
-import java.util.Vector;
+import java.awt.Image;
 
 public class SymbolPaint
 {

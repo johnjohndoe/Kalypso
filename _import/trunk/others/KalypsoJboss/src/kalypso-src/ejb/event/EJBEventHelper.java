@@ -9,6 +9,7 @@ import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 import javax.naming.NamingException;
+
 import ejb.util.Lookup;
 
 public class EJBEventHelper {

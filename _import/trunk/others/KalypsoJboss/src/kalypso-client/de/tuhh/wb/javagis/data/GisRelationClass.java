@@ -1,17 +1,10 @@
 package de.tuhh.wb.javagis.data;
 
-import javax.swing.table.AbstractTableModel;
-import javax.ejb.ObjectNotFoundException;
-/*
-import de.tuhh.wb.javagis.model.ElementSession;
-import de.tuhh.wb.javagis.model.ObjectSession;
-import de.tuhh.wb.javagis.model.RelationSession;
-*/
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
 
-import java.awt.geom.Point2D;
+import javax.ejb.ObjectNotFoundException;
+
 import de.tuhh.wb.javagis.view.netview.GisPoint;
 
 public class GisRelationClass extends GisElementClass

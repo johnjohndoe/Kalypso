@@ -5,15 +5,16 @@
  */
 package de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar;
 
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.GridLayout;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
 import de.tuhh.wb.javagis.tools.I18n;
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.components.*;
 
 
 public class JHourandMinuteChooser extends JPanel

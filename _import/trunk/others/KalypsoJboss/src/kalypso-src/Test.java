@@ -1,9 +1,7 @@
-import de.tuhh.wb.javagis.xml.XmlImport;
-import de.tuhh.wb.javagis.xml.XmlConvert;
-import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
-import de.tuhh.wb.javagis.xml.KalypsoXmlVectorSetListener;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
+import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.VectorSet;
+import de.tuhh.wb.javagis.xml.XmlConvert;
 public class Test implements KalypsoXmlImportListener
 {
 

@@ -1,10 +1,12 @@
 package de.tuhh.wb.javagis.xml;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
 import de.tuhh.wb.javagis.model.Tools;
 
 public class VectorSet

@@ -4,14 +4,14 @@ package de.tuhh.wb.javagis.data;
 
 //import de.tuhh.wb.javagis.model.ElementSession;
 //import de.tuhh.wb.javagis.model.ObjectSession;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
 
-import java.awt.geom.Point2D;
+import javax.ejb.ObjectNotFoundException;
+
 import de.tuhh.wb.javagis.model.BasePointTransfer;
 import de.tuhh.wb.javagis.view.netview.GisPoint;
-import javax.ejb.ObjectNotFoundException;
 
 public class GisObjectClass extends GisElementClass
 {

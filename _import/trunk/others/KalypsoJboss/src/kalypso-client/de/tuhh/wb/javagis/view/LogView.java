@@ -1,28 +1,21 @@
 package de.tuhh.wb.javagis.view;
 
-import java.util.Vector;
-import java.util.Date;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.JInternalFrame;
-import javax.swing.*;
-import javax.swing.JLabel;
-import javax.swing.tree.*;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-
 import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import de.tuhh.wb.javagis.tools.I18n;
 

@@ -1,8 +1,8 @@
 package de.tuhh.kalypso.util;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.File;
+import java.io.FileWriter;
 
 import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
 

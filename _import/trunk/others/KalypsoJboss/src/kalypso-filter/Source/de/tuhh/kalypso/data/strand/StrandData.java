@@ -1,8 +1,8 @@
 package de.tuhh.kalypso.data.strand;
 
-import java.io.StreamTokenizer;
-import java.io.IOException;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.StreamTokenizer;
 
 import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
 

@@ -1,9 +1,10 @@
 package de.tuhh.wb.javagis.model;
 
 //import java.io.PrintWriter; 
-import java.io.Writer; 
-import org.xml.sax.helpers.AttributesImpl;
 import java.io.IOException;
+import java.io.Writer;
+
+import org.xml.sax.helpers.AttributesImpl;
 public abstract class Tools
 {
     public static void genXml(Writer out, String name,String attributeName,String attribute, String content) throws IOException

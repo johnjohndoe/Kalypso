@@ -1,12 +1,7 @@
 package de.tuhh.wb.javagis.data;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.List;
 import java.io.Serializable;
+
 import de.tuhh.wb.javagis.model.VersionSession;
 
 public class Modeldata implements Serializable

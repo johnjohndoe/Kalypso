@@ -1,11 +1,13 @@
 
 package datacenter.tree;
 
-import java.sql.*;
+import java.sql.ResultSet;
 import java.util.Vector;
 
-import datacenter.persistent.*;
-import datacenter.zeitreihen.*;
+import datacenter.persistent.Database;
+import datacenter.persistent.Persistent;
+import datacenter.persistent.PersistentException;
+import datacenter.zeitreihen.Channel;
 
 /**
  * A Container holds data. In Flomatis it normaly holds descriptional data, two-dimensional

@@ -1,13 +1,5 @@
 package de.tuhh.wb.javagis.data;
 
-import javax.naming.InitialContext;
-import javax.rmi.PortableRemoteObject;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-//import de.tuhh.wb.javagis.model.ElementSession;
-import de.tuhh.wb.javagis.view.netview.GisPoint;
 public class GisRelation extends GisElement
 {
     public GisRelation(Object id,GisRelationClass gisRelationClass)

@@ -1,18 +1,16 @@
 package de.tuhh.kalypso.data.strand;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.util.Iterator;
+import java.util.Vector;
+
 import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.strand.RhtData;
 import de.tuhh.kalypso.util.Printf;
 import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
 import de.tuhh.kalypso.util.xmlParser.VectorSet;
-
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.Date;
-import java.io.File;
-import java.io.StreamTokenizer;
-import java.io.IOException;
-import java.io.BufferedWriter;
 
 /** The class Rht.java holds the data of a reservoir ( @see de.tuhh.kalypso.data.strand.Rhb )
  * taking into account the evaporation of water from the water surface. It was also

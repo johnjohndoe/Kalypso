@@ -1,21 +1,19 @@
 package de.tuhh.kalypso.data;
 
-import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.strand.Strand;
-import de.tuhh.kalypso.util.LogFile;
-import de.tuhh.kalypso.util.KeyGenerator;
-import de.tuhh.kalypso.util.Printf;
-
-import java.util.TreeSet;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Locale;
+import java.util.TreeSet;
+
+import de.tuhh.kalypso.data.node.Node;
+import de.tuhh.kalypso.data.strand.Strand;
+import de.tuhh.kalypso.util.KeyGenerator;
+import de.tuhh.kalypso.util.LogFile;
+import de.tuhh.kalypso.util.Printf;
 
 
 /** The Class StrandTable.java can hold a set of Strands, the strand are listed

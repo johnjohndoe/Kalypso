@@ -1,11 +1,12 @@
 //package de.tuhh.wb.javagis.xml;
 package de.tuhh.kalypso.util.xmlParser;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Enumeration;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
 
 public class GisTransferObject
 {

@@ -1,15 +1,15 @@
 package de.tuhh.kalypso.data.strand;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.io.StreamTokenizer;
-import java.io.IOException;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.util.Iterator;
+import java.util.Vector;
 
-import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
-import de.tuhh.kalypso.util.xmlParser.VectorSet;
 import de.tuhh.kalypso.data.strand.Nasim.NasimData;
 import de.tuhh.kalypso.util.Printf;
+import de.tuhh.kalypso.util.xmlParser.GisTransferObject;
+import de.tuhh.kalypso.util.xmlParser.VectorSet;
 
 /**
  * This class Channel.java holds all data to describe a natural Channel. The member

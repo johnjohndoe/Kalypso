@@ -1,25 +1,22 @@
 package de.tuhh.kalypso.data;
-import de.tuhh.kalypso.data.node.Node;
-
-import de.tuhh.kalypso.data.riverbasin.Rb;
-import de.tuhh.kalypso.data.riverbasin.Rb.RbOutConnected;
-
-import de.tuhh.kalypso.data.strand.Strand;
-
-import de.tuhh.kalypso.util.LogFile;
-import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
-import de.tuhh.kalypso.util.KeyGenerator;
-import de.tuhh.kalypso.util.Printf;
-
-import java.util.TreeSet;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.Locale;
-import java.util.HashMap;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.TreeSet;
+import java.util.Vector;
+
+import de.tuhh.kalypso.data.node.Node;
+import de.tuhh.kalypso.data.riverbasin.Rb;
+import de.tuhh.kalypso.data.riverbasin.Rb.RbOutConnected;
+import de.tuhh.kalypso.data.strand.Strand;
+import de.tuhh.kalypso.util.KeyGenerator;
+import de.tuhh.kalypso.util.LogFile;
+import de.tuhh.kalypso.util.Printf;
+import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
 
 /** This class RbTable.java containts a river basin collections (TreeSet). The
  * TreeSet ensures that the River basins are listetd in assending order from smallest

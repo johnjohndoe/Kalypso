@@ -1,18 +1,17 @@
 package de.tuhh.kalypso.gui;
 
-import de.tuhh.kalypso.data.WcTable;
-import de.tuhh.kalypso.data.Wc;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Frame;
+import java.util.Iterator;
 
-import javax.swing.JOptionPane;
 import javax.swing.JDialog;
 import javax.swing.JList;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import java.awt.Frame;
-import java.awt.Container;
-import java.awt.BorderLayout;
-import java.awt.event.WindowListener;
-import java.util.Iterator;
+import javax.swing.event.ListSelectionListener;
+
+import de.tuhh.kalypso.data.Wc;
+import de.tuhh.kalypso.data.WcTable;
 
 /** The class DialogBox.java creates form a set of watercourses a wcList. (not
  * finished yet ).

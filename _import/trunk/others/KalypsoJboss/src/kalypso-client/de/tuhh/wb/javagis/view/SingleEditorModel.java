@@ -1,6 +1,7 @@
 package de.tuhh.wb.javagis.view;
 
 import javax.swing.table.AbstractTableModel;
+
 import de.tuhh.wb.javagis.view.tableview.GisTableFilter;
 public class SingleEditorModel extends AbstractTableModel
 {

@@ -2,61 +2,24 @@ package de.tuhh.wb.javagis.view.tableview;
 
 
 
-import javax.swing.JTable;
-
-import javax.swing.table.AbstractTableModel;
-
-import javax.swing.DefaultCellEditor;
-
-import javax.swing.table.TableCellRenderer;
-
-import javax.swing.event.*;
-
-
-
-import javax.swing.JLabel;
-
-import javax.swing.JDialog;
-
-import javax.swing.JButton;
-
-import javax.swing.JCheckBox;
-
-
-
-import javax.swing.JScrollPane;
-
-import javax.swing.JOptionPane;
-
-import javax.swing.JFrame;
-
-import javax.swing.SwingUtilities;
-
-import java.awt.*;
-
-import java.awt.event.*;
-
-import java.util.Date;
-
-import java.text.ParseException;
-
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
-
 import java.text.SimpleDateFormat;
-
 import java.util.Calendar;
-
-import java.util.TimeZone;
-
+import java.util.Date;
 import java.util.Locale;
 
-
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JTable;
 
 import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JCalendar;
-
 import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JMonthChooser;
-
-import de.tuhh.wb.javagis.jcalendar.src.com.toedter.calendar.JCalendarField;
 
 
 

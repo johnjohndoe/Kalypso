@@ -1,41 +1,29 @@
 package de.tuhh.kalypso.data;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
+import java.text.DateFormat;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Vector;
+
+import de.tuhh.kalypso.data.node.HydroData;
+import de.tuhh.kalypso.data.node.Node;
 import de.tuhh.kalypso.data.riverbasin.Rb;
 import de.tuhh.kalypso.data.strand.Rhb;
 import de.tuhh.kalypso.data.strand.Rht;
 import de.tuhh.kalypso.data.strand.Strand;
 import de.tuhh.kalypso.data.strand.StrandData;
-import de.tuhh.kalypso.data.node.Node;
-import de.tuhh.kalypso.data.node.HydroData;
-import de.tuhh.kalypso.data.strand.NullChannel;
-
 import de.tuhh.kalypso.util.LogFile;
-import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
 import de.tuhh.kalypso.util.Printf;
-
-
-import java.io.File;
-import java.io.BufferedWriter;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import org.xml.sax.SAXException;
-import java.io.StreamTokenizer;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.text.DateFormat;
-import java.util.Locale;
-import java.util.Iterator;
-import java.util.Vector;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Set;
+import de.tuhh.kalypso.util.ErrorHandler.KalypsoFilterException;
 import de.tuhh.kalypso.util.xmlParser.GisTransferManager;
-import de.tuhh.kalypso.util.xmlParser.*;
-import java.util.HashSet;
 
 /** This class WcState.java contains a @link StrandTable, a @link RbTable and a
  * @link WcTable. It is the level where alle information of a net is contained.

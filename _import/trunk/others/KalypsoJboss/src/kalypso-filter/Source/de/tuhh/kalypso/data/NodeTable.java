@@ -1,17 +1,15 @@
 package de.tuhh.kalypso.data;
-import de.tuhh.kalypso.data.node.*;
-
-import de.tuhh.kalypso.util.Printf;
-import de.tuhh.kalypso.util.LogFile;
-import de.tuhh.kalypso.util.KeyGenerator;
-
-import java.io.IOException;
-import java.util.TreeSet;
-import java.util.Iterator;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Locale;
-import java.sql.Connection;
-import java.sql.Statement;
+import java.util.TreeSet;
+
+import de.tuhh.kalypso.data.node.HydroData;
+import de.tuhh.kalypso.data.node.Node;
+import de.tuhh.kalypso.util.KeyGenerator;
+import de.tuhh.kalypso.util.LogFile;
+import de.tuhh.kalypso.util.Printf;
 
 /**
  * NodeTable.java

@@ -1,26 +1,17 @@
 package de.tuhh.wb.javagis.view;
 
-import javax.swing.*;
-
-import java.awt.event.MouseEvent;
-
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
-import javax.swing.event.ChangeListener;
+import java.awt.event.FocusListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import de.tuhh.wb.javagis.data.GisElement;
-import de.tuhh.wb.javagis.data.GisObject;
-import de.tuhh.wb.javagis.data.GisRelation;
 
 public class ValueEditor  implements ChangeListener, DocumentListener, FocusListener
 {

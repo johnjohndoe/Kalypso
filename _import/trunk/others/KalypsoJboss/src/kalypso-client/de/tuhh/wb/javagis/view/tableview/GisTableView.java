@@ -1,97 +1,45 @@
 package de.tuhh.wb.javagis.view.tableview;
 
-import javax.swing.event.TableModelEvent;
-
-import javax.swing.event.InternalFrameListener;
-
-import javax.swing.event.InternalFrameEvent;
-
-import javax.swing.JInternalFrame;
-
-import javax.swing.table.TableModel;
-
-import javax.swing.table.TableColumnModel;
-
-import javax.swing.table.TableColumn;
-
 import java.awt.BorderLayout;
-
-import javax.swing.JButton;
-
-import javax.swing.JSplitPane;
-
-import javax.swing.JPanel;
-
-import javax.swing.JComboBox;
-
-import javax.swing.JTabbedPane;
-
-import javax.swing.JTable;
-
-import javax.swing.JScrollPane;
-
-import javax.swing.JToolBar;
-
-import javax.swing.JMenu;
-
-import javax.swing.JMenuItem;
-import javax.swing.JCheckBoxMenuItem;
-
-import javax.swing.JMenuBar;
-
-import javax.swing.JOptionPane;
-
-import javax.swing.JPopupMenu;
-
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
-import java.util.Hashtable;
-
-import java.util.Enumeration;
-
-import java.awt.event.MouseListener;
-
-import java.awt.event.MouseEvent;
-
-import java.awt.event.MouseMotionListener;
-
-import java.awt.event.ActionListener;
-
-import java.awt.event.ActionEvent;
-
-import java.awt.Point;
+import javax.swing.JComboBox;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import de.tuhh.wb.javagis.Main;
-
-import de.tuhh.wb.javagis.view.ViewManager;
-
-import de.tuhh.wb.javagis.view.GisView;
-
-import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
-
-import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
-
-import de.tuhh.wb.javagis.data.GisElement;
-
-import de.tuhh.wb.javagis.data.GisElementClass;
-import de.tuhh.wb.javagis.data.Version;
-import de.tuhh.wb.javagis.data.GisObjectClass;
-
-import de.tuhh.wb.javagis.model.GisInterfaceTableModel;
-
-import de.tuhh.wb.javagis.tools.I18n;
-
-import de.tuhh.wb.javagis.view.tableview.DateChooser;
-
-import de.tuhh.wb.javagis.view.LogView;
-
 import de.tuhh.wb.javagis.data.DoubleKeyHash;
-
-import java.awt.event.ItemEvent;
-
-import java.awt.event.ItemListener;
-
-import javax.ejb.ObjectNotFoundException;
+import de.tuhh.wb.javagis.data.GisElement;
+import de.tuhh.wb.javagis.data.GisElementClass;
+import de.tuhh.wb.javagis.data.GisObjectClass;
+import de.tuhh.wb.javagis.data.Version;
+import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.GisView;
+import de.tuhh.wb.javagis.view.ViewManager;
+import de.tuhh.wb.javagis.view.singleview.GisSingleObjectView;
 import de.tuhh.wb.tools.event.ActionManager;
 
 public class GisTableView

@@ -2,37 +2,51 @@ package de.tuhh.wb.javagis.view;
 
 //import java.util.Vector;
 
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-//import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
-//import java.util.Vector;
-//import java.lang.Math;
 
-import de.tuhh.wb.javagis.data.VersionClass;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import de.tuhh.wb.javagis.Main;
-import de.tuhh.wb.javagis.data.VersionAccess;
-//import de.tuhh.wb.javagis.data.VersionAccessImpl;
-//import de.tuhh.wb.javagis.view.JobRequest;
-//import de.tuhh.wb.javagis.data.event.VersionListener;
-//import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
-import de.tuhh.wb.javagis.tools.I18n;
-//import ejb.event.EJBEvent;
-import javax.swing.*;
-import java.awt.*;
+import de.tuhh.wb.javagis.AutomateCalibration.SCE_KALYPSO;
 import de.tuhh.wb.javagis.data.Version;
-import de.tuhh.wb.javagis.view.tableview.GisTableView;
+import de.tuhh.wb.javagis.data.VersionAccess;
+import de.tuhh.wb.javagis.data.VersionClass;
+import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.netview.GisNetView;
 import de.tuhh.wb.javagis.view.projectview.ProjectView;
-//import de.tuhh.wb.javagis.view.projectview.SimulationDialog;
-import de.tuhh.wb.javagis.view.Tutorial;
-import de.tuhh.wb.javagis.AutomateCalibration.SCE_KALYPSO;
-
-import java.awt.event.*;
-import java.lang.ClassLoader;
-import de.tuhh.wb.javagis.view.ConfigurationView;
+import de.tuhh.wb.javagis.view.tableview.GisTableView;
 
 public class ViewManager
 	extends JFrame
@@ -592,8 +606,8 @@ public class ViewManager
 		calibrationButton.setMaximumSize(new Dimension(35, 110));
 		calibrationButton.setPreferredSize(new Dimension(35, 35));
 		calibrationButton.setToolTipText(I18n.get("ButtonAutomateCalibration"));
-		calibrationButton.setIcon(
-			(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
+		//calibrationButton.setIcon(
+		//	(new ImageIcon(cl.getResource("symbols/calibration.gif"))));
 		calibrationButton.addActionListener(this);
 		calibrationButton.setActionCommand("automateCalibration");
 

@@ -2,18 +2,18 @@ package de.tuhh.wb.javagis.simpleclient;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.GridLayout;
-import java.util.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import de.tuhh.wb.javagis.tools.I18n;
-
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 
 public class SimulationTimeDialog extends JPanel implements ActionListener

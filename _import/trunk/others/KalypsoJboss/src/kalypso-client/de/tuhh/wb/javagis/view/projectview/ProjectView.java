@@ -1,35 +1,40 @@
 package de.tuhh.wb.javagis.view.projectview;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import javax.swing.tree.*;
-import de.tuhh.wb.javagis.Main;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-import java.io.File;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import de.tuhh.wb.javagis.view.LogView;
-//import de.tuhh.wb.javagis.view.Tutorial;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+
+import de.tuhh.wb.javagis.Main;
 import de.tuhh.wb.javagis.data.VersionAccess;
 import de.tuhh.wb.javagis.data.VersionAccessImpl;
-//import de.tuhh.wb.javagis.view.JobRequest;
-import de.tuhh.wb.javagis.data.event.VersionListener;
 import de.tuhh.wb.javagis.data.event.KalypsoEventManager;
+import de.tuhh.wb.javagis.data.event.VersionListener;
 import de.tuhh.wb.javagis.tools.I18n;
+import de.tuhh.wb.javagis.view.LogView;
 import de.tuhh.wb.javagis.view.ViewManager;
-import ejb.event.EJBEvent;
-import javax.swing.*;
-//import java.awt.*;
-import java.lang.ClassLoader;
-import java.awt.Component;
-import java.awt.Color;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
-
 import de.tuhh.wb.javagis.view.trafoview.TrafoView;
+import ejb.event.EJBEvent;
 
 public class ProjectView
 	extends JInternalFrame

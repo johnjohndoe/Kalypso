@@ -1,34 +1,34 @@
 package de.tuhh.wb.javagis.view.projectview;
 
-import javax.swing.JInternalFrame;
-import javax.swing.*;
-import java.util.Date;
-import java.io.File;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Date;
+import java.util.HashSet;
 
-import javax.swing.event.InternalFrameListener;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.InternalFrameEvent;
-
-import de.tuhh.wb.javagis.FileSystemUtils;
-
-import de.tuhh.wb.javagis.Main;
-
-import de.tuhh.wb.javagis.simulation.KonfigWrite;
-import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
+import javax.swing.event.InternalFrameListener;
 
 import de.tuhh.kalypso.data.I_FilterImpl;
+import de.tuhh.wb.javagis.FileSystemUtils;
+import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.SystemExecute;
+import de.tuhh.wb.javagis.data.VersionAccess;
+import de.tuhh.wb.javagis.simulation.KonfigWrite;
+import de.tuhh.wb.javagis.simulation.TimeSeriesGenerator;
+import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.view.LogView;
-
+import de.tuhh.wb.javagis.view.ViewManager;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.XmlImport;
-import de.tuhh.wb.javagis.xml.GisTransferObject;
-import de.tuhh.wb.javagis.data.VersionAccess;
-import de.tuhh.wb.javagis.view.ViewManager;
 import ejb.event.EJBEvent;
-import java.util.HashSet;
-import de.tuhh.wb.javagis.SystemExecute;
-import de.tuhh.wb.javagis.tools.I18n;
 
 public class SimulationDialog
 	extends JInternalFrame

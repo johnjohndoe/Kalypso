@@ -1,28 +1,26 @@
 package de.tuhh.wb.javagis.simpleclient;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-//import java.awt.GridLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.Date;
 import java.util.Vector;
-import de.tuhh.wb.javagis.tools.I18n;
 
-import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+
+import org.xml.sax.helpers.AttributesImpl;
+
+import de.tuhh.wb.javagis.tools.I18n;
 import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.VectorSet;
-import org.xml.sax.helpers.AttributesImpl;
 
 public class StationFileDialog extends JScrollPane implements ActionListener//,MouseListener
 {

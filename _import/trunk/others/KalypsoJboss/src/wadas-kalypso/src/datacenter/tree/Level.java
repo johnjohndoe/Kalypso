@@ -1,10 +1,11 @@
 package datacenter.tree;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
-import datacenter.persistent.*;
+import datacenter.persistent.Database;
+import datacenter.persistent.Persistent;
+import datacenter.persistent.PersistentException;
 
 /**
  * A Level is an abstract element of the tree hierarchy of the datacenter. A Level

@@ -1,18 +1,14 @@
 package de.tuhh.wb.javagis.view.projectview;
 
 import java.io.File;
-import de.tuhh.wb.javagis.FileSystemUtils;
-import de.tuhh.wb.javagis.Main;
-import de.tuhh.wb.javagis.view.LogView;
 
+import javax.swing.JOptionPane;
+
+import de.tuhh.wb.javagis.Main;
+import de.tuhh.wb.javagis.data.VersionAccess;
+import de.tuhh.wb.javagis.xml.GisTransferObject;
 import de.tuhh.wb.javagis.xml.KalypsoXmlImportListener;
 import de.tuhh.wb.javagis.xml.XmlImport;
-import de.tuhh.wb.javagis.xml.GisTransferObject;
-import de.tuhh.wb.javagis.data.VersionAccess;
-import de.tuhh.wb.javagis.data.VersionAccessImpl;
-import de.tuhh.wb.javagis.view.ViewManager;
-import de.tuhh.wb.javagis.tools.I18n;
-import javax.swing.JOptionPane;
 
 public class HwsSimulation implements KalypsoXmlImportListener
 {
