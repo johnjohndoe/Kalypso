@@ -32,7 +32,7 @@
     <simpleProperty key="m_areaHy">
       <name>Area</name>
       <description>Area of hydrotop</description>
-      <unit>m2</unit>
+      <unit>m<sup>3</sup></unit>
       <type>java.lang.Integer</type>
       <default>1000</default>
     </simpleProperty>
@@ -99,7 +99,7 @@
     <simpleProperty key="m_qInitial">
       <name>Initial Discharge</name>
       <description></description>
-      <unit>m3/s</unit>
+      <unit>m<sup>3</sup>/s</unit>
       <type>java.lang.Float</type>
     </simpleProperty>
 
@@ -121,14 +121,14 @@
     <simpleProperty key="m_qBoardfull">
       <name>Bankfull Discharge</name>
       <description>Discharge conveyed in a water course without overtopping the flood plains</description>
-      <unit>m3/s</unit>
+      <unit>m<sup>3</sup>/s</unit>
       <type>java.lang.Float</type>
     </simpleProperty>
 
     <simpleProperty key="m_qInitial">
       <name>Initial Discharge</name>
       <description></description>
-      <unit>m3/s</unit>
+      <unit>m<sup>3</sup>/s</unit>
       <type>java.lang.Float</type>
     </simpleProperty>
 
@@ -142,7 +142,7 @@
       <description>5 discharge levels: 1. and 2. discharge in channel , 3. bankfull, 4. and 5. discharge in channel and over flood plain</description>
       <simpleProperty key="v_q">
 	<name>Discharge</name>
-	<unit>m3/s</unit>
+	<unit>m<sup>3</sup>/s</unit>
 	<type>java.lang.Float</type>
       </simpleProperty>
       <simpleProperty key="v_kRiver">
@@ -189,7 +189,7 @@
     <simpleProperty key="m_qInitial">
       <name>Initial Discharge</name>
       <description></description>
-      <unit>m3/s</unit>
+      <unit>m<sup>3</sup>/s</unit>
       <type>java.lang.Float</type>
     </simpleProperty>
 
@@ -206,17 +206,17 @@
     </simpleProperty>
     <simpleProperty key="m_initVolume">
       <name>Initial Volume of Reservoir</name>
-      <unit>hm3</unit>
+      <unit>hm<sup>3</sup></unit>
       <type>java.lang.Float</type>
     </simpleProperty>
     <simpleProperty key="m_maxVolume">
       <name>Maximum Volume of Reservoir</name>
-      <unit>hm</unit>
+      <unit>hm<sup>3</sup></unit>
       <type>java.lang.Float</type>
     </simpleProperty>
     <simpleProperty key="m_minVolume">
       <name>Minimum Volume of Reservoir</name>
-      <unit>hm3</unit>
+      <unit>hm<sup>3</sup></unit>
       <type>java.lang.Float</type>
     </simpleProperty>
     <vectorSet key="m_data">
@@ -228,12 +228,12 @@
       </simpleProperty>
       <simpleProperty key="m_Volume">
 	<name>Volume of Reservoir</name>
-	<unit>hm3</unit>
+	<unit>hm<sup>3</sup></unit>
 	<type>java.lang.Float</type>
       </simpleProperty>
       <simpleProperty key="m_discharge">
 	<name>Output Discharge</name>
-	<unit>m3/s</unit>
+	<unit>m<sup>3</sup>/s</unit>
 	<type>java.lang.Float</type>
       </simpleProperty>
     </vectorSet>
@@ -355,10 +355,9 @@
     </simpleProperty>
     <simpleProperty key="m_mesTableName">
       <name>database</name>
-
+      <format>bce_db</format>
       <description>database timeseries</description>
       <type>java.lang.String</type>
-            <format>bce_db</format>
     </simpleProperty>
   </objectClass>
   <objectClass ID="wc">
@@ -489,7 +488,7 @@
     </simpleProperty>
     <simpleProperty key="m_aquifExtract">
       <name>Draw-off from Shallow Aquifer</name>
-      <unit>m3/s</unit>
+      <unit>m<sup>3</sup>/s</unit>
       <type>java.lang.Double</type>
     </simpleProperty>
     <simpleProperty key="m_aquifPorosity">
@@ -662,24 +661,21 @@
 -->
     <simpleProperty key="m_mesTableName">
       <name>Table Name Measured</name>
-      
+      <format>bce_db</format>
       <description>Measured values</description>
       <type>java.lang.String</type>
-      <format>bce_db</format>
     </simpleProperty>
     <simpleProperty key="m_synTableName">
       <name>Table Name Synthetic</name>
-      
+      <format>bce_db</format>
       <description>Forecasted values</description>
       <type>java.lang.String</type>
-      <format>bce_db</format>
     </simpleProperty>
     <simpleProperty key="m_mesTableNameLongTerm">
       <name>Table Name Measured Long term</name>
-      
+      <format>bce_db</format>
       <description>Measured values for long term simulation</description>
       <type>java.lang.String</type>
-      <format>bce_db</format>
     </simpleProperty>
   </objectClass>
 
@@ -699,25 +695,22 @@
 -->
     <simpleProperty key="m_mesTableName">
       <name>Table Name Measured</name>
-      
+      <format>bce_db</format><!-- bce_db : DBTableName,nicetablename-->
       <description>Measured values</description>
       <type>java.lang.String</type>
-      <format>bce_db</format><!-- bce_db : DBTableName,nicetablename-->
     </simpleProperty>
     <simpleProperty key="m_synTableName">
       <name>Table Name Synthetic</name>
-      
+      <format>bce_db</format>
       <description>Forecasted values</description>
       <type>java.lang.String</type>
-      <format>bce_db</format>
     </simpleProperty>
 
     <simpleProperty key="m_mesTableNameEvaporation">
       <name>Table Name Measured Evaporation</name>
-      
+      <format>bce_db</format><!-- bce_db : DBTableName,nicetablename-->
       <description>Measured values of evaporation</description>
       <type>java.lang.String</type>
-      <format>bce_db</format><!-- bce_db : DBTableName,nicetablename-->
     </simpleProperty>
 <!--
     <simpleProperty key="m_synTableNameEvaporation">

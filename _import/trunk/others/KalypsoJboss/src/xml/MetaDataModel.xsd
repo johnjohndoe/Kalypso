@@ -145,6 +145,7 @@
 		<xs:sequence>
 			<xs:element name="name" type="xs:string"/>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="unit" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="key" type="xs:string"/>
 	</xs:complexType>
@@ -198,11 +199,21 @@
 			<xs:enumeration value="3"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="_FormatType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="bce_db"/>
+<!--			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/> -->
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="_SimpleParameterType">
 		<xs:complexContent>
 			<xs:extension base="_ParameterType">
 				<xs:sequence>
 					<xs:element name="type" type="_SimpleDataType"/>
+					<xs:element name="format" type="_FormatType" minOccurs="0"/>
+					<xs:element name="default" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
