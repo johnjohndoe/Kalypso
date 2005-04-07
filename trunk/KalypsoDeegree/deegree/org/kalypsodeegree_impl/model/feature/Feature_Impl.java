@@ -341,7 +341,6 @@ public class Feature_Impl implements Feature
 
   public boolean select( int selectID )
   {
-    System.out.println( "select feature " + m_id + " with " + selectID );
     if( isSelected( selectID ) )
       return false;
 

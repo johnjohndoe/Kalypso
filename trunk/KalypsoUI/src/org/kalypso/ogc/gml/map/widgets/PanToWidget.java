@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
@@ -52,6 +52,15 @@ import org.kalypso.util.command.ICommand;
  */
 public class PanToWidget extends AbstractWidget
 {
+  /*
+   * 
+   *  @author doemming
+   */
+  public PanToWidget( String name, String toolTip )
+  {
+    super( name, toolTip );    
+  }
+
   private Point endPoint = null;
 
   private Point startPoint = null;
@@ -87,7 +96,7 @@ public class PanToWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#performIntern()
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
    */
   public ICommand performIntern()
   {

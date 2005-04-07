@@ -36,15 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
@@ -52,32 +50,38 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
  * 
  * @author bce
  */
-public abstract class AbstractWidgetActionDelegate implements IEditorActionDelegate
+public abstract class AbstractWidgetActionDelegate extends AbstractGisEditorActionDelagate
 {
-  private final String m_widgetID;
-  
-  private GisMapEditor m_editor;
+  private final IWidget m_widget;
 
-  private MapPanel myActualMapPanel;
-
-  public AbstractWidgetActionDelegate( final String widgetID )
+  /*
+   * 
+   * @author doemming
+   */
+  public AbstractWidgetActionDelegate( IWidget widget )
   {
-    m_widgetID = widgetID;
+    m_widget = widget;
   }
 
+  public abstract void refreshEnabled();
+
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#refreshAction()
    */
-  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
+  final protected void refreshAction()
   {
-    if( targetEditor != null )
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    IAction action = getAction();
+    if( editor != null && action != null )
     {
-      m_editor = (GisMapEditor)targetEditor;
-      myActualMapPanel = m_editor.getMapPanel();
-      if( myActualMapPanel != null )
-          action.setChecked( m_widgetID.equals( myActualMapPanel.getActualWidgetID() ) );
+      if( action.isChecked() )
+        editor.getMapPanel().getWidgetManager().changeWidget( m_widget );
     }
+  }
+
+  public IWidget getWidget()
+  {
+    return m_widget;
   }
 
   /**
@@ -85,17 +89,7 @@ public abstract class AbstractWidgetActionDelegate implements IEditorActionDeleg
    */
   public void run( final IAction action )
   {
-    if( action.isChecked() && !m_widgetID.equals( myActualMapPanel.getActualWidgetID() ) )
-      myActualMapPanel.changeWidget( m_widgetID );
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( IAction action, ISelection selection )
-  {
-  // nix tun?
-    action.getClass();
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    editor.getMapPanel().getWidgetManager().changeWidget( m_widget );
   }
 }

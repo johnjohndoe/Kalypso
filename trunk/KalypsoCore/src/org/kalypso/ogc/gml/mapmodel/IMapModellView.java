@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.mapmodel;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * @author vDoemming
+ * @author doemming
  */
 public interface IMapModellView extends ModellEventListener
 {

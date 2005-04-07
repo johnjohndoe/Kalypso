@@ -41,14 +41,14 @@
 package org.kalypso.ui.editor.diagrameditor.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.kalypso.ui.editor.AbstractEditorActionDelegate;
+import org.kalypso.ui.editor.AbstractMapEditorActionDelegate;
 
 /**
  * OpenGrafikAction
  * 
  * @author schlienger
  */
-public class OpenGrafikAction extends AbstractEditorActionDelegate
+public class OpenGrafikAction extends AbstractMapEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

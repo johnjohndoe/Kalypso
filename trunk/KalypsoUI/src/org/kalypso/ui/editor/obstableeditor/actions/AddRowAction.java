@@ -46,7 +46,7 @@ import org.eclipse.jface.window.Window;
 import org.kalypso.eclipse.jface.dialogs.TypeBasedInputValidator;
 import org.kalypso.ogc.sensor.commands.AddRowCommand;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ui.editor.AbstractEditorActionDelegate;
+import org.kalypso.ui.editor.AbstractMapEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**
@@ -54,7 +54,7 @@ import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
  * 
  * @author schlienger
  */
-public class AddRowAction extends AbstractEditorActionDelegate
+public class AddRowAction extends AbstractMapEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

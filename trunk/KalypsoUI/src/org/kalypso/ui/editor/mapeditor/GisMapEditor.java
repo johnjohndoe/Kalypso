@@ -46,7 +46,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,12 +61,12 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.MapPanelHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * <p>
@@ -194,7 +193,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     super.createPartControl( parent );
 
-    MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), myMapPanel );
+//    MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), myMapPanel );
     
     // create MapPanel
     final Frame virtualFrame = SWT_AWT

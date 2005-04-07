@@ -40,17 +40,18 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.util.command.CommandJob;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
  */
-public class UndoRedoDelegate extends GisTableAbstractActionDelagate implements ModellEventListener
+public class UndoRedoDelegate extends AbstractGisEditorActionDelagate implements ModellEventListener
 {
   private final boolean m_undo;
 
@@ -64,7 +65,7 @@ public class UndoRedoDelegate extends GisTableAbstractActionDelagate implements 
    */
   public void run( final IAction action )
   {
-    final GisTableEditor editor = getEditor();
+    final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor == null )
       return;
 
@@ -83,7 +84,7 @@ public class UndoRedoDelegate extends GisTableAbstractActionDelagate implements 
   {
     boolean bEnabled = false;
 
-    final GisTableEditor editor = getEditor();
+    final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor != null )
     {
       final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();

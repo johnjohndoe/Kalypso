@@ -38,13 +38,32 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.map.widgets;
 
-/**
- *
- * @author von Dömming
- */
-public interface TemporaryActionWidget extends IWidget
+import org.kalypso.ogc.gml.command.JMSelector;
+
+public class SelectWidget extends AbstractSelectWidget
 {
-  //
+  /*
+   * 
+   *  @author doemming
+   */
+  public SelectWidget( String name, String toolTip )
+  {
+    super( name, toolTip );
+    
+  }
+
+  protected int getSelectionMode()
+  {
+     return JMSelector.MODE_SELECT;        
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
+   */
+  boolean allowOnlyOneSelectedFeature()
+  {
+    return false;
+  }  
 }

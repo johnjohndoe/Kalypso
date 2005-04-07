@@ -110,7 +110,6 @@ public abstract class AbstractEditorPart extends EditorPart implements
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
 
     m_commandTarget.dispose();
-
     super.dispose();
   }
 

@@ -38,19 +38,53 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ui.editor;
 
-import org.kalypso.ogc.gml.command.JMSelector;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
 
-public class SingleElementSelectWidget extends AbstractSelectWidget
+/**
+ * AbstractEditorActionDelegate
+ * 
+ * @author schlienger
+ */
+public abstract class AbstractMapEditorActionDelegate implements
+    IEditorActionDelegate
 {
-  protected int getSelectionMode()
+  private IEditorPart m_editor;
+
+  /**
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
-    return JMSelector.MODE_TOGGLE;
+    m_editor = targetEditor;
   }
 
-  protected boolean allowOnlyOneSelectedFeature()
+  /**
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged( IAction action, ISelection selection )
   {
-    return true;
+    // 
+  }
+  
+  /**
+   * @return shell
+   */
+  public Shell getShell()
+  {
+    return m_editor.getSite().getShell();
+  }
+  
+  /**
+   * @return editor
+   */
+  public IEditorPart getEditor()
+  {
+    return m_editor;
   }
 }

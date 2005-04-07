@@ -52,30 +52,33 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
 import org.kalypso.services.proxy.DocBean;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
+import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.metadoc.table.ExportTableBerichtWizard;
 import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 
 /**
  * @author Belger
  */
-public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
+public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelagate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
+    GisTableEditor editor = (GisTableEditor)getEditor();
     try
     {
       final String username = System.getProperty( "user.name" );
       final MetadocServiceWrapper service = new MetadocServiceWrapper(  );
       final DocBean doc = service.prepareDocument( ".csv", username );
       
-      final ExportableLayerTable exp = new ExportableLayerTable( getEditor().getLayerTable() );
+      final ExportableLayerTable exp = new ExportableLayerTable( editor.getLayerTable() );
       
       final Wizard exportWizard = new ExportTableBerichtWizard( exp , doc );
 
-      final WizardDialog dialog = new WizardDialog( getEditor().getSite().getShell(), exportWizard );
+      final WizardDialog dialog = new WizardDialog( editor.getSite().getShell(), exportWizard );
       final int ok = dialog.open();
 
       final Job job = new Job( "Berichtsablage" ) {
@@ -102,13 +105,13 @@ public class ExportBerichtActionDelegate extends GisTableAbstractActionDelagate
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( getEditor().getSite().getShell(), "Berichtsablage",
+      ErrorDialog.openError( editor.getSite().getShell(), "Berichtsablage",
           "Berichtsablagedienst konnte nicht initialisiert werden", e.getStatus() );
     }
   }
 
   /**
-   * @see org.kalypso.ui.editor.gistableeditor.actions.GisTableAbstractActionDelagate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#refreshAction()
    */
   protected void refreshAction()
   {

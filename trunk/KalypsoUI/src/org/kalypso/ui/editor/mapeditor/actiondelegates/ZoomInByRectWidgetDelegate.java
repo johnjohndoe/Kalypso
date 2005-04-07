@@ -36,20 +36,54 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
+import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.map.MapPanel;
-
+import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
- * @author <a href="mailto:k.lupp@web.de">Katharina Lupp</a>
+ * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  */
 public class ZoomInByRectWidgetDelegate extends AbstractWidgetActionDelegate
 {
-  public ZoomInByRectWidgetDelegate(  )
+  public ZoomInByRectWidgetDelegate()
   {
-    super( MapPanel.WIDGET_ZOOM_IN_RECT );
+    super(WidgetHelper.getWidget( MapPanel.WIDGET_ZOOM_IN_RECT ));
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run( final IAction action )
+  {
+    //    if( action.isChecked() && !m_widgetID.equals(
+    // m_actualMapPanel.getActualWidgetID() ) )
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    editor.getMapPanel().getWidgetManager().changeWidget( getWidget() );
+  }
+
+  
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractWidgetActionDelegate#refreshEnabled()
+   */
+  public void refreshEnabled()
+  {
+    boolean enabled = false;
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    IAction action = getAction();
+    if( editor != null )
+    {
+      final MapPanel mapPanel = editor.getMapPanel();
+      IMapModell mapModell = mapPanel.getMapModell();
+      if(mapModell!=null && mapModell.getThemeSize() > 0 )
+        enabled=true;
+    }
+    action.setEnabled(enabled);
   }
 }
+

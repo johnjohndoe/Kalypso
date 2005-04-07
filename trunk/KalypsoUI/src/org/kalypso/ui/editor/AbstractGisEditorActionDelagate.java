@@ -36,27 +36,31 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gistableeditor.actions;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.ui.editor;
 
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
  */
-public abstract class GisTableAbstractActionDelagate implements IEditorActionDelegate, ModellEventListener
+public abstract class AbstractGisEditorActionDelagate implements IEditorActionDelegate,
+    ModellEventListener
 {
-  private GisTableEditor m_editor;
+  private AbstractEditorPart m_editor;
 
   private IAction m_action;
-  
+
+  public static int c = 0;
+
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
@@ -64,18 +68,32 @@ public abstract class GisTableAbstractActionDelagate implements IEditorActionDel
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_action = action;
-
+    // disconnect old editor
     if( m_editor != null )
-      m_editor.getLayerTable().removeModellListener( this );
+    {
+      if( m_editor instanceof GisTableEditor )
+        ( (GisTableEditor)m_editor ).getLayerTable().removeModellListener( this );
+      if( m_editor instanceof GisMapEditor )
+      {
+        ( (GisMapEditor)m_editor ).getMapPanel().removeModellListener(this);
+      }
+    }
+    m_editor = (AbstractEditorPart)targetEditor;
 
-    m_editor = (GisTableEditor)targetEditor;
-
+    // connect new editor
     if( m_editor != null )
-      m_editor.getLayerTable().addModellListener( this );
+    {
+      if( m_editor instanceof GisTableEditor )
+        ( (GisTableEditor)m_editor ).getLayerTable().addModellListener( this );
+      if( m_editor instanceof GisMapEditor )
+      {
+        ( (GisMapEditor)m_editor ).getMapPanel().addModellListener(this);
+      }
+    }
 
     refreshAction();
   }
-  
+
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
@@ -86,17 +104,20 @@ public abstract class GisTableAbstractActionDelagate implements IEditorActionDel
   }
 
   protected abstract void refreshAction();
-  
-  protected GisTableEditor getEditor()
+
+  /**
+   * make cast to your editor
+   */
+  protected AbstractEditorPart getEditor()
   {
     return m_editor;
   }
-  
+
   protected IAction getAction()
   {
     return m_action;
   }
-  
+
   /**
    * @param action
    * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
@@ -113,5 +134,4 @@ public abstract class GisTableAbstractActionDelagate implements IEditorActionDel
   {
     refreshAction();
   }
-
 }

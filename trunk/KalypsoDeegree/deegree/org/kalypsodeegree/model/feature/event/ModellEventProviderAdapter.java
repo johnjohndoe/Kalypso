@@ -16,7 +16,10 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void addModellListener( ModellEventListener listener )
   {
-    myListeners.add( listener );
+    synchronized( myListeners )
+    {
+      myListeners.add( listener );
+    }
   }
 
   /**
@@ -24,7 +27,10 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void removeModellListener( ModellEventListener listener )
   {
-    myListeners.remove( listener );
+    synchronized( myListeners )
+    {
+      myListeners.remove( listener );
+    }
   }
 
   /**
@@ -32,7 +38,10 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void fireModellEvent( ModellEvent event )
   {
-    for( final Iterator iter = myListeners.iterator(); iter.hasNext(); )
-      ((ModellEventListener)iter.next()).onModellChange(event);
+    synchronized( myListeners )
+    {
+      for( final Iterator iter = myListeners.iterator(); iter.hasNext(); )
+        ( (ModellEventListener)iter.next() ).onModellChange( event );
+    }
   }
 }

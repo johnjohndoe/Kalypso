@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
@@ -45,6 +45,9 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommandTarget;
@@ -58,18 +61,18 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 {
   private IWidget myNormalWidget = null;
 
-  private IWidget myTemporaryWidget = null;
-
   private final MapPanel myMapPanel;
-  
+
   private final ICommandTarget m_commandTarget;
-  
-  private Point m_lastDragged=null;
+
+  private Point m_lastDragged = null;
 
   private static final double MINIMUM_MOUSE_DISTANCE = 5;
-  
-  private Point m_lastMoved=null;
-  
+
+  private Point m_lastMoved = null;
+
+  private final List m_widgetChangeListener = new ArrayList();
+
   public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
     myMapPanel = mapPanel;
@@ -98,39 +101,36 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
       case MouseEvent.BUTTON3:
         actualWidget.rightClicked( e.getPoint() );
-        stopTemporaryWidget();
         break;
 
       default:
         break;
       }
   }
-  
+
   public void mouseMoved( MouseEvent e )
   {
-    if( m_lastMoved==null 
-        || m_lastMoved.distance(e.getPoint())>MINIMUM_MOUSE_DISTANCE)        
-      if(  getActualWidget() != null )
-    {
-      m_lastMoved=e.getPoint();
-      getActualWidget().moved( m_lastMoved );
+    if( m_lastMoved == null || m_lastMoved.distance( e.getPoint() ) > MINIMUM_MOUSE_DISTANCE )
+      if( getActualWidget() != null )
+      {
+        m_lastMoved = e.getPoint();
+        getActualWidget().moved( m_lastMoved );
 
-      myMapPanel.repaint();
-    }
+        myMapPanel.repaint();
+      }
   }
-  
+
   // MouseMotionAdapter:
   public void mouseDragged( MouseEvent e )
   {
-  if(m_lastDragged==null 
-        || m_lastDragged.distance(e.getPoint())>MINIMUM_MOUSE_DISTANCE)
-    
-        if(getActualWidget() != null )
-    {
-      m_lastDragged=e.getPoint();
-      getActualWidget().dragged( m_lastDragged);
-      myMapPanel.repaint();
-    }
+    if( m_lastDragged == null || m_lastDragged.distance( e.getPoint() ) > MINIMUM_MOUSE_DISTANCE )
+
+      if( getActualWidget() != null )
+      {
+        m_lastDragged = e.getPoint();
+        getActualWidget().dragged( m_lastDragged );
+        myMapPanel.repaint();
+      }
 
   }
 
@@ -197,7 +197,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       case MouseEvent.BUTTON3: //Right
         actualWidget.perform();
 
-        //		    getActualWidget().rightReleased(e.getPoint());
+        //       getActualWidget().rightReleased(e.getPoint());
         break;
 
       default:
@@ -214,9 +214,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public IWidget getActualWidget()
   {
-    if( myTemporaryWidget != null )
-      return myTemporaryWidget;
-
     return myNormalWidget;
   }
 
@@ -225,63 +222,43 @@ public class WidgetManager implements MouseListener, MouseMotionListener
     if( newWidget == null )
     {
       myNormalWidget = null;
+      fireWidgetChangeEvent( newWidget );
       return;
     }
-    if( myTemporaryWidget != null ) // finish temporary widget if required
-    {
-      myTemporaryWidget.finish();
-      myTemporaryWidget = null;
-    }
 
-    if( newWidget instanceof TemporaryActionWidget )
-    {
-      myTemporaryWidget = newWidget;
-    }
-    else
-    // normal widget
-    {
-      if( myNormalWidget != null )// && normalWidget != newWidget )
-        myNormalWidget.finish();
+    if( myNormalWidget != null )// && normalWidget != newWidget )
+      myNormalWidget.finish();
 
-      myNormalWidget = newWidget;
-      myNormalWidget.activate( m_commandTarget, myMapPanel );
-    }
-
-    if( getActualWidget() != null )
-    {
-      //            JPanel panel = new JPanel( );
-      //            panel.setLayout( new BorderLayout( ) );
-      //
-      //            if( normalWidget != null && normalWidget != getActualWidget( ) )
-      //            {
-      //                JButton lastWidgetButton = new JButton( normalWidget.getName( ) );
-      //                lastWidgetButton.setActionCommand( "stopTemporaryWidget" );
-      //                lastWidgetButton.addActionListener( this );
-      //                panel.add( lastWidgetButton, BorderLayout.SOUTH );
-      //            }
-      //
-      //            panel.add( new JLabel( getActualWidget( ).getName( ) ),
-      // BorderLayout.NORTH );
-      //
-      //            JComponent component = getActualWidget( ).getOptionDialog( );
-      //
-      //            if( component != null )
-      //                panel.add( component, BorderLayout.CENTER );
-      //
-      //            JMMapFrame.getInstance( ).setOptionDialog( panel );
-      //       
-    }
+    myNormalWidget = newWidget;
+    myNormalWidget.activate( m_commandTarget, myMapPanel );
+    fireWidgetChangeEvent( newWidget );
   }
 
-  private void stopTemporaryWidget()
-  {
-    if( myTemporaryWidget != null )
-    {
-      myTemporaryWidget.finish();
-      myTemporaryWidget = null;
-    }
+//  private void stopTemporaryWidget()
+//  {
+//    if( getActualWidget() != null )
+//      changeWidget( getActualWidget() );
+//  }
 
-    if( getActualWidget() != null )
-      changeWidget( getActualWidget() );
+  public void add( IWidgetChangeListener listener )
+  {
+    m_widgetChangeListener.add( listener );
+  }
+
+  public void remove( IWidgetChangeListener listener )
+  {
+    m_widgetChangeListener.remove( listener );
+  }
+
+  private void fireWidgetChangeEvent( IWidget newWidget )
+  {
+    synchronized( m_widgetChangeListener )
+    {
+      for( Iterator iter = m_widgetChangeListener.iterator(); iter.hasNext(); )
+      {
+        IWidgetChangeListener listener = (IWidgetChangeListener)iter.next();
+        listener.widgetChanged( newWidget );
+      }
+    }
   }
 }
