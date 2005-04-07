@@ -6,6 +6,10 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
+
+- WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
+- selektierte MapAction gilt jetzt für alle karten
+
 - Bug75: "Fehler beim Drücken auf 'optimieren' (Widget war disposed	!)"
 - Bug41: "Beim Öffnen mehrerer Tabellen können über Tabelle-Spalten nur die Elemente der zuerst geöffneten Tabelle ausgewählt werden auch wenn eine andere Tabellenart  aktiv ist."
 - Gis-Tabelle: die Sortierung kann durch ein erneutes Drücken auf den Spaltenkopf wieder ausgestellt werden; also
