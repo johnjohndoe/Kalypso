@@ -47,18 +47,18 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
@@ -70,8 +70,9 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author vdoemming
  * 
  */
-public class MapPanel extends Canvas implements IMapModellView, ComponentListener
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener,ModellEventProvider
 {
+  private final ModellEventProvider m_modellEventProvider=new ModellEventProviderAdapter();
   private static final long serialVersionUID = 1L;
 
   public final static String WIDGET_ZOOM_IN = "ZOOM_IN";
@@ -93,10 +94,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
 
   /** WIDGET_... -> widget */
-  private Map m_widgets = new HashMap();
+//  private Map m_widgets = new HashMap();
 
   /** widget -> WIDGET_... */
-  private Map m_widgetIDs = new HashMap();
+//  private Map m_widgetIDs = new HashMap();
 
   private Image mapImage = null;
 
@@ -112,7 +113,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private IMapModell m_model = null;
 
-  private final WidgetManager myWidgetManager;
+  private final WidgetManager m_widgetManager;
 
   private final GeoTransform m_projection = new WorldToScreenTransform();
 
@@ -129,25 +130,25 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     // set empty Modell:
     setMapModell( new MapModell( crs ) );
-    myWidgetManager = new WidgetManager( viewCommandTarget, this );
-    addMouseListener( myWidgetManager );
-    addMouseMotionListener( myWidgetManager );
+    m_widgetManager = new WidgetManager( viewCommandTarget, this );
+    addMouseListener( m_widgetManager );
+    addMouseMotionListener( m_widgetManager );
     addComponentListener( this );
     setVisible( true );
   }
 
   public void dispose()
   {
-    removeMouseListener( myWidgetManager );
-    removeMouseMotionListener( myWidgetManager );
+    removeMouseListener( m_widgetManager );
+    removeMouseMotionListener( m_widgetManager );
     m_model.removeModellListener( this );
   }
 
-  public void setWidget( final String id, final IWidget widget )
-  {
-    m_widgets.put( id, widget );
-    m_widgetIDs.put( widget, id );
-  }
+//  public void setWidget( final String id, final IWidget widget )
+//  {
+//    m_widgets.put( id, widget );
+//    m_widgetIDs.put( widget, id );
+//  }
 
   public void setOffset( int dx, int dy ) // used by pan method
   {
@@ -266,7 +267,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     g.setColor( Color.red );
     g.setClip( 0, 0, getWidth(), getHeight() );
 
-    myWidgetManager.paintWidget( g );
+    m_widgetManager.paintWidget( g );
 
     // g.drawImage( widgetImage, 0, 0, null );
     // gr.dispose();
@@ -282,31 +283,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return validMap;
   }
 
-  // private void setValidSelection( boolean status )
-  // {
-  // validSelection = status;
-  // }
-
-  // private boolean hasValidSelection()
-  // {
-  // return validSelection;
-  // }
-
-  // private void setValidHighlight( boolean status )
-  // {
-  // validHighlight = status;
-  // }
-
-  // private boolean hasValidHighlight()
-  // {
-  // return validHighlight;
-  // }
-
   private void setValidAll( boolean status )
   {
     setValidMap( status );
-    // setValidSelection( status );
-    // setValidHighlight( status );
   }
 
   /**
@@ -329,6 +308,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( m_model != null )
       m_model.addModellListener( this );
+//    fireModellEvent(null);
   }
 
   /**
@@ -445,28 +425,32 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  public void changeWidget( final String widgetID )
-  {
-    if( myWidgetManager != null && m_widgets.containsKey( widgetID ) )
-      myWidgetManager.changeWidget( (IWidget)m_widgets.get( widgetID ) );
-  }
+//  public void changeWidget( final String widgetID )
+//  {
+//    if( m_widgetManager != null && m_widgets.containsKey( widgetID ) )
+//      m_widgetManager.changeWidget( (IWidget)m_widgets.get( widgetID ) );
+//  }
 
-  public String getActualWidgetID()
-  {
-    if( myWidgetManager != null )
-    {
-      final IWidget actualWidget = myWidgetManager.getActualWidget();
-      return (String)m_widgetIDs.get( actualWidget );
-    }
-
-    return null;
-  }
+//  public String getActualWidgetID()
+//  {
+//    if( m_widgetManager != null )
+//    {
+//      final IWidget actualWidget = m_widgetManager.getActualWidget();
+//      return (String)m_widgetIDs.get( actualWidget );
+//    }
+//
+//    return null;
+//  }
 
   public int getSelectionID()
   {
     return m_selectionID;
   }
 
+  public WidgetManager getWidgetManager()
+  {
+    return m_widgetManager;
+  }
   /**
    * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
    */
@@ -503,5 +487,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       setBoundingBox( m_wishBBox );
     else
       setBoundingBox( getBoundingBox() );
+  }
+  public void addModellListener( ModellEventListener listener )
+  {
+    m_modellEventProvider.addModellListener( listener );
+  }
+  public void fireModellEvent( ModellEvent event )
+  {
+    m_modellEventProvider.fireModellEvent( event );
+  }
+  public void removeModellListener( ModellEventListener listener )
+  {
+    m_modellEventProvider.removeModellListener( listener );
   }
 }

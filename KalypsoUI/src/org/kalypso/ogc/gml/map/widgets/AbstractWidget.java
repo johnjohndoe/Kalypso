@@ -38,22 +38,22 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author bce
@@ -64,6 +64,18 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   private ICommandTarget m_commandPoster;
 
+  private final String m_name;
+
+  private final String m_toolTip;
+
+ /*
+ * 
+ *  @author doemming
+ */
+public AbstractWidget(String name,String toolTip)
+{
+  m_name = name;
+  m_toolTip = toolTip;} 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
@@ -72,18 +84,14 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
     // unregister Modelllistener
     if( m_mapPanel != null )
-    {
-      IMapModell mapModell = m_mapPanel.getMapModell();
-      if( mapModell != null )
-        mapModell.removeModellListener( this );
-    }
-    // TODO: register modelllistener?
+      m_mapPanel.removeModellListener(this);
+
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
 
-    if( m_mapPanel != null )
-      m_mapPanel.getMapModell().addModellListener( this );
     // registerModelllistener
+    if( m_mapPanel != null )
+      m_mapPanel.addModellListener( this );
   }
 
   /**
@@ -296,32 +304,12 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     }
   }
 
-  //  public FeatureType getActiveFeatureType()
-  //  {
-  //    try
-  //    {
-  //      return ( getActiveTheme() ).getFeatureType();
-  //    }
-  //    catch( Exception e )
-  //    {
-  //      // no active layer
-  //      // layer not loaded complete
-  //      // not a featurelayer e.g. a wms-layer
-  //      return null;
-  //    }
-  //  }
-
-  //  public KalypsoFeatureLayer[] getAllKalypsoFeatureLayers()
-  //  {
-  //    List result = new ArrayList();
-  //    IKalypsoTheme[] themes = m_mapPanel.getMapModell().getAllThemes();
-  //    for( int i = 0; i < themes.length; i++ )
-  //    {
-  //      IKalypsoLayer layer = themes[i].getLayer();
-  //      if( layer != null && layer instanceof KalypsoFeatureLayer )
-  //        result.add( layer );
-  //    }
-  //    return (KalypsoFeatureLayer[])result.toArray( new
-  // KalypsoFeatureLayer[result.size()] );
-  //  }
+  public String getName()
+  {
+    return m_name;
+  }
+  public String getToolTip()
+  {
+    return m_toolTip;
+  }
 }

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -60,6 +60,16 @@ import org.kalypso.util.command.ICommand;
 
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
+  /*
+   * 
+   *  @author doemming
+   */
+  public AbstractSelectWidget( String name, String toolTip )
+  {
+    super( name, toolTip );
+    
+  }
+
   /**
    * pixel coordinates
    */

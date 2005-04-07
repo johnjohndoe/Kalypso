@@ -53,19 +53,20 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 
 /**
  * @author belger
  */
-public class SaveThemeDelegate extends GisTableAbstractActionDelagate
+public class SaveThemeDelegate extends AbstractGisEditorActionDelagate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    final GisTableEditor editor = getEditor();
+    final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor == null )
       return;
 
@@ -109,10 +110,10 @@ public class SaveThemeDelegate extends GisTableAbstractActionDelagate
 
   protected void refreshAction()
   {
-    boolean bEnabled = false;
+    boolean enabled = false;
 
     
-    final GisTableEditor editor = getEditor();
+    final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor != null )
     {
       final IKalypsoFeatureTheme theme = editor.getLayerTable().getTheme();
@@ -120,11 +121,11 @@ public class SaveThemeDelegate extends GisTableAbstractActionDelagate
       {
         final CommandableWorkspace workspace = theme.getWorkspace();
         if( workspace != null )
-          bEnabled = workspace.isDirty();
+          enabled = workspace.isDirty();
       }
     }
 
     if( getAction() != null )
-      getAction().setEnabled( bEnabled );
+      getAction().setEnabled( enabled );
   }
 }

@@ -50,9 +50,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -80,6 +77,9 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.xml.sax.InputSource;
 
 /**
@@ -289,13 +289,12 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       if( m_workspace == null )
       {
-        if( m_panel != null )
+        if( m_panel != null && !m_panel.isDisposed() )
         {
           m_label = new Label( m_panel, SWT.CENTER );
           m_label.setText( "laden..." );
           m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         }
-
         return;
       }
 
@@ -320,6 +319,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         // todo Fehlermeldung anzeigen
       }
     }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
     finally
     {
       if( m_panel != null && !m_panel.isDisposed() )
@@ -327,6 +330,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         final Point computeSize = m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
         m_panel.setSize( computeSize );
       }
+
     }
   }
 
@@ -353,7 +357,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       } );
     }
   }
-  
+
   public Feature getFeature()
   {
     return m_featureComposite.getFeature();

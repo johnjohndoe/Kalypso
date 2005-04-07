@@ -88,4 +88,8 @@ public interface IWidget
   public void rightPressed( Point p );
 
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
+
+  public String getName();
+
+  public String getToolTip();
 }

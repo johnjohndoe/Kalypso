@@ -74,7 +74,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   {
     m_dirtyRunnable = dirtyRunnable;
     m_commandManager = commandManager;
-    
+
     undoAction = new UndoRedoAction( m_commandManager, m_mutexRule, true );
     redoAction = new UndoRedoAction( m_commandManager, m_mutexRule, false );
 

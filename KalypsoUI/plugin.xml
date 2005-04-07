@@ -206,6 +206,12 @@
             class="org.kalypso.ui.view.prognose.PrognoseView"
             id="org.kalypso.view.prognose">
       </view>
+      <view
+            allowMultiple="false"
+            class="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
+            category="Kalypso"
+            name="Edit Optionen"
+            id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">
@@ -393,6 +399,7 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                tooltip="Speichert die Daten des aktiven Themas">
          </action>
+
          <action
                label="Rückgängig"
                icon="icons/map/undo_edit.gif"

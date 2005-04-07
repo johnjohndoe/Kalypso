@@ -87,7 +87,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.MapPanelHelper;
+import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
@@ -383,7 +383,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, m_selectionID );
-    MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
+    //   MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
     final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
@@ -415,7 +415,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     // TODO: use widgetID from Konfiguration
-    m_mapPanel.changeWidget( widgetID );
+    
+    m_mapPanel.getWidgetManager().changeWidget( WidgetHelper.getWidget(widgetID));
 
     m_mapPanel.setBoundingBox( m_wishBoundingBox );
 
@@ -668,27 +669,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected List getSelectedFeatures()
   {
     return getFeatures( true );
-    //    final IMapModell mapModell = getMapModell();
-    //    if( mapModell == null )
-    //      return new ArrayList();
-    //
-    //    final IKalypsoTheme activeTheme;
-    //    if( useTable && m_gisTableViewer != null )
-    //      activeTheme = m_gisTableViewer.getTheme();
-    //    else
-    //      activeTheme = mapModell.getActiveTheme();
-    //
-    //    if( activeTheme == null )
-    //      return new ArrayList();
-    //
-    //    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-    //    final FeatureList featureList = kft.getFeatureList();
-    //
-    //    if( featureList == null )
-    //      return new ArrayList();
-    //
-    //    return GetSelectionVisitor.getSelectedFeatures( featureList,
-    // m_selectionID );
   }
 
   protected FeatureList getFeatures()

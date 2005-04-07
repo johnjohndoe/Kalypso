@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
@@ -59,9 +59,10 @@ public class CreatePointFeatureWidget extends AbstractWidget
 
 //  private final IKalypsoFeatureTheme m_theme;
 
-  public CreatePointFeatureWidget( CreateGeometryFeatureWidget parentWidget,
+  public CreatePointFeatureWidget(String name,String tooltip, CreateGeometryFeatureWidget parentWidget,
       final IKalypsoFeatureTheme theme, FeatureTypeProperty ftp )
   {
+    super(name,tooltip);
     myParentWidget = parentWidget;
     theme.getClass();
     ftp.getClass();
@@ -76,7 +77,7 @@ public class CreatePointFeatureWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#performIntern()
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
    */
   public ICommand performIntern()
   {

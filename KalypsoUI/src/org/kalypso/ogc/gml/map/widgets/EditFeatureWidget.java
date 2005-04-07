@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
@@ -53,7 +53,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 
@@ -64,13 +63,13 @@ public class EditFeatureWidget extends AbstractWidget
 {
   private Point m_point;
 
-  private final Shell m_shell;
+  private Shell m_shell;
 
-  public EditFeatureWidget( final Shell shell )
+  public EditFeatureWidget( String name, String tooltip )
   {
-    m_shell = shell;
+    super( name, tooltip );
   }
-  
+
   public void leftPressed( final Point p )
   {
     m_point = p;
@@ -78,7 +77,7 @@ public class EditFeatureWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#performIntern()
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
    */
   public ICommand performIntern()
   {
@@ -93,7 +92,7 @@ public class EditFeatureWidget extends AbstractWidget
         // TODO: Sollte so etwas nicht eine Zentrale Stelle machen?
         final GeoTransform transform = getMapPanel().getProjection();
         final double gisRadius = transform.getSourceX( m_point.getX() + 20 ) - position.getX();
-        
+
         final FindNearestVisitor visitor = new FindNearestVisitor( position, gisRadius );
         final FeatureList featureList = featureTheme.getFeatureList();
         featureList.accept( visitor );
@@ -105,21 +104,28 @@ public class EditFeatureWidget extends AbstractWidget
     return null;
   }
 
-  private void editFeature( final ICommandTarget commandTarget, final GMLWorkspace workspace, final Feature feature )
+  private void editFeature( final ICommandTarget commandTarget, final GMLWorkspace workspace,
+      final Feature feature )
   {
     if( m_shell != null && feature != null )
     {
       final FeatureComposite helper = new FeatureComposite( feature );
-      
+
       final Shell shell = m_shell;
       shell.getDisplay().asyncExec( new Runnable()
       {
         public void run()
         {
-          final FeatureviewDialog dialog = new FeatureviewDialog( workspace, commandTarget, shell, helper );
+          final FeatureviewDialog dialog = new FeatureviewDialog( workspace, commandTarget, shell,
+              helper );
           dialog.open();
         }
       } );
     }
+  }
+
+  public void setShell( Shell shell )
+  {
+    m_shell = shell;
   }
 }

@@ -36,20 +36,64 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.map.MapPanel;
-
+import org.kalypso.ogc.gml.map.widgets.EditFeatureWidget;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author belger
  */
 public class EditFeatureWidgetDelegate extends AbstractWidgetActionDelegate
 {
-  public EditFeatureWidgetDelegate(  )
+  public EditFeatureWidgetDelegate()
   {
-    super( MapPanel.WIDGET_EDIT_FEATURE );
+    super( new EditFeatureWidget( "edit feature", "" ) );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#setActiveEditor(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  {
+    super.setActiveEditor( action, targetEditor );
+    final EditFeatureWidget featureWidget = (EditFeatureWidget)getWidget();
+    if( targetEditor != null )
+      featureWidget.setShell( getEditor().getEditorSite().getShell() );
+  }
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run( final IAction action )
+  {
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    editor.getMapPanel().getWidgetManager().changeWidget( getWidget() );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractWidgetActionDelegate#refreshEnabled()
+   */
+  public void refreshEnabled()
+  {
+    boolean enabled = false;
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    IAction action = getAction();
+    if( editor != null )
+    {
+      final MapPanel mapPanel = editor.getMapPanel();
+      IMapModell mapModell = mapPanel.getMapModell();
+      if( mapModell != null && mapModell.getThemeSize() > 0 )
+        enabled = true;
+    }
+    action.setEnabled( enabled );
   }
 }
+

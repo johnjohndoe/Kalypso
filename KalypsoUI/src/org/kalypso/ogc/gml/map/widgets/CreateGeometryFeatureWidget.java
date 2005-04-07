@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -188,8 +188,9 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
       myWidget.rightReleased( p );
   }
 
-  public CreateGeometryFeatureWidget()
+  public CreateGeometryFeatureWidget(String name,String tooltip)
   {
+    super(name,tooltip);
     setup();
   }
 
@@ -221,7 +222,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   private void setGeometryWidget( final IKalypsoFeatureTheme theme, final FeatureTypeProperty ftp )
   {
     if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_Point" ) )
-      myWidget = new CreatePointFeatureWidget( this, theme, ftp );
+      myWidget = new CreatePointFeatureWidget("Gemoetrie-editor","editieren von "+ftp.getName(), this, theme, ftp );
     //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_MultiPoint"
     // ) )
     //      myWidget = new CreateMultipointFeatureWidget();
@@ -240,7 +241,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#performIntern()
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
    */
   protected ICommand performIntern()
   {

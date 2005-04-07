@@ -44,25 +44,28 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.gml.table.wizard.ExportTableWizard;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
+import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 
 /**
  * @author Belger
  */
-public class ExportActionDelegate extends GisTableAbstractActionDelagate
+public class ExportActionDelegate extends AbstractGisEditorActionDelagate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    final Wizard exportWizard = new ExportTableWizard( getEditor().getLayerTable() );
+    GisTableEditor editor = (GisTableEditor)getEditor();
+    final Wizard exportWizard = new ExportTableWizard( editor.getLayerTable() );
 
-    final WizardDialog dialog = new WizardDialog( getEditor().getSite().getShell(), exportWizard );
+    final WizardDialog dialog = new WizardDialog( editor.getSite().getShell(), exportWizard );
     dialog.open();
   }
 
   /**
-   * @see org.kalypso.ui.editor.gistableeditor.actions.GisTableAbstractActionDelagate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#refreshAction()
    */
   protected void refreshAction()
   {
