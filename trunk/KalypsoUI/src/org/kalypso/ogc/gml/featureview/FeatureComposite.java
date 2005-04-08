@@ -81,6 +81,7 @@ import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -275,7 +276,11 @@ public class FeatureComposite implements IFeatureControl
         final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
         try
         {
-          final Annotation annotation = ftp.getAnnotation( Locale.getDefault().getLanguage() );
+          //          final Annotation annotation = ftp.getAnnotation(
+          // Locale.getDefault().getLanguage() );
+          final Annotation annotation = ftp.getAnnotation( KalypsoGisPlugin.getDefault()
+              .getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE ) );
+
           if( annotation != null )
           {
             label.setText( annotation.getLabel() );
@@ -347,8 +352,8 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( ftp,
-          (FeatureviewType[])m_viewMap.values().toArray( new FeatureviewType[0] ) );
+      final IFeatureControl fc = new SubFeatureControl( ftp, (FeatureviewType[])m_viewMap.values()
+          .toArray( new FeatureviewType[0] ) );
       fc.setFeature( feature );
 
       final Control control = fc.createControl( parent, SWTUtilities
@@ -366,7 +371,8 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), plugin.getDefaultMapSelectionID() );
+      final IFeatureControl fc = new TableFeatureContol( ftp, plugin
+          .createFeatureTypeCellEditorFactory(), plugin.getDefaultMapSelectionID() );
       fc.setFeature( feature );
 
       final Control control = fc.createControl( parent, SWTUtilities
@@ -382,18 +388,19 @@ public class FeatureComposite implements IFeatureControl
     return label;
   }
 
-  private Composite createCompositeFromCompositeType( final Composite parent, final int style, 
+  private Composite createCompositeFromCompositeType( final Composite parent, final int style,
       final CompositeType compositeType )
   {
     if( compositeType instanceof GroupType )
     {
-      final Group group = new org.eclipse.swt.widgets.Group( parent,
-          style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+      final Group group = new org.eclipse.swt.widgets.Group( parent, style
+          | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
       group.setText( ( (GroupType)compositeType ).getText() );
       return group;
     }
 
-    return new Composite( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+    return new Composite( parent, style
+        | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
   }
 
   private Layout createLayout( final LayoutType layoutType )
@@ -486,7 +493,7 @@ public class FeatureComposite implements IFeatureControl
     try
     {
       final Object unmarshal = FeatureviewHelper.UNMARSHALLER.unmarshal( url );
-      if( unmarshal instanceof FeatureviewType ) 
+      if( unmarshal instanceof FeatureviewType )
         addView( (FeatureviewType)unmarshal );
       else if( unmarshal instanceof FeaturetemplateType )
       {
@@ -496,7 +503,8 @@ public class FeatureComposite implements IFeatureControl
           addView( (FeatureviewType)vIt.next() );
       }
       else
-        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
+        System.out.println( getClass().getName() + ": Unsupported type: "
+            + unmarshal.getClass().getName() + " in " + url.toString() );
     }
     catch( final JAXBException e )
     {

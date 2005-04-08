@@ -75,5 +75,7 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_HEIGHT, 500 );
     
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS,"EPSG:31469" );
+    
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault(IKalypsoPreferences.LANGUAGE, "de");
   }
 }

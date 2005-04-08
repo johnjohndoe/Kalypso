@@ -76,6 +76,7 @@ import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.ICommandTarget;
 
 /**
@@ -268,7 +269,8 @@ public class GisTableEditor extends AbstractEditorPart implements
       return;
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
-    final String lang = Locale.getDefault().getLanguage();
+//    final String lang = Locale.getDefault().getLanguage();
+    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
     
     for( int i = 0; i < ftps.length; i++ )
     {
