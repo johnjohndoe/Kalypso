@@ -36,16 +36,25 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import org.kalypsodeegree.model.feature.event.ModellEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -67,11 +76,13 @@ import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ogc.gml.outline.AbstractOutlineAction;
 import org.kalypso.ogc.gml.outline.ActivateThemeAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.MoveThemeDownAction;
 import org.kalypso.ogc.gml.outline.MoveThemeUpAction;
 import org.kalypso.ogc.gml.outline.OpenStyleDialogAction;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ogc.gml.outline.RemoveRuleAction;
 import org.kalypso.ogc.gml.outline.RemoveThemeAction;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
@@ -79,6 +90,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.list.IListManipulator;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * OutlinePage für das MapView-Template
@@ -99,12 +111,19 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   protected RemoveRuleAction m_removeRuleAction = null;
 
   protected SaveStyleAction m_saveStyleAction = null;
-  
+
   protected ActivateThemeAction m_activateThemeAction = null;
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
   private final GisMapOutlineViewer m_modellView;
+
+  public GisMapOutlineViewer getModellView()
+  {
+    return m_modellView;
+  }
+
+  private final List m_actionDelegates = new ArrayList();
 
   public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
@@ -132,10 +151,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_removeAction = new RemoveThemeAction( "Thema löschen",
         ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema löschen", m_modellView, this );
 
-    //    m_addAction = new AddThemeAction( "Thema hinzuf?gen",
-    // ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD,
-    //        "Thema hinzuf?gen", m_modellView, this );
-
     m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
         ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD, "Style ändern", m_modellView );
 
@@ -145,9 +160,45 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_saveStyleAction = new SaveStyleAction( "Style speichern",
         ImageProvider.IMAGE_STYLEEDITOR_SAVE, "Style speichern", m_modellView );
 
-    m_activateThemeAction = new ActivateThemeAction( "Thema aktivieren", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema aktivieren", m_modellView );
+    m_activateThemeAction = new ActivateThemeAction( "Thema aktivieren",
+        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema aktivieren", m_modellView );
+
+    createControlsFromPlugins();
 
     onModellChange( null );
+
+  }
+
+  private void createControlsFromPlugins()
+  {
+    //get platform registry (all registered plugins at start up)
+    IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+    IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui",
+        "mapviewaction" );
+    //check if extention point is registered on start up
+    if( extensionPoint == null )
+      return;
+    IExtension[] extensions = extensionPoint.getExtensions();
+    // no mapview extensions have been registered
+    if( extensions == null )
+      return;
+    for( int i = 0; i < extensions.length; i++ )
+    {
+      IExtension extension = extensions[i];
+      IConfigurationElement configurationElement = extension.getConfigurationElements()[0];
+      String title = configurationElement.getAttribute( "title" );
+      String resource = configurationElement.getAttribute( "icon" );
+      //TODO handle custom icon from the extension point
+      //the icon is not available from the kalypso ui icon resources
+      //get it from the running class and create it after the class has been
+      // initiated.
+      ImageDescriptor icon = ImageProvider.id( resource );//try to get it from kalypso ui icon resources
+      String tooltip = configurationElement.getAttribute( "tooltip" );
+      //create action delegate
+      PluginMapOutlineActionDelegate actionDelegate = new PluginMapOutlineActionDelegate( title,
+          icon , tooltip, m_modellView, configurationElement, this );
+      m_actionDelegates.add( actionDelegate );
+    }
   }
 
   /**
@@ -174,6 +225,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       m_removeRuleAction.dispose();
     if( m_activateThemeAction != null )
       m_activateThemeAction.dispose();
+    for( Iterator iter = m_actionDelegates.iterator(); iter.hasNext(); )
+    {
+      AbstractOutlineAction action = (AbstractOutlineAction)iter.next();
+      action.dispose();
+    }
   }
 
   /**
@@ -199,6 +255,13 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     toolBarManager.add( m_moveOneDownAction );
     toolBarManager.add( m_removeAction );
     toolBarManager.add( m_openStyleDialogAction );
+
+    for( Iterator iter = m_actionDelegates.iterator(); iter.hasNext(); )
+    {
+      AbstractOutlineAction action = (AbstractOutlineAction)iter.next();
+      toolBarManager.add( action );
+    }
+
     actionBars.updateActionBars();
 
     final MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" );
@@ -274,12 +337,12 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void doubleClick( final DoubleClickEvent event )
   {
-  /*
-   * final IStructuredSelection sel =
-   * (IStructuredSelection)event.getSelection(); if( !sel.isEmpty() )
-   * m_gisEditor.postCommand( new EditPropertiesCommand(
-   * getControl().getShell(), (LayerType)sel.getFirstElement() ) );
-   */
+    /*
+     * final IStructuredSelection sel =
+     * (IStructuredSelection)event.getSelection(); if( !sel.isEmpty() )
+     * m_gisEditor.postCommand( new EditPropertiesCommand(
+     * getControl().getShell(), (LayerType)sel.getFirstElement() ) );
+     */
   }
 
   /**
@@ -332,9 +395,11 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.util.list.IListManipulator#addElement(java.lang.Object)
    */
-  public void addElement( final Object elementBefore )
+  public void addElement( final Object element )
   {
-  // todo
+    //    m_commandTarget.postCommand( new AddThemeCommand( getMapModell(),
+    // (IKalypsoTheme)element ),
+    //        new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   private final class SelectThemeRunner implements Runnable
@@ -366,7 +431,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-  // nix tun
+    // nix tun
   }
 
   /**
@@ -374,6 +439,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-  // 
+    // 
   }
 }

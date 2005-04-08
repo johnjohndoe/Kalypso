@@ -296,6 +296,13 @@ public class NetWorker
       connection.addRequestProperty( "Proxy-Authorization", epw );
     }
   }
+  public static boolean requiresAuthentification(final URLConnection connection ){
+    final URL url = connection.getURL();
+    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url.getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
+    if(authentication != null )
+      return true;
+    return false;
+  }
 
   /**
    * performs the request and returns the result as a byte array.

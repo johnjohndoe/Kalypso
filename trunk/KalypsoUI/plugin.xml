@@ -78,10 +78,11 @@
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
       <import plugin="org.eclipse.debug.ui" export="true"/>
-      <import plugin="org.apache.ant" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.bce.eclipse.platform.contrib"/>
    </requires>
+   <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
+   <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
 
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -762,6 +763,16 @@
             factory="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory"
             name="Kalypso Zeitreihendienst">
       </repository>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            class="org.kalypso.ui.wizard.dataimport.KalypsoImportWizard"
+            icon="icons/sample.gif"
+            name="Kalypso Import Wizard"
+            id="KalypsoUI.importWizard">
+         <selection class="org.kalypso.ui.internal.wizard.IKalypsoImportWizard"/>
+      </wizard>
    </extension>
 
 </plugin>

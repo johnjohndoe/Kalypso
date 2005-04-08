@@ -50,16 +50,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.types.ExtentType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -70,47 +71,43 @@ import org.xml.sax.InputSource;
  */
 public class GisTemplateHelper
 {
-  private GisTemplateHelper( )
+  private GisTemplateHelper()
   {
     // never instantiate this class
   }
 
   public static final Featuretemplate loadGisFeatureTemplate( final IFile file,
-      final Properties replaceProps ) throws CoreException, IOException,
-      JAXBException
+      final Properties replaceProps ) throws CoreException, IOException, JAXBException
   {
     // TODO: replace with 'ReplaceToken'
-    final InputStreamReader inputStreamReader = new InputStreamReader( file
-        .getContents(), file.getCharset() );
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader,
-        replaceProps );
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
+        .getCharset() );
+    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
 
     return loadGisFeatureTemplate( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate(
-      final InputSource is ) throws JAXBException
+  public static final Featuretemplate loadGisFeatureTemplate( final InputSource is )
+      throws JAXBException
   {
     Unmarshaller unmarshaller = new org.kalypso.template.featureview.ObjectFactory()
         .createUnmarshaller();
-    return (Featuretemplate) unmarshaller.unmarshal( is );
+    return (Featuretemplate)unmarshaller.unmarshal( is );
   }
 
-  public static final Gismapview loadGisMapView( final IFile file,
-      final Properties replaceProps ) throws CoreException, IOException,
-      JAXBException
+  public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps )
+      throws CoreException, IOException, JAXBException
   {
     // TODO: replace with 'ReplaceToken'
-    final InputStreamReader inputStreamReader = new InputStreamReader( file
-        .getContents(), file.getCharset() );
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader,
-        replaceProps );
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
+        .getCharset() );
+    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
 
     return loadGisMapView( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Gismapview loadGisMapView( final IFile file )
-      throws JAXBException, CoreException
+  public static final Gismapview loadGisMapView( final IFile file ) throws JAXBException,
+      CoreException
   {
     final InputSource is = new InputSource( file.getContents() );
     is.setEncoding( file.getCharset() );
@@ -118,13 +115,12 @@ public class GisTemplateHelper
     return loadGisMapView( is );
   }
 
-  public static final Gismapview loadGisMapView( final InputSource is )
-      throws JAXBException
+  public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
     final ObjectFactory objectFactory = new ObjectFactory();
     Unmarshaller unmarshaller = objectFactory.createUnmarshaller();
 
-    return (Gismapview) unmarshaller.unmarshal( is );
+    return (Gismapview)unmarshaller.unmarshal( is );
   }
 
   /**
@@ -141,20 +137,18 @@ public class GisTemplateHelper
    * @throws IOException
    * @throws JAXBException
    */
-  public static Gistableview loadGisTableview( final IFile file,
-      final Properties replaceProps ) throws CoreException, IOException,
-      JAXBException
+  public static Gistableview loadGisTableview( final IFile file, final Properties replaceProps )
+      throws CoreException, IOException, JAXBException
   {
-    final InputStreamReader inputStreamReader = new InputStreamReader( file
-        .getContents(), file.getCharset() );
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader,
-        replaceProps );
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
+        .getCharset() );
+    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
 
     return loadGisTableview( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static Gistableview loadGisTableview( final IFile file )
-      throws CoreException, JAXBException
+  public static Gistableview loadGisTableview( final IFile file ) throws CoreException,
+      JAXBException
   {
     final InputSource is = new InputSource( file.getContents() );
     is.setEncoding( file.getCharset() );
@@ -162,17 +156,16 @@ public class GisTemplateHelper
     return loadGisTableview( is );
   }
 
-  public static Gistableview loadGisTableview( final InputSource is )
-      throws JAXBException
+  public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
     Unmarshaller unmarshaller = new org.kalypso.template.gistableview.ObjectFactory()
         .createUnmarshaller();
 
-    return (Gistableview) unmarshaller.unmarshal( is );
+    return (Gistableview)unmarshaller.unmarshal( is );
   }
 
-  public static void saveGisMapView( final Gismapview modellTemplate,
-      final OutputStream outStream ) throws JAXBException
+  public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream )
+      throws JAXBException
   {
     final ObjectFactory objectFactory = new ObjectFactory();
     final Marshaller marshaller = objectFactory.createMarshaller();
@@ -183,7 +176,21 @@ public class GisTemplateHelper
   public static GM_Envelope getBoundingBox( Gismapview gisview )
   {
     final ExtentType extent = gisview.getExtent();
-    return GeometryFactory.createGM_Envelope( extent.getLeft(), extent
-        .getBottom(), extent.getRight(), extent.getTop() );
+    return GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent
+        .getRight(), extent.getTop() );
+  }
+
+  public static void fillLayerType( Layer layer, String id, String name, boolean visible,
+      KalypsoWMSTheme wmsTheme )
+  {
+    layer.setName( name );
+    layer.setFeaturePath( "" );
+
+    layer.setVisible( visible );
+    layer.setId( id );
+    layer.setHref( wmsTheme.getSource() );
+    layer.setLinktype( "wms" );
+    layer.setActuate( "onRequest" );
+    layer.setType( "simple" );
   }
 }

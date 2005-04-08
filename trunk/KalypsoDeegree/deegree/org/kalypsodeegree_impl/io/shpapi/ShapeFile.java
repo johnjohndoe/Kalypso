@@ -60,11 +60,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
@@ -724,28 +724,26 @@ public class ShapeFile
    */
   private void initDBaseFile( final Feature[] features ) throws DBaseException
   {
-    FieldDescriptor[] fieldDesc = null;
 
     // get feature properties
-    FeatureProperty[] pairs = getFeatureProperties( features[0] );
+//    FeatureProperty[] pairs = getFeatureProperties( features[0] );
 
     // count regular fields
-    int cnt = 0;
+//    int cnt = 0;
     FeatureType featT = features[0].getFeatureType();
     FeatureTypeProperty[] ftp = featT.getProperties();
-    for( int i = 0; i < pairs.length; i++ )
-    {
-      if( !( pairs[i].getValue() instanceof ByteArrayInputStream )
-          && !( pairs[i].getValue() instanceof GM_Object ) )
-        cnt++;
-    }
+//    for( int i = 0; i < pairs.length; i++ )
+//    {
+//      if( !( pairs[i].getValue() instanceof ByteArrayInputStream )
+//          && !( pairs[i].getValue() instanceof GM_Object ) )
+//        cnt++;
+//    }
 
-    // allocate memory for fielddescriptors
-    fieldDesc = new FieldDescriptor[cnt];
 
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
-    cnt = 0;
+//    cnt = 0;
+    final List fieldList=new ArrayList();
     for( int i = 0; i < ftp.length; i++ )
     {
       int pos = ftp[i].getName().lastIndexOf( '.' );
@@ -756,45 +754,51 @@ public class ShapeFile
       String s = ftp[i].getName().substring( pos + 1 );
       if( ftp[i].getType().endsWith( "Integer" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)20, (byte)0 );
+        fieldList.add(new FieldDescriptor( s, "N", (byte)20, (byte)0 ));
       }
       else if( ftp[i].getType().endsWith( "Byte" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)4, (byte)0 );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)4, (byte)0 ));
       }
       else if( ftp[i].getType().endsWith( "Character" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "C", (byte)1, (byte)0 );
+        fieldList.add( new FieldDescriptor( s, "C", (byte)1, (byte)0 ));
       }
       else if( ftp[i].getType().endsWith( "Float" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
       }
       else if( ftp[i].getType().endsWith( "Double" ) || ftp[i].getType().endsWith( "Number" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
       }
       else if( ftp[i].getType().endsWith( "BigDecimal" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
       }
-      else if( ftp[i].getType().endsWith( "String" ) )
+      else if( ftp[i].getType().equals( "java.lang.String" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "C", (byte)127, (byte)0 );
+        fieldList.add( new FieldDescriptor( s, "C", (byte)127, (byte)0 ));
       }
       else if( ftp[i].getType().endsWith( "Date" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "D", (byte)12, (byte)0 );
+        fieldList.add( new FieldDescriptor( s, "D", (byte)12, (byte)0 ));
       }
       else if( ftp[i].getType().endsWith( "Long" ) )
       {
-        fieldDesc[cnt++] = new FieldDescriptor( s, "N", (byte)30, (byte)10 );
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
+      }
+      else
+      {
+      System.out.println("no db-type:" + ftp[i].getType());
       }
     }
 
     //initialize/create DBaseFile
     try
     {
+    // allocate memory for fielddescriptors
+    final FieldDescriptor[] fieldDesc = (FieldDescriptor[])fieldList.toArray( new FieldDescriptor[fieldList.size()] );
       dbf = new DBaseFile( url, fieldDesc );
     }
     catch( DBaseException e )
@@ -818,7 +822,7 @@ public class ShapeFile
     SHPEnvelope mbr = null;
     // mbr of the whole shape file
     SHPEnvelope shpmbr = new SHPEnvelope();
-    FeatureProperty[] pairs = null;
+//    FeatureProperty[] pairs = null;
 
     // Set the Offset to the end of the fileHeader
     int offset = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
@@ -831,25 +835,27 @@ public class ShapeFile
     for( int i = 0; i < features.length; i++ )
     {
       // get i'th features properties
-      pairs = getFeatureProperties( features[i] );
+      Feature feature=features[i];
+//      pairs = getFeatureProperties( features[i] );
 
       // write i'th features properties to a ArrayList
       ArrayList vec = new ArrayList();
       FeatureTypeProperty[] ftp = features[0].getFeatureType().getProperties();
-      for( int j = 0; j < pairs.length; j++ )
+      for( int j = 0; j < ftp.length; j++ )
       {
+        Object value=feature.getProperty(ftp[j].getName());
         if( ( ftp[j].getType().endsWith( "Integer" ) ) || ( ftp[j].getType().endsWith( "Byte" ) )
             || ( ftp[j].getType().endsWith( "Character" ) )
             || ( ftp[j].getType().endsWith( "Float" ) ) || ( ftp[j].getType().endsWith( "Double" ) )
             || ( ftp[j].getType().endsWith( "Number" ) )
-            || ( ftp[j].getType().endsWith( "String" ) )
+            || ( ftp[j].getType().equals( "java.lang.String" ) )
             || ( ftp[j].getType().endsWith( "Date" ) || ( ftp[j].getType().endsWith( "Long" ) ) ) )
         {
-          vec.add( pairs[j].getValue() );
+          vec.add( value);
         }
         else if( ftp[j].getType().endsWith( "BigDecimal" ) )
         {
-          vec.add( new Double( ( (java.math.BigDecimal)pairs[j].getValue() ).doubleValue() ) );
+          vec.add( new Double( ( (java.math.BigDecimal)value ).doubleValue() ) );
         }
       }
 

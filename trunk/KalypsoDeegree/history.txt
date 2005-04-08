@@ -1,0 +1,14 @@
+10. märz 2005
+
+GMLSchema:
+1.
+ es werden auch feature die "abstract" sind als FeatureType erzeugt, um xlinks auf diese ft abzubilden.
+2.
+ substitutionsgroups funktionieren jetzt auch ueber schemagrenzen hinweg.
+ Jeder featureType registriert sich bei den FeatureAssociationPropertyTypes von denen er substituiert wird.
+ (Substitution...Vistor)
+3.
+ complextypes (Content der Features) können nun auch innerhalb der element-definition stehen 
+ und nicht nur ueber namen referenziert werden.
+
+ TODO "abstract" FeatureTypes markieren und sicherstellen, dass keine instanzen erzeugt werden können.

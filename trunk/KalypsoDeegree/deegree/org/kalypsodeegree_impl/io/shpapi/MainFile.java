@@ -370,7 +370,7 @@ public class MainFile
     recBuf = null;
     recBuf = new byte[len];
 
-    if( rafShp.read( recBuf, 0, len ) != -1 )
+    if( rafShp.read( recBuf, 0, len ) != -1  )//ck: && recBuf.length != 0)
     {
 
       shpType = ByteUtils.readLEInt( recBuf, 0 );

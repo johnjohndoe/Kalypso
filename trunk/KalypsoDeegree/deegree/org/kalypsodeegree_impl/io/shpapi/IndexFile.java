@@ -300,15 +300,17 @@ public class IndexFile
    */
   public int getRecordOffset( int RecNo )
   {
-
-    if( RecNo >= 0 )
+//  ck: Hier darf der index arry nicht null sein??
+    if( RecNo >= 0 )//&& indexArray.length != 0)
     {
       return indexArray[RecNo].offset;
     }
-    else
-    {
+//    //ck: array ist null gib einen offset von null zurück??
+//    else if( indexArray.length == 0){
+//      return 0;
+//    }
+    
       return -1;
-    }
 
   }
 
@@ -319,16 +321,17 @@ public class IndexFile
   public int getRecordLength( int RecNo )
   {
 
-    if( RecNo >= 0 )
+    if( RecNo >= 0 && indexArray.length != 0)
     {
       return indexArray[RecNo].length;
     }
-    else
-    {
+    //ck: eingefügt
+//    else if (indexArray.length == 0){
+//      return 0;
+//    }
+    
       return -1;
-    }
-
-  }
+   }
 
   /**
    * method: getIndexRecord (int RecNo) <BR>

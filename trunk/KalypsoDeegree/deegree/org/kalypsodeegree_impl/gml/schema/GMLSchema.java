@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree_impl.gml.schema.vistors.GMLSchemaVisitor;
+import org.kalypsodeegree_impl.gml.schema.vistors.SubstitutionGroupRegistrator;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -20,7 +22,7 @@ import org.w3c.dom.NodeList;
  */
 public class GMLSchema
 {
-  private final Document m_schemaDoc;
+  private Document m_schemaDoc;
 
   private final HashMap m_ns = new HashMap(); // (key,NS)
 
@@ -37,24 +39,37 @@ public class GMLSchema
   /**
    * @param documentURL
    *          url of schema
-   * @throws Exception
-   *           Falls GML nicht geladen werden kann
    */
-  GMLSchema( final URL documentURL ) throws Exception
+  public GMLSchema( final URL documentURL )
   {
     m_url = documentURL;
     m_nodeFeatureTypeMap = new HashMap();
 
-    m_schemaDoc = XMLHelper.getAsDOM( documentURL, true );
+    try
+    {
+      m_schemaDoc = XMLHelper.getAsDOM( documentURL, true );
 
-    setNameSpaces();
-    setImportedSchemas();
+      setNameSpaces();
+      setImportedSchemas();
+      // to force building of featuretypes
+      FeatureType[] featureTypes = getFeatureTypes();
+
+      for( int i = 0; i < featureTypes.length; i++ )
+        accept( new SubstitutionGroupRegistrator( featureTypes[i] ) );
+
+      //            System.out.println("fts: #" + featureTypes.length);
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   private void setImportedSchemas()
   {
-    //    <import namespace="http://www.opengis.net/gml"
-    //            schemaLocation="feature.xsd"/>
+    // <import namespace="http://www.opengis.net/gml"
+    // schemaLocation="feature.xsd"/>
     final NodeList nl = m_schemaDoc.getElementsByTagNameNS( XMLHelper.XMLSCHEMA_NS, "import" );
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -67,11 +82,12 @@ public class GMLSchema
         final URL url = uri.isAbsolute() ? new URL( schemaLocation ) : new URL( m_url,
             schemaLocation );
 
-        //        System.out.println( "m_url: " + m_url.toString() );
-        //        System.out.println( "SchemaLocation: " + schemaLocation );
-        //        System.out.println( "url: " + url.toString() );
+        // System.out.println( "m_url: " + m_url.toString() );
+        // System.out.println( "SchemaLocation: " + schemaLocation );
+        // System.out.println( "url: " + url.toString() );
 
-        final GMLSchema schema = new GMLSchema( url );
+        final GMLSchema schema = GMLSchemaCache.getSchema( url );
+        // final GMLSchema schema = new GMLSchema( url );
         m_importedSchemas.put( schema.getTargetNS(), schema );
       }
       catch( final Exception e )
@@ -231,4 +247,22 @@ public class GMLSchema
   {
     return m_ns;
   }
+
+  public void accept( GMLSchemaVisitor visitor )
+  {
+    visitor.visit( this );
+
+  }
+
+  public GMLSchema[] getImportedSchemas()
+  {
+    final Collection collection = m_importedSchemas.values();
+    return (GMLSchema[])collection.toArray( new GMLSchema[collection.size()] );
+  }
+
+  public URL getUrl()
+  {
+    return m_url;
+  }
+
 }
