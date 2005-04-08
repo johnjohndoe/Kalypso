@@ -27,7 +27,8 @@ public class SchemaAttribute
     // -> check if you have registred all needed types (TypeRegistry)
 
     m_NS = atributeNode.getNamespaceURI();
-    m_Name = atributeNode.getLocalName(); //ref
+
+    m_Name = atributeNode.getLocalName(); // ref
 
     String value = atributeNode.getNodeValue();
     String[] strings = value.split( ":" );

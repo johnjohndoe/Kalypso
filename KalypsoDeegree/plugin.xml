@@ -89,6 +89,9 @@
       </library>
       <library name="lib/javaBinding/xsdlib.jar">
       </library>
+      <library name="lib/deegree/deegree2004-02-13.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>

@@ -334,7 +334,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       final String id = f.getId();
       if( m_indexMap.containsKey( id ) )
-        System.out.println( "Workspace already contains a feature with id: " + id );
+//        System.out.println( "Workspace already contains a feature with id: " + id );
       m_indexMap.put( id, f );
 
       return true;

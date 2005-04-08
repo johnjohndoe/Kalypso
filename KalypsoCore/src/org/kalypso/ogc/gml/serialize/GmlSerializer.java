@@ -206,12 +206,32 @@ public final class GmlSerializer
 
     final URL schemaLocation = urlResolver.resolveURL( gmlURL, schemaLocationName );
     final GMLSchema schema = GMLSchemaCache.getSchema( schemaLocation );
-    
+
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
     return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS(),
         schema.getNamespaceMap() );
+  }
+
+  public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, URL schemaURL )
+      throws Exception
+  {
+
+    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( inputStream, true ) );
+
+    final GMLFeature gmlFeature = gml.getRootFeature();
+
+    final GMLSchema schema = GMLSchemaCache.getSchema( schemaURL );
+    if( schema == null )
+      throw new Exception( "Schema konnte nicht gefunden werden." );
+
+    // create feature and workspace gml
+    final FeatureType[] types = schema.getFeatureTypes();
+    final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
+
+    return new GMLWorkspace_Impl( types, feature, null, null, schema.getTargetNS(), schema
+        .getNamespaceMap() );
   }
 }

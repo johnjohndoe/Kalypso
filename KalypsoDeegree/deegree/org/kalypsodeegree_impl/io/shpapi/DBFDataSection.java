@@ -94,7 +94,7 @@ public class DBFDataSection
   // length of one record in bytes
   private int recordlength = 0;
 
-  private FieldDescriptor[] fieldDesc = null;
+  private final FieldDescriptor[] fieldDesc;
 
   private ArrayList data = new ArrayList();
 

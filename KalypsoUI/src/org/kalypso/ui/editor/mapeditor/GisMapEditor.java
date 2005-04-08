@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Frame;
@@ -97,15 +97,15 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(),
-        plugin.getDefaultMapSelectionID() );
+    myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), plugin
+        .getDefaultMapSelectionID() );
   }
 
   public void dispose()
   {
     if( m_mapModell != null )
       m_mapModell.dispose();
-    
+
     setMapModell( null );
 
     if( m_outlinePage != null )
@@ -131,7 +131,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return super.getAdapter( adapter );
   }
 
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+      throws CoreException
   {
     if( m_mapModell == null )
       return;
@@ -141,8 +142,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       getMapPanel().getBoundingBox();
-      
-      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( getMapPanel().getBoundingBox() );
+
+      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( getMapPanel()
+          .getBoundingBox() );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -164,14 +166,16 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     }
     catch( final Throwable e )
     {
+      System.out.println( e.getLocalizedMessage() );
       e.printStackTrace();
-      
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
+
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
     }
     finally
     {
       monitor.done();
-      
+
       if( bis != null )
         try
         {
@@ -206,23 +210,24 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
       throws Exception, CoreException
   {
-    if( !(input instanceof IFileEditorInput) )
+    if( !( input instanceof IFileEditorInput ) )
       throw new IllegalArgumentException( "Kann nur Dateien laden" );
-    
+
     // prepare for exception
     setMapModell( null );
 
     monitor.beginTask( "Kartenvorlage laden", 2000 );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( ((IFileEditorInput) input).getFile() );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( ( (IFileEditorInput)input )
+        .getFile() );
 
     monitor.worked( 1000 );
 
     final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );
-    
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin
-        .getDefault().getCoordinatesSystem() );
+
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context,
+        KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
     setMapModell( mapModell );
 
     GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
@@ -256,7 +261,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return myMapPanel;
   }
 
-  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
+  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor )
+      throws CoreException
   {
     m_mapModell.saveTheme( theme, monitor );
   }

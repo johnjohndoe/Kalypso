@@ -65,4 +65,7 @@ public interface IKalypsoUIConstants
   public static final String REPOSITORY_PERSPECTIVE = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
 
   public static final String PROGNOSE_PERSPECTIVE = "org.kalypso.ui.perspectives.PrognosePerspective"; //$NON-NLS-1$
+  
+  /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd)*/
+  public static final String PL_IMPORT = "dataimportwizard";
 }

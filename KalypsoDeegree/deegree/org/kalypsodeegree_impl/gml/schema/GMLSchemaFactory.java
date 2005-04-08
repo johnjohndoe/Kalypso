@@ -76,29 +76,59 @@ public class GMLSchemaFactory
     NodeList_Impl result = new NodeList_Impl();
     final Document document = schema.getSchema();
     NodeList childNodes = document.getElementsByTagNameNS( XMLHelper.XMLSCHEMA_NS, "element" );
-    //NodeList childNodes2 = ((Element)document).getChildNodes();
+    // NodeList childNodes2 = ((Element)document).getChildNodes();
     for( int i = 0; i < childNodes.getLength(); i++ )
     {
       Node node = childNodes.item( i );
+      if( DEBUG )
+        System.out.println( "TEST NODE: " + XMLHelper.toString( node ) );
       // root elements must be global
       if( !XMLHelper.isGlobalElementDefinition( node ) )
         continue;
       // root elements must not be abstract
+
+      // TODO implement abstract flag in FeatureType
+      // if( XMLHelper.isAbstractElementDefinition( node ) )
+      // continue;
       if( XMLHelper.isAbstractElementDefinition( node ) )
-        continue;
-      SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode(
-          node, "type" ) );
-      // XML_SCHEMA_Types can not be Applicationschema Root-Elements
-      if( XMLHelper.XMLSCHEMA_NS.equals( typeAttribute.getValueNS() ) )
-        continue;
-      //      System.out.println(XMLHelper.toString(node));
-      Node cNode = schema.getContentNode( typeAttribute.getValueNS(), typeAttribute.getValue() );
-      //      System.out.println(XMLHelper.toString(cNode));
+        System.out.println( "TODO implement abstract flag" );
+
+      final Node cNode;
+      if( XMLHelper.getAttributeNode( node, "type" ) == null )
+      { // type definition inside
+        cNode = XMLHelper.getFirstChildElement( node, XMLHelper.XMLSCHEMA_NS, "complexType", 1 );
+
+      }
+      else
+      { // type definition referenced e.g. ' type="ns:abcType" '
+
+        SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode(
+            node, "type" ) );
+        // XML_SCHEMA_Types can not be Applicationschema Root-Elements
+        if( XMLHelper.XMLSCHEMA_NS.equals( typeAttribute.getValueNS() ) )
+          continue;
+        cNode = schema.getContentNode( typeAttribute.getValueNS(), typeAttribute.getValue() );
+        // GML specials:
+        if( XMLHelper.GMLSCHEMA_NS.equals( typeAttribute.getValueNS() )
+            && "AbstractFeatureType".equals( typeAttribute.getValue() ) )
+        {
+          result.add( node );
+          continue;
+        }
+      }
       // ComplexType must not be abstract
+      if( cNode == null )
+      {
+        System.out.println( "content not available for: \n" + XMLHelper.toString( node ) );
+        continue;
+      }
+      if( DEBUG )
+        System.out.println( "ContentNode: " + XMLHelper.toString( cNode ) );
       if( XMLHelper.isAbstractElementDefinition( cNode ) )
         continue;
       String baseType = XMLHelper.getGMLBaseType( schema, cNode );
-      //      System.out.println("BaseType: "+baseType);
+      if( baseType == null )
+        System.out.println( "BaseType: is null" );
       if( "AbstractFeatureType".equals( baseType ) )
         result.add( node );
     }
@@ -107,10 +137,11 @@ public class GMLSchemaFactory
 
   public static void createFeatureTypes( GMLSchema schema, HashMap ftMap ) throws Exception
   {
-    //    NodeList nl = schema.getSchema().getElementsByTagNameNS(
+    // NodeList nl = schema.getSchema().getElementsByTagNameNS(
     // "http://www.w3.org/2001/XMLSchema",
-    //        "element" );
-    //    nl = XMLHelper.reduceByAttribute( nl, "substitutionGroup", "gml:_Feature"
+    // "element" );
+    // nl = XMLHelper.reduceByAttribute( nl, "substitutionGroup",
+    // "gml:_Feature"
     // );
 
     NodeList nl = GMLSchemaFactory.getRootElements( schema );
@@ -127,9 +158,10 @@ public class GMLSchemaFactory
         }
       }
       FeatureType ft = (FeatureType)schema.getMappedType( nl.item( i ) );
-      //      FeatureTypeBuilder builder = new FeatureTypeBuilder( schema, nl.item( i
+      // FeatureTypeBuilder builder = new FeatureTypeBuilder( schema,
+      // nl.item( i
       // ) );
-      //      FeatureType ft = builder.toFeatureType();
+      // FeatureType ft = builder.toFeatureType();
       if( ft != null )
         ftMap.put( ft.getName(), ft );
     }
@@ -152,14 +184,14 @@ public class GMLSchemaFactory
       {
         String[] strings = debugTxt.split( ">" );
         System.out.print( "\n\n" + strings[1] + "|\n(map it)" );
-        //      System.out.println( );
+        // System.out.println( );
       }
     }
 
     switch( getType( schema, node ) )
     {
     case COMPLEX_TYPE:
-      //<complexType name="FeatureAssociationType">
+      // <complexType name="FeatureAssociationType">
       break;
 
     case COMPLEX_CONTENT:
@@ -177,26 +209,27 @@ public class GMLSchemaFactory
       if( DEBUG )
         System.out.println( refAttribute.getValueNS() );
 
-      //      ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
-      //      String valueNS = refAttribute.getValueNS();
-      //      String value = refAttribute.getValue();
-      //      ITypeHandler typeHandlerForTypeName =
+      // ITypeRegistry typeRegistry =
+      // TypeRegistrySingleton.getTypeRegistry();
+      // String valueNS = refAttribute.getValueNS();
+      // String value = refAttribute.getValue();
+      // ITypeHandler typeHandlerForTypeName =
       // typeRegistry.getTypeHandlerForTypeName(valueNS+":"+value);
-      //      if(typeHandlerForTypeName!=null)
-      //      {
-      //      	    System.out.println("debug");
-      //        	String className = typeHandlerForTypeName.getClassName();
-      //      		FeatureTypeProperty property =
+      // if(typeHandlerForTypeName!=null)
+      // {
+      // System.out.println("debug");
+      // String className = typeHandlerForTypeName.getClassName();
+      // FeatureTypeProperty property =
       // FeatureFactory.createFeatureTypeProperty("name","namespace",className,true);
-      //        	collector.add(property);
-      //      }
-      //  else
+      // collector.add(property);
+      // }
+      // else
       {
         GMLSchema refSchema = schema.getGMLSchema( refAttribute.getValueNS() );
         NodeList nl = refSchema.getSchema().getElementsByTagNameNS(
             "http://www.w3.org/2001/XMLSchema", "element" );
         nl = XMLHelper.reduceByAttribute( nl, "name", refAttribute.getValue() );
-        //      NodeList_Impl nl2=new NodeList_Impl();
+        // NodeList_Impl nl2=new NodeList_Impl();
         // must refer to a global element definition, so filter for it
         Node refNode = null;
         for( int i = 0; i < nl.getLength(); i++ )
@@ -205,7 +238,7 @@ public class GMLSchemaFactory
 
         if( refNode != null )
         {
-          //       map( refSchema, refNode, collector );
+          // map( refSchema, refNode, collector );
           Object mapedElement = refSchema.getMappedType( refNode );
           if( mapedElement instanceof FeatureType )
           {
@@ -217,7 +250,7 @@ public class GMLSchemaFactory
           // (recursive definition ?)
           else if( mapedElement instanceof Node )
           {
-            //refSchema.
+            // refSchema.
             // FeatureType ft=(FeatureType)mapedElement;
             String name = ( (Element)refNode ).getAttribute( "name" );
             collector.setOccurency( name, refSchema.getTargetNS(), node );
@@ -238,11 +271,12 @@ public class GMLSchemaFactory
             throw new Exception( "refered element is nether featuretype "
                 + "nor featuretypeproperty :" + mapedElement.getClass().toString() );
 
-          //FeatureTypeBuilder childCollector = new FeatureTypeBuilder(
+          // FeatureTypeBuilder childCollector = new
+          // FeatureTypeBuilder(
           // refSchema, refNode );
-          //collector.setOccurency( childCollector.getName(),
+          // collector.setOccurency( childCollector.getName(),
           // childCollector.getNamespace(), node );
-          //collector.add( childCollector );
+          // collector.add( childCollector );
 
         }
       }
@@ -257,9 +291,9 @@ public class GMLSchemaFactory
       collector.add( childCollector );
       return;
 
-    //    case EXTENSION:
+    // case EXTENSION:
     //
-    //      break;
+    // break;
     case EXTENSION_COMPLEXCONTENT:
       mapBaseType( schema, node, collector );
       //
@@ -267,7 +301,7 @@ public class GMLSchemaFactory
     case RESTRICTION_SIMPLECONTENT:
       if( DEBUG )
         System.out.println( "TODO map restriction simplecontent" );
-    //TODO break;
+    // TODO break;
     case RESTRICTION_COMPLEXCONTENT:
       // RESTRICTION_COMPLEXCONTENT redefines the complete contents of the
       // basetype,
@@ -332,7 +366,7 @@ public class GMLSchemaFactory
     case IGNORED_TYPE:
       if( DEBUG )
         System.out.println( "nothing todo" );
-      //nothing to do
+      // nothing to do
       break;
 
     default:
@@ -341,12 +375,14 @@ public class GMLSchemaFactory
         throw ( new Exception( "unsupported node: " + node.getLocalName() + " \n"
             + node.getNodeName() + "\n" + node.getNodeValue() + "\n" + node.toString() ) );
 
-    //UNSUPPORTED_TYPE
+    // UNSUPPORTED_TYPE
     }
 
     map( schema, node.getChildNodes(), collector );
 
-  } //  private static void mapGMLExtension( String typeName, FeatureTypeBuilder
+  } // private static void mapGMLExtension( String typeName,
+
+  // FeatureTypeBuilder
 
   private static Annotation createAnnotation( Element element )
   {
@@ -362,33 +398,33 @@ public class GMLSchemaFactory
   }
 
   // collector )
-  //  {
-  //    if("AbstractFeatureType".equals(typeName))
-  //      {
-  //// <element ref="gml:description" minOccurs="0"/>
-  //// <element ref="gml:name" minOccurs="0"/>
-  //// <element ref="gml:boundedBy" minOccurs="0"/>
-  //        FeatureFactory.createFeatureTypeProperty("name",XMLHelper.GMLSCHEMA_NS,"java.lang.String",
+  // {
+  // if("AbstractFeatureType".equals(typeName))
+  // {
+  // // <element ref="gml:description" minOccurs="0"/>
+  // // <element ref="gml:name" minOccurs="0"/>
+  // // <element ref="gml:boundedBy" minOccurs="0"/>
+  // FeatureFactory.createFeatureTypeProperty("name",XMLHelper.GMLSCHEMA_NS,"java.lang.String",
   // false);
-  //      }
-  //  }
+  // }
+  // }
   private static void mapBaseType( GMLSchema schema, Node node, FeatureTypeBuilder collector )
       throws Exception
   {
     SchemaAttribute base = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "base" ) );
     if( XMLHelper.XMLSCHEMA_NS.equals( base.getValueNS() ) )
       throw new UnsupportedOperationException( "TODO: map " + XMLHelper.toString( node ) );
-    //       if(XMLHelper.GMLSCHEMA_NS.equals(base.getValueNS()))
-    //           mapGMLExtension(base.getValue() , collector );
+    // if(XMLHelper.GMLSCHEMA_NS.equals(base.getValueNS()))
+    // mapGMLExtension(base.getValue() , collector );
     // map base type and then continue mapping complex content
     String typeNamespace = base.getValueNS();
     String typeName = base.getValue();
 
     GMLSchema typeSchema = schema.getGMLSchema( typeNamespace );
     Node typeNode = typeSchema.getContentNode( typeNamespace, typeName );
-    //      if( typeNode == null )
-    //        System.out.println( "typeNode==null" );//
-    //  System.out.println( XMLHelper.toString( typeNode ) );
+    // if( typeNode == null )
+    // System.out.println( "typeNode==null" );//
+    // System.out.println( XMLHelper.toString( typeNode ) );
     map( typeSchema, typeNode, collector );
   }
 
@@ -454,10 +490,7 @@ public class GMLSchemaFactory
 
     if( "attributeGroup".equals( localName ) && element.hasAttribute( "ref" ) )
     {
-      SchemaAttribute refAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node,
-          "ref" ) );
-
-        return ATTRIBUTEGROUP_TYPE;
+      return ATTRIBUTEGROUP_TYPE;
     }
 
     String message = "unsupported node:" + localName + "\n" + XMLHelper.toString( node ) + "\n"

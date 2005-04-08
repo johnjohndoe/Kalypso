@@ -87,6 +87,10 @@ public class Mapper
 
     if( "AbstractFeatureType".equals( name ) )
       return "org.kalypsodeegree.model.feature.Feature";
+    
+    if( "FeatureAssociationType".equals( name ) )
+        return "FeatureAssociationType";
+
 
     //    System.out.println( "add mapping for " + name + " in " +
     // Mapper.class.toString() );

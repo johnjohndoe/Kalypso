@@ -483,6 +483,7 @@ public class DBaseFile
           && ( ( pos + column.position + column.size ) < ( startIndex + cacheSize ) ) )
       {
         pos = pos - startIndex;
+        
       }
       else
       {
@@ -494,6 +495,7 @@ public class DBaseFile
         pos = 0;
       }
       StringBuffer sb = new StringBuffer( column.size );
+      System.out.println(column.size);
       int i = 0;
       while( i < column.size )
       {
@@ -646,7 +648,7 @@ public class DBaseFile
       dbfCol column = (dbfCol)column_info.get( colHeader.get( i ) );
 
       String value = getColumn( column.name.trim() );
-
+      System.out.print(value);
       if( value != null )
       {
         // cast the value of the i'th column to corresponding datatype

@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
 import org.kalypso.util.list.IListManipulator;
 
 /**
@@ -50,23 +51,26 @@ import org.kalypso.util.list.IListManipulator;
  */
 public class RemoveThemeAction extends AbstractOutlineAction
 {
-  public RemoveThemeAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
+  public RemoveThemeAction( final String text, final ImageDescriptor image,
+      final String tooltipText, final GisMapOutlineViewer outlineViewer,
+      final IListManipulator listManip )
   {
     super( text, image, tooltipText, outlineViewer, listManip );
   }
-  
+
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
   public void run()
   {
-    getListManipulator().removeElement( ((IStructuredSelection)getOutlineviewer().getSelection()).getFirstElement() );
+    getListManipulator().removeElement(
+        ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
   }
 
   protected void refresh()
   {
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
-
-    setEnabled( !s.isEmpty()  && (s.getFirstElement() instanceof IKalypsoFeatureTheme));
+    setEnabled( !s.isEmpty()
+        && ( ( s.getFirstElement() instanceof IKalypsoFeatureTheme ) || ( s.getFirstElement() instanceof KalypsoWMSTheme ) ) );
   }
 }
