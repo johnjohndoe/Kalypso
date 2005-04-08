@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -75,32 +76,56 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
    */
   public void createFieldEditors()
   {
-    addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
+        "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
-    addField( new BooleanFieldEditor( IKalypsoPreferences.USE_RANGE, "&Datum (Von-Bis) benutzen", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.DATE_FROM, "Von-Datum:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.DATE_TO, "Bis-Datum:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.NUMBER_OF_DAYS, "&Tagesanzahl (Zeitreihenbrowser):", getFieldEditorParent() ) );
+    addField( new BooleanFieldEditor( IKalypsoPreferences.USE_RANGE, "&Datum (Von-Bis) benutzen",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.DATE_FROM, "Von-Datum:",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.DATE_TO, "Bis-Datum:",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.NUMBER_OF_DAYS,
+        "&Tagesanzahl (Zeitreihenbrowser):", getFieldEditorParent() ) );
 
-    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH, "Breite des Exportbildes (Diagramm):", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT, "Höhe des Exportbildes (Diagramm):", getFieldEditorParent() ) );
-    
-    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
-    
+    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH,
+        "Breite des Exportbildes (Diagramm):", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT,
+        "Höhe des Exportbildes (Diagramm):", getFieldEditorParent() ) );
+
+    addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT,
+        "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER,
+        "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
+
     // set echo char because it is a password field
-    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS, "Http-Proxy Pass&wort:", getFieldEditorParent() );
+    final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS,
+        "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
-    
-    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() ) );
-//
-//    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a multiple-choice preference", 1,
-//        new String[][]
-//        {
-//        { "&Choice 1", "choice1" },
-//        { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
+
+    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS,
+        "Globales &Koordinatensystem:", getFieldEditorParent() ) );
+    addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1,
+        new String[][]
+        {
+            {
+                "&Deutsch",
+                "de" },
+            {
+                "&English",
+                "en" } }, getFieldEditorParent() ) );
+
+    //
+    //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
+    // multiple-choice preference", 1,
+    //        new String[][]
+    //        {
+    //        { "&Choice 1", "choice1" },
+    //        { "C&hoice 2", "choice2" } }, getFieldEditorParent() ) );
   }
 
   /**
@@ -108,21 +133,20 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
    */
   public void init( IWorkbench workbench )
   {
-    // empty
+  // empty
   }
-  
-  
-  
+
   /**
    * @see org.eclipse.jface.preference.IPreferencePage#performOk()
    */
-  public boolean performOk( )
+  public boolean performOk()
   {
     final boolean result = super.performOk();
 
-    // even if on shutdown the preferences are saved, we save them in case of a platfrom crash
+    // even if on shutdown the preferences are saved, we save them in case of a
+    // platfrom crash
     KalypsoGisPlugin.getDefault().savePluginPreferences();
-    
+
     return result;
   }
 }

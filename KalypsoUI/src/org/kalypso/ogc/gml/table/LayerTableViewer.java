@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -105,6 +104,8 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -398,7 +399,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       FeatureType featureType = theme.getFeatureType();
       FeatureTypeProperty property = featureType.getProperty( propertyName );
   
-      final String lang = Locale.getDefault().getLanguage();
+//      final String lang = Locale.getDefault().getLanguage();
+      final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
       final Annotation annotation = property.getAnnotation( lang);
       
       text = annotation.getLabel() + " (" + propertyName + ")";

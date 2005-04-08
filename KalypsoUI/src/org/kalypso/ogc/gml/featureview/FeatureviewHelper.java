@@ -59,6 +59,8 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -163,7 +165,8 @@ public class FeatureviewHelper
         groupdata.setVerticalAlignment( "GridData.FILL" );
         groupdata.setHorizontalSpan( 2 );
 
-        final String lang = Locale.getDefault().getLanguage();
+//        final String lang = Locale.getDefault().getLanguage();
+        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
         final Annotation annotation = ftp.getAnnotation( lang );
         final String text = annotation == null ? ftp.getName() : annotation.getLabel();
         final String tooltip = annotation == null ? null : annotation.getTooltip();
