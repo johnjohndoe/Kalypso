@@ -50,11 +50,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -63,7 +59,6 @@ import org.deegree.services.OGCWebServiceEvent;
 import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
 import org.deegree.services.WebServiceException;
-import org.deegree.services.wms.capabilities.Layer;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree.xml.XMLParsingException;
@@ -85,9 +80,6 @@ import org.w3c.dom.Document;
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServiceClient
 {
-
-  // auskommentiert bis deegreebackup aufgeraemt ist
-
   private final String m_layers;
 
   private Image myImage = null;
@@ -103,8 +95,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   private RemoteWMService m_remoteWMS;
 
   private final String m_source;
-
-  private HashSet m_allLayers;
 
   private boolean m_authentification;
 
@@ -122,8 +112,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     super( themeName );
 
     m_source = source;
-    // TODO check for coordinate system
-    m_crs = localCRS;
 
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
 
@@ -139,9 +127,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       final URL url = new URL( service + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
 
       final URLConnection c = url.openConnection();
+      NetWorker.configureProxy( c );
       // checks authentification TODO test if it works (this is a fast
       // implemention)
-      NetWorker.configureProxy( c );
       //      if( NetWorker.requiresAuthentification(c) )
       //      
       //      {
@@ -165,26 +153,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       final WMSCapabilities wmsCaps = wmsCapFac.createCapabilities( reader );
       m_remoteWMS = new RemoteWMService( wmsCaps );
 
-      
-      Set treeSet = new TreeSet();
-      WMSHelper.getInstance().getAllLayers(wmsCaps, treeSet);
-      System.out.println("treeSet: - all layers");
-      HashSet hashSet = new HashSet(); 
-      WMSHelper.getInstance().getLevels(hashSet, wmsCaps);
-      System.out.println("hashSet: - levels");
-      
-      
-      HashSet layers = new HashSet();
-      Layer topWMSLayer = wmsCaps.getCapability().getLayer();
-      Layer[] firstLayerSet = topWMSLayer.getLayer();
-      if( firstLayerSet.length < 1 || firstLayerSet == null )
-        layers.add( topWMSLayer );
-      else
-        //        getAvaliableLayers( layers, firstLayerSet );
-        getAvaliableLayers( layers, topWMSLayer );
-      m_allLayers = layers;
-      //find geoTransformation
-      if( !matchCRS( localCRS ) )
+      CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( localCRS, wmsCaps, m_layers.split( "," ) );
+      if( crs.length > 1 )
       {
         GeoTransform gt = findGeotransformation();
         if( gt == null )
@@ -193,8 +163,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
         m_transformation = gt;
       }
       else
-        m_crs = localCRS;
-
+        m_crs = crs[0];
     }
     catch( MalformedURLException e )
     {
@@ -227,88 +196,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   {
     m_authentification = b;
   }
-
-  /**
-   * Recursive function to collect all availabel layers on this Service TODO
-   * cascading wms
-   */
-  private void getAvaliableLayers( HashSet layers, Layer layer )
-  {
-    Layer[] layerTree = layer.getLayer();
-    for( int i = 0; i < layerTree.length; i++ )
-    {
-      Layer newLayer = layerTree[i];//.getLayer();
-      if( newLayer.getLayer().length > 0 )
-      {
-        //recursive function call
-        getAvaliableLayers( layers, newLayer );
-      }
-      else
-      {
-//        if( m_layers.matches( ".*" + layerTree[i].getName() + ".*" ) )
-//        {
-//          System.out.println( layerTree[i].getName() );
-//          LayerBoundingBox[] bboxLayer = layerTree[i].getBoundingBox();
-//          for( int j = 0; j < bboxLayer.length; j++ )
-//          {
-//            LayerBoundingBox box = bboxLayer[j];
-//            String srs = box.getSRS();
-//            try
-//            {
-//              if( srs != null && srs.equals( m_crs.getName() ) )
-//              {
-//                final GM_Envelope env = GeometryFactory.createGM_Envelope( box.getMin().getX(), box
-//                    .getMin().getY(), box.getMax().getX(), box.getMax().getY() );
-//                if( m_maxEnv == null )
-//                  m_maxEnv = env;
-//                else
-//                {
-//                  m_maxEnv = m_maxEnv.getMerged( env );
-//                }
-//              }
-//            }
-//            catch( RemoteException e )
-//            {
-//              e.printStackTrace();
-//            }
-//          }
-          layers.add( layerTree[i] );
-//        }
-
-        //        final String[] layersToShow = m_layers.split( "," );
-        //        if( contains( layersToShow, layerTree[i].getName() ) )
-        //        {
-        //          final LayerBoundingBox[] boundingBox = layerTree[i].getBoundingBox();
-        //          for( int j = 0; j < boundingBox.length; j++ )
-        //          {
-        //            final LayerBoundingBox box = boundingBox[j];
-        //            final String srs = box.getSRS();
-        //            try
-        //            {
-        //              if( srs != null && srs.equals( m_crs.getName() ) )
-        //              {
-        //                final GM_Envelope bbox=GeometryFactory.createGM_Envelope(
-        // box.getMin().getX(),
-        //                    box.getMin().getY(), box.getMax().getX(), box.getMax().getY());
-        //                if( m_maxEnv == null )
-        //                  m_maxEnv = bbox;
-        //                else
-        //                {
-        //                  m_maxEnv = m_maxEnv.getMerged(bbox);
-        //                }
-        //              }
-        //            }//try
-        //            catch( RemoteException e )
-        //            {
-        //              e.printStackTrace();
-        //              //do nothing
-        //            }
-        //          }
-        //        }
-        continue;
-      }
-    }//for
-  }//getAvailableLayers
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
@@ -457,6 +344,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public void dispose()
   {
+    //do nothing (no graphics to dispose)
   }
 
   /**
@@ -466,20 +354,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   {
     return m_maxEnv;
   }
-
-  public boolean matchCRS( CS_CoordinateSystem localCRS ) throws Exception
-  {
-    //Muss dies nicht nur die gerforderten layers m_layers durchsuchen
-    for( Iterator iter = m_allLayers.iterator(); iter.hasNext(); )
-    {
-      Layer layer = (Layer)iter.next();
-      String[] layerSrs = layer.getSrs();
-      if( contains( layerSrs, localCRS.getName() ) )
-        return true;
-
-    }
-    return false;
-  }//matchCRS
 
   /**
    * Returns the Transfomed image Frage: muss dies ein GeoTransform von Deegree
@@ -543,6 +417,5 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     }
     return false;
   }
-  
-  
+
 }// class KalypsoWMSTheme
