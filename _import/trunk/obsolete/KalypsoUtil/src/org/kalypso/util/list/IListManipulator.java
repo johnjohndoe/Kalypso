@@ -50,6 +50,6 @@ public interface IListManipulator
   
   public void removeElement( final Object element );
   
-  public void addElement( final Object elementBefore );
+  public void addElement( final Object element );
 
 }

@@ -36,15 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
-
 
 /**
  * @author bce
@@ -55,21 +54,22 @@ public class PropertiesHelper
 
   private PropertiesHelper()
   {
-  // wird nicht instantiiert
+    // wird nicht instantiiert
   }
 
   public static Properties parseFromString( final String source, final char separator )
   {
     final Properties props = new Properties();
-
-    final String[] strings = source.split( "" + separator );
-    for( int i = 0; i < strings.length; i++ )
+    if( source != null )
     {
-      int pos = strings[i].indexOf( ENTRY_SEPARATOR );
-      if( pos > 0 )
-        props.put( strings[i].substring( 0, pos ), strings[i].substring( pos + 1 ) );
+      final String[] strings = source.split( "" + separator );
+      for( int i = 0; i < strings.length; i++ )
+      {
+        int pos = strings[i].indexOf( ENTRY_SEPARATOR );
+        if( pos > 0 )
+          props.put( strings[i].substring( 0, pos ), strings[i].substring( pos + 1 ) );
+      }
     }
-
     return props;
   }
 

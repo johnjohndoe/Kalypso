@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io;
 
 import java.io.BufferedInputStream;
@@ -46,12 +46,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
 
@@ -294,16 +297,16 @@ public class FileUtilities
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
     {
-      String difference = StringUtils.difference(baseAbs, absAbs);
-      if(difference==null || "".equals(difference))
+      String difference = StringUtils.difference( baseAbs, absAbs );
+      if( difference == null || "".equals( difference ) )
         return null;
-      final int index=absAbs.indexOf(difference);
-      if(index<5)
+      final int index = absAbs.indexOf( difference );
+      if( index < 5 )
         return null;
-      String back=baseAbs.substring(index);
+      String back = baseAbs.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      String x=back.replaceAll("[a-zA-Z0-9]+", "..");
-      String result=x+File.separator+difference;
+      String x = back.replaceAll( "[a-zA-Z0-9]+", ".." );
+      String result = x + File.separator + difference;
       return result;
     }
     final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
@@ -336,7 +339,8 @@ public class FileUtilities
   }
 
   /**
-   * @param name name of path of the file
+   * @param name
+   *          name of path of the file
    * @return characters after last "." of given file name
    */
   public static String getSuffix( final String name )
@@ -346,7 +350,7 @@ public class FileUtilities
       return strings[strings.length - 1];
     return null;
   }
-  
+
   /**
    * @param file
    * @return characters after last "." of given file name
@@ -382,22 +386,70 @@ public class FileUtilities
     return fileName.substring( 0, lastIndexOf );
   }
 
-  /** Lässt den FileVisitor die angegebene Datei (Verzeichnis) und alle Ihre Unterverzeichnisse und enthaltenen Dateien besuchen. */
+  /**
+   * Lässt den FileVisitor die angegebene Datei (Verzeichnis) und alle Ihre
+   * Unterverzeichnisse und enthaltenen Dateien besuchen.
+   */
   public static void accept( final File root, final FileVisitor visitor )
   {
     // zuerst die Datei selbst
     boolean recurse = visitor.visit( root );
     if( !recurse || !root.isDirectory() )
       return;
-    
+
     final File[] files = root.listFiles();
     if( files == null )
       return;
-    
+
     for( int i = 0; i < files.length; i++ )
     {
       final File file = files[i];
       accept( file, visitor );
+    }
+  }
+
+  public static void copyShapeFileToDirectory( String shapeBase, File target )
+  {
+    File _shp;
+    File _dbf;
+    File _shx;
+    File _sbn;
+    File _sbx;
+    if( target.isDirectory() )
+    {
+      try
+      {
+        _shp = new File( shapeBase + ".shp" );
+        if( _shp.exists() )
+          FileUtils.copyFileToDirectory( _shp, target );
+        else
+          return;
+        _dbf = new File( shapeBase + ".dbf" );
+        if( _dbf.exists() )
+          FileUtils.copyFileToDirectory( _dbf, target );
+        else
+          return;
+        _shx = new File( shapeBase + ".shx" );
+        if( _shx.exists() )
+          FileUtils.copyFileToDirectory( _shx, target );
+        else 
+          return;
+        _sbn = new File( shapeBase + ".sbn" );
+        if( _sbn.exists() )
+          FileUtils.copyFileToDirectory( _sbn, target );
+        _sbx = new File( shapeBase + ".sbx" );
+        if( _sbn.exists() )
+          FileUtils.copyFileToDirectory( _sbx, target );
+
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 }
