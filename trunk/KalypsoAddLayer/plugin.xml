@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.ui.addlayer"
+   name="KaylpsoAddLayer"
+   version="0.0.1"
+   provider-name="kalypso.org"
+   class="org.kaylpso.ui.KalypsoAddLayerPlugin">
+
+   <runtime>
+      <library name="KaylpsoAddLayerPlugin.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.ui" export="true"/>
+   </requires>
+   <extension
+         id="mapviewaction"
+         name="mapviewaction"
+         point="org.kalypso.ui.mapviewaction">
+      <MapviewAction
+            title="AddLayer"
+            enabled="true"
+            icon="icons/gistable/add_row.gif"
+            class="org.kaylpso.ui.view.action.AddLayerAction"
+            tooltip="Neues Thema zu activer Karte hinzufügen"/>
+   </extension>
+   <extension
+         id="dataimport"
+         name="dataimport"
+         point="org.kalypso.ui.dataimportwizard">
+      <wizard
+            icon="icon/repository_item.gif"
+            class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"
+            name="ESRI (tm) Shape "
+            id="org.kalypso.ui.wizard.shape"/>
+      <wizard
+            icon="icon/repository_item.gif"
+            class="org.kaylpso.ui.wizard.wms.ImportWmsSourceWizard"
+            name="Web Map Service"
+            id="org.kalypso.ui.wizard.wms"/>
+      <wizard
+            icon="icon/repository_item.gif"
+            class="org.kaylpso.ui.wizard.wfs.ImportWfsSourceWizard"
+            name="Web Feature Service"
+            id="org.kalypso.ui.wizard.wfs"/>
+   </extension>
+
+</plugin>
