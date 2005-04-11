@@ -36,20 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.sensor.impl.test;
 
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Map;
+
+import javax.activation.DataHandler;
 
 import junit.framework.TestCase;
 
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
-import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
@@ -61,7 +60,8 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class KalypsoObservationServiceTest extends TestCase
 {
-//  private final static String KALYPSO_SERVER_BASE = "\\\\LFUG-KV-01\\kalypsotemp";
+  //  private final static String KALYPSO_SERVER_BASE =
+  // "\\\\LFUG-KV-01\\kalypsotemp";
 
   private KalypsoObservationService m_srv;
 
@@ -124,7 +124,7 @@ public class KalypsoObservationServiceTest extends TestCase
 
     final ItemBean[] beans = m_srv.getChildren( null );
 
-    for( int i = 0; i < /*beans.length*/ 1; i++ )
+    for( int i = 0; i < /* beans.length */1; i++ )
       readData( beans[i], "#" );
 
     System.out.println( ":Stop Test Read Data" );
@@ -146,17 +146,17 @@ public class KalypsoObservationServiceTest extends TestCase
       final DateRangeArgument dra = DateRangeArgument.createFromPastDays( 30 );
       final DateRangeBean drb = new DateRangeBean( dra.getFrom(), dra.getTo() );
 
-      final OCSDataBean oddb = m_srv.readData( ob, drb );
-      final URL url = new URL( oddb.getLocation() );
+      //      final OCSDataBean oddb = m_srv.readData( ob, drb );
+      //      final URL url = new URL( oddb.getLocation() );
+      //
+      //      System.out.println( space + "Data location: " + url );
+      //      final File f = new File( url.getFile() );
+      //      assertTrue( f.exists() );
+      //
+      //      m_srv.clearTempData( oddb );
 
-      System.out.println( space + "Data location: " + url );
-      final File f = new File( url.getFile() );
-      assertTrue( f.exists() );
-
-      m_srv.clearTempData( oddb );
-
-      System.out.println( space + "Data cleared" );
-      assertFalse( f.exists() );
+      final DataHandler oddb = m_srv.readData( ob, drb );
+      assertNotNull( oddb );
     }
     else
     {

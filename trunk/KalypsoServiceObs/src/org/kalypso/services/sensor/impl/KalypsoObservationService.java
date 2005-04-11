@@ -45,7 +45,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -55,10 +54,12 @@ import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
-import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -73,6 +74,7 @@ import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
+import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service.
@@ -87,7 +89,7 @@ public class KalypsoObservationService implements IObservationService
 
   private final Map m_mapBean2Item;
 
-  private final Map m_mapBean2File;
+  //private final Map m_mapBean2File;
 
   private final Map m_mapItem2Beans;
 
@@ -107,7 +109,7 @@ public class KalypsoObservationService implements IObservationService
   public KalypsoObservationService( ) throws RemoteException
   {
     m_mapBean2Item = new Hashtable( 512 );
-    m_mapBean2File = new Hashtable( 512 );
+    //m_mapBean2File = new Hashtable( 512 );
     m_mapItem2Beans = new Hashtable( 512 );
     m_mapId2Rep = new Hashtable();
 
@@ -141,7 +143,7 @@ public class KalypsoObservationService implements IObservationService
   {
     m_lastId = 0;
 
-    m_mapBean2File.clear();
+    //m_mapBean2File.clear();
     m_mapBean2Item.clear();
     m_mapItem2Beans.clear();
     m_mapId2Rep.clear();
@@ -200,15 +202,15 @@ public class KalypsoObservationService implements IObservationService
     ZmlFilter.configureFor( null );
 
     // delete temp files
-    for( final Iterator iter = m_mapBean2File.keySet().iterator(); iter
-        .hasNext(); )
-    {
-      final Object elt = iter.next();
-
-      // force delete, even if we called deleteOnExit()
-      ((File) m_mapBean2File.get( elt )).delete();
-    }
-    m_mapBean2File.clear();
+//    for( final Iterator iter = m_mapBean2File.keySet().iterator(); iter
+//        .hasNext(); )
+//    {
+//      final Object elt = iter.next();
+//
+//      // force delete, even if we called deleteOnExit()
+//      ((File) m_mapBean2File.get( elt )).delete();
+//    }
+//    m_mapBean2File.clear();
 
     // force delete, even if we called deleteOnExit()
     m_tmpDir.delete();
@@ -218,7 +220,7 @@ public class KalypsoObservationService implements IObservationService
    * @see org.kalypso.services.sensor.IObservationService#readData(org.kalypso.ogc.sensor.beans.ObservationBean,
    *      org.kalypso.ogc.sensor.beans.DateRangeBean)
    */
-  public OCSDataBean readData( final ObservationBean obean,
+  public DataHandler readData( final ObservationBean obean,
       final DateRangeBean drb ) throws RemoteException
   {
     FileOutputStream fos = null;
@@ -261,13 +263,15 @@ public class KalypsoObservationService implements IObservationService
       fos = new FileOutputStream( f );
       ZmlFactory.getMarshaller().marshal( obsType, fos );
 
-      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obean.getId(), f
-          .toURL().toExternalForm() );
+//      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obean.getId(), f
+//          .toURL().toExternalForm() );
+      final DataHandler data = new DataHandler( new FileDataSource( f ) );
 
       // DATABEAN --> ZML File
-      m_mapBean2File.put( new Integer( oddb.getId() ), f );
+      //m_mapBean2File.put( new Integer( oddb.getId() ), f );
 
-      return oddb;
+//      return oddb;
+      return data;
     }
     catch( Exception e ) // generic exception used for simplicity
     {
@@ -283,64 +287,64 @@ public class KalypsoObservationService implements IObservationService
         }
         catch( IOException e )
         {
-          m_logger.throwing( getClass().getName(), "readData", e );
-          throw new RemoteException( "", e );
+          m_logger.severe( e.getLocalizedMessage() );
+          throw new RemoteException( "Error closing the output stream", e );
         }
     }
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#clearTempData(org.kalypso.ogc.sensor.beans.OCSDataBean)
-   */
-  public void clearTempData( final OCSDataBean bean )
-  {
-    final Integer id = new Integer( bean.getId() );
-
-    // DATA-BEAN --> Zml-File
-    if( m_mapBean2File.containsKey( id ) )
-    {
-      final File f = (File) m_mapBean2File.get( id );
-
-      if( f.delete() )
-        m_mapBean2File.remove( id );
-      else
-        m_logger.warning( "Could not delete file: " + f.getAbsolutePath() );
-    }
-  }
-
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#prepareForWrite(org.kalypso.ogc.sensor.beans.ObservationBean)
-   */
-  public OCSDataBean prepareForWrite( final ObservationBean obs )
-      throws RemoteException
-  {
-    try
-    {
-      final File f = File.createTempFile( "___" + obs.getName(), ".zml",
-          m_tmpDir );
-
-      // we say delete on exit even if we allow the client to delete the file
-      // explicitely in the clearTempData() service call. This allows us to
-      // clear temp files on shutdown in the case the client forgets it.
-      f.deleteOnExit();
-
-      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obs.getId(), f
-          .toURL().toExternalForm() );
-
-      return oddb;
-    }
-    catch( IOException e )
-    {
-      m_logger.throwing( getClass().getName(), "prepareForWrite", e );
-      throw new RemoteException( "", e );
-    }
-  }
+//  /**
+//   * @see org.kalypso.services.sensor.IObservationService#clearTempData(org.kalypso.ogc.sensor.beans.OCSDataBean)
+//   */
+//  public void clearTempData( final OCSDataBean bean )
+//  {
+//    final Integer id = new Integer( bean.getId() );
+//
+//    // DATA-BEAN --> Zml-File
+//    if( m_mapBean2File.containsKey( id ) )
+//    {
+//      final File f = (File) m_mapBean2File.get( id );
+//
+//      if( f.delete() )
+//        m_mapBean2File.remove( id );
+//      else
+//        m_logger.warning( "Could not delete file: " + f.getAbsolutePath() );
+//    }
+//  }
+//
+//  /**
+//   * @see org.kalypso.services.sensor.IObservationService#prepareForWrite(org.kalypso.ogc.sensor.beans.ObservationBean)
+//   */
+//  public OCSDataBean prepareForWrite( final ObservationBean obs )
+//      throws RemoteException
+//  {
+//    try
+//    {
+//      final File f = File.createTempFile( "___" + obs.getName(), ".zml",
+//          m_tmpDir );
+//
+//      // we say delete on exit even if we allow the client to delete the file
+//      // explicitely in the clearTempData() service call. This allows us to
+//      // clear temp files on shutdown in the case the client forgets it.
+//      f.deleteOnExit();
+//
+//      final OCSDataBean oddb = new OCSDataBean( m_lastId++, obs.getId(), f
+//          .toURL().toExternalForm() );
+//
+//      return oddb;
+//    }
+//    catch( IOException e )
+//    {
+//      m_logger.throwing( getClass().getName(), "prepareForWrite", e );
+//      throw new RemoteException( "", e );
+//    }
+//  }
 
   /**
    * @see org.kalypso.services.sensor.IObservationService#writeData(org.kalypso.ogc.sensor.beans.ObservationBean,
    *      org.kalypso.ogc.sensor.beans.OCSDataBean)
    */
-  public void writeData( final ObservationBean obean, final OCSDataBean odb )
+  public void writeData( final ObservationBean obean, final DataHandler odb )
       throws RemoteException
   {
     try
@@ -358,8 +362,8 @@ public class KalypsoObservationService implements IObservationService
         throw e;
       }
 
-      final IObservation zml = ZmlFactory.parseXML(
-          new URL( odb.getLocation() ), odb.getObsId() );
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), obs.getIdentifier(), null );
+//          new URL( odb.getLocation() ), odb.getObsId() );
 
       obs.setValues( zml.getValues( null ) );
     }

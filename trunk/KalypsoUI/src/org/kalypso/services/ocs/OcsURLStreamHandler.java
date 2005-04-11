@@ -45,12 +45,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.io.FileUtils;
+import javax.activation.DataHandler;
+
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -99,14 +100,16 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       if( dra != null )
         drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
       
-      final OCSDataBean db = srv.readData( ob, drb );
+      final DataHandler db = srv.readData( ob, drb );
 
-      final File file = File.createTempFile( "local-zml", ".zml" );
-      file.deleteOnExit();
+//      final File file = File.createTempFile( "local-zml", ".zml" );
+//      file.deleteOnExit();
 
-      FileUtils.copyURLToFile( new URL( db.getLocation() ), file );
-
-      srv.clearTempData( db );
+      //
+      //      FileUtils.copyURLToFile( new URL( db.getLocation() ), file );
+      //
+      //      srv.clearTempData( db );
+      final File file = FileUtilities.makeFileFromStream( false, "local-zml", "zml", db.getInputStream(), false );
 
       return file.toURL().openConnection();
     }

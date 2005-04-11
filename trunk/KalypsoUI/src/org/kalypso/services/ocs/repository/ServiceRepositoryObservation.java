@@ -36,16 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URL;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.xml.bind.Marshaller;
 import javax.xml.rpc.ServiceException;
 
@@ -62,13 +63,13 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.OCSDataBean;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.zml.ObservationType;
+import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
@@ -77,18 +78,19 @@ public class ServiceRepositoryObservation implements IObservation
 {
   /** the protocol that identifies the observation service */
   public final static String SCHEME_OCS = "kalypso-ocs";
-  
+
   /** Metadata name for the id of the OCS Service Observation */
   public final static String MD_OCS_ID = "KZ Zeitreihendienst";
-  
+
   private final IObservationService m_srv;
 
   private final ObservationBean m_ob;
 
   private IObservation m_obs = null;
-  
-  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
-  
+
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
+      this );
+
   /**
    * Constructor
    * 
@@ -139,12 +141,15 @@ public class ServiceRepositoryObservation implements IObservation
 
     try
     {
-      final OCSDataBean db = m_srv.readData( m_ob, drb );
+      //      final OCSDataBean db = m_srv.readData( m_ob, drb );
+      final DataHandler db = m_srv.readData( m_ob, drb );
 
-      final IObservation obs = ZmlFactory.parseXML(
-          new URL( db.getLocation() ), db.getObsId() );
+      //      final IObservation obs = ZmlFactory.parseXML(
+      //          new URL( db.getLocation() ), db.getObsId() );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( db
+          .getInputStream() ), "", null );
 
-      m_srv.clearTempData( db );
+      //      m_srv.clearTempData( db );
 
       return obs;
     }
@@ -212,7 +217,7 @@ public class ServiceRepositoryObservation implements IObservation
   {
     final MetadataList ml = new MetadataList();
     ml.putAll( m_ob.getMetadataList() );
-    
+
     // also put the id of this observation in the metadata list
     ml.put( MD_OCS_ID, getIdentifier() );
 
@@ -241,20 +246,20 @@ public class ServiceRepositoryObservation implements IObservation
   public synchronized ITuppleModel getValues( final IVariableArguments args )
       throws SensorException
   {
-//    synchronized( this )
-//    {
-      // tricky: uses the cache
-      ITuppleModel values = ObservationCache.getInstance().getValues( this );
+    //    synchronized( this )
+    //    {
+    // tricky: uses the cache
+    ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
-      if( values == null )
-      {
-        values = getRemote( args ).getValues( null );
+    if( values == null )
+    {
+      values = getRemote( args ).getValues( null );
 
-        ObservationCache.getInstance().addValues( this, values );
-      }
+      ObservationCache.getInstance().addValues( this, values );
+    }
 
-      return values;
-//    }
+    return values;
+    //    }
   }
 
   /**
@@ -265,31 +270,37 @@ public class ServiceRepositoryObservation implements IObservation
     // sets values
     final IObservation obs = getRemote( new DateRangeArgument() );
     obs.setValues( values );
-    
+
     Writer fw = null;
-    
+
     try
     {
-      OCSDataBean db = m_srv.prepareForWrite( m_ob );
-      
+      //      OCSDataBean db = m_srv.prepareForWrite( m_ob );
+
       // save zml
       final ObservationType obst = ZmlFactory.createXML( obs, null );
-      final String path = db.getLocation().replaceAll( "file:", "" );
-      
-      final FileOutputStream stream = new FileOutputStream( new File( path ) );
+      //      final String path = db.getLocation().replaceAll( "file:", "" );
+
+      final File tmpFile = File.createTempFile( "towards-server", "zml" );
+      tmpFile.deleteOnExit();
+      //      final FileOutputStream stream = new FileOutputStream( new File( path )
+      // );
+      final FileOutputStream stream = new FileOutputStream( tmpFile );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
-      final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING ).toString();
-      fw = new OutputStreamWriter( stream , enc );
-      
+      final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING )
+          .toString();
+      fw = new OutputStreamWriter( stream, enc );
+
       marshaller.marshal( obst, fw );
       fw.close();
-      
+
       // let server read file and save on its own
-      m_srv.writeData( m_ob, db );
+      //      m_srv.writeData( m_ob, db );
+      m_srv.writeData( m_ob, new DataHandler( new FileDataSource( tmpFile ) ) );
 
       // and clean temp stuff
-      m_srv.clearTempData( db );
-      
+      //      m_srv.clearTempData( db );
+
       m_evtPrv.fireChangedEvent();
     }
     catch( Exception e ) // generic for simplicity
@@ -301,29 +312,32 @@ public class ServiceRepositoryObservation implements IObservation
       IOUtils.closeQuietly( fw );
     }
   }
-  
+
   /**
-   * Sets the given values to the server side observation defined
-   * by the given href.
-   *  
+   * Sets the given values to the server side observation defined by the given
+   * href.
+   * 
    * @param values
    * @param href
    * @throws SensorException
    */
-  public static void setValuesFor( final ITuppleModel values, final String href ) throws SensorException
+  public static void setValuesFor( final ITuppleModel values, final String href )
+      throws SensorException
   {
     try
     {
-      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-      
-      final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( srv, getObservationBean( href ) );
-      
+      final IObservationService srv = KalypsoGisPlugin.getDefault()
+          .getObservationServiceProxy();
+
+      final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation(
+          srv, getObservationBean( href ) );
+
       srvObs.setValues( values );
     }
     catch( ServiceException e )
     {
       e.printStackTrace();
-      throw new SensorException(e);
+      throw new SensorException( e );
     }
   }
 
@@ -348,7 +362,7 @@ public class ServiceRepositoryObservation implements IObservation
   {
     // removes the service scheme part, the rest is our id!
     final String id = href.replaceFirst( SCHEME_OCS + ":", "" );
-    
+
     return new ObservationBean( id, "", "", null );
   }
 
@@ -367,7 +381,7 @@ public class ServiceRepositoryObservation implements IObservation
   {
     m_evtPrv.removeListener( listener );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */

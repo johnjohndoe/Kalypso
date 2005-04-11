@@ -111,7 +111,7 @@ public class ZmlFactory
   private static ParserFactory m_parserFactory = null;
 
   private static Properties m_parserProps = null;
-  
+
   private static Logger LOG = Logger.getLogger( ZmlFactory.class.getName() );
 
   private ZmlFactory( )
@@ -220,7 +220,7 @@ public class ZmlFactory
       // loose the query part we might have removed because of Eclipse's
       // url handling.
       return parseXML( new InputSource( inputStream ), identifier, url );
-    }    
+    }
     catch( IOException e )
     {
       throw new SensorException( "Error while unmarshalling: "
@@ -321,9 +321,10 @@ public class ZmlFactory
     if( obs.getTarget() != null )
       target = new JAXBXLink( obs.getTarget() );
 
-    final SimpleObservation zmlObs = new SimpleObservation( context
-        .toExternalForm(), identifier, obs.getName(), obs.isEditable(), target,
-        metadata, model.getAxisList(), model );
+    final String href = context != null ? context.toExternalForm() : "";
+    final SimpleObservation zmlObs = new SimpleObservation( href, identifier,
+        obs.getName(), obs.isEditable(), target, metadata, model.getAxisList(),
+        model );
 
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( context,
@@ -332,8 +333,10 @@ public class ZmlFactory
     // tricky: check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( context, filteredObs );
 
-    // tricky: check if the observation is auto-proxyable using its own metadata (for instance WQ)
-    final IObservation autoProxyObs = AutoProxyFactory.getInstance().proxyObservation( proxyObs );
+    // tricky: check if the observation is auto-proxyable using its own metadata
+    // (for instance WQ)
+    final IObservation autoProxyObs = AutoProxyFactory.getInstance()
+        .proxyObservation( proxyObs );
 
     return autoProxyObs;
   }
@@ -349,6 +352,9 @@ public class ZmlFactory
   private static IObservation createProxyFrom( final URL context,
       final IObservation baseObs )
   {
+    if( context == null )
+      return baseObs;
+    
     final String str = context.toExternalForm();
 
     IVariableArguments args = null;
@@ -545,17 +551,17 @@ public class ZmlFactory
     for( int i = 0; i < amount; i++ )
     {
       final Object elt = model.getElement( i, axis );
-      
+
       if( elt == null )
         LOG.warning( "Element " + i + " is null for Axis: " + axis );
-        
+
       sb.append( elt ).append( ";" );
     }
 
     if( amount > 0 )
     {
       final Object elt = model.getElement( amount, axis );
-      
+
       if( elt == null )
         LOG.warning( "Element " + amount + " is null for Axis: " + axis );
 
@@ -582,29 +588,29 @@ public class ZmlFactory
     return unmarshaller;
   }
 
-//  /**
-//   * @return an apache XMLSerializer configured to handle CDATA correctly
-//   */
-//  private static XMLSerializer getXMLSerializer( )
-//  {
-//    // configure an OutputFormat to handle CDATA
-//    OutputFormat of = new OutputFormat();
-//
-//    // specify which of your elements you want to be handled as CDATA.
-//    // The use of the '^' between the namespaceURI and the localname
-//    // seems to be an implementation detail of the xerces code.
-//    of.setCDataElements( new String[] { "data" } );
-//
-//    // set any other options you'd like
-//    of.setPreserveSpace( true );
-//    of.setIndenting( true );
-//
-//    // create the serializer
-//    XMLSerializer serializer = new XMLSerializer( of );
-//    serializer.setOutputByteStream( System.out );
-//
-//    return serializer;
-//  }
+  //  /**
+  //   * @return an apache XMLSerializer configured to handle CDATA correctly
+  //   */
+  //  private static XMLSerializer getXMLSerializer( )
+  //  {
+  //    // configure an OutputFormat to handle CDATA
+  //    OutputFormat of = new OutputFormat();
+  //
+  //    // specify which of your elements you want to be handled as CDATA.
+  //    // The use of the '^' between the namespaceURI and the localname
+  //    // seems to be an implementation detail of the xerces code.
+  //    of.setCDataElements( new String[] { "data" } );
+  //
+  //    // set any other options you'd like
+  //    of.setPreserveSpace( true );
+  //    of.setIndenting( true );
+  //
+  //    // create the serializer
+  //    XMLSerializer serializer = new XMLSerializer( of );
+  //    serializer.setOutputByteStream( System.out );
+  //
+  //    return serializer;
+  //  }
 
   /**
    * @param axis

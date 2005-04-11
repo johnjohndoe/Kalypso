@@ -42,8 +42,9 @@ package org.kalypso.services.sensor;
 
 import java.rmi.RemoteException;
 
+import javax.activation.DataHandler;
+
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
-import org.kalypso.ogc.sensor.beans.OCSDataBean;
 import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.repository.service.IRepositoryService;
@@ -77,31 +78,31 @@ public interface IObservationService extends IRepositoryService, IKalypsoService
    * @return data bean
    * @throws RemoteException
    */
-  public OCSDataBean readData( final ObservationBean observation, final DateRangeBean drb ) throws RemoteException;
+  public DataHandler readData( final ObservationBean observation, final DateRangeBean drb ) throws RemoteException;
 
-  /**
-   * Call this method once client is done with manipulation of the data underlying
-   * the given bean. The service will then free any resources hold by the bean.
-   * @param bean
-   * @throws RemoteException
-   */
-  public void clearTempData( final OCSDataBean bean ) throws RemoteException;
+//  /**
+//   * Call this method once client is done with manipulation of the data underlying
+//   * the given bean. The service will then free any resources hold by the bean.
+//   * @param bean
+//   * @throws RemoteException
+//   */
+//  public void clearTempData( final OCSDataBean bean ) throws RemoteException;
   
   /**
    * Writes the data in. Does not take the data as argument but a descriptor
    * which describes where the data is to be found.
    * @param observation
-   * @param descriptor
+   * @param data
    * @throws RemoteException
    */
-  public void writeData( final ObservationBean observation, final OCSDataBean descriptor ) throws RemoteException;
+  public void writeData( final ObservationBean observation, final DataHandler data ) throws RemoteException;
   
-  /**
-   * Prepares a container on the server side so that client can write data into it.
-   * 
-   * @param obs
-   * @return data bean where client can safely write data into
-   * @throws RemoteException
-   */
-  public OCSDataBean prepareForWrite( final ObservationBean obs ) throws RemoteException;
+//  /**
+//   * Prepares a container on the server side so that client can write data into it.
+//   * 
+//   * @param obs
+//   * @return data bean where client can safely write data into
+//   * @throws RemoteException
+//   */
+//  public OCSDataBean prepareForWrite( final ObservationBean obs ) throws RemoteException;
 }
