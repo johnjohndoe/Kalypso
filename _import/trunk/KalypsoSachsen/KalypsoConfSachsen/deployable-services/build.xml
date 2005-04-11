@@ -1,137 +1,194 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<project name="Kalypso-Sachsen: services" default="zip-services-lfug" basedir="..">
+<project name="Kalypso-Sachsen: services" default="zip-services-lfug" basedir=".">
 
 	<property name="project.path" value="${workspace}/KalypsoConfSachsen" />
-	<property name="dist" value="${workspace}/KalypsoConfSachsen/deploy/server" />
-	<property name="dist.services" value="${dist}/services" />
+	<property name="dep.server" value="${project.path}/deploy/server" />
+	<property name="dep.services" value="${dep.server}/services" />
 
-	<target name="prepare" description="Creates the build directory">
+	<target name="prepare">
 		<echo message="Creating the required directories...." />
-		<mkdir dir="${dist}" />
-		<mkdir dir="${dist.services}"/>
+		<mkdir dir="${dep.server}" />
+		<mkdir dir="${dep.services}" />
 	</target>
 
-	<target name="clean" description="Removes the build directories">
-		<delete dir="${dist.services}" />
+	<target name="clean">
+		<echo message="Cleaning all subprojects..." />
+		<delete dir="${dep.services}" />
+		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="clean" inheritall="false" />
+		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="clean" inheritall="false" />
 	</target>
-	
-	<target name="build-services" description="Builds all services" >
-		<echo message="Building all services"/>
+
+	<target name="build-basic" depends="prepare">
+		<echo message="Building basic projects" />
+		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
+	</target>
+
+	<target name="build-plugins" depends="build-basic, build-CalcService">
+		<echo message="Building specific plugins for Sachsen" />
+		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
+	</target>
+
+	<target name="modelplugins-dependency" depends="build-plugins">
+		<echo message="Copying the libs relevant for using Spree-Plugin and NA-Plugin"/>
 		
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-war" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build-war" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-war" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false" />
-		<antcall target="build-KalypsoConf-war" />
-	</target>
-	
-	<target name="echte-psicompact" depends="prepare">
-		<copy file="${project.path}/deployable-services/echte-psicompact/PSICompact.jar"
-			  tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" 
-		      overwrite="true"/>
-	</target>
-			
-	<target name="zip-services-lfug" depends="prepare,clean,echte-psicompact,build-services" description="copy all services.war to the deploy dir">
-		<echo message="Copying the wars to ${dist.services}" />
-
-		<copy tofile="${dist.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true"/>
-		<copy tofile="${dist.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true"/>
-		<copy tofile="${dist.services}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip" overwrite="true"/>
-		<copy tofile="${dist.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true"/>
+		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoSpreePlugin/build/deploy" includes="**/*.jar" />
+		</copy>
+		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoNA/build/deploy" includes="**/*.jar" />
+		</copy>
+		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
+		</copy>
 	</target>
 
-	<target name="fake-psicompact" depends="prepare" description="deploy the fake impl of psicompact into the KalypsoPSICompactAdapter libs">
+	<target name="psicompact-fake" depends="prepare, build-basic">
+		<echo message="Integrating the fake implementation of PSICompact"/>
 		<delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
-		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false"/>
+		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false" />
+		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="deploy" inheritall="false" />
+	</target>
+
+	<target name="psicompact-echte" depends="prepare, build-basic">
+		<echo message="Integrating the real implementation of PSICompact"/>
+		<copy file="${project.path}/deployable-services/echte-psicompact/PSICompact.jar" tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" overwrite="true" />
+		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="deploy" inheritall="false" />
+	</target>
+
+	<target name="build-ConfService">
+		<ant antfile="KalypsoConf/etc/ant/build.xml" target="build-war">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="build-UserService" depends="build-basic">
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<copy todir="${workspace}/KalypsoUserService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
+		</copy>
+	</target>
+
+	<target name="build-ObsService" depends="build-basic">
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<copy todir="${workspace}/KalypsoObsService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
+		</copy>
+	</target>
+
+	<target name="build-CalcService" depends="build-basic">
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="build-MetaDocService" depends="build-basic">
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<copy todir="${workspace}/KalypsoMetaDocService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
+		</copy>
+	</target>
+
+	<target name="build-services-dev" depends="psicompact-fake,build-ConfService,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins">
+		<echo message="Building all services" />
 	</target>
 	
-	<target name="redeploy-services-bce" depends="prepare,fake-psicompact,build-services" description="redeploys all services">
-		<echo message="Redeploying all services"/>
+	<target name="deploy-services" depends="build-services-dev,modelplugins-dependency" >
+		<echo message="Deploying all services on the server named ${tomcat.server}" />
+
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="deploy" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="deploy" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+		<ant antfile="KalypsoConf/etc/ant/build.xml" target="deploy">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="redeploy-UserService" depends="psicompact-fake,build-UserService">
+		<echo message="Redeploying User Service" />
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="redeploy-ObsService" depends="psicompact-fake,build-ObsService">
+		<echo message="Redeploying Observation Service" />
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="redeploy-MetaDocService" depends="psicompact-fake,build-MetaDocService">
+		<echo message="Redeploying MetaDoc Service" />
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="redeploy-CalcService" depends="psicompact-fake,build-CalcService">
+		<echo message="Redeploying Calculation Service" />
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="redeploy-ConfService" depends="prepare,build-ConfService">
+		<echo message="Redeploying Configuration Service" />
+		<ant antfile="KalypsoConf/etc/ant/build.xml" target="redeploy">
+			<property file="deploy.properties" />
+		</ant>
+	</target>
+
+	<target name="redeploy-services" depends="redeploy-ConfService,redeploy-UserService,redeploy-ObsService,redeploy-CalcService,redeploy-MetaDocService" >
+		<echo message="Redeploying all services" />
+	</target>
+	
+	<target name="build-services-lfug" depends="psicompact-echte,build-ConfService,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins,modelplugins-dependency">
+		<echo message="Build for LFUG (using real PSICompact)" />
+	</target>
 		
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-		<antcall target="redeploy-KalypsoConf" />
+	<target name="zip-services-lfug" depends="clean,prepare,build-services-lfug" >
+		<echo message="Copying the wars to ${dep.services} - Ready for sending to LFUG" />
+
+		<!-- Note: KalypsoConf already there -->
+		<copy tofile="${dep.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true" />
+		<copy tofile="${dep.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true" />
+		<copy tofile="${dep.services}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip" overwrite="true" />
+		<copy tofile="${dep.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true" />
 	</target>
-	
-  <target name="redeploy-services-tuhh-andreas" depends="prepare,fake-psicompact,build-services" description="redeploys all services">
-<!--
-wichtig:
-1. fake-psicompact ant-run
-2. KalypsoPSICompactAdapter refresh
-3. KalypsoPSICompactAdapter clean
-4. diese task starten
- -->
-    <echo message="Redeploying all services"/>  		
-  		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-  		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-  		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-  		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false" />
-  		<antcall target="redeploy-KalypsoConf" />
-  	</target>
-  	
-
-  
-	<!-- ### AB HIER KalypsoConf SPEZIFISCH ############################### -->
-	
-	<property name="deployable.war" value="kalypso_conf.zip" />
-	<property name="service.name" value="KalypsoConf" />
-	<property name="war.path" value="file:///${dist.services}/${deployable.war}" />
-
-	<property name="core.path" value="${workspace}/KalypsoCoreServices" />
-	<property file="${project.path}/tomcat.properties" />
-
-	<path id="ant.classpath">
-		<fileset dir="${core.path}/lib" includes="*.jar" />
-		<fileset dir="${core.path}/lib/build" includes="*.jar" />
-	</path>
-
-	<target name="build-KalypsoConf-war" depends="prepare" description="builds the KalypsoConf.war">
-		<jar jarfile="${dist.services}/${deployable.war}">
-			<fileset dir="${project.path}/deployable-services/KalypsoConf" includes="*/**" />
-		</jar>
-	</target>
-
-	<target name="deploy-KalypsoConf" description="Deploys a Web application">
-
-		<echo message="Deploying the web application..." />
-		<echo message="URL: ${tomcat.manager.url}" />
-		<echo message="UNAME: ${tomcat.username}" />
-		<echo message="PWD: ${tomcat.password}" />
-		<echo message="PATH: /${service.name}" />
-		<echo message="WAR: ${war.path}" />
-
-		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" war="${war.path}" />
-	</target>
-
-	<target name="undeploy-KalypsoConf" description="Undeploys a Web application">
-		<echo message="Undeploying the web application..." />
-		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
-	</target>
-
-	<target name="redeploy-KalypsoConf" description="Undeploys and deploys a Web aplication">
-		<antcall target="undeploy-KalypsoConf" />
-		<antcall target="deploy-KalypsoConf" />
-	</target>
-
-	<target name="start-KalypsoConf" description="Starts a Web application">
-		<echo message="Starting the application...." />
-		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
-	</target>
-
-	<target name="stop-KalypsoConf" description="Stops a Web application">
-		<echo message="Stopping the application...." />
-		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
-	</target>
-
-	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="ant.classpath" />
-	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="ant.classpath" />
-	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpathref="ant.classpath" />
-	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpathref="ant.classpath" />
-
-	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="ant.classpath" />
-	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask" classpathref="ant.classpath" />
 
 </project>
