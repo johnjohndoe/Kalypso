@@ -58,7 +58,7 @@ public class EditFeatureWidgetDelegate extends AbstractWidgetActionDelegate
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#setActiveEditor(org.eclipse.jface.action.IAction,
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
   public void setActiveEditor( IAction action, IEditorPart targetEditor )

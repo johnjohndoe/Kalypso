@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
@@ -50,7 +50,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
  * 
  * @author bce
  */
-public abstract class AbstractWidgetActionDelegate extends AbstractGisEditorActionDelagate
+public abstract class AbstractWidgetActionDelegate extends AbstractGisEditorActionDelegate
 {
   private final IWidget m_widget;
 
@@ -66,7 +66,7 @@ public abstract class AbstractWidgetActionDelegate extends AbstractGisEditorActi
   public abstract void refreshEnabled();
 
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction()
    */
   final protected void refreshAction()
   {

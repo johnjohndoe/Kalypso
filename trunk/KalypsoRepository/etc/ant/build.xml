@@ -1,109 +1,25 @@
 <?xml version="1.0"?>
-<project name="KalypsoRepositoryBuild" default="deploy" basedir="../..">
+<project name="KalypsoRepositoryBuild" default="deploy">
 
-  <!-- Propertys aus einer Datei laden -->
-  <property file="../KalypsoBuild/projectbuild.properties" />
+	<property name="project" value="${workspace}/KalypsoRepository" />
+	
+	<path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
+		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar" />
+	</path>
 
-  <property name="project" value="${workspace}/KalypsoRepository" />
-  <property name="project.build" value="${project}/build" />
-  <property name="project.bin" value="${project.build}/bin" />
-  <property name="project.src" value="${project}/src" />
-  <property name="project.lib" value="${project}/lib" />
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+	<property name="project-name" value="KalypsoRepository" />
 
-  <path id="project.classpath">
-    <fileset dir="${project.lib}" includes="**/*.jar" />
-    <fileset dir="${workspace}/KalypsoUtil/build" includes="**/*.jar" />
-  </path>
+	<target name="binding">
+		<ant antfile="${project}/etc/xmlbinding/build.xml" inheritall="false" target="deploy" dir="${project}/etc/xmlbinding" />
+	</target>
 
-
-  <target name="prepare">
-    <mkdir dir="${project.bin}" />
-  </target>
-
-  <target name="wsdp">
-    <ant antfile="${project}/etc/xmlbinding/build.xml"
-         inheritall="true"
-         target="deploy"
-         dir="${project}/etc/xmlbinding"
-    />
-  </target>
-
-  <target name="compile" depends="prepare,wsdp">
-    <echo message="Compiliere Sourcen ..." />
-    <javac srcdir="${project.src}"
-           destdir="${project.bin}"
-           classpathref="project.classpath"
-    >
-    </javac>
-  </target>
-
-  <target name="junit-test"
-          description="Runs the junit-tests of the projekt"
-          depends="prepare,compile"
-  >
-    <junit haltonerror="false" fork="true">
-      <classpath>
-        <path refid="project.classpath" />
-      </classpath>
-
-      <formatter type="xml" />
-
-      <batchtest fork="yes" todir=".">
-        <fileset dir="${project.src}">
-          <include name="**/*Test*.java" />
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-
-  <target name="deploy" depends="compile">
-    <jar destfile="${project.build}/KalypsoRepository.jar">
-      <fileset dir="${project.bin}" includes="**/*" />
-    </jar>
-  </target>
-
-  <target name="deploy.plugin" depends="wsdp">
-    <eclipse.buildScript  elements="plugin@org.kalypso.repository"
-                         install="${project}"
-                         children="true"
-                         recursivegeneration="true"
-    />
-
-    <ant antfile="${project}/build.xml"
-         inheritall="false"
-         target="zip.plugin"
-    />
-    <move todir="${project.build}">
-      <fileset dir="${project}">
-        <include name="**/org.kalypso*.zip" />
-        <include name="**/kalypso*.zip" />
-        <include name="**/kalypso*.jar" />
-      </fileset>
-    </move>
-    <delete file="${project}/build.xml" />
-  </target>
-
-  <target name="javadoc" depends="prepare">
-    <echo message="Erzeuge die Dokumentation ..." />
-    <javadoc destdir="${project.doc}"
-             failonerror="true"
-             classpathref="project.classpath"
-    >
-      <fileset dir="${project.src}" casesensitive="false">
-        <include name="**/*.java" />
-        <exclude name="**/*test*.java" />
-      </fileset>
-    </javadoc>
-  </target>
-
-
-  <target name="clean">
-    <echo message="Raeume auf ..." />
-    <delete dir="${project.build}" />
-    <ant antfile="${project}/etc/xmlbinding/build.xml"
-         target="clean"
-         dir="${project}/etc/xmlbinding/"
-    />
-  </target>
+	<!-- Override compile to resolve dependencies to binding -->
+	<target name="compile" depends="prepare,binding">
+		<antcall target="commonbuild.compile" />
+	</target>
 
 </project>
