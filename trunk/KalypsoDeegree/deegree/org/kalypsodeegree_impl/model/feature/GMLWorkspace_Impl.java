@@ -333,7 +333,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     public boolean visit( final Feature f )
     {
       final String id = f.getId();
-      if( m_indexMap.containsKey( id ) )
+      // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
+//      if( m_indexMap.containsKey( id ) )
 //        System.out.println( "Workspace already contains a feature with id: " + id );
       m_indexMap.put( id, f );
 
