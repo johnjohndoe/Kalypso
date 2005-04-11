@@ -171,56 +171,64 @@ public class WechmannFactory
    * 
    * @param wg
    * @return xml String
-   * @throws JAXBException
+   * @throws WechmannException
    */
   public static String createXMLString(final WechmannGroup wg)
-      throws JAXBException
+      throws WechmannException
   {
-    final Wechmann wt = m_objectFactory.createWechmann();
-
-    final List sets = wt.getSet();
-
-    final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
-
-    for( final Iterator it = wg.iterator(); it.hasNext(); )
+    try
     {
-      final WechmannSet wset = (WechmannSet) it.next();
+      final Wechmann wt = m_objectFactory.createWechmann();
 
-      final XMLWechmannSet wechmannSet = m_objectFactory.createXMLWechmannSet();
-      final ValidityType validityType = m_objectFactory
-          .createXMLWechmannSetValidityType();
+      final List sets = wt.getSet();
 
-      validityType.setFormat( df.toPattern() );
-      validityType.setValue( df.format( wset.getValidity() ) );
-      wechmannSet.setValidity( validityType );
+      final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
-      for( final Iterator itp = wset.iterator(); itp.hasNext(); )
+      for( final Iterator it = wg.iterator(); it.hasNext(); )
       {
-        final WechmannParams wp = (WechmannParams) itp.next();
+        final WechmannSet wset = (WechmannSet) it.next();
 
-        final XMLWechmannParams wechmannParams = m_objectFactory
-            .createXMLWechmannParams();
-        wechmannParams.setK2( wp.getK2() );
-        wechmannParams.setLnk1( wp.getLNK1() );
-        wechmannParams.setW1( wp.getW1() );
+        final XMLWechmannSet wechmannSet = m_objectFactory
+            .createXMLWechmannSet();
+        final ValidityType validityType = m_objectFactory
+            .createXMLWechmannSetValidityType();
 
-        if( wp.hasWGR() )
-          wechmannParams.setWgr( wp.getWGR() );
-        else
-          wechmannParams.setWgr( -1 );
+        validityType.setFormat( df.toPattern() );
+        validityType.setValue( df.format( wset.getValidity() ) );
+        wechmannSet.setValidity( validityType );
 
-        wechmannSet.getParams().add( wechmannParams );
+        for( final Iterator itp = wset.iterator(); itp.hasNext(); )
+        {
+          final WechmannParams wp = (WechmannParams) itp.next();
+
+          final XMLWechmannParams wechmannParams = m_objectFactory
+              .createXMLWechmannParams();
+          wechmannParams.setK2( wp.getK2() );
+          wechmannParams.setLnk1( wp.getLNK1() );
+          wechmannParams.setW1( wp.getW1() );
+
+          if( wp.hasWGR() )
+            wechmannParams.setWgr( wp.getWGR() );
+          else
+            wechmannParams.setWgr( -1 );
+
+          wechmannSet.getParams().add( wechmannParams );
+        }
+
+        sets.add( wechmannSet );
       }
 
-      sets.add( wechmannSet );
+      final Marshaller marshaller = m_objectFactory.createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
+      final StringWriter writer = new StringWriter();
+      marshaller.marshal( wt, writer );
+
+      return writer.toString();
     }
-
-    final Marshaller marshaller = m_objectFactory.createMarshaller();
-    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
-    final StringWriter writer = new StringWriter();
-    marshaller.marshal( wt, writer );
-
-    return writer.toString();
+    catch( JAXBException e )
+    {
+      throw new WechmannException( e );
+    }
   }
 }

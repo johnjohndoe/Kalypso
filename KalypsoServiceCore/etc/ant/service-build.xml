@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<project name="coreservicesbuild" default="deploy">
+
+	<dirname property="coreservicesbuild.basedir" file="${ant.file.coreservicesbuild}" />
+
+	<property file="${workspace}/KalypsoBuild/common-project/project.properties" />
+	<property file="${coreservicesbuild.basedir}/build.properties" />
+
+	<!-- TODO: define these elements in your own project 
+	
+		<property name="project" value="full path of the project"/>
+		<property name="project-name" value="used as name for jar file"/>
+	
+		<path id="compile.classpath"/>
+	-->
+	
+	<import file="${workspace}/KalypsoBuild/common-tomcat/build.xml"/>
+	
+	<!-- TODO: define following properties in your importing script
+	
+		<property name="tomcat.manager.url" value="" />
+		<property name="tomcat.username" value="" />
+		<property name="tomcat.password" value="" />
+		<property name="service.name" value="" />
+		<property name="war.path" value="" />	
+	-->
+	
+	<path id="generate.classpath">
+		<path refid="compile.classpath"/>
+		
+		<pathelement path="${project.bin}"/>
+		
+		<fileset dir="${jwsdp}/jaxp/lib" includes="*.jar" />
+		<fileset dir="${jwsdp}/jaxrpc/lib" includes="*.jar" />
+		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="*.jar" />
+		<fileset dir="${jwsdp}/saaj/lib" includes="*.jar" />
+	</path>
+
+	<taskdef name="wscompile" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wscompile" />
+	<taskdef name="wsdeploy" classpathref="ant.classpath" classname="com.sun.xml.rpc.tools.ant.Wsdeploy" />
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+	  <classpath>
+		<pathelement location="${workspace}/KalypsoCoreServices/etc/ant/ant-contrib-1.0b2.jar"/>
+	  </classpath>
+	</taskdef>
+	
+	<target name="prepare">
+		<mkdir dir="${project.bin}" />
+		<mkdir dir="${project.build}" />
+		<mkdir dir="${project.deploy}" />
+		<mkdir dir="${project.doc}" />
+
+		<mkdir dir="${build.proxy}" />
+		<mkdir dir="${build.web}" />
+		<mkdir dir="${build.web.inf}" />
+		<mkdir dir="${build.web.lib}" />
+		<mkdir dir="${build.web.inf}/classes" />
+
+		<mkdir dir="${dist.server}" />
+
+		<echo message="Project: ${project}" />
+		<echo message="Package: ${interface.package}" />
+
+	</target>
+
+	<target name="clean">
+		<echo message="Raeume auf..." />
+		<delete dir="${project.bin}" />
+		<delete dir="${project.deploy}" />
+		<delete dir="${project.doc}" />
+		<delete dir="${build.web}" />
+		<delete dir="${build.proxy}" />
+	</target>
+
+	<target name="compile" depends="prepare">
+		<echo message="Compiliere Sourcen für ${project-name}" />
+		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
+	</target>
+
+	<target name="junit-test" description="Runs the junit-tests of the projekt" depends="prepare,compile">
+		<junit haltonerror="false" fork="true">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir=".">
+				<fileset dir="${project.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="javadoc" depends="prepare">
+		<echo message="Erzeuge die Dokumentation ..." />
+		<javadoc destdir="${project.doc}" failonerror="true" classpathref="compile.classpath">
+			<fileset dir="${project.src}" casesensitive="false">
+				<include name="**/*.java" />
+				<exclude name="**/*Test*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+
+	<!--  HIER GEHTS LOS -->
+	<target name="build" depends="build-client,build-war" description="Executes the targets needed to build the webservice and the client jar.">
+	</target>
+
+	<!-- BUILD-WAR -->
+	<target name="build-war" depends="prepare,generate-wsdl,compile" description="Runs wsdeploy to generate the ties and 
+	                     create a deployable WAR file">
+
+		<echo message="Creating web.xml and jaxrpc.ri.xml..." />
+
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${build.web}">
+				<include name="jaxrpc-ri.xml" />
+			</fileset>
+		</delete>
+
+		<echo message="${war.xml}" file="${build.web.inf}/web.xml" append="false" />
+
+		<echo message="${jaxrpc-ri.xml}" file="${build.web.inf}/jaxrpc-ri.xml" append="false" />
+
+		<!-- delete existing .wsdl file -->
+		<delete>
+			<fileset dir="${build.web.inf}">
+				<filename name="*.wsdl" />
+			</fileset>
+		</delete>
+
+		<echo message="Packaging the WAR...." />
+
+		<copy todir="${build.web.inf}/classes">
+			<fileset dir="${project.bin}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+		<!-- convert compile path to a fileset in order to copy
+			the libs for runtime dependencies -->
+		<pathtofileset name="compile.libs"
+                       pathrefid="compile.classpath"
+                       dir="${workspace}"/>
+
+		<copy todir="${build.web.inf}/lib" flatten="true">
+			<fileset refid="compile.libs"/>
+		</copy>
+
+		<jar jarfile="${java.io.tmpdir}/${portable.war}">
+			<fileset dir="${build.web}" includes="*/**" />
+		</jar>
+
+		<echo message="Process WAR File to generate ties...." />
+
+		<wsdeploy verbose="true" outwarfile="${project.deploy}/${deployable.war}" inwarfile="${java.io.tmpdir}/${portable.war}">
+			<classpath refid="generate.classpath" />
+		</wsdeploy>
+
+		<delete file="${java.io.tmpdir}/${portable.war}" />
+	</target>
+
+	<target name="generate-wsdl" depends="prepare,compile" description="Erzegt das wsld File aus dem Service-Interface">
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${java.io.tmpdir}/config-interface" includes="**/*" />
+		</delete>
+
+		<mkdir dir="${java.io.tmpdir}/config-interface" />
+
+		<echo message="config interface file: ${config.interface.file}" />
+		<echo message="header: ${config.interface.header}" />
+		<echo message="body: ${config.interface.body}" />
+
+		<echo message="${config.interface.header}${config.interface.body}" file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
+
+		<wscompile define="true" model="${build.web.inf}/${model.file}" base="${build.web.inf}" nonClassDir="${build.web.inf}" verbose="true" config="${java.io.tmpdir}config-interface/${config.interface.file}">
+			<classpath refid="generate.classpath" />
+		</wscompile>
+
+		<delete file="${java.io.tmpdir}/config-interface/${config.interface.file}" />
+	</target>
+
+	<target name="build-client" depends="generate-proxy,compile" description="Erzeugt die Bibliothek fuer den Client">
+
+		<echo message="Building client part of service ${service.name} to ${project.deploy}/${client.jar}"/>
+		
+		<pathconvert property="clientjar_cp" pathsep=" " refid="compile.classpath" dirsep="/">
+			<map from="${basedir}" to="." />
+		</pathconvert>
+
+		<!-- package all -->
+		<jar jarfile="${project.deploy}/${client.jar}">
+			<fileset dir="${project.bin}" includes="**/*" />
+			<fileset dir="${build.proxy}" includes="**/*" />
+		</jar>
+
+	</target>
+
+	<target name="generate-proxy" depends="generate-wsdl" description="Erzeugt die Proxy-Klassen aus der WSDL">
+
+		<echo message="${config.wsdl.header}${config.wsdl.body}" file="${java.io.tmpdir}/${config.wsdl.file}" />
+
+		<wscompile client="true" base="${build.proxy}" nonclassdir="${build.proxy}" config="${java.io.tmpdir}/${config.wsdl.file}">
+			<classpath refid="generate.classpath" />
+		</wscompile>
+
+	</target>
+
+	<target name="redeploy-all" depends="build,redeploy" description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt">
+		<copy file="${project.deploy}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
+	</target>
+
+</project>
+

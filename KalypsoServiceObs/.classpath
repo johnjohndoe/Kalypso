@@ -5,5 +5,6 @@
 	<classpathentry kind="src" path="/KalypsoCoreServices"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="src" path="/KalypsoRepository"/>
+	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

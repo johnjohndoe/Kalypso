@@ -47,7 +47,7 @@
 		<jar destfile="${project.deploy}/${project-name}.jar">
 			<fileset dir="${project.bin}" includes="**/*" />
 		</jar>
-		<copy todir="${project.deploy}">
+		<copy todir="${project.deploy}" flatten="true">
 			<fileset dir="${project.lib}"/>
 		</copy>
 	</target>
