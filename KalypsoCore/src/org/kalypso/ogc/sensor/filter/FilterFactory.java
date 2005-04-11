@@ -148,6 +148,9 @@ public class FilterFactory
   public static IObservation createFilterFrom( final URL u,
       final IObservation obs ) throws SensorException
   {
+    if( u == null )
+      return obs;
+    
     final String strUrl = u.toExternalForm();
 
     final int i1 = strUrl.indexOf( TAG_FILTER1 );
