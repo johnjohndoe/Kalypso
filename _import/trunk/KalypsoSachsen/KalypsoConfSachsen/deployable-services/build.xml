@@ -114,11 +114,11 @@
 		</copy>
 	</target>
 
-	<target name="build-services-dev" depends="psicompact-fake,build-ConfService,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins">
+	<target name="build-services-dev" depends="psicompact-fake,build-ConfService,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins,modelplugins-dependency">
 		<echo message="Building all services" />
 	</target>
 	
-	<target name="deploy-services" depends="build-services-dev,modelplugins-dependency" >
+	<target name="deploy-services" depends="build-services-dev" >
 		<echo message="Deploying all services on the server named ${tomcat.server}" />
 
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="deploy" inheritAll="false">
@@ -159,7 +159,7 @@
 		</ant>
 	</target>
 
-	<target name="redeploy-CalcService" depends="psicompact-fake,build-CalcService">
+	<target name="redeploy-CalcService" depends="psicompact-fake,build-CalcService,modelplugins-dependency">
 		<echo message="Redeploying Calculation Service" />
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
 			<property file="deploy.properties" />

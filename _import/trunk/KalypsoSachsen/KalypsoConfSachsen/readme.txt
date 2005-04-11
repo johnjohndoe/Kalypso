@@ -2,34 +2,22 @@
 Kalypso Konfigurations und Deployment Projekt              Sachsen/Dresden
 --------------------------------------------------------------------------
 
-
-das Projekt KalypsoConfSachsen wurde aktualisiert und ist jetzt folgendermaßen aufgebaut:
-
-
 KalypsoConfSachsen
-       
-(       |------------------- \deploy                                             [da werden die deployed Dateien hinkopiert] )
-       
-       
-        |------------------- \deployable-client
-                                         |----------------- \client              [beinhaltet die RCP]
-                                         |----------------- build.xml            [deploy von feature und plugins]
-
-        |------------------- \deployable-data
-                                         |----------------- \data                [data Verzeichnis auf dem Server]
-                                         |----------------- build.xml            [deploy vom data-Verzeichnis + live checkout von den Modellen: Spree und WeisseElster]
-
-        |------------------- \deployable-services
-                                         |----------------- \echte-psicompact        [beinhaltet die echte PSICompact.jar]
-                                         |----------------- \KalypsoConf             [Der KalypsoConf pseudo-Service]
-                                         |----------------- build.xml                [deploy von allen services]
-                                         |----------------- build-KalypsoConf.xml    [sub-build file, wird von build.xml benutzt]
-
-        |------------------- \doc
-                                         |----------------- tecdoc
-                                         
-        |------------------- \tomcatStuff                                  
-
+ |--  \deploy                    da werden die deployed Dateien hinkopiert
+ |--  \deployable-client
+   |--  \client                  beinhaltet die RCP
+   |--  build.xml                deploy von feature und plugins
+ |--  \deployable-data
+   |-- \data                     data Verzeichnis auf dem Server
+   |-- build.xml                 deploy vom data-Verzeichnis + live checkout von den Modellen: Spree und WeisseElster
+ |--  \deployable-services
+   |-- \echte-psicompact         beinhaltet die echte PSICompact.jar
+   |-- \KalypsoConf              Der KalypsoConf pseudo-Service
+   |-- build.xml                 deploy von allen services
+   |-- build-KalypsoConf.xml     sub-build file, wird von build.xml benutzt
+ |-- \doc
+   |-- tecdoc
+ |-- \tomcatStuff                                  
 
 * Die Variable ${workspace} muss Ant bekannt sein (Siehe Eclipse Preferences,
   Ant, Runtime)
@@ -48,13 +36,6 @@ KalypsoConfSachsen
   vornehmen, weil sonst ein Deploy vor Ort zu Inkonsistenz führen konnte. 
   Beispiel: der Servername ist LFUG-KV-01 und ist in mehrere Dateien zu 
   finden. Also nie mit PC242 oder was auch immer ändern.
-  Nota, zu diesem Thema: Andreas, wir werden hier bei BCE der PC242 in 
-  LFUG-KV-01 umnennen um genau die gleiche Konfiguration wie bei der 
-  LfUG zu haben. Wenn wir später auf WebDAV umschalteten werden, werden 
-  wir auch diese Feinheiten wie Rechnername nur noch auf minimale zentrale 
-  Stellen definieren müssen, und nicht wie bisher quer durch der Server 
-  Install.
-
 
 Dienste
 ===========
@@ -72,9 +53,9 @@ Daten und Konfiguration
 ===========================
 
   data
-    |---- conf
-    |---- mirrored
-              |---- prognose
+    |-- conf
+    |-- mirrored
+      |-- prognose
      
 - Direkte Kopie von data/conf, data/mirrored
 - Modelle werden aus dem CVS rausgecheckt
