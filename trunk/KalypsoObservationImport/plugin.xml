@@ -17,6 +17,7 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.jwsdp"/>
    </requires>
 
    <extension
