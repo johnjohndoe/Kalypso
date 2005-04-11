@@ -49,7 +49,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.services.proxy.DocBean;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractMapEditorActionDelegate;
+import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 
 /**
@@ -57,7 +57,7 @@ import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
  * 
  * @author schlienger
  */
-public abstract class AbstractExportActionDelegate extends AbstractMapEditorActionDelegate
+public abstract class AbstractExportActionDelegate extends AbstractEditorActionDelegate
 {
   private final static Class[] CONS_SIGN = { IExportableDocument.class, DocBean.class };
   private MetadocServiceWrapper m_metadocService;

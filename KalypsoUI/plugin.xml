@@ -26,39 +26,6 @@
       <library name="lib/jcommon-0.9.6.jar">
          <export name="*"/>
       </library>
-      <library name="lib/activation.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/dom.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jaxrpc-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jaxrpc-impl.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jaxrpc-spi.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/saaj-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/saaj-impl.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jaxp-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jax-qname.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/mail.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/xercesImpl.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/kalypsoservice_user.jar">
          <export name="*"/>
       </library>
@@ -80,6 +47,7 @@
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.bce.eclipse.platform.contrib"/>
+      <import plugin="org.kalypso.jwsdp"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>

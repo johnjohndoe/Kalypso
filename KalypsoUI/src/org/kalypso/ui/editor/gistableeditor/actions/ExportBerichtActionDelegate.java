@@ -52,7 +52,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
 import org.kalypso.services.proxy.DocBean;
-import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.metadoc.table.ExportTableBerichtWizard;
 import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
@@ -60,7 +60,7 @@ import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 /**
  * @author Belger
  */
-public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelagate
+public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -111,7 +111,7 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelagate
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction()
    */
   protected void refreshAction()
   {

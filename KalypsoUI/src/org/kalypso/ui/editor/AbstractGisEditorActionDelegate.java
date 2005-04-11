@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author belger
  */
-public abstract class AbstractGisEditorActionDelagate implements IEditorActionDelegate,
+public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate,
     ModellEventListener
 {
   private AbstractEditorPart m_editor;

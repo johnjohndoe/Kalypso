@@ -43,7 +43,7 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.util.command.CommandJob;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author belger
  */
-public class UndoRedoDelegate extends AbstractGisEditorActionDelagate implements ModellEventListener
+public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements ModellEventListener
 {
   private final boolean m_undo;
 

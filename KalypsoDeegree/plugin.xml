@@ -34,64 +34,18 @@
       <library name="lib/junit/junit.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jwsdp/activation.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/dom.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/jaxp-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/jax-qname.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/jaxrpc-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/jaxrpc-impl.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/jaxrpc-spi.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/mail.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/saaj-api.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/saaj-impl.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/jwsdp/xercesImpl.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/braju/hb15.jar">
          <export name="*"/>
       </library>
       <library name="lib/sldRasterSymbolizerBinding.jar">
          <export name="*"/>
       </library>
-      <library name="lib/javaBinding/jaxb-api.jar">
-      </library>
-      <library name="lib/javaBinding/jaxb-impl.jar">
-      </library>
-      <library name="lib/javaBinding/jaxb-libs.jar">
-      </library>
-      <library name="lib/javaBinding/jaxb-xjc.jar">
-      </library>
-      <library name="lib/javaBinding/jax-qname.jar">
-      </library>
-      <library name="lib/javaBinding/namespace.jar">
-      </library>
-      <library name="lib/javaBinding/relaxngDatatype.jar">
-      </library>
-      <library name="lib/javaBinding/xsdlib.jar">
-      </library>
-      <library name="lib/deegree/deegree2004-02-13.jar">
+	  <library name="lib/deegree/deegree2004-02-13.jar">
          <export name="*"/>
       </library>
    </runtime>
+   <requires>
+      <import plugin="org.kalypso.jwsdp"/>
+   </requires>
 
 </plugin>

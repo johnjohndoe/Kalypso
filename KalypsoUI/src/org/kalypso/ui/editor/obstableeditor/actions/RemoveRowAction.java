@@ -43,7 +43,7 @@ package org.kalypso.ui.editor.obstableeditor.actions;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.sensor.commands.RemoveRowCommand;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ui.editor.AbstractMapEditorActionDelegate;
+import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**
@@ -51,7 +51,7 @@ import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
  * 
  * @author schlienger
  */
-public class RemoveRowAction extends AbstractMapEditorActionDelegate
+public class RemoveRowAction extends AbstractEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

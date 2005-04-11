@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractMapEditorActionDelegate;
+import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 import org.kalypso.util.pool.ResourcePool;
 
@@ -68,7 +68,7 @@ import org.kalypso.util.pool.ResourcePool;
  * 
  * @author schlienger
  */
-public class SaveDataAction extends AbstractMapEditorActionDelegate
+public class SaveDataAction extends AbstractEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

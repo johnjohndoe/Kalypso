@@ -44,13 +44,13 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.gml.table.wizard.ExportTableWizard;
-import org.kalypso.ui.editor.AbstractGisEditorActionDelagate;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 
 /**
  * @author Belger
  */
-public class ExportActionDelegate extends AbstractGisEditorActionDelagate
+public class ExportActionDelegate extends AbstractGisEditorActionDelegate
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -65,7 +65,7 @@ public class ExportActionDelegate extends AbstractGisEditorActionDelagate
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelagate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction()
    */
   protected void refreshAction()
   {

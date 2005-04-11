@@ -51,7 +51,7 @@ import org.eclipse.ui.IEditorPart;
  * 
  * @author schlienger
  */
-public abstract class AbstractMapEditorActionDelegate implements
+public abstract class AbstractEditorActionDelegate implements
     IEditorActionDelegate
 {
   private IEditorPart m_editor;
