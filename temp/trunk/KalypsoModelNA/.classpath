@@ -9,5 +9,6 @@
 	<classpathentry kind="src" path="/KalypsoOptimizePlugin"/>
 	<classpathentry exported="true" kind="lib" path="/KalypsoOptimizePlugin/lib/optimizerBinding.jar"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
+	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
