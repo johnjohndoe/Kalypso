@@ -24,7 +24,6 @@
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 	</target>
@@ -41,7 +40,6 @@
 	<target name="build-plugins" depends="build-basic, build-CalcService">
 		<echo message="Building specific plugins for Sachsen" />
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
 	</target>
@@ -54,9 +52,6 @@
 		</copy>
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoSaalePlugin/build/deploy" includes="**/*.jar" />
-		</copy>
-		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
 		</copy>
 	</target>
 
@@ -103,7 +98,8 @@
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="deploy" inheritAll="false">
+	    <!-- TODO mittelfristig werden bestimmt diese Dienste auch benötigt: -->
+		<!--ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
@@ -111,7 +107,7 @@
 		</ant>
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant>
+		</ant-->
 		<ant antfile="KalypsoConf/etc/ant/build.xml" target="deploy">
 			<property file="deploy.properties" />
 		</ant>
