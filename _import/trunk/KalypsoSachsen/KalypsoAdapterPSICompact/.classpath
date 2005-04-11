@@ -7,5 +7,6 @@
 	<classpathentry exported="true" sourcepath="/KalypsoPSICompactImpl/src" kind="lib" path="lib/PSICompact.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/OB.jar"/>
 	<classpathentry kind="src" path="/KalypsoRepository"/>
+	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

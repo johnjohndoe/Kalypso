@@ -1,19 +1,23 @@
 <?xml version="1.0"?>
-<project name="WiskiAdapter" default="deploy">
+<project name="KalypsoSpreePlugin" default="deploy">
 
-	<property name="project" value="${workspace}/KalypsoWiskiAdapter" />
+	<property name="project" value="${workspace}/KalypsoSpreePlugin" />
 
 	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
-	<property name="project-name" value="KalypsoWiskiAdapter" />
+	<property name="project-name" value="KalypsoSpreePlugin" />
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
+
+		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
+		
 		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCalcService/build/deploy" includes="**/*.jar"/>
+		
 	</path>
-	
+
 	<!-- overriden to also copy non-java files -->
 	<target name="compile" depends="prepare">
 		<antcall target="commonbuild.compile" />
@@ -22,5 +26,6 @@
 			<fileset dir="${project.src}" excludes="**/*.java"/>
 		</copy>
 	</target>
-	
+
 </project>
+
