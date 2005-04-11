@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="/KalypsoObsService"/>
 	<classpathentry kind="lib" path="lib/optimizerBinding.jar"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
+	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
