@@ -1,12 +1,32 @@
 <?xml version="1.0"?>
-<project name="commonbuild" default="prepare" basedir=".">
+
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Common build file for all kalypso projects.
+
+The following targets are defined here:
+- clean: cleans all generated stuff
+- prepare: creates the required directories
+- compile: compiles the sources
+- deploy: builds a jar
+- test: runs the test classes
+- javadoc
+
+This script uses properties defined in the project.properties file.
+
+It is designed to be imported using the following syntax:
+
+ <import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+<project name="commonbuild" default="deploy" basedir=".">
 
 	<dirname property="commonbuild.basedir" file="${ant.file.commonbuild}" />
 
 	<property file="${commonbuild.basedir}/project.properties" />
 
-	<!-- Define these elements in your own project -->
-	<!--
+	<!-- Define these elements in your own project
 	
 	<property name="project" value="full path of the project"/>
 	<property name="project-name" value="used as name for jar file"/>
@@ -26,7 +46,7 @@
 		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
 	</target>
 
-	<target name="junit-test" description="Runs the junit-tests of the projekt" depends="prepare,compile">
+	<target name="test" depends="prepare,compile">
 		<junit haltonerror="false" fork="true">
 			<classpath>
 				<path refid="compile.classpath" />
