@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Common build file for tomcat operations on services. It defines tasks using
+the catalina-ant.jar and enables following targets:
+- deploy
+- undeploy
+- redeploy
+- start
+- stop
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
 <project name="tomcatdeploy" default="deploy" basedir=".">
 
 	<!-- TODO: define following properties in your importing script:
 	
 	<property name="workspace" value="" />
+
 	<property name="tomcat.manager.url" value="" />
 	<property name="tomcat.username" value="" />
 	<property name="tomcat.password" value="" />
+
 	<property name="service.name" value="" />
 	<property name="war.path" value="" />
 	

@@ -78,33 +78,6 @@
 		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
 	</target>
 
-	<target name="junit-test" description="Runs the junit-tests of the projekt" depends="prepare,compile">
-		<junit haltonerror="false" fork="true">
-			<classpath>
-				<path refid="compile.classpath" />
-			</classpath>
-
-			<formatter type="xml" />
-
-			<batchtest fork="yes" todir=".">
-				<fileset dir="${project.src}">
-					<include name="**/*Test*.java" />
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
-
-	<target name="javadoc" depends="prepare">
-		<echo message="Erzeuge die Dokumentation ..." />
-		<javadoc destdir="${project.doc}" failonerror="true" classpathref="compile.classpath">
-			<fileset dir="${project.src}" casesensitive="false">
-				<include name="**/*.java" />
-				<exclude name="**/*Test*.java" />
-			</fileset>
-		</javadoc>
-	</target>
-
-
 	<!--  HIER GEHTS LOS -->
 	<target name="build" depends="build-client,build-war" description="Executes the targets needed to build the webservice and the client jar.">
 	</target>

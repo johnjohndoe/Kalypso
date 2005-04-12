@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="commonbinding" default="deploy">
-	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
-	<!-- define following properties in importing script -->
-	<!--
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Common build file for all binding projects.
+
+The following targets are defined here:
+- clean: cleans all generated stuff
+- init
+- compile: compiles the sources
+- generate: runs xjc against the schemas to generate the source files
+- deploy: builds a jar
+
+It is designed to be imported using the following syntax:
+
+ <import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+<project name="commonbinding" default="deploy">
+
+	<!-- define following properties in importing script
+	
 	<property name="project" value="full path of the project..." />
 	<property name="project-name" value="will be used for naming the jar containing the bindings..." />
+
 	-->
 	
 	<property name="build" value="${java.io.tmpdir}/${project-name}TmpDir" />
