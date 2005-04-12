@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="KalypsoCreateFloodRiskProject"
+   name="KalypsoCreateFloodRiskProject Plug-in"
+   version="1.0.0"
+   provider-name=""
+   class="org.kalypso.KalypsoCreateFloodRiskProjectPlugin">
+
+   <runtime>
+      <library name="KalypsoCreateFloodRiskProject.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.kalypso.ui" export="true"/>
+      <import plugin="org.kalypso.jwsdp"/>
+   </requires>
+   
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="Hochwasserrisiko Projekt"
+            id="KalypsoCreateFloodRiskProject"/>
+      <wizard
+            class="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"
+            project="true"
+            icon="icons/kalypso16.gif"
+            category="org.kalypso"
+            name="Hochwasserrisiko Projekt"
+            id="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"/>
+   </extension>
+
+</plugin>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+	<extent bottom="5938457.706909187" left="3556681.4430176914" right="3565355.7515027057" top="5946623.455272846"/>
+	<layers active="ID_1">
+    </layers>
+</gismapview>
