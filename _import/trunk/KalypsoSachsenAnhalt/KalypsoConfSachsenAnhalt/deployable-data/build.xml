@@ -4,12 +4,12 @@
 
 	<!-- Project full path -->
 	<property name="project.path" value="${workspace}/KalypsoConfSachsenAnhalt" />
-	<property name="dist" value="${workspace}/KalypsoConfSachsenAnhalt/deploy/server" />
+	<property name="dist" value="${project.path}/deploy/server" />
 	<property name="dist.data" value="${dist}/data" />
 	<property name="dist.prognose" value="${dist.data}/mirrored/prognose" />
 
 	<!-- begin server specific -->
-	<property file="${project.path}/tomcat.properties" />
+	<property file="${project.path}/deployable-services/deploy.properties" />
 	<!-- end server specific -->
 	
 	<target name="prepare" description="Creates the build directory">
@@ -75,7 +75,7 @@
 	
 	<!-- copy data to the kalypso server -->
 	<target name="deploy-bce" depends="co-sachsen-anhalt-models" description="Copy the data files to the kalypso server" >
-		<copy todir="\\\\${tomcat.server}\\kalypso$\\data" overwrite="true">
+		<copy todir="\\\\${tomcat.server}\\D\\kalypso\\data" overwrite="true">
 			<fileset dir="${dist.data}" includes="*/**" excludes="**/CVS/**" />
 		</copy>
 	</target>

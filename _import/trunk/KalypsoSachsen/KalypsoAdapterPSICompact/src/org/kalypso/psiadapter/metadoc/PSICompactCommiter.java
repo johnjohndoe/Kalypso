@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.MetaDocException;
-import org.kalypso.metadoc.beans.DocBean;
 import org.kalypso.psiadapter.PSICompactFactory;
 
 import de.psi.go.lhwz.ECommException;
@@ -24,43 +24,45 @@ public class PSICompactCommiter implements IMetaDocCommiter
 {
   /** distribution directory property */
   public final static String PSICOMPACT_DIST = "PSICOMPACT_DIST";
-  
-  private final Logger m_logger = Logger.getLogger( getClass().getName() ); 
-  
+
+  private final Logger m_logger = Logger.getLogger( getClass().getName() );
+
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, org.kalypso.metadoc.beans.DocBean)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties,
+   *      java.util.Map)
    */
-  public void prepareMetainf( final Properties serviceProps, final DocBean docBean )
+  public void prepareMetainf( final Properties serviceProps, final Map metadata )
   {
     final Properties props = new Properties();
-    props.putAll( docBean.getMetadata() );
+    props.putAll( metadata );
 
     MetaDocSerializer.prepareProperties( serviceProps, props );
 
-    docBean.getMetadata().putAll( props );
+    metadata.putAll( props );
   }
 
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, org.kalypso.metadoc.beans.DocBean)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties,
+   *      java.util.Map, java.io.File)
    */
-  public void commitDocument( final Properties serviceProps, final DocBean docBean ) throws MetaDocException
+  public void commitDocument( final Properties serviceProps,
+      final Map metadata, final File docFile ) throws MetaDocException
   {
-    final File xmlFile = new File( FileUtilities.nameWithoutExtension( docBean
-        .getLocation() )
+    final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile
+        .getAbsolutePath() )
         + ".xml" );
 
-    // just fetch the name of the file (without path, not necessary for PSICompact)
-    final File docFile = new File( docBean.getLocation() );
-    
     try
     {
       final Properties mdProps = new Properties();
-      mdProps.putAll( docBean.getMetadata() );
-      
-      final Writer writer = new OutputStreamWriter( new FileOutputStream(xmlFile), "UTF-8" );
-      // closes writer 
-      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, docFile.getName() );
-      
+      mdProps.putAll( metadata );
+
+      final Writer writer = new OutputStreamWriter( new FileOutputStream(
+          xmlFile ), "UTF-8" );
+      // closes writer
+      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, docFile
+          .getName() );
+
       // commit the both files (important: last one is the xml file)
       final String dist = serviceProps.getProperty( PSICOMPACT_DIST ) + "/";
       String distDocFile = dist + docFile.getName();
@@ -68,8 +70,6 @@ public class PSICompactCommiter implements IMetaDocCommiter
       String distXmlFile = dist + xmlFile.getName();
       distXmlFile = distXmlFile.replace( '\\', '/' );
 
-      // todo: das doc wird gleich nach dieser Operation gelöscht
-      // ist das ok? wenn ja, bitte kommentar hier einfügen
       distributeFile( docFile, distDocFile );
       distributeFile( xmlFile, distXmlFile );
     }
@@ -83,11 +83,14 @@ public class PSICompactCommiter implements IMetaDocCommiter
       xmlFile.delete();
     }
   }
-  
-  private void distributeFile( final File file, final String distFile ) throws ECommException
+
+  private void distributeFile( final File file, final String distFile )
+      throws ECommException
   {
-    m_logger.info( "Distributing File " + file.getAbsolutePath() + " to " + distFile );
-    final boolean b = PSICompactFactory.getConnection().copyanddistributeFile( file, distFile );
+    m_logger.info( "Distributing File " + file.getAbsolutePath() + " to "
+        + distFile );
+    final boolean b = PSICompactFactory.getConnection().copyanddistributeFile(
+        file, distFile );
     m_logger.info( "File distributed: " + b );
   }
 }
