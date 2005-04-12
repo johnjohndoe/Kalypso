@@ -9,6 +9,7 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar"/>
+		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 		

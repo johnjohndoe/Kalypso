@@ -40,8 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.map;
 
+import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.map.wizard.ExportMapOptionsPage;
-import org.kalypso.services.proxy.DocBean;
 import org.kalypso.ui.metadoc.ExportBerichtWizard;
 
 /**
@@ -52,7 +52,7 @@ public class ExportMapBerichtWizard extends ExportBerichtWizard
   private final ExportMapOptionsPage m_optionPage;
 
   public ExportMapBerichtWizard(
-      final ExportMapOptionsPage page, final DocBean doc )
+      final ExportMapOptionsPage page, final Document doc )
   {
     super( page, doc );
 

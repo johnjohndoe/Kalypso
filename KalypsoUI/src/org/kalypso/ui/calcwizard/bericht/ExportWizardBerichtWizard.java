@@ -42,14 +42,14 @@ package org.kalypso.ui.calcwizard.bericht;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypso.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.java.util.Arrays;
-import org.kalypso.services.proxy.DocBean;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.ExportBerichtWizard;
 import org.kalypso.ui.metadoc.IExportableDocument;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author belger
@@ -95,7 +95,7 @@ public class ExportWizardBerichtWizard extends ExportBerichtWizard
   private IBerichtExporter[] m_choosenExporter;
   private ArrayChooserPage m_chooseFromListPage;
 
-  public ExportWizardBerichtWizard( final FeatureList features, final List checkedFeatures, final String nameProperty, final IExportableDocument document2export, final DocBean doc, final IBerichtExporter[] exporters )
+  public ExportWizardBerichtWizard( final FeatureList features, final List checkedFeatures, final String nameProperty, final IExportableDocument document2export, final Document doc, final IBerichtExporter[] exporters )
   {
     super( document2export, doc );
     

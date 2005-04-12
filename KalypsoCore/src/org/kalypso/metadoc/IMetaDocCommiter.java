@@ -40,10 +40,9 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.metadoc;
 
+import java.io.File;
+import java.util.Map;
 import java.util.Properties;
-
-import org.kalypso.metadoc.beans.DocBean;
-
 
 /**
  * IMetaDocCommiter. Commits documents with their meta information.
@@ -55,28 +54,28 @@ public interface IMetaDocCommiter
   public static final String KEY_AUTOR = "KEY_AUTOR";
   
   /**
-   * Prepares the DocBean with the required Metainformation.
+   * Prepares the metadata with the required Metainformation.
    * 
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional
    *          properties relevant to the commiter
    * 
-   * @param docBean
+   * @param metadata
    * @throws MetaDocException
    */
-  public void prepareMetainf( final Properties serviceProps,
-      final DocBean docBean ) throws MetaDocException;
+  public void prepareMetainf( final Properties serviceProps, final Map metadata ) throws MetaDocException;
 
   /**
-   * <p>Commits the document described by the given bean.</p>
+   * <p>Commits the document described by the metadata.</p>
    * <p>Should delete document after commit operation</p>
    * 
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional
    *          properties relevant to the commiter
-   * @param docBean
+   * @param metadata
+   * @param doc
    * @throws MetaDocException
    */
   public void commitDocument( final Properties serviceProps,
-      final DocBean docBean ) throws MetaDocException;
+      final Map metadata, final File doc ) throws MetaDocException;
 }

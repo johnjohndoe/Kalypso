@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -51,28 +50,28 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.metadoc.Document;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.wizard.feature.FeaturePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.internal.UIPlugin;
-import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ogc.gml.featureview.FeatureChange;
-import org.kalypso.services.proxy.DocBean;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizard.feature.FeaturePage;
 
 /**
  * @author belger
  */
 public class ExportBerichtWizard extends Wizard
 {
-  private final DocBean m_docBean;
+  private final Document m_docBean;
 
   private FeaturePage m_featurePage;
 
@@ -81,7 +80,7 @@ public class ExportBerichtWizard extends Wizard
   protected final IExportableDocument m_document2export;
 
   public ExportBerichtWizard( final IExportableDocument document2export,
-      final DocBean doc )
+      final Document doc )
   {
     m_document2export = document2export;
     m_docBean = doc;
@@ -160,7 +159,7 @@ public class ExportBerichtWizard extends Wizard
 
   public boolean performFinish( )
   {
-    final DocBean docBean = commitData();
+    final Document docBean = commitData();
 
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
@@ -170,11 +169,8 @@ public class ExportBerichtWizard extends Wizard
         FileOutputStream outs = null;
         try
         {
-          // das Dokument erzeugen
-          final File destinationFile = new File( docBean.getLocation() );
-
           // export
-          outs = new FileOutputStream( destinationFile );
+          outs = new FileOutputStream( docBean.getFile() );
           m_document2export.exportDocument( outs );
         }
         catch( final Exception e )
@@ -194,11 +190,11 @@ public class ExportBerichtWizard extends Wizard
     return true;
   }
 
-  protected DocBean commitData( )
+  protected Document commitData( )
   {
     final Collection changes = new ArrayList();
     m_featurePage.collectChanges( changes );
-    final DocBean docBean = m_docBean;
+    final Document docBean = m_docBean;
     final Map metadata = docBean.getMetadata();
     for( final Iterator iter = changes.iterator(); iter.hasNext(); )
     {

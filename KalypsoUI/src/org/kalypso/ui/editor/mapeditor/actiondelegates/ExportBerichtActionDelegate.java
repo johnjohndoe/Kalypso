@@ -50,9 +50,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.wizard.ExportMapOptionsPage;
-import org.kalypso.services.proxy.DocBean;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.map.ExportMapBerichtWizard;
 import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
@@ -79,7 +79,7 @@ public class ExportBerichtActionDelegate extends AbstractThemeDelegate
     {
       final String username = System.getProperty( "user.name" );
       final MetadocServiceWrapper service = new MetadocServiceWrapper();
-      final DocBean doc = service.prepareDocument( ".csv", username );
+      final Document doc = service.prepareDocument( ".csv", username );
 
       final MapPanel mapPanel = getEditor().getMapPanel();
       
@@ -99,9 +99,9 @@ public class ExportBerichtActionDelegate extends AbstractThemeDelegate
           try
           {
             if( ok == Window.OK )
-              service.commitData( doc );
+              service.commitDocument( doc );
             else
-              service.cancelData( doc );
+              doc.dispose();
           }
           catch( CoreException e )
           {

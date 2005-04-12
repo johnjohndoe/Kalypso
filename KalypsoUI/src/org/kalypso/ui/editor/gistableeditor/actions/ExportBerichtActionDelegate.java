@@ -50,8 +50,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
-import org.kalypso.services.proxy.DocBean;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.metadoc.table.ExportTableBerichtWizard;
@@ -72,7 +72,7 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
     {
       final String username = System.getProperty( "user.name" );
       final MetadocServiceWrapper service = new MetadocServiceWrapper(  );
-      final DocBean doc = service.prepareDocument( ".csv", username );
+      final Document doc = service.prepareDocument( ".csv", username );
       
       final ExportableLayerTable exp = new ExportableLayerTable( editor.getLayerTable() );
       
@@ -87,9 +87,9 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
           try
           {
             if( ok == Window.OK )
-              service.commitData( doc );
+              service.commitDocument( doc );
             else
-              service.cancelData( doc );
+              doc.dispose();
           }
           catch( CoreException e )
           {

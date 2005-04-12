@@ -47,7 +47,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.services.proxy.DocBean;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
@@ -59,7 +59,7 @@ import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
  */
 public abstract class AbstractExportActionDelegate extends AbstractEditorActionDelegate
 {
-  private final static Class[] CONS_SIGN = { IExportableDocument.class, DocBean.class };
+  private final static Class[] CONS_SIGN = { IExportableDocument.class, Document.class };
   private MetadocServiceWrapper m_metadocService;
 
   /**
@@ -76,16 +76,16 @@ public abstract class AbstractExportActionDelegate extends AbstractEditorActionD
       final String username = System.getProperty( "user.name" );
       
       m_metadocService = new MetadocServiceWrapper(  );
-      final DocBean doc = m_metadocService.prepareDocument( expDoc.getDocumentExtension(), username );
+      final Document doc = m_metadocService.prepareDocument( expDoc.getDocumentExtension(), username );
 
       final Constructor constructor = wizardClass.getConstructor( CONS_SIGN );
       final Wizard exportWizard = (Wizard) constructor.newInstance( new Object[] {expDoc, doc} ); 
 
       final WizardDialog dialog = new WizardDialog( shell, exportWizard );
       if( dialog.open() == Window.OK )
-        m_metadocService.commitData( doc );
+        m_metadocService.commitDocument( doc );
       else
-        m_metadocService.cancelData( doc );
+        doc.dispose();
     }
     catch( final Exception e )
     {

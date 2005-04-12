@@ -36,19 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.util;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.metadoc.Document;
 import org.kalypso.services.ProxyFactory;
-import org.kalypso.services.proxy.DocBean;
 import org.kalypso.services.proxy.IMetaDocService;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -60,11 +61,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class MetadocServiceWrapper
 {
   private final IMetaDocService m_service;
-  
+
   /**
    * @throws CoreException
    */
-  public MetadocServiceWrapper(  ) throws CoreException
+  public MetadocServiceWrapper( ) throws CoreException
   {
     try
     {
@@ -81,52 +82,42 @@ public class MetadocServiceWrapper
           "Berichtsablage-Dienst konnte nicht initialisiert werden", e ) );
     }
   }
- 
+
   /**
-   * @param fileExtension Extension with '.' (e.g. '.csv')
+   * @param fileExtension
+   *          Extension with '.' (e.g. '.csv')
    * @param username
    * @return
    * @throws CoreException
    */
-  public DocBean prepareDocument( final String fileExtension, final String username ) throws CoreException
+  public Document prepareDocument( final String fileExtension,
+      final String username ) throws CoreException
   {
     try
     {
-      return m_service.prepareNewDocument( fileExtension, username );
+      return new Document( fileExtension, m_service
+          .prepareNewDocument( username ) );
     }
-    catch( final RemoteException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Fehler beim Aufruf des Berichtsablage-Dienstes", e ) );
     }
   }
-  
-  public void commitData( final DocBean bean ) throws CoreException
+
+  public void commitDocument( final Document doc ) throws CoreException
   {
     try
     {
-      m_service.commitNewDocument( bean );
+      m_service.commitNewDocument( doc.getMetadata(), new DataHandler(
+          new FileDataSource( doc.getFile() ) ), doc.getFileExtension() );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Berichtsablage gescheitert", e ) );
-    }
-  }
-
-  public void cancelData( final DocBean bean ) throws CoreException
-  {
-    try
-    {
-      m_service.rollbackNewDocument( bean );
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Löschen der Berichtsvorlage auf dem Server gescheitert", e ) );
     }
   }
 }

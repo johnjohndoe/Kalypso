@@ -40,7 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.table;
 
-import org.kalypso.services.proxy.DocBean;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.ExportBerichtWizard;
 import org.kalypso.ui.metadoc.IExportableDocument;
@@ -54,7 +54,7 @@ public class ExportTableBerichtWizard extends ExportBerichtWizard
   private ExportTableOptionsPage m_optionPage;
 
   public ExportTableBerichtWizard(
-      final IExportableDocument document2export, final DocBean doc )
+      final IExportableDocument document2export, final Document doc )
   {
     super( document2export, doc );
   }
