@@ -183,7 +183,7 @@ public class ZmlFactory
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * 
    * @param url
-   * @param identifier
+   * @param identifier ID für Repository
    * @return IObservation object
    * 
    * @throws SensorException
