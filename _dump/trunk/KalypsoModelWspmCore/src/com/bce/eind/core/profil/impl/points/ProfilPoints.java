@@ -26,12 +26,12 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return m_unmodifiable;
   }
 
-  public final LinkedList<ProfilPointProperty> getExistingColumns( )
+  public final LinkedList<ProfilPointProperty> getExistingProperties( )
   {
     return m_pointProperties;
   }
 
-  public final LinkedList<ProfilPointProperty> getVisibleColumns( )
+  public final LinkedList<ProfilPointProperty> getVisibleProperties( )
   {
     LinkedList<ProfilPointProperty> visibleColumns = new LinkedList<ProfilPointProperty>();
     for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
@@ -43,35 +43,35 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return visibleColumns;
   }
 
-  public final void addColumn( final ProfilPointProperty columnKey )
+  public final void addProperty( final ProfilPointProperty columnKey )
   {
-    if( columnExists( columnKey ) )
+    if( propertyExists( columnKey ) )
       return;
-    for( final Iterator ptIt = this.iterator(); ptIt.hasNext(); )
+    for( final Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); )
     {
-      final ProfilPoint pt = (ProfilPoint)ptIt.next();
-      pt.addColumn( columnKey );
+      final IProfilPoint pt = ptIt.next();
+      ((ProfilPoint)pt).addProperty( columnKey );
     }
     m_pointProperties.add( columnKey );
 
   }
 
-  public final boolean removeColumn( final ProfilPointProperty columnKey )
+  public final boolean removeProperty( final ProfilPointProperty columnKey )
   {
     if( !columnKey.isOptional() )
       return false;
-    if( !(columnExists( columnKey )) )
+    if( !(propertyExists( columnKey )) )
       return true;
-    for( final Iterator ptIt = this.iterator(); ptIt.hasNext(); )
+    for( final Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); )
     {
-      final ProfilPoint pt = (ProfilPoint)ptIt.next();
-      pt.removeColumn( columnKey );
+      final IProfilPoint pt = ptIt.next();
+      ((ProfilPoint)pt).removeProperty( columnKey );
     }
     m_pointProperties.remove( columnKey );
     return true;
   }
 
-  public final boolean columnExists( final ProfilPointProperty columnKey )
+  public final boolean propertyExists( final ProfilPointProperty columnKey )
   {
     return m_pointProperties.contains( columnKey );
   }
@@ -80,9 +80,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       throws ProfilDataException
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
-      point.addColumn( (ProfilPointProperty)ecIt.next() );
+      point.addProperty( ecIt.next() );
     }
     point.setValueFor( IProfil.HOEHE, hoehe );
     point.setValueFor( IProfil.BREITE, breite );
@@ -94,9 +94,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       throws ProfilDataException
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
-      point.addColumn( (ProfilPointProperty)ecIt.next() );
+      point.addProperty( ecIt.next() );
     }
     final int pktIndex = this.indexOf( thePointBefore ) + 1;
     if( pktIndex < this.size() )
@@ -108,9 +108,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
 
   public final IProfilPoint getPoint( final double breite, final double hoehe )
   {
-    for( final Iterator ptIt = this.iterator(); ptIt.hasNext(); )
+    for( final Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); )
     {
-      final ProfilPoint point = (ProfilPoint)ptIt.next();
+      final IProfilPoint point = ptIt.next();
       try
       {
         if( (point.getValueFor( IProfil.HOEHE ) == hoehe)

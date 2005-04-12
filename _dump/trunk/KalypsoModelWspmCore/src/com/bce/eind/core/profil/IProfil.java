@@ -106,7 +106,7 @@ public interface IProfil
   /** TODO Kim: HW/RW müssen interpoliert werden. Am besten (interne) Eigenschaft für jede Spalte, ob interpoliert wird oder einfach übertragen */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException;
   
-  public boolean addTableData( final ProfilPointProperty columnKey );
+  public boolean addProfilPointProperty( final ProfilPointProperty columnKey );
 
   public IProfilPoint getDevider( final DeviderKey deviderKey );
 
@@ -128,13 +128,13 @@ public interface IProfil
 
   public int getPointsCount( );
 
-  public LinkedList<ProfilPointProperty> getTableDataKeys( );
+  public LinkedList<ProfilPointProperty> getProfilPointProperties( );
 
   public boolean setValueFor( IProfilPoint point, ProfilPointProperty columnKey, double value ) throws ProfilDataException;
 
   public double[] getValuesFor( final ProfilPointProperty columnKey ) throws ProfilDataException;
 
-  public boolean removeTableData( final ProfilPointProperty columnKey );
+  public boolean removeProfilPointProperty( final ProfilPointProperty columnKey );
 
   public boolean removeProfilMetaData( final METADATA metaData );
 
@@ -149,7 +149,7 @@ public interface IProfil
 
   public void setRauheitTyp( final RAUHEITEN_TYP r );
   
-  public Object getExtendedTableData(ProfilPointProperty tableDataKey);
+  public Object getExtendedPointData(ProfilPointProperty tableDataKey);
   
   public String getComment();
   

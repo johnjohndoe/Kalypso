@@ -24,10 +24,10 @@ public class ProfilPoint implements IProfilPoint
   public IProfilPoint clonePoint( )
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<ProfilPointProperty> tdkIt = m_columns.keySet().iterator(); tdkIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> tdkIt = m_pointProperties.keySet().iterator(); tdkIt.hasNext(); )
     {
       final ProfilPointProperty tdk = tdkIt.next();
-      point.addColumn(tdk);
+      point.addProperty(tdk);
       try
       {
         point.setValueFor(tdk,this.getValueFor(tdk));
@@ -45,38 +45,38 @@ public class ProfilPoint implements IProfilPoint
    * 
    * @see com.bce.eind.core.profilinterface.IProfilPoint#hasTableData(com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
-  public boolean hasTableData( ProfilPointProperty columnKey )
+  public boolean hasProperty( ProfilPointProperty pointProperty )
   {
-    return m_columns.containsKey( columnKey );
+    return m_pointProperties.containsKey( pointProperty );
 
   }
 
-  private final HashMap<ProfilPointProperty, Double> m_columns = new HashMap<ProfilPointProperty, Double>();
+  private final HashMap<ProfilPointProperty, Double> m_pointProperties = new HashMap<ProfilPointProperty, Double>();
 
-  public final void addColumn( final ProfilPointProperty columnKey )
+  public final void addProperty( final ProfilPointProperty columnKey )
   {
-    m_columns.put( columnKey, new Double( 0 ) );
+    m_pointProperties.put( columnKey, new Double( 0 ) );
   }
 
-  public final void removeColumn( final ProfilPointProperty columnKey )
+  public final void removeProperty( final ProfilPointProperty columnKey )
   {
-    m_columns.remove( columnKey );
+    m_pointProperties.remove( columnKey );
   }
 
-  public final boolean setValueFor( final ProfilPointProperty columnKey, final double value )
+  public final boolean setValueFor( final ProfilPointProperty pointProperty, final double value )
       throws ProfilDataException
   {
-    if( !(m_columns.containsKey( columnKey )) )
+    if( !(m_pointProperties.containsKey( pointProperty )) )
       throw new ProfilDataException( "Profileigenschaft existiert nicht" );
-    m_columns.put( columnKey, new Double( value ) );
+    m_pointProperties.put( pointProperty, new Double( value ) );
     return true;
   }
 
-  public final double getValueFor( final ProfilPointProperty columnKey ) throws ProfilDataException
+  public final double getValueFor( final ProfilPointProperty pointProperty ) throws ProfilDataException
   {
-    if( !(m_columns.containsKey( columnKey )) )
+    if( !(m_pointProperties.containsKey( pointProperty )) )
       throw new ProfilDataException( "Profileigenschaft existiert nicht" );
 
-    return m_columns.get( columnKey ).doubleValue();
+    return m_pointProperties.get( pointProperty ).doubleValue();
   }
 }

@@ -54,11 +54,11 @@ public class Profil implements IProfil
     m_table = new ProfilPoints();
     m_unknownData = new Vector();
     m_tableData = new HashMap<ProfilPointProperty, Object>();
-    m_table.addColumn( BREITE );
-    m_table.addColumn( HOEHE );
-    m_table.addColumn( RAUHEIT );
-    m_table.addColumn( TRENNFLAECHE );
-    m_table.addColumn( DURCHSTROEMTE );
+    m_table.addProperty( BREITE );
+    m_table.addProperty( HOEHE );
+    m_table.addProperty( RAUHEIT );
+    m_table.addProperty( TRENNFLAECHE );
+    m_table.addProperty( DURCHSTROEMTE );
     m_building = ProfilBuildingFactory.createProfilBuilding( IProfil.BUILDING_TYP.BLD_NONE );
   }
 
@@ -105,22 +105,22 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#addColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
-  public boolean addTableData( ProfilPointProperty columnKey )
+  public boolean addProfilPointProperty( ProfilPointProperty columnKey )
   {
     if( (columnKey == BEWUCHS_AX) | (columnKey == BEWUCHS_AY) | (columnKey == BEWUCHS_DP) )
     {
-      m_table.addColumn( BEWUCHS_AX );
-      m_table.addColumn( BEWUCHS_AY );
-      m_table.addColumn( BEWUCHS_DP );
+      m_table.addProperty( BEWUCHS_AX );
+      m_table.addProperty( BEWUCHS_AY );
+      m_table.addProperty( BEWUCHS_DP );
       return true;
     }
     if( (columnKey == HOCHWERT) | (columnKey == RECHTSWERT) )
     {
-      m_table.addColumn( HOCHWERT );
-      m_table.addColumn( RECHTSWERT );
+      m_table.addProperty( HOCHWERT );
+      m_table.addProperty( RECHTSWERT );
       return true;
     }
-    m_table.addColumn( columnKey );
+    m_table.addProperty( columnKey );
     //KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
     return true;
   }
@@ -173,7 +173,7 @@ public class Profil implements IProfil
       final IProfilPoint pt = ptIt.next();
       try
       {
-        final double x = pt.getValueFor( deviderKey.getColumnKey() );
+        final double x = pt.getValueFor( deviderKey.getProfilPointProperty() );
         final double y = deviderKey.getValue();
         if( x * y > 0 )
           return pt;
@@ -194,14 +194,14 @@ public class Profil implements IProfil
    */
   public TRENNFLAECHEN_TYP getDeviderTyp( DeviderKey deviderKey )
   {
-    if( deviderKey.getColumnKey() != IProfil.TRENNFLAECHE )
+    if( deviderKey.getProfilPointProperty() != IProfil.TRENNFLAECHE )
       return IProfil.TRENNFLAECHEN_TYP.UNDEFINED;
     final IProfilPoint pktTrennflaeche = this.getDevider( deviderKey );
 
     try
     {
       final int deviderTypKey = (int)Math.abs( pktTrennflaeche.getValueFor( deviderKey
-          .getColumnKey() ) );
+          .getProfilPointProperty() ) );
       return IProfil.TRENNFLAECHEN_TYP.values()[deviderTypKey];
     }
     catch( ProfilDataException e )
@@ -219,9 +219,9 @@ public class Profil implements IProfil
    *      com.bce.eind.core.profilinterface.IProfilPoint,
    *      com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
-  public final LinkedList<ProfilPointProperty> getExistingTableDataKeys( )
+  public final LinkedList<ProfilPointProperty> getExistingPointProperties( )
   {
-    return m_table.getExistingColumns();
+    return m_table.getExistingProperties();
   }
 
   /*
@@ -229,7 +229,7 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#getExtendedTableData(com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
-  public Object getExtendedTableData( ProfilPointProperty tableDataKey )
+  public Object getExtendedPointData( ProfilPointProperty tableDataKey )
   {
 
     return this.m_tableData.get( tableDataKey );
@@ -369,9 +369,9 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#getTableDataKeys()
    */
-  public LinkedList<ProfilPointProperty> getTableDataKeys( )
+  public LinkedList<ProfilPointProperty> getProfilPointProperties( )
   {
-    return m_table.getVisibleColumns();
+    return m_table.getVisibleProperties();
   }
 
   /**
@@ -441,9 +441,9 @@ public class Profil implements IProfil
     final IProfilPoint oldPosition = getDevider( deviderKey );
     if( !(profilPointExists( newPosition ) & (profilPointExists( oldPosition ))) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
-    final double deviderValue = oldPosition.getValueFor( deviderKey.getColumnKey() );
-    newPosition.setValueFor( deviderKey.getColumnKey(), deviderValue );
-    oldPosition.setValueFor( deviderKey.getColumnKey(), 0.0 );
+    final double deviderValue = oldPosition.getValueFor( deviderKey.getProfilPointProperty() );
+    newPosition.setValueFor( deviderKey.getProfilPointProperty(), deviderValue );
+    oldPosition.setValueFor( deviderKey.getProfilPointProperty(), 0.0 );
   //KIM  fireTableChanged( new ProfilTableEvent( deviderKey.getColumnKey(), newPosition ) );
   }
 
@@ -479,9 +479,9 @@ public class Profil implements IProfil
   public IProfilBuilding removeProfilBuilding( )
   {
     final IProfilBuilding oldBuilding = m_building;
-    for( final Iterator<ProfilPointProperty> pbIt = m_building.getTableDataKeys().iterator(); pbIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties().iterator(); pbIt.hasNext(); )
     {
-      removeTableData(pbIt.next());
+      removeProfilPointProperty(pbIt.next());
     }
     m_building = ProfilBuildingFactory.createProfilBuilding(BUILDING_TYP.BLD_NONE);
     return oldBuilding;
@@ -509,19 +509,19 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#removeColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
-  public boolean removeTableData( ProfilPointProperty columnKey )
+  public boolean removeProfilPointProperty( ProfilPointProperty columnKey )
   {
     boolean result;
     if( (columnKey == BEWUCHS_AX) | (columnKey == BEWUCHS_AY) | (columnKey == BEWUCHS_DP) )
     {
-      result = (m_table.removeColumn( BEWUCHS_AX ) & m_table.removeColumn( BEWUCHS_AY ) & m_table
-          .removeColumn( BEWUCHS_DP ));
+      result = (m_table.removeProperty( BEWUCHS_AX ) & m_table.removeProperty( BEWUCHS_AY ) & m_table
+          .removeProperty( BEWUCHS_DP ));
     }
     if( (columnKey == HOCHWERT) | (columnKey == RECHTSWERT) )
     {
-      result = (m_table.removeColumn( HOCHWERT ) & m_table.removeColumn( RECHTSWERT ));
+      result = (m_table.removeProperty( HOCHWERT ) & m_table.removeProperty( RECHTSWERT ));
     }
-    result = m_table.removeColumn( columnKey );
+    result = m_table.removeProperty( columnKey );
     //KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
     return result;
   }
@@ -556,12 +556,12 @@ public class Profil implements IProfil
   public boolean setDeviderTyp( DeviderKey deviderKey, TRENNFLAECHEN_TYP deviderTyp )
       throws ProfilDataException
   {
-    if( deviderKey.getColumnKey() != IProfil.TRENNFLAECHE )
+    if( deviderKey.getProfilPointProperty() != IProfil.TRENNFLAECHE )
       throw new ProfilDataException( "Trenner muﬂ vom Typ Trennfl‰che sein" );
     final IProfilPoint point = getDevider( deviderKey );
     if( point == null )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
-    final ProfilPointProperty columnKey = deviderKey.getColumnKey();
+    final ProfilPointProperty columnKey = deviderKey.getProfilPointProperty();
     final double value = deviderKey.getValue() * deviderTyp.ordinal();
     final boolean result = point.setValueFor( columnKey, value );
     //KIM fireTableChanged( new ProfilTableEvent( deviderKey.getColumnKey(), point ) );

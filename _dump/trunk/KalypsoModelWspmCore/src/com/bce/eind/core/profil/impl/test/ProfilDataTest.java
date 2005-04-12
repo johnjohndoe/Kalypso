@@ -31,7 +31,7 @@ public class ProfilDataTest extends TestCase
     p.setDevider(p1,p4,IProfil.DURCHSTROEMTE);
     p.setDevider(p2,p3,IProfil.TRENNFLAECHE);
     p.setDeviderTyp(IProfil.TRENNFLAECHE_L,IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG);
-return p;
+    return p;
   }
  /* final IProfilPoint pkt4 = p.getPoints().get( 3 );
     p.insertPoint( pkt4, 888.9876, -123.4567 );
@@ -58,7 +58,7 @@ return p;
     assertEquals( "Anzahl Koordinaten:",4, p.getPointsCount() );
 
     final IProfilPoint pktTrennL = p.getDevider( IProfil.TRENNFLAECHE_L );
-    assertEquals( "Trennfläche links:", 20.13, pktTrennL.getValueFor( IProfil.BREITE ) );
+    assertEquals( "Trennfläche links:", 150.00015, pktTrennL.getValueFor( IProfil.BREITE ) );
     final IProfilPoint pktTrennR = p.getDevider( IProfil.TRENNFLAECHE_R );
     assertEquals( "Trennfläche rechts:", 51.31, pktTrennR.getValueFor( IProfil.BREITE ) );
     final IProfilPoint pktDurchL = p.getDevider( IProfil.DURCHSTROEMTE_L );
@@ -101,7 +101,7 @@ return p;
     final IProfilPoint startPoint = p.getPoint( 3 );
     final IProfilPoint clonePoint = startPoint.clonePoint();
 
-    for( final Iterator<ProfilPointProperty> tdkIt = p.getTableDataKeys().iterator(); tdkIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> tdkIt = p.getProfilPointProperties().iterator(); tdkIt.hasNext(); )
     {
       final ProfilPointProperty tdk = tdkIt.next();
       assertEquals( tdk.toString(), startPoint.getValueFor( tdk ), clonePoint.getValueFor( tdk ) );

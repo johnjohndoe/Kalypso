@@ -57,7 +57,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /* (non-Javadoc)
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
-  public List<ProfilPointProperty> getTableDataKeys( )
+  public List<ProfilPointProperty> getProfilPointProperties( )
   {
     return Collections.unmodifiableList(m_tableDataKeys);
   }
@@ -88,7 +88,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /* (non-Javadoc)
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeyCount()
    */
-  public int getTableDataKeyCount( )
+  public int getProfilPointPropertiesCount( )
   {
      return m_tableDataKeys.size();
   }
