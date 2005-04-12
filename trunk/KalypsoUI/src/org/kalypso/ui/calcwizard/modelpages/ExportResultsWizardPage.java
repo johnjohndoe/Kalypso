@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -60,12 +59,6 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -102,6 +95,7 @@ import org.kalypso.eclipse.core.runtime.MultiStatus;
 import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilityException;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -115,7 +109,6 @@ import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
-import org.kalypso.services.proxy.DocBean;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
@@ -125,6 +118,12 @@ import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * 
@@ -388,7 +387,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
       final ExportWizardBerichtWizard wizard = new ExportWizardBerichtWizard(
           features, selectedFeatures, nameProperty, metadocService
-              .getDummyDoc(), metadocService.getDummyBean(), m_berichtExporters );
+              .getDummyExportableDoc(), metadocService.getDummyDocument(),
+          m_berichtExporters );
       final WizardDialog dialog = new WizardDialog( getContainer().getShell(),
           wizard );
       if( dialog.open() == Window.OK )
@@ -452,16 +452,16 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       {
         monitor.setTaskName( "Berichtsablage - " + berichtExporter.toString() );
 
-        final DocBean doc = metadocService.getCopyBean( extension );
+        final Document doc = metadocService.getCopyDocument( extension );
         OutputStream os = null;
         try
         {
-          os = new FileOutputStream( new File( doc.getLocation() ) );
+          os = new FileOutputStream( doc.getFile() );
           final IStatus status = berichtExporter.export( features[j], os );
           if( !status.isOK() )
             stati.add( status );
-          
-          metadocService.commitBean( doc );
+
+          metadocService.commitDocument( doc );
         }
         catch( final CoreException ce )
         {
@@ -471,13 +471,12 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
         {
           e.printStackTrace();
 
-          metadocService.cancelBean( doc );
+          doc.dispose();
 
           final String msg = e.getLocalizedMessage();
           final String message = msg == null ? "Unbekannter Fehler" : msg;
 
-          stati.add( KalypsoGisPlugin.createErrorStatus(
-              message, e ) );
+          stati.add( KalypsoGisPlugin.createErrorStatus( message, e ) );
         }
         finally
         {

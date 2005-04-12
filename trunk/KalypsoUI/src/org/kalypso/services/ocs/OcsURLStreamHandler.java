@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs;
 
 import java.io.File;
@@ -80,7 +80,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     try
     {
       DateRangeArgument dra = null;
-      
+
       /*
        * The query part of the URL (after the ?...) contains some additional
        * specification: from-to, filter, etc.
@@ -90,7 +90,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
         dra = ZmlURL.checkDateRange( query );
 
       final String obsId = ZmlURL.getIdentifierPart( u );
-      final ObservationBean ob = ServiceRepositoryObservation.getObservationBean( obsId );
+      final ObservationBean ob = ServiceRepositoryObservation
+          .getObservationBean( obsId );
 
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();
@@ -99,24 +100,21 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       DateRangeBean drb = null;
       if( dra != null )
         drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
-      
-      final DataHandler db = srv.readData( ob, drb );
 
-//      final File file = File.createTempFile( "local-zml", ".zml" );
-//      file.deleteOnExit();
+      final DataHandler data = srv.readData( ob, drb );
 
-      //
-      //      FileUtils.copyURLToFile( new URL( db.getLocation() ), file );
-      //
-      //      srv.clearTempData( db );
-      final File file = FileUtilities.makeFileFromStream( false, "local-zml", "zml", db.getInputStream(), false );
+      final File file = FileUtilities.makeFileFromStream( false, "local-zml",
+          "zml", data.getInputStream(), false );
+      file.deleteOnExit();
+
+      srv.clearTempData( data );
 
       return file.toURL().openConnection();
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
-      
+
       throw new IOException( "URL could not be resolved: "
           + e.getLocalizedMessage() );
     }

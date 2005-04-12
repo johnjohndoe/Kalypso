@@ -36,15 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.util;
 
 import java.io.OutputStream;
-import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.services.proxy.DocBean;
+import org.kalypso.metadoc.Document;
 import org.kalypso.ui.metadoc.IExportableDocument;
 
 /**
@@ -52,71 +51,57 @@ import org.kalypso.ui.metadoc.IExportableDocument;
  */
 public class MultiDocumentServiceWrapper
 {
-  private final IExportableDocument m_dummyDoc = new IExportableDocument()
+  private final IExportableDocument m_dummyExportableDoc = new IExportableDocument()
   {
     public void exportDocument( final OutputStream outs ) throws Exception
     {
-    // ignore
+      // ignore
     }
 
-    public String getDocumentExtension()
+    public String getDocumentExtension( )
     {
       return ".dummy";
     }
   };
-  
+
   private MetadocServiceWrapper m_wrapper;
 
-  private DocBean m_dummybean;
+  private Document m_dummyDoc;
 
   private String m_username;
 
-  
-  public MultiDocumentServiceWrapper() throws CoreException
+  public MultiDocumentServiceWrapper( ) throws CoreException
   {
     m_username = System.getProperty( "user.name" );
-    m_wrapper = new MetadocServiceWrapper(  );
-    m_dummybean = m_wrapper.prepareDocument( m_dummyDoc.getDocumentExtension(), m_username );
+    m_wrapper = new MetadocServiceWrapper();
+    m_dummyDoc = m_wrapper.prepareDocument( m_dummyExportableDoc.getDocumentExtension(),
+        m_username );
   }
 
+  public IExportableDocument getDummyExportableDoc( )
+  {
+    return m_dummyExportableDoc;
+  }
 
-  public IExportableDocument getDummyDoc()
+  public Document getDummyDocument( )
   {
     return m_dummyDoc;
   }
 
-  public DocBean getDummyBean()
+  public void dispose( )
   {
-    return m_dummybean;
+    m_dummyDoc.dispose();
   }
 
-  public void dispose()
+  public Document getCopyDocument( final String extension ) throws CoreException
   {
-    try
-    {
-      m_wrapper.cancelData( m_dummybean );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-  }
-  
-  
-  public DocBean getCopyBean( final String extension ) throws CoreException
-  {
-    final DocBean newbean = m_wrapper.prepareDocument( extension, m_username );
-    newbean.setMetadata( new HashMap( m_dummybean.getMetadata() ) );
-    return newbean;
+    final Document newdoc = m_wrapper.prepareDocument( extension, m_username );
+    //newdoc.setMetadata( new HashMap( m_dummyDoc.getMetadata() ) );
+    return newdoc;
   }
 
-  public void commitBean( final DocBean doc ) throws CoreException
+  public void commitDocument( final Document doc ) throws CoreException
   {
-    m_wrapper.commitData( doc );
-  }
-
-  public void cancelBean( final DocBean doc ) throws CoreException
-  {
-    m_wrapper.cancelData( doc );
+    m_wrapper.commitDocument( doc );
   }
 }
