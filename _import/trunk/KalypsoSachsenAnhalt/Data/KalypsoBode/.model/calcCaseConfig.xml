@@ -30,7 +30,7 @@
 	<!-- Zeitreihen laden (hier Fake als Kopie) -->
 	<updateTransformations logFile="updateCalcCase.log">
 		<transformation className="org.kalypso.util.transformation.CopyOrMoveDirTransformation">
-			<argument name="input" value=":project:.templates/Zeitreihen"/>
+			<argument name="input" value=":project:.templates/Modell/Zeitreihen"/>
 			<argument name="output" value=":calcdir:/Zeitreihen"/>
 		</transformation>
 	</updateTransformations>
