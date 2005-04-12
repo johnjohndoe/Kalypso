@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="com.bce.profil.core"
+   id="com.bce.eind.core"
    name="Profil Core Plugin"
    version="0.0.1"
    provider-name="bce.com">
