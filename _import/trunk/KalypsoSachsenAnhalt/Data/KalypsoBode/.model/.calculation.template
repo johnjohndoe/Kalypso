@@ -9,7 +9,7 @@ project:/.model/schema/control.xsd">
 				<BatchIDCollection>
 					<BatchIDAssociation>
 						<BatchID>
-							<id>1</id>
+							<id>RUN1.BAT</id>
 						</BatchID>
 					</BatchIDAssociation>
 				</BatchIDCollection>
