@@ -1,0 +1,2 @@
+(text,a)
+(itag1,i2)_(imon1,i2)_(ijah1,i2)_(xkc,f8.2)(xwt,f8.2)(xlai,f8.2)
