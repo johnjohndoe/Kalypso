@@ -79,7 +79,7 @@ public class WiskiRepository extends AbstractRepository
     try
     {
 //      BCEHelper.configureProxy( "172.16.0.253", "8080", "schlienger",
-//          "lba7cfi8" );
+//          "..." );
 
       //create a server object
       final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
@@ -164,6 +164,8 @@ public class WiskiRepository extends AbstractRepository
     SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
     sort.addColumnAscent( "station_name" );
 
+    //m_wiski.getGroupList( m_userData, new String[] {},  )
+    
     //m_wiski.getRiverList( )
     //m_wiski.getStationList( m_userData, new String[] { "station_no",
       //  "station_name", "station_id" }, new String[] );
