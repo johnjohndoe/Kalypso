@@ -3,23 +3,23 @@
  */
 package com.bce.eind.core.profil.impl.devider;
 
-import com.bce.eind.core.profil.impl.points.ProfilPointProperty;
+import com.bce.eind.core.profil.IProfilPointProperty;
 
 /**
  * @author kimwerner
  */
 public class DeviderKey
 {
- private final ProfilPointProperty m_ProfilPointProperty;
+ private final IProfilPointProperty m_ProfilPointProperty;
  private final int m_value;
  
-  public DeviderKey( final ProfilPointProperty columnKey, final int value )
+  public DeviderKey( final IProfilPointProperty columnKey, final int value )
   {
     super();
     m_ProfilPointProperty = columnKey;
     m_value = value;
   }
-  public DeviderKey( final ProfilPointProperty columnKey)
+  public DeviderKey( final IProfilPointProperty columnKey)
   {
     super();
     m_ProfilPointProperty = columnKey;
@@ -28,7 +28,7 @@ public class DeviderKey
 /**
  * @return Returns the label.
  */
-public ProfilPointProperty getProfilPointProperty( )
+public IProfilPointProperty getProfilPointProperty( )
 {
   return m_ProfilPointProperty;
 }

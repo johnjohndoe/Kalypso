@@ -18,7 +18,7 @@ public class BrueckeProfilBuilding extends AbstractProfilBuilding
   public BrueckeProfilBuilding()
   {
     super(BUILDING_TYP.BLD_BRUECKE,Arrays.asList(BUILDING_VALUES.CENTER_X,BUILDING_VALUES.CENTER_Y));
-    this.m_tableDataKeys.add(IProfil.OBERKANTEBRUECKE);
-    this.m_tableDataKeys.add(IProfil.UNTERKANTEBRUECKE);
+    this.m_tableDataKeys.add(IProfil.PointProperties.OBERKANTEBRUECKE);
+    this.m_tableDataKeys.add(IProfil.PointProperties.UNTERKANTEBRUECKE);
   }
  }

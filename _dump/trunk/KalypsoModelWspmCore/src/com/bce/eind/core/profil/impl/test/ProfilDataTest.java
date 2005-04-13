@@ -9,10 +9,10 @@ import junit.framework.TestCase;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilListener;
 import com.bce.eind.core.profil.IProfil.METADATA;
 import com.bce.eind.core.profil.impl.Profil;
-import com.bce.eind.core.profil.impl.points.ProfilPointProperty;
 import com.bce.eind.core.profil.util.ProfilUtil;
 
 /**
@@ -28,8 +28,8 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint p4 = p.addPoint(200.0002, -200.0002 );
     final IProfilPoint p2 = p.insertPoint(p1);
     final IProfilPoint p3 = p.insertPoint(p2);
-    p.setDevider(p1,p4,IProfil.DURCHSTROEMTE);
-    p.setDevider(p2,p3,IProfil.TRENNFLAECHE);
+    p.setDevider(p1,p4,IProfil.PointProperties.DURCHSTROEMTE);
+    p.setDevider(p2,p3,IProfil.PointProperties.TRENNFLAECHE);
     p.setDeviderTyp(IProfil.TRENNFLAECHE_L,IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG);
     return p;
   }
@@ -58,13 +58,13 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Anzahl Koordinaten:",4, p.getPointsCount() );
 
     final IProfilPoint pktTrennL = p.getDevider( IProfil.TRENNFLAECHE_L );
-    assertEquals( "Trennfläche links:", 150.00015, pktTrennL.getValueFor( IProfil.BREITE ) );
+    assertEquals( "Trennfläche links:", 150.00015, pktTrennL.getValueFor( IProfil.PointProperties.BREITE ) );
     final IProfilPoint pktTrennR = p.getDevider( IProfil.TRENNFLAECHE_R );
-    assertEquals( "Trennfläche rechts:", 51.31, pktTrennR.getValueFor( IProfil.BREITE ) );
+    assertEquals( "Trennfläche rechts:", 51.31, pktTrennR.getValueFor( IProfil.PointProperties.BREITE ) );
     final IProfilPoint pktDurchL = p.getDevider( IProfil.DURCHSTROEMTE_L );
-    assertEquals( "Durchstroemte links:", -200.0, pktDurchL.getValueFor( IProfil.BREITE ) );
+    assertEquals( "Durchstroemte links:", -200.0, pktDurchL.getValueFor( IProfil.PointProperties.BREITE ) );
     final IProfilPoint pktDurchR = p.getDevider( IProfil.DURCHSTROEMTE_R );
-    assertEquals( "Durchstroemte rechts:", 296.82, pktDurchR.getValueFor( IProfil.BREITE ) );
+    assertEquals( "Durchstroemte rechts:", 296.82, pktDurchR.getValueFor( IProfil.PointProperties.BREITE ) );
 
     p.setDeviderTyp( IProfil.TRENNFLAECHE_R, IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG );
     assertEquals( "Trennfläche rechts Typ:", IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG, p
@@ -76,8 +76,8 @@ public class ProfilDataTest extends TestCase
 
     p.moveDevider( IProfil.DURCHSTROEMTE_R, pktTrennR );
     final IProfilPoint newPkt = p.getDevider( IProfil.DURCHSTROEMTE_R );
-    assertEquals( "neu Durchstroemte rechts:", pktTrennR.getValueFor( IProfil.BREITE ), newPkt
-        .getValueFor( IProfil.BREITE ) );
+    assertEquals( "neu Durchstroemte rechts:", pktTrennR.getValueFor( IProfil.PointProperties.BREITE ), newPkt
+        .getValueFor( IProfil.PointProperties.BREITE ) );
   }
 
   public void testSplitSegment( ) throws Exception
@@ -89,8 +89,8 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint startPoint = p.getPoint( 0 );
     final IProfilPoint nextPoint = p.getNextPoint( startPoint );
     final IProfilPoint middlePoint = ProfilUtil.splitSegment( startPoint, nextPoint );
-    assertEquals( "Interpolierter Punkt(Breite):", -194.34, middlePoint.getValueFor( IProfil.BREITE ) );
-    assertEquals( "Interpolierter Punkt(Höhe):", 66.95, middlePoint.getValueFor( IProfil.HOEHE ) );
+    assertEquals( "Interpolierter Punkt(Breite):", -194.34, middlePoint.getValueFor( IProfil.PointProperties.BREITE ) );
+    assertEquals( "Interpolierter Punkt(Höhe):", 66.95, middlePoint.getValueFor( IProfil.PointProperties.HOEHE ) );
   }
 
   public void testClonePoint( ) throws Exception
@@ -101,9 +101,9 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint startPoint = p.getPoint( 3 );
     final IProfilPoint clonePoint = startPoint.clonePoint();
 
-    for( final Iterator<ProfilPointProperty> tdkIt = p.getProfilPointProperties().iterator(); tdkIt.hasNext(); )
+    for( final Iterator<IProfilPointProperty> tdkIt = p.getProfilPointProperties(true).iterator(); tdkIt.hasNext(); )
     {
-      final ProfilPointProperty tdk = tdkIt.next();
+      final IProfilPointProperty tdk = tdkIt.next();
       assertEquals( tdk.toString(), startPoint.getValueFor( tdk ), clonePoint.getValueFor( tdk ) );
     }
   }
@@ -112,7 +112,7 @@ public class ProfilDataTest extends TestCase
   {
     class TestListener implements ProfilListener
     {
-      public void onPointChanged( final IProfilPoint point, ProfilPointProperty pointProperty )
+      public void onPointChanged( final IProfilPoint point, IProfilPointProperty pointProperty )
       {
         // TODO Auto-generated method stub
       }
@@ -123,7 +123,7 @@ public class ProfilDataTest extends TestCase
         
       }
 
-      public void onProfilDataChanged( ProfilPointProperty pointProperty, Object value )
+      public void onProfilDataChanged( IProfilPointProperty pointProperty, Object value )
       {
         // TODO Auto-generated method stub
         
@@ -137,7 +137,7 @@ public class ProfilDataTest extends TestCase
     final TestListener testListener = new TestListener();
     p.addProfilListener( testListener );
     final IProfilPoint point = p.getPoint( 3 );
-    p.setValueFor( point, IProfil.RAUHEIT, 0.07 );
+    p.setValueFor( point, IProfil.PointProperties.RAUHEIT, 0.07 );
     p.setProfilMetaData(METADATA.STATUS,new String("Na so was"));
     p.setRauheitTyp(IProfil.RAUHEITEN_TYP.RAUHEIT_KST);
     p.removeProfilListener( testListener );

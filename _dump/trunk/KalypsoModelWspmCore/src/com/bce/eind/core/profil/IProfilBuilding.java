@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfil.BUILDING_VALUES;
-import com.bce.eind.core.profil.impl.points.ProfilPointProperty;
 
 /**
  * @author kimwerner
@@ -16,7 +15,7 @@ import com.bce.eind.core.profil.impl.points.ProfilPointProperty;
 public interface IProfilBuilding
 {
 public BUILDING_TYP getBuildingTyp();
-public List<ProfilPointProperty> getProfilPointProperties();
+public List<IProfilPointProperty> getProfilPointProperties();
 public double getValue(BUILDING_VALUES buildingValue) throws ProfilBuildingException;
 public void setValue(BUILDING_VALUES buildingValue,double value) throws ProfilBuildingException;
 public int getProfilPointPropertiesCount();

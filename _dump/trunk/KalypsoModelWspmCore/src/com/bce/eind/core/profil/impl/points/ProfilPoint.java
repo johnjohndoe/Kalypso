@@ -3,11 +3,13 @@
  */
 package com.bce.eind.core.profil.impl.points;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
-
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
 
 /**
@@ -24,9 +26,9 @@ public class ProfilPoint implements IProfilPoint
   public IProfilPoint clonePoint( )
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<ProfilPointProperty> tdkIt = m_pointProperties.keySet().iterator(); tdkIt.hasNext(); )
+    for( final Iterator<IProfilPointProperty> tdkIt = m_pointProperties.keySet().iterator(); tdkIt.hasNext(); )
     {
-      final ProfilPointProperty tdk = tdkIt.next();
+      final IProfilPointProperty tdk = tdkIt.next();
       point.addProperty(tdk);
       try
       {
@@ -45,25 +47,25 @@ public class ProfilPoint implements IProfilPoint
    * 
    * @see com.bce.eind.core.profilinterface.IProfilPoint#hasTableData(com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
-  public boolean hasProperty( ProfilPointProperty pointProperty )
+  public boolean hasProperty( IProfilPointProperty pointProperty )
   {
     return m_pointProperties.containsKey( pointProperty );
 
   }
 
-  private final HashMap<ProfilPointProperty, Double> m_pointProperties = new HashMap<ProfilPointProperty, Double>();
+  private final HashMap<IProfilPointProperty, Double> m_pointProperties = new HashMap<IProfilPointProperty, Double>();
 
-  public final void addProperty( final ProfilPointProperty columnKey )
+  public final void addProperty( final IProfilPointProperty columnKey )
   {
     m_pointProperties.put( columnKey, new Double( 0 ) );
   }
 
-  public final void removeProperty( final ProfilPointProperty columnKey )
+  public final void removeProperty( final IProfilPointProperty columnKey )
   {
     m_pointProperties.remove( columnKey );
   }
 
-  public final boolean setValueFor( final ProfilPointProperty pointProperty, final double value )
+  public final boolean setValueFor( final IProfilPointProperty pointProperty, final double value )
       throws ProfilDataException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
@@ -72,11 +74,19 @@ public class ProfilPoint implements IProfilPoint
     return true;
   }
 
-  public final double getValueFor( final ProfilPointProperty pointProperty ) throws ProfilDataException
+  public final double getValueFor( final IProfilPointProperty pointProperty ) throws ProfilDataException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
       throw new ProfilDataException( "Profileigenschaft existiert nicht" );
 
     return m_pointProperties.get( pointProperty ).doubleValue();
+  }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilPoint#getProperties()
+   */
+  public Collection<IProfilPointProperty> getProperties( )
+  {
+    return Collections.unmodifiableSet(m_pointProperties.keySet());
   }
 }

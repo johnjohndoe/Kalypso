@@ -3,16 +3,18 @@
   */
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.impl.points.ProfilPointProperty;
+import java.util.Collection;
+
 
 /**
  * @author kimwerner
  */
 public interface IProfilPoint
 {
-public double getValueFor(final ProfilPointProperty pointProperty) throws ProfilDataException;
-public boolean setValueFor(final ProfilPointProperty pointProperty, final double value) throws ProfilDataException;
-public boolean hasProperty(final ProfilPointProperty pointProperty);
+public double getValueFor(final IProfilPointProperty pointProperty) throws ProfilDataException;
+public boolean setValueFor(final IProfilPointProperty pointProperty, final double value) throws ProfilDataException;
+public boolean hasProperty(final IProfilPointProperty pointProperty);
 public IProfilPoint clonePoint();
+public Collection<IProfilPointProperty> getProperties();
 
 }

@@ -11,10 +11,10 @@ import java.util.List;
 
 
 import com.bce.eind.core.profil.IProfilBuilding;
+import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfil.BUILDING_VALUES;
-import com.bce.eind.core.profil.impl.points.ProfilPointProperty;
 
 /**
  * @author kimwerner
@@ -24,7 +24,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   //TODO: m_buildingValues für jede abgeleitete Klasse einfügen
   private final BUILDING_TYP m_buildingTyp;
 
-  protected final List<ProfilPointProperty> m_tableDataKeys;
+  protected final List<IProfilPointProperty> m_tableDataKeys;
   
   private final List<BUILDING_VALUES> m_buildingValues;
 
@@ -33,7 +33,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<BUILDING_VALUES> buildingValues)
   {
     m_buildingTyp = buildingTyp;
-    m_tableDataKeys = new LinkedList<ProfilPointProperty>();
+    m_tableDataKeys = new LinkedList<IProfilPointProperty>();
     m_buildingValues = Collections.unmodifiableList(buildingValues);
     m_values = new HashMap<BUILDING_VALUES, Double>(buildingValues.size());
     setValues();
@@ -57,7 +57,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /* (non-Javadoc)
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
-  public List<ProfilPointProperty> getProfilPointProperties( )
+  public List<IProfilPointProperty> getProfilPointProperties( )
   {
     return Collections.unmodifiableList(m_tableDataKeys);
   }
