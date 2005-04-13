@@ -2,25 +2,29 @@ package org.kalypso.wiskiadapter;
 
 import java.rmi.Naming;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
-import de.kisters.tsmsystem.common.data.SimpleRequestSortTerm;
+import de.kisters.tsmsystem.common.data.SimpleRequestFilterTerm;
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
 /**
- * WiskiRepository
+ * WiskiRepository over the Wiski Data Provider (WDP).
  * 
  * @author schlienger
  */
 public class WiskiRepository extends AbstractRepository
 {
+  /** expected number of items in the configuration string */
   private final static int CONF_NB_ITEMS = 5;
 
+  /** separator of the configuration string */
   private final static String CONF_SEP = "#";
 
   private String m_url;
@@ -41,9 +45,14 @@ public class WiskiRepository extends AbstractRepository
   private HashMap m_userData;
 
   /**
+   * Constructor
+   * 
    * @param name
    * @param factory
    * @param conf
+   *          the configuration should be build the followin way: URL # DOMAIN #
+   *          LOGIN-NAME # PASSWORD # LANGUAGE
+   * 
    * @param readOnly
    * @throws RepositoryException
    */
@@ -68,18 +77,17 @@ public class WiskiRepository extends AbstractRepository
   }
 
   /**
-   * Perform initialisation of WISKI RMI proxy
-   * 
-   * @return
+   * Perform initialisation of WISKI RMI proxy. Declared final since called from
+   * constructor (good java practice)
    * 
    * @throws RepositoryException
    */
-  private KiWWDataProviderRMIf init( ) throws RepositoryException
+  private final KiWWDataProviderRMIf init( ) throws RepositoryException
   {
     try
     {
-//      BCEHelper.configureProxy( "172.16.0.253", "8080", "schlienger",
-//          "..." );
+      //      BCEHelper.configureProxy( "172.16.0.253", "8080", "schlienger",
+      //          "..." );
 
       //create a server object
       final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
@@ -109,8 +117,6 @@ public class WiskiRepository extends AbstractRepository
     }
   }
 
-  
-  
   /**
    * @see java.lang.Object#finalize()
    */
@@ -135,8 +141,7 @@ public class WiskiRepository extends AbstractRepository
    */
   public void reload( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-
+    WiskiUtils.forcePropertiesReload();
   }
 
   /**
@@ -152,8 +157,7 @@ public class WiskiRepository extends AbstractRepository
    */
   public boolean hasChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   /**
@@ -161,16 +165,60 @@ public class WiskiRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "station_name" );
+    final String prop = WiskiUtils.getProperties().getProperty(
+        WiskiUtils.CONFIG_GROUP_NAMES );
+    if( prop == null )
+      throw new RepositoryException(
+          "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
 
-    //m_wiski.getGroupList( m_userData, new String[] {},  )
-    
-    //m_wiski.getRiverList( )
-    //m_wiski.getStationList( m_userData, new String[] { "station_no",
-      //  "station_name", "station_id" }, new String[] );
+    final String[] groupNames = prop.split( "," );
 
-    // TODO Auto-generated method stub
-    return null;
+    final SimpleRequestFilterTerm filtergroup = new SimpleRequestFilterTerm();
+    for( int i = 0; i < groupNames.length; i++ )
+    {
+      if( i > 0 )
+        filtergroup.addOperator( "and" );
+
+      filtergroup.addColumnReference( "group_name" );
+      filtergroup.addOperator( "like" );
+      filtergroup.addValue( groupNames[i] + "%" );
+    }
+
+    try
+    {
+      final HashMap grouplist = m_wiski.getGroupList( m_userData, new String[] {
+          "group_id", "group_name" },
+          KiWWDataProviderInterface.TIMESERIES_GROUP, null, filtergroup, 15, 0,
+          false, null );
+
+      final List resultList = (List) grouplist
+          .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+
+      final GroupItem[] items = new GroupItem[resultList.size()];
+      int i = 0;
+      for( final Iterator it = resultList.iterator(); it.hasNext(); )
+      {
+        final HashMap map = (HashMap) it.next();
+        items[i++] = new GroupItem( this, (String)map.get( "group_id" ), (String)map
+            .get( "group_name" ) );
+      }
+
+      return items;
+    }
+    catch( Exception e ) // RemoteException or KiWWException
+    {
+      e.printStackTrace();
+      throw new RepositoryException( e );
+    }
+  }
+
+  public HashMap getUserData( )
+  {
+    return m_userData;
+  }
+
+  public KiWWDataProviderRMIf getWiski( )
+  {
+    return m_wiski;
   }
 }
