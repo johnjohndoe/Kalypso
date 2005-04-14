@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
@@ -17,17 +17,23 @@ import org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent;
 import org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener;
 import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author F.Lindemann
  *  
  */
-public class GMLReader implements IPoolListener
+public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
 {
   private CommandableWorkspace workspace = null;
 
@@ -40,6 +46,10 @@ public class GMLReader implements IPoolListener
   private String source = null;
 
   private URL context = null;
+
+  private JobExclusiveCommandTarget m_commandTarget;
+
+  private boolean m_loaded = false;
 
   public GMLReader( String m_type, String m_source, URL m_context )
   {
@@ -71,15 +81,15 @@ public class GMLReader implements IPoolListener
   {
     if( m_workspace == null )
       return null;
-    
+
     final FeatureElement rootElement = FeatureElement.createRootFeature();
     final Feature feature = m_workspace.getRootFeature();
     final FeatureElement element = new FeatureElement( rootElement, feature );
     createFeatureChildren( element, feature );
-    
+
     return rootElement;
   }
-  
+
   public void createFeatureChildren( final FeatureElement parent, final Feature ft )
   {
     // children erzeugen
@@ -119,8 +129,7 @@ public class GMLReader implements IPoolListener
             }
             else
             {
-              if( value != null
-                  && value.toString().trim().length() > 0 )
+              if( value != null && value.toString().trim().length() > 0 )
                 new LinkedFeatureElement( propertyElement, value.toString() );
             }
           }
@@ -142,7 +151,10 @@ public class GMLReader implements IPoolListener
     try
     {
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
+      {
         workspace = (CommandableWorkspace)newValue;
+        m_commandTarget = new JobExclusiveCommandTarget( workspace, null );
+      }
     }
     catch( final Throwable e )
     {
@@ -159,6 +171,7 @@ public class GMLReader implements IPoolListener
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
     System.out.println( "objectInvalid" );
+    m_loaded = false;
   }
 
   public void addGMLDocumentListener( IGMLDocumentListener l )
@@ -173,7 +186,8 @@ public class GMLReader implements IPoolListener
     {
       if( listeners[i] == IGMLDocumentListener.class )
       {
-        GMLDocumentEvent event = new GMLDocumentEvent( getGMLDocument( getGMLWorkspace() ),getGMLWorkspace() );
+        GMLDocumentEvent event = new GMLDocumentEvent( getGMLDocument( getGMLWorkspace() ),
+            getGMLWorkspace() );
         ( (IGMLDocumentListener)listeners[i + 1] ).onChange( event );
       }
     }
@@ -182,5 +196,42 @@ public class GMLReader implements IPoolListener
   public void dispose()
   {
     KalypsoGisPlugin.getDefault().getPool().removePoolListener( this );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
+   *      java.lang.Runnable)
+   */
+  public void postCommand( ICommand command, Runnable runnable )
+  {
+    m_commandTarget.postCommand( command, runnable );
+  }
+
+  public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      if( workspace != null )
+        KalypsoGisPlugin.getDefault().getPool().saveObject( workspace, monitor );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern", e ) );
+    }
+  }
+
+  /**
+   * @see org.kalypso.loader.IPooledObject#isLoaded()
+   */
+  public boolean isLoaded()
+  {
+    if( m_loaded )
+      return true;
+    // workspace not here
+    if( workspace == null )
+      return false;
+    m_loaded = true;
+    return m_loaded;
   }
 }

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -42,8 +44,11 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 
-public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListener
+public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListener,
+    ModellEventProvider
 {
   private final static int DEFAULT_EXPANSION_LEVEL = 3;
 
@@ -78,6 +83,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
   protected Clipboard clipboard = null;
 
   final GMLEditor m_gmlEditor;
+
+  private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
   /**
    * The constructor.
@@ -155,8 +162,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
                 ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem );
             try
             {
-              //m_workspace.postCommand( command );
-              m_gmlEditor.postCommand(command, null);
+              m_workspace.postCommand( command );
+              //m_gmlEditor.postCommand(command, null);
               return;
             }
             catch( Exception e )
@@ -338,10 +345,9 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           addLinkActions = new Action[types.length];
           for( int i = 0; i < types.length; i++ )
           {
-            addFeatureActions[i] = new AddFeatureAction( types[i], m_workspace, m_gmlEditor,
-                parentFeature, ( (PropertyElement)obj ).getProperty().getName(), 0, m_composite
-                    .getShell() );
-            addLinkActions[i] = new AddLinkAction( types[i], m_workspace, m_gmlEditor, parentFeature,
+            addFeatureActions[i] = new AddFeatureAction( types[i], m_workspace, parentFeature,
+                ( (PropertyElement)obj ).getProperty().getName(), 0, m_composite.getShell() );
+            addLinkActions[i] = new AddLinkAction( types[i], m_workspace, parentFeature,
                 ( (PropertyElement)obj ).getProperty().getName(), 0, m_composite.getShell() );
           }
 
@@ -376,7 +382,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           if( obj instanceof FeatureElement )
           {
             editFeatureAction = new EditFeatureAction( ( (FeatureElement)obj ).getFeature(),
-                m_workspace, m_gmlEditor, m_composite.getShell() );
+                m_workspace, reader, m_composite.getShell() );
             editFeatureAction.setEnabled( true );
             copyFeatureAction = new CopyFeatureAction( ( (FeatureElement)obj ).getFeature(),
                 m_workspace, clipboard );
@@ -427,7 +433,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     m_workspace = event.getWorkspace();
     if( m_workspace == null )
       return;
-    
+
     m_workspace.addModellListener( this );
 
     if( m_composite == null || m_composite.isDisposed() )
@@ -443,10 +449,19 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
         // cache
         m_treeViewer.expandAll();
         m_treeViewer.collapseAll();
+
         m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
         m_treeViewer.getTree().setVisible( true );
+
+        fireModellEvent( new ModellEvent( getInstance(), ModellEvent.FULL_CHANGE ) );
       }
     } );
+
+  }
+
+  public GMLEditorTreeView getInstance()
+  {
+    return this;
   }
 
   public void dispose()
@@ -481,6 +496,8 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
             m_treeViewer.setExpandedElements( findDataElements( expandedData ) );
             m_treeViewer.setSelection( new StructuredSelection( findDataElements( selecteddata ) ) );
+
+            fireModellEvent( modellEvent );
           }
         } );
     }
@@ -508,4 +525,39 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     m_root.accept( visitor );
     return visitor.getResults();
   }
+
+  public void saveData( final IProgressMonitor monitor ) throws CoreException
+  {
+    reader.saveFeatures( monitor );
+  }
+
+  public CommandableWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
+   */
+  public void addModellListener( ModellEventListener listener )
+  {
+    myEventProvider.addModellListener( listener );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
+   */
+  public void removeModellListener( ModellEventListener listener )
+  {
+    myEventProvider.removeModellListener( listener );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
+  public void fireModellEvent( ModellEvent event )
+  {
+    myEventProvider.fireModellEvent( event );
+  }
+
 }
