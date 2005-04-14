@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="XMLBuddy User Guide" 
+	topic="doc/uglite.html">
+	<topic label="Introduction" href="http://xmlbuddy.com/2.0/doc/intro.html">
+		<topic label="What's New in 2.0?" 
+			href="http://xmlbuddy.com/2.0/doc/new20.html"/>
+		<topic label="Acknowledgements" 
+			href="doc/ack/acknowledge.html"/>
+	</topic>
+	<topic label="Concepts" href="http://xmlbuddy.com/2.0/doc/concepts.html">
+		<topic label="Eclipse and XML" 
+			href="http://xmlbuddy.com/2.0/doc/eclipse.html"/>
+		<!--		<topic label="XML for Authors" href="http://xmlbuddy.com/2.0/doc/xml_authors.html"/> -->
+	</topic>
+	<topic label="Tasks" href="http://xmlbuddy.com/2.0/doc/tasks.html">
+		<topic label="Create projects" 
+			href="http://xmlbuddy.com/2.0/doc/projects.html">
+			<topic label="Create a project in the workspace" 
+				href="http://xmlbuddy.com/2.0/doc/create_project.html"/>
+			<topic label="Create a project in an existing directory" 
+				href="http://xmlbuddy.com/2.0/doc/use_dir.html"/>
+		</topic>
+		<topic label="Create Files and Folders" 
+			href="http://xmlbuddy.com/2.0/doc/files.html">
+			<topic label="Create a Folder" 
+				href="http://xmlbuddy.com/2.0/doc/create_folder.html"/>
+			<topic label="Create an XML Document" 
+				href="http://xmlbuddy.com/2.0/doc/create_doc.html"/>
+			<topic label="Create a DTD" 
+				href="http://xmlbuddy.com/2.0/doc/create_dtd.html"/>
+			<topic label="Create an XML Schema" 
+				href="http://xmlbuddy.com/2.0/doc/createxsd.html"/>
+			<topic label="Create a RELAX NG schema" 
+				href="http://xmlbuddy.com/2.0/doc/createrng.html"/>
+			<topic label="Create a RELAX NG compact syntax schema" 
+				href="http://xmlbuddy.com/2.0/doc/creaternc.html"/>
+			<topic label="Create an XSL stylesheet" 
+				href="http://xmlbuddy.com/2.0/doc/createxsl.html"/>
+		</topic>
+		<topic label="Reformat a Document" 
+			href="http://xmlbuddy.com/2.0/doc/format.html"/>
+		<topic label="Set Preferences and Properties" 
+			href="http://xmlbuddy.com/2.0/doc/prefs_props.html">
+			<topic label="Set Encoding Defaults" 
+				href="http://xmlbuddy.com/2.0/doc/encoding.html"/>
+			<topic label="Set Number of Undo Levels" 
+				href="http://xmlbuddy.com/2.0/doc/undolevels.html"/>
+			<topic label="Set Syntax Colors" 
+				href="http://xmlbuddy.com/2.0/doc/coloring.html"/>
+			<topic 
+				label="Set Tab Width, Spaces for Tabs and Format Wrap Margin" 
+				href="http://xmlbuddy.com/2.0/doc/tab.html"/>
+			<topic label="Set Outline View Behavior" 
+				href="http://xmlbuddy.com/2.0/doc/outline.html"/>
+			<topic label="Set DTD Defaults" 
+				href="http://xmlbuddy.com/2.0/doc/dtd_defaults.html"/>
+			<topic label="Set XML Schema Defaults" 
+				href="http://xmlbuddy.com/2.0/doc/xsdprefs.html"/>
+			<topic label="Use RELAX NG to Validate Documents" 
+				href="http://xmlbuddy.com/2.0/doc/rngprefs.html"/>
+			<topic label="Use RELAX NG Compact Syntax to Validate Documents" 
+				href="http://xmlbuddy.com/2.0/doc/rncprefs.html"/>
+			<topic label="Set Primary or Included/Imported DTD or Schema" 
+				href="http://xmlbuddy.com/2.0/doc/primary.html"/>
+			<topic label="Choose an XSL Processor" 
+				href="http://xmlbuddy.com/2.0/doc/transformprefs.html"/>
+		</topic>
+		<topic label="Run an XSL Transform" 
+			href="http://xmlbuddy.com/2.0/doc/transform.html"/>
+		<topic label="Evaluate XPath expressions" 
+			href="http://xmlbuddy.com/2.0/doc/xpathtop.html">
+			<topic label="XPath View" 
+				href="http://xmlbuddy.com/2.0/doc/xpathview.html"/>
+			<topic label="XPath Search" 
+				href="http://xmlbuddy.com/2.0/doc/xpathsearch.html"/>
+		</topic>
+		<!--<topic 
+			label="Convert a DTD or Schema" 
+			href="http://xmlbuddy.com/2.0/doc/convert.html"/>-->
+	</topic>
+	<topic label="More Information" 
+		href="http://xmlbuddy.com/2.0/doc/more.html"/>
+</toc>

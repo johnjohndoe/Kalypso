@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!-- ===================================================== -->
+<!-- Declare the documentation for the Platform User Guide  -->
+<!-- We will declare only one infoset (book)               -->
+<!-- ===================================================== -->
+
+<plugin
+   name = "%pluginName"
+   id = "org.eclipse.platform.doc.user"
+   version = "3.0.1"
+   provider-name = "%providerName">
+
+
+<!-- ============================================================================= -->
+<!-- Define primary TOC                                                            -->
+<!-- ============================================================================= -->
+
+   <extension point="org.eclipse.help.toc">
+       <toc file="toc.xml" primary="true" />
+   </extension>
+
+<!-- ============================================================================= -->
+<!-- Define TOCs                                                                   -->
+<!-- ============================================================================= -->
+
+   <extension point="org.eclipse.help.toc">
+       <toc file="topics_GettingStarted.xml" />
+       <toc file="topics_Concepts.xml" />
+       <toc file="topics_Tasks.xml" />
+       <toc file="topics_Reference.xml" />
+   </extension>
+
+<!-- ============================================================================= -->
+<!-- F1 context files                                                              -->
+<!-- ============================================================================= -->
+
+   <extension point="org.eclipse.help.contexts"> 
+       <contexts file="contexts_Workbench.xml" plugin="org.eclipse.ui"/> 
+   </extension>
+   
+    <extension point="org.eclipse.help.contexts"> 
+       <contexts file="contexts_Workbench.xml" plugin="org.eclipse.ui.ide"/> 
+   </extension>
+
+   <extension point="org.eclipse.help.contexts"> 
+       <contexts file="contexts_Workbench.xml" plugin="org.eclipse.ui.workbench.texteditor"/> 
+   </extension>
+
+   <extension point="org.eclipse.help.contexts"> 
+       <contexts file="contexts_Workbench.xml" plugin="org.eclipse.ui.editors"/> 
+   </extension>
+   
+   <extension point="org.eclipse.help.contexts">
+   		<contexts file="contexts_ExternalTools.xml" plugin="org.eclipse.ui.externaltools"/>
+   </extension>
+   
+   <extension point="org.eclipse.help.contexts">
+   		<contexts file="contexts_AntUI.xml" plugin="org.eclipse.ant.ui"/>
+   </extension>
+
+   <extension point="org.eclipse.help.contexts"> 
+       <contexts file="contexts_Team.xml" plugin="org.eclipse.team.ui"/> 
+   </extension>
+
+   <extension point="org.eclipse.help.contexts"> 
+       <contexts file="contexts_Team_CVS.xml" plugin="org.eclipse.team.cvs.ui"/> 
+   </extension>
+
+	<extension point="org.eclipse.help.contexts"> 
+		<contexts file="contexts_Compare.xml" plugin="org.eclipse.compare"/> 
+	</extension>
+   
+   <extension point="org.eclipse.help.contexts"> 
+      <contexts file="contexts_Search.xml" plugin="org.eclipse.search"/> 
+   </extension>
+   
+	<extension point="org.eclipse.help.contexts"> 
+		<contexts file="contexts_Update.xml"  plugin="org.eclipse.update.ui"/> 
+	</extension>
+
+
+</plugin>

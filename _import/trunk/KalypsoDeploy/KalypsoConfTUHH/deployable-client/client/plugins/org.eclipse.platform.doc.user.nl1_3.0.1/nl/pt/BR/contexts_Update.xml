@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+   
+   <!-- Context IDs added in the  code, ID is class name, where context ID is set -->
+   
+   <context  id="ConfigurationView" >
+      <description>Este diálogo pode ser utilizado para trabalhar com recursos instalados. Por padrão, ele mostra apenas os recursos atualmente ativados. Na barra de ferramentas do diálogo, ligue o filtro "Mostrar recursos desativados" para que também seja possível consultar os recursos desativados.</description>
+      <topic label="Inspecionando a Configuração" href="tasks/tasks-33.htm"/>
+      <topic label="Ativar, desativar e desinstalar um recurso" href="tasks/tasks-35.htm"/>
+   </context>
+     
+   <context  id="ReviewPage" >
+      <description>Os resultados das procuras por recursos são mostrados nesta página. Selecione os recursos que deseja instalar.</description>
+   </context>
+   
+   
+   <context  id="CofigurationView_showUnconfFeaturesAction" >
+      <description>Mostra os recursos desativados.</description>
+   </context>
+   
+   <context  id="CofigurationView_revertAction" >
+      <description>Restaura sua configuração para corresponder ao histórico selecionado.</description>
+   </context>
+   
+   <context  id="CofigurationView_showStatusAction" >
+      <description>Mostra o status da configuração atual para o recurso selecionado.</description>
+   </context>
+   
+   <context  id="CofigurationView_preserveAction" >
+      <description>Salva a configuração selecionada na pasta <b>Configurações Salvas</b>.</description>
+   </context>
+   
+   <context  id="CofigurationView_removePreservedAction" >
+      <description>Exclui a configuração salva da pasta <b>Configurações Salvas</b>.</description>
+   </context>
+   
+   <context  id="CofigurationView_unlinkAction" >
+      <description>Desfaz o link do site selecionado da configuração.</description>
+   </context>
+   
+   <context  id="CofigurationView_propertiesAction" >
+      <description>Exibe as propriedades da seleção.</description>
+   </context>
+   
+   <context  id="UpdatesView_newAction" >
+      <description>Cria um novo marcador de site.</description>
+   </context>
+   
+   <context  id="UpdatesView_newFolderAction" >
+      <description>Cria uma nova pasta na Visualização de Atualizações de Recurso. As pastas podem ser utilizadas para organizar marcadores de site e consultas de pesquisa.</description>
+   </context>
+   
+   <context  id="UpdatesView_newSearchAction" >
+      <description>Cria uma nova consulta de pesquisa.</description>
+   </context>
+   
+   <context  id="UpdatesView_newLocalAction" >
+      <description>Cria um marcador de site para o site local selecionado.</description>
+   </context>
+   
+   <context  id="UpdatesView_deleteAction" >
+      <description>Exclui o item selecionado.</description>
+   </context>
+   
+   <context  id="UpdatesView_refreshAction" >
+      <description>Atualiza o item selecionado.</description>
+   </context>
+   
+   <context  id="UpdatesView_fileFilterAction" >
+      <description>Selecione para mostrar arquivos individuais em <b>Meu Computador</b>. Desmarque para mostrar apenas os sites e diretórios locais.</description>
+   </context>
+   
+   <context  id="UpdatesView_filterEnvironmentAction" >
+      <description>Selecione para mostrar apenas os recursos que correspondem ao ambiente atual. Desmarque para mostrar todos os recursos disponíveis (os recursos que não correspondem ao ambiente atual não podem ser instalados).</description>
+   </context>
+   
+   <context  id="UpdatesView_showCategoriesAction" >
+      <description>Selecione para ver os recursos organizados nas categorias do site. Desmarque para ver todos os recursos como uma lista.</description>
+   </context>
+   
+   <context  id="UpdatesView_linkExtensionAction" >
+      <description>Estabelece link do site selecionado na configuração.</description>
+   </context>
+   
+   <context  id="DetailsView_homeAction" >
+      <description>Exibe a página de Bem-vindo Atualizar Gerenciador.</description>
+   </context>
+   
+   <context  id="DetailsView_backAction" >
+      <description>Retorna à página de detalhes anterior.</description>
+   </context>
+   
+   <context  id="DetailsView_forwardAction" >
+      <description>Avança para a próxima página de detalhes.</description>
+   </context>
+   
+   <context  id="MainPreferencePage" >
+      <description>Define as preferências do Gerenciador de Atualizador - <b>número de históricos</b> a serem mantidos antes da exclusão; escopo da procura de <b>novas atualizações</b> apenas para atualizações de serviço ou atualizações secundários compatíveis do release; <b>política de atualização</b> para sites de atualização alternativos; configurações de <b>proxy</b></description>
+      <topic label="Controle de política de atualização"  href="tasks/tasks-37.htm"/>
+   </context>
+
+      
+   <context  id="LicensePage2" >
+      <description>Você deve exibir o(s) contrato(s) de licença apresentado(s) e aceitar ou rejeitar.</description>
+   </context>
+   
+   <context  id="ModeSelectionPage" >
+      <description>Selecione se deseja procurar por atualizações disponíveis dos recursos instalados ou procurar por quaisquer recursos localizados nos sites de atualização selecionados</description>   
+      <topic label="Instalando Recursos com o Gerenciador de Atualização" href="tasks/tasks-34.htm"/>
+      <topic label="Atualizando Recursos com o Gerenciador de Atualização" href="tasks/tasks-36.htm"/>   
+   </context>
+   
+   <context  id="SitePage" >
+      <description>Adicionar, remover ou editar um marcador de site de atualização.
+Selecione o(s) site(s) a procurar por recursos e correções.
+
+<b>Site remoto</b>: o URL de um Web site que contenha recursos
+<b>Site local</b>: um site que esteja na máquina atual
+<b>Tamanho do archive</b>: um site local empacotado como um arquivo ZIP ou JAR
+
+É possível ligar ou desligar a procura por recursos que não correspondem ao ambiente (S.O., localidade e etc.)
+	</description>
+   </context>
+   
+   <context  id="NewUpdatesWizardPage" >
+      <description>Selecione uma ou mais atualizações disponíveis a serem instaladas.</description>
+   </context>
+   
+   <context  id="MultiTargetPage2" >
+      <description>Para cada recurso a ser instalado, selecione um local de instalação entre as opções apresentadas ou inclua um novo. Devido a restrições de local conjunto, pode não ser possível definir um novo local para alguns recursos.</description>
+   </context>
+   
+   <context id="OptionalFeaturesPage">
+   	  <description>Escolha quais recursos opcionais serão incluídos no recurso
+principal que será instalado.</description>
+   </context>
+   
+   <context id="MultiOptionalFeaturesPage2">
+   	  <description>Escolha quais recursos opcionais serão incluídos nos recursos
+principais que serão instalados.</description>
+   </context>
+   
+   <context  id="JarVerificationPage" >
+      <description>Você deve aceitar ou rejeitar o certificado do arquivo JAR</description>
+   </context>
+   
+   <context  id="UserValidationDialog" >
+      <description>Digite as informações do usuário.</description>
+   </context>
+   
+   <context id="MultiReviewPage2">
+      <description>Selecionar os recursos que você deseja instalar.
+Se houver erros, pressione <b>Detalhes do Erro</b> e tente corrigí-los selecionando ou removendo a seleção dos recursos apropriados.</description>
+     <topic label="Instalando Recursos com o Gerenciador de Atualização" href="tasks/tasks-34.htm"/>
+   </context>
+
+   
+   <context  id="InstallableSiteForm" >
+      <description>Exibe detalhes sobre o site local que faz parte da configuração.</description>          
+   </context>
+   
+   
+   <context  id="SiteForm" >
+      <description>Exibe os detalhes de configuração da instalação atual.</description> 
+      <topic label="Inspecionando a Configuração" href="tasks/tasks-33.htm"/>
+      <topic label="Ativar, desativar e desinstalar um recurso" href="tasks/tasks-35.htm"/>       
+   </context>
+   
+   <context  id="UnknownObjectForm" >
+      <description>Exibe quando um objeto desconhecido ou nenhum objeto foi
+selecionado na parte ativa.</description>
+   </context>
+   
+   
+   <context id ="SiteBookmarkPropertyPage">
+      <description>Altere as propriedades do objeto marcador.</description>
+   </context>
+   
+   <context id ="NamedObjectPropertyPage">
+      <description>Altere o nome do objeto selecionado.</description>
+   </context>
+   
+   <context id ="ConfigurationPropertyPage">
+      <description>Altere o nome da configuração selecionada.</description>
+   </context>
+   
+</contexts>

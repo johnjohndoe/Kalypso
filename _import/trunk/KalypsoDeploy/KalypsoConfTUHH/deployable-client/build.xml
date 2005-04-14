@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Kalypso-TUHH: client" default="feature-and-plugins" basedir="..">
+
+	<!-- Project full path -->
+	<property name="project.path" value="${workspace}/KalypsoConfTUHH" />
+	<property name="dist" value="${workspace}/KalypsoConfTUHH/deploy" />
+	<property name="dist.client" value="${dist}/client" />
+
+	<target name="prepare" description="Creates the build directory">
+		<echo message="Creating the required directories...." />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist.client}" />
+	</target>
+
+	<target name="clean" description="Removes the build directories">
+		<delete dir="${dist.client}" />
+	</target>
+
+	<!-- copy base client files [optional, you can perform it when required] -->
+	<target name="copy-clientbase" depends="prepare" description="Copy the base files of the client to the deploy dir. Optional: you can run it when so desired" >
+		<copy todir="${dist.client}">
+			<fileset dir="${project.path}/deployable-client/client" includes="*/**" excludes="**/CVS/**" />
+		</copy>
+	</target>
+
+	<!-- deploy kalypso feature and kalypso plugins
+	WICHTIG: da dieser Target pde.exportFeatures von Eclipse benutzt,
+	sollte man es im selben JRE wie der Workspace ausführen
+	-->
+	<target name="feature-and-plugins" depends="prepare" description="deploy kalypso feature and plugins">
+    	<pde.exportFeatures features="org.kalypso.enterprise" destination="${dist.client}" exportType="directory" exportSource="false" />
+	</target>
+
+	<!-- deploy for bce in the project directory on Q-Drive -->
+  	<!-- TODO: remove old instalation 
+  		Besser gesagt *remove*, denn das klappt nicht, weil feature-and-plugins im Hintergrund läuft!
+  	-->
+	<target name="deploy-for-bce" depends="feature-and-plugins" description="deploy for bce in the project directory on Q-Drive">
+		<copy todir="Q:\\lhz04085\\work\\kalypso_deploy\\kalypso">
+			<fileset dir="${dist.client}" excludes="**/CVS/**"/>
+		</copy>
+	</target>
+
+    <target name="deploy-for-tuhh" depends="copy-clientbase" description="deploy for bce in the project directory on Q-Drive">
+		<copy todir="C:\\tmp">
+			<fileset dir="${dist.client}" excludes="**/CVS/**"/>
+		</copy>
+	</target>
+
+</project>
