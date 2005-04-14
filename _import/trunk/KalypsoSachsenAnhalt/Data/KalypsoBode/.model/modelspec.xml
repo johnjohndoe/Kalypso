@@ -14,8 +14,8 @@
 	
 	<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
 	<!--	<input id="ZeitreihenDir" path="Zeitreihen" relativeToCalcCase="true"/> -->
-	<input id="QPegelDir" path="Zeitreihen/Pegelmessung" relativeToCalcCase="true"/>
+	<input id="QPegelDir" path="Zeitreihen/Pegel/Messung" relativeToCalcCase="true"/>
 	<input id="QSpeicherDir" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
-	<input id="VSpeicherDir" path="Zeitreihen/Speicherinhalt" relativeToCalcCase="true"/>
+	<input id="VSpeicherDir" path="Zeitreihen/Speicherinhalt/Messung" relativeToCalcCase="true"/>
 	<input id="NsGebietDir" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
 </modelspec>
