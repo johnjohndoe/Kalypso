@@ -55,25 +55,23 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project-name}" />
 		<xjc target="${build.source}" extension="true">
-			<!-- TODO: check if depends/produces really do work - I'm in doubt! (Gernot) -->
 			<schema dir=".">
 				<include name="**/*.xsd" />
 			</schema>
 
-			<depends dir=".">
-				<include name="**/*.xsd" />
-			</depends>
-
-			<produces dir="${build.source}">
-				<include name="**/*.jar" />
-			</produces>
+			<!-- Important Note: the produces element specifies the
+			files from which the generate-process is depending. If 
+			the files are up-to-date (compared to the schemas) then
+			nothing is done. It is only when changes are discovered
+			that the xjc re-generates the binding-source.			
+			-->
+			<produces file="${project}/lib/${dest.file.name}"/>
 		</xjc>
 	</target>
 
 	<target name="compile" depends="generate" description="compiles the generated sources">
 		<echo message="Compiling binding classes" />
-		<javac debug="${flag-debug}" destdir="${build.compile}" optimize="${flag-optimize}" srcdir="${build.source}" classpathref="cpref">
-		</javac>
+		<javac debug="${flag-debug}" destdir="${build.compile}" optimize="${flag-optimize}" srcdir="${build.source}" classpathref="cpref"/>
 	</target>
 
 	<target name="deploy" depends="compile" description="package jar">
