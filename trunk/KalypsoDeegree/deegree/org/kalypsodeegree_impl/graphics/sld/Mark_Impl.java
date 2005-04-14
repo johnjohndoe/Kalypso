@@ -89,7 +89,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Mark_Impl implements Mark, Marshallable
 {
-  private BufferedImage image = null;
+  private BufferedImage m_image = null;
 
   private Fill fill = null;
 
@@ -101,7 +101,9 @@ public class Mark_Impl implements Mark, Marshallable
    * Constructor for the default <tt>Mark</tt>.
    */
   Mark_Impl()
-  {}
+  {
+    //
+  }
 
   /**
    * constructor initializing the class with the <Mark>
@@ -225,26 +227,26 @@ public class Mark_Impl implements Mark, Marshallable
 
     if( wellKnownName.equalsIgnoreCase( "circle" ) )
     {
-      image = drawCircle( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      m_image = drawCircle( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
     else if( wellKnownName.equalsIgnoreCase( "triangle" ) )
     {
-      image = drawTriangle( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      m_image = drawTriangle( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
     else if( wellKnownName.equalsIgnoreCase( "cross" ) )
     {
-      image = drawCross1( size, strokeOpacity, strokeColor );
+      m_image = drawCross1( size, strokeOpacity, strokeColor );
     }
     else if( wellKnownName.equalsIgnoreCase( "x" ) )
     {
-      image = drawCross2( size, strokeOpacity, strokeColor );
+      m_image = drawCross2( size, strokeOpacity, strokeColor );
     }
     else
     {
-      image = drawSquare( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      m_image = drawSquare( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
 
-    return image;
+    return m_image;
   }
 
   /**
@@ -256,7 +258,7 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void setAsImage( BufferedImage bufferedImage )
   {
-    this.image = bufferedImage;
+    m_image = bufferedImage;
   }
 
   /**

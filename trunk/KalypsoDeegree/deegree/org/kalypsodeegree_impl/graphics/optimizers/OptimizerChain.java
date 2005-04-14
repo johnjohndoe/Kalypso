@@ -77,12 +77,6 @@ public class OptimizerChain extends AbstractOptimizer
   private ArrayList optimizers = new ArrayList();
 
   /**
-   * Constructs a new empty <tt>OptimizerChain</tt>
-   */
-  public OptimizerChain()
-  {}
-
-  /**
    * Constructs a new <tt>OptimizerChain</tt> that contains the submitted
    * <tt>Optimizer</tt> instances.
    * <p>

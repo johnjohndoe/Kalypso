@@ -98,13 +98,7 @@ import org.w3c.dom.Document;
  */
 public class GML_Transformer
 {
-  TransformationFactory transformationfactory = null;
-
-  /**
-   * the default constructor
-   */
-  public GML_Transformer()
-  {}
+  private TransformationFactory transformationfactory = null;
 
   /**
    * This selects the GMLGeometry and leads it to the corresponending

@@ -36,11 +36,9 @@
 
    <requires>
       <import plugin="org.eclipse.ui.workbench" export="true"/>
-      <import plugin="org.eclipse.jface" export="true"/>
       <import plugin="org.eclipse.core.resources" export="true"/>
       <import plugin="org.eclipse.ui.ide" export="true"/>
       <import plugin="org.eclipse.ui.views" export="true"/>
-      <import plugin="org.eclipse.ui" export="true"/>
       <import plugin="org.eclipse.compare" export="true"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
@@ -48,6 +46,7 @@
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.bce.eclipse.platform.contrib"/>
       <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.eclipse.ui"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>

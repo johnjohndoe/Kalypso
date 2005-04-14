@@ -32,6 +32,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.sun.org.apache.xpath.internal.XPathAPI;
+
 /**
  * 
  * @author doemming
@@ -122,7 +124,7 @@ public class XMLHelper
 
         try
         {
-            nl = org.apache.xpath.XPathAPI.selectNodeList(domNode, xPathQuery);
+            nl = XPathAPI.selectNodeList(domNode, xPathQuery);
         } catch (Exception e)
         {
             System.out.println(e.getMessage());
