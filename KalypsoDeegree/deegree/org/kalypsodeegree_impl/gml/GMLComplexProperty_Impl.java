@@ -101,7 +101,6 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
    * doesn't contain a value.
    */
   public static GMLComplexProperty createGMLComplexProperty( Document doc, String propName )
-      throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLComplexProperty(Document, String)" );
 
@@ -158,7 +157,7 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
   /**
    * @see org.kalypsodeegree_impl.gml.GMLComplexProperty_Impl#getPropertyValue()
    */
-  public void setComplexPropetryValue( GMLFeature value ) throws GMLException
+  public void setComplexPropetryValue( GMLFeature value )
   {
     Debug.debugMethodBegin( this, "setComplexPropetryValue" );
 
@@ -190,11 +189,6 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
         + "of a geo property as a String" );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return DOMPrinter.nodeToString( element, "" );
@@ -205,6 +199,9 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/04/14 20:55:50  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:03  doemming
  * *** empty log message ***
  *

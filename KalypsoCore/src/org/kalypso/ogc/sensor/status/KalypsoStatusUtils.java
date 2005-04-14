@@ -178,7 +178,6 @@ public class KalypsoStatusUtils
    *  
    * @param axes
    * @param axis
-   * @return
    * @throws NoSuchElementException if no corresponding status axis found
    */
   public static IAxis findStatusAxisFor( final IAxis[] axes, final IAxis axis )

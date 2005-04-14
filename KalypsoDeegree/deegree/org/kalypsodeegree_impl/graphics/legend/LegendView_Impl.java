@@ -71,5 +71,5 @@ import org.kalypsodeegree.graphics.legend.LegendView;
  */
 class LegendView_Impl implements LegendView
 {
-
+  //
 }

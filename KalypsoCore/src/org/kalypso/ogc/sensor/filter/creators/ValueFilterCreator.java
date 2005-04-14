@@ -123,7 +123,6 @@ public class ValueFilterCreator implements IFilterCreator
    * 
    * @param avc
    * @param axes
-   * @return
    * @throws ParserException
    */
   private static IValueComp createComp( final AbstractValueCompType avc, final IAxis[] axes ) throws ParserException

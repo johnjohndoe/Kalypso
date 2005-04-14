@@ -39,7 +39,6 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @throws TypeRegistryException
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForTypeName(java.lang.String)
    */
   public ITypeHandler getTypeHandlerForTypeName( final String typeName )
@@ -50,8 +49,6 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @throws TypeRegistryException
-   *           falls className nicht bekannt ist
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#getTypeHandlerForClassName(java.lang.String)
    */
   public ITypeHandler getTypeHandlerForClassName( final String className )

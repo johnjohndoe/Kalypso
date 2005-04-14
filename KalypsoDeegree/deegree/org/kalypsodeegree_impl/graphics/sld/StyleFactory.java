@@ -588,7 +588,6 @@ public class StyleFactory
    * @return the external graphic
    */
   public static ExternalGraphic createExternalGraphic( java.net.URL url, String format )
-      throws MalformedURLException
   {
     return new ExternalGraphic_Impl( format, url );
   }
@@ -1396,39 +1395,39 @@ public class StyleFactory
     return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max );
   }
 
-  /**
-   * create a textsymbolizer which doesn't change
-   * 
-   * @param color
-   *          the color of the text
-   * @param font
-   *          the font to use
-   * @param label
-   *          the label to use
-   * 
-   * @return the new textsymbolizer
-   */
-  public static TextSymbolizer createStaticTextSymbolizer( Color color, Font font, String label )
-  {
-    return null;
-  }
-
-  /**
-   * create a textsymbolizer which doesn't change
-   * 
-   * @param color
-   *          the color of the text
-   * @param fonts
-   *          an array of fonts to use from the first to last
-   * @param label
-   *          the label to use
-   * 
-   * @return the new textsymbolizer
-   */
-  public static TextSymbolizer createStaticTextSymbolizer( Color color, Font[] fonts, String label )
-  {
-    return null;
-  }
+//  /**
+//   * create a textsymbolizer which doesn't change
+//   * 
+//   * @param color
+//   *          the color of the text
+//   * @param font
+//   *          the font to use
+//   * @param label
+//   *          the label to use
+//   * 
+//   * @return the new textsymbolizer
+//   */
+//  public static TextSymbolizer createStaticTextSymbolizer( Color color, Font font, String label )
+//  {
+//    return null;
+//  }
+//
+//  /**
+//   * create a textsymbolizer which doesn't change
+//   * 
+//   * @param color
+//   *          the color of the text
+//   * @param fonts
+//   *          an array of fonts to use from the first to last
+//   * @param label
+//   *          the label to use
+//   * 
+//   * @return the new textsymbolizer
+//   */
+//  public static TextSymbolizer createStaticTextSymbolizer( Color color, Font[] fonts, String label )
+//  {
+//    return null;
+//  }
 
   /**
    * create a simple styling rule
@@ -1992,156 +1991,156 @@ public class StyleFactory
     return createStyle( "defaultPolygon", symbolizer );
   }
 
-  /**
-   * creates a style with name 'defaultPoint' for rendering point geometries.
-   * The style contains 1..n rules depending on the value range and the number
-   * of steps within it. So it is possible to create a style that creates
-   * different rendering depending on the value of one feature attribute.
-   * <p>
-   * there will be a linear interpolation between colors, size and width of the
-   * first and the last rule considering the number of passed steps (rules)
-   * 
-   * @param wellKnownNames -
-   *          list of well known names of the mark. the first field will be
-   *          assigned to the starting rule the last to the ending rule.
-   * @param startFillColor -
-   *          the color of the mark of the first rule
-   * @param endFillColor -
-   *          the color of the mark of the last rule
-   * @param startBorderColor -
-   *          the outline color of the mark of the first rule
-   * @param endBorderColor -
-   *          the outline color of the mark of the last rule
-   * @param startBorderWidth -
-   *          the width of the outline of the first rule
-   * @param endBorderWidth -
-   *          the width of the outline of the last rule
-   * @param opacity -
-   *          the opacity of the graphic
-   * @param startSize -
-   *          the size of the graphic of the first rule
-   * @param endSize -
-   *          the size of the graphic of the last rule
-   * @param rotation -
-   *          the rotation from the top of the page of the graphic
-   * @param min -
-   *          the minimim scale to draw the feature at
-   * @param max -
-   *          the maximum scale to draw the feature at
-   * @param featurePropertyName -
-   *          name of the feature property that determines the selection of the
-   *          rule for drawing
-   * @param numberOfSteps -
-   *          number of steps used for the interpolation between first and last
-   *          value. It is identical with the number of rules that will be
-   *          created.
-   * 
-   * @return the style created
-   */
-  public static Style createPointStyle( String[] wellKnownNames, Color startFillColor,
-      Color endFillColor, Color startBorderColor, Color endBorderColor, double startBorderWidth,
-      double endBorderWidth, double opacity, double startSize, double endSize, double rotation,
-      double min, double max, String featurePropertyName, int numberOfSteps )
-  {
-    return null;
-  }
-
-  /**
-   * creates a style with name 'defaultLine' for rendering line geometries. The
-   * style contains 1..n rules depending on the value range and the number of
-   * steps within it. So it is possible to create a style that creates different
-   * rendering depending on the value of one feature attribute.
-   * <p>
-   * there will be a linear interpolation between colors, size and width of the
-   * first and the last rule considering the number of passed steps (rules)
-   * 
-   * @param startColor -
-   *          the color of the first rule
-   * @param endColor -
-   *          the color of the last rule
-   * @param startWidth -
-   *          the width of the line of the first rule
-   * @param endWidth -
-   *          the width of the line of the last rule
-   * @param opacity -
-   *          the opacity of the graphic
-   * @param min -
-   *          the minimim scale to draw the feature at
-   * @param max -
-   *          the maximum scale to draw the feature at
-   * @param featurePropertyName -
-   *          name of the feature property that determines the selection of the
-   *          rule for drawing
-   * @param numberOfSteps -
-   *          number of steps used for the interpolation between first and last
-   *          value. It is identical with the number of rules that will be
-   *          created.
-   * 
-   * @return the style created
-   */
-  public static Style createLineStyle( Color startColor, Color endColor, double startWidth,
-      double endWidth, double opacity, double min, double max, String featurePropertyName,
-      int numberOfSteps )
-  {
-    return null;
-  }
-
-  /**
-   * creates a style with name 'defaultPoint' for rendering point geometries.
-   * The style contains 1..n rules depending on the value range and the number
-   * of steps within it. So it is possible to create a style that creates
-   * different rendering depending on the value of one feature attribute.
-   * <p>
-   * there will be a linear interpolation between colors, size and width of the
-   * first and the last rule considering the number of passed steps (rules)
-   * 
-   * @param startFillColor -
-   *          the fill color of the first rule
-   * @param endFillColor -
-   *          the fill color of the last rule
-   * @param fillOpacity -
-   *          the opacity of the fill
-   * @param startStrokeColor -
-   *          the line color of the first rule
-   * @param endStrokeColor -
-   *          the line color of the last rule
-   * @param startStrokeWidth -
-   *          the width of the outline of the first rule
-   * @param endStrokeWidth -
-   *          the width of the outline of the last rule
-   * @param strokeOpacity -
-   *          the opacity of the outline
-   * @param min -
-   *          the minimim scale to draw the feature at
-   * @param max -
-   *          the maximum scale to draw the feature at
-   * @param featurePropertyName -
-   *          name of the feature property that determines the selection of the
-   *          rule for drawing
-   * @param numberOfSteps -
-   *          number of steps used for the interpolation between first and last
-   *          value. It is identical with the number of rules that will be
-   *          created.
-   * 
-   * @return the style created
-   */
-  public static Style createPolygonStyle( Color startFillColor, Color endFillColor,
-      double fillOpacity, Color startStrokeColor, Color endStrokeColor, double startStrokeWidth,
-      double endStrokeWidth, double strokeOpacity, double min, double max,
-      String featurePropertyName, int numberOfSteps )
-  {
-    return null;
-  }
-
-  /**
-   * create a new default style
-   * 
-   * @return the new style
-   */
-  public static Style createStyle()
-  {
-    return null;
-  }
+//  /**
+//   * creates a style with name 'defaultPoint' for rendering point geometries.
+//   * The style contains 1..n rules depending on the value range and the number
+//   * of steps within it. So it is possible to create a style that creates
+//   * different rendering depending on the value of one feature attribute.
+//   * <p>
+//   * there will be a linear interpolation between colors, size and width of the
+//   * first and the last rule considering the number of passed steps (rules)
+//   * 
+//   * @param wellKnownNames -
+//   *          list of well known names of the mark. the first field will be
+//   *          assigned to the starting rule the last to the ending rule.
+//   * @param startFillColor -
+//   *          the color of the mark of the first rule
+//   * @param endFillColor -
+//   *          the color of the mark of the last rule
+//   * @param startBorderColor -
+//   *          the outline color of the mark of the first rule
+//   * @param endBorderColor -
+//   *          the outline color of the mark of the last rule
+//   * @param startBorderWidth -
+//   *          the width of the outline of the first rule
+//   * @param endBorderWidth -
+//   *          the width of the outline of the last rule
+//   * @param opacity -
+//   *          the opacity of the graphic
+//   * @param startSize -
+//   *          the size of the graphic of the first rule
+//   * @param endSize -
+//   *          the size of the graphic of the last rule
+//   * @param rotation -
+//   *          the rotation from the top of the page of the graphic
+//   * @param min -
+//   *          the minimim scale to draw the feature at
+//   * @param max -
+//   *          the maximum scale to draw the feature at
+//   * @param featurePropertyName -
+//   *          name of the feature property that determines the selection of the
+//   *          rule for drawing
+//   * @param numberOfSteps -
+//   *          number of steps used for the interpolation between first and last
+//   *          value. It is identical with the number of rules that will be
+//   *          created.
+//   * 
+//   * @return the style created
+//   */
+//  public static Style createPointStyle( String[] wellKnownNames, Color startFillColor,
+//      Color endFillColor, Color startBorderColor, Color endBorderColor, double startBorderWidth,
+//      double endBorderWidth, double opacity, double startSize, double endSize, double rotation,
+//      double min, double max, String featurePropertyName, int numberOfSteps )
+//  {
+//    return null;
+//  }
+//
+//  /**
+//   * creates a style with name 'defaultLine' for rendering line geometries. The
+//   * style contains 1..n rules depending on the value range and the number of
+//   * steps within it. So it is possible to create a style that creates different
+//   * rendering depending on the value of one feature attribute.
+//   * <p>
+//   * there will be a linear interpolation between colors, size and width of the
+//   * first and the last rule considering the number of passed steps (rules)
+//   * 
+//   * @param startColor -
+//   *          the color of the first rule
+//   * @param endColor -
+//   *          the color of the last rule
+//   * @param startWidth -
+//   *          the width of the line of the first rule
+//   * @param endWidth -
+//   *          the width of the line of the last rule
+//   * @param opacity -
+//   *          the opacity of the graphic
+//   * @param min -
+//   *          the minimim scale to draw the feature at
+//   * @param max -
+//   *          the maximum scale to draw the feature at
+//   * @param featurePropertyName -
+//   *          name of the feature property that determines the selection of the
+//   *          rule for drawing
+//   * @param numberOfSteps -
+//   *          number of steps used for the interpolation between first and last
+//   *          value. It is identical with the number of rules that will be
+//   *          created.
+//   * 
+//   * @return the style created
+//   */
+//  public static Style createLineStyle( Color startColor, Color endColor, double startWidth,
+//      double endWidth, double opacity, double min, double max, String featurePropertyName,
+//      int numberOfSteps )
+//  {
+//    return null;
+//  }
+//
+//  /**
+//   * creates a style with name 'defaultPoint' for rendering point geometries.
+//   * The style contains 1..n rules depending on the value range and the number
+//   * of steps within it. So it is possible to create a style that creates
+//   * different rendering depending on the value of one feature attribute.
+//   * <p>
+//   * there will be a linear interpolation between colors, size and width of the
+//   * first and the last rule considering the number of passed steps (rules)
+//   * 
+//   * @param startFillColor -
+//   *          the fill color of the first rule
+//   * @param endFillColor -
+//   *          the fill color of the last rule
+//   * @param fillOpacity -
+//   *          the opacity of the fill
+//   * @param startStrokeColor -
+//   *          the line color of the first rule
+//   * @param endStrokeColor -
+//   *          the line color of the last rule
+//   * @param startStrokeWidth -
+//   *          the width of the outline of the first rule
+//   * @param endStrokeWidth -
+//   *          the width of the outline of the last rule
+//   * @param strokeOpacity -
+//   *          the opacity of the outline
+//   * @param min -
+//   *          the minimim scale to draw the feature at
+//   * @param max -
+//   *          the maximum scale to draw the feature at
+//   * @param featurePropertyName -
+//   *          name of the feature property that determines the selection of the
+//   *          rule for drawing
+//   * @param numberOfSteps -
+//   *          number of steps used for the interpolation between first and last
+//   *          value. It is identical with the number of rules that will be
+//   *          created.
+//   * 
+//   * @return the style created
+//   */
+//  public static Style createPolygonStyle( Color startFillColor, Color endFillColor,
+//      double fillOpacity, Color startStrokeColor, Color endStrokeColor, double startStrokeWidth,
+//      double endStrokeWidth, double strokeOpacity, double min, double max,
+//      String featurePropertyName, int numberOfSteps )
+//  {
+//    return null;
+//  }
+//
+//  /**
+//   * create a new default style
+//   * 
+//   * @return the new style
+//   */
+//  public static Style createStyle()
+//  {
+//    return null;
+//  }
 
   /**
    * transforms the color of the request from java.awt.Color to the hexadecimal

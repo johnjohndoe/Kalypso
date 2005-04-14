@@ -767,8 +767,6 @@ public class LegendElement_Impl implements LegendElement
 
   /**
    * exports the <tt>LegendElement</tt> as</tt> BufferedImage</tt>
-   * 
-   * @return
    */
   public BufferedImage exportAsImage() throws LegendException
   {
