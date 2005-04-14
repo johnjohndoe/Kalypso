@@ -1,4 +1,4 @@
-package org.kalypso.psiadapter.repository.conversion;
+package org.kalypso.util.conversion.units;
 
 /**
  * SIConverter
@@ -7,32 +7,30 @@ package org.kalypso.psiadapter.repository.conversion;
  */
 public class SIConverter implements IValueConverter
 {
-  private final double m_psi2kal;
-  private final double m_kal2psi;
+  private final double m_factor;
 
-  public SIConverter( final String psiUnit, final String kalypsoUnit )
+  public SIConverter( final String orgUnit, final String destUnit )
   {
-    final double psif = factor( psiUnit );
-    final double kalf = factor( kalypsoUnit );
+    final double orgf = factor( orgUnit );
+    final double destf = factor( destUnit );
     
-    m_psi2kal = psif / kalf;
-    m_kal2psi = kalf / psif;
+    m_factor = orgf / destf;
   }
   
   /**
-   * @see org.kalypso.psiadapter.repository.conversion.IValueConverter#psi2kalypso(double)
+   * @see org.kalypso.util.conversion.units.IValueConverter#convert(double)
    */
-  public double psi2kalypso( double value )
+  public double convert( double value )
   {
-    return value * m_psi2kal;
+    return value * m_factor;
   }
 
   /**
-   * @see org.kalypso.psiadapter.repository.conversion.IValueConverter#kalypso2psi(double)
+   * @see org.kalypso.util.conversion.units.IValueConverter#reverse(double)
    */
-  public double kalypso2psi( double value )
+  public double reverse( double value )
   {
-    return value * m_kal2psi;
+    return value / m_factor;
   }
 
   /**

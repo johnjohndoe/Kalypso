@@ -170,7 +170,7 @@ public class WiskiRepository extends AbstractRepository
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     final String prop = WiskiUtils.getProperties().getProperty(
-        WiskiUtils.CONFIG_GROUP_NAMES );
+        WiskiUtils.PROP_GROUP_NAMES );
     if( prop == null )
       throw new RepositoryException(
           "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );

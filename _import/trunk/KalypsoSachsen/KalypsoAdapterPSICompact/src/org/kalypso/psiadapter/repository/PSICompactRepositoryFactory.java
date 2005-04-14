@@ -6,13 +6,13 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.psiadapter.PSICompactFactory;
-import org.kalypso.psiadapter.repository.conversion.IValueConverter;
-import org.kalypso.psiadapter.repository.conversion.KelvinCelsiusConverter;
-import org.kalypso.psiadapter.repository.conversion.NoConverter;
-import org.kalypso.psiadapter.repository.conversion.SIConverter;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
+import org.kalypso.util.conversion.units.IValueConverter;
+import org.kalypso.util.conversion.units.KelvinCelsiusConverter;
+import org.kalypso.util.conversion.units.NoConverter;
+import org.kalypso.util.conversion.units.SIConverter;
 
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.WQData;

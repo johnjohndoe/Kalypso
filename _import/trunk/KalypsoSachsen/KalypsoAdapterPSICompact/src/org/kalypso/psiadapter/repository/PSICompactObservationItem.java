@@ -17,7 +17,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
-import org.kalypso.psiadapter.repository.conversion.IValueConverter;
+import org.kalypso.util.conversion.units.IValueConverter;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -154,13 +154,13 @@ public class PSICompactObservationItem implements IObservation
       if( TimeserieConstants.TYPE_WATERLEVEL.equals( measureTypeToString() ) )
       {
         metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc
-            .psi2kalypso( psiMD.getAlarm1() ) ) );
+            .convert( psiMD.getAlarm1() ) ) );
         metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc
-            .psi2kalypso( psiMD.getAlarm2() ) ) );
+            .convert( psiMD.getAlarm2() ) ) );
         metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc
-            .psi2kalypso( psiMD.getAlarm3() ) ) );
+            .convert( psiMD.getAlarm3() ) ) );
         metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc
-            .psi2kalypso( psiMD.getAlarm4() ) ) );
+            .convert( psiMD.getAlarm4() ) ) );
       }
 
       metadata.put( TimeserieConstants.MD_FLUSS, psiMD.getRiver() );

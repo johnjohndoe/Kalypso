@@ -1,8 +1,16 @@
 package org.kalypso.wiskiadapter;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+
+import de.kisters.tsmsystem.common.data.SimpleRequestFilterTerm;
+import de.kisters.tsmsystem.common.data.SimpleRequestSortTerm;
+import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 
 /**
  * StationItem
@@ -11,19 +19,32 @@ import org.kalypso.repository.RepositoryException;
  */
 public class StationItem implements IRepositoryItem
 {
+  private static final String[] COLUMNS_PARAMETER = { "tsinfo_id",
+      "tsinfo_name", "tsinfo_timelevel", "tsinfo_valuetype", "tsinfo_unitname",
+      "stationparameter_name", "stationparameter_longname", "station_name",
+      "station_no", "parametertype_name", "parametertype_longname",
+      "tsinfo_group_name" };
+
   private final WiskiRepository m_rep;
+
+  private final String m_no;
+
   private final String m_id;
+
   private final String m_name;
+
   private final GroupItem m_group;
 
-  public StationItem( final WiskiRepository rep, final GroupItem group, final String id, final String name )
+  public StationItem( final WiskiRepository rep, final GroupItem group,
+      final String no, final String id, final String name )
   {
     m_rep = rep;
     m_group = group;
+    m_no = no;
     m_id = id;
     m_name = name;
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
@@ -53,8 +74,7 @@ public class StationItem implements IRepositoryItem
    */
   public boolean hasChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   /**
@@ -62,8 +82,41 @@ public class StationItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    final SimpleRequestFilterTerm filter = new SimpleRequestFilterTerm();
+    filter.addColumnReference( "station_no" );
+    filter.addOperator( "like" );
+    filter.addValue( m_no );
+
+    final SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
+    sort.addColumnAscent( "stationparameter_longname" );
+
+    try
+    {
+      final HashMap tsinfolist = m_rep.getWiski().getTsInfoList(
+          m_rep.getUserData(), COLUMNS_PARAMETER, sort, filter, 15, 0, false,
+          null );
+
+      final List resultList = (List) tsinfolist
+          .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+      final StationParameter[] params = new StationParameter[resultList.size()];
+
+      int i = 0;
+      for( final Iterator it = resultList.iterator(); it.hasNext(); )
+      {
+        final HashMap map = (HashMap) it.next();
+        params[i++] = new StationParameter( m_rep, this, (String) map
+            .get( "tsinfo_id" ), (String) map.get( "tsinfo_name" ),
+            (String) map.get( "tsinfo_unitname" ), (String) map
+                .get( "parametertype_name" ) );
+      }
+
+      return params;
+    }
+    catch( final Exception e ) // KiWWException and RemoteException
+    {
+      e.printStackTrace();
+      throw new RepositoryException( e );
+    }
   }
 
   /**
@@ -79,7 +132,7 @@ public class StationItem implements IRepositoryItem
    */
   public Object getAdapter( Class anotherClass )
   {
-    // TODO Auto-generated method stub
+    // not adaptable
     return null;
   }
 }

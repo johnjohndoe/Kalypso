@@ -11,8 +11,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.psiadapter.repository.conversion.IValueConverter;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
+import org.kalypso.util.conversion.units.IValueConverter;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
@@ -119,7 +119,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
       // convert the value if necessary
       if( vc != null )
-        value = vc.kalypso2psi( value );
+        value = vc.reverse( value );
       
       data[i] = new ArchiveData( date, status, value );
     }
@@ -139,7 +139,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
       double value = m_data[index].getValue();
       
       if( m_vc != null )
-        value = m_vc.psi2kalypso( value );
+        value = m_vc.convert( value );
       
       m_values[index] = new Double( value );
     }
@@ -163,7 +163,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     double v = value.doubleValue();
     
     if( m_vc != null )
-      v = m_vc.kalypso2psi( v );
+      v = m_vc.reverse( v );
     
     m_data[index].setValue( v );
   }
@@ -220,7 +220,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-      case 0:
+      case 0: // TODO: darf das Datum überhaupt geändert werden???
         m_data[index].setTimestamp( (Date) element );
       case 1:
         setValue( index, (Double) element );

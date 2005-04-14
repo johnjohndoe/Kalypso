@@ -2,15 +2,10 @@ package org.kalypso.wiskiadapter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.repository.RepositoryException;
-
-import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 
 /**
  * WiskiUtils
@@ -20,7 +15,13 @@ import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 public final class WiskiUtils
 {
   /** name of the property that delivers the group names */
-  final static String CONFIG_GROUP_NAMES = "GROUP_NAMES";
+  final static String PROP_GROUP_NAMES = "GROUP_NAMES";
+
+  /**
+   * name of the properties delivering the number of days in the past that can
+   * be used as default date-range
+   */
+  final static String PROP_NUMBER_OF_DAYS = "NUMBER_OF_DAYS";
 
   private static Properties PROPS = null;
 
@@ -70,31 +71,78 @@ public final class WiskiUtils
   }
 
   /**
-   * Parse the commonInfoList type as defined by the WDP (which is a HashMap
-   * with a specific construction). See WDP-Doc for more information on this
-   * structure.
-   * <p>
-   * The parsing here only returns the list of values for the given column. Each
-   * resultset is scanned and the value of the column is fetched in an array.
-   * Finally the array is returned.
+   * Uses the property file to convert the wiski type into the kalypso type
    * 
-   * @param commonInfoList
+   * @param wiskiType
    * @return
    */
-  public static String[] parseCommonInfoList( final HashMap commonInfoList,
-      final String columnName )
+  public static String wiskiType2Kalypso( final String wiskiType )
   {
-    final List resultList = (List) commonInfoList
-        .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
-
-    final String[] results = new String[resultList.size()];
-    int i = 0;
-    for( final Iterator it = resultList.iterator(); it.hasNext(); )
+    try
     {
-      final HashMap map = (HashMap) it.next();
-      results[i++] = (String) map.get( columnName );
-    }
+      final String type = getProperties().getProperty( "TYPE_" + wiskiType );
 
-    return results;
+      if( type == null )
+        throw new IllegalArgumentException( "Wiski-Typ nicht erkannt: "
+            + wiskiType );
+
+      return type;
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      throw new IllegalArgumentException( e.getLocalizedMessage() );
+    }
+  }
+
+  /**
+   * Uses the property file to fetch the corresponding kalypso metadata name
+   * 
+   * @param wiskiLevel
+   * @return
+   */
+  public static String wiskiMetadataName2Kalypso( final String wiskiName )
+  {
+    try
+    {
+      final String md = getProperties().getProperty( "MD_" + wiskiName );
+
+      if( md == null )
+        throw new IllegalArgumentException( "Wiski-Name nicht erkannt: "
+            + wiskiName );
+
+      return md;
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      throw new IllegalArgumentException( e.getLocalizedMessage() );
+    }
+  }
+
+  /**
+   * Uses the property file to convert the wiski status into the kalypso one
+   * 
+   * @param wiskiStatus
+   * @return
+   */
+  public static Integer wiskiStatus2Kalypso( final String wiskiStatus )
+  {
+    try
+    {
+      final String status = getProperties().getProperty(
+          "STATUS_" + wiskiStatus );
+
+      if( status == null )
+        throw new IllegalArgumentException( "Wiski-Status nicht erkannt: "
+            + wiskiStatus );
+
+      return Integer.valueOf( status );
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      throw new IllegalArgumentException( e.getLocalizedMessage() );
+    }
   }
 }

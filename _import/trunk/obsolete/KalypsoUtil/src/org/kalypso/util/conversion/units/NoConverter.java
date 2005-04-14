@@ -1,4 +1,4 @@
-package org.kalypso.psiadapter.repository.conversion;
+package org.kalypso.util.conversion.units;
 
 /**
  * Performs no conversion, return the values 'as is'.
@@ -23,17 +23,17 @@ public final class NoConverter implements IValueConverter
   }
   
   /**
-   * @see org.kalypso.psiadapter.repository.conversion.IValueConverter#psi2kalypso(double)
+   * @see org.kalypso.util.conversion.units.IValueConverter#convert(double)
    */
-  public double psi2kalypso( double value )
+  public double convert( double value )
   {
     return value;
   }
 
   /**
-   * @see org.kalypso.psiadapter.repository.conversion.IValueConverter#kalypso2psi(double)
+   * @see org.kalypso.util.conversion.units.IValueConverter#reverse(double)
    */
-  public double kalypso2psi( double value )
+  public double reverse( double value )
   {
     return value;
   }

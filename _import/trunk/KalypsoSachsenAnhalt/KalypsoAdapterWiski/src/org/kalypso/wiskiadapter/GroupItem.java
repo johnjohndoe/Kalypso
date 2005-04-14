@@ -105,7 +105,7 @@ public class GroupItem implements IRepositoryItem
       for( final Iterator it = resultList.iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap) it.next();
-        stations[i++] = new StationItem( m_rep, this, 
+        stations[i++] = new StationItem( m_rep, this, (String) map.get( "station_no" ), 
             (String) map.get( "station_id" ), (String) map.get( "station_name" ) );
       }
 
