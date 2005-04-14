@@ -57,8 +57,6 @@
 		<mkdir dir="${build.web.lib}" />
 		<mkdir dir="${build.web.inf}/classes" />
 
-		<mkdir dir="${dist.server}" />
-
 		<echo message="Project: ${project}" />
 		<echo message="Package: ${interface.package}" />
 
