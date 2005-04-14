@@ -1,0 +1,104 @@
+<xs:schema xmlns="util.gml.kalypso.org" xmlns:layer="types.template.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" targetNamespace="util.gml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd"/>
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd"/>
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="../template/layerTypes.xsd"/>
+	<xs:element name="gmlconvert">
+		<xs:annotation>
+			<xs:documentation><![CDATA[
+				Konvertiert eine GML-Datenquelle in ein GML-Datenziel.
+				]]></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="target" type="layer:kalypsoLinkType">
+					<xs:annotation>
+						<xs:documentation><![CDATA[
+							  An diesen Ort wird die Datenquelle geschrieben.
+				]]></xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="source"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="source" type="SourceType">
+		<xs:annotation>
+			<xs:documentation><![CDATA[
+				Bezeichnet eine Quelle von GML-Daten.
+				
+				Kann prinzipiell alles sein, Datei, Kombination aus Dateien etc.
+				]]></xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="SourceType"/>
+	<xs:element name="gmlsource" type="GmlSourceType" substitutionGroup="source"/>
+	<xs:complexType name="GmlSourceType">
+		<xs:complexContent>
+			<xs:extension base="SourceType">
+				<xs:attributeGroup ref="xlink:locatorLink"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="csvsource" type="CsvSourceType" substitutionGroup="source"/>
+	<xs:complexType name="CsvSourceType">
+		<xs:complexContent>
+			<xs:extension base="SourceType">
+				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="featureproperty">
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:element name="column" type="xs:int"/>
+							</xs:sequence>
+							<xs:attribute name="name" type="xs:string" use="required"/>
+							<xs:attribute name="type" type="xs:string" use="required"/>
+							<xs:attribute name="format" type="xs:string" use="optional" default=""/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attributeGroup ref="xlink:locatorLink"/>
+				<xs:attribute name="comment" type="xs:string"/>
+				<xs:attribute name="delemiter" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="featuremapping" type="FeaturemappingSourceType" substitutionGroup="source"/>
+	<xs:complexType name="FeaturemappingSourceType">
+		<xs:complexContent>
+			<xs:extension base="SourceType">
+				<xs:sequence>
+					<xs:element ref="source" minOccurs="2" maxOccurs="2"/>
+					<xs:element ref="mapping" minOccurs="0" maxOccurs="unbounded">
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="mapping" type="MappingType"/>
+	<xs:complexType name="MappingType">
+		<xs:sequence>
+			<xs:element name="map" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="from" type="xs:string" use="required"/>
+					<xs:attribute name="to" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="fromPath" type="xs:string"/>
+		<xs:attribute name="toPath" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="addFeaturesMapping" type="AddFeaturesMappingType" substitutionGroup="mapping"/>
+	<xs:complexType name="AddFeaturesMappingType">
+		<xs:complexContent>
+			<xs:extension base="MappingType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="changeFeaturesMapping" type="changeFeaturesMappingType" substitutionGroup="mapping"/>
+	<xs:complexType name="changeFeaturesMappingType">
+		<xs:complexContent>
+			<xs:extension base="MappingType">
+				<xs:attribute name="sourceProperty" type="xs:string"/>
+				<xs:attribute name="targetProperty" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

@@ -20,7 +20,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Lädt und schreibt ein CSV als
- * {@link org.kalypsodeegree.model.feature.GMLWorkspace}
+ * {@link org.kalypsodeegree.model.feature.GMLWorkspace}.
+ * 
+ * Die Information, welche Spalte wie gelesen wird, wird per {@link #addInfo(FeatureTypeProperty, CSVInfo)} übergeben.
+ * 
+ * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind.
+ * Alternativ wäre aber auch super, wenn das auch automatisch anhand der 1.Zeile ginge
+ * 
+ * @todo Koordinatensystem berücksichtigen
  * 
  * @author belger
  */
@@ -69,6 +76,7 @@ public final class CsvFeatureReader
     final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new HashMap() );
     
     final LineNumberReader lnr = new LineNumberReader( reader );
+    
     while( lnr.ready() )
     {
       final String line = lnr.readLine();
@@ -105,7 +113,6 @@ public final class CsvFeatureReader
         final double rw = Double.parseDouble( tokens[col0] );
         final double hw = Double.parseDouble( tokens[col1] );
 
-        // TODO: coord syst!
         data[i] = GeometryFactory.createGM_Position( rw, hw );
       }
     }
