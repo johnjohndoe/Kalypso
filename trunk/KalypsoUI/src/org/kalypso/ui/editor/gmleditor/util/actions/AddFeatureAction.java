@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -49,7 +47,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 
 public final class AddFeatureAction extends Action
 {
@@ -65,16 +64,13 @@ public final class AddFeatureAction extends Action
 
   private Shell m_shell;
 
-  private ICommandTarget m_commandTarget;
-
   public AddFeatureAction( FeatureType type, CommandableWorkspace workspace,
-      ICommandTarget commandTarget, Feature parentFeature, String propertyName, int i, Shell shell )
+      Feature parentFeature, String propertyName, int i, Shell shell )
   {
     super( type.getName() );
     m_propertyName = propertyName;
     pos = i;
     m_workspace = workspace;
-    m_commandTarget = commandTarget;
     m_type = type;
     m_parentFeature = parentFeature;
     m_shell = shell;
@@ -89,8 +85,8 @@ public final class AddFeatureAction extends Action
         m_parentFeature, m_propertyName, pos );
     try
     {
-      //m_workspace.postCommand( command );
-      m_commandTarget.postCommand(command, null);
+      m_workspace.postCommand( command );
+      //m_commandTarget.postCommand(command, null);
       return;
     }
     catch( final Exception e )

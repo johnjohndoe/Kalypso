@@ -262,6 +262,27 @@
          </action>
       </editorContribution>
       <editorContribution
+            targetID="org.kalypso.ui.editor.GMLEditor"
+            id="org.kalypso.ui.editor.gistreeeditor.GisTreeActionDelegate">
+         <menu
+               label="Baum"
+               path="additions"
+               id="org.kalypso.ui.editors.treeeditor.menu">
+            <groupMarker name="edit"/>
+         </menu>
+         <action
+               style="push"
+               id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction"
+               toolbarPath="Baum/edit"
+               class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate"
+               disabledIcon="icons/map/save_edit_disabled.gif"
+               icon="icons/gistable/save_edit.gif"
+               label="Daten speichern"
+               menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit"
+               tooltip="Speichert die Daten des Baums">
+         </action>
+      </editorContribution>
+      <editorContribution
             targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             id="org.kalypso.ogc.widgets.GisMapEditorActionDelegate">
          <menu

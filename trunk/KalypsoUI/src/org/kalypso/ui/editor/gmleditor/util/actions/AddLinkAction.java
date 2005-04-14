@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddLinkCommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 
@@ -76,16 +75,13 @@ public class AddLinkAction extends Action
 
   private Shell m_shell;
 
-  private ICommandTarget m_commandTarget;
-
   public AddLinkAction( FeatureType type, CommandableWorkspace workspace,
-      ICommandTarget commandTarget, Feature parentFeature, String propertyName, int i, Shell shell )
+      Feature parentFeature, String propertyName, int i, Shell shell )
   {
     super( type.getName() + " Link" );
     m_propertyName = propertyName;
     pos = i;
     m_workspace = workspace;
-    m_commandTarget = commandTarget;
     m_type = type;
     m_parentFeature = parentFeature;
     m_shell = shell;
@@ -120,9 +116,9 @@ public class AddLinkAction extends Action
 
     try
     {
-      //m_workspace.postCommand( command );
       if( command != null )
-        m_commandTarget.postCommand( command, null );
+        m_workspace.postCommand( command );
+        //m_commandTarget.postCommand( command, null );
       return;
     }
     catch( final Exception e )

@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
@@ -49,36 +48,12 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
 
   protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
   {
-    /*try
-    {
-      CommandableWorkspace workspace = gmlReader.getGMLWorkspace();
-      IFile outputFile = ResourceUtilities.findFileFromURL(workspace.getContext());
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      final OutputStreamWriter osw = new OutputStreamWriter( bos, outputFile
-          .getCharset() );
-
-      GmlSerializer.serializeWorkspace( osw, workspace );
-      bos.close();
-
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos
-          .toByteArray() );
-      outputFile.setContents( bis, false, true, monitor );
-
-      bis.close();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }*/
+  // not implemented
   }
-  
-  /*public boolean isSaveAsAllowed( )
+
+  public GMLEditorTreeView getTreeView()
   {
-    return false;
-  }*/
-  
-  public CommandableWorkspace getWorkspace(){
-    return gmlReader.getGMLWorkspace();
+    return viewer;
   }
 
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
