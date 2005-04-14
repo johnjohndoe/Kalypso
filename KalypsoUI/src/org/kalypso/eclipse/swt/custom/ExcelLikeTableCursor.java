@@ -130,6 +130,9 @@ public class ExcelLikeTableCursor extends TableCursor implements SelectionListen
   {
     final int column = getColumn();
     final TableItem tableRow = getRow();
+    if( tableRow == null )
+      return;
+    
     final Object element = tableRow.getData();
 
     if( !checkCanModify( tableRow, column ) )

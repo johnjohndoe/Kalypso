@@ -70,7 +70,6 @@ public class UrlResolver implements IUrlResolver
    * </p>
    * @param baseURL
    * @param relativeURL
-   * @return
    * @throws MalformedURLException
    */
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
