@@ -11,6 +11,7 @@ import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
 import de.kisters.tsmsystem.common.data.SimpleRequestFilterTerm;
+import de.kisters.tsmsystem.common.data.SimpleRequestSortTerm;
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
@@ -27,6 +28,12 @@ public class WiskiRepository extends AbstractRepository
   /** separator of the configuration string */
   private final static String CONF_SEP = "#";
 
+  /** interesting column names for querying groups */
+  private static final String[] COLUMNS_GROUP = { "group_id", "group_name" };
+
+  private final static Logger LOG = Logger.getLogger( WiskiRepository.class
+      .getName() );
+
   private String m_url;
 
   private String m_domain;
@@ -36,9 +43,6 @@ public class WiskiRepository extends AbstractRepository
   private String m_password;
 
   private String m_language;
-
-  private final static Logger LOG = Logger.getLogger( WiskiRepository.class
-      .getName() );
 
   private KiWWDataProviderRMIf m_wiski;
 
@@ -184,26 +188,28 @@ public class WiskiRepository extends AbstractRepository
       filtergroup.addValue( groupNames[i] + "%" );
     }
 
+    final SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
+    sort.addColumnAscent( "group_name" );
+
     try
     {
-      final HashMap grouplist = m_wiski.getGroupList( m_userData, new String[] {
-          "group_id", "group_name" },
-          KiWWDataProviderInterface.TIMESERIES_GROUP, null, filtergroup, 15, 0,
-          false, null );
+      final HashMap grouplist = m_wiski.getGroupList( m_userData,
+          COLUMNS_GROUP, KiWWDataProviderInterface.TIMESERIES_GROUP, sort,
+          filtergroup, 15, 0, false, null );
 
       final List resultList = (List) grouplist
           .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
 
-      final GroupItem[] items = new GroupItem[resultList.size()];
+      final GroupItem[] groups = new GroupItem[resultList.size()];
       int i = 0;
       for( final Iterator it = resultList.iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap) it.next();
-        items[i++] = new GroupItem( this, (String)map.get( "group_id" ), (String)map
-            .get( "group_name" ) );
+        groups[i++] = new GroupItem( this, (String) map.get( "group_id" ),
+            (String) map.get( "group_name" ) );
       }
 
-      return items;
+      return groups;
     }
     catch( Exception e ) // RemoteException or KiWWException
     {

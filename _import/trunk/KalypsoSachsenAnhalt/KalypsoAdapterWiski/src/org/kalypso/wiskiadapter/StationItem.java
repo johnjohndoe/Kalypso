@@ -11,13 +11,25 @@ import org.kalypso.repository.RepositoryException;
  */
 public class StationItem implements IRepositoryItem
 {
+  private final WiskiRepository m_rep;
+  private final String m_id;
+  private final String m_name;
+  private final GroupItem m_group;
+
+  public StationItem( final WiskiRepository rep, final GroupItem group, final String id, final String name )
+  {
+    m_rep = rep;
+    m_group = group;
+    m_id = id;
+    m_name = name;
+  }
+  
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_name;
   }
 
   /**
@@ -25,8 +37,7 @@ public class StationItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_rep.getIdentifier() + m_id;
   }
 
   /**
@@ -34,8 +45,7 @@ public class StationItem implements IRepositoryItem
    */
   public IRepositoryItem getParent( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_group;
   }
 
   /**
@@ -61,8 +71,7 @@ public class StationItem implements IRepositoryItem
    */
   public IRepository getRepository( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_rep;
   }
 
   /**
@@ -73,5 +82,4 @@ public class StationItem implements IRepositoryItem
     // TODO Auto-generated method stub
     return null;
   }
-
 }
