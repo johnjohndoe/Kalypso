@@ -25,7 +25,7 @@ für jedes feature in der source-liste wird ein feature in der target liste gesuc
 
 Baustein 2: Einheitliche Loader für alle Formate
 ------------------------------------------------
-Für shp und gml schon da, fehlt nur csv
+Für shp und gml schon da, fehlt nur csv (fertig: CsvFeatureReader) 
 -> hier Problem festzulegen, was was ist (d.h FeatureType und Spaltenzuordnung müssen angegeben werden)
 List von { java-type, formatstring, colnums[] }
 
@@ -38,14 +38,14 @@ Nur alles zusammenpacken, das heist:
 - die Daten übertragen
 - die zieldateiwieder speichern
 
-Baustein 4: Persitierung der Import-Einstellungen
--------------------------------------------------
+Baustein 4: Persistierung der Import-Einstellungen
+--------------------------------------------------
 Die Einstellungen für einen speziellen import am besten
 in einem xml format ablegen.
 
 Baustein 5: GUI (optional)
 --------------------------
-Minimum ist, ein (z.b. manuell erzeugtes import-xml) auszuführen.
+Minimum ist, ein (z.B. manuell erzeugtes import-xml) auszuführen.
 
 Sehr schön wäre z.B. ein Wizard der die ganzen Daten sammelt 
 und im xml ablegt, dann den eigentlichen import anstösst.
