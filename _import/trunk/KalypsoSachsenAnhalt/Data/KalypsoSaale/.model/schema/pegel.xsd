@@ -39,7 +39,14 @@
 		<complexContent>
 			<extension base="common:EmptyFeatureBaseType">
 				<sequence>
-					<element name="Messstellennummer" type="string"/>
+					<element name="PNR" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Messstellennummer</label>
+								<description>Im Saale-Modell intern verwendete Pegelnummer</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="Name" type="string"/>
 					<element name="Gewässer" type="string">
 						<annotation>
@@ -52,6 +59,140 @@
 					</element>
 					<element ref="gml:location"/>
 					<element name="Durchfluss_eingabe" type="obslink:TimeseriesLinkType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="EZG" type="pegel:EZGType" substitutionGroup="pegel:Pegel">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Einzugsgebiet</label>
+				<tooltip>Einzugsgebiet</tooltip>
+				<description>Einzugsgebiet</description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="EZGType">
+		<complexContent>
+			<extension base="pegel:PegelType">
+				<sequence>
+					<element name="L" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>L</label>
+								<tooltip>effektive Länge der Anstiegsfunktion h(t)</tooltip>
+								<description>effektive Länge der Anstiegsfunktion h(t)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="N" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>N</label>
+								<tooltip>INDEX für den Direktabfluss - Rückgangsbeginn</tooltip>
+								<description>INDEX für den Direktabfluss - Rückgangsbeginn</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="M" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>M</label>
+								<tooltip>INDEX für den Direktabfluss - Rückgangsende</tooltip>
+								<description>INDEX für den Direktabfluss - Rückgangsende</description>
+							</documentation>
+						</annotation>
+					</element>
+
+
+<element name="IWE"  type="int"> <annotation><documentation xml:lang="de"><label>IWE</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="ISOA" type="int"> <annotation><documentation xml:lang="de"><label>ISOA</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="ISOE" type="int"> <annotation><documentation xml:lang="de"><label>ISOE</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="IWA"  type="int"> <annotation><documentation xml:lang="de"><label>IWA</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="NRH"  type="int"> <annotation><documentation xml:lang="de"><label>NRH</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="IP9"  type="int"> <annotation><documentation xml:lang="de"><label>IP9</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="IP10" type="int"> <annotation><documentation xml:lang="de"><label>IP10</label><tooltip></tooltip><description></description></documentation></annotation></element>
+
+<element name="PAR_1" type="double"> <annotation><documentation xml:lang="de"><label>PAR_1</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_2" type="double"> <annotation><documentation xml:lang="de"><label>PAR_2</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_3" type="double"> <annotation><documentation xml:lang="de"><label>PAR_3</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_4" type="double"> <annotation><documentation xml:lang="de"><label>PAR_4</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_5" type="double"> <annotation><documentation xml:lang="de"><label>PAR_5</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_6" type="double"> <annotation><documentation xml:lang="de"><label>PAR_6</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_7" type="double"> <annotation><documentation xml:lang="de"><label>PAR_7</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_8" type="double"> <annotation><documentation xml:lang="de"><label>PAR_8</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_9" type="double"> <annotation><documentation xml:lang="de"><label>PAR_9</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="PAR_10" type="double"> <annotation><documentation xml:lang="de"><label>PAR_10</label><tooltip></tooltip><description></description></documentation></annotation></element>
+ 
+<element name="G_1"  type="double"> <annotation><documentation xml:lang="de"><label>G_1</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_2"  type="double"> <annotation><documentation xml:lang="de"><label>G_2</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_3"  type="double"> <annotation><documentation xml:lang="de"><label>G_3</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_4"  type="double"> <annotation><documentation xml:lang="de"><label>G_4</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_5"  type="double"> <annotation><documentation xml:lang="de"><label>G_5</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_6"  type="double"> <annotation><documentation xml:lang="de"><label>G_6</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_7"  type="double"> <annotation><documentation xml:lang="de"><label>G_7</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_8"  type="double"> <annotation><documentation xml:lang="de"><label>G_8</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_9"  type="double"> <annotation><documentation xml:lang="de"><label>G_9</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_10" type="double"> <annotation><documentation xml:lang="de"><label>G_10</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_11" type="double"> <annotation><documentation xml:lang="de"><label>G_11</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_12" type="double"> <annotation><documentation xml:lang="de"><label>G_12</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_13" type="double"> <annotation><documentation xml:lang="de"><label>G_13</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_14" type="double"> <annotation><documentation xml:lang="de"><label>G_14</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_15" type="double"> <annotation><documentation xml:lang="de"><label>G_15</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_16" type="double"> <annotation><documentation xml:lang="de"><label>G_16</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_17" type="double"> <annotation><documentation xml:lang="de"><label>G_17</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="G_18" type="double"> <annotation><documentation xml:lang="de"><label>G_18</label><tooltip></tooltip><description></description></documentation></annotation></element>
+ 
+<element name="H_1"  type="double"> <annotation><documentation xml:lang="de"><label>H_1</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_2"  type="double"> <annotation><documentation xml:lang="de"><label>H_2</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_3"  type="double"> <annotation><documentation xml:lang="de"><label>H_3</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_4"  type="double"> <annotation><documentation xml:lang="de"><label>H_4</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_5"  type="double"> <annotation><documentation xml:lang="de"><label>H_5</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_6"  type="double"> <annotation><documentation xml:lang="de"><label>H_6</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_7"  type="double"> <annotation><documentation xml:lang="de"><label>H_7</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_8"  type="double"> <annotation><documentation xml:lang="de"><label>H_8</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_9"  type="double"> <annotation><documentation xml:lang="de"><label>H_9</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_10" type="double"> <annotation><documentation xml:lang="de"><label>H_10</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_11" type="double"> <annotation><documentation xml:lang="de"><label>H_11</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_12" type="double"> <annotation><documentation xml:lang="de"><label>H_12</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_13" type="double"> <annotation><documentation xml:lang="de"><label>H_13</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_14" type="double"> <annotation><documentation xml:lang="de"><label>H_14</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_15" type="double"> <annotation><documentation xml:lang="de"><label>H_15</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_16" type="double"> <annotation><documentation xml:lang="de"><label>H_16</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_17" type="double"> <annotation><documentation xml:lang="de"><label>H_17</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_18" type="double"> <annotation><documentation xml:lang="de"><label>H_18</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_19" type="double"> <annotation><documentation xml:lang="de"><label>H_19</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_20" type="double"> <annotation><documentation xml:lang="de"><label>H_20</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_21" type="double"> <annotation><documentation xml:lang="de"><label>H_21</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_22" type="double"> <annotation><documentation xml:lang="de"><label>H_22</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_23" type="double"> <annotation><documentation xml:lang="de"><label>H_23</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_24" type="double"> <annotation><documentation xml:lang="de"><label>H_24</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_25" type="double"> <annotation><documentation xml:lang="de"><label>H_25</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_26" type="double"> <annotation><documentation xml:lang="de"><label>H_26</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_27" type="double"> <annotation><documentation xml:lang="de"><label>H_27</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_28" type="double"> <annotation><documentation xml:lang="de"><label>H_28</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_29" type="double"> <annotation><documentation xml:lang="de"><label>H_29</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_30" type="double"> <annotation><documentation xml:lang="de"><label>H_30</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_31" type="double"> <annotation><documentation xml:lang="de"><label>H_31</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_32" type="double"> <annotation><documentation xml:lang="de"><label>H_32</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_33" type="double"> <annotation><documentation xml:lang="de"><label>H_33</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_34" type="double"> <annotation><documentation xml:lang="de"><label>H_34</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_35" type="double"> <annotation><documentation xml:lang="de"><label>H_35</label><tooltip></tooltip><description></description></documentation></annotation></element>
+<element name="H_36" type="double"> <annotation><documentation xml:lang="de"><label>H_36</label><tooltip></tooltip><description></description></documentation></annotation></element>
+ 
+
+
+					<!--					
+					<element name="" type="">
+						<annotation>
+							<documentation xml:lang="de">
+								<label></label>
+								<tooltip></tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+					</element>
+-->
 				</sequence>
 			</extension>
 		</complexContent>
