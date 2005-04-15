@@ -25,7 +25,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
@@ -343,7 +343,7 @@ public class PSICompactImpl implements PSICompact
     if( m_id2zml.containsKey( id ) )
     {
       final String wqParam = getZmlObs( id ).getMetadataList().getProperty(
-          TimeserieConstants.MD_WQ );
+          TimeserieConstants.MD_WQWECHMANN );
 
       if( wqParam != null )
       {
@@ -355,7 +355,7 @@ public class PSICompactImpl implements PSICompact
         {
           group = WechmannFactory.parse( src );
         }
-        catch( WechmannException e )
+        catch( WQException e )
         {
           e.printStackTrace();
           throw new ECommException( e );

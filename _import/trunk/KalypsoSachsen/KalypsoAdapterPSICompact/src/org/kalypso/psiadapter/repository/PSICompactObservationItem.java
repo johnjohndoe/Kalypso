@@ -175,7 +175,7 @@ public class PSICompactObservationItem implements IObservation
             .readWQParams( psiWQ );
         final String xml = WechmannFactory.createXMLString( group );
 
-        metadata.put( TimeserieConstants.MD_WQ, xml );
+        metadata.put( TimeserieConstants.MD_WQWECHMANN, xml );
       }
     }
     catch( Exception e ) // generic exception caught for simplicity

@@ -47,10 +47,32 @@ import org.w3c.dom.Text;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * @author doemming
+ * @author doemming, schlienger
  */
-public class XMLUtilities
+public final class XMLUtilities
 {
+  /** denotes the beginning of an XML-Header (Value is: &lt;?xml) */
+  public final static String XML_HEADER_BEGIN = "<?xml";
+  
+  /** denotes the beginning of a CDATA section (Value is: &lt;![CDATA[) */
+  public final static String CDATA_BEGIN = "<![CDATA[";
+  public final static String CDATA_BEGIN_REGEX = "<\\!\\[CDATA\\[";
+  
+  /** denotes the end of a CDATA section (Value is: ]]&gt;)*/
+  public final static String CDATA_END = "]]>";
+  public final static String CDATA_END_REGEX = "\\]\\]>";
+  
+  /**
+   * Encapsulates the given string into a CDATA section.<p>
+   * 
+   * @param string
+   * @return &lt;![CDATA[...string...]]&gt;
+   */
+  public static String encapsulateInCDATA( final String string )
+  {
+    return CDATA_BEGIN + string + CDATA_END;
+  }
+  
   public static String removeXMLHeader( String xmlString )
   {
     return xmlString.replaceFirst( "<\\?.+?\\?>", "" );
@@ -89,5 +111,4 @@ public class XMLUtilities
     }
   
   }
-
 }
