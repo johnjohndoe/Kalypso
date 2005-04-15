@@ -490,7 +490,8 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
                 TimeserieConstants.MD_GKR,
                 TimeserieConstants.MD_HOEHENANGABEART,
                 TimeserieConstants.MD_PEGELNULLPUNKT,
-                TimeserieConstants.MD_WQ,
+                TimeserieConstants.MD_WQTABLE,
+                TimeserieConstants.MD_WQWECHMANN,
                 TimeserieConstants.MD_VORHERSAGE } );
 
           }
