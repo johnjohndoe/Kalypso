@@ -1,3 +1,0 @@
-(text,a)
-(text6,a10)(ianz,i4)
-(char3,a8)(xtief,*)_(xret,*)

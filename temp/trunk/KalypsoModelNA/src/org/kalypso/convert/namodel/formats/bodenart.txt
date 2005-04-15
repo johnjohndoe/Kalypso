@@ -1,2 +1,0 @@
-(text,*)
-(typchar,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)

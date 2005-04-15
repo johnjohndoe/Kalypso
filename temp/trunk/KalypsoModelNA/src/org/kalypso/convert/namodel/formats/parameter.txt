@@ -1,0 +1,15 @@
+#Bodentyp:
+(text,a)
+(text6,a10)(ianz,i4)
+(char3,a8)(xtief,*)_(xret,*)
+
+#Bodenart:
+(text,*)
+(typchar,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
+
+#Nutzung:
+(text,a)
+(itag1,i2)_(imon1,i2)_(ijah1,i2)_(xkc,f8.2)(xwt,f8.2)(xlai,f8.2)
+
+#Schnee:
+(texttyp,a20) (xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsorad,*)_(xh0)

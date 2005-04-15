@@ -1,1 +1,0 @@
-(texttyp,a20) (xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsorad,*)_(xh0)
