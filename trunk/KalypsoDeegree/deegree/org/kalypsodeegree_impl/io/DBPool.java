@@ -182,7 +182,9 @@ public class DBPool extends ObjectPool
       ( (Connection)o ).close();
     }
     catch( SQLException e )
-    {}
+    {
+        // shouldnt we print stack trace?
+    }
   }
 
 }

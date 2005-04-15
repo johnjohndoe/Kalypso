@@ -18,7 +18,9 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
+import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 
 /**
  * @author doemming
@@ -155,7 +157,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature[] getFeatures( final FeatureType ft )
   {
-    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( ft, false );
+    final CollectorVisitor collector = new CollectorVisitor();
+    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( collector, ft, false );
     try
     {
       accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -165,8 +168,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       e.printStackTrace();
     }
 
-    final Collection results = visitor.getResults();
-    return (Feature[])results.toArray( new Feature[results.size()] );
+    return collector.getResults( true );
   }
 
   private final Collection m_listener = new ArrayList();
@@ -406,20 +408,24 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           final String typename = path.getTypename();
           if( typename == null )
             return value;
-
-          // falls ein typ angegeben wurde, nur die Elemente
-          // dieses Typs raussuchen
-          // auch, wenn es sich um substituierende handelt!
-          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename, true );
-
+          
           final FeatureList fl = (FeatureList)value;
-          fl.accept( visitor );
-          final Collection results = visitor.getResults();
+          
+          // Versuchsweise!!! nicht löschen
+          
+          // ALT: eine neue FeatureList zurückgeben, die nur diesen Typ enthält
+          // Problem: änderungen in dieser Liste führen nicht zu änderungen im GML
+//          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename, true );
+//          fl.accept( visitor );
+//          final Collection results = visitor.getResults();
+//          final FeatureList newList = FeatureFactory.createFeatureList();
+//          newList.addAll( results );
+//          return newList;
 
-          final FeatureList newList = FeatureFactory.createFeatureList();
-          newList.addAll( results );
+          // NEU: eine gefiltere FeatureList (siehe FilteredFeatureList)
+          // Problem: ist langsamer und unterstützt nicht alle Operationen der Originalliste
+          return new FilteredFeatureList( fl, typename, true );
 
-          return newList;
         }
         return null;
       }

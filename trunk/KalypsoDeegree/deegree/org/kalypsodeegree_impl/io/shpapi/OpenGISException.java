@@ -77,9 +77,6 @@ public class OpenGISException extends Exception
 {
   private String message = "org.kalypsodeegree_impl.io.shpapi.OpenGISException";
 
-  public OpenGISException()
-  {}
-
   public OpenGISException( String s )
   {
     super( s );

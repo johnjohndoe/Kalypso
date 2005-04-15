@@ -245,7 +245,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setColor( backColor );
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
-    final Feature feature = FeatureFactory.createDefaultFeature( ft, true );
+    final Feature feature = FeatureFactory.createDefaultFeature( "egal", ft, true );
     DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
     { style }, null );
     for( int i = 0; i < des.length; i++ )

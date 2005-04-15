@@ -83,13 +83,9 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 public class SHPMultiPoint extends SHPGeometry
 {
-
   public SHPPoint[] points = null;
 
   public int numPoints = 0;
-
-  public SHPMultiPoint()
-  {}
 
   /**
    * constructor: recieves a stream <BR>

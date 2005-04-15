@@ -1,4 +1,4 @@
-package org.kalypso.ogc.gml.convert;
+package org.kalypso.ogc.gml.convert.source;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.gml.util.CsvSourceType;
 import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -24,21 +24,22 @@ public class CsvSourceHandler implements ISourceHandler
 {
   private final CsvSourceType m_type;
 
-  private IUrlResolver m_resolver = new UrlUtilities();
-
   private final URL m_context;
 
-  public CsvSourceHandler( final URL context, final CsvSourceType type )
+  private final IUrlResolver m_resolver;
+
+  public CsvSourceHandler( final IUrlResolver resolver, final URL context, final CsvSourceType type )
   {
+    m_resolver = resolver;
     m_context = context;
     m_type = type;
   }
 
   /**
-   * @throws SourceHandlerException
-   * @see org.kalypso.ogc.gml.convert.ISourceHandler#getWorkspace()
+   * @throws GmlConvertException
+   * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
-  public GMLWorkspace getWorkspace() throws SourceHandlerException
+  public GMLWorkspace getWorkspace() throws GmlConvertException
   {
     final String href = m_type.getHref();
     
@@ -71,12 +72,13 @@ public class CsvSourceHandler implements ISourceHandler
       stream = connection.getInputStream();
 
       final String encoding = connection.getContentEncoding();
+      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
       
-      return reader.loadCSV( new InputStreamReader( stream, encoding ), m_type.getComment(), m_type.getDelemiter() );
+      return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter() );
     }
     catch( final Exception e )
     {
-      throw new SourceHandlerException( "CSV konnte nicht geladen werden: " + href, e );
+      throw new GmlConvertException( "CSV konnte nicht geladen werden: " + href, e );
     }
     finally
     {

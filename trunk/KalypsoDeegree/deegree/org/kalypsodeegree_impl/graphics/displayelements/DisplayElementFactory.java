@@ -84,7 +84,6 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
@@ -389,21 +388,10 @@ public class DisplayElementFactory
       GM_Point[] centroids = new GM_Point[primitives.length];
 
       for( int i = 0; i < primitives.length; i++ )
-      {
         centroids[i] = primitives[i].getCentroid();
-      }
 
-      try
-      {
-        displayElement = new PointDisplayElement_Impl( feature, GeometryFactory
-            .createGM_MultiPoint( centroids ), sym );
-      }
-      catch( GM_Exception e )
-      {
-        System.out
-            .println( "GM_Exception caught in DisplayElementFactory.buildPointDisplayElement: " + e );
-        e.printStackTrace();
-      }
+      displayElement = new PointDisplayElement_Impl( feature, GeometryFactory
+          .createGM_MultiPoint( centroids ), sym );
     }
     else
     {

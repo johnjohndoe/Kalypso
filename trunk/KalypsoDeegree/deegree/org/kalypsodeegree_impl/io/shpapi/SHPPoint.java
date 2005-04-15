@@ -80,13 +80,14 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class SHPPoint extends SHPGeometry
 {
-
   public double x;
 
   public double y;
 
   public SHPPoint()
-  {}
+  {
+    // empty
+  }
 
   /**
    * constructor: gets a stream and the start index <BR>

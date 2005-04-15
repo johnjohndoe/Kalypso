@@ -10,18 +10,35 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="target" type="layer:kalypsoLinkType">
-					<xs:annotation>
-						<xs:documentation><![CDATA[
-							  An diesen Ort wird die Datenquelle geschrieben.
-				]]></xs:documentation>
-					</xs:annotation>
-				</xs:element>
+				<xs:element ref="target"/>
 				<xs:element ref="source"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="source" type="SourceType">
+	<xs:element abstract="true" name="target" type="TargetType">
+		<xs:annotation>
+			<xs:documentation><![CDATA[
+							  An diesen Ort wird die Datenquelle geschrieben.
+				]]></xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="TargetType">
+		<xs:attributeGroup ref="xlink:locatorLink"/>
+	</xs:complexType>
+	<xs:element name="csvtarget" type="CsvTargetType" substitutionGroup="target"/>
+	<xs:complexType name="CsvTargetType">
+		<xs:complexContent>
+			<xs:extension base="TargetType">
+				<xs:sequence>
+					<xs:element name="column" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="featurePath" type="xs:string"/>
+				<xs:attribute name="delemiter" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="gmltarget" type="TargetType" substitutionGroup="target"/>
+	<xs:element abstract="true" name="source" type="SourceType">
 		<xs:annotation>
 			<xs:documentation><![CDATA[
 				Bezeichnet eine Quelle von GML-Daten.
@@ -84,20 +101,22 @@
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="fromPath" type="xs:string"/>
+		<xs:attribute name="fromID" type="xs:string"/>
 		<xs:attribute name="toPath" type="xs:string"/>
+		<xs:attribute name="toID" type="xs:string"/>
 	</xs:complexType>
 	<xs:element name="addFeaturesMapping" type="AddFeaturesMappingType" substitutionGroup="mapping"/>
 	<xs:complexType name="AddFeaturesMappingType">
 		<xs:complexContent>
-			<xs:extension base="MappingType"/>
+			<xs:extension base="MappingType">
+				<xs:attribute name="overwriteExisting" type="xs:boolean" use="optional" default="false"/>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:element name="changeFeaturesMapping" type="changeFeaturesMappingType" substitutionGroup="mapping"/>
 	<xs:complexType name="changeFeaturesMappingType">
 		<xs:complexContent>
 			<xs:extension base="MappingType">
-				<xs:attribute name="sourceProperty" type="xs:string"/>
-				<xs:attribute name="targetProperty" type="xs:string"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

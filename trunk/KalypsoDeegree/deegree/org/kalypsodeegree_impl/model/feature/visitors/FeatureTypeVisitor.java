@@ -1,36 +1,39 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * <p>Collects all features of a given type</p>
+ * <p>Decorater over any FeatureVisitor, but only visits features of a given type.</p>
  * <p>Comparisaon is by name of the given type</p>
  * 
  * @author belger
  */
 public class FeatureTypeVisitor implements FeatureVisitor
 {
-  private final Collection m_results = new ArrayList();
-  
   private final String m_typename;
 
   /** Falls true, werden auch features acceptiert, welche den angegebenen Typ substituieren */
   private final boolean m_acceptIfSubstituting;
 
-  public FeatureTypeVisitor( final FeatureType ft, final boolean acceptIfSubstituting )
+  private FeatureVisitor m_visitor;
+
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final FeatureType ft, final boolean acceptIfSubstituting )
   {
-    this( ft.getName(), acceptIfSubstituting );
+    this( visitor, ft.getName(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final String typename, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final String typename, final boolean acceptIfSubstituting )
   {
+    m_visitor = visitor;
     m_typename = typename;
     m_acceptIfSubstituting = acceptIfSubstituting;
+  }
+  
+  public void setVisitor( FeatureVisitor visitor )
+  {
+    m_visitor = visitor;
   }
 
   /**
@@ -38,18 +41,17 @@ public class FeatureTypeVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final FeatureType featureType = f.getFeatureType();
-
-    final String substName = featureType.getNamespace() + ":" + m_typename;
-    
-    if( m_typename.equals( featureType.getName() ) || ( m_acceptIfSubstituting && substName.equals( featureType.getSubstitutionGroup() ) ) )
-      m_results.add( f );
+    if( matchesType( f ) )
+      m_visitor.visit( f );
     
     return true;
   }
-
-  public Collection getResults()
+  
+  public boolean matchesType( final Feature f )
   {
-    return m_results;
+    final FeatureType featureType = f.getFeatureType();
+
+    final String substName = featureType.getNamespace() + ":" + m_typename;
+    return ( m_typename.equals( featureType.getName() ) || ( m_acceptIfSubstituting && substName.equals( featureType.getSubstitutionGroup() ) ) );
   }
 }

@@ -88,12 +88,6 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
   private Graphic graphic = null;
 
   /**
-   * default constructor
-   */
-  GraphicStroke_Impl()
-  {}
-
-  /**
    * constructor initializing the class with the <GraphicStroke>
    */
   GraphicStroke_Impl( Graphic graphic )

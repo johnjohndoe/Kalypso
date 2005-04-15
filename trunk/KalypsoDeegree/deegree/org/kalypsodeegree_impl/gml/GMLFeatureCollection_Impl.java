@@ -139,11 +139,6 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
     super( element );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public Element getAsElement()
   {
     return element;
@@ -389,11 +384,6 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
     Debug.debugMethodEnd();
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return DOMPrinter.nodeToString( element, "" );
@@ -404,6 +394,9 @@ public class GMLFeatureCollection_Impl extends GMLFeature_Impl implements GMLFea
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.8  2005/04/15 19:46:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.7  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *

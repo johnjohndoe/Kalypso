@@ -85,7 +85,9 @@ public class Symbolizer_Impl implements Symbolizer
    * default constructor
    */
   Symbolizer_Impl()
-  {}
+  {
+    // geometry is null
+  }
 
   /**
    * constructor initializing the class with the <Symbolizer>

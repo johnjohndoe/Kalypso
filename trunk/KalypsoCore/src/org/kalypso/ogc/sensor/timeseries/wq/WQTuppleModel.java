@@ -259,7 +259,6 @@ public class WQTuppleModel extends AbstractTuppleModel
    * 
    * @param values
    * @param axes
-   * @return
    * @throws SensorException
    */
   public static ITuppleModel reverse( ITuppleModel values, IAxis[] axes )

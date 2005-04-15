@@ -86,12 +86,6 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
   private Graphic graphic = null;
 
   /**
-   * default constructor
-   */
-  GraphicFill_Impl()
-  {}
-
-  /**
    * constructor initializing the class with the <GraphicFill>
    */
   GraphicFill_Impl( Graphic graphic )

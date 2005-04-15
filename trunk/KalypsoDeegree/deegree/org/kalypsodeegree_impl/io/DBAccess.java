@@ -192,8 +192,9 @@ public class DBAccess
     con.setAutoCommit( autoCommit );
   }
 
-  public void kill()
-  {}
+  // unused!
+//  public void kill()
+//  {}
 
   /**
    * sets the auto commit status of the connection

@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.url;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -49,6 +51,7 @@ import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.java.net.UrlUtilities;
 
 /**
  * <p>Erzeugt aus einem String eine URL</p>
@@ -103,5 +106,17 @@ public class UrlResolver implements IUrlResolver
   public void addReplaceToken( final String key, final String value )
   {
     m_replaceTokenMap.setProperty( key, value );
+  }
+
+  /**
+   * @throws IOException
+   * @see org.kalypso.java.net.IUrlResolver#createBufferedWriter(java.net.URL)
+   */
+  public BufferedWriter createBufferedWriter( final URL url ) throws IOException
+  {
+    // TODO: handle platfrom protocolls etc.
+    final UrlUtilities utilities = new UrlUtilities();
+    
+    return utilities.createBufferedWriter( url );
   }
 }

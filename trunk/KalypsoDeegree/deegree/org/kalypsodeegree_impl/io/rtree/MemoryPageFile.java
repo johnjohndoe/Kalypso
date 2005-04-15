@@ -56,7 +56,7 @@ public class MemoryPageFile extends PageFile
   /**
    * @see PageFile#writeNode(Node)
    */
-  public int writeNode( Node node ) throws PageFileException
+  public int writeNode( Node node )
   {
     int i = 0;
 
@@ -84,13 +84,6 @@ public class MemoryPageFile extends PageFile
     return i;
   }
 
-  /**
-   * 
-   * 
-   * @param pageNumber
-   * 
-   * @return
-   */
   public Node deleteNode( int pageNumber )
   {
     return (Node)file.remove( new Integer( pageNumber ) );
@@ -99,7 +92,7 @@ public class MemoryPageFile extends PageFile
   /**
    * @see PageFile#close()
    */
-  public void close() throws PageFileException
+  public void close()
   {
   // nothing to do
   }

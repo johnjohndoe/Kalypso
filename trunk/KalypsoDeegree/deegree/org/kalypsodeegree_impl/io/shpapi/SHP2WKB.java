@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.cs.Adapters;
@@ -77,12 +76,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class SHP2WKB
 {
-  /**
-   * constructor: <BR>
-   */
-  public SHP2WKB()
-  {}
-
   /**
    * method: byte[] transformPoint(CS_CoordinateSystem srs, <BR>
    * SHPPoint shppoint)) <BR>
@@ -156,12 +149,11 @@ public class SHP2WKB
   public byte[] transformPolyLine( SHPPolyLine shppolyline )
   {
     byte[] wkbLineString = null;
-    int offset = 0;
 
     SHP2WKS shp2wks = new SHP2WKS();
     CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
     CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
-    GM_Curve[] points = shp2wks.transformPolyLine( srs, shppolyline );
+    shp2wks.transformPolyLine( srs, shppolyline );
 
     /*
      * // it's a single LineString if (points.length == 1) {

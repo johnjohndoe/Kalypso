@@ -80,12 +80,6 @@ public class Extent_Impl implements Extent, Marshallable
   private String value = null;
 
   /**
-   * default constructor
-   */
-  Extent_Impl()
-  {}
-
-  /**
    * constructor initializing the class with the <Extent>
    */
   Extent_Impl( String value, String name )

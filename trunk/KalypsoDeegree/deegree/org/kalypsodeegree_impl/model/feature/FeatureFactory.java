@@ -336,11 +336,11 @@ public class FeatureFactory
   }
 
   /** Creates default feature, used by LegendView */
-  public static Feature createDefaultFeature( final FeatureType ft, final boolean createGeometry )
+  public static Feature createDefaultFeature( final String id, final FeatureType ft, final boolean createGeometry )
   {
     final FeatureTypeProperty[] propTypes = ft.getProperties();
     final FeatureProperty[] props = createDefaultFeatureProperty( propTypes, createGeometry );
-    final Feature feature = FeatureFactory.createFeature( "default", ft, props );
+    final Feature feature = FeatureFactory.createFeature( id, ft, props );
     return feature;
   }
 
@@ -386,7 +386,7 @@ public class FeatureFactory
         }
         catch( Exception e )
         {
-          e.printStackTrace();        
+          e.printStackTrace();
         }
       }
       else
@@ -521,10 +521,11 @@ public class FeatureFactory
         result.add( newFtp[j] );
     }
 
-    final FeatureTypeProperty[] vftp = registry.getVirtualFeatureTypePropertiesFor( realFeatureType );
+    final FeatureTypeProperty[] vftp = registry
+        .getVirtualFeatureTypePropertiesFor( realFeatureType );
     for( int i = 0; i < vftp.length; i++ )
       result.add( vftp[i] );
-    
+
     return (FeatureTypeProperty[])result.toArray( new FeatureTypeProperty[result.size()] );
   }
 
