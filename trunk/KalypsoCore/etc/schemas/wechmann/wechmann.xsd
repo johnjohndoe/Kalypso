@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="wechmann.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="wechmann.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlinkext">
+<xs:schema targetNamespace="wechmann.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="wechmann.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="wechmann">
 		<xs:annotation>
 			<xs:documentation>The Wechmann Parametersets</xs:documentation>

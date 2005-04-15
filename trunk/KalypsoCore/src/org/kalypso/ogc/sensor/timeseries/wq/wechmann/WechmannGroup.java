@@ -46,6 +46,9 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+
 /**
  * A List of WechmannSets sorted according to the date of validity of the
  * WechmannSet objects. You can call the iterator to step through the list in
@@ -53,7 +56,7 @@ import java.util.TreeMap;
  * 
  * @author schlienger
  */
-public class WechmannGroup
+public class WechmannGroup implements IWQConverter
 {
   private final SortedMap m_map;
 
@@ -94,5 +97,23 @@ public class WechmannGroup
       return null;
     
     return (WechmannSet) m_map.get( dates[i] );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
+   */
+  public double computeW( Date date, double Q ) throws WQException
+  {
+    final WechmannParams params = getFor( date ).getForQ( Q );
+    return WechmannFunction.computeW( params, Q );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
+   */
+  public double computeQ( Date date, double W ) throws WQException
+  {
+    final WechmannParams params = getFor( date ).getForW( W );
+    return WechmannFunction.computeQ( params, W );
   }
 }

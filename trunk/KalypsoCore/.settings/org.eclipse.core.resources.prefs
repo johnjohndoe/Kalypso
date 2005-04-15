@@ -1,7 +1,10 @@
-#Thu Apr 14 22:03:00 CEST 2005
+#Fri Apr 15 17:05:59 CEST 2005
 encoding//schema/nativeObsAdapter.exsd=UTF-8
-eclipse.preferences.version=1
-encoding//etc/schemas/zml/beispiel.zml=UTF-8
-encoding//src/org/kalypso/ogc/sensor/filter/test/Niederschlag.zml=UTF-8
-encoding//etc/schemas/zml/inline.zml=UTF-8
+encoding//etc/schemas/zml/beispiel-metadata.zml=UTF-8
+encoding//src/org/kalypso/ogc/sensor/timeseries/wq/test/wq-test4.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/test/spreemodell/modell.gml=UTF-8
+encoding//src/org/kalypso/ogc/sensor/filter/test/Niederschlag.zml=UTF-8
+encoding//etc/schemas/zml/beispiel.zml=UTF-8
+eclipse.preferences.version=1
+encoding//etc/schemas/zml/inline.zml=UTF-8
+encoding//etc/schemas/zml/inline_ex.zml=UTF-8

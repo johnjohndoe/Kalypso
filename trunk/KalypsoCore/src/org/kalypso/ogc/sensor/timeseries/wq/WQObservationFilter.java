@@ -51,10 +51,8 @@ import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.xml.sax.InputSource;
 
@@ -73,7 +71,7 @@ public class WQObservationFilter extends AbstractObservationFilter
 
   private IAxis m_destAxis;
 
-  private WechmannGroup m_group = null;
+  private IWQConverter m_conv = null;
 
   /**
    * The argument conf is a String as defined in TimeserieConstants.TYPE_*. It
@@ -145,39 +143,46 @@ public class WQObservationFilter extends AbstractObservationFilter
       throws SensorException
   {
     return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
-        m_srcAxis, m_destAxis, getWechmannGroup() );
+        m_srcAxis, m_destAxis, getWQConverter() );
   }
 
   /**
-   * Lazy loading of wechmann group.
+   * Lazy loading of WQ-Relation
    * 
    * @throws SensorException
    */
-  private WechmannGroup getWechmannGroup( ) throws SensorException
+  private IWQConverter getWQConverter( ) throws SensorException
   {
-    if( m_group == null )
+    if( m_conv == null )
     {
-      final String wechmann = getMetadataList().getProperty(
-          TimeserieConstants.MD_WQ );
-      if( wechmann != null )
+      try
       {
-        try
+        if( getMetadataList().containsKey( TimeserieConstants.MD_WQWECHMANN ) )
         {
-          m_group = WechmannFactory.parse( new InputSource( new StringReader(
+          final String wechmann = getMetadataList().getProperty(
+              TimeserieConstants.MD_WQWECHMANN );
+
+          m_conv = WechmannFactory.parse( new InputSource( new StringReader(
               wechmann ) ) );
         }
-        catch( WechmannException e )
+        else if( getMetadataList().containsKey( TimeserieConstants.MD_WQTABLE ) )
         {
-          throw new SensorException( e );
+          final String wqtable = getMetadataList().getProperty(
+              TimeserieConstants.MD_WQTABLE );
+
+          m_conv = WQTableFactory.parse( new InputSource( new StringReader(
+              wqtable ) ) );
         }
+        else
+          throw new IllegalStateException( "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
       }
-      else
+      catch( WQException e )
       {
-        m_group = new WechmannGroup( new WechmannSet[0] );
+        throw new SensorException( e );
       }
     }
 
-    return m_group;
+    return m_conv;
   }
 
   /**
@@ -188,25 +193,16 @@ public class WQObservationFilter extends AbstractObservationFilter
     super.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
   }
 
-  /**
-   * @return Returns the dateAxis.
-   */
   public IAxis getDateAxis( )
   {
     return m_dateAxis;
   }
 
-  /**
-   * @return Returns the destAxis.
-   */
   public IAxis getDestAxis( )
   {
     return m_destAxis;
   }
 
-  /**
-   * @return Returns the srcAxis.
-   */
   public IAxis getSrcAxis( )
   {
     return m_srcAxis;

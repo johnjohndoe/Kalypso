@@ -49,6 +49,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.wechmann.Wechmann;
 import org.kalypso.wechmann.WechmannType;
 import org.kalypso.wechmann.XMLWechmannParams;
@@ -103,10 +104,10 @@ public class WechmannFactory
    * 
    * @param ins
    * @return newly created WechmannGroup object
-   * @throws WechmannException
+   * @throws WQException
    */
   public static WechmannGroup parse(final InputSource ins)
-      throws WechmannException
+      throws WQException
   {
     try
     {
@@ -162,7 +163,7 @@ public class WechmannFactory
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      throw new WechmannException( e );
+      throw new WQException( e );
     }
   }
 
@@ -171,10 +172,10 @@ public class WechmannFactory
    * 
    * @param wg
    * @return xml String
-   * @throws WechmannException
+   * @throws WQException
    */
   public static String createXMLString(final WechmannGroup wg)
-      throws WechmannException
+      throws WQException
   {
     try
     {
@@ -228,7 +229,7 @@ public class WechmannFactory
     }
     catch( JAXBException e )
     {
-      throw new WechmannException( e );
+      throw new WQException( e );
     }
   }
 }

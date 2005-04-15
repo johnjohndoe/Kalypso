@@ -58,6 +58,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.PropertiesHelper;
+import org.kalypso.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -183,7 +184,8 @@ public class ZmlFactory
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * 
    * @param url
-   * @param identifier ID für Repository
+   * @param identifier
+   *          ID für Repository
    * @return IObservation object
    * 
    * @throws SensorException
@@ -270,7 +272,16 @@ public class ZmlFactory
       {
         final MetadataType md = (MetadataType) it.next();
 
-        metadata.put( md.getName(), md.getValue() );
+        final String value;
+        if( md.getValue() != null )
+          value = md.getValue();
+        else if( md.getData() != null )
+          value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" )
+              .replaceAll( XMLUtilities.CDATA_END_REGEX, "" );
+        else
+          value = "";
+
+        metadata.put( md.getName(), value );
       }
     }
 
@@ -354,7 +365,7 @@ public class ZmlFactory
   {
     if( context == null )
       return baseObs;
-    
+
     final String str = context.toExternalForm();
 
     IVariableArguments args = null;
@@ -435,7 +446,14 @@ public class ZmlFactory
 
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
-        mdType.setValue( mdValue );
+
+        // TRICKY: if this looks like an xml-string then pack it
+        // into a CDATA section and use the 'data'-Element instead
+        if( mdValue.startsWith( XMLUtilities.XML_HEADER_BEGIN ) )
+          mdType.setData( XMLUtilities.encapsulateInCDATA( mdValue ) );
+        else
+          mdType.setValue( mdValue );
+
         metadataList.add( mdType );
       }
 

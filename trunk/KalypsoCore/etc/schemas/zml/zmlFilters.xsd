@@ -7,20 +7,6 @@
 	<complexType name="abstractFilterType" abstract="true"/>
 	<element name="filter" type="filters:abstractFilterType"/>
 	
-	<!-- Filter: WQ Transformation -->
-	<complexType name="wqFilterType">
-		<complexContent>
-			<extension base="filters:abstractFilterType">
-				<sequence>
-					<element ref="filters:filter" minOccurs="0"/>
-				</sequence>
-				<!-- W or Q -->
-				<attribute name="type" type="string"/>
-			</extension>
-		</complexContent>
-	</complexType>
-	<element name="wqFilter" type="filters:wqFilterType" substitutionGroup="filters:filter"/>
-	
 	<!-- Filter: valueFilter -->
 	<complexType name="valueFilterType">
 		<complexContent>

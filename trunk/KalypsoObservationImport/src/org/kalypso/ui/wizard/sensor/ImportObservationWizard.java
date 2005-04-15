@@ -175,7 +175,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
           final ITuppleModel model = new SimpleTuppleModel( axesNew, newValues );
           newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq
-              .getDestAxis(), wq.getWsets() );
+              .getDestAxis(), wq.getConverter() );
         }
         else
         {

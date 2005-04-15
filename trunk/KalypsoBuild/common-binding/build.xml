@@ -54,7 +54,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project-name}" />
-		<xjc target="${build.source}" extension="true">
+		<xjc target="${build.source}" extension="true" removeoldoutput="true">
 			<schema dir=".">
 				<include name="**/*.xsd" />
 			</schema>

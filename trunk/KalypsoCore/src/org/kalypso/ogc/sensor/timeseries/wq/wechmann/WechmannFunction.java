@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+
 /**
  * The Wechmann Function. Performs conversion from W to Q and from Q to W
  * according to the Wechmann parameters.
@@ -111,9 +113,9 @@ public class WechmannFunction
    * @return W
    * @see WechmannFunction#computeW(double, double, double, double)
    * 
-   * @throws WechmannException
+   * @throws WQException
    */
-  public static final double computeW( final WechmannParams wp, final double Q ) throws WechmannException
+  public static final double computeW( final WechmannParams wp, final double Q ) throws WQException
   {
     return computeW( wp.getW1(), Q, wp.getLNK1(), wp.getK2() );
   }
@@ -131,12 +133,12 @@ public class WechmannFunction
    * @param K2
    * @return W
    * 
-   * @throws WechmannException when K2 = 0
+   * @throws WQException when K2 = 0
    */
-  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 ) throws WechmannException
+  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 ) throws WQException
   {
     if( K2 == 0 )
-      throw new WechmannException( "Divide by 0 (K2 = 0)" );
+      throw new WQException( "Divide by 0 (K2 = 0)" );
     
     return W1 + Math.exp( ( Math.log( Q ) - LNK1 ) / K2 );
   }

@@ -41,9 +41,13 @@
 package org.kalypso.ogc.sensor.zml.test;
 
 import java.io.File;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
@@ -56,19 +60,18 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.util.factory.FactoryException;
+import org.kalypso.zml.ObservationType;
+import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
  */
 public class ZmlTest extends TestCase
 {
-  private IObservation m_obs;
+  private final SimpleDateFormat df = new SimpleDateFormat( "dd.MM.yyyy" );
 
-  private String m_obsID;
-
-  private SimpleDateFormat df;
-
-  private DoubleComparator dc;
+  private final DoubleComparator dc = new DoubleComparator( 0 );
 
   // contains the list of ZMLs to test
   private final static String[] ZMLs = { "./etc/schemas/zml/beispiel.zml",
@@ -77,54 +80,51 @@ public class ZmlTest extends TestCase
   public void testZmls( ) throws MalformedURLException, SensorException,
       ParseException
   {
-    df = new SimpleDateFormat( "dd.MM.yyyy" );
-    dc = new DoubleComparator( 0 );
-
     for( int i = 0; i < ZMLs.length; i++ )
     {
       System.out.println( "Testing: " + ZMLs[i] );
-      
+
       final File zmlFile = new File( ZMLs[i] );
       assertTrue( zmlFile.exists() );
 
-      m_obsID = zmlFile.getAbsolutePath();
+      final String obsID = zmlFile.getAbsolutePath();
 
-      m_obs = ZmlFactory.parseXML( zmlFile.toURL(), m_obsID );
+      final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), obsID );
 
-      _testGetName();
-      _testGetTarget();
-      _testGetAxisList();
-      _testGetIdentifier();
-      _testGetMetadataList();
-      _testGetValues();
-      _testIsEditable();
-      _testSetValues();
+      _testGetName( obs );
+      _testGetTarget( obs );
+      _testGetAxisList( obs );
+      _testGetIdentifier( obs, obsID );
+      _testGetMetadataList( obs );
+      _testGetValues( obs );
+      _testIsEditable( obs );
+      _testSetValues( obs );
     }
   }
 
-  public void _testGetName( )
+  private void _testGetName( final IObservation obs )
   {
-    assertTrue( m_obs.getName().equals( "Eine Test-Observation" ) );
+    assertTrue( obs.getName().equals( "Eine Test-Observation" ) );
   }
 
-  public void _testIsEditable( )
+  private void _testIsEditable( final IObservation obs )
   {
-    assertTrue( m_obs.isEditable() );
+    assertTrue( obs.isEditable() );
   }
 
-  public void _testGetIdentifier( )
+  private void _testGetIdentifier( final IObservation obs, final String obsID )
   {
-    assertTrue( m_obs.getIdentifier().equals( m_obsID ) );
+    assertTrue( obs.getIdentifier().equals( obsID ) );
   }
 
-  public void _testGetTarget( )
+  private void _testGetTarget( final IObservation obs )
   {
-    assertNull( m_obs.getTarget() );
+    assertNull( obs.getTarget() );
   }
 
-  public void _testGetMetadataList( )
+  private void _testGetMetadataList( final IObservation obs )
   {
-    final MetadataList mdl = m_obs.getMetadataList();
+    final MetadataList mdl = obs.getMetadataList();
     assertNotNull( mdl );
 
     assertTrue( mdl.getProperty( "Pegelnullpunkt" ).equals( "10" ) );
@@ -132,17 +132,18 @@ public class ZmlTest extends TestCase
     assertTrue( mdl.getProperty( "Alarmstufe 1" ).equals( "4.3" ) );
   }
 
-  public void _testGetAxisList( )
+  private void _testGetAxisList( final IObservation obs )
   {
-    final IAxis[] axes = m_obs.getAxisList();
+    final IAxis[] axes = obs.getAxisList();
     assertNotNull( axes );
 
     assertTrue( axes.length == 3 );
   }
 
-  public void _testGetValues( ) throws SensorException, ParseException
+  private void _testGetValues( final IObservation obs ) throws SensorException,
+      ParseException
   {
-    final ITuppleModel values = m_obs.getValues( null );
+    final ITuppleModel values = obs.getValues( null );
     assertNotNull( values );
 
     assertEquals( values.getCount(), 21 );
@@ -170,9 +171,10 @@ public class ZmlTest extends TestCase
         .valueOf( "18.5" ) ) == 0 );
   }
 
-  public void _testSetValues( ) throws SensorException, ParseException
+  private void _testSetValues( final IObservation obs ) throws SensorException,
+      ParseException
   {
-    final IAxis[] axes = m_obs.getAxisList();
+    final IAxis[] axes = obs.getAxisList();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByName( axes, "Datum" );
     assertNotNull( dateAxis );
@@ -183,7 +185,7 @@ public class ZmlTest extends TestCase
     final IAxis vAxis2 = ObservationUtilities.findAxisByName( axes, "Pegel2" );
     assertNotNull( vAxis2 );
 
-    final SimpleTuppleModel m = new SimpleTuppleModel( m_obs.getAxisList() );
+    final SimpleTuppleModel m = new SimpleTuppleModel( obs.getAxisList() );
 
     final Object[] t1 = new Object[3];
     t1[m.getPositionFor( dateAxis )] = df.parse( "20.01.2004" );
@@ -203,9 +205,9 @@ public class ZmlTest extends TestCase
     t3[m.getPositionFor( vAxis2 )] = new Double( 33 );
     m.addTupple( t3 );
 
-    m_obs.setValues( m );
+    obs.setValues( m );
 
-    final ITuppleModel values = m_obs.getValues( null );
+    final ITuppleModel values = obs.getValues( null );
     assertNotNull( values );
 
     assertEquals( values.getCount(), 22 );
@@ -230,5 +232,32 @@ public class ZmlTest extends TestCase
         .valueOf( "66" ) ) == 0 );
     assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double
         .valueOf( "33" ) ) == 0 );
+  }
+
+  /**
+   * Tests the new mechanism ('data'-Element) for storing Metadata stuff
+   */
+  public void testMetadataEx( ) throws MalformedURLException, SensorException,
+      ParseException, FactoryException, JAXBException
+  {
+    final File zmlFile = new File( "./etc/schemas/zml/beispiel-metadata.zml" );
+    assertTrue( zmlFile.exists() );
+
+    final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), zmlFile
+        .getAbsolutePath() );
+
+    final ObservationType xml = ZmlFactory.createXML( obs, null );
+    final StringWriter writer = new StringWriter();
+    ZmlFactory.getMarshaller().marshal( xml, writer );
+    
+    final String xmlStr = writer.toString();
+    
+    System.out.println( xmlStr );
+    
+    final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), "fake-id", null );
+    final ObservationType xml2 = ZmlFactory.createXML( obs2, null );
+    final StringWriter writer2 = new StringWriter();
+    ZmlFactory.getMarshaller().marshal( xml2, writer2 );
+    System.out.println( writer2.toString() );
   }
 }
