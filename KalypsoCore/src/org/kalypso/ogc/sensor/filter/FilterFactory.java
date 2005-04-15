@@ -178,7 +178,6 @@ public class FilterFactory
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      
       throw new SensorException( e );
     }
     finally

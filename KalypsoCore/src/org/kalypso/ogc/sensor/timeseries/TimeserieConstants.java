@@ -98,7 +98,9 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   // METADATEN
 
-  public final static String MD_WQ = "WQ-Parameter";
+  public final static String MD_WQWECHMANN = "WQ-Parameter";
+
+  public final static String MD_WQTABLE = "WQ-Tabelle";
 
   public final static String MD_GKR = "Rechtswert";
 

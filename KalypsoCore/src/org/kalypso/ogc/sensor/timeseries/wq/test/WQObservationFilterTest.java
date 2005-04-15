@@ -36,13 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.test;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -74,12 +73,8 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" );
 
-      final IObservation obs = ZmlFactory
-          .parseXML(
-              new InputSource( ins ),
-              "",
-              new URL(
-                  "file:/wq-test.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "",
+          null );
 
       final ITuppleModel wqValues = obs.getValues( null );
 
@@ -107,12 +102,8 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" );
 
-      final IObservation obs = ZmlFactory
-          .parseXML(
-              new InputSource( ins ),
-              "",
-              new URL(
-                  "file:/wq-test2.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "",
+          null );
 
       final ITuppleModel values = obs.getValues( null );
 
@@ -126,12 +117,6 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  /**
-   * tests a wq filter over an observation that does not have any wq param spec
-   * 
-   * @throws MalformedURLException
-   * @throws SensorException
-   */
   public void testObsWithoutWQParam( ) throws MalformedURLException,
       SensorException
   {
@@ -140,12 +125,31 @@ public class WQObservationFilterTest extends TestCase
     {
       ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" );
 
-      final IObservation obs = ZmlFactory
-          .parseXML(
-              new InputSource( ins ),
-              "",
-              new URL(
-                  "file:/wq-test3.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "",
+          null );
+
+      final ITuppleModel values = obs.getValues( null );
+
+      assertNotNull( values );
+
+      System.out.println( ObservationUtilities.dump( values, "  " ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
+    }
+  }
+
+  public void testWQTable( ) throws MalformedURLException,
+      SensorException
+  {
+    InputStream ins = null;
+    try
+    {
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test4.zml" );
+
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "",
+          null );
 
       final ITuppleModel values = obs.getValues( null );
 

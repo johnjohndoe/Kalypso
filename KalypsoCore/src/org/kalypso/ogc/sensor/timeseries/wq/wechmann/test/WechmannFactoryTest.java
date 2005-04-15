@@ -47,7 +47,7 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannException;
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
@@ -76,7 +76,7 @@ public class WechmannFactoryTest extends TestCase
     m_wg = new WechmannGroup( new WechmannSet[] { ws, ws } );
   }
 
-  public void testParse() throws WechmannException, JAXBException
+  public void testParse() throws WQException, JAXBException
   {
     final String xml = WechmannFactory.createXMLString( m_wg );
     

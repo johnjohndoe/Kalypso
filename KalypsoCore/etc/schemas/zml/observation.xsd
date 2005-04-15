@@ -95,12 +95,24 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="MetadataType">
+		<xs:sequence>
+			<xs:element name="data" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The data element is optional and
+						is an alternative way to specify the value
+						of the property (for instance a CDATA block
+						can be used to specify a complex value such 
+						as some xml)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required">
 			<xs:annotation>
-				<xs:documentation>The name must be unique within the metadalist</xs:documentation>
+				<xs:documentation>The name must be unique within the 
+					metadalist</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="value" type="xs:anySimpleType" use="required">
+		<xs:attribute name="value" type="xs:anySimpleType" use="optional">
 			<xs:annotation>
 				<xs:documentation>This is the value which is associated to the 
 					name, thus building a property-value pair</xs:documentation>
