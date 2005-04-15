@@ -299,6 +299,7 @@ public class StatisticView extends JInternalFrame implements ActionListener
 
   void interpretStatistics( Hashtable statistics, Hashtable landuseTypeList )
   {
+    double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
     while( it.hasNext() )
     {
@@ -322,12 +323,15 @@ public class StatisticView extends JInternalFrame implements ActionListener
       logln( landuse + ": Sum=" + Number.round( sum.doubleValue(), 2, mode ) + ", MinValue="
           + Number.round( min.doubleValue(), 4, mode ) + ", MaxValue="
           + Number.round( max.doubleValue(), 4, mode ) );
+      sumAll = sumAll + sum.doubleValue();
     }
+    logln( "Total damage= " + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
   }
 
   void interpretStatistics( Hashtable statistics, Hashtable administrationUnitList,
       Hashtable landuseTypeList )
   {
+    double sumAll = 0;
     Iterator it = statistics.keySet().iterator();
     while( it.hasNext() )
     {
@@ -372,8 +376,10 @@ public class StatisticView extends JInternalFrame implements ActionListener
             + Number.round( max.doubleValue(), 4, mode ) );
       }
       int mode = BigDecimal.ROUND_HALF_EVEN;
-      logln( "Summed Damage=" + Number.round( sum_adminUnit, 2, mode ) + "\n" );
+      logln( "Summed Damage=" + Number.round( sum_adminUnit, 2, mode ) );
+      sumAll = sumAll + sum_adminUnit;
     }
+    logln( "Total Damage=" + Number.round( sumAll, 2, BigDecimal.ROUND_HALF_EVEN ) + "\n" );
   }
 
   void logln( String text )
