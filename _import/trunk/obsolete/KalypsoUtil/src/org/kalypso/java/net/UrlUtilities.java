@@ -40,10 +40,18 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownServiceException;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -95,5 +103,36 @@ public class UrlUtilities implements IUrlResolver
   public void addReplaceToken( final String key, final String value )
   {
     m_replaceTokenMap.setProperty( key, value );
+  }
+
+  /**
+   * @throws IOException
+   * @see org.kalypso.java.net.IUrlResolver#createBufferedWriter(java.net.URL)
+   */
+  public BufferedWriter createBufferedWriter( final URL url ) throws IOException
+  {
+    final URLConnection connection = url.openConnection();
+    try
+    {
+      connection.setDoOutput( true );
+
+      final OutputStream outputStream = connection.getOutputStream();
+      return new BufferedWriter( new OutputStreamWriter( outputStream ) );
+    }
+    catch( final UnknownServiceException e )
+    {
+      // in diesem Fall unterstütz die URL kein Output
+      
+      // jetzt versuchen, selbst einen Stream zu öffnen
+      final String protocol = url.getProtocol();
+      if( "file".equals( protocol ) )
+      {
+        final File file = new File( url.getFile() );
+        return new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
+      }
+      
+      // wenn alles nichts hilfe, doch die esception werden
+      throw e;
+    }
   }
 }

@@ -112,11 +112,11 @@ public class HWVORBatch
           currDir = speicherDir;
           sValue = TimeserieConstants.TYPE_VOLUME;
         }
-        else if( files[i].startsWith( "WQ" ) )
-        {
-          currDir = wqDir;
-          sValue = TimeserieConstants.MD_WQ;
-        }
+//        else if( files[i].startsWith( "WQ" ) )
+//        {
+//          currDir = wqDir;
+//          sValue = TimeserieConstants.MD_WQ;
+//        }
         else if( files[i].startsWith( "P_" ) )
         {
           currDir = niederDir;

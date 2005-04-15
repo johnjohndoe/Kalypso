@@ -36,10 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -51,11 +53,21 @@ public interface IUrlResolver
 {
   public URL resolveURL( final URL base, final String relative ) throws MalformedURLException;
 
-  /** An iterator over entries of a map (Map.Entry)
-   * Each entry represant a token , wich can be replaced
-   * */
+  /**
+   * An iterator over entries of a map (Map.Entry) Each entry represant a token ,
+   * wich can be replaced
+   */
   public Iterator getReplaceEntries();
 
-  /** add a Replace token to the map, which can be accessed via getReplaceEntries() */
+  /**
+   * add a Replace token to the map, which can be accessed via
+   * getReplaceEntries()
+   */
   public void addReplaceToken( final String key, final String value );
+
+  /**
+   * Erzeugt einen BufferedWriter, der an den Ort der URL schreibt. Der Writer
+   * muss vom Aufrufenden geschlossen werden.
+   */
+  public BufferedWriter createBufferedWriter( final URL url ) throws IOException;
 }
