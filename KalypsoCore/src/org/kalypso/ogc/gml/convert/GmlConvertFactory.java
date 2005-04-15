@@ -3,12 +3,19 @@ package org.kalypso.ogc.gml.convert;
 import java.net.URL;
 
 import org.kalypso.gml.util.CsvSourceType;
+import org.kalypso.gml.util.CsvTargetType;
 import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.GmlSourceType;
+import org.kalypso.gml.util.Gmltarget;
 import org.kalypso.gml.util.SourceType;
-import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ILoaderFactory;
-import org.kalypso.template.types.KalypsoLinkType;
+import org.kalypso.gml.util.TargetType;
+import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
+import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;
+import org.kalypso.ogc.gml.convert.source.GmlSourceHandler;
+import org.kalypso.ogc.gml.convert.source.ISourceHandler;
+import org.kalypso.ogc.gml.convert.target.GmlTargetHandler;
+import org.kalypso.ogc.gml.convert.target.ITargetHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -27,42 +34,41 @@ public class GmlConvertFactory
    * Lädt das GML aus einer Source. Sorgt intern dafür, dass die richtigen
    * Source-Handler benutzt werden.
    * 
-   * @throws SourceHandlerException
+   * @throws GmlConvertException
    */
-  public static final GMLWorkspace loadSource( final URL context, final SourceType source )
-      throws SourceHandlerException
+  public static final GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source )
+      throws GmlConvertException
   {
     // switch over source-type
     final ISourceHandler handler;
     if( source instanceof FeaturemappingSourceType )
-      handler = new FeaturemappingSourceHandler( context, (FeaturemappingSourceType)source );
+      handler = new FeaturemappingSourceHandler( resolver, context, (FeaturemappingSourceType)source );
     else if( source instanceof CsvSourceType )
-      handler = new CsvSourceHandler( context, (CsvSourceType)source );
+      handler = new CsvSourceHandler( resolver, context, (CsvSourceType)source );
     else if( source instanceof GmlSourceType )
-      handler = new GmlSourceHandler( context, (GmlSourceType)source );
+      handler = new GmlSourceHandler( resolver, context, (GmlSourceType)source );
     else
-      handler = null;
+      throw new GmlConvertException( "Unbekannter Source-Type: " + source.getClass().getName() );
 
-    return handler == null ? null : handler.getWorkspace();
+    return handler.getWorkspace();
   }
 
   /**
    * Schreibt das GML ins angegebene Target.
-   * @throws SourceHandlerException
+   * @throws GmlConvertException
    *  
    */
-  public static void writeIntoTarget( final ILoaderFactory factory, final URL context,
-      final GMLWorkspace gml, final KalypsoLinkType link ) throws SourceHandlerException
+  public static void writeIntoTarget( final IUrlResolver resolver, final URL context,
+      final GMLWorkspace gml, final TargetType target ) throws GmlConvertException
   {
-    try
-    {
-      final String linktype = link.getLinktype();
-      final ILoader loader = factory.getLoaderInstance( linktype );
-      loader.save( link.getHref(), context, null, gml );
-    }
-    catch( final Exception e )
-    {
-      throw new SourceHandlerException( "Daten wurden nicht gespeichert: " + e );
-    }
+    final ITargetHandler handler;
+    if( target instanceof CsvTargetType )
+      handler = new CsvTargetHandler( resolver, context, (CsvTargetType)target );
+    else if( target instanceof Gmltarget )
+      handler = new GmlTargetHandler( resolver, context, (Gmltarget)target );
+    else
+      throw new GmlConvertException( "Unbekannter Target-Type: " + target.getClass().getName() );
+
+    handler.saveWorkspace( gml );
   }
 }

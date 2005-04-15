@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLCoord;
 import org.kalypsodeegree.gml.GMLCoordinates;
-import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLLineString;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.XMLTools;
@@ -109,11 +108,6 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
     return ls;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public Element getAsElement()
   {
     return element;
@@ -149,7 +143,7 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
    * @see org.kalypsodeegree_impl.gml.GMLLinearRing_Impl#getCoord() already existing
    *      coords will be removed
    */
-  public void setCoords( GMLCoord[] coord ) throws GMLException
+  public void setCoords( GMLCoord[] coord )
   {
     Debug.debugMethodBegin( "", "setCoords" );
 
@@ -176,7 +170,7 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
   /**
    * @see org.kalypsodeegree_impl.gml.GMLLinearRing_Impl#getCoord()
    */
-  public void appendCoord( GMLCoord coord ) throws GMLException
+  public void appendCoord( GMLCoord coord )
   {
     Debug.debugMethodBegin( "", "appendCoord" );
 
@@ -228,6 +222,9 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/04/15 19:46:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *

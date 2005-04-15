@@ -149,7 +149,9 @@ public class PersistentPageFile extends PageFile
           }
         }
         catch( IOException ioe )
-        {}
+        {
+          // shouldnt we print stack trace?
+        }
       }
       else
       {

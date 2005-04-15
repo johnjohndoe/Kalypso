@@ -11,6 +11,9 @@ import java.util.Map.Entry;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author doemming
@@ -90,20 +93,42 @@ public class FeatureHelper
       final FeatureTypeProperty sourceFTP = sourceType.getProperty( sourceProp );
       final FeatureTypeProperty targetFTP = targetType.getProperty( targetProp );
 
+      if( sourceFTP == null )
+        throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
+      if( targetFTP == null )
+        throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
+      
       if( !sourceFTP.getType().equals( targetFTP.getType() ) )
-        throw new IllegalArgumentException( "Types of mapped properties are different: '" + sourceProp + "' and '" + targetProp + "'" );
+        throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
 
       final Object object = sourceFeature.getProperty( sourceProp );
       
-      final Object newobject;
-      if( object instanceof String )
-        newobject = object;
-      else if( object instanceof Number )
-        newobject = object;
-      else
-        throw new UnsupportedOperationException( "Cannot copy propertie of type: " + sourceFTP.getType() );
+      final Object newobject = cloneData( object, sourceFTP.getType() );
       
       targetFeature.setProperty( FeatureFactory.createFeatureProperty( targetProp, newobject ) );
     }
+  }
+
+  /**
+   * @throws UnsupportedOperationException If type of object is not supported for clone
+   */
+  private static Object cloneData( Object object, final String type )
+  {
+    if( object instanceof String )
+      return object;
+    
+    if( object instanceof Number )
+      return object;
+    
+    if( object instanceof GM_Point )
+    {
+      final GM_Point point = (GM_Point)object;
+      // todo: is there a universal clone-method for GM_Geometries?
+      final GM_Position position = point.getPosition();
+      final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
+      return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
+    }
+
+    throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type +  "' nicht kopieren." );
   }
 }

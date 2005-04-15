@@ -113,11 +113,6 @@ public class GMLCoord_Impl implements GMLCoord
     return coord;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public Element getAsElement()
   {
     return element;
@@ -348,11 +343,6 @@ public class GMLCoord_Impl implements GMLCoord
     return dim;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return DOMPrinter.nodeToString( element, "" );
@@ -363,6 +353,9 @@ public class GMLCoord_Impl implements GMLCoord
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/04/15 19:46:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *

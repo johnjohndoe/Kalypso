@@ -79,13 +79,6 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class GMLCoordinatesParser_Impl
 {
-  /**
-   * 
-   * 
-   * @param coordinates
-   * 
-   * @return
-   */
   public static GM_Position[] coordinatesToPoints( GMLCoordinates coordinates )
   {
     Debug.debugMethodBegin( "", "coordinatesToPoints(GMLCoordinates)" );
@@ -125,6 +118,9 @@ public class GMLCoordinatesParser_Impl
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.6  2005/04/15 19:46:42  belger
+ * *** empty log message ***
+ *
  * Revision 1.5  2005/03/08 11:01:03  doemming
  * *** empty log message ***
  *

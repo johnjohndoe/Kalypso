@@ -1,10 +1,10 @@
-package org.kalypso.ogc.gml.convert;
+package org.kalypso.ogc.gml.convert.source;
 
 import java.net.URL;
 
 import org.kalypso.gml.util.GmlSourceType;
 import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -15,21 +15,22 @@ public class GmlSourceHandler implements ISourceHandler
 {
   private String m_href;
 
-  private IUrlResolver m_resolver = new UrlUtilities();
-
   private final URL m_context;
 
-  public GmlSourceHandler( final URL context, final GmlSourceType type )
+  private final IUrlResolver m_resolver;
+
+  public GmlSourceHandler( final IUrlResolver resolver, final URL context, final GmlSourceType type )
   {
+    m_resolver = resolver;
     m_context = context;
     m_href = type.getHref();
   }
 
   /**
-   * @throws SourceHandlerException
-   * @see org.kalypso.ogc.gml.convert.ISourceHandler#getWorkspace()
+   * @throws GmlConvertException
+   * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
-  public GMLWorkspace getWorkspace() throws SourceHandlerException
+  public GMLWorkspace getWorkspace() throws GmlConvertException
   {
     try
     {
@@ -38,7 +39,7 @@ public class GmlSourceHandler implements ISourceHandler
     }
     catch( final Exception e )
     {
-      throw new SourceHandlerException( "GML konnte nicht geladen werden: " + m_href, e );
+      throw new GmlConvertException( "GML konnte nicht geladen werden: " + m_href, e );
     }
   }
 

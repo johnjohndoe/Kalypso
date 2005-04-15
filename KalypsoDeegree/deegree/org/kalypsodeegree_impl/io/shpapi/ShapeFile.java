@@ -73,7 +73,6 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -193,7 +192,9 @@ public class ShapeFile
           dBaseIndexes.put( s[i], new DBaseIndex( url + "$" + s[i] ) );
         }
         catch( IOException e )
-        {}
+        {
+          // shouldnt we do something here?
+        }
       }
     }
   }
@@ -248,7 +249,9 @@ public class ShapeFile
         index.close();
       }
       catch( Exception ex )
-      {}
+      {
+        // and here?
+      }
     }
 
   }
@@ -318,7 +321,7 @@ public class ShapeFile
    * Same as
    * {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
    */
-  public Feature getFeatureByRecNo( int RecNo ) throws IOException, GM_Exception,
+  public Feature getFeatureByRecNo( int RecNo ) throws IOException,
       HasNoDBaseFileException, DBaseException
   {
     return getFeatureByRecNo( RecNo, false );
@@ -332,7 +335,7 @@ public class ShapeFile
    *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
   public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException,
-      GM_Exception, HasNoDBaseFileException, DBaseException
+      HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
     {
@@ -353,7 +356,7 @@ public class ShapeFile
   /**
    * returns RecNo'th Geometrie <BR>
    */
-  public GM_Object getGM_ObjectByRecNo( int RecNo ) throws IOException, GM_Exception
+  public GM_Object getGM_ObjectByRecNo( int RecNo ) throws IOException
   {
     GM_Object geom = null;
 
@@ -500,7 +503,9 @@ public class ShapeFile
     for( int i = 0; i < numRecs; i++ )
     {
       if( getShapeTypeByRecNo( i + 1 ) == ShapeConst.SHAPE_TYPE_NULL )
-      {}
+      {
+        // hm
+      }
       else if( getShapeTypeByRecNo( i + 1 ) == ShapeConst.SHAPE_TYPE_POINT )
       {
         geom = (SHPPoint)shp.getByRecNo( i + 1 );
@@ -641,14 +646,6 @@ public class ShapeFile
     return dbf.getRow( rowNo );
   }
 
-  /**
-   * returns the type of the n'th feature in a featurecollection
-   * 
-   * @param fc :
-   *          FeatureCollection
-   * @param n :
-   *          number of the feature which should be examined starts with 0
-   */
   private int getGeometryType( final Feature feature )
   {
     GM_Object[] g = feature.getGeometryProperties();
@@ -691,14 +688,6 @@ public class ShapeFile
     return -1;
   }
 
-  /**
-   * returns the n'th feature of a featurecollection as a GM_Object <BR>
-   * 
-   * @param fc :
-   *          FeatureCollection <BR>
-   * @param n :
-   *          number of the feature which should be returned <BR>
-   */
   private GM_Object getFeatureAsGeometry( final Feature feature )
   {
     return feature.getGeometryProperties()[0];
@@ -706,43 +695,15 @@ public class ShapeFile
 
   /**
    */
-  private FeatureProperty[] getFeatureProperties( final Feature feature )
-  {
-    FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
-    FeatureProperty[] fp = new FeatureProperty[ftp.length];
-    Object[] fp_ = feature.getProperties();
-
-    for( int i = 0; i < ftp.length; i++ )
-    {
-      fp[i] = FeatureFactory.createFeatureProperty( ftp[i].getName(), fp_[i] );
-    }
-
-    return fp;
-  }
-
-  /**
-   */
   private void initDBaseFile( final Feature[] features ) throws DBaseException
   {
-
-    // get feature properties
-//    FeatureProperty[] pairs = getFeatureProperties( features[0] );
-
     // count regular fields
-//    int cnt = 0;
     FeatureType featT = features[0].getFeatureType();
     FeatureTypeProperty[] ftp = featT.getProperties();
-//    for( int i = 0; i < pairs.length; i++ )
-//    {
-//      if( !( pairs[i].getValue() instanceof ByteArrayInputStream )
-//          && !( pairs[i].getValue() instanceof GM_Object ) )
-//        cnt++;
-//    }
 
 
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
-//    cnt = 0;
     final List fieldList=new ArrayList();
     for( int i = 0; i < ftp.length; i++ )
     {

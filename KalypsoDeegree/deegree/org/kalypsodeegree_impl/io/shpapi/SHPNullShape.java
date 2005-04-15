@@ -74,4 +74,6 @@ package org.kalypsodeegree_impl.io.shpapi;
  */
 
 public class SHPNullShape extends SHPGeometry
-{}
+{
+  // nothing
+}

@@ -120,11 +120,6 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
     this.remoteOWS = remoteOWS;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = getClass().getName() + "\n";

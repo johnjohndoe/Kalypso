@@ -198,19 +198,16 @@ public class RTree
 
       return;
     }
-    else
-    {
-      NoneLeafNode node = (NoneLeafNode)node1;
+    NoneLeafNode node = (NoneLeafNode)node1;
 
-      // node ist kein LeafNode
-      // alle eintraäge auf überlappung durchsuchen
-      for( int i = 0; i < node.getUsedSpace(); i++ )
+    // node ist kein LeafNode
+    // alle eintraäge auf überlappung durchsuchen
+    for( int i = 0; i < node.getUsedSpace(); i++ )
+    {
+      // wenn enthalten rekursiv search mit diesem node aufrufen
+      if( node.hyperBBs[i].contains( box ) )
       {
-        // wenn enthalten rekursiv search mit diesem node aufrufen
-        if( node.hyperBBs[i].contains( box ) )
-        {
-          containsSearch( (Node)node.getData( i ), v, box );
-        }
+        containsSearch( (Node)node.getData( i ), v, box );
       }
     }
   }
@@ -239,19 +236,16 @@ public class RTree
 
       return;
     }
-    else
-    {
-      NoneLeafNode node = (NoneLeafNode)node1;
+    NoneLeafNode node = (NoneLeafNode)node1;
 
-      // node ist kein LeafNode
-      // alle eintraäge auf überlappung durchsuchen
-      for( int i = 0; i < node.getUsedSpace(); i++ )
+    // node ist kein LeafNode
+    // alle eintraäge auf überlappung durchsuchen
+    for( int i = 0; i < node.getUsedSpace(); i++ )
+    {
+      // wenn überlappung rekursiv search mit diesem node aufrufen
+      if( node.hyperBBs[i].overlaps( box ) )
       {
-        // wenn überlappung rekursiv search mit diesem node aufrufen
-        if( node.hyperBBs[i].overlaps( box ) )
-        {
-          intersectsSearch( (Node)node.getData( i ), v, box );
-        }
+        intersectsSearch( (Node)node.getData( i ), v, box );
       }
     }
   }
@@ -270,7 +264,9 @@ public class RTree
     try
     {
       Node[] newNodes = new Node[]
-      { null, null };
+      {
+          null,
+          null };
       //Find position for new record
       LeafNode node;
       node = chooseLeaf( file.readNode( 0 ), box );
@@ -307,14 +303,6 @@ public class RTree
     return true;
   }
 
-  /**
-   * 
-   * 
-   * @param node
-   * 
-   * @return @throws
-   *         PageFileException
-   */
   private Node[] splitNode( Node node ) throws PageFileException
   {
     // Neuer Knoten
@@ -409,16 +397,11 @@ public class RTree
     file.writeNode( newNode );
 
     return new Node[]
-    { node, newNode };
+    {
+        node,
+        newNode };
   }
 
-  /**
-   * 
-   * 
-   * @param node
-   * 
-   * @return
-   */
   private int[] pickSeeds( Node node )
   {
     double max = 0.0;
@@ -446,19 +429,11 @@ public class RTree
       }
 
     return new int[]
-    { e1, e2 };
+    {
+        e1,
+        e2 };
   }
 
-  /**
-   * 
-   * 
-   * @param node
-   * @param marker
-   * @param group1
-   * @param group2
-   * 
-   * @return
-   */
   private int[] pickNext( Node node, boolean[] marker, Node group1, Node group2 )
   {
     double d0 = 0;
@@ -513,29 +488,21 @@ public class RTree
 
     marker[entry] = true;
     return new int[]
-    { group, entry };
+    {
+        group,
+        entry };
   }
 
-  /**
-   * 
-   * 
-   * @param node
-   * @param box
-   * 
-   * @return
-   */
   private LeafNode chooseLeaf( Node node, HyperBoundingBox box )
   {
     if( node instanceof LeafNode )
     {
       return (LeafNode)node;
     }
-    else
-    {
-      NoneLeafNode node1 = (NoneLeafNode)node;
-      int least = node1.getLeastEnlargement( box );
-      return chooseLeaf( (Node)node1.getData( least ), box );
-    }
+
+    NoneLeafNode node1 = (NoneLeafNode)node;
+    int least = node1.getLeastEnlargement( box );
+    return chooseLeaf( (Node)node1.getData( least ), box );
   }
 
   /**
@@ -550,7 +517,9 @@ public class RTree
     try
     {
       return nearestNeighbour( file.readNode( 0 ), point, new double[]
-      { Double.POSITIVE_INFINITY, -1.0 } );
+      {
+          Double.POSITIVE_INFINITY,
+          -1.0 } );
     }
     catch( PageFileException e )
     {
@@ -559,15 +528,6 @@ public class RTree
     }
   }
 
-  /**
-   * 
-   * 
-   * @param node
-   * @param point
-   * @param temp
-   * 
-   * @return
-   */
   private double[] nearestNeighbour( Node node, HyperPoint point, double[] temp )
   {
     if( node instanceof LeafNode )
@@ -596,48 +556,33 @@ public class RTree
        */
       class ABL implements Comparable
       {
-        Node node;
+        Node m_node;
 
         double minDist;
 
         /**
          * Creates a new ABL object.
          * 
-         * @param node
+         * @param n
          * @param minDist
          */
-        public ABL( Node node, double minDist )
+        public ABL( Node n, double minDist )
         {
-          this.node = node;
+          m_node = n;
           this.minDist = minDist;
         }
 
-        /**
-         * 
-         * 
-         * @param obj
-         * 
-         * @return
-         */
         public int compareTo( Object obj )
         {
           ABL help = (ABL)obj;
 
           if( this.minDist < help.minDist )
-          {
             return -1;
-          }
-          else
-          {
-            if( this.minDist > help.minDist )
-            {
-              return 1;
-            }
-            else
-            {
-              return 0;
-            }
-          }
+
+          if( this.minDist > help.minDist )
+            return 1;
+
+          return 0;
         }
       }
 
@@ -658,7 +603,7 @@ public class RTree
         // apply heuristic 3
         if( abl[i].minDist <= temp[0] )
         {
-          temp = nearestNeighbour( abl[i].node, point, temp );
+          temp = nearestNeighbour( abl[i].m_node, point, temp );
         }
       }
     }
@@ -800,72 +745,68 @@ public class RTree
     }
 
     if( v.size() < 1 )
-    {
       return false;
-    }
-    else
+
+    LeafNode leaf;
+
+    for( Enumeration en = v.elements(); en.hasMoreElements(); )
     {
-      LeafNode leaf;
+      leaf = (LeafNode)en.nextElement();
 
-      for( Enumeration en = v.elements(); en.hasMoreElements(); )
+      for( int i = 0; i < leaf.getUsedSpace(); i++ )
       {
-        leaf = (LeafNode)en.nextElement();
-
-        for( int i = 0; i < leaf.getUsedSpace(); i++ )
+        if( leaf.getHyperBoundingBox( i ).equals( box ) )
         {
-          if( leaf.getHyperBoundingBox( i ).equals( box ) )
-          {
-            leaf.deleteData( i );
-
-            try
-            {
-              file.writeNode( leaf );
-            }
-            catch( PageFileException e )
-            {
-              e.fillInStackTrace();
-              throw new RTreeException( "PageFileException - delete()" );
-            }
-          }
-        }
-
-        Stack stack = new Stack();
-
-        try
-        {
-          condenseTree( leaf, stack );
-        }
-        catch( PageFileException e )
-        {
-          e.fillInStackTrace();
-          throw new RTreeException( "PageFileException - condenseTree()" );
-        }
-
-        while( !stack.empty() )
-        {
-          Node node = (Node)stack.pop();
-
-          if( node instanceof LeafNode )
-          {
-            for( int i = 0; i < node.getUsedSpace(); i++ )
-              this.insert( ( (LeafNode)node ).getData( i ), ( (LeafNode)node )
-                  .getHyperBoundingBox( i ) );
-          }
-          else
-          {
-            for( int i = 0; i < node.getUsedSpace(); i++ )
-              stack.push( ( (NoneLeafNode)node ).getData( i ) );
-          }
+          leaf.deleteData( i );
 
           try
           {
-            file.deleteNode( node.pageNumber );
+            file.writeNode( leaf );
           }
           catch( PageFileException e )
           {
             e.fillInStackTrace();
-            throw new RTreeException( "PageFileException - delete() - deleteNode(0)" );
+            throw new RTreeException( "PageFileException - delete()" );
           }
+        }
+      }
+
+      Stack stack = new Stack();
+
+      try
+      {
+        condenseTree( leaf, stack );
+      }
+      catch( PageFileException e )
+      {
+        e.fillInStackTrace();
+        throw new RTreeException( "PageFileException - condenseTree()" );
+      }
+
+      while( !stack.empty() )
+      {
+        Node node = (Node)stack.pop();
+
+        if( node instanceof LeafNode )
+        {
+          for( int i = 0; i < node.getUsedSpace(); i++ )
+            this.insert( ( (LeafNode)node ).getData( i ), ( (LeafNode)node )
+                .getHyperBoundingBox( i ) );
+        }
+        else
+        {
+          for( int i = 0; i < node.getUsedSpace(); i++ )
+            stack.push( ( (NoneLeafNode)node ).getData( i ) );
+        }
+
+        try
+        {
+          file.deleteNode( node.pageNumber );
+        }
+        catch( PageFileException e )
+        {
+          e.fillInStackTrace();
+          throw new RTreeException( "PageFileException - delete() - deleteNode(0)" );
         }
       }
     }
@@ -927,19 +868,17 @@ public class RTree
 
       return;
     }
-    else
-    {
-      NoneLeafNode node = (NoneLeafNode)node1;
 
-      // node ist kein LeafNode
-      // alle eintraäge auf überlappung durchsuchen
-      for( int i = 0; i < node.getUsedSpace(); i++ )
+    NoneLeafNode node = (NoneLeafNode)node1;
+
+    // node ist kein LeafNode
+    // alle eintraäge auf überlappung durchsuchen
+    for( int i = 0; i < node.getUsedSpace(); i++ )
+    {
+      // wenn enthalten rekursiv search mit diesem node aufrufen
+      if( node.hyperBBs[i].contains( box ) )
       {
-        // wenn enthalten rekursiv search mit diesem node aufrufen
-        if( node.hyperBBs[i].contains( box ) )
-        {
-          findSearch( (Node)node.getData( i ), v, box );
-        }
+        findSearch( (Node)node.getData( i ), v, box );
       }
     }
   }
@@ -1104,7 +1043,9 @@ public class RTree
     {
       // Bei Split muß der zweite AbstractNode noch eingefügt werden
       Node[] newNodes = new Node[]
-      { null, null };
+      {
+          null,
+          null };
 
       if( p.getUsedSpace() < ( file.getCapacity() - 1 ) )
       {

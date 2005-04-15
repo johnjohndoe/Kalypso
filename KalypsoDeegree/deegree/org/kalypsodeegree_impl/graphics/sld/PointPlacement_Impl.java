@@ -91,7 +91,9 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   private boolean auto = false;
 
   PointPlacement_Impl()
-  {}
+  {
+    // default
+  }
 
   /**
    * Creates a new PointPlacement_Impl object.

@@ -86,7 +86,9 @@ public class SHPGeometry
   protected SHPEnvelope envelope = null;
 
   public SHPGeometry()
-  {}
+  {
+    // 
+  }
 
   public SHPGeometry( byte[] recBuf )
   {

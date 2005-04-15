@@ -98,7 +98,6 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
    * return doesn't contain a value.
    */
   public static GMLFeatureProperty createGMLFeatureProperty( Document doc, String propName )
-      throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLFeatureProperty(Document,String)" );
 
@@ -148,7 +147,7 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
   /**
    * @see org.kalypsodeegree_impl.gml.GMLFeatureProperty_Impl#getFeaturePropertyValue()
    */
-  public void setFeaturePropetryValue( GMLFeature value ) throws GMLException
+  public void setFeaturePropetryValue( GMLFeature value )
   {
     Debug.debugMethodBegin();
 
@@ -170,11 +169,6 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
         + "of a feature property as a String" );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return DOMPrinter.nodeToString( element, "" );

@@ -253,8 +253,6 @@ final public class GeometryFactory
   /**
    * creates a GM_Curve from an array of ordinates
    * 
-   * @param segments
-   *          array of GM_CurveSegments
    */
   public static GM_Curve createGM_Curve( double[] ord, int dim, CS_CoordinateSystem crs )
       throws GM_Exception
@@ -651,7 +649,7 @@ final public class GeometryFactory
    *          array of GM_Points
    *  
    */
-  public static GM_MultiPoint createGM_MultiPoint( GM_Point[] points ) throws GM_Exception
+  public static GM_MultiPoint createGM_MultiPoint( GM_Point[] points )
   {
     return new GM_MultiPoint_Impl( points );
   }
@@ -756,7 +754,7 @@ final public class GeometryFactory
    * 
    * @param curves
    */
-  public static GM_MultiCurve createGM_MultiCurve( GM_Curve[] curves ) throws GM_Exception
+  public static GM_MultiCurve createGM_MultiCurve( GM_Curve[] curves )
   {
     return new GM_MultiCurve_Impl( curves );
   }
@@ -891,7 +889,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface from a wkb
    */
-  public static GM_MultiSurface createGM_MultiSurface( GM_Surface[] surfaces ) throws GM_Exception
+  public static GM_MultiSurface createGM_MultiSurface( GM_Surface[] surfaces )
   {
     return new GM_MultiSurface_Impl( surfaces );
   }

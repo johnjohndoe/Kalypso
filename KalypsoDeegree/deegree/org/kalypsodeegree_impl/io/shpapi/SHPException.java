@@ -66,9 +66,6 @@ public class SHPException extends Exception
 {
   private String message = "org.kalypsodeegree_impl.io.shpapi.SHPException";
 
-  public SHPException()
-  {}
-
   public SHPException( String s )
   {
     super( s );

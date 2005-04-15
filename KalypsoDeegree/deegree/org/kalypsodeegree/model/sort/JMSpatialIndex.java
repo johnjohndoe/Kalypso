@@ -23,6 +23,7 @@ public interface JMSpatialIndex
 
   public void paint( Graphics g, GeoTransform geoTransform );
 
+  /** TODO: Was bedeutet das??? */
   public int rsize();
 
   public GM_Envelope getBoundingBox();

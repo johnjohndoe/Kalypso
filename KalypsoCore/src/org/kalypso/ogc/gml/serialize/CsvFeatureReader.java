@@ -9,11 +9,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypsodeegree.gml.GMLPoint;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -54,7 +54,7 @@ public final class CsvFeatureReader
     m_infos.put( ftp, info );
   }
 
-  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter ) throws IOException
+  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter ) throws IOException, CsvException
   {
     final List list = new ArrayList();
     final FeatureType ft = loadCSVIntoList( list, reader, comment, delemiter );
@@ -70,7 +70,7 @@ public final class CsvFeatureReader
         ft }, rootFeature, null, null, null, new HashMap() );
   }
 
-  private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment, final String delemiter ) throws IOException
+  private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment, final String delemiter ) throws IOException, CsvException
   {
     final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray( new FeatureTypeProperty[0] );
     final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new HashMap() );
@@ -92,7 +92,7 @@ public final class CsvFeatureReader
     return featureType;
   }
 
-  private Feature createFeatureFromTokens( final String index, final String[] tokens, final FeatureType featureType )
+  private Feature createFeatureFromTokens( final String index, final String[] tokens, final FeatureType featureType ) throws CsvException
   {
     final FeatureTypeProperty[] properties = featureType.getProperties();
     final Object[] data = new Object[properties.length];
@@ -102,21 +102,37 @@ public final class CsvFeatureReader
       final CSVInfo info = (CSVInfo)m_infos.get( ftp );
       
       final String type = ftp.getType();
+      
+      // check column numbers
+      for( int j = 0; j < info.columns.length; j++ )
+      {
+        final int colNumber = info.columns[j];
+        if( colNumber >= tokens.length )
+          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber +  " zu groß für FeatureProperty '" + ftp.getName() + "'" + "\nNur " + tokens.length  + " Spalten gefunden." );
+      }
+      
       final int col0 = info.columns[0];
       if( String.class.getName().equals( type ) )
         data[i] = tokens[col0];
+      else if( Integer.class.getName().equals( type ) )
+        data[i] = new Integer( tokens[col0] );
+      else if( Long.class.getName().equals( type ) )
+        data[i] = new Long( tokens[col0] );
+      else if( Float.class.getName().equals( type ) )
+        data[i] = new Float( tokens[col0] );
       else if( Double.class.getName().equals( type ) )
         data[i] = new Double( tokens[col0] );
-      else if( GMLPoint.class.getName().equals( type ) )
+      else if( GM_Point.class.getName().equals( type ) )
       {
         final int col1 = info.columns[1];
         final double rw = Double.parseDouble( tokens[col0] );
         final double hw = Double.parseDouble( tokens[col1] );
 
-        data[i] = GeometryFactory.createGM_Position( rw, hw );
+        data[i] = GeometryFactory.createGM_Point( rw, hw, null );
       }
+      else
+        throw new CsvException( "Datentyp nicht bekannt: " + type );
     }
-    
     
     return FeatureFactory.createFeature( index, featureType, data );
   }

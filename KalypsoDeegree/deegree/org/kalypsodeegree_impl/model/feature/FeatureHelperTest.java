@@ -40,7 +40,7 @@ public final class FeatureHelperTest extends TestCase
         new Double( 3.14 ),
         new Integer( 1 ) } );
 
-    final Feature targetfeature = FeatureFactory.createDefaultFeature( sourceFTP, false );
+    final Feature targetfeature = FeatureFactory.createDefaultFeature( "test", sourceFTP, false );
 
     // mapping erzeugen
     final Properties mapping = new Properties();

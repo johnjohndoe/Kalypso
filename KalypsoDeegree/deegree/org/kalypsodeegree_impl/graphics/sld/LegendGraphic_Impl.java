@@ -80,12 +80,6 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
   private Graphic graphic = null;
 
   /**
-   * default constructor
-   */
-  LegendGraphic_Impl()
-  {}
-
-  /**
    * constructor initializing the class with the <LegendGraphic>
    */
   LegendGraphic_Impl( Graphic graphic )
