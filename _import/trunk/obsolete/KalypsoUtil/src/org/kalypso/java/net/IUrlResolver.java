@@ -68,6 +68,8 @@ public interface IUrlResolver
   /**
    * Erzeugt einen BufferedWriter, der an den Ort der URL schreibt. Der Writer
    * muss vom Aufrufenden geschlossen werden.
+   * 
+   * @throws IOException
    */
   public BufferedWriter createBufferedWriter( final URL url ) throws IOException;
 }
