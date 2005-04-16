@@ -386,14 +386,16 @@ public class FileUtilities
   }
 
   /**
-   * Lässt den FileVisitor die angegebene Datei (Verzeichnis) und alle Ihre
-   * Unterverzeichnisse und enthaltenen Dateien besuchen.
+   * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin
+   * enthaltenen Dateien besuchen.
+   * 
+   * @param recurse Falls true, werden auch Unterverzeichnisse besucht
    */
-  public static void accept( final File root, final FileVisitor visitor )
+  public static void accept( final File root, final FileVisitor visitor, final boolean recurse )
   {
     // zuerst die Datei selbst
-    boolean recurse = visitor.visit( root );
-    if( !recurse || !root.isDirectory() )
+    final boolean stop = !visitor.visit( root );
+    if( stop || !root.isDirectory() )
       return;
 
     final File[] files = root.listFiles();
@@ -403,7 +405,9 @@ public class FileUtilities
     for( int i = 0; i < files.length; i++ )
     {
       final File file = files[i];
-      accept( file, visitor );
+      
+      if( file.isFile() || ( file.isDirectory() && recurse  ) )
+        accept( file, visitor, recurse );
     }
   }
 
