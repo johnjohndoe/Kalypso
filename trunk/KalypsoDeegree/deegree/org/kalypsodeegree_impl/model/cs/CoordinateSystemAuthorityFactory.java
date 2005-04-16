@@ -105,8 +105,6 @@ public abstract class CoordinateSystemAuthorityFactory
    * Set the properties fon an {@link Info}object. This method should be
    * invoked from all <code>create*</code> methods.
    * 
-   * @param info
-   *          The {@link Info}object to set properties.
    * @param code
    *          The authority code (must not be <code>null</code>).
    * @param alias
@@ -116,7 +114,7 @@ public abstract class CoordinateSystemAuthorityFactory
    * @param remarks
    *          The remarks, or <code>null</code> if none.
    */
-  final void setProperties( final Info info, final String code, final String alias,
+  final void setProperties( final String code, final String alias,
       final String abbreviation, final String remarks )
   {
     Info.ensureNonNull( "code", code );

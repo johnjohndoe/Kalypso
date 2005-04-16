@@ -215,7 +215,7 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   /**
    * Resource key, used for building localized name. This key doesn't need to be
    * serialized, since {@link #readResolve}canonicalize enums according their
-   * {@link #value}. Furthermore, its value is implementation-dependent (which
+   * {@link EnumeratedParameter#getValue()}. Furthermore, its value is implementation-dependent (which
    * is an other raison why it should not be serialized).
    */
   private transient final int key;
@@ -271,8 +271,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
     {
       return ENUMS[( value ^ 1 ) + 1];
     }
-    else
-      return this;
+
+    return this;
   }
 
   /**
@@ -333,8 +333,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
     {
       return ENUMS[( value & ~1 ) + 1];
     }
-    else
-      return this;
+
+    return this;
   }
 
   /**
@@ -383,15 +383,13 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
    * <code>enum1.equals(enum2)</code>.
    * 
    * @return A single instance of this enum.
-   * @throws ObjectStreamException
-   *           is deserialization failed.
    */
   private Object readResolve()
   {
     final int value = getValue();
     if( value >= 0 && value < ENUMS.length )
       return ENUMS[value]; // Canonicalize
-    else
-      return ENUMS[0]; // Collapse unknow value to a single canonical one
+
+    return ENUMS[0]; // Collapse unknow value to a single canonical one
   }
 }

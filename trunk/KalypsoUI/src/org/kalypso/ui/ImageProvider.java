@@ -49,9 +49,14 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class ImageProvider
 {
+  public static final ImageDescriptor id( final String pluginID, final String location )
+  {
+    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
+  }
+
   public static final ImageDescriptor id( final String location )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.ui", location );
+    return id( "org.kalypso.ui", location );
   }
   
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
@@ -88,8 +93,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_ICON_GTT = id( "icons/kalypso_gtt.gif" );
   public static final ImageDescriptor IMAGE_ICON_GMT = id( "icons/kalypso_gmt.gif" );
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "etc/kalypso16.gif" );
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = id( "etc/kalypso32.gif" );
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "org.kalypso.product", "etc/kalypso16.gif" );
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = id( "org.kalypso.product", "etc/kalypso32.gif" );
   
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );
   public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = id( "icons/util/unchecked.gif" );

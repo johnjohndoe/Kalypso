@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.view.prognose;
+package org.kalypso.ui.view;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

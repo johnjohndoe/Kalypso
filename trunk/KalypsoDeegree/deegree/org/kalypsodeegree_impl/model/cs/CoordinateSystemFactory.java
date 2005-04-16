@@ -548,7 +548,7 @@ public class CoordinateSystemFactory
     /**
      * Creates a coordinate system object from an XML string.
      */
-    public CS_CoordinateSystem createFromXML( final String xml ) throws RemoteException
+    public CS_CoordinateSystem createFromXML( final String xml )
     {
       throw new UnsupportedOperationException( "XML parsing not yet implemented" );
     }
@@ -556,7 +556,7 @@ public class CoordinateSystemFactory
     /**
      * Creates a coordinate system object from a Well-Known Text string.
      */
-    public CS_CoordinateSystem createFromWKT( String wellKnownText ) throws RemoteException
+    public CS_CoordinateSystem createFromWKT( String wellKnownText )
     {
       throw new UnsupportedOperationException( "WKT parsing not yet implemented" );
     }
@@ -576,7 +576,6 @@ public class CoordinateSystemFactory
      */
     public CS_FittedCoordinateSystem createFittedCoordinateSystem( final String name,
         final CS_CoordinateSystem base, final String toBaseWKT, final CS_AxisInfo[] arAxes )
-        throws RemoteException
     {
       throw new UnsupportedOperationException( "Fitted CS not yet implemented" );
     }
@@ -596,7 +595,7 @@ public class CoordinateSystemFactory
      * Creates an ellipsoid from radius values.
      */
     public CS_Ellipsoid createEllipsoid( final String name, final double semiMajorAxis,
-        final double semiMinorAxis, final CS_LinearUnit linearUnit ) throws RemoteException
+        final double semiMinorAxis, final CS_LinearUnit linearUnit )
     {
       return adapters.export( CoordinateSystemFactory.this.createEllipsoid( name, semiMajorAxis,
           semiMinorAxis, adapters.wrap( linearUnit ) ) );
@@ -606,7 +605,7 @@ public class CoordinateSystemFactory
      * Creates an ellipsoid from an major radius, and inverse flattening.
      */
     public CS_Ellipsoid createFlattenedSphere( final String name, final double semiMajorAxis,
-        final double inverseFlattening, final CS_LinearUnit linearUnit ) throws RemoteException
+        final double inverseFlattening, final CS_LinearUnit linearUnit )
     {
       return adapters.export( CoordinateSystemFactory.this.createFlattenedSphere( name,
           semiMajorAxis, inverseFlattening, adapters.wrap( linearUnit ) ) );
@@ -629,7 +628,7 @@ public class CoordinateSystemFactory
      * Creates a projection.
      */
     public CS_Projection createProjection( final String name, final String wktProjectionClass,
-        final CS_ProjectionParameter[] parameters ) throws RemoteException
+        final CS_ProjectionParameter[] parameters )
     {
       return adapters.export( CoordinateSystemFactory.this.createProjection( name,
           wktProjectionClass, adapters.wrap( parameters ) ) );
@@ -651,7 +650,7 @@ public class CoordinateSystemFactory
      * Creates a prime meridian, relative to Greenwich.
      */
     public CS_PrimeMeridian createPrimeMeridian( final String name,
-        final CS_AngularUnit angularUnit, final double longitude ) throws RemoteException
+        final CS_AngularUnit angularUnit, final double longitude )
     {
       return adapters.export( CoordinateSystemFactory.this.createPrimeMeridian( name, adapters
           .wrap( angularUnit ), longitude ) );
@@ -674,7 +673,6 @@ public class CoordinateSystemFactory
      * Creates a local datum.
      */
     public CS_LocalDatum createLocalDatum( final String name, final CS_DatumType localDatumType )
-        throws RemoteException
     {
       return adapters.export( CoordinateSystemFactory.this.createLocalDatum( name,
           (DatumType.Local)adapters.wrap( localDatumType ) ) );
@@ -684,7 +682,7 @@ public class CoordinateSystemFactory
      * Creates a vertical datum from an enumerated type value.
      */
     public CS_VerticalDatum createVerticalDatum( final String name,
-        final CS_DatumType verticalDatumType ) throws RemoteException
+        final CS_DatumType verticalDatumType )
     {
       return adapters.export( CoordinateSystemFactory.this.createVerticalDatum( name,
           (DatumType.Vertical)adapters.wrap( verticalDatumType ) ) );

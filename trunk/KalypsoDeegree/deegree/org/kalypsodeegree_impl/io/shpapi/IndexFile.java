@@ -339,22 +339,12 @@ public class IndexFile
    */
   public IndexRecord getIndexRecord( int RecNo )
   {
-
     IndexRecord ir = new IndexRecord();
 
     if( RecNo >= 0 )
-    {
-
       return ir = indexArray[RecNo];
 
-    }
-    else
-    {
-
-      return ir;
-
-    }
-
+    return ir;
   }
 
   /**
@@ -389,7 +379,6 @@ public class IndexFile
 
     //actualize file length
     filelength = (int)offset / 2;
-
   }
 
 }

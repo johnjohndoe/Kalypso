@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import org.kalypsodeegree_impl.model.resources.Utilities;
@@ -143,9 +142,9 @@ public class Datum extends Info
   public int hashCode()
   {
     int code = 37 * super.hashCode();
-    final DatumType type = getDatumType();
-    if( type != null )
-      code += type.hashCode();
+    final DatumType t = getDatumType();
+    if( t != null )
+      code += t.hashCode();
     return code;
   }
 
@@ -210,7 +209,7 @@ public class Datum extends Info
     /**
      * Gets the type of the datum as an enumerated code.
      */
-    public CS_DatumType getDatumType() throws RemoteException
+    public CS_DatumType getDatumType()
     {
       return adapters.export( Datum.this.getDatumType() );
     }

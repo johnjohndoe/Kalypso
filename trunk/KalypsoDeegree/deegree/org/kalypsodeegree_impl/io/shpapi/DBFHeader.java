@@ -90,7 +90,7 @@ public class DBFHeader
   /**
    * constructor retrieves number of fields
    */
-  public DBFHeader( FieldDescriptor[] fieldDesc ) throws DBaseException
+  public DBFHeader( FieldDescriptor[] fieldDesc )
   {
 
     // allocate memory for the header
@@ -150,11 +150,9 @@ public class DBFHeader
    * method: public byte[] getHeader() throws DBaseException returns the header
    * as a byte array
    */
-  public byte[] getHeader() throws DBaseException
+  public byte[] getHeader()
   {
-
     return header;
-
   }
 
 }

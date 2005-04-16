@@ -480,7 +480,7 @@ public class Ellipsoid extends Info
     /**
      * Gets the equatorial radius.
      */
-    public double getSemiMajorAxis() throws RemoteException
+    public double getSemiMajorAxis()
     {
       return Ellipsoid.this.getSemiMajorAxis();
     }
@@ -488,7 +488,7 @@ public class Ellipsoid extends Info
     /**
      * Gets the polar radius.
      */
-    public double getSemiMinorAxis() throws RemoteException
+    public double getSemiMinorAxis()
     {
       return Ellipsoid.this.getSemiMinorAxis();
     }
@@ -496,7 +496,7 @@ public class Ellipsoid extends Info
     /**
      * Returns the value of the inverse of the flattening constant.
      */
-    public double getInverseFlattening() throws RemoteException
+    public double getInverseFlattening()
     {
       final double ivf = Ellipsoid.this.getInverseFlattening();
       return Double.isInfinite( ivf ) ? 0 : ivf;
@@ -505,7 +505,7 @@ public class Ellipsoid extends Info
     /**
      * Is the Inverse Flattening definitive for this ellipsoid?
      */
-    public boolean isIvfDefinitive() throws RemoteException
+    public boolean isIvfDefinitive()
     {
       return Ellipsoid.this.isIvfDefinitive();
     }
@@ -513,7 +513,7 @@ public class Ellipsoid extends Info
     /**
      * Returns the LinearUnit.
      */
-    public CS_LinearUnit getAxisUnit() throws RemoteException
+    public CS_LinearUnit getAxisUnit()
     {
       return (CS_LinearUnit)adapters.export( Ellipsoid.this.getAxisUnit() );
     }
