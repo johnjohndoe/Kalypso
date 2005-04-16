@@ -59,7 +59,6 @@ public class WQTable
    * 
    * @param validity
    *          date up from which this table is valid
-   * @param table
    */
   public WQTable( final Date validity, final double[] W, final double[] Q )
   {

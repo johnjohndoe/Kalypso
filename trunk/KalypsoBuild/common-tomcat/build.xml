@@ -46,8 +46,24 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" war="${war.path}" />
 	</target>
+  
+  	<target name="checkWebApp" description="checks if the webapp is already deployed" >
+  	  <condition property="is.tomcat.started">
+  	    <http url="${tomcat.server}"/>
+  	  </condition>
+  	  
+  	  <condition property="is.webapp.deployed">
+  	    <and>
+  	      <isset property="is.tomcat.started"/>
+  	      <http url="${tomcat.server}/${service.name}"/>
+  	    </and>
+  	  </condition>
 
-	<target name="undeploy" description="Undeploys a Web application">
+  	  <echo message="Tomcat ${tomcat.server} is started: ${is.tomcat.started}"/>
+  	  <echo message="WebApp ${service.name} is installed: ${is.webapp.deployed}"/>
+    </target>
+
+	<target name="undeploy" depends="checkWebApp" if="is.webapp.deployed" description="Undeploys a Web application">
 		<echo message="Undeploying the web application..." />
 		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${service.name}" />
 	</target>

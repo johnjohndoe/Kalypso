@@ -237,8 +237,7 @@ public class ZmlTest extends TestCase
   /**
    * Tests the new mechanism ('data'-Element) for storing Metadata stuff
    */
-  public void testMetadataEx( ) throws MalformedURLException, SensorException,
-      ParseException, FactoryException, JAXBException
+  public void testMetadataEx( ) throws MalformedURLException, SensorException, FactoryException, JAXBException
   {
     final File zmlFile = new File( "./etc/schemas/zml/beispiel-metadata.zml" );
     assertTrue( zmlFile.exists() );

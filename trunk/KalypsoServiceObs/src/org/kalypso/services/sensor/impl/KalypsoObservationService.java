@@ -284,8 +284,7 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#writeData(org.kalypso.ogc.sensor.beans.ObservationBean,
-   *      org.kalypso.ogc.sensor.beans.OCSDataBean)
+   * @see org.kalypso.services.sensor.IObservationService#writeData(ObservationBean, DataHandler)
    */
   public void writeData( final ObservationBean obean, final DataHandler odb )
       throws RemoteException

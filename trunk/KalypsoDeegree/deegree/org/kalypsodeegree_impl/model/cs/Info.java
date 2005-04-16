@@ -186,8 +186,6 @@ public class Info implements Serializable
    */
   public String getName( final Locale locale )
   {
-    locale.getClass();
-    
     return name;
   }
 
@@ -208,8 +206,6 @@ public class Info implements Serializable
    */
   public String getAuthority( final Locale locale )
   {
-    locale.getClass();
-    
     return ( properties != null ) ? (String)properties.get( "authority" ) : null;
   }
 
@@ -230,7 +226,6 @@ public class Info implements Serializable
    */
   public String getAuthorityCode( final Locale locale )
   {
-    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "authorityCode" ) : null;
   }
 
@@ -246,7 +241,6 @@ public class Info implements Serializable
    */
   public String getAlias( final Locale locale )
   {
-    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "alias" ) : null;
   }
 
@@ -262,7 +256,6 @@ public class Info implements Serializable
    */
   public String getAbbreviation( final Locale locale )
   {
-    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "abbreviation" ) : null;
   }
 
@@ -279,7 +272,6 @@ public class Info implements Serializable
    */
   public String getRemarks( final Locale locale )
   {
-    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "remarks" ) : null;
   }
 
