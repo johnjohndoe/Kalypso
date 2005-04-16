@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -115,7 +116,7 @@ public class KalypsoApplication implements IPlatformRunnable
 
     String[] choosenRights = null;
     final Display display = new Display();
-    final Shell shell = new Shell( display );
+    final Shell shell = new Shell( display, SWT.SYSTEM_MODAL );
 
     final ImageDescriptor id = ImageProvider.IMAGE_KALYPSO_ICON;
 
