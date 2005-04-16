@@ -116,10 +116,10 @@ public class ModelSynchronizer
     {
       final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true,
           ModelNature.CONTROL_NAME );
-      FileUtilities.accept( from, copyVisitor );
+      FileUtilities.accept( from, copyVisitor, true );
 
       final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from, ModelNature.CONTROL_NAME );
-      FileUtilities.accept( to, deleteVisitor );
+      FileUtilities.accept( to, deleteVisitor, true );
     }
     finally
     {
@@ -134,7 +134,7 @@ public class ModelSynchronizer
     try
     {
       final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true );
-      FileUtilities.accept( from, copyVisitor );
+      FileUtilities.accept( from, copyVisitor, true );
     }
     finally
     {
@@ -239,7 +239,7 @@ public class ModelSynchronizer
   public File[] getRemoteCalcCases()
   {
     final CalcDirCollector collector = new CalcDirCollector();
-    FileUtilities.accept( getServerRoot(), collector );
+    FileUtilities.accept( getServerRoot(), collector, true );
     
     return collector.getCalcDirs();
   }

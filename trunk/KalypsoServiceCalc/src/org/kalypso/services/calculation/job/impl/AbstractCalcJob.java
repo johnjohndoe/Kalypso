@@ -125,7 +125,7 @@ public abstract class AbstractCalcJob implements ICalcJob
     // normalerweise nichts zu tun
   }
 
-  protected void addResult( final CalcJobDataBean bean )
+  public void addResult( final CalcJobDataBean bean )
   {
     m_logger.info( "Adding result: " + bean.getPath() );
     
