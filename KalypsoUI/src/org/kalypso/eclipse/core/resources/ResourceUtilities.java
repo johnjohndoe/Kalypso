@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.resources;
 
 import java.io.File;
@@ -68,9 +68,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ResourceUtilities
 {
-  private ResourceUtilities( )
+  private ResourceUtilities()
   {
-    // do not instantiate
+  // do not instantiate
   }
 
   /**
@@ -83,8 +83,7 @@ public class ResourceUtilities
    * @return platform URL
    * @throws MalformedURLException
    */
-  public static URL createURL( final IResource resource )
-      throws MalformedURLException
+  public static URL createURL( final IResource resource ) throws MalformedURLException
   {
     String strUrl = createURLSpec( resource.getFullPath() );
 
@@ -105,6 +104,11 @@ public class ResourceUtilities
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
   }
 
+  /**
+   * Gibt den IFile-Handler zurück, falls die URL eine Platform Url denotiert
+   * 
+   * @see PlatformURLResourceConnection
+   */
   public static IFile findFileFromURL( final URL u )
   {
     final IPath path = findPathFromURL( u );
@@ -125,13 +129,10 @@ public class ResourceUtilities
     else
       urlpath = utostring;
 
-    if( urlpath != null
-        && urlpath
-            .startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+    if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
-      final String path = urlpath
-          .substring( PlatformURLResourceConnection.RESOURCE_URL_STRING
-              .length() - 1 );
+      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING
+          .length() - 1 );
 
       final Path path2 = new Path( path );
       return path2;
@@ -140,56 +141,54 @@ public class ResourceUtilities
     return null;
   }
 
-  /** 
+  /**
    * Findet alle Projekte einer Selektion von Resourcen
+   * 
    * @param selection
    * @return list of projects (not null)
    */
-  public static IProject[] findeProjectsFromSelection(
-      final ISelection selection )
+  public static IProject[] findeProjectsFromSelection( final ISelection selection )
   {
     // gleiche Projekte sollen nur einen Eintrag gebens
     final Collection projects = new HashSet();
-    if( selection != null && !selection.isEmpty()
-        && selection instanceof IStructuredSelection )
+    if( selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection ssel = (IStructuredSelection) selection;
+      final IStructuredSelection ssel = (IStructuredSelection)selection;
       for( final Iterator iter = ssel.iterator(); iter.hasNext(); )
       {
         final Object resource = iter.next();
         if( resource instanceof IResource )
-          projects.add( ((IResource) resource).getProject() );
+          projects.add( ( (IResource)resource ).getProject() );
         else if( resource instanceof IAdaptable )
         {
-          final IResource res = (IResource) ((IAdaptable) resource)
-              .getAdapter( IResource.class );
+          final IResource res = (IResource)( (IAdaptable)resource ).getAdapter( IResource.class );
           if( res != null )
             projects.add( res.getProject() );
         }
       }
     }
 
-    return (IProject[]) projects.toArray( new IProject[projects.size()] );
+    return (IProject[])projects.toArray( new IProject[projects.size()] );
   }
 
   /**
-   * TODO does this work? seems not... Note from Marc: this only works
-   * when the navigator has an active selection
+   * TODO does this work? seems not... Note from Marc: this only works when the
+   * navigator has an active selection
    * 
    * Returns the currently selected project from the navigator.
+   * 
    * @return list of selected projects
    */
   public static IProject[] getSelectedProjects()
   {
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final ISelection selection = window.getSelectionService().getSelection(
-        IPageLayout.ID_RES_NAV );
+    final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     final IProject[] projects = findeProjectsFromSelection( selection );
 
     return projects;
   }
-  
+
   public static File makeFileFromPath( final IPath resource )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -201,8 +200,7 @@ public class ResourceUtilities
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
-    if( path == null || path.isRoot() || path.segmentCount() < 1
-        || !path.isAbsolute() )
+    if( path == null || path.isRoot() || path.segmentCount() < 1 || !path.isAbsolute() )
       return null;
 
     final String projectName = path.segment( 0 );

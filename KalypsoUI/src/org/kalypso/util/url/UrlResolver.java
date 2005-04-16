@@ -36,28 +36,43 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.url;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownServiceException;
 import java.util.Iterator;
 import java.util.Properties;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.java.io.RunAfterCloseOutputStream;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.java.net.UrlUtilities;
 
 /**
- * <p>Erzeugt aus einem String eine URL</p>
- * <p>Davor kann noch eine Token-Ersetzung stattfinden</p>
+ * <p>
+ * Erzeugt aus einem String eine URL
+ * </p>
+ * <p>
+ * Davor kann noch eine Token-Ersetzung stattfinden
+ * </p>
  * 
- * TODO: untersuchen warum es auch org.kalypso.java.net.UrlUtilities gibt??? Marc.
+ * TODO: untersuchen warum es auch org.kalypso.java.net.UrlUtilities gibt???
+ * Marc.
  * 
  * @author belger
  */
@@ -66,11 +81,16 @@ public class UrlResolver implements IUrlResolver
   private Properties m_replaceTokenMap = new Properties();
 
   /**
-   * <p>Löst eine URL relativ zu einer anderen auf.</p>
-   * <p>Also handles the pseudo protocol 'project:'. If project: ist specified in relativeURL,
-   * it tries to guess the project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/).
-   * It then replaces project: by 'platform:/resource/<projectname>/
+   * <p>
+   * Löst eine URL relativ zu einer anderen auf.
    * </p>
+   * <p>
+   * Also handles the pseudo protocol 'project:'. If project: ist specified in
+   * relativeURL, it tries to guess the project from the baseURL (e.g. the
+   * baseURL must be of the form platfrom:/resource/). It then replaces project:
+   * by 'platform:/resource/ <projectname>/
+   * </p>
+   * 
    * @param baseURL
    * @param relativeURL
    * @throws MalformedURLException
@@ -81,14 +101,15 @@ public class UrlResolver implements IUrlResolver
     {
       if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
         throw new MalformedURLException( "Protocol 'project:' need a resource url as context" );
-      
+
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
-      final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName();
-      
+      final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/"
+          + project.getName();
+
       final String relPath = relativeURL.substring( "project:".length() + 1 );
-      return new URL( projectURL + "/" + relPath );      
+      return new URL( projectURL + "/" + relPath );
     }
-    
+
     return new URL( baseURL, relativeURL );
   }
 
@@ -101,7 +122,8 @@ public class UrlResolver implements IUrlResolver
   }
 
   /**
-   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
+   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String,
+   *      java.lang.String)
    */
   public void addReplaceToken( final String key, final String value )
   {
@@ -109,14 +131,64 @@ public class UrlResolver implements IUrlResolver
   }
 
   /**
+   * If URL denotes a location within the workspace, special handling is done. Else, we rely on {@link UrlUtilities}.
+   * 
    * @throws IOException
    * @see org.kalypso.java.net.IUrlResolver#createBufferedWriter(java.net.URL)
    */
   public BufferedWriter createBufferedWriter( final URL url ) throws IOException
   {
-    // TODO: handle platfrom protocolls etc.
-    final UrlUtilities utilities = new UrlUtilities();
-    
-    return utilities.createBufferedWriter( url );
+    try
+    {
+      return new UrlUtilities().createBufferedWriter( url );
+    }
+    catch( final UnknownServiceException e )
+    {
+      final IFile file = ResourceUtilities.findFileFromURL( url );
+      if( file != null )
+      {
+        final IPath path = file.getLocation();
+        final File realFile = path.toFile();
+
+        final Runnable runnable = new Runnable()
+        {
+          public void run()
+          {
+            try
+            {
+              file.refreshLocal( IResource.DEPTH_ONE, null );
+            }
+            catch( final CoreException ce )
+            {
+              // maybe there is better error handling than that?
+              ce.printStackTrace();
+            }
+          }
+        };
+        
+        if( !realFile.exists() )
+          realFile.createNewFile();
+        final OutputStream os = new RunAfterCloseOutputStream( new FileOutputStream( realFile ),
+            runnable );
+
+        String charset;
+        try
+        {
+          charset = file.getCharset();
+        }
+        catch( final CoreException ce )
+        {
+          ce.printStackTrace();
+
+          charset = null;
+        }
+
+        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os )
+            : new OutputStreamWriter( os, charset );
+        return new BufferedWriter( osw );
+      }
+
+      throw e;
+    }
   }
 }

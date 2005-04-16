@@ -1,10 +1,7 @@
 package org.kalypso.ogc.gml.convert.target;
 
 import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.gml.util.Gmltarget;
@@ -19,7 +16,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class GmlTargetHandler implements ITargetHandler
 {
   private final Gmltarget m_target;
+
   private final IUrlResolver m_resolver;
+
   private final URL m_context;
 
   public GmlTargetHandler( final IUrlResolver resolver, final URL context, final Gmltarget target )
@@ -38,22 +37,20 @@ public class GmlTargetHandler implements ITargetHandler
     try
     {
       final String href = m_target.getHref();
-      
+
       final URL url = m_resolver.resolveURL( m_context, href );
 
-      final URLConnection connection = url.openConnection();
-      final OutputStream outputStream = connection.getOutputStream();
-      writer = new BufferedWriter( new OutputStreamWriter( outputStream ) );
-      
+      writer = m_resolver.createBufferedWriter( url );
+
       GmlSerializer.serializeWorkspace( writer, workspace );
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( "Daten wurden nicht gespeichert: " + e );
+      throw new GmlConvertException( "Daten wurden nicht gespeichert", e );
     }
     finally
     {
-       IOUtils.closeQuietly( writer );
+      IOUtils.closeQuietly( writer );
     }
   }
 
