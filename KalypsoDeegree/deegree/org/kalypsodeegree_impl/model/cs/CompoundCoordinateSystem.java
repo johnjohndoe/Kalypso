@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.units.Unit;
@@ -348,7 +347,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
     /**
      * Gets first sub-coordinate system.
      */
-    public CS_CoordinateSystem getHeadCS() throws RemoteException
+    public CS_CoordinateSystem getHeadCS()
     {
       return adapters.export( CompoundCoordinateSystem.this.getHeadCS() );
     }
@@ -356,7 +355,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
     /**
      * Gets second sub-coordinate system.
      */
-    public CS_CoordinateSystem getTailCS() throws RemoteException
+    public CS_CoordinateSystem getTailCS()
     {
       return adapters.export( CompoundCoordinateSystem.this.getTailCS() );
     }

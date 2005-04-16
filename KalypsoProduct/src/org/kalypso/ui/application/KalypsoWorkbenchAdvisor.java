@@ -57,8 +57,8 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.kalypso.product.IKalypsoProductConstants;
 import org.kalypso.services.user.UserServiceConstants;
-import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
  * @author belger
@@ -108,7 +108,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
    */
   public String getInitialWindowPerspectiveId()
   {
-    return IKalypsoUIConstants.PROGNOSE_PERSPECTIVE;
+    return IKalypsoProductConstants.PROGNOSE_PERSPECTIVE;
   }
   
   /**
@@ -192,7 +192,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
-      workbench.showPerspective( IKalypsoUIConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
+      workbench.showPerspective( IKalypsoProductConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
     }
     catch( final WorkbenchException e )
     {

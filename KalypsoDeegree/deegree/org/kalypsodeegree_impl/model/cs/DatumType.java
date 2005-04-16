@@ -61,7 +61,6 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.io.ObjectStreamException;
 import java.util.Locale;
 
 import javax.media.jai.EnumeratedParameter;
@@ -211,7 +210,7 @@ public abstract class DatumType extends EnumeratedParameter
   /**
    * Resource key, used for building localized name. This key doesn't need to be
    * serialized, since {@link #readResolve}canonicalize enums according their
-   * {@link #value}. Furthermore, its value is implementation-dependent (which
+   * {@link EnumeratedParameter#getValue()}. Furthermore, its value is implementation-dependent (which
    * is an other raison why it should not be serialized).
    */
   private transient int key = 0;
@@ -321,10 +320,8 @@ public abstract class DatumType extends EnumeratedParameter
    * <code>enum1.equals(enum2)</code>.
    * 
    * @return A single instance of this enum.
-   * @throws ObjectStreamException
-   *           is deserialization failed.
    */
-  private Object readResolve() throws ObjectStreamException
+  private Object readResolve()
   {
     return getEnum( getValue() );
   }
@@ -370,7 +367,7 @@ public abstract class DatumType extends EnumeratedParameter
     /**
      * Construct a new enum with the specified value.
      */
-    private Horizontal( final String name, final int value, final int key )
+    protected Horizontal( final String name, final int value, final int key )
     {
       super( name, value, key );
     }
@@ -447,7 +444,7 @@ public abstract class DatumType extends EnumeratedParameter
     /**
      * Construct a new enum with the specified value.
      */
-    private Vertical( final String name, final int value, final int key )
+    protected Vertical( final String name, final int value, final int key )
     {
       super( name, value, key );
     }
@@ -516,7 +513,7 @@ public abstract class DatumType extends EnumeratedParameter
     /**
      * Construct a new enum with the specified value.
      */
-    private Temporal( final String name, final int value, final int key )
+    protected Temporal( final String name, final int value, final int key )
     {
       super( name, value, key );
     }
@@ -582,7 +579,7 @@ public abstract class DatumType extends EnumeratedParameter
     /**
      * Construct a new enum with the specified value.
      */
-    private Local( final String name, final int value, final int key )
+    protected Local( final String name, final int value, final int key )
     {
       super( name, value, key );
     }

@@ -1,6 +1,5 @@
 package org.kalypso.ui.wizard.data;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 

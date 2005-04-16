@@ -61,11 +61,9 @@
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -188,6 +186,8 @@ public class Info implements Serializable
    */
   public String getName( final Locale locale )
   {
+    locale.getClass();
+    
     return name;
   }
 
@@ -208,6 +208,8 @@ public class Info implements Serializable
    */
   public String getAuthority( final Locale locale )
   {
+    locale.getClass();
+    
     return ( properties != null ) ? (String)properties.get( "authority" ) : null;
   }
 
@@ -228,6 +230,7 @@ public class Info implements Serializable
    */
   public String getAuthorityCode( final Locale locale )
   {
+    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "authorityCode" ) : null;
   }
 
@@ -243,6 +246,7 @@ public class Info implements Serializable
    */
   public String getAlias( final Locale locale )
   {
+    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "alias" ) : null;
   }
 
@@ -258,6 +262,7 @@ public class Info implements Serializable
    */
   public String getAbbreviation( final Locale locale )
   {
+    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "abbreviation" ) : null;
   }
 
@@ -274,6 +279,7 @@ public class Info implements Serializable
    */
   public String getRemarks( final Locale locale )
   {
+    locale.getClass();
     return ( properties != null ) ? (String)properties.get( "remarks" ) : null;
   }
 
@@ -282,8 +288,8 @@ public class Info implements Serializable
    */
   public int hashCode()
   {
-    final String name = getName( null );
-    return ( name != null ) ? name.hashCode() : 369781;
+    final String n = getName( null );
+    return ( n != null ) ? n.hashCode() : 369781;
   }
 
   /**
@@ -337,6 +343,7 @@ public class Info implements Serializable
    */
   String addString( final StringBuffer buffer )
   {
+    buffer.getClass();
     return Utilities.getShortClassName( this );
   }
 
@@ -461,7 +468,7 @@ public class Info implements Serializable
    * classes outside this package, unless we give it <code>protected</code>
    * access. TODO: Would it be a good idea?
    */
-  Object readResolve() throws ObjectStreamException
+  Object readResolve()
   {
     return pool.intern( this );
   }
@@ -552,7 +559,7 @@ public class Info implements Serializable
     /**
      * Gets the name.
      */
-    public String getName() throws RemoteException
+    public String getName()
     {
       return Info.this.getName( null );
     }
@@ -560,7 +567,7 @@ public class Info implements Serializable
     /**
      * Gets the authority name.
      */
-    public String getAuthority() throws RemoteException
+    public String getAuthority()
     {
       return Info.this.getAuthority( null );
     }
@@ -568,7 +575,7 @@ public class Info implements Serializable
     /**
      * Gets the authority-specific identification code.
      */
-    public String getAuthorityCode() throws RemoteException
+    public String getAuthorityCode()
     {
       return Info.this.getAuthorityCode( null );
     }
@@ -576,7 +583,7 @@ public class Info implements Serializable
     /**
      * Gets the alias.
      */
-    public String getAlias() throws RemoteException
+    public String getAlias()
     {
       return Info.this.getAlias( null );
     }
@@ -584,7 +591,7 @@ public class Info implements Serializable
     /**
      * Gets the abbreviation.
      */
-    public String getAbbreviation() throws RemoteException
+    public String getAbbreviation()
     {
       return Info.this.getAbbreviation( null );
     }
@@ -592,7 +599,7 @@ public class Info implements Serializable
     /**
      * Gets the provider-supplied remarks.
      */
-    public String getRemarks() throws RemoteException
+    public String getRemarks()
     {
       return Info.this.getRemarks( null );
     }
@@ -600,7 +607,7 @@ public class Info implements Serializable
     /**
      * Gets a Well-Known text representation of this object.
      */
-    public String getWKT() throws RemoteException
+    public String getWKT()
     {
       return Info.this.toString();
     }
@@ -608,7 +615,7 @@ public class Info implements Serializable
     /**
      * Gets an XML representation of this object.
      */
-    public String getXML() throws RemoteException
+    public String getXML()
     {
       throw new UnsupportedOperationException( "XML parsing not yet implemented" );
     }
@@ -638,7 +645,7 @@ public class Info implements Serializable
     }
 
     /** Returns the number of meters per linear unit. */
-    public double getMetersPerUnit() throws RemoteException
+    public double getMetersPerUnit()
     {
       return scale;
     }
@@ -666,7 +673,7 @@ public class Info implements Serializable
     }
 
     /** Returns the number of radians per angular unit. */
-    public double getRadiansPerUnit() throws RemoteException
+    public double getRadiansPerUnit()
     {
       return scale;
     }

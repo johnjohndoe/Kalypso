@@ -120,9 +120,6 @@ public class Adapters
    */
   public org.kalypsodeegree_impl.model.pt.Adapters PT = null;
 
-  protected Adapters()
-  {}
-
   /**
    * Default constructor.
    * 
@@ -851,8 +848,6 @@ public class Adapters
   /**
    * Returns an unit for an OpenGIS structure.
    * 
-   * @throws RemoteException
-   *           if a remote call failed.
    */
   public Unit wrap( final CS_Unit unit )
   {

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.product"
+   name="KalypsoProduct Plug-in"
+   version="1.0.0"
+   provider-name="kalypso.org"
+   class="org.kalypso.product.KalypsoProductPlugin">
+
+   <runtime>
+      <library name="KalypsoProduct.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.jwsdp"/>
+   </requires>
+
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Hochwasser Vorhersage"
+            icon="etc/kalypso16.gif"
+            fixed="true"
+            class="org.kalypso.ui.perspectives.PrognosePerspective"
+            id="org.kalypso.ui.perspectives.PrognosePerspective">
+      </perspective>
+   </extension>
+
+   <extension
+         id="product"
+         name="Kalypso Enterprise"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="Kalypso Enterprise"
+            application="org.kalypso.product.application"
+            description="Kalypso Enterprise Client for numerical modelling">
+         <property
+               name="aboutText"
+               value="%productBlurb">
+         </property>
+         <property
+               name="aboutImage"
+               value="etc/aboutKalypso.gif">
+         </property>
+         <property
+               name="featureImage"
+               value="etc/kalypso32.gif">
+         </property>
+         <property
+               name="windowImage"
+               value="etc/kalypso16.gif">
+         </property>
+      </product>
+   </extension>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.kalypso.ui.application.KalypsoApplication">
+         </run>
+      </application>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Kalypso"
+            id="Kalypso">
+      </category>
+      <view
+            name="Hochwasser Vorhersage"
+            icon="etc/kalypso16.gif"
+            category="Kalypso"
+            class="org.kalypso.ui.view.PrognoseView"
+            id="org.kalypso.view.prognose">
+      </view>
+   </extension>
+
+</plugin>

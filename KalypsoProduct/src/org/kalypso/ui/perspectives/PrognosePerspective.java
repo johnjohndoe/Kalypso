@@ -38,21 +38,31 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.view.prognose;
+package org.kalypso.ui.perspectives;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.model.xml.ModellistType;
-import org.kalypso.model.xml.ModellistType.ModelType;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.internal.PageLayout;
+import org.kalypso.product.IKalypsoProductConstants;
 
 /**
- * @author Belger
+ * @author belger
  */
-public class ModelLabelProvider extends LabelProvider
+public class PrognosePerspective implements IPerspectiveFactory
 {
-  public String getText( final Object element )
+  /**
+   * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
+   */
+  public void createInitialLayout( final IPageLayout layout )
   {
-    final ModellistType.ModelType model = (ModelType)element;
+    layout.addView( IKalypsoProductConstants.ID_PROGNOSE_VIEW, IPageLayout.LEFT, 0.95f, IPageLayout.ID_EDITOR_AREA );
     
-    return model.getLabel();
+    layout.setFixed( true );
+    layout.setEditorAreaVisible( false );
+
+    // a bit dirty, but this perspective should be minimalistic
+    if( layout instanceof PageLayout )
+      ((PageLayout)layout).getActionSets().clear();
   }
+
 }

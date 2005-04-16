@@ -194,8 +194,8 @@ public class AxisInfo implements Serializable
       return Utilities.equals( this.orientation, that.orientation )
           && Utilities.equals( this.name, that.name );
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

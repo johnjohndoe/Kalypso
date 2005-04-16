@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -279,8 +279,8 @@ public class DBaseIndex
 
         return item.p;
       }
-      else
-        return null;
+
+      return null;
     }
 
     /**
@@ -487,7 +487,7 @@ public class DBaseIndex
     /**
      * This method is called if saving is needed
      */
-    void store() throws IOException
+    void store()
     {
       onStoreList = true;
     }
@@ -513,26 +513,24 @@ public class DBaseIndex
 
         return -number;
       }
-      else
+
+      for( int i = 0; i < validEntries; i++ )
       {
-        for( int i = 0; i < validEntries; i++ )
+        int compare = entries[i].compareTo( key );
+
+        if( compare == 0 || compare > 0 )
         {
-          int compare = entries[i].compareTo( key );
-
-          if( compare == 0 || compare > 0 )
-          {
-            Page lowerPage = getPage( entries[i].lower );
-            if( searchStack != null )
-              searchStack.push( new Integer( number ) );
-            return lowerPage.search( key, searchStack );
-          }
+          Page lowerPage = getPage( entries[i].lower );
+          if( searchStack != null )
+            searchStack.push( new Integer( number ) );
+          return lowerPage.search( key, searchStack );
         }
-
-        Page lowerPage = getPage( lastLower );
-        if( searchStack != null )
-          searchStack.push( new Integer( number ) );
-        return lowerPage.search( key, searchStack );
       }
+
+      Page lowerPage = getPage( lastLower );
+      if( searchStack != null )
+        searchStack.push( new Integer( number ) );
+      return lowerPage.search( key, searchStack );
     }
 
     /**
@@ -736,11 +734,9 @@ public class DBaseIndex
 
       if( entries[0].lower == 0 )
         return 1;
-      else
-      {
-        Page lowerPage = getPage( entries[0].lower );
-        return lowerPage.getDepth() + 1;
-      }
+
+      final Page lowerPage = getPage( entries[0].lower );
+      return lowerPage.getDepth() + 1;
     }
 
     /**
@@ -878,7 +874,7 @@ public class DBaseIndex
   /**
    * Set the root page
    */
-  protected synchronized void setRoot( Page page ) throws IOException
+  protected synchronized void setRoot( Page page )
   {
     startingPageNo = page.number;
   }
@@ -995,18 +991,16 @@ public class DBaseIndex
       }
       return retval;
     }
-    else
+
+    ArrayList searchResult = root.searchDup( key );
+    if( searchResult.size() == 0 )
     {
-      ArrayList searchResult = root.searchDup( key );
-      if( searchResult.size() == 0 )
-      {
-        throw new KeyNotFoundException( key, this );
-      }
-      int[] retval = new int[searchResult.size()];
-      for( int i = 0; i < retval.length; i++ )
-        retval[i] = ( (Integer)searchResult.get( i ) ).intValue();
-      return retval;
+      throw new KeyNotFoundException( key, this );
     }
+    int[] retval = new int[searchResult.size()];
+    for( int i = 0; i < retval.length; i++ )
+      retval[i] = ( (Integer)searchResult.get( i ) ).intValue();
+    return retval;
   }
 
   /**

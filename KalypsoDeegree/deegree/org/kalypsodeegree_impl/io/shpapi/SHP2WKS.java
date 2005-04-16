@@ -229,13 +229,9 @@ public class SHP2WKS
     }
 
     if( ( crossings % 2 ) != 0 )
-    {
       return true;
-    }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   //    

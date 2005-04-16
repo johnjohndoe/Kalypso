@@ -168,13 +168,6 @@
             id="org.kalypso.ui.editor.mapeditor.views.styleeditor">
       </view>
       <view
-            name="Hochwasser Vorhersage"
-            icon="etc/kalypso16.gif"
-            category="Kalypso"
-            class="org.kalypso.ui.view.prognose.PrognoseView"
-            id="org.kalypso.view.prognose">
-      </view>
-      <view
             allowMultiple="false"
             class="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
             category="Kalypso"
@@ -565,48 +558,6 @@
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
             id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
       </perspective>
-      <perspective
-            name="Hochwasser Vorhersage"
-            icon="etc/kalypso16.gif"
-            fixed="true"
-            class="org.kalypso.ui.perspectives.PrognosePerspective"
-            id="org.kalypso.ui.perspectives.PrognosePerspective">
-      </perspective>
-   </extension>
-   <extension
-         id="product"
-         name="Kalypso Enterprise"
-         point="org.eclipse.core.runtime.products">
-      <product
-            name="Kalypso Enterprise"
-            application="org.kalypso.ui.application"
-            description="Kalypso Enterprise Client for numerical modelling">
-         <property
-               name="aboutText"
-               value="%productBlurb">
-         </property>
-         <property
-               name="aboutImage"
-               value="etc/aboutKalypso.gif">
-         </property>
-         <property
-               name="featureImage"
-               value="etc/kalypso32.gif">
-         </property>
-         <property
-               name="windowImage"
-               value="etc/kalypso16.gif">
-         </property>
-      </product>
-   </extension>
-   <extension
-         id="application"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.kalypso.ui.application.KalypsoApplication">
-         </run>
-      </application>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
@@ -762,5 +713,4 @@
          <selection class="org.kalypso.ui.internal.wizard.IKalypsoImportWizard"/>
       </wizard>
    </extension>
-
 </plugin>
