@@ -93,11 +93,6 @@ public class ConvenienceTransformFactory
     csFactory = ConvenienceCSFactory.getInstance();
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public static ConvenienceTransformFactory getInstance()
   {
     if( tfFactory == null )

@@ -67,7 +67,7 @@ public class CsvTargetHandler implements ITargetHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( "Daten wurden nicht gespeichert: " + e );
+      throw new GmlConvertException( "Daten wurden nicht gespeichert", e );
     }
     finally
     {

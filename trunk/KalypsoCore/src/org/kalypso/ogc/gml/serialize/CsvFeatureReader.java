@@ -14,18 +14,22 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Lädt und schreibt ein CSV als
  * {@link org.kalypsodeegree.model.feature.GMLWorkspace}.
  * 
- * Die Information, welche Spalte wie gelesen wird, wird per {@link #addInfo(FeatureTypeProperty, CSVInfo)} übergeben.
+ * Die Information, welche Spalte wie gelesen wird, wird per
+ * {@link #addInfo(FeatureTypeProperty, CSVInfo)}übergeben.
  * 
  * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind.
- * Alternativ wäre aber auch super, wenn das auch automatisch anhand der 1.Zeile ginge
+ *       Alternativ wäre aber auch super, wenn das auch automatisch anhand der
+ *       1.Zeile ginge
  * 
  * @todo Koordinatensystem berücksichtigen
  * 
@@ -54,7 +58,8 @@ public final class CsvFeatureReader
     m_infos.put( ftp, info );
   }
 
-  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter ) throws IOException, CsvException
+  public final GMLWorkspace loadCSV( final Reader reader, final String comment,
+      final String delemiter ) throws IOException, CsvException
   {
     final List list = new ArrayList();
     final FeatureType ft = loadCSVIntoList( list, reader, comment, delemiter );
@@ -62,7 +67,7 @@ public final class CsvFeatureReader
     // featurelist erzeugen
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
     final List flist = (List)rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    flist.addAll( list ); 
+    flist.addAll( list );
 
     return new GMLWorkspace_Impl( new FeatureType[]
     {
@@ -70,13 +75,16 @@ public final class CsvFeatureReader
         ft }, rootFeature, null, null, null, new HashMap() );
   }
 
-  private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment, final String delemiter ) throws IOException, CsvException
+  private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment,
+      final String delemiter ) throws IOException, CsvException
   {
-    final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray( new FeatureTypeProperty[0] );
-    final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null, new HashMap() );
-    
+    final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray(
+        new FeatureTypeProperty[0] );
+    final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null,
+        null, null, new HashMap() );
+
     final LineNumberReader lnr = new LineNumberReader( reader );
-    
+
     while( lnr.ready() )
     {
       final String line = lnr.readLine();
@@ -92,7 +100,8 @@ public final class CsvFeatureReader
     return featureType;
   }
 
-  private Feature createFeatureFromTokens( final String index, final String[] tokens, final FeatureType featureType ) throws CsvException
+  private Feature createFeatureFromTokens( final String index, final String[] tokens,
+      final FeatureType featureType ) throws CsvException
   {
     final FeatureTypeProperty[] properties = featureType.getProperties();
     final Object[] data = new Object[properties.length];
@@ -100,17 +109,20 @@ public final class CsvFeatureReader
     {
       final FeatureTypeProperty ftp = properties[i];
       final CSVInfo info = (CSVInfo)m_infos.get( ftp );
-      
+
       final String type = ftp.getType();
-      
+      final String format = info.format;
+
       // check column numbers
       for( int j = 0; j < info.columns.length; j++ )
       {
         final int colNumber = info.columns[j];
         if( colNumber >= tokens.length )
-          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber +  " zu groß für FeatureProperty '" + ftp.getName() + "'" + "\nNur " + tokens.length  + " Spalten gefunden." );
+          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber
+              + " zu groß für FeatureProperty '" + ftp.getName() + "'" + "\nNur " + tokens.length
+              + " Spalten gefunden." );
       }
-      
+
       final int col0 = info.columns[0];
       if( String.class.getName().equals( type ) )
         data[i] = tokens[col0];
@@ -128,12 +140,14 @@ public final class CsvFeatureReader
         final double rw = Double.parseDouble( tokens[col0] );
         final double hw = Double.parseDouble( tokens[col1] );
 
-        data[i] = GeometryFactory.createGM_Point( rw, hw, null );
+        final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( format );
+        
+        data[i] = GeometryFactory.createGM_Point( rw, hw, crs );
       }
       else
         throw new CsvException( "Datentyp nicht bekannt: " + type );
     }
-    
+
     return FeatureFactory.createFeature( index, featureType, data );
   }
 }
