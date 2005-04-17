@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.url;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -134,13 +133,13 @@ public class UrlResolver implements IUrlResolver
    * If URL denotes a location within the workspace, special handling is done. Else, we rely on {@link UrlUtilities}.
    * 
    * @throws IOException
-   * @see org.kalypso.java.net.IUrlResolver#createBufferedWriter(java.net.URL)
+   * @see org.kalypso.java.net.IUrlResolver#createWriter(java.net.URL)
    */
-  public BufferedWriter createBufferedWriter( final URL url ) throws IOException
+  public OutputStreamWriter createWriter( final URL url ) throws IOException
   {
     try
     {
-      return new UrlUtilities().createBufferedWriter( url );
+      return new UrlUtilities().createWriter( url );
     }
     catch( final UnknownServiceException e )
     {
@@ -185,7 +184,7 @@ public class UrlResolver implements IUrlResolver
 
         final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os )
             : new OutputStreamWriter( os, charset );
-        return new BufferedWriter( osw );
+        return osw;
       }
 
       throw e;

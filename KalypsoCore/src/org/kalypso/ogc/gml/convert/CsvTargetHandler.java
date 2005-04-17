@@ -42,9 +42,7 @@ public class CsvTargetHandler implements ITargetHandler
     {
       final URL url = m_resolver.resolveURL( m_context, m_target.getHref() );
 
-      final BufferedWriter bw = m_resolver.createBufferedWriter( url );
-
-      writer = new PrintWriter( bw );
+      writer = new PrintWriter( new BufferedWriter( m_resolver.createWriter( url ) ) );
 
       final String delemiter = m_target.getDelemiter();
       final String featurePath = m_target.getFeaturePath();
