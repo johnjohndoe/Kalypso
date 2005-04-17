@@ -43,6 +43,8 @@ package org.kalypso.java.net;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
@@ -133,5 +135,22 @@ public class UrlUtilities implements IUrlResolver
       // wenn alles nichts hilfe, doch die esception werden
       throw e;
     }
+  }
+
+  /**
+   * Erzeugt den Reader anhand der URL und {@link URLConnection#getContentEncoding()}.
+   * 
+   * @see org.kalypso.java.net.IUrlResolver#createReader(java.net.URL)
+   */
+  public InputStreamReader createReader( final URL url ) throws IOException
+  {
+    final URLConnection connection = url.openConnection();
+    final String contentEncoding = connection.getContentEncoding();
+    final InputStream inputStream = connection.getInputStream();
+    
+    if( contentEncoding == null )
+      return new InputStreamReader( inputStream );
+    
+    return new InputStreamReader( inputStream, contentEncoding );
   }
 }
