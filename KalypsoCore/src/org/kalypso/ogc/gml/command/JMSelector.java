@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -197,8 +198,10 @@ public class JMSelector
   public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus,
       int selectionId )
   {
-    final List resultDE = select( GeometryFactory.createGM_Envelope( pos.getX() - r,
-        pos.getY() - r, pos.getX() + r, pos.getY() + r ), list, withinStatus, selectionId );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos
+        .getX()
+        + r, pos.getY() + r );
+    final List resultDE = select( env, list, withinStatus, selectionId );
 
     return resultDE;
   }
@@ -216,10 +219,18 @@ public class JMSelector
       // TODO: ich bin der Meinung das ist bloedsinn, Gernot
       // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
       // weil deegree die distance nicht implementiert hat!
-      if( result == null || fe.getDefaultGeometryProperty().distance( pos ) < dist )
+      final GM_Object defaultGeometryProperty = fe.getDefaultGeometryProperty();
+      double distance = defaultGeometryProperty.distance( pos );
+      // some geometries must be prefered, otherwise it is not possible to
+      // select a point inside a polygon as the polygone is always more near
+      if( defaultGeometryProperty instanceof GM_Surface )
+        distance += 2 * r / 5;
+      if( defaultGeometryProperty instanceof GM_Curve )
+        distance += r / 5;
+      if( result == null || distance < dist )
       {
         result = fe;
-        dist = result.getDefaultGeometryProperty().distance( pos );
+        dist = distance;
       }
     }
     return result;

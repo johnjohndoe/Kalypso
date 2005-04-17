@@ -256,7 +256,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_gisTableViewer != null )
       m_gisTableViewer.dispose();
-    
+
     if( m_table != null )
       m_table.dispose();
     if( m_tableTemplate != null )
@@ -264,7 +264,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     if( m_obsChart != null )
       m_obsChart.dispose();
-    
+
     if( m_diagView != null )
       m_diagView.dispose();
   }
@@ -415,8 +415,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     // TODO: use widgetID from Konfiguration
-    
-    m_mapPanel.getWidgetManager().changeWidget( WidgetHelper.getWidget(widgetID));
+
+    m_mapPanel.getWidgetManager().setActualWidget( WidgetHelper.getWidget( widgetID ) );
 
     m_mapPanel.setBoundingBox( m_wishBoundingBox );
 
@@ -522,8 +522,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
           getReplaceProperties() );
 
-      m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
+      m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin
+          .getDefault().createFeatureTypeCellEditorFactory(), getSelectionID(), false );
       m_gisTableViewer.applyTableTemplate( template, getContext() );
 
     }
@@ -646,7 +646,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public final void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent != null && modellEvent.getType() == ModellEvent.SELECTION_CHANGED )
+    if( modellEvent != null && modellEvent.isType( ModellEvent.SELECTION_CHANGED ) )
     {
       refreshDiagram();
 
@@ -785,6 +785,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Saves the dirty observations that were edited in the table.
+   * 
    * @param monitor
    * @param saveFiles
    */
@@ -874,12 +875,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // lock buttons
     try
     {
-      ((CalcWizard)getWizard()).setButtonsLocked( true );
+      ( (CalcWizard)getWizard() ).setButtonsLocked( true );
       op.runAndHandleOperation( getShell(), true, true, "Hochwasser Vorhersage", "Berechnung" );
     }
     finally
     {
-      ((CalcWizard)getWizard()).setButtonsLocked( false );
+      ( (CalcWizard)getWizard() ).setButtonsLocked( false );
     }
   }
 

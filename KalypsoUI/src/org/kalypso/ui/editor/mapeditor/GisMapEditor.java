@@ -101,19 +101,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
         .getDefaultMapSelectionID() );
   }
 
-  public void dispose()
-  {
-    if( m_mapModell != null )
-      m_mapModell.dispose();
-
-    setMapModell( null );
-
-    if( m_outlinePage != null )
-      m_outlinePage.dispose();
-
-    super.dispose();
-  }
-
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
@@ -197,11 +184,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     super.createPartControl( parent );
 
-//    MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), myMapPanel );
-    
     // create MapPanel
-    final Frame virtualFrame = SWT_AWT
-        .new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    final Frame virtualFrame = SWT_AWT.new_Frame( composite );
     virtualFrame.setVisible( true );
     myMapPanel.setVisible( true );
     virtualFrame.add( myMapPanel );
@@ -266,4 +251,21 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     m_mapModell.saveTheme( theme, monitor );
   }
+
+  /*
+   *  
+   */
+  public void dispose()
+  {
+    if( m_mapModell != null )
+      m_mapModell.dispose();
+
+    setMapModell( null );
+
+    if( m_outlinePage != null )
+      m_outlinePage.dispose();
+
+    super.dispose();
+  }
+
 }

@@ -36,16 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author belger
@@ -53,18 +56,20 @@ import org.kalypso.util.command.ICommand;
 public class ChangeFeaturesCommand implements ICommand
 {
   private final FeatureChange[] m_newChanges;
-  private final FeatureChange[] m_oldChanges;
-  private final ModellEventProvider m_eventprovider;
 
-  public ChangeFeaturesCommand( final ModellEventProvider eventprovider, final FeatureChange[] changes )
+  private final FeatureChange[] m_oldChanges;
+
+  private final GMLWorkspace m_workspace;
+
+  public ChangeFeaturesCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
   {
-    m_eventprovider = eventprovider;
+    m_workspace = workspace;
     m_newChanges = changes;
     m_oldChanges = new FeatureChange[changes.length];
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      
+
       final Object oldValue = change.feature.getProperty( change.property );
       m_oldChanges[i] = new FeatureChange( change.feature, change.property, oldValue );
     }
@@ -99,7 +104,7 @@ public class ChangeFeaturesCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    applyChanges( m_oldChanges );  
+    applyChanges( m_oldChanges );
   }
 
   /**
@@ -109,17 +114,21 @@ public class ChangeFeaturesCommand implements ICommand
   {
     return "Feature verändern";
   }
-  
+
   private void applyChanges( final FeatureChange[] changes )
   {
+    final List changedFeaturesList = new ArrayList();
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      final FeatureProperty fp = FeatureFactory.createFeatureProperty( change.property, change.newValue );
+      final FeatureProperty fp = FeatureFactory.createFeatureProperty( change.property,
+          change.newValue );
       change.feature.setProperty( fp );
+      changedFeaturesList.add( change.feature );
     }
-    
-    if( m_eventprovider != null )
-      m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FEATURE_CHANGE ) );
+
+    if( m_workspace != null )
+      m_workspace
+          .fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeaturesList ) );
   }
 }

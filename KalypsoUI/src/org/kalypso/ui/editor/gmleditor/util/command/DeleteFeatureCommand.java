@@ -42,11 +42,11 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
 
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author belger
@@ -57,16 +57,16 @@ public class DeleteFeatureCommand implements ICommand
 
   private final Object m_deleteItem;
 
-  private final ModellEventProvider m_eventprovider;
-
   private int index = -1;
 
   private final String m_propName;
 
-  public DeleteFeatureCommand( final ModellEventProvider eventprovider, Feature parentFeature,
+  private final GMLWorkspace m_workspace;
+
+  public DeleteFeatureCommand( final GMLWorkspace workspace, Feature parentFeature,
       String propName, Object deleteItem )
   {
-    m_eventprovider = eventprovider;
+    m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propName;
     m_deleteItem = deleteItem;
@@ -121,9 +121,7 @@ public class DeleteFeatureCommand implements ICommand
       list.add( index, m_deleteItem );
       index = -1;
     }
-    if( m_eventprovider != null )
-      m_eventprovider
-          .fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FEATURE_CHANGE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD) );
   }
 
   /**
@@ -156,7 +154,6 @@ public class DeleteFeatureCommand implements ICommand
       index = list.indexOf( m_deleteItem );
       list.remove( m_deleteItem );
     }
-    if( m_eventprovider != null )
-      m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE) );
   }
 }

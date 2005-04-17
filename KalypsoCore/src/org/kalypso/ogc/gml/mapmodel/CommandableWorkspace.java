@@ -260,9 +260,10 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     m_workspace.addLinkedFeature( parent, propName, pos, newFeature );
   }
-  
-  public void removeLinkedFeature(Feature parentFeature, String propName, Feature linkFeature){
-    m_workspace.removeLinkedFeature(parentFeature, propName, linkFeature);
+
+  public void removeLinkedFeature( Feature parentFeature, String propName, Feature linkFeature )
+  {
+    m_workspace.removeLinkedFeature( parentFeature, propName, linkFeature );
   }
 
   /**
@@ -271,5 +272,15 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public Map getNamespaceMap()
   {
     return m_workspace.getNamespaceMap();
+  }
+
+  public boolean equals( Object obj )
+  {
+    return m_workspace.equals( obj );
+  }
+
+  public int hashCode()
+  {
+    return m_workspace.hashCode();
   }
 }

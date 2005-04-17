@@ -178,91 +178,97 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public boolean intersects( GM_Envelope bb )
   {
     // coordinates of this GM_Envelope's BBOX
-    double west1 = min.getX();
-    double south1 = min.getY();
-    double east1 = max.getX();
-    double north1 = max.getY();
+    double minx1 = min.getX();
+    double miny1 = min.getY();
+    double maxx1 = max.getX();
+    double maxy1 = max.getY();
 
     // coordinates of the other GM_Envelope's BBOX
-    double west2 = bb.getMin().getX();
-    double south2 = bb.getMin().getY();
-    double east2 = bb.getMax().getX();
-    double north2 = bb.getMax().getY();
+    double minx2 = bb.getMin().getX();
+    double miny2 = bb.getMin().getY();
+    double maxx2 = bb.getMax().getX();
+    double maxy2 = bb.getMax().getY();
 
-    // special cases: one box lays completly inside the other one
-    if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && ( north1 >= north2 ) )
-    {
-      return true;
-    }
-
-    if( ( west1 >= west2 ) && ( south1 >= south2 ) && ( east1 <= east2 ) && ( north1 <= north2 ) )
-    {
-      return true;
-    }
-
-    // in any other case of intersection, at least one line of the BBOX has
-    // to cross a line of the other BBOX
-    // check western boundary of box 1
-    // "touching" boxes must not intersect
-    if( ( west1 >= west2 ) && ( west1 < east2 ) )
-    {
-      if( ( south1 <= south2 ) && ( north1 > south2 ) )
-      {
-        return true;
-      }
-
-      if( ( south1 < north2 ) && ( north1 >= north2 ) )
-      {
-        return true;
-      }
-    }
-
-    // check eastern boundary of box 1
-    // "touching" boxes must not intersect
-    if( ( east1 > west2 ) && ( east1 <= east2 ) )
-    {
-      if( ( south1 <= south2 ) && ( north1 > south2 ) )
-      {
-        return true;
-      }
-
-      if( ( south1 < north2 ) && ( north1 >= north2 ) )
-      {
-        return true;
-      }
-    }
-
-    // check southern boundary of box 1
-    // "touching" boxes must not intersect
-    if( ( south1 >= south2 ) && ( south1 < north2 ) )
-    {
-      if( ( west1 <= west2 ) && ( east1 > west2 ) )
-      {
-        return true;
-      }
-
-      if( ( west1 < east2 ) && ( east1 >= east2 ) )
-      {
-        return true;
-      }
-    }
-
-    // check northern boundary of box 1
-    // "touching" boxes must not intersect
-    if( ( north1 > south2 ) && ( north1 <= north2 ) )
-    {
-      if( ( west1 <= west2 ) && ( east1 > west2 ) )
-      {
-        return true;
-      }
-
-      if( ( west1 < east2 ) && ( east1 >= east2 ) )
-      {
-        return true;
-      }
-    }
-
-    return false;
+    
+    if(!(Math.max(minx1, minx2)<=Math.min(maxx1, maxx2)))
+      return false;
+    if(!(Math.max(miny1, miny2)<=Math.min(maxy1, maxy2)))
+      return false;
+    return true;
+//    // special cases: box2 lays completly inside box1
+//    if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && ( north1 >= north2 ) )
+//    {
+//      return true;
+//    }
+//
+//    if( ( west1 >= west2 ) && ( south1 >= south2 ) && ( east1 <= east2 ) && ( north1 <= north2 ) )
+//    {
+//      return true;
+//    }
+//
+//    // in any other case of intersection, at least one line of the BBOX has
+//    // to cross a line of the other BBOX
+//    // check western boundary of box 1
+//    // "touching" boxes must not intersect
+//    if( ( west1 >= west2 ) && ( west1 < east2 ) )
+//    {
+//      if( ( south1 <= south2 ) && ( north1 > south2 ) )
+//      {
+//        return true;
+//      }
+//
+//      if( ( south1 < north2 ) && ( north1 >= north2 ) )
+//      {
+//        return true;
+//      }
+//    }
+//
+//    // check eastern boundary of box 1
+//    // "touching" boxes must not intersect
+//    if( ( east1 > west2 ) && ( east1 <= east2 ) )
+//    {
+//      if( ( south1 <= south2 ) && ( north1 > south2 ) )
+//      {
+//        return true;
+//      }
+//
+//      if( ( south1 < north2 ) && ( north1 >= north2 ) )
+//      {
+//        return true;
+//      }
+//    }
+//
+//    // check southern boundary of box 1
+//    // "touching" boxes must not intersect
+//    if( ( south1 >= south2 ) && ( south1 < north2 ) )
+//    {
+//      if( ( west1 <= west2 ) && ( east1 > west2 ) )
+//      {
+//        return true;
+//      }
+//
+//      if( ( west1 < east2 ) && ( east1 >= east2 ) )
+//      {
+//        return true;
+//      }
+//    }
+//
+//    // check northern boundary of box 1
+//    // "touching" boxes must not intersect
+//    if( ( north1 > south2 ) && ( north1 <= north2 ) )
+//    {
+//      if( ( west1 <= west2 ) && ( east1 > west2 ) )
+//      {
+//        return true;
+//      }
+//
+//      if( ( west1 < east2 ) && ( east1 >= east2 ) )
+//      {
+//        return true;
+//      }
+//    }
+//
+//    return false;
   }
 
   /**
@@ -419,6 +425,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.11  2005/04/17 21:19:24  doemming
+ * *** empty log message ***
+ *
  * Revision 1.10  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *

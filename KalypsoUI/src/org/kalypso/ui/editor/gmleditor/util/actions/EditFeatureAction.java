@@ -53,8 +53,6 @@ public final class EditFeatureAction extends Action
 
   CommandableWorkspace m_workspace;
 
-  public static final String NAME = "Bearbeiten";
-
   private final Feature m_feature;
 
   final ICommandTarget m_commandTarget;
@@ -64,7 +62,7 @@ public final class EditFeatureAction extends Action
   public EditFeatureAction( Feature feature, CommandableWorkspace workspace,
       ICommandTarget commandTarget, Shell shell )
   {
-    super( NAME );
+    super( "Bearbeiten" );
     m_feature = feature;
     m_workspace = workspace;
     m_commandTarget = commandTarget;

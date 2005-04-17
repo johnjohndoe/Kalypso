@@ -46,8 +46,7 @@ import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author belger
@@ -56,27 +55,26 @@ public class AddFeatureCommand implements ICommand
 {
   private final Feature m_parentFeature;
 
-  private final ModellEventProvider m_eventprovider;
 
-  private GMLWorkspace m_workspace;
 
-  private int m_pos = 0;
+  private final int m_pos;
 
   private final String m_propName;
 
-  private FeatureType m_type;
+  private final FeatureType m_type;
 
   private Feature newFeature = null;
 
-  public AddFeatureCommand( final ModellEventProvider eventprovider, FeatureType type,
+  private final GMLWorkspace m_workspace;
+
+  public AddFeatureCommand( final GMLWorkspace workspace, FeatureType type,
       Feature parentFeature, String propertyName, int pos )
   {
-    m_eventprovider = eventprovider;
+    m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
     m_type = type;
-    m_workspace = (GMLWorkspace)eventprovider;
   }
 
   /**
@@ -92,6 +90,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
+    newFeature = m_workspace.createFeature( m_type );
     addFeature();
   }
 
@@ -100,8 +99,9 @@ public class AddFeatureCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    m_workspace.addFeature( m_parentFeature, m_propName, m_pos, newFeature );
-    m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    if( newFeature == null )
+      return;
+    addFeature();
   }
 
   /**
@@ -130,8 +130,7 @@ public class AddFeatureCommand implements ICommand
       List list = (List)prop;
       list.remove( newFeature );
     }
-    if( m_eventprovider != null )
-      m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE) );
   }
 
   /**
@@ -144,8 +143,7 @@ public class AddFeatureCommand implements ICommand
 
   private void addFeature() throws Exception
   {
-    newFeature = m_workspace.createFeature( m_type );
     m_workspace.addFeature( m_parentFeature, m_propName, m_pos, newFeature );
-    m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD) );
   }
 }

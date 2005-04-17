@@ -20,6 +20,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -163,13 +165,21 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent != null && modellEvent.getType() == ModellEvent.FEATURE_CHANGE )
+    if( modellEvent != null )
     {
-      final Event event = new Event(  );
-      event.widget = m_viewer.getControl();
-      final ModifyEvent me = new ModifyEvent( event );
-      for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
-        ( (ModifyListener)mIt.next() ).modifyText( me );
+      if( modellEvent instanceof IGMLWorkspaceModellEvent
+          && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
+      {
+        final FeaturesChangedModellEvent feEvent = (FeaturesChangedModellEvent)modellEvent;
+        if( feEvent.getGMLWorkspace() == m_kft.getWorkspace() )
+        {
+          final Event event = new Event();
+          event.widget = m_viewer.getControl();
+          final ModifyEvent me = new ModifyEvent( event );
+          for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
+            ( (ModifyListener)mIt.next() ).modifyText( me );
+        }
+      }
     }
   }
 }

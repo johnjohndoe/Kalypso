@@ -371,6 +371,16 @@
                id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
          </action>
          <action
+               label="Relationen setzen"
+               icon="icons/kalypso32.gif"
+               style="radio"
+               tooltip="setzen von Relationen"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               toolbarPath="karte/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.NewRelationAction">
+         </action>
+         <action
                style="push"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"
                toolbarPath="karte/edit"

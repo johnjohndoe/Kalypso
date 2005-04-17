@@ -155,7 +155,8 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public boolean isGeometryProperty()
   {
-    return m_type.startsWith( "org.kalypsodeegree.model.geometry." ) && !m_type.endsWith( "Envelope" );
+    return m_type.startsWith( "org.kalypsodeegree.model.geometry." )
+        && !m_type.endsWith( "Envelope" );
   }
 
   /**
@@ -174,47 +175,26 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
     return m_annotationMap;
   }
 
+  /**
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    if( obj == null || !( obj instanceof FeatureTypeProperty ) )
+      return false;
+    final FeatureTypeProperty other = (FeatureTypeProperty)obj;
+    return other.getName().equals( getName() ) && other.getNamespace().equals( getNamespace() );
+  }
+
+  /**
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode()
+  {
+    if( m_namespace != null )
+      return ( m_name + m_namespace ).hashCode();
+    return m_name.hashCode();
+  }
 }
-/*
- * Changes to this class. What the people haven been up to:
- * 
- * $Log$
- * Revision 1.9  2005/03/08 11:01:10  doemming
- * *** empty log message ***
- *
- * Revision 1.8  2005/02/20 18:56:50  doemming
- * *** empty log message ***
- * Revision 1.7 2005/01/26 17:55:31
- * doemming *** empty log message *** Revision 1.6 2005/01/18 12:50:42 doemming
- * *** empty log message ***
- * 
- * Revision 1.5 2004/10/11 14:44:28 doemming *** empty log message *** Revision
- * 1.4 2004/10/09 18:41:20 belger *** empty log message ***
- * 
- * Revision 1.3 2004/10/07 14:09:16 doemming *** empty log message ***
- * 
- * Revision 1.1 2004/09/02 23:57:07 doemming *** empty log message *** Revision
- * 1.3 2004/08/31 14:07:12 doemming *** empty log message *** Revision 1.3
- * 2004/02/09 07:59:57 poth no message
- * 
- * Revision 1.2 2002/11/25 09:32:41 poth no message
- * 
- * Revision 1.1.1.1 2002/09/25 16:00:38 poth no message
- * 
- * Revision 1.4 2002/08/15 10:00:00 ap no message
- * 
- * Revision 1.3 2002/05/21 16:05:51 ap no message
- * 
- * Revision 1.2 2002/04/05 09:41:40 ap no message
- * 
- * Revision 1.1 2002/04/04 16:22:41 ap no message
- * 
- * Revision 1.4 2002/03/04 10:20:31 ap no message
- * 
- * Revision 1.3 2001/10/23 13:41:52 ap no message
- * 
- * Revision 1.2 2001/10/15 14:48:19 ap no message
- * 
- * Revision 1.1 2001/10/05 15:19:43 ap no message
- *  
- */

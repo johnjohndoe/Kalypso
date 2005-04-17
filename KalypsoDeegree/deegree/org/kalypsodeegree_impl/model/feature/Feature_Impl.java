@@ -72,8 +72,8 @@ public class Feature_Impl implements Feature
     final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
     for( int i = 0; i < ftp.length; i++ )
     {
-      if( properties[i].getValue() != null && ft.getMaxOccurs(i)==1 )
-        setProperty( properties[i] );      
+      if( properties[i].getValue() != null && ft.getMaxOccurs( i ) == 1 )
+        setProperty( properties[i] );
     }
   }
 
@@ -163,7 +163,7 @@ public class Feature_Impl implements Feature
           result.add( o );
       }
     }
-	// TODO allways use virtual ftp to calculate bbox ??
+    // TODO allways use virtual ftp to calculate bbox ??
     final FeatureTypeProperty[] vftp = m_featureType.getVirtuelFeatureTypeProperty();
     for( int p = 0; p < vftp.length; p++ )
     {
@@ -365,8 +365,7 @@ public class Feature_Impl implements Feature
 
   public boolean isSelected( int selectID )
   {
-    boolean selected = selectID == ( mySelection & selectID );
-    return selected;
+    return selectID == ( mySelection & selectID );
   }
 
   /**
@@ -386,7 +385,8 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String, org.kalypsodeegree.model.feature.GMLWorkspace)
+   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String,
+   *      org.kalypsodeegree.model.feature.GMLWorkspace)
    */
   public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace )
   {

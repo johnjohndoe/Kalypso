@@ -56,19 +56,20 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author belger
  */
-public class SaveThemeDelegate extends AbstractThemeDelegate implements ModellEventListener
+public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implements ModellEventListener
 {
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    final GisMapEditor editor = getEditor();
+    final GisMapEditor editor = (GisMapEditor)getEditor();
     if( editor == null )
       return;
 
@@ -114,14 +115,14 @@ public class SaveThemeDelegate extends AbstractThemeDelegate implements ModellEv
       }
     }
 
-    refreshAction();
+    refreshAction(null);
   }
 
-  protected void refreshAction( )
+  protected void refreshAction(IAction action )
   {
     boolean bEnabled = false;
 
-    final GisMapEditor editor = getEditor();
+    final GisMapEditor editor = (GisMapEditor)getEditor();
     if( editor != null )
     {
       final IMapModell mapModell = editor.getMapPanel().getMapModell();

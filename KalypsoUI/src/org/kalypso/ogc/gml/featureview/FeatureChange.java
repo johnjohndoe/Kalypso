@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
 import org.kalypsodeegree.model.feature.Feature;
@@ -48,7 +48,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureChange
 {
   public final Feature feature;
+
   public final String property;
+
   public final Object newValue;
 
   public FeatureChange( final Feature featur, final String propert, final Object newValu )

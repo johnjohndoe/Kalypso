@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.views;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
@@ -57,6 +63,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
+import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
@@ -67,56 +74,64 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 public class ActionOptionsView extends ViewPart implements IWindowListener, IPageListener,
     IPartListener, IWidgetChangeListener
 {
-  private Composite m_topLevel;
+  /**
+   * top level composite of view
+   */
+  private Composite m_topLevel = null;
 
-  private Group m_group;
+  /**
+   * group that is contains always the active widget's controls
+   */
+  private Group m_group = null;
 
-  private IWidget m_activeWidget;
+  /**
+   * the actual active widget
+   */
+  private IWidget m_activeWidget = null;
+
+  /**
+   * list of registries where we are registered as listeners <br>
+   * used for clean dispose
+   */
+  private final List m_registries = new ArrayList();
+
+  /**
+   * sets force mode for update of inner control
+   */
+  private boolean m_modeForce = false;
 
   /*
    * 
    * @author doemming
+   * TODO update view when model changes (on selected modellevents)
    */
   public ActionOptionsView()
   {
     super();
     // register as windowlistener at workbench
-    IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
     workbench.addWindowListener( this );
-    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-    // initial settings
+    m_registries.add( workbench );
+    final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    //     set initial things
     windowOpened( activeWorkbenchWindow );
-    IWorkbenchPage[] pages = activeWorkbenchWindow.getPages();
+
+    final IWorkbenchPage[] pages = activeWorkbenchWindow.getPages();
     for( int i = 0; i < pages.length; i++ )
     {
-      IWorkbenchPage workbenchPage = pages[i];
+      final IWorkbenchPage workbenchPage = pages[i];
       pageOpened( workbenchPage );
-      IEditorPart activeEditor = workbenchPage.getActiveEditor();
+      final IEditorPart activeEditor = workbenchPage.getActiveEditor();
       if( activeEditor != null )
+      {
         partActivated( activeEditor );
+        if( activeEditor instanceof GisMapEditor )
+        {
+          final GisMapEditor editor = (GisMapEditor)activeEditor;
+          m_activeWidget = editor.getMapPanel().getWidgetManager().getActualWidget();
+        }
+      }
     }
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  public void createPartControl( Composite parent )
-  {
-    m_topLevel = new Composite( parent, SWT.NONE );
-
-    GridLayout gridLayout = new GridLayout();
-    m_topLevel.setLayout( gridLayout );
-
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.verticalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    m_topLevel.setLayoutData( data );
-
-    m_group = new Group( m_topLevel, SWT.NONE );
-    gridLayout = new GridLayout();
-    m_group.setLayout( gridLayout );
-    m_group.setText( "Optionen" );
   }
 
   /**
@@ -128,45 +143,11 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   }
 
   /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
-  public void dispose()
-  {
-    if( m_topLevel != null && !m_topLevel.isDisposed() )
-      m_topLevel.dispose();
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    workbench.removeWindowListener( this );
-    super.dispose();
-  }
-
-  private boolean isMapEditor( IWorkbenchPart part )
-  {
-    return ( part instanceof GisMapEditor );
-  }
-
-  /**
-   * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
-   */
-  public void windowOpened( IWorkbenchWindow window )
-  {
-    window.addPageListener( this );
-  }
-
-  /**
-   * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
-   */
-  public void windowClosed( IWorkbenchWindow window )
-  {
-    window.removePageListener( this );
-  }
-
-  /**
    * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
    */
   public void windowActivated( IWorkbenchWindow window )
   {
   // nothing
-
   }
 
   /**
@@ -182,7 +163,25 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void pageActivated( IWorkbenchPage page )
   {
-  //    
+  //  nothing
+  }
+
+  /**
+   * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void windowOpened( IWorkbenchWindow window )
+  {
+    window.addPageListener( this );
+    m_registries.add( window );
+  }
+
+  /**
+   * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
+   */
+  public void windowClosed( IWorkbenchWindow window )
+  {
+    window.removePageListener( this );
+    m_registries.remove( window );
   }
 
   /**
@@ -191,6 +190,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   public void pageOpened( IWorkbenchPage page )
   {
     page.addPartListener( this );
+    m_registries.add( page );
   }
 
   /**
@@ -199,6 +199,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   public void pageClosed( IWorkbenchPage page )
   {
     page.removePartListener( this );
+    m_registries.remove( page );
   }
 
   /**
@@ -206,10 +207,20 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partActivated( IWorkbenchPart part )
   {
-    if( isMapEditor( part ) )
+    if( part instanceof GisMapEditor )
     {
       GisMapEditor editor = (GisMapEditor)part;
-      editor.getMapPanel().getWidgetManager().add( this );
+      if( m_topLevel != null && !m_topLevel.isDisposed() )
+        m_topLevel.setVisible( true );
+      final WidgetManager widgetManager = editor.getMapPanel().getWidgetManager();
+      widgetManager.addWidgetChangeListener( this );
+      m_registries.add( widgetManager );
+    }
+    else if( part instanceof IEditorPart )
+    {
+      // if other editor than mapeditor disable view
+      if( m_topLevel != null && !m_topLevel.isDisposed() )
+        m_topLevel.setVisible( false );
     }
   }
 
@@ -218,10 +229,12 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public void partDeactivated( IWorkbenchPart part )
   {
-    if( isMapEditor( part ) )
+    if( part instanceof GisMapEditor )
     {
-      GisMapEditor editor = (GisMapEditor)part;
-      editor.getMapPanel().getWidgetManager().remove( this );
+      final GisMapEditor editor = (GisMapEditor)part;
+      final WidgetManager widgetManager = editor.getMapPanel().getWidgetManager();
+      widgetManager.removeWidgetChangeListener( this );
+      m_registries.remove( widgetManager );
     }
   }
 
@@ -250,14 +263,51 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   }
 
   /**
+   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
+  public void createPartControl( Composite parent )
+  {
+    m_topLevel = new Composite( parent, SWT.NONE );
+
+    Layout gridLayout = new FillLayout();
+    m_topLevel.setLayout( gridLayout );
+
+    GridData data = new GridData();
+    data.horizontalAlignment = GridData.FILL;
+    data.verticalAlignment = GridData.FILL;
+    data.grabExcessHorizontalSpace = true;
+    data.grabExcessVerticalSpace = true;
+    m_topLevel.setLayoutData( data );
+
+    m_group = new Group( m_topLevel, SWT.NONE );
+    GridData datag = new GridData();
+    datag.horizontalAlignment = GridData.FILL;
+    datag.verticalAlignment = GridData.FILL;
+    datag.grabExcessHorizontalSpace = true;
+    datag.grabExcessVerticalSpace = true;
+
+    GridLayout layout = new GridLayout();
+    m_group.setLayout( layout );
+    m_group.setText( "Optionen" );
+    m_group.setLayoutData( datag );
+    m_topLevel.layout();
+    m_topLevel.pack();
+
+    // update content
+    m_modeForce = true;
+    widgetChanged( m_activeWidget );
+    m_modeForce = false;
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.widgets.IWidgetChangeListener#widgetChanged(org.kalypso.ogc.gml.widgets.IWidget)
    */
   public void widgetChanged( IWidget newWidget )
   {
-    if( m_activeWidget == newWidget )
+    if( m_activeWidget == newWidget && !m_modeForce )
       return;
     // dispose old
-    if( m_activeWidget == null && m_activeWidget instanceof IWidgetWithOptions )
+    if( m_activeWidget != null && m_activeWidget instanceof IWidgetWithOptions )
     {
       IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
       widget.disposeControl();
@@ -265,19 +315,53 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
 
     // create new Content
     m_activeWidget = newWidget;
-    if( newWidget == null )
+    if( newWidget == null && m_group != null && !m_group.isDisposed() )
       m_group.setText( "keine Aktion selektiert" );
     else
     {
-      String name = newWidget.getName();
-      String tooltip = newWidget.getToolTip();
-      m_group.setText( name );
-      m_group.setToolTipText( tooltip );
-      if( newWidget instanceof IWidgetWithOptions )
+      final String name = newWidget.getName();
+      final String tooltip = newWidget.getToolTip();
+      if( m_group != null && !m_group.isDisposed() )
       {
-        IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
-        widget.createControl( m_group );
+        m_group.setText( name );
+        m_group.setToolTipText( tooltip );
+        if( newWidget instanceof IWidgetWithOptions )
+        {
+          final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
+          widget.createControl( m_group );
+          m_group.layout();
+        }
       }
     }
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#dispose()
+   */
+  public void dispose()
+  {
+    // dispose inner controls
+    if( m_activeWidget != null && m_activeWidget instanceof IWidgetWithOptions )
+    {
+      ( (IWidgetWithOptions)m_activeWidget ).disposeControl();
+      m_activeWidget = null;
+    }
+    // dispose my controls
+    if( m_topLevel != null && !m_topLevel.isDisposed() )
+      m_topLevel.dispose();
+    // remove all listeners
+    for( Iterator iter = m_registries.iterator(); iter.hasNext(); )
+    {
+      final Object registry = iter.next();
+      if( registry instanceof WidgetManager )
+        ( (WidgetManager)registry ).removeWidgetChangeListener( this );
+      if( registry instanceof IWorkbench )
+        ( (IWorkbench)registry ).removeWindowListener( this );
+      if( registry instanceof IWorkbenchWindow )
+        ( (IWorkbenchWindow)registry ).removePageListener( this );
+      if( registry instanceof IWorkbenchPage )
+        ( (IWorkbenchPage)registry ).removePartListener( this );
+    }
+    super.dispose();
   }
 }

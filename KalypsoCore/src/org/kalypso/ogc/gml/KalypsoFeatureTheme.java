@@ -57,6 +57,8 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -68,7 +70,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
-  CommandableWorkspace m_workspace;
+  final CommandableWorkspace m_workspace;
 
   private final HashMap m_styleDisplayMap = new HashMap();
 
@@ -164,7 +166,37 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    setDirty();
+    if( modellEvent instanceof IGMLWorkspaceModellEvent
+        && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_workspace )
+    {
+      if( modellEvent instanceof FeaturesChangedModellEvent )
+      {
+        final FeaturesChangedModellEvent featuresChangedModellEvent = ( (FeaturesChangedModellEvent)modellEvent );
+        if( featuresChangedModellEvent.getGMLWorkspace() == m_workspace )
+        {
+          final List features = featuresChangedModellEvent.getFeatures();
+          // optimize: i think it is faster to restyle all than to find and
+          // exchange so many display elements
+          if( features.size() > m_featureList.size() / 5 )
+            setDirty();
+          else
+          {
+            for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
+            {
+              StyleDisplayMap sdm = (StyleDisplayMap)iter.next();
+              for( Iterator iterator = features.iterator(); iterator.hasNext(); )
+                sdm.restyle( (Feature)iterator.next() );
+            }
+          }
+        }
+      }
+      else
+      {
+        setDirty();
+      }
+    }
+      if( modellEvent.isType( ModellEvent.STYLE_CHANGE ) )
+        setDirty();
     fireModellEvent( modellEvent );
   }
 
@@ -246,7 +278,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       if( result == null )
         result = new HashSet();
-      m_vaildEnvelope=null;
+      m_vaildEnvelope = null;
       restyle( env );
       for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
         result.add( ( (DisplayElement[])iter.next() )[0].getFeature() );
@@ -259,7 +291,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_dispayElements.clear();
     }
 
-    public List getSelectedDisplayElements( List result, int selectionId, GM_Envelope bbox )
+    /**
+     * 
+     * @return List of display elements that fit to selectionMask <br>
+     */
+    public List getSelectedDisplayElements( List result, int selectionMask, GM_Envelope bbox )
     {
       if( result == null )
         result = new ArrayList();
@@ -270,7 +306,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         if( de.length > 0 )
         {
           Feature feature = de[0].getFeature();
-          if( feature.isSelected( selectionId ) && feature.getEnvelope().intersects( bbox ) )
+          if( feature.isSelected( selectionMask ) && feature.getEnvelope().intersects( bbox ) )
             result.add( de );
         }
       }
@@ -298,7 +334,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
       for( int i = 0; i < layerList.length; i++ )
         for( Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
-  				((DisplayElement)iterator.next()).paint( g, p );
+          ( (DisplayElement)iterator.next() ).paint( g, p );
     }
 
     public void restyle( GM_Envelope env )
@@ -316,15 +352,46 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         for( Iterator iter = features.iterator(); iter.hasNext(); )
         {
           Feature feature = (Feature)iter.next();
-          DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature,
-              m_style,m_workspace);
-          if( elements.length > 0 )
-            m_dispayElements.add( elements );
-          if( elements.length > m_maxDisplayArray )
-            m_maxDisplayArray = elements.length;
+          addDisplayElements( feature );
         }
       }
     }
+
+    private void addDisplayElements( Feature feature )
+    {
+      DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style,
+          m_workspace );
+      if( elements.length > 0 )
+        m_dispayElements.add( elements );
+      if( elements.length > m_maxDisplayArray )
+        m_maxDisplayArray = elements.length;
+    }
+
+    public void restyle( Feature feature )
+    {
+      for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
+      {
+        DisplayElement[] elements = (DisplayElement[])iter.next();
+        if( elements[0].getFeature().equals( feature ) )
+        {
+          m_dispayElements.remove( feature );
+          break;
+        }
+      }
+      addDisplayElements( feature );
+    }
   }
 
+  public boolean equals( Object obj )
+  {
+    if( obj == null || !( obj instanceof KalypsoFeatureTheme ) )
+      return false;
+    final KalypsoFeatureTheme other = (KalypsoFeatureTheme)obj;
+    return getWorkspace().equals( other.getWorkspace() );
+  }
+
+  public int hashCode()
+  {
+    return getWorkspace().getContext().toExternalForm().hashCode();
+  }
 }

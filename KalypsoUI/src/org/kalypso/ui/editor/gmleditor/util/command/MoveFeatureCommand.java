@@ -40,13 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author belger
@@ -56,8 +57,6 @@ public class MoveFeatureCommand implements ICommand
   private final Feature m_parentFeature;
 
   private final Object m_moveItem;
-
-  private final ModellEventProvider m_eventprovider;
 
   public static int UP = 0;
 
@@ -69,10 +68,12 @@ public class MoveFeatureCommand implements ICommand
 
   private final String m_propName;
 
-  public MoveFeatureCommand( final ModellEventProvider eventprovider, Feature parentFeature,
-      String propName, Object moveItem, int type )
+  private final GMLWorkspace m_workspace;
+
+  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, String propName,
+      Object moveItem, int type )
   {
-    m_eventprovider = eventprovider;
+    m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propName;
     m_moveItem = moveItem;
@@ -131,9 +132,10 @@ public class MoveFeatureCommand implements ICommand
         list.remove( m_moveItem );
         list.add( ( index - 1 ), m_moveItem );
       }
-      if( m_eventprovider != null )
-        m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider,
-            ModellEvent.FEATURE_CHANGE ) );
+      final List feList = new ArrayList();
+      feList.add( m_parentFeature );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
+          m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
     }
   }
 
@@ -170,9 +172,11 @@ public class MoveFeatureCommand implements ICommand
         list.remove( m_moveItem );
         list.add( ( index + 1 ), m_moveItem );
       }
-      if( m_eventprovider != null )
-        m_eventprovider
-            .fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+
+      final List feList = new ArrayList();
+      feList.add( m_parentFeature );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
+          m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
     }
   }
 }

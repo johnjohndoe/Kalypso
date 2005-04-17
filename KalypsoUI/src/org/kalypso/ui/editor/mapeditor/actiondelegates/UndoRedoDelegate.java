@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -46,13 +46,15 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.util.command.CommandJob;
 
 /**
  * @author belger
  */
-public class UndoRedoDelegate extends AbstractThemeDelegate implements ModellEventListener
+public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
+    ModellEventListener
 {
   private final boolean m_undo;
 
@@ -60,13 +62,13 @@ public class UndoRedoDelegate extends AbstractThemeDelegate implements ModellEve
   {
     m_undo = undo;
   }
-  
+
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    final GisMapEditor editor = getEditor();
+    final GisMapEditor editor = (GisMapEditor)getEditor();
     if( editor == null )
       return;
 
@@ -80,19 +82,20 @@ public class UndoRedoDelegate extends AbstractThemeDelegate implements ModellEve
 
         final CommandableWorkspace workspace = theme.getWorkspace();
 
-        if( ( m_undo && workspace.canUndo()) || ( !m_undo && workspace.canRedo() ) )
-          new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO  : CommandJob.REDO );
+        if( ( m_undo && workspace.canUndo() ) || ( !m_undo && workspace.canRedo() ) )
+          new CommandJob( null, workspace, theme.getSchedulingRule(), null,
+              m_undo ? CommandJob.UNDO : CommandJob.REDO );
       }
     }
 
-    refreshAction();
+    refreshAction(null);
   }
 
-  protected void refreshAction()
+  protected void refreshAction(IAction action)
   {
     boolean bEnabled = false;
 
-    final GisMapEditor editor = getEditor();
+    final GisMapEditor editor = (GisMapEditor)getEditor();
     if( editor != null )
     {
       final IMapModell mapModell = editor.getMapPanel().getMapModell();
