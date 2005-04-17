@@ -40,7 +40,6 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -107,9 +106,9 @@ public class UrlUtilities implements IUrlResolver
 
   /**
    * @throws IOException
-   * @see org.kalypso.java.net.IUrlResolver#createBufferedWriter(java.net.URL)
+   * @see org.kalypso.java.net.IUrlResolver#createWriter(java.net.URL)
    */
-  public BufferedWriter createBufferedWriter( final URL url ) throws IOException
+  public OutputStreamWriter createWriter( final URL url ) throws IOException
   {
     final URLConnection connection = url.openConnection();
     try
@@ -117,7 +116,7 @@ public class UrlUtilities implements IUrlResolver
       connection.setDoOutput( true );
 
       final OutputStream outputStream = connection.getOutputStream();
-      return new BufferedWriter( new OutputStreamWriter( outputStream ) );
+      return new OutputStreamWriter( outputStream );
     }
     catch( final UnknownServiceException e )
     {
@@ -128,7 +127,7 @@ public class UrlUtilities implements IUrlResolver
       if( "file".equals( protocol ) )
       {
         final File file = new File( url.getFile() );
-        return new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
+        return new OutputStreamWriter( new FileOutputStream( file ) );
       }
       
       // wenn alles nichts hilfe, doch die esception werden

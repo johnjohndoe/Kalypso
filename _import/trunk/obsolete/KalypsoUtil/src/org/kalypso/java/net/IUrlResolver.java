@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -71,5 +71,5 @@ public interface IUrlResolver
    * 
    * @throws IOException
    */
-  public BufferedWriter createBufferedWriter( final URL url ) throws IOException;
+  public OutputStreamWriter createWriter( final URL url ) throws IOException;
 }
