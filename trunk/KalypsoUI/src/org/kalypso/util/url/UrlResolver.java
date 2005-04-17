@@ -43,6 +43,8 @@ package org.kalypso.util.url;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
@@ -78,6 +80,7 @@ import org.kalypso.java.net.UrlUtilities;
 public class UrlResolver implements IUrlResolver
 {
   private Properties m_replaceTokenMap = new Properties();
+  private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
   /**
    * <p>
@@ -139,7 +142,7 @@ public class UrlResolver implements IUrlResolver
   {
     try
     {
-      return new UrlUtilities().createWriter( url );
+      return m_urlUtilities.createWriter( url );
     }
     catch( final UnknownServiceException e )
     {
@@ -189,5 +192,31 @@ public class UrlResolver implements IUrlResolver
 
       throw e;
     }
+  }
+
+  /**
+   * Ausnahmebehandlung von Platform URLs. In diesem Fall anhand der Workbench das encoding bestimmen.
+   * 
+   * @see org.kalypso.java.net.IUrlResolver#createReader(java.net.URL)
+   */
+  public InputStreamReader createReader( final URL url ) throws IOException
+  {
+    try
+    {
+      final IFile file = ResourceUtilities.findFileFromURL( url );
+      if( file != null )
+      {
+        final InputStream is = file.getContents();
+        final String charset = file.getCharset();
+        return new InputStreamReader( is, charset );
+      }
+    }
+    catch( final CoreException e )
+    {
+      throw new IOException( e.getMessage() );
+    }
+    
+    // wenn alles nichts hilfe, auf Standardzeug zurückgreifen
+    return m_urlUtilities.createReader( url );
   }
 }

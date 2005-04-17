@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.job.impl;
 
 import java.io.File;
@@ -57,15 +57,15 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
 public abstract class AbstractCalcJob implements ICalcJob
 {
   private Logger m_logger = Logger.getLogger( ICalcJob.class.getName() );
-  
+
   private String m_message = "Warte auf Ausführung...";
-  
+
   private int m_progress = -1;
-  
+
   private Collection m_results = new Vector();
 
   private boolean m_canceled = false;
-  
+
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#cancel()
    */
@@ -73,12 +73,12 @@ public abstract class AbstractCalcJob implements ICalcJob
   {
     m_canceled = true;
   }
-  
+
   public boolean isCanceled()
   {
     return m_canceled;
   }
-  
+
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getProgress()
    */
@@ -94,7 +94,7 @@ public abstract class AbstractCalcJob implements ICalcJob
   {
     return m_message;
   }
-  
+
   protected final void setMessage( final String message )
   {
     m_message = message;
@@ -116,44 +116,70 @@ public abstract class AbstractCalcJob implements ICalcJob
   {
     m_progress = Math.min( m_progress + work, 100 );
   }
-  
+
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#disposeJob()
    */
   public void disposeJob()
   {
-    // normalerweise nichts zu tun
+  // normalerweise nichts zu tun
   }
 
-  public void addResult( final CalcJobDataBean bean )
+  public final void addResult( final CalcJobDataBean bean )
   {
     m_logger.info( "Adding result: " + bean.getPath() );
-    
+
     synchronized( m_results )
     {
       m_results.add( bean );
     }
   }
 
+  // TODO: so sollte es sein!
+//  /**
+//   * Fügt eine Datei zur Ausgabe hinzu.
+//   * 
+//   * @param file Diese Datei oder dieses Verzeichnis werden zurück an den Server gegeben.
+//   * @param id Die ID für die Bean
+//   * @param description Der Name der Bean
+//   * @param targetPath Das Ergebnis wird in diesen Pfad innnerhalb der Rechenvarianten zurückgeschrieben.
+//   */
+//  protected void addResult( final File file, final String id, final String description, final String targetPath )
+//  {
+//    final DataSource source = new FileDataSource( file );
+//    final DataHandler data = new DataHandler( source );
+//    addResult( new CalcJobDataBean( id, description, targetPath, data ) );
+//  }
+  
   /**
-   * Kopiert eine Datei in den Ausgabeordner und f?gt die entsprechende Bean zur
+   * Kopiert eine Datei in den Ausgabeordner und fügt die entsprechende Bean zur
    * Ausgabe hinzu.
    * 
    * Die Pfade werden wie folgt angelegt:
    * 
    * Das Resultfile wird relativ zu resultdir aufgel?st und unter dem gleichen
-   * rleativen Pfad unter das Outputdir abgelegt: z.B.: resultdir
-   * C:\tmp\kalypsonatest\exe\ resultfile:
-   * C:\tmp\kalypsonatest\exe\out_we.nat\950901.bof Ablage im utputdir:
-   * C:\tmp\kalypsonatest\output\out_we.nat\950901.bof pfad in der Bean:
-   * .\out_we.nat\950901.bof
-   *  
+   * rleativen Pfad unter das Outputdir abgelegt: z.B.:
+   * <ul>
+   * <li>
+   * resultdir: C:\tmp\kalypsonatest\exe\
+   * </li>
+   * <li>
+   * resultfile: C:\tmp\kalypsonatest\exe\out_we.nat\950901.bof
+   * </li>
+   * <li>
+   * Ablage im utputdir: C:\tmp\kalypsonatest\output\out_we.nat\950901.bof
+   * </li>
+   * <li>
+   * Pfad in der Bean: .\out_we.nat\950901.bof
+   * </li>
+   *  </ul>
    */
-  protected void copyResult( final File resultdir, final File resultfile, final File outputdir, final String id, final String description )
+  protected void copyResult( final File resultdir, final File resultfile, final File outputdir,
+      final String id, final String description )
   {
     final String relativePathTo = FileUtilities.getRelativePathTo( resultdir, resultfile );
     final File outputfile = new File( outputdir, relativePathTo );
-  
+
     try
     {
       FileUtils.copyFile( resultfile, outputfile );

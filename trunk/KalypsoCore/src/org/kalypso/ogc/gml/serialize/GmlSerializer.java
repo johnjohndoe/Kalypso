@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
@@ -180,14 +181,20 @@ public final class GmlSerializer
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
       throws Exception
   {
-    // Replace tokens
     final URLConnection connection = gmlURL.openConnection();
     final String contentEncoding = connection.getContentEncoding();
 
     final InputStream inputStream = connection.getInputStream();
     final InputStreamReader isr = contentEncoding == null ? new InputStreamReader( inputStream ) : new InputStreamReader( inputStream, contentEncoding );
 
-    final ReplaceTokens rt = new ReplaceTokens( isr );
+    return createGMLWorkspace( isr, urlResolver, gmlURL );
+  }
+
+  public static GMLWorkspace createGMLWorkspace( final Reader gmlreader, final IUrlResolver urlResolver, final URL context )
+      throws Exception
+  {
+    // Replace tokens
+    final ReplaceTokens rt = new ReplaceTokens( gmlreader );
     rt.setBeginToken( ':' );
     rt.setEndToken( ':' );
     for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
@@ -212,14 +219,14 @@ public final class GmlSerializer
     if( schemaLocationName == null || schemaLocationName.length() == 0 )
       throw new Exception( "Keine 'schemaLocation' in gml spezifiziert." );
 
-    final URL schemaLocation = urlResolver.resolveURL( gmlURL, schemaLocationName );
+    final URL schemaLocation = urlResolver.resolveURL( context, schemaLocationName );
     final GMLSchema schema = GMLSchemaCache.getSchema( schemaLocation );
 
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS(),
+    return new GMLWorkspace_Impl( types, feature, context, schemaLocationName, schema.getTargetNS(),
         schema.getNamespaceMap() );
   }
 

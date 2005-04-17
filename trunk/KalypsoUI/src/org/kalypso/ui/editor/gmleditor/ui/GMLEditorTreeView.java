@@ -64,7 +64,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
   protected Action deleteFeatureAction = null;
 
-  protected GMLReader reader = null;
+  protected GMLReader m_reader = null;
 
   protected Action moveFeatureUpAction = null;
 
@@ -123,11 +123,18 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     createMenu( m_treeViewer.getControl() );
   }
 
-  public void setGmlReader( GMLReader m_reader )
+  public void setGmlReader( final GMLReader reader )
   {
-    reader = m_reader;
-    reader.addGMLDocumentListener( this );
-    reader.load();
+    if( m_reader != null )
+      m_reader.removeGMLDocuentListener( this );
+      
+    m_reader = reader;
+    
+    if( m_reader != null )
+    {
+      m_reader.addGMLDocumentListener( this );
+      onChange( new GMLDocumentEvent( GMLReader.getGMLDocument( getWorkspace() ), m_reader.getGMLWorkspace() ) );
+    }
   }
 
   protected void createActions()
@@ -382,7 +389,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
           if( obj instanceof FeatureElement )
           {
             editFeatureAction = new EditFeatureAction( ( (FeatureElement)obj ).getFeature(),
-                m_workspace, reader, m_composite.getShell() );
+                m_workspace, m_reader, m_composite.getShell() );
             editFeatureAction.setEnabled( true );
             copyFeatureAction = new CopyFeatureAction( ( (FeatureElement)obj ).getFeature(),
                 m_workspace, clipboard );
@@ -489,7 +496,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
                 .getSelection();
             final Object[] selecteddata = getDataFromElements( selection.toArray() );
 
-            final FeatureElement root = reader.getGMLDocument( (CommandableWorkspace)modellEvent
+            final FeatureElement root = GMLReader.getGMLDocument( (CommandableWorkspace)modellEvent
                 .getEventSource() );
             m_root = root;
             m_treeViewer.setInput( root );
@@ -528,7 +535,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
   public void saveData( final IProgressMonitor monitor ) throws CoreException
   {
-    reader.saveFeatures( monitor );
+    m_reader.saveFeatures( monitor );
   }
 
   public CommandableWorkspace getWorkspace()

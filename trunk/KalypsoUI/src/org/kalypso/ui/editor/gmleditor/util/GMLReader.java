@@ -35,62 +35,53 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
 {
-  private CommandableWorkspace workspace = null;
+  private CommandableWorkspace m_workspace = null;
 
-  private PoolableObjectType m_layerKey = null;
+  private final PoolableObjectType m_layerKey;
 
-  private EventListenerList listenerList = new EventListenerList();
+  private final EventListenerList listenerList = new EventListenerList();
 
-  private String type = null;
-
-  private String source = null;
-
-  private URL context = null;
 
   private JobExclusiveCommandTarget m_commandTarget;
 
   private boolean m_loaded = false;
 
-  public GMLReader( String m_type, String m_source, URL m_context )
+  public GMLReader( final String type, final String source, final URL context )
   {
-    type = m_type;
-    source = m_source;
-    context = m_context;
-  }
+    m_layerKey = new PoolableObjectType( type, source, context );
 
-  public void load()
-  {
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     try
     {
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-      m_layerKey = new PoolableObjectType( type, source, context );
       pool.addPoolListener( this, m_layerKey );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
+      
+      pool.removePoolListener( this );
     }
   }
 
   public CommandableWorkspace getGMLWorkspace()
   {
-    return workspace;
+    return m_workspace;
   }
 
-  public FeatureElement getGMLDocument( CommandableWorkspace m_workspace )
+  public static FeatureElement getGMLDocument( final CommandableWorkspace workspace )
   {
-    if( m_workspace == null )
+    if( workspace == null )
       return null;
 
     final FeatureElement rootElement = FeatureElement.createRootFeature();
-    final Feature feature = m_workspace.getRootFeature();
+    final Feature feature = workspace.getRootFeature();
     final FeatureElement element = new FeatureElement( rootElement, feature );
     createFeatureChildren( element, feature );
 
     return rootElement;
   }
 
-  public void createFeatureChildren( final FeatureElement parent, final Feature ft )
+  public static void createFeatureChildren( final FeatureElement parent, final Feature ft )
   {
     // children erzeugen
     final FeatureTypeProperty[] ftp = ft.getFeatureType().getProperties();
@@ -152,8 +143,8 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     {
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
       {
-        workspace = (CommandableWorkspace)newValue;
-        m_commandTarget = new JobExclusiveCommandTarget( workspace, null );
+        m_workspace = (CommandableWorkspace)newValue;
+        m_commandTarget = new JobExclusiveCommandTarget( m_workspace, null );
       }
     }
     catch( final Throwable e )
@@ -174,9 +165,14 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     m_loaded = false;
   }
 
-  public void addGMLDocumentListener( IGMLDocumentListener l )
+  public void addGMLDocumentListener( final IGMLDocumentListener l )
   {
     listenerList.add( IGMLDocumentListener.class, l );
+  }
+  
+  public void removeGMLDocuentListener( final IGMLDocumentListener l )
+  {
+    listenerList.remove( IGMLDocumentListener.class, l );
   }
 
   protected void fire()
@@ -211,8 +207,8 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   {
     try
     {
-      if( workspace != null )
-        KalypsoGisPlugin.getDefault().getPool().saveObject( workspace, monitor );
+      if( m_workspace != null )
+        KalypsoGisPlugin.getDefault().getPool().saveObject( m_workspace, monitor );
     }
     catch( final Exception e )
     {
@@ -229,7 +225,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     if( m_loaded )
       return true;
     // workspace not here
-    if( workspace == null )
+    if( m_workspace == null )
       return false;
     m_loaded = true;
     return m_loaded;
