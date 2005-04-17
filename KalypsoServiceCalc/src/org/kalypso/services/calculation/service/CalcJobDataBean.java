@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.service;
 
 import java.io.Serializable;
@@ -55,16 +55,37 @@ public class CalcJobDataBean implements Serializable
 
   private String m_id;
 
+//  private DataHandler m_data;
+
   public CalcJobDataBean()
   {
   // nur für wspcompile
   }
 
-  public CalcJobDataBean( final String id, final String name, final String path )
+  /**
+   * @param id
+   *          ID dieses Datenobjekts
+   * @param name
+   *          Name, für eventuelle Benutzermeldungen
+   * @param path
+   *          Ein relativer Pfad. Hinweis, wie der Server, bzw. der Client die
+   *          Daten ablegen soll, damit die relativen Pfade erhalten bleiben.
+   *          <p>
+   *          Bei Senden zum Server: die Datei wird Relativ zum /basedir/INPUT_DIR_NAME/ abgelegt.
+   *          </p>
+   *          <p>
+   *          Bei Senden zum Client: die Datei wird mit diesem Pfad unterhalb
+   *          der Rechenvariante abgelegt.
+   *          </p>
+//   * @param data Die eigentlichen Daten
+   *  
+   */
+  public CalcJobDataBean( final String id, final String name, final String path /*, final DataHandler data */ )
   {
     m_id = id;
     m_name = name;
     m_path = path;
+//    m_data = data;
   }
 
   public final String getId()
@@ -96,6 +117,15 @@ public class CalcJobDataBean implements Serializable
   {
     m_path = url;
   }
+
+  //  public final DataHandler getData()
+  //  {
+  //    return m_data;
+  //  }
+  //  public final void setData( final DataHandler data )
+  //  {
+  //    m_data = data;
+  //  }
 
   /**
    * @see java.lang.Object#toString()

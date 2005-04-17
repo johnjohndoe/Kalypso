@@ -47,9 +47,13 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -80,8 +84,9 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     super( parentShell );
     m_workspace = workspace;
     m_target = target;
-
     m_featureComposite = featureComposite;
+    
+    setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
   /**
@@ -91,19 +96,45 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   {
     getShell().setText( "Feature editieren" );
 
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
+    final Composite panel = new Composite( parent, SWT.BORDER );
+    panel.setLayout( new GridLayout( ) );
+    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( panel, SWT.H_SCROLL
         | SWT.V_SCROLL );
 
-    // don't forget this line!
+    // don't forget that line!
     scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    final Composite control = (Composite)m_featureComposite.createControl( scrolledComposite, SWT.BORDER );
-    control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+    final Composite control = (Composite)m_featureComposite.createControl( scrolledComposite,
+        SWT.NONE );
     scrolledComposite.setContent( control );
+
+    updateControlSize( scrolledComposite, control );
+
+    panel.addControlListener( new ControlAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+       */
+      public void controlResized( final ControlEvent e )
+      {
+        updateControlSize( scrolledComposite, control );
+      }
+    } );
 
     m_featureComposite.addModifyListener( this );
 
     return scrolledComposite;
+  }
+
+  protected void updateControlSize( final ScrolledComposite scrolledComposite, final Composite control )
+  {
+    final Point controlSize = control.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    final Point parentSize = scrolledComposite.getSize();
+    
+    final Point newSize = new Point( Math.max( controlSize.x, parentSize.x ), Math.max( controlSize.y, parentSize.y ) );
+    control.setSize( newSize );
   }
 
   /**

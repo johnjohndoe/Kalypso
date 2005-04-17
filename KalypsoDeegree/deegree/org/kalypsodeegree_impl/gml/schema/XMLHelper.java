@@ -123,6 +123,7 @@ public class XMLHelper
 
         try
         {
+          // Note for Gernot: unter Windows: org.apache.xpath.XPathApi in jre/rt.jar
             nl = XPathAPI.selectNodeList(domNode, xPathQuery);
         } catch (Exception e)
         {

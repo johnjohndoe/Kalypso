@@ -99,13 +99,16 @@ public class FeatureviewHelper
     final GridDataType griddata = FACTORY.createGridData();
 
     final String typename = ftp.getType();
-    if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date"
+    final String name = ftp.getName();
+    if( "boundedBy".equals( name ) )
+      return;
+    else if( "java.lang.String|java.lang.Integer|java.lang.Long|java.lang.Float|java.lang.Double|java.util.Date"
         .indexOf( typename ) != -1 )
     {
       final TextType editor = FACTORY.createText();
       editor.setStyle( "SWT.NONE" );
       editor.setEditable( true );
-      editor.setProperty( ftp.getName() );
+      editor.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.FILL" );
       editor.setLayoutData( griddata );
@@ -117,7 +120,7 @@ public class FeatureviewHelper
       final CheckboxType checkbox = FACTORY.createCheckbox();
       checkbox.setStyle( "SWT.NONE" );
       checkbox.setEditable( true );
-      checkbox.setProperty( ftp.getName() );
+      checkbox.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       checkbox.setLayoutData( griddata );
@@ -126,11 +129,11 @@ public class FeatureviewHelper
     }
     else if( "FeatureAssociationType".equals( typename ) )
     {
-      if( featureType.getMaxOccurs( ftp.getName() ) != 1 )
+      if( featureType.getMaxOccurs( name ) != 1 )
       {
         final TableType table = FACTORY.createTable();
         table.setStyle( "SWT.NONE" );
-        table.setProperty( ftp.getName() );
+        table.setProperty( name );
 
         griddata.setHorizontalAlignment( "GridData.FILL" );
         griddata.setVerticalAlignment( "GridData.FILL" );
@@ -146,7 +149,7 @@ public class FeatureviewHelper
       {
         final Subcomposite compo = FACTORY.createSubcomposite();
         compo.setStyle( "SWT.NONE" );
-        compo.setProperty( ftp.getName() );
+        compo.setProperty( name );
 
         griddata.setHorizontalAlignment( "GridData.FILL" );
         griddata.setVerticalAlignment( "GridData.FILL" );
@@ -168,7 +171,7 @@ public class FeatureviewHelper
 //        final String lang = Locale.getDefault().getLanguage();
         final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
         final Annotation annotation = ftp.getAnnotation( lang );
-        final String text = annotation == null ? ftp.getName() : annotation.getLabel();
+        final String text = annotation == null ? name : annotation.getLabel();
         final String tooltip = annotation == null ? null : annotation.getTooltip();
         
         group.setLayoutData( groupdata );
@@ -191,7 +194,7 @@ public class FeatureviewHelper
     {
       final ButtonType button = FACTORY.createButton();
       button.setStyle( "SWT.PUSH" );
-      button.setProperty( ftp.getName() );
+      button.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
 //      griddata.setWidthHint( 100 );
@@ -202,7 +205,7 @@ public class FeatureviewHelper
 
     final String lang = Locale.getDefault().getLanguage();
     final Annotation annotation = ftp.getAnnotation( lang );
-    final String text = annotation == null ? ftp.getName() : annotation.getLabel();
+    final String text = annotation == null ? name : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();
 
     if( type != null )
