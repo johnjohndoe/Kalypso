@@ -81,7 +81,7 @@ public class SplitSort implements FeatureList
     if( result == null )
       result = new ArrayList();
     if( myRootContainer != null )
-      myRootContainer.query( queryEnv, result );
+      result=myRootContainer.query( queryEnv, result );
     return result;
   }
 

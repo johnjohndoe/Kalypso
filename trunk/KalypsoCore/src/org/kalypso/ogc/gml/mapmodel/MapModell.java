@@ -58,7 +58,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author doemming
  */
-public class MapModell implements ModellEventProvider, ModellEventListener, IMapModell
+public class MapModell implements IMapModell
 {
   private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
@@ -72,7 +72,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
   private final CS_CoordinateSystem myCoordinatesSystem;
 
-  private IKalypsoTheme myActiveTheme = null;
+  private IKalypsoTheme m_activeTheme = null;
 
   public MapModell( final CS_CoordinateSystem crs )
   {
@@ -90,19 +90,19 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   public void activateTheme( final IKalypsoTheme theme )
   {
     // TODO: check, ob thema überhaupt hier vorhanden?
-    myActiveTheme = theme;
+    m_activeTheme = theme;
     fireModellEvent( null );
   }
 
   public IKalypsoTheme getActiveTheme()
   {
-    return myActiveTheme;
+    return m_activeTheme;
   }
 
   public void addTheme( final IKalypsoTheme theme )
   {
-    if( myActiveTheme == null )
-      myActiveTheme = theme;
+    if( m_activeTheme == null )
+      m_activeTheme = theme;
 
     myThemes.add( theme );
 
@@ -115,7 +115,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
   public void clear()
   {
-    myActiveTheme = null;
+    m_activeTheme = null;
     IKalypsoTheme[] themes = getAllThemes();
     for( int i = 0; i < themes.length; i++ )
       removeTheme( themes[i] );
@@ -224,7 +224,7 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
 
   public boolean isThemeActivated( IKalypsoTheme theme )
   {
-    return myActiveTheme == theme;
+    return m_activeTheme == theme;
   }
 
   public boolean isThemeEnabled( IKalypsoTheme theme )
@@ -260,8 +260,8 @@ public class MapModell implements ModellEventProvider, ModellEventListener, IMap
   {
     myThemes.remove( theme );
     myEnabledThemeStatus.remove( theme );
-    if( myActiveTheme == theme )
-      myActiveTheme = null;
+    if( m_activeTheme == theme )
+      m_activeTheme = null;
     fireModellEvent( null );
   }
 

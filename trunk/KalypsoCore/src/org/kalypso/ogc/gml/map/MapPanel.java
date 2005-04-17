@@ -68,11 +68,13 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * 
  * @author vdoemming
- * 
+ *  
  */
-public class MapPanel extends Canvas implements IMapModellView, ComponentListener,ModellEventProvider
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener,
+    ModellEventProvider
 {
-  private final ModellEventProvider m_modellEventProvider=new ModellEventProviderAdapter();
+  private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
+
   private static final long serialVersionUID = 1L;
 
   public final static String WIDGET_ZOOM_IN = "ZOOM_IN";
@@ -92,12 +94,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
 
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
-
-  /** WIDGET_... -> widget */
-//  private Map m_widgets = new HashMap();
-
-  /** widget -> WIDGET_... */
-//  private Map m_widgetIDs = new HashMap();
 
   private Image mapImage = null;
 
@@ -144,12 +140,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_model.removeModellListener( this );
   }
 
-//  public void setWidget( final String id, final IWidget widget )
-//  {
-//    m_widgets.put( id, widget );
-//    m_widgetIDs.put( widget, id );
-//  }
-
   public void setOffset( int dx, int dy ) // used by pan method
   {
     xOffset = dx;
@@ -178,8 +168,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private void paintMap( final Graphics g )
   {
-    // TODO paintWMS(g); //
-
     // to avoid threading issues, get reference once
     final IMapModell model = m_model;
 
@@ -208,7 +196,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final Rectangle clipBounds = g.getClipBounds();
       if( clipBounds != null )
       {
-        mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(), getHeight(), model, m_selectionID );
+        mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(),
+            clipBounds, getWidth(), getHeight(), model, m_selectionID );
         setValidMap( mapImage != null );
       }
     }
@@ -261,16 +250,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private void paintWidget( Graphics g )
   {
-    // Image widgetImage = new BufferedImage( getWidth(), getHeight(),
-    // BufferedImage.TYPE_INT_ARGB );
-    // Graphics gr = widgetImage.getGraphics();
     g.setColor( Color.red );
     g.setClip( 0, 0, getWidth(), getHeight() );
-
     m_widgetManager.paintWidget( g );
-
-    // g.drawImage( widgetImage, 0, 0, null );
-    // gr.dispose();
   }
 
   public void setValidMap( boolean status )
@@ -308,7 +290,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( m_model != null )
       m_model.addModellListener( this );
-//    fireModellEvent(null);
+    //    fireModellEvent(null);
   }
 
   /**
@@ -318,6 +300,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     setValidAll( false );
     clearOffset();
+    // inform my listeners
+    fireModellEvent( modellEvent );
   }
 
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
@@ -349,8 +333,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     return MapModellHelper.calcScale( m_model, getBoundingBox(), getWidth(), getHeight() );
   }
-
-
 
   public GeoTransform getProjection()
   {
@@ -425,23 +407,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-//  public void changeWidget( final String widgetID )
-//  {
-//    if( m_widgetManager != null && m_widgets.containsKey( widgetID ) )
-//      m_widgetManager.changeWidget( (IWidget)m_widgets.get( widgetID ) );
-//  }
-
-//  public String getActualWidgetID()
-//  {
-//    if( m_widgetManager != null )
-//    {
-//      final IWidget actualWidget = m_widgetManager.getActualWidget();
-//      return (String)m_widgetIDs.get( actualWidget );
-//    }
-//
-//    return null;
-//  }
-
   public int getSelectionID()
   {
     return m_selectionID;
@@ -451,6 +416,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     return m_widgetManager;
   }
+
   /**
    * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
    */
@@ -488,14 +454,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     else
       setBoundingBox( getBoundingBox() );
   }
+
   public void addModellListener( ModellEventListener listener )
   {
     m_modellEventProvider.addModellListener( listener );
   }
+
   public void fireModellEvent( ModellEvent event )
   {
     m_modellEventProvider.fireModellEvent( event );
   }
+
   public void removeModellListener( ModellEventListener listener )
   {
     m_modellEventProvider.removeModellListener( listener );

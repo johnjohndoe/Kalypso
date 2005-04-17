@@ -91,7 +91,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private Button m_checkUpdate;
 
-  private GMLWorkspace m_workspace;
+  GMLWorkspace m_workspace;
 
   private IFolder m_currentCalcCase;
 
@@ -135,9 +135,9 @@ public class SteuerparameterWizardPage extends WizardPage
       public void runIntern() throws Exception
       {
         fc.collectChanges( changes );
-
+        // BUG command wird nicht ausgeführt
         // Änderungen committen
-        new ChangeFeaturesCommand( null, (FeatureChange[])changes
+        new ChangeFeaturesCommand( m_workspace, (FeatureChange[])changes
             .toArray( new FeatureChange[changes.size()] ) ).process();
       }
     } );

@@ -24,7 +24,7 @@ public class VirtualFeatureTypeRegistry
     m_instance = new VirtualFeatureTypeRegistry();
     try
     {
-      m_instance.register( new VirtualAssociationFeatureTypePropertyHanlder() );
+      m_instance.register( new VirtualAssociationFeatureTypePropertyHandler() );
       m_instance.register( new VirtualRasterFeatureTypePropertyHandler() );
       m_instance.register( new VirtualVelocityFeatureTypePropertyHandler() );
     }

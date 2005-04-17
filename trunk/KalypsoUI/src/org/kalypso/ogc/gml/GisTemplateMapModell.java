@@ -69,7 +69,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GisTemplateMapModell implements IMapModell
 {
-  private final IMapModell m_modell;
+  private final MapModell m_modell;
+
   private final URL m_context;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context,
@@ -82,7 +83,6 @@ public class GisTemplateMapModell implements IMapModell
     addTheme( legendTheme );
     enableTheme( legendTheme, false );
 
-    
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
 
@@ -105,8 +105,9 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  public IKalypsoTheme addTheme(org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer)
-  {  
+  public IKalypsoTheme addTheme(
+      org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer )
+  {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
     {
@@ -115,7 +116,7 @@ public class GisTemplateMapModell implements IMapModell
     }
     return theme;
   }
-      
+
   public void dispose()
   {
     if( m_modell != null )
@@ -129,7 +130,7 @@ public class GisTemplateMapModell implements IMapModell
       String layerName = layerType.getName();
       String source = layerType.getHref();
       CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerName, source, cs);
+      return new KalypsoWMSTheme( layerName, source, cs );
     }
     return new GisTemplateFeatureTheme( layerType, context );
   }
@@ -161,7 +162,7 @@ public class GisTemplateMapModell implements IMapModell
     for( int i = 0; i < themes.length; i++ )
     {
       final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
-      
+
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
@@ -171,9 +172,10 @@ public class GisTemplateMapModell implements IMapModell
       }
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
-        String name=kalypsoTheme.getName();
-       GisTemplateHelper.fillLayerType(layer,"ID_"+i,name,m_modell.isThemeEnabled(kalypsoTheme),(KalypsoWMSTheme)kalypsoTheme);
-       layerList.add( layer );    
+        String name = kalypsoTheme.getName();
+        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell
+            .isThemeEnabled( kalypsoTheme ), (KalypsoWMSTheme)kalypsoTheme );
+        layerList.add( layer );
       }
 
       if( m_modell.isThemeActivated( kalypsoTheme ) )

@@ -111,9 +111,9 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction()
+  protected void refreshAction(IAction action)
   {
     // nix tun, immer Aktiv
   }

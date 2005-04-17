@@ -277,17 +277,18 @@ public class SplitSortContainer
     return true;
   }
 
-  public void query( GM_Envelope env, List result )
+  public List query( GM_Envelope env, List result )
   {
     if( result == null )
       result = new ArrayList();
     if( env == null )
-      return;
+      return result;
     for( int i = 0; i < myObjects.size(); i++ )
     {
-      GM_Envelope envObject = SplitSort.getEnvelope( myObjects.get( i ) );
+      Object object = myObjects.get( i );
+      GM_Envelope envObject = SplitSort.getEnvelope( object );
       if( envObject == null || env.intersects( envObject ) )
-        result.add( myObjects.get( i ) );
+        result.add( object );
     }
     //	boolean queried=false;
     if( hasSubContainers() )
@@ -296,8 +297,8 @@ public class SplitSortContainer
       {
         if( mySubContainer[i].getEnvelope().contains( env ) )
         {
-          mySubContainer[i].query( env, result );
-          return;
+          result=mySubContainer[i].query( env, result );
+          return result;
         }
       }
       for( int i = 0; i < 4; i++ )
@@ -306,6 +307,7 @@ public class SplitSortContainer
           mySubContainer[i].query( env, result );
       }
     }
+    return result;
   }
 
   public void queryAll( List result )

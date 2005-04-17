@@ -46,7 +46,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -59,9 +58,9 @@ import org.kalypso.util.command.ICommandTarget;
  */
 public class WidgetManager implements MouseListener, MouseMotionListener
 {
-  private IWidget myNormalWidget = null;
+  private IWidget m_actualWidget = null;
 
-  private final MapPanel myMapPanel;
+  private final MapPanel m_MapPanel;
 
   private final ICommandTarget m_commandTarget;
 
@@ -75,7 +74,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    myMapPanel = mapPanel;
+    m_MapPanel = mapPanel;
     m_commandTarget = commandTarget;
   }
 
@@ -116,7 +115,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
         m_lastMoved = e.getPoint();
         getActualWidget().moved( m_lastMoved );
 
-        myMapPanel.repaint();
+        m_MapPanel.repaint();
       }
   }
 
@@ -129,7 +128,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       {
         m_lastDragged = e.getPoint();
         getActualWidget().dragged( m_lastDragged );
-        myMapPanel.repaint();
+        m_MapPanel.repaint();
       }
 
   }
@@ -156,17 +155,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener
       {
       case MouseEvent.BUTTON1:
         actualWidget.leftPressed( e.getPoint() );
-
         break;
 
       case MouseEvent.BUTTON2:
         actualWidget.middlePressed( e.getPoint() );
-
         break;
 
       case MouseEvent.BUTTON3:
         actualWidget.rightPressed( e.getPoint() );
-
         break;
 
       default:
@@ -191,19 +187,15 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
       case MouseEvent.BUTTON2:
         actualWidget.middleReleased( e.getPoint() );
-
         break;
 
       case MouseEvent.BUTTON3: //Right
         actualWidget.perform();
-
-        //       getActualWidget().rightReleased(e.getPoint());
         break;
 
       default:
         break;
       }
-
   }
 
   public void paintWidget( Graphics g )
@@ -214,51 +206,41 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   public IWidget getActualWidget()
   {
-    return myNormalWidget;
+    return m_actualWidget;
   }
 
-  public void changeWidget( final IWidget newWidget )
+  public void setActualWidget( final IWidget newWidget )
   {
     if( newWidget == null )
     {
-      myNormalWidget = null;
+      m_actualWidget = null;
       fireWidgetChangeEvent( newWidget );
       return;
     }
 
-    if( myNormalWidget != null )// && normalWidget != newWidget )
-      myNormalWidget.finish();
+    if( m_actualWidget != null )
+      m_actualWidget.finish();
 
-    myNormalWidget = newWidget;
-    myNormalWidget.activate( m_commandTarget, myMapPanel );
+    m_actualWidget = newWidget;
+    m_actualWidget.activate( m_commandTarget, m_MapPanel );
     fireWidgetChangeEvent( newWidget );
   }
 
-//  private void stopTemporaryWidget()
-//  {
-//    if( getActualWidget() != null )
-//      changeWidget( getActualWidget() );
-//  }
-
-  public void add( IWidgetChangeListener listener )
+  public void addWidgetChangeListener( IWidgetChangeListener listener )
   {
     m_widgetChangeListener.add( listener );
   }
 
-  public void remove( IWidgetChangeListener listener )
+  public void removeWidgetChangeListener( IWidgetChangeListener listener )
   {
     m_widgetChangeListener.remove( listener );
   }
 
   private void fireWidgetChangeEvent( IWidget newWidget )
   {
-    synchronized( m_widgetChangeListener )
-    {
-      for( Iterator iter = m_widgetChangeListener.iterator(); iter.hasNext(); )
-      {
-        IWidgetChangeListener listener = (IWidgetChangeListener)iter.next();
-        listener.widgetChanged( newWidget );
-      }
-    }
+    IWidgetChangeListener[] listener = (IWidgetChangeListener[])m_widgetChangeListener
+        .toArray( new IWidgetChangeListener[m_widgetChangeListener.size()] );
+    for( int i = 0; i < listener.length; i++ )
+      listener[i].widgetChanged( newWidget );
   }
 }

@@ -56,11 +56,9 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate,
     ModellEventListener
 {
-  private AbstractEditorPart m_editor;
+  private IEditorPart m_editor;
 
   private IAction m_action;
-
-  public static int c = 0;
 
   /**
    * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
@@ -68,39 +66,40 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
+    // remember active action
     m_action = action;
-    // disconnect old editor
+    // disconnect eventlistener from old model
     if( m_editor != null )
     {
       if( m_editor instanceof GisTableEditor )
         ( (GisTableEditor)m_editor ).getLayerTable().removeModellListener( this );
       if( m_editor instanceof GisMapEditor )
       {
-        ( (GisMapEditor)m_editor ).getMapPanel().removeModellListener(this);
+        ( (GisMapEditor)m_editor ).getMapPanel().removeModellListener( this );
       }
       if( m_editor instanceof GMLEditor )
       {
         ((GMLEditor) m_editor).getTreeView().removeModellListener(this);
       }
     }
-    m_editor = (AbstractEditorPart)targetEditor;
-
-    // connect new editor
+    // remember new editor
+    m_editor = targetEditor;
+    // connect eventlistener from new model
     if( m_editor != null )
     {
       if( m_editor instanceof GisTableEditor )
         ( (GisTableEditor)m_editor ).getLayerTable().addModellListener( this );
       if( m_editor instanceof GisMapEditor )
       {
-        ( (GisMapEditor)m_editor ).getMapPanel().addModellListener(this);
+        ( (GisMapEditor)m_editor ).getMapPanel().addModellListener( this );
       }
       if( m_editor instanceof GMLEditor )
       {
         ((GMLEditor) m_editor).getTreeView().addModellListener(this);
       }
     }
-
-    refreshAction();
+    // update action state
+    refreshAction(null);
   }
 
   /**
@@ -109,15 +108,24 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    m_action = action;
+  //    m_action = action;
+  // ??
   }
 
-  protected abstract void refreshAction();
+  /**
+   * implement here: <br>
+   * 1. validate action constraints <br>
+   * 2. update action status
+   * @param action 
+   */
+  protected abstract void refreshAction(IAction action);
 
   /**
-   * make cast to your editor
+   * make cast to special editor in calling method
+   * 
+   * @return active editor
    */
-  protected AbstractEditorPart getEditor()
+  public IEditorPart getEditor()
   {
     return m_editor;
   }
@@ -128,19 +136,10 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   }
 
   /**
-   * @param action
-   * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
-   */
-  public void init( final IAction action )
-  {
-    m_action = action;
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshAction();
+    refreshAction(m_action);
   }
 }

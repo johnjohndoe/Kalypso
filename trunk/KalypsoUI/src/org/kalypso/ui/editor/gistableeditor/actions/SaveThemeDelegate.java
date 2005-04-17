@@ -104,15 +104,12 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
         e.printStackTrace();
       }
     }
-
-    refreshAction();
+    refreshAction(null);
   }
 
-  protected void refreshAction()
+  protected void refreshAction(IAction action)
   {
     boolean enabled = false;
-
-    
     final GisTableEditor editor = (GisTableEditor)getEditor();
     if( editor != null )
     {

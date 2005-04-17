@@ -158,8 +158,8 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-
-    if( modellEvent != null && modellEvent.getType() == ModellEvent.LEGEND_UPDATED )
+    // TODO ??
+    if( modellEvent != null && modellEvent.isType( ModellEvent.LEGEND_UPDATED ) )
       return;
     m_Image = null;
     //updateLegend();

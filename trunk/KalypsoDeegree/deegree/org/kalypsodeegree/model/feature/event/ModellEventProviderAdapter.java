@@ -2,7 +2,6 @@ package org.kalypsodeegree.model.feature.event;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * @author Belger
@@ -16,10 +15,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void addModellListener( ModellEventListener listener )
   {
-    synchronized( myListeners )
-    {
-      myListeners.add( listener );
-    }
+    myListeners.add( listener );
   }
 
   /**
@@ -27,10 +23,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void removeModellListener( ModellEventListener listener )
   {
-    synchronized( myListeners )
-    {
-      myListeners.remove( listener );
-    }
+    myListeners.remove( listener );
   }
 
   /**
@@ -38,10 +31,9 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    */
   public void fireModellEvent( ModellEvent event )
   {
-    synchronized( myListeners )
-    {
-      for( final Iterator iter = myListeners.iterator(); iter.hasNext(); )
-        ( (ModellEventListener)iter.next() ).onModellChange( event );
-    }
+    final ModellEventListener[] listeners = (ModellEventListener[])myListeners
+        .toArray( new ModellEventListener[myListeners.size()] );
+    for( int i = 0; i < listeners.length; i++ )
+      listeners[i].onModellChange( event );
   }
 }

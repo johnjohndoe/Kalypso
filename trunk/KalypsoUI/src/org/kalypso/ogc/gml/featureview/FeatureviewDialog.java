@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.util.command.ICommandTarget;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -74,11 +74,11 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
   private final Collection m_changes = new ArrayList();
 
-  private final ModellEventProvider m_workspace;
+  private final GMLWorkspace m_workspace;
 
   private final ICommandTarget m_target;
 
-  public FeatureviewDialog( final ModellEventProvider workspace, final ICommandTarget target,
+  public FeatureviewDialog( final GMLWorkspace workspace, final ICommandTarget target,
       final Shell parentShell, final FeatureComposite featureComposite )
   {
     super( parentShell );

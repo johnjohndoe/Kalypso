@@ -1,7 +1,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +81,8 @@ public class FeatureAssociationTypeProperty_Impl extends
     }
 
     /**
-     * @see org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty#getAcsociationFeatureType()
+     * 
+     * @see org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty#getAssociationFeatureType()
      */
     public FeatureType getAssociationFeatureType()
     {

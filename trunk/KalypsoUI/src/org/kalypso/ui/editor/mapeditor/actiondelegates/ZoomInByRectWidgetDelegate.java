@@ -43,47 +43,60 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.WidgetHelper;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  */
-public class ZoomInByRectWidgetDelegate extends AbstractWidgetActionDelegate
+public class ZoomInByRectWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  public ZoomInByRectWidgetDelegate()
-  {
-    super(WidgetHelper.getWidget( MapPanel.WIDGET_ZOOM_IN_RECT ));
-  }
+
+  private IWidget m_widget=null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    //    if( action.isChecked() && !m_widgetID.equals(
-    // m_actualMapPanel.getActualWidgetID() ) )
     final GisMapEditor editor = (GisMapEditor)getEditor();
-    editor.getMapPanel().getWidgetManager().changeWidget( getWidget() );
+    editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
   }
 
-  
+  //  /**
+  //   * @see
+  // org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshEnabled()
+  //   */
+  //  public void refreshEnabled()
+  //  {
+  //    boolean enabled = false;
+  //    final GisMapEditor editor = (GisMapEditor)getEditor();
+  //    IAction action = getAction();
+  //    if( editor != null )
+  //    {
+  //      final MapPanel mapPanel = editor.getMapPanel();
+  //      IMapModell mapModell = mapPanel.getMapModell();
+  //      if(mapModell!=null && mapModell.getThemeSize() > 0 )
+  //        enabled=true;
+  //    }
+  //    action.setEnabled(enabled);
+  //  }
+
   /**
-   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractWidgetActionDelegate#refreshEnabled()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
-  public void refreshEnabled()
+  protected void refreshAction( IAction action )
   {
-    boolean enabled = false;
-    final GisMapEditor editor = (GisMapEditor)getEditor();
-    IAction action = getAction();
-    if( editor != null )
-    {
-      final MapPanel mapPanel = editor.getMapPanel();
-      IMapModell mapModell = mapPanel.getMapModell();
-      if(mapModell!=null && mapModell.getThemeSize() > 0 )
-        enabled=true;
-    }
-    action.setEnabled(enabled);
+  //  nothing
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#getWidget()
+   */
+  public IWidget getWidget()
+  {
+    if( m_widget == null )
+      m_widget = WidgetHelper.getWidget( MapPanel.WIDGET_ZOOM_IN_RECT );
+    return m_widget;
   }
 }
-

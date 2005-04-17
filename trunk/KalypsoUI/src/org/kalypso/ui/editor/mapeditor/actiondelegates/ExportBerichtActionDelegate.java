@@ -54,18 +54,20 @@ import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.wizard.ExportMapOptionsPage;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.metadoc.map.ExportMapBerichtWizard;
 import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 
 /**
  * @author belger
  */
-public class ExportBerichtActionDelegate extends AbstractThemeDelegate
+public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
 {
   /**
-   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractThemeDelegate#refreshAction()
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction()
+  protected void refreshAction(IAction action)
   {
   // mir wurscht
   }
@@ -81,12 +83,13 @@ public class ExportBerichtActionDelegate extends AbstractThemeDelegate
       final MetadocServiceWrapper service = new MetadocServiceWrapper();
       final Document doc = service.prepareDocument( ".csv", username );
 
-      final MapPanel mapPanel = getEditor().getMapPanel();
-      
-      final ExportMapOptionsPage page = new ExportMapOptionsPage( mapPanel, "optionPage", "Export Otionen",
-          ImageProvider.IMAGE_UTIL_BERICHT_WIZ, mapPanel.getWidth(), mapPanel.getHeight()  );
+      final MapPanel mapPanel = ( (GisMapEditor)getEditor() ).getMapPanel();
+
+      final ExportMapOptionsPage page = new ExportMapOptionsPage( mapPanel, "optionPage",
+          "Export Otionen", ImageProvider.IMAGE_UTIL_BERICHT_WIZ, mapPanel.getWidth(), mapPanel
+              .getHeight() );
       page.setDestinationFormat( "png" );
-      
+
       final Wizard exportWizard = new ExportMapBerichtWizard( page, doc );
 
       final WizardDialog dialog = new WizardDialog( getEditor().getSite().getShell(), exportWizard );

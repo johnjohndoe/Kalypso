@@ -87,11 +87,10 @@ public class GMLSchemaFactory
         continue;
       // root elements must not be abstract
 
-      // TODO implement abstract flag in FeatureType
       // if( XMLHelper.isAbstractElementDefinition( node ) )
       // continue;
       if( XMLHelper.isAbstractElementDefinition( node ) )
-        System.out.println( "TODO implement abstract flag" );
+        ;// TODO implement abstract flag in FeatureType
 
       final Node cNode;
       if( XMLHelper.getAttributeNode( node, "type" ) == null )

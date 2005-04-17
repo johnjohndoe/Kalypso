@@ -60,8 +60,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
@@ -889,7 +891,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface from a wkb
    */
-  public static GM_MultiSurface createGM_MultiSurface( GM_Surface[] surfaces )
+  public static GM_MultiSurface createGM_MultiSurface( GM_Surface[] surfaces ) 
   {
     return new GM_MultiSurface_Impl( surfaces );
   }
@@ -1081,6 +1083,13 @@ final public class GeometryFactory
     }
 
     return multisurface;
+  }
+
+  public static GM_Point createGM_Point( Point p, GeoTransform transform, CS_CoordinateSystem coordinatesSystem )
+  {
+    double g1x = transform.getSourceX( p.getX() );
+    double g1y = transform.getSourceY( p.getY() );
+    return createGM_Point(g1x, g1y, coordinatesSystem);
   }
 
 }

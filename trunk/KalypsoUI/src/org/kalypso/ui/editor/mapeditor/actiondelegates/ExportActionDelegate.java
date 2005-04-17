@@ -4,6 +4,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.gml.map.wizard.ExportMapWizard;
+import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -47,14 +48,15 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class ExportActionDelegate extends AbstractThemeDelegate
+public class ExportActionDelegate extends AbstractGisEditorActionDelegate
 {
   /**
-   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractThemeDelegate#refreshAction()
+   * 
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction()
+  protected void refreshAction(IAction action)
   {
-    // egal
+  // egal
   }
 
   /**
@@ -62,8 +64,8 @@ public class ExportActionDelegate extends AbstractThemeDelegate
    */
   public void run( final IAction action )
   {
-    final GisMapEditor editor = getEditor();
-   
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+
     final Wizard exportWizard = new ExportMapWizard( editor );
 
     final WizardDialog dialog = new WizardDialog( getEditor().getSite().getShell(), exportWizard );

@@ -63,7 +63,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
 
     if( getEditor() == null )
@@ -85,7 +85,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
           treeViewer.saveData( monitor );
-          refreshAction();
+          refreshAction(action);
         }
       };
 
@@ -108,7 +108,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
     
   }
 
-  protected void refreshAction()
+  protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;
 
@@ -125,9 +125,9 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
         }
       }
     }
-
-    if( getAction() != null )
+    if( action != null )
       getAction().setEnabled( bEnabled );
   }
+
 
 }

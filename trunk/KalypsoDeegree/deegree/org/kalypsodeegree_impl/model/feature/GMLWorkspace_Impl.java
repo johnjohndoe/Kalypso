@@ -339,7 +339,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 //      if( m_indexMap.containsKey( id ) )
 //        System.out.println( "Workspace already contains a feature with id: " + id );
       m_indexMap.put( id, f );
-
       return true;
     }
   }
@@ -451,7 +450,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       final Feature feature = getFeature( path.getID() );
       return feature == null ? null : feature.getFeatureType();
     }
-    
+
     final String typename = path.getTypename();
 
     FeatureType aktuType = getRootFeature().getFeatureType();
@@ -570,8 +569,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // TODO eigene exception entwerfen
     throw new Exception( "New Feature violates maxOccurs" );
   }
-  
-  public void removeLinkedFeature(Feature parentFeature, String propName, Feature linkFeature){
+
+  public void removeLinkedFeature( Feature parentFeature, String propName, Feature linkFeature )
+  {
     Object prop = parentFeature.getProperty( propName );
     Object properties[] = parentFeature.getProperties();
     int propIndex = 0;
@@ -598,5 +598,18 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public Map getNamespaceMap()
   {
     return m_nsMap;
+  }
+
+  public boolean equals( Object obj )
+  {
+    if( obj == null || !( obj instanceof GMLWorkspace ) )
+      return false;
+    GMLWorkspace other = (GMLWorkspace)obj;
+    return getContext().toExternalForm().equals( other.getContext().toExternalForm() );
+  }
+
+  public int hashCode()
+  {
+    return getContext().toExternalForm().hashCode();
   }
 }

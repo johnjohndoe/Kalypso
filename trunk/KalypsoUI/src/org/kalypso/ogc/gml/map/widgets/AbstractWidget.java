@@ -68,14 +68,16 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   private final String m_toolTip;
 
- /*
- * 
- *  @author doemming
- */
-public AbstractWidget(String name,String toolTip)
-{
-  m_name = name;
-  m_toolTip = toolTip;} 
+  /*
+   * 
+   * @author doemming
+   */
+  public AbstractWidget( String name, String toolTip )
+  {
+    m_name = name;
+    m_toolTip = toolTip;
+  }
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
@@ -84,7 +86,7 @@ public AbstractWidget(String name,String toolTip)
   {
     // unregister Modelllistener
     if( m_mapPanel != null )
-      m_mapPanel.removeModellListener(this);
+      m_mapPanel.removeModellListener( this );
 
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
@@ -92,6 +94,8 @@ public AbstractWidget(String name,String toolTip)
     // registerModelllistener
     if( m_mapPanel != null )
       m_mapPanel.addModellListener( this );
+    // force modellchange
+    onModellChange( null );
   }
 
   /**
@@ -179,6 +183,7 @@ public AbstractWidget(String name,String toolTip)
    */
   public void finish()
   {
+
   // not implemented by default
   }
 
@@ -289,7 +294,7 @@ public AbstractWidget(String name,String toolTip)
 
   public void onModellChange( final ModellEvent modellEvent )
   {
-  //
+  // not implemented by default
   }
 
   public IKalypsoTheme getActiveTheme()
@@ -308,6 +313,7 @@ public AbstractWidget(String name,String toolTip)
   {
     return m_name;
   }
+
   public String getToolTip()
   {
     return m_toolTip;

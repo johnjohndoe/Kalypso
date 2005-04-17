@@ -101,12 +101,12 @@ class FeatureType_Impl implements FeatureType, Serializable
 
   private final Map m_annotationsMap;
 
-  private FeatureTypeProperty[] m_virtualProperties=new FeatureTypeProperty[0];
+  private FeatureTypeProperty[] m_virtualProperties = new FeatureTypeProperty[0];
 
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
       int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
-    m_annotationsMap = annotationMap == null ? new HashMap() : annotationMap;    
+    m_annotationsMap = annotationMap == null ? new HashMap() : annotationMap;
     m_substitutionGroup = substitutionGroup;
     this.m_name = name;
     m_namespace = namespace;
@@ -278,7 +278,7 @@ class FeatureType_Impl implements FeatureType, Serializable
   {
     if( obj == null || ( !( obj instanceof FeatureType ) ) )
       return false;
-    FeatureType other = (FeatureType)obj;
+    final FeatureType other = (FeatureType)obj;
     if( m_namespace != null )
       if( !m_namespace.equals( other.getNamespace() ) )
         return false;

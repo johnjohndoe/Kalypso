@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
 import java.net.URL;
@@ -201,7 +201,6 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     }
   };
 
-
   /**
    * @param parent
    * @param templateTarget
@@ -211,9 +210,9 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
    *          falls true, wird immer die unter dem Cursor liegende Zeile
    *          selektiert
    */
-  public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
-      final IFeatureModifierFactory featureControlFactory, final int selectionID,
-      final boolean bCursorSelects )
+  public LayerTableViewer( final Composite parent, final int style,
+      final ICommandTarget templateTarget, final IFeatureModifierFactory featureControlFactory,
+      final int selectionID, final boolean bCursorSelects )
   {
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
@@ -315,7 +314,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
       {
         final ColumnType ct = (ColumnType)iter.next();
-        addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
+        addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(),
+            false );
       }
     }
 
@@ -398,11 +398,12 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
       FeatureType featureType = theme.getFeatureType();
       FeatureTypeProperty property = featureType.getProperty( propertyName );
-  
-//      final String lang = Locale.getDefault().getLanguage();
-      final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
-      final Annotation annotation = property.getAnnotation( lang);
-      
+
+      //      final String lang = Locale.getDefault().getLanguage();
+      final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+          IKalypsoPreferences.LANGUAGE );
+      final Annotation annotation = property.getAnnotation( lang );
+
       text = annotation.getLabel() + " (" + propertyName + ")";
     }
     catch( Exception e )
@@ -568,7 +569,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
   protected void handleModelChanged( final ModellEvent event, final List newSelection )
   {
     if( event != null && event.getEventSource() == getTheme()
-        && event.getType() == ModellEvent.THEME_ADDED )
+        && event.isType( ModellEvent.THEME_ADDED ) )
     {
       refreshCellEditors();
       refreshColumnProperties();
@@ -600,21 +601,21 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final TableColumn column = getTable().getColumn( columnIndex );
     return column.getData( COLUMN_PROP_NAME ).toString();
   }
-  
+
   public String getColumnAlignment( final int columnIndex )
   {
     if( columnIndex == -1 )
       return "SWT.LEAD";
-    
+
     final TableColumn column = getTable().getColumn( columnIndex );
     return "" + column.getStyle();
   }
-  
+
   public String getColumnFormat( final int columnIndex )
   {
     if( columnIndex == -1 )
       return null;
-    
+
     final TableColumn column = getTable().getColumn( columnIndex );
     return (String)column.getData( COLUMN_PROP_FORMAT );
   }
@@ -833,11 +834,13 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
 
       final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[]
       { fc } );
-      theme.postCommand( command, new Runnable() {
+      theme.postCommand( command, new Runnable()
+      {
         public void run()
         {
           refresh();
-        }} );
+        }
+      } );
     }
   }
 

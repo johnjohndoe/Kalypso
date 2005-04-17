@@ -3,8 +3,7 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -52,24 +51,21 @@ public class AddLinkCommand implements ICommand
 
   private final Feature m_parentFeature;
 
-  private final ModellEventProvider m_eventprovider;
-
-  private GMLWorkspace m_workspace;
-
   private int m_pos = 0;
 
   private final String m_propName;
 
   private Feature m_linkFeature;
 
-  public AddLinkCommand( final ModellEventProvider eventprovider, Feature parentFeature,
-      String propertyName, int pos, Feature linkFeature )
+  private final GMLWorkspace m_workspace;
+
+  public AddLinkCommand( final GMLWorkspace workspace, Feature parentFeature, String propertyName,
+      int pos, Feature linkFeature )
   {
-    m_eventprovider = eventprovider;
+    m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
-    m_workspace = (GMLWorkspace)eventprovider;
     m_linkFeature = linkFeature;
   }
 
@@ -107,8 +103,8 @@ public class AddLinkCommand implements ICommand
 
     m_workspace.removeLinkedFeature( m_parentFeature, m_propName, m_linkFeature );
 
-    if( m_eventprovider != null )
-      m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
+        m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
@@ -122,7 +118,7 @@ public class AddLinkCommand implements ICommand
   private void addLink() throws Exception
   {
     m_workspace.addLinkedFeature( m_parentFeature, m_propName, m_pos, m_linkFeature );
-    m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
+        m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
-
 }

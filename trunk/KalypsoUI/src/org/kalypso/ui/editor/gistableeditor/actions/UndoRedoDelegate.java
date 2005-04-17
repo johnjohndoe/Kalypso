@@ -77,10 +77,10 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
       new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO
           : CommandJob.REDO );
 
-    refreshAction();
+    refreshAction(null);
   }
 
-  protected void refreshAction()
+  protected void refreshAction(IAction action)
   {
     boolean bEnabled = false;
 
