@@ -1,6 +1,7 @@
 package org.kalypso.ogc.gml.convert.target;
 
 import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -40,9 +41,10 @@ public class GmlTargetHandler implements ITargetHandler
 
       final URL url = m_resolver.resolveURL( m_context, href );
 
-      writer = m_resolver.createBufferedWriter( url );
+      final OutputStreamWriter osw = m_resolver.createWriter( url );
+      writer = new BufferedWriter( osw );
 
-      GmlSerializer.serializeWorkspace( writer, workspace );
+      GmlSerializer.serializeWorkspace( writer, workspace, osw.getEncoding() );
     }
     catch( final Exception e )
     {

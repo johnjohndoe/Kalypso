@@ -57,6 +57,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
+import org.kalypso.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLFeature;
 import org.kalypsodeegree.gml.GMLNameSpace;
@@ -72,7 +73,6 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypso.java.net.IUrlResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -90,6 +90,12 @@ public final class GmlSerializer
 
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace )
       throws GmlSerializeException
+  {
+    serializeWorkspace( writer, workspace, null );
+  }
+
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace,
+      final String charsetEncoding ) throws GmlSerializeException
   {
     try
     {
@@ -132,10 +138,14 @@ public final class GmlSerializer
 
       // DOM als GML schreiben
       final Document xmlDOM = gmlDoc;
-      final Transformer t = TransformerFactory.newInstance().newTransformer();
+      final TransformerFactory newInstance = TransformerFactory.newInstance();
+
+      final Transformer t = newInstance.newTransformer();
 
       t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
       t.setOutputProperty( OutputKeys.INDENT, "yes" );
+      if( charsetEncoding != null )
+        t.setOutputProperty( OutputKeys.ENCODING , charsetEncoding );
 
       t.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
     }
@@ -172,12 +182,10 @@ public final class GmlSerializer
   {
     // Replace tokens
     final URLConnection connection = gmlURL.openConnection();
-    String contentEncoding = connection.getContentEncoding();
-    if( contentEncoding == null )
-      contentEncoding = "UTF-8";
+    final String contentEncoding = connection.getContentEncoding();
 
     final InputStream inputStream = connection.getInputStream();
-    final InputStreamReader isr = new InputStreamReader( inputStream, contentEncoding );
+    final InputStreamReader isr = contentEncoding == null ? new InputStreamReader( inputStream ) : new InputStreamReader( inputStream, contentEncoding );
 
     final ReplaceTokens rt = new ReplaceTokens( isr );
     rt.setBeginToken( ':' );
