@@ -274,13 +274,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getNamespaceMap();
   }
 
-  public boolean equals( Object obj )
-  {
-    return m_workspace.equals( obj );
-  }
-
-  public int hashCode()
-  {
-    return m_workspace.hashCode();
-  }
+//  public boolean equals( Object obj )
+//  {
+//    return m_workspace.equals( obj );
+//  }
+//
+//  public int hashCode()
+//  {
+//    return m_workspace.hashCode();
+//  }
 }
