@@ -56,6 +56,7 @@ import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.types.ExtentType;
@@ -192,5 +193,39 @@ public class GisTemplateHelper
     layer.setLinktype( "wms" );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
+  }
+
+  /**
+   * This method creates a new Map with a bounding box
+   * @param bbox
+   *          bounding box of new map
+   * @return gismapview 
+   *          new empty map with a layer list
+   *  
+   */
+  public static Gismapview emptyGisView( final GM_Envelope bbox ) throws JAXBException
+  {
+
+    final ObjectFactory maptemplateFactory = new ObjectFactory();
+
+    final org.kalypso.template.types.ObjectFactory extentedFactory = new org.kalypso.template.types.ObjectFactory();
+    final Gismapview gismapview = maptemplateFactory.createGismapview();
+    final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
+
+    if( bbox != null )
+    {
+      final ExtentType extentType = extentedFactory.createExtentType();
+
+      extentType.setTop( bbox.getMax().getY() );
+      extentType.setBottom( bbox.getMin().getY() );
+      extentType.setLeft( bbox.getMin().getX() );
+      extentType.setRight( bbox.getMax().getX() );
+
+      gismapview.setExtent( extentType );
+
+    }
+
+    gismapview.setLayers( layersType );
+    return gismapview;
   }
 }
