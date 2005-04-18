@@ -382,16 +382,16 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
-  public boolean equals( Object obj )
-  {
-    if( obj == null || !( obj instanceof KalypsoFeatureTheme ) )
-      return false;
-    final KalypsoFeatureTheme other = (KalypsoFeatureTheme)obj;
-    return getWorkspace().equals( other.getWorkspace() );
-  }
-
-  public int hashCode()
-  {
-    return getWorkspace().getContext().toExternalForm().hashCode();
-  }
+//  public boolean equals( Object obj )
+//  {
+//    if( obj == null || !( obj instanceof KalypsoFeatureTheme ) )
+//      return false;
+//    final KalypsoFeatureTheme other = (KalypsoFeatureTheme)obj;
+//    return getWorkspace().equals( other.getWorkspace() );
+//  }
+//
+//  public int hashCode()
+//  {
+//    return getWorkspace().getContext().toExternalForm().hashCode();
+//  }
 }
