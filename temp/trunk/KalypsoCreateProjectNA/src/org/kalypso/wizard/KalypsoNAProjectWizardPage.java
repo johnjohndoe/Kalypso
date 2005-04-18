@@ -63,7 +63,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -93,7 +93,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author kuepfer
  *  
  */
-public class KalypsoNAProjectWizardPage extends WizardPage
+public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionListener
 {
 
   //constants
@@ -148,6 +148,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage
   private HashMap mapping;
 
   private int maxSourceComboWidth;
+
+  private Button resetButton;
 
   /**
    * @param pageName
@@ -245,40 +247,11 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     browseButton = new Button( fileGroup, SWT.PUSH );
     browseButton.setText( "Durchsuchen..." );
     browseButton.setLayoutData( new GridData( GridData.END ) );
-    browseButton.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        //if (validateFileField())
-        handleFileBrowse();
-        validateFileField();
-      }
-    } );
+    browseButton.addSelectionListener(this);
     skipRadioButton = new Button( fileGroup, SWT.CHECK );
     skipRadioButton.setText( "Diese Datei einlesen" );
     skipRadioButton.setSelection( true );
-    skipRadioButton.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        Button w = (Button)e.widget;
-        if( !w.getSelection() )
-        {
-          setPageComplete( true );
-          topSCLMappingComposite.setVisible( false );
-          buttonGroup.setVisible( false );
-          //remove mapping
-          mapping = null;
-        }
-        else
-        {
-          setPageComplete( false );
-          topSCLMappingComposite.setVisible( true );
-          buttonGroup.setVisible( true );
-        }
-      }
-
-    } );
+    skipRadioButton.addSelectionListener(this);
     fileGroup.pack();
 
   }
@@ -374,22 +347,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
     okButton = new Button( buttonGroup, SWT.PUSH );
     okButton.setText( "Zuordnung bestätigen" );
-    okButton.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        handleOKSelection();
-      }
-    } );
-    Button resetButton = new Button( buttonGroup, SWT.PUSH );
+    okButton.addSelectionListener(this);
+    resetButton = new Button( buttonGroup, SWT.PUSH );
     resetButton.setText( "Zuordnung zurücksetzen" );
-    resetButton.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        handelResetSelection();
-      }
-    } );
+    resetButton.addSelectionListener(this);
 
     Point size = topMappingComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     topMappingComposite.setSize( size );
@@ -437,16 +398,20 @@ public class KalypsoNAProjectWizardPage extends WizardPage
   {
     FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[]
-    { "shp" } );
+    {
+      "shp"
+    } );
     fdialog.setText( "Wählen Sie eine ESRI Arc-View Shapedatei aus:" );
     fdialog.setFilterNames( new String[]
     {
         "Shape Files",
-        "All Files (*.*)" } );
+        "All Files (*.*)"
+    } );
     fdialog.setFilterExtensions( new String[]
     {
         "*.shp",
-        "*.*" } );
+        "*.*"
+    } );
     fdialog.setFileName( "*.shp" );
     if( fdialog.open() != null )
     {
@@ -570,8 +535,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage
       Combo combo = (Combo)cArray[i];
       combo.setData( SOURCE_KEY, null );
       combo.removeAll();
-      FontData fd[] = combo.getFont().getFontData();
-
       combo.setSize( maxSourceComboWidth * 10, SWT.DEFAULT );
       for( int j = 0; j < ftp.length; j++ )
       {
@@ -639,28 +602,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   public void dispose()
   {
-  //		super.dispose();
-  //		Control[] sgc = sourceGroup.getChildren();
-  //		for (int i= 0; i < sgc.length; i++) {
-  //			Control control = sgc[i];
-  //			control.dispose();
-  //		}
-  //		Control[] tgc = targetGroup.getChildren();
-  //		for (int i= 0; i < tgc.length; i++) {
-  //			Control control = tgc[i];
-  //			control.dispose();
-  //		}
-  //		fileGroup.dispose();
-  //		fileLabel.dispose();
-  //		sourceGroup.dispose();
-  //		buttonGroup.dispose();
-  //		targetGroup.dispose();
-  //		textField.dispose();
-  //		topComposite.dispose();
-  //		topSCLMappingComposite.dispose();
-  //		topMappingComposite.dispose();
-  //		browseButton.dispose();
-  //		okButton.dispose();
+    okButton.removeSelectionListener(this);
+    resetButton.removeSelectionListener(this);
+    browseButton.removeSelectionListener(this);
+    skipRadioButton.removeSelectionListener(this);
   }
 
   private void storeSelectionData( Widget w )
@@ -670,8 +615,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     String str = st.nextToken();
     String name = str.substring( 1, str.length() - 1 );
     w.setData( SOURCE_KEY, name );
-    System.out
-        .println( "Quelle: " + w.getData( SOURCE_KEY ) + "\tZiel: " + w.getData( TARGET_KEY ) );
+//    System.out
+//        .println( "Quelle: " + w.getData( SOURCE_KEY ) + "\tZiel: " + w.getData( TARGET_KEY ) );
   }
 
   public String getToolTip( FeatureTypeProperty ftp )
@@ -684,5 +629,49 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
     }
     return ftp.getName();
+  }
+
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetSelected( SelectionEvent e )
+  {
+    Widget w = e.widget;
+    if( w instanceof Button )
+    {
+      Button b = (Button)w;
+      if( b == okButton )
+        handleOKSelection();
+      if( b == resetButton )
+        handelResetSelection();
+      if( b == browseButton )
+        handleFileBrowse();
+      if( b == skipRadioButton )
+      {
+        if( !b.getSelection() )
+        {
+          setPageComplete( true );
+          topSCLMappingComposite.setVisible( false );
+          buttonGroup.setVisible( false );
+          //remove mapping
+          mapping = null;
+        }
+        else
+        {
+          setPageComplete( false );
+          topSCLMappingComposite.setVisible( true );
+          buttonGroup.setVisible( true );
+        }
+      }
+    }
+    validateFileField();
+  }
+
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetDefaultSelected( SelectionEvent e )
+  {
+    //do nothing
   }
 }
