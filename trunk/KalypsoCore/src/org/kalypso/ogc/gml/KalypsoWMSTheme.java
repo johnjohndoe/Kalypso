@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -70,6 +71,7 @@ import org.kalypso.java.util.PropertiesHelper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.tools.NetWorker;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -82,19 +84,19 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 {
   private final String m_layers;
 
-  private Image myImage = null;
+  private Image m_remoteImage = null;
 
-  private GM_Envelope myEnv = null;
+ private String m_source = null;
 
   private String my_requestId = null;
 
-  private GM_Envelope my_requestBBox = null;
+  private GM_Envelope m_requestedBBox = null;
 
-  private CS_CoordinateSystem m_crs = null;
+  private CS_CoordinateSystem m_localCSR = null;
 
   private RemoteWMService m_remoteWMS;
 
-  private final String m_source;
+  private CS_CoordinateSystem m_remoteCSR = null;
 
   private boolean m_authentification;
 
@@ -102,22 +104,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private String m_user;
 
-  private GeoTransform m_transformation;
-
   private GM_Envelope m_maxEnv = null;
 
   public KalypsoWMSTheme( final String themeName, final String source,
       final CS_CoordinateSystem localCRS )
   {
     super( themeName );
-
-    m_source = source;
-
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-
     m_layers = sourceProps.getProperty( "LAYERS", "" );
-
     final String service = sourceProps.getProperty( "URL", "" );
+    m_localCSR = localCRS;
+    m_source = source;
 
     // TODO: maybe do this in a thread
     try
@@ -128,6 +125,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
       final URLConnection c = url.openConnection();
       NetWorker.configureProxy( c );
+      c.addRequestProperty( "SERVICE", "WMS" );
+      c.addRequestProperty( "VERSION", "1.1.1" );
+      c.addRequestProperty( "REQUEST", "GetCapabilities" );
       // checks authentification TODO test if it works (this is a fast
       // implemention)
       //      if( NetWorker.requiresAuthentification(c) )
@@ -145,25 +145,19 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       //        c.addRequestProperty( "Proxy-Authorization", epw );
       //      }
 
-      c.addRequestProperty( "SERVICE", "WMS" );
-      c.addRequestProperty( "VERSION", "1.1.1" );
-      c.addRequestProperty( "REQUEST", "GetCapabilities" );
+      //create capabilites from the request
       final Reader reader = new InputStreamReader( c.getInputStream() );
-
       final WMSCapabilities wmsCaps = wmsCapFac.createCapabilities( reader );
       m_remoteWMS = new RemoteWMService( wmsCaps );
-
-      CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( localCRS, wmsCaps, m_layers.split( "," ) );
-      if( crs.length > 1 )
-      {
-        GeoTransform gt = findGeotransformation();
-        if( gt == null )
-          throw new OperationNotSupportedException(
-              "No coordinate transformation possible for this Layer" );
-        m_transformation = gt;
-      }
+      //match the local with the remote coordiante system
+      CS_CoordinateSystem[] crs = WMSHelper
+          .negotiateCRS( m_localCSR, wmsCaps, m_layers.split( "," ) );
+      if( !crs[0].equals( m_localCSR ) )
+        m_remoteCSR = crs[0];
       else
-        m_crs = crs[0];
+        m_remoteCSR = m_localCSR;
+      //set max extent for Map Layer
+      m_maxEnv = WMSHelper.getMaxExtend( m_layers.split( "," ), wmsCaps, m_remoteCSR );
     }
     catch( MalformedURLException e )
     {
@@ -198,6 +192,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   }
 
   /**
+   * @param g
+   *          the graphics context from the map panel
+   * @param p
+   *          world to screen transformation
+   * @param scale
+   *          scale
+   * @param bbox
+   *          bounding box from map model (screen)
+   * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
@@ -208,12 +211,27 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     // kann keine selektion zeichnen!
     if( selectionId != 0 )
       return;
-
-    if( myEnv != null && myEnv.equals( bbox ) && myImage != null )
+    //the image is only updated when the wish bbox is bigger then bbox of the requestedbbox (image) 
+    if( m_requestedBBox != null
+        && ( m_requestedBBox.equals( bbox ) || m_requestedBBox.contains( bbox ) )
+        && m_remoteImage != null )
     {
-      g.setPaintMode();
-      g.drawImage( myImage, 0, 0, null );
+
+      GM_Envelope remoteEnv = null;
+      try
+      {
+        GeoTransformer gt = new GeoTransformer( m_remoteCSR );
+        remoteEnv = gt.transformEnvelope( m_requestedBBox, m_localCSR );
+        WMSHelper.transformImage( m_remoteImage, remoteEnv, m_localCSR, m_remoteCSR, p, g );
+        //      g.setPaintMode();
+        //      g.drawImage( m_remoteImage, 0, 0, null );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
     }
+
     else
     {
       int width = (int)g.getClip().getBounds().getWidth();
@@ -224,6 +242,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   public void updateImage( int width, int height, GM_Envelope bbox )
   {
+
     final HashMap wmsParameter = new HashMap();
     wmsParameter.put( "SERVICE", "WMS" );
     wmsParameter.put( "VERSION", "1.1.1" ); // 1.0.0 ??
@@ -244,10 +263,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     //      wmsParameter.put("Proxy-Authorization", epw );
     //    }
 
+    GM_Envelope remoteEnv = null;
     try
     {
       //null pointer exception
-      wmsParameter.put( "SRS", m_crs.getName() );
+      wmsParameter.put( "SRS", m_remoteCSR.getName() );
+      GeoTransformer gt = new GeoTransformer( m_remoteCSR );
+      remoteEnv = gt.transformEnvelope( bbox, m_localCSR );
     }
     catch( Exception err )
     {
@@ -257,12 +279,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     wmsParameter.put( "WIDTH", "" + width );
     wmsParameter.put( "HEIGHT", "" + height );
 
-    String bboxValue = env2bboxString( bbox );
+    //    String bboxValue = env2bboxString( bbox );
+    String bboxValue = env2bboxString( remoteEnv );
     wmsParameter.put( "BBOX", bboxValue );
 
     try
     {
-      if( my_requestBBox != null && my_requestBBox.equals( bbox ) )
+      if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) )
         return;
 
       final String id = "KalypsoWMSRequest" + getName() + ( new Date() ).toString();
@@ -274,7 +297,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
           request, //request
           null, //message
           this ); //client
-      my_requestBBox = bbox;
+      m_requestedBBox = bbox;
+      //      my_requestBBox = remoteEnv;
       my_requestId = id;
       m_remoteWMS.doService( ogcWSEvent );
     }
@@ -319,8 +343,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
         if( map != null && map instanceof Image )
         {
-          myImage = (Image)map;
-          myEnv = my_requestBBox;
+          m_remoteImage = (Image)map;
 
           fireModellEvent( null );
         }
@@ -329,10 +352,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
           final Document wmsException = ( (WMSGetMapResponse)response ).getException();
           if( wmsException != null )
           {
-            // TODO create empty image and paint exception message on it
-            //            XMLTools.getStringValue(wmsException);
-            //             System.out.println( "OGC_WMS_Exception:" + XMLTools.);
-            System.out.println( "OGC_WMS_Exception:" + XMLHelper.toString( wmsException ) );
+            int width = (int)m_requestedBBox.getWidth();
+            int height = (int)m_requestedBBox.getHeight();
+            final BufferedImage image = new BufferedImage( width, height,
+                BufferedImage.TYPE_INT_ARGB );
+            final Graphics gr = image.getGraphics();
+            gr.drawString( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ), width / 2,
+                height / 2 );
           }
         }
       }
@@ -353,69 +379,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   public GM_Envelope getBoundingBox()
   {
     return m_maxEnv;
+    //    return m_requestedBBox;
   }
 
-  /**
-   * Returns the Transfomed image Frage: muss dies ein GeoTransform von Deegree
-   * oder kalypsodeegree sein ?? -> wäre besser wenn hier deegree verwendet
-   * würde und nich kalypsodeegree
-   */
-  private GeoTransform findGeotransformation() throws OperationNotSupportedException
-  {
-    //TODO find transformable CRS and return Transformation Parameters ??
-    throw new OperationNotSupportedException( "The Server can not find a matching Coordinate"
-        + "Reference System (CRS)\n. The transformation into the local CRS (requested) is not\n"
-        + "implemented yet" );
-  }
-
-  //    }
-  //    String[] wmsCRS = layer.getSrs();
-  //    for( int i = 0; i < wmsCRS.length; i++ )
-  //    {
-  //      CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName(
-  // wmsCRS[i] );
-  //
-  //      if( cs != null && cs.equals( localCRS ) )
-  //        m_crs = localCRS;
-  //      else if( cs != null )
-  //      {
-  //        //TODO create a CRS Transformation
-  //        //
-  // CoordinateTransformationFactory.getDefault().createFromCoordinateSystems(cs,
-  //        // localCRS);
-  //      }
-  //
-  //    }
-  //    Layer[] layers = layer.getLayer();
-  //    for( int j = 0; j < layers.length; j++ )
-  //    {
-  //      Layer insideLayer = layers[j];
-  //      String[] layersCSR = insideLayer.getSrs();
-  //      for( int i = 0; i < layersCSR.length; i++ )
-  //      {
-  //        CS_CoordinateSystem layerCSR =
-  // ConvenienceCSFactory.getInstance().getOGCCSByName(
-  //            layersCSR[i] );
-  //
-  //        if( layerCSR != null && layerCSR.getName().equals( localCRS.getName() ) )
-  //          m_crs = layerCSR;
-  //      }
-  //
-  //    }
-  //  }
   public String getSource()
   {
     return m_source;
   }
 
-  public boolean contains( String[] srs, String match )
-  {
-    for( int i = 0; i < srs.length; i++ )
-    {
-      if( srs[i].equals( match ) )
-        return true;
-    }
-    return false;
-  }
 
 }// class KalypsoWMSTheme
