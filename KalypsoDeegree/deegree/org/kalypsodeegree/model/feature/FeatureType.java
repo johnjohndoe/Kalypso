@@ -108,9 +108,9 @@ public interface FeatureType
    */
   int getMaxOccurs( int pos );
 
-  public int getMaxOccurs( String linkName );
+  public int getMaxOccurs( String propName );
 
-  public int getMinOccurs( String linkName );
+  public int getMinOccurs( String propName );
 
   /**
    * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die FeatureTypeProperty selbst wissen
