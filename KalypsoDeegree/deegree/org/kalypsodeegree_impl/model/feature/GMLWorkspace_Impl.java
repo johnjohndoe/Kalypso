@@ -599,17 +599,4 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_nsMap;
   }
-
-//  public boolean equals( Object obj )
-//  {
-//    if( obj == null || !( obj instanceof GMLWorkspace ) )
-//      return false;
-//    GMLWorkspace other = (GMLWorkspace)obj;
-//    return getContext().toExternalForm().equals( other.getContext().toExternalForm() );
-//  }
-//
-//  public int hashCode()
-//  {
-//    return getContext().toExternalForm().hashCode();
-//  }
 }
