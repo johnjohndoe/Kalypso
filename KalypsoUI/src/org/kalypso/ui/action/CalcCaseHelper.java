@@ -110,7 +110,7 @@ public class CalcCaseHelper
     if( calcCases.length == 0 )
     {
       MessageDialog.openInformation( shell, title,
-          "Es sind keine Rechenfälle im Navigator selektiert." );
+          "Es sind keine Rechenvarianten im Navigator selektiert." );
       return null;
     }
 
