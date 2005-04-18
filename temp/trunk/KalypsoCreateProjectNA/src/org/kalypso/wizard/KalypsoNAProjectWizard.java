@@ -100,6 +100,7 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.gml.schema.virtual.GetGeomDestinationFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -134,17 +135,20 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class
               .getName(), false, null ),
           FeatureFactory.createFeatureTypeProperty( "StrangArt", "wizard.kalypso.na", Integer.class
-              .getName(), false, null ) }, new int[]
+              .getName(), false, null )
+      }, new int[]
       {
           1,
-          1 }, new int[]
+          1
+      }, new int[]
       {
           1,
-          1 }, null, null );
+          1
+      }, null, null );
 
   private KalypsoNAProjectWizardPage createMappingCatchmentPage;
 
-  private KalypsoNAFileImportPage createMappingHydrotopPage;
+  private KalypsoNAProjectWizardPage createMappingHydrotopPage;
 
   private KalypsoNAProjectWizardPage createMappingNodePage;
 
@@ -158,17 +162,26 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private URL m_modelSchemaURL = getClass().getResource( "resources/.model/schema/namodell.xsd" );
 
+  private URL m_hydrotopSchemaURL = getClass()
+      .getResource( "resources/.model/schema/Hydrotope.xsd" );
+
   private GMLWorkspace modelWS;
 
   IPath workspacePath;
 
   IProject projectHandel;
 
-  IPath modelPath;
+  IPath m_modelPath;
 
-  ISelection selection;
+  ISelection m_selection;
 
   IWorkspace workspace;
+
+  private GMLSchema m_hydrotopeSchema;
+
+  private Path m_hydPath;
+
+  private GMLWorkspace m_hydWS;
 
   //	IStructuredSelection structSelection;
 
@@ -183,6 +196,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       //      TODO: jh, schemata an zentrale speichern und von dort aufrufen, damit
       // hier nicht ständig aktualisiert werden muss.
       m_modelSchema = GMLSchemaCache.getSchema( m_modelSchemaURL );
+      m_hydrotopeSchema = GMLSchemaCache.getSchema( m_hydrotopSchemaURL );
       setNeedsProgressMonitor( true );
     }
     catch( MalformedURLException e )
@@ -225,18 +239,21 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, "Knoten einlesen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) );
     addPage( createMappingNodePage );
-    createMappingHydrotopPage = new KalypsoNAFileImportPage( HYDROTOP_PAGE,
-        "Hydrotopdatei in den Workspace importieren", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    //		creaSteMappingHydrotopPage = new KalypsoNAProjectWizardPage(
-    //				HYDROTOP_PAGE, "Hydrotope einlesen",
-    //				ImageProvider.IMAGE_KALYPSO_ICON_BIG,
-    //				getFeatureType("_Hydrotop"));
+    //    createMappingHydrotopPage = new KalypsoNAFileImportPage( HYDROTOP_PAGE,
+    //        "Hydrotopdatei in den Workspace importieren",
+    // ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE,
+        "Hydrotope einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotope" ) );
     addPage( createMappingHydrotopPage );
   }
 
   private FeatureType getFeatureType( String featureName )
   {
-    FeatureType ft = m_modelSchema.getFeatureType( featureName );
+    //TODO this must be changed when a schema registry exitst
+    FeatureType ft = null;
+    ft = m_modelSchema.getFeatureType( featureName );
+    if( ft == null )
+      ft = m_hydrotopeSchema.getFeatureType( featureName );
     return ft;
   }
 
@@ -248,7 +265,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    this.selection = selection;
+    this.m_selection = selection;
   }
 
   /**
@@ -266,7 +283,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       IProjectDescription description = new ProjectDescription();
       String[] nanature =
-      { "org.kalypso.ui.ModelNature" };
+      {
+        "org.kalypso.ui.ModelNature"
+      };
       description.setNatureIds( nanature );
       projectHandel.create( description, null );
       //      projectHandel.create( null );
@@ -282,12 +301,16 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     //copy all the resources to the workspace into the new created project
     copyResourcesToProject( workspacePath.append( projectHandel.getFullPath() ) );
 
-    //open modell.gml file to write imported feature
+    //open modell.gml and hydrotop.gml file to write imported feature
     try
     {
-      modelPath = new Path( projectHandel.getFullPath().append( "/modell.gml" ).toString() );
-      URL modelURL = new URL( ResourceUtilities.createURLSpec( modelPath ) );
+      m_modelPath = new Path( projectHandel.getFullPath().append( "/modell.gml" ).toString() );
+      URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
       modelWS = GmlSerializer.createGMLWorkspace( modelURL, new UrlResolver() );
+      m_hydPath = new Path( projectHandel.getFullPath().append( "/hydrotop.gml" ).toString() );
+      URL hydURL = new URL( ResourceUtilities.createURLSpec( m_hydPath ) );
+      m_hydWS = GmlSerializer.createGMLWorkspace( hydURL, new UrlResolver() );
+
     }
     catch( Exception e1 )
     {
@@ -309,21 +332,37 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       List riverFeatureList = createMappingRiverPage.getFeatureList();
       mapRiver( riverFeatureList, riverMapping );
     }
-    //	map river shape file
+    //map node shape file
     HashMap nodeMapping = createMappingNodePage.getMapping();
     if( nodeMapping != null && nodeMapping.size() != 0 )
     {
       List nodeFeatureList = createMappingNodePage.getFeatureList();
       mapNode( nodeFeatureList, nodeMapping );
     }
-    //		write all new imported features to the modell.gml file in the
+
+    //map hydrotope shape file
+    HashMap hydMapping = createMappingHydrotopPage.getMapping();
+    if( hydMapping != null && hydMapping.size() != 0 )
+    {
+      List hydFeatureList = createMappingHydrotopPage.getFeatureList();
+      mapHyd( hydFeatureList, hydMapping );
+    }
+
+    //		write all new imported features to the modell.gml and hydrotop.gml file
+    // in the
     // workspace
     try
     {
-      IPath modelPath2 = workspacePath.append( modelPath );
-      Writer writer = new FileWriter( modelPath2.toFile() );
-      GmlSerializer.serializeWorkspace( writer, modelWS );
-      writer.close();
+      //model.gml
+      IPath modelPath2 = workspacePath.append( m_modelPath );
+      Writer modelWriter = new FileWriter( modelPath2.toFile() );
+      GmlSerializer.serializeWorkspace( modelWriter, modelWS );
+      modelWriter.close();
+      //hydrotop.gml
+      IPath hydPath = workspacePath.append( m_hydPath );
+      Writer hydrotopWriter = new FileWriter( hydPath.toFile() );
+      GmlSerializer.serializeWorkspace( hydrotopWriter, m_hydWS );
+      hydrotopWriter.close();
     }
     catch( Exception e3 )
     {
@@ -334,36 +373,48 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     //copy Hydrotop file to workspace into the new project and add it as a
     // layer to the map temlate
 
-    sourceURL = createMappingHydrotopPage.getFileURL();
-    if( sourceURL != null )
+    //    sourceURL = createMappingHydrotopPage.getFileURL();
+    //    if( sourceURL != null )
+    //    {
+    //      try
+    //      {
+    //        File source = FileUtils.toFile( sourceURL );
+    //        String shapeBaseSource = FileUtilities.nameWithoutExtension(
+    // source.toString() );
+    //        String fileName = FileUtilities.nameWithoutExtension( source.getName() );
+    //        String shapeBaseTarget = ( ( workspacePath.append(
+    // projectHandel.getFullPath().append(
+    //            "/Shapes/" + fileName ) ) ).toFile() ).toString();
+    //
+    //        // ResourceUtilities.findFileFromURL()
+    //
+    //        ResourcesPlugin.getWorkspace().build(
+    // IncrementalProjectBuilder.FULL_BUILD, null );
+    //        // String sourceFile = createMappingHydrotopPage.getFileURL()
+    //        // .getPath().substring(1);
+    //        // int index = sourceFile.lastIndexOf("/");
+    //        // String shapeBase = sourceFile.substring(index + 1);
+    //        GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseSource,
+    //            createMappingHydrotopPage.getCoordinateSystem(), null );
+    //        ShapeSerializer.serialize( shapeWS, shapeBaseTarget );
+    //        addLayer( source );
+    //        projectHandel.refreshLocal( IResource.DEPTH_INFINITE, null );
+    //      }
+    //      catch( Exception e )
+    //      {
+    //        e.printStackTrace();
+    //        return false;
+    //      }
+    //    }//if
+    try
     {
-      try
-      {
-        File source = FileUtils.toFile( sourceURL );
-        String shapeBaseSource = FileUtilities.nameWithoutExtension( source.toString() );
-        String fileName = FileUtilities.nameWithoutExtension( source.getName() );
-        String shapeBaseTarget = ( ( workspacePath.append( projectHandel.getFullPath().append(
-            "/Shapes/" + fileName ) ) ).toFile() ).toString();
-
-        //				ResourceUtilities.findFileFromURL()
-
-        ResourcesPlugin.getWorkspace().build( IncrementalProjectBuilder.FULL_BUILD, null );
-        //				String sourceFile = createMappingHydrotopPage.getFileURL()
-        //						.getPath().substring(1);
-        //				int index = sourceFile.lastIndexOf("/");
-        //				String shapeBase = sourceFile.substring(index + 1);
-        GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseSource,
-            createMappingHydrotopPage.getCoordinateSystem(), null );
-        ShapeSerializer.serialize( shapeWS, shapeBaseTarget );
-        addLayer( source );
-        projectHandel.refreshLocal( IResource.DEPTH_INFINITE, null );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        return false;
-      }
-    }//if
+      ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+    }
+    catch( CoreException e2 )
+    {
+      e2.printStackTrace();
+      return false;
+    }
     createMappingCatchmentPage.dispose();
     createMappingRiverPage.dispose();
     createMappingNodePage.dispose();
@@ -371,12 +422,48 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     return true;
   }
 
+  private void mapHyd( List sourceFeatureList, HashMap mapping )
+  {
+    Feature rootFeature = m_hydWS.getRootFeature();
+    FeatureType hydFT = getFeatureType( "Hydrotope" );
+    Feature hydCollectionFE = (Feature)rootFeature.getProperty( "HydrotopeCollectionMember" );
+    List hydList = (List)hydCollectionFE.getProperty( "HydrotopeMember" );
+
+    for( int i = 0; i < sourceFeatureList.size(); i++ )
+    {
+      Feature sourceFeature = (Feature)sourceFeatureList.get( i );
+      Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), hydFT );
+      Iterator it = mapping.keySet().iterator();
+      while( it.hasNext() )
+      {
+        String targetkey = (String)it.next();
+        String sourcekey = (String)mapping.get( targetkey );
+        Object so = sourceFeature.getProperty( sourcekey );
+        //The area property of the catchment is set at this point, to check if
+        // this is not redundant ??
+        //because the area can always be calculatet from the GM_Surface object.
+        if( so instanceof GM_Surface )
+        {
+          Double area = new Double( ( (GM_Surface)so ).getArea() );
+          FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", area );
+          targetFeature.setProperty( fpArea );
+        }
+
+        FeatureProperty fp = FeatureFactory.createFeatureProperty( targetkey, so );
+        targetFeature.setProperty( fp );
+
+      }
+      hydList.add( targetFeature );
+    }
+    //TODO Mapping
+  }
+
   private void addLayer( File sourceFile ) throws Exception
   {
     String path = workspacePath.append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" )
         .toFile().toString();
-    File mapfile = workspacePath.append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" )
-        .toFile();
+    File mapfile = workspacePath
+        .append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" ).toFile();
     InputStream inputStream = new FileInputStream( mapfile );
 
     ObjectFactory typeOF = new ObjectFactory();
