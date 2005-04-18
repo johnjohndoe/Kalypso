@@ -63,6 +63,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.AddLinkCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.util.command.ICommand;
@@ -89,9 +90,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private Feature m_fromFE = null;
+  private Feature m_srcFE = null;
 
-  private Feature m_toFE = null;
+  private Feature m_targetFE = null;
 
   private FeatureList m_allowedFeatureList = null;
 
@@ -120,13 +121,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   public void leftPressed( Point p )
   {
-    if( m_fromFE != null && m_toFE != null )
+    if( m_srcFE != null && m_targetFE != null )
     {
       perform();
       finish();
       return;
     }
-    m_toFE = null;
+    m_targetFE = null;
     final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
@@ -135,7 +136,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
-    m_fromFE = feature;
+    m_srcFE = feature;
     m_fitProblems.setLength( 0 );
     updateProblemsText();
     updateInfoText();
@@ -147,8 +148,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public void finish()
   {
     super.finish();
-    m_fromFE = null;
-    m_toFE = null;
+    m_srcFE = null;
+    m_targetFE = null;
     m_fitProblems.setLength( 0 );
     updateProblemsText();
     updateInfoText();
@@ -184,6 +185,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         }
       }
     }
+    if( fitList.isEmpty() && m_fitProblems.length() == 0 )
+      m_fitProblems.append( "Ziel nicht erlaubt" );
     return fitList;
   }
 
@@ -198,7 +201,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public void moved( Point p )
   {
     super.moved( p );
-    if( m_fromFE == null )
+    if( m_srcFE == null )
       return;
     final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
     final MapPanel mapPanel = getMapPanel();
@@ -208,13 +211,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
     m_fitProblems.setLength( 0 );
-    m_toFE = null;
-    if( m_fromFE == feature )
+    m_targetFE = null;
+    if( m_srcFE == feature )
       m_fitProblems.append( "gleiches Element geht nicht" );
     else
     {
-      if( !getFitList( m_fromFE, feature ).isEmpty() )
-        m_toFE = feature;
+      if( !getFitList( m_srcFE, feature ).isEmpty() )
+        m_targetFE = feature;
     }
     updateInfoText();
     updateProblemsText();
@@ -235,10 +238,10 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   public void paint( Graphics g )
   {
-    if( m_fromFE == null || m_toFE == null )
+    if( m_srcFE == null || m_targetFE == null )
       return;
-    final GM_Object fromGeom = m_fromFE.getDefaultGeometryProperty();
-    final GM_Object toGeom = m_toFE.getDefaultGeometryProperty();
+    final GM_Object fromGeom = m_srcFE.getDefaultGeometryProperty();
+    final GM_Object toGeom = m_targetFE.getDefaultGeometryProperty();
     if( fromGeom == null || toGeom == null )
       return;
     final GM_Point fromCenter = fromGeom.getCentroid();
@@ -310,7 +313,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    */
   protected final ICommand performIntern()
   {
-    final List fitList = getFitList( m_fromFE, m_toFE );
+    final List fitList = getFitList( m_srcFE, m_targetFE );
     for( Iterator iter = fitList.iterator(); iter.hasNext(); )
     {
       RelationType element = (RelationType)iter.next();
@@ -320,14 +323,14 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     if( fitList.size() < 1 )
       return null;
     final RelationType relation = (RelationType)fitList.get( 0 );
+    final GMLWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
     if( relation instanceof HeavyRelationType )
     {
-      // TODO implement it
-      System.out.println( "heavy relationtype not supportet yet" );
-      return null;
+      final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
+      return new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink(),
+          heavyRealtion.getDestLinkFTP(), m_targetFE );
     }
-    final GMLWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
-    return new AddLinkCommand( workspace, m_fromFE, relation.getLink().getName(), 0, m_toFE );
+    return new AddLinkCommand( workspace, m_srcFE, relation.getLink().getName(), 0, m_targetFE );
   }
 
   private void updateProblemsText()
@@ -363,31 +366,31 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     tipBuffer.append( "Relation" );
     tipBuffer.append( "\n  von: " );
 
-    if( m_fromFE == null )
+    if( m_srcFE == null )
     {
       labelBuffer.append( "<select>" );
       tipBuffer.append( "<select>" );
     }
     else
     {
-      final FeatureType ft = m_fromFE.getFeatureType();
+      final FeatureType ft = m_srcFE.getFeatureType();
       final Annotation annotation = ft.getAnnotation( lang );
-      labelBuffer.append( annotation.getLabel() + "#" + m_fromFE.getId() );
-      tipBuffer.append( ft.getNamespace() + ":" + ft.getName() + "#" + m_fromFE.getId() );
+      labelBuffer.append( annotation.getLabel() + "#" + m_srcFE.getId() );
+      tipBuffer.append( ft.getNamespace() + ":" + ft.getName() + "#" + m_srcFE.getId() );
     }
     labelBuffer.append( "\n nach: " );
     tipBuffer.append( "\n nach: " );
-    if( m_toFE == null )
+    if( m_targetFE == null )
     {
       labelBuffer.append( "<select>" );
       tipBuffer.append( "<select>" );
     }
     else
     {
-      final FeatureType ft = m_toFE.getFeatureType();
+      final FeatureType ft = m_targetFE.getFeatureType();
       final Annotation annotation = ft.getAnnotation( lang );
-      labelBuffer.append( annotation.getLabel() + "#" + m_toFE.getId() );
-      tipBuffer.append( ft.getNamespace() + ":" + ft.getName() + "#" + m_toFE.getId() );
+      labelBuffer.append( annotation.getLabel() + "#" + m_targetFE.getId() );
+      tipBuffer.append( ft.getNamespace() + ":" + ft.getName() + "#" + m_targetFE.getId() );
     }
     if( m_textInfo != null && !m_textInfo.isDisposed() )
     {
