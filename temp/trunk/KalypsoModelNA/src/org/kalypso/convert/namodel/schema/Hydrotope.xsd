@@ -46,7 +46,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="Ort" type="gml:PointPropertyType">
+					<element name="Ort" type="gml:PolygonPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Ort</label>
@@ -107,15 +107,6 @@
 								<label>Versiegelungsgrad</label>
 								<tooltip>Versiegelungsgrad des Hydrotopes [-] (= 0-1)</tooltip>
 								<description>Versiegelungsgrad des Hydrotopes [-] (= 0-1)</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="inum_tg" type="integer" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>TeilgebietNr</label>
-								<tooltip>übergeordnete Teilgebietsnummer</tooltip>
-								<description>Nummer des übergeordneten Teilgebietes zu welchem das hydrotop gehört</description>
 							</documentation>
 						</annotation>
 					</element>
