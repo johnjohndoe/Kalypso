@@ -50,26 +50,30 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.command.ICommandManagerListener;
 
 /**
- * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
+ * Decorator Ã¼ber einen Workspace, der diesen um die F?higkeiten eines
  * {@link org.kalypso.util.command.ICommandManager ICommandManagers}erweitert
  * 
  * @author belger
  */
 public class CommandableWorkspace implements GMLWorkspace, ICommandManager
 {
-  private final GMLWorkspace m_workspace;
+  private final GMLWorkspace_Impl m_workspace;
 
   private final ICommandManager m_commandManager = new DefaultCommandManager();
 
-  public CommandableWorkspace( final GMLWorkspace workspace )
+  public CommandableWorkspace( GMLWorkspace workspace )
   {
-    m_workspace = workspace;
+    /** it does not make sence decorate something else than the real workspace<br>
+     * 	the UML looks also nicer without recursive dependencies here 
+     */
+    m_workspace = (GMLWorkspace_Impl) workspace;
   }
 
   public void addCommandManagerListener( ICommandManagerListener l )
