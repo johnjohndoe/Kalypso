@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilPointProperties;
 
 /**
  * @author kimwerner
@@ -85,8 +85,8 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     {
       point.addProperty( ecIt.next() );
     }
-    point.setValueFor( IProfil.PointProperties.HOEHE, hoehe );
-    point.setValueFor( IProfil.PointProperties.BREITE, breite );
+    point.setValueFor( IProfilPointProperties.HOEHE, hoehe );
+    point.setValueFor( IProfilPointProperties.BREITE, breite );
     this.add( point );
     return point;
   }
@@ -114,8 +114,8 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       final IProfilPoint point = ptIt.next();
       try
       {
-        if( (point.getValueFor( IProfil.PointProperties.HOEHE ) == hoehe)
-            & (point.getValueFor( IProfil.PointProperties.BREITE ) == breite) )
+        if( (point.getValueFor( IProfilPointProperties.HOEHE ) == hoehe)
+            & (point.getValueFor( IProfilPointProperties.BREITE ) == breite) )
           return point;
       }
       catch( ProfilDataException e )

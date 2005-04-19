@@ -24,7 +24,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   //TODO: m_buildingValues für jede abgeleitete Klasse einfügen
   private final BUILDING_TYP m_buildingTyp;
 
-  protected final List<IProfilPointProperty> m_tableDataKeys;
+  protected final List<IProfilPointProperty> m_pointProperties;
   
   private final List<BUILDING_VALUES> m_buildingValues;
 
@@ -33,7 +33,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<BUILDING_VALUES> buildingValues)
   {
     m_buildingTyp = buildingTyp;
-    m_tableDataKeys = new LinkedList<IProfilPointProperty>();
+    m_pointProperties = new LinkedList<IProfilPointProperty>();
     m_buildingValues = Collections.unmodifiableList(buildingValues);
     m_values = new HashMap<BUILDING_VALUES, Double>(buildingValues.size());
     setValues();
@@ -59,7 +59,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
    */
   public List<IProfilPointProperty> getProfilPointProperties( )
   {
-    return Collections.unmodifiableList(m_tableDataKeys);
+    return Collections.unmodifiableList(m_pointProperties);
   }
   /*
    * (non-Javadoc)
@@ -90,7 +90,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
    */
   public int getProfilPointPropertiesCount( )
   {
-     return m_tableDataKeys.size();
+     return m_pointProperties.size();
   }
   /**
    * @return Returns the buildingValues.

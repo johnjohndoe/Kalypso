@@ -6,7 +6,7 @@ public interface IProfilPointProperty
   public String getLabel( );
   public boolean isOptional( );
   public boolean isInterpolation( );
-  public void setInterpolation( boolean interpolation );
+  //public void setInterpolation( boolean interpolation );
   public int getPrecision( );
-  public void setPrecision( int precision );
+  //public void setPrecision( int precision );
 }

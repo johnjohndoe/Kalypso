@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.bce.eind.core.profil.impl.devider.DeviderKey;
-import com.bce.eind.core.profil.impl.points.pointproperties.ProfilPointProperties;
 
 /**
  * @author kimwerner
@@ -45,20 +44,17 @@ public interface IProfil
   {
     TRENNFLAECHE_BOESCHUNG, TRENNFLAECHE_SOHLE, UNDEFINED
   }
+  public static final DeviderKey BORDVOLL_L = new DeviderKey( IProfilPointProperties.BORDVOLL, -1 );
 
-  public static final ProfilPointProperties PointProperties = new ProfilPointProperties();
+  public static final DeviderKey BORDVOLL_R = new DeviderKey( IProfilPointProperties.BORDVOLL, 1 );
 
-  public static final DeviderKey BORDVOLL_L = new DeviderKey( PointProperties.BORDVOLL, -1 );
+  public static final DeviderKey DURCHSTROEMTE_L = new DeviderKey( IProfilPointProperties.DURCHSTROEMTE, -1 );
 
-  public static final DeviderKey BORDVOLL_R = new DeviderKey( PointProperties.BORDVOLL, 1 );
+  public static final DeviderKey DURCHSTROEMTE_R = new DeviderKey( IProfilPointProperties.DURCHSTROEMTE, 1 );
 
-  public static final DeviderKey DURCHSTROEMTE_L = new DeviderKey( PointProperties.DURCHSTROEMTE, -1 );
+  public static final DeviderKey TRENNFLAECHE_L = new DeviderKey( IProfilPointProperties.TRENNFLAECHE, -1 );
 
-  public static final DeviderKey DURCHSTROEMTE_R = new DeviderKey( PointProperties.DURCHSTROEMTE, 1 );
-
-  public static final DeviderKey TRENNFLAECHE_L = new DeviderKey( PointProperties.TRENNFLAECHE, -1 );
-
-  public static final DeviderKey TRENNFLAECHE_R = new DeviderKey( PointProperties.TRENNFLAECHE, 1 );
+  public static final DeviderKey TRENNFLAECHE_R = new DeviderKey( IProfilPointProperties.TRENNFLAECHE, 1 );
 
   public void addCommentLine( final String line );
 
@@ -79,7 +75,7 @@ public interface IProfil
 
   public TRENNFLAECHEN_TYP getDeviderTyp( final DeviderKey deviderKey );
 
-  public Object getExtendedPointData( IProfilPointProperty tableDataKey );
+  public Object getExtendedPointData( IProfilPointProperty pointProperty );
 
   public IProfilPoint getNextPoint( IProfilPoint point ) throws ProfilDataException;
 
@@ -106,6 +102,8 @@ public interface IProfil
   public List getUnknownObjects( );
 
   public double[] getValuesFor( final IProfilPointProperty columnKey ) throws ProfilDataException;
+
+  public int indexOf(final IProfilPoint point);
 
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException;
 
@@ -140,7 +138,7 @@ public interface IProfil
   public boolean setProfilMetaData( final METADATA metaDataKey, final Object data );
 
   public void setRauheitTyp( final RAUHEITEN_TYP r );
-
+  
   public boolean setValueFor( IProfilPoint point, IProfilPointProperty columnKey, double value )
       throws ProfilDataException;
 
