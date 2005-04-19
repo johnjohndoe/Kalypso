@@ -380,6 +380,16 @@
                toolbarPath="karte/tools"
                id="org.kalypso.ui.editor.mapeditor.action.NewRelationAction">
          </action>
+             <action
+               label="Coordinaten Info"
+               icon="icons/util/question_small.gif"
+               style="radio"
+               tooltip="Coordinaten-Informationen"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               toolbarPath="karte/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.CoordinateInfoAction">
+         </action>
          <action
                style="push"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction"

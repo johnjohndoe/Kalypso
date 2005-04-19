@@ -86,7 +86,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * TODO use check icons that indicate mixed child status <br>
  * TODO support removing relations <br>
- * TODO send command to create relation in workspace <br>
  */
 public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
@@ -475,59 +474,6 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         }
       }
     } );
-    //    m_viewer.addDoubleClickListener( new IDoubleClickListener()
-    //    {
-    //      public void doubleClick( DoubleClickEvent event )
-    //      {
-    //        final ISelection selection = event.getSelection();
-    //        if( selection instanceof IStructuredSelection )
-    //        {
-    //          final Object element = ( (IStructuredSelection)selection
-    // ).getFirstElement();
-    //          if( element != null )
-    //          {
-    //            boolean status = m_contentProvider.isChecked( element );
-    //            m_contentProvider.accept( element, new SetCheckedTreeVisitor( m_viewer,
-    // !status ) );
-    //            m_viewer.refresh( element, true );
-    //          }
-    //        }
-    //      }
-    //    } );
-
-    //    m_viewer.addPostSelectionChangedListener( new ISelectionChangedListener()
-    //    {
-    //      public void selectionChanged( SelectionChangedEvent event )
-    //      {
-    //        final ISelection selection = event.getSelection();
-    //        if( selection instanceof IStructuredSelection )
-    //        {
-    //          final Object element = ( (IStructuredSelection)selection
-    // ).getFirstElement();
-    //          if( element != null )
-    //          {
-    //            boolean status = m_contentProvider.isChecked( element );
-    //            m_contentProvider.accept( element, new SetCheckedTreeVisitor( m_viewer,
-    // !status ) );
-    //            m_viewer.refresh( element, true );
-    //          }
-    //        }
-    //      }
-    //    } );
-    //    m_viewer.getTree().getItem(null)SelectionChangedListener(null) // final
-    // ICheckStateListener checkstateListener = new ICheckStateListener()
-    //    {
-    //      public void checkStateChanged( CheckStateChangedEvent event )
-    //      {
-    //        Object element = event.getElement();
-    //        m_viewer.removeCheckStateListener( this );
-    //        m_contentProvider
-    //            .accept( element, new SetCheckedTreeVisitor( m_viewer, event.getChecked()
-    // ) );
-    //        m_viewer.addCheckStateListener( this );
-    //      }
-    //    };
     refreshSettings();
-    //    m_viewer.addCheckStateListener( checkstateListener );
   }
 }
