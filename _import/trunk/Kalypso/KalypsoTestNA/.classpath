@@ -6,9 +6,9 @@
 	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="src" path="/KalypsoCalcService"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
-	<classpathentry kind="src" path="/KalypsoCoreServices"/>
 	<classpathentry kind="src" path="/KalypsoOptimizePlugin"/>
 	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
+	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

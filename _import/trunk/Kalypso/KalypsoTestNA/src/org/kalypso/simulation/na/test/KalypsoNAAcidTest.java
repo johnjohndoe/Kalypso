@@ -98,6 +98,7 @@ public class KalypsoNAAcidTest extends TestCase
       if( !success )
         failBuffer.append( " simulation for " + nodeFE.getId() + " failed\n" );
     }
+    System.out.println(failBuffer.toString());
     if( failBuffer.length() > 0 )
       fail( failBuffer.toString() );
   }
@@ -106,7 +107,7 @@ public class KalypsoNAAcidTest extends TestCase
   {
     final File baseDir = FileUtilities.createNewTempDir( rootNode + "_NaAcidTest" );
     final FileCopyVisitor copyVisitor = new FileCopyVisitor( inputDir, baseDir, true );
-    FileUtilities.accept( inputDir, copyVisitor );
+    FileUtilities.accept( inputDir, copyVisitor ,true);
 
     final File simDir = new File( baseDir, "sim" );
     final File ergDir = new File( baseDir, "output" );
