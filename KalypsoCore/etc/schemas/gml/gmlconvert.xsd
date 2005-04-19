@@ -4,9 +4,13 @@
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="../template/layerTypes.xsd"/>
 	<xs:element name="gmlconvert">
 		<xs:annotation>
-			<xs:documentation><![CDATA[
-				Konvertiert eine GML-Datenquelle in ein GML-Datenziel.
-				]]></xs:documentation>
+			<xs:documentation>
+				<pr>Konvertiert eine GML-Datenquelle in ein GML-Datenziel.</pr>
+				<pr>Dabei können sowohl während des Lesens oder während des Schreibens verschiedenen Konvertierungen durchgeführt werden.</pr>
+				<pr>Wie, was, warum etwas konvertiert wird, wird in der jeweiligen Quelle bzw. im jeweiligen Ziel definiert.</pr>
+				<pr>Auf Codeseite ist es die Klasse org.kalypso.ogc.gml.convert.GmlConvertFactory um die sich alles dreht.</pr>
+				<pr>Intern werden die Daten in einen GMlWorkspace gelesen, alle Operationen basieren dann tatäschlich auf Operationen auf diesen Workspace.</pr>
+			</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
@@ -15,40 +19,61 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element abstract="true" name="target" type="TargetType">
+	<xs:element name="target" type="TargetType" abstract="true">
 		<xs:annotation>
-			<xs:documentation><![CDATA[
-							  An diesen Ort wird die Datenquelle geschrieben.
-				]]></xs:documentation>
+			<xs:documentation>Beschreibt, wohin die Daten geschrieben werden.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="TargetType">
 		<xs:attributeGroup ref="xlink:locatorLink"/>
 	</xs:complexType>
-	<xs:element name="csvtarget" type="CsvTargetType" substitutionGroup="target"/>
+	<xs:element name="csvtarget" type="CsvTargetType" substitutionGroup="target">
+		<xs:annotation>
+			<xs:documentation>Schreibt die Daten in eine CSV (Comma Separated Values) Datei.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="CsvTargetType">
 		<xs:complexContent>
 			<xs:extension base="TargetType">
 				<xs:sequence>
-					<xs:element name="column" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="column" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Erzeugt eine Spalte in der Ausgabedatei. Der Inhalt bezeichnet die Feature-Property, die in diese Spalte geschrieben wird.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
-				<xs:attribute name="featurePath" type="xs:string"/>
-				<xs:attribute name="delemiter" type="xs:string"/>
+				<xs:attribute name="featurePath" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Beschreibt die Features, die in die Datei geschrieben werden. Muss eine FeatureList sein.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="delemiter" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Das Trennzeichen zwischen den Spalteneinträgen.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="gmltarget" type="TargetType" substitutionGroup="target"/>
-	<xs:element abstract="true" name="source" type="SourceType">
+	<xs:element name="gmltarget" type="TargetType" substitutionGroup="target">
 		<xs:annotation>
-			<xs:documentation><![CDATA[
-				Bezeichnet eine Quelle von GML-Daten.
-				
-				Kann prinzipiell alles sein, Datei, Kombination aus Dateien etc.
-				]]></xs:documentation>
+			<xs:documentation>Schreibt die Daten in eine GMl Datei.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="source" type="SourceType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				<pr>Beschreibt, woher die Daten kommen.</pr>
+				<pr>Kann prinzipiell alles sein, Datei, Kombination aus Dateien etc.</pr>
+			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="SourceType"/>
-	<xs:element name="gmlsource" type="GmlSourceType" substitutionGroup="source"/>
+	<xs:element name="gmlsource" type="GmlSourceType" substitutionGroup="source">
+		<xs:annotation>
+			<xs:documentation>Liest die Daten aus einer GMl Datei.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="GmlSourceType">
 		<xs:complexContent>
 			<xs:extension base="SourceType">
@@ -56,68 +81,155 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="csvsource" type="CsvSourceType" substitutionGroup="source"/>
+	<xs:element name="csvsource" type="CsvSourceType" substitutionGroup="source">
+		<xs:annotation>
+			<xs:documentation>
+				<p>Liest die Daten aus einer CSV Datei.</p>
+				<pr>Zur Zeit müssen sowohl alle Spalten die gelesen werden sollen als auch deren Typ angegeben werden.</pr>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="CsvSourceType">
 		<xs:complexContent>
 			<xs:extension base="SourceType">
 				<xs:sequence minOccurs="0" maxOccurs="unbounded">
 					<xs:element name="featureproperty">
+						<xs:annotation>
+							<xs:documentation>Mit dieser Liste von featureproperties wird der FeatureType spezifiziert, den der gelesene Workspace erhält.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence minOccurs="0" maxOccurs="unbounded">
-								<xs:element name="column" type="xs:int"/>
+								<xs:element name="column" type="xs:int">
+									<xs:annotation>
+										<xs:documentation>Spezifiziert, aus welcher(n) Spalte)n) des csv diese FeatureProperty gelesen wird. Es können durchaus mehrere Spalten sein, wie z.B. im Falle einer Punktgeometrie.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
-							<xs:attribute name="name" type="xs:string" use="required"/>
-							<xs:attribute name="type" type="xs:string" use="required"/>
-							<xs:attribute name="format" type="xs:string" use="optional" default=""/>
+							<xs:attribute name="name" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:documentation>Name der erzeugten FeatureProperty</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="type" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:documentation>Java-Typ der erzeugten Feature-Property</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="format" type="xs:string" use="optional" default="">
+								<xs:annotation>
+									<xs:documentation>
+										<p>Wird eventuell zu parsen der FeatureProperty benutzt.</p>
+										<p>Gibt im Falle einer Punktgeometrie z.B. das Koordinatensystem an.</p>
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
 				<xs:attributeGroup ref="xlink:locatorLink"/>
-				<xs:attribute name="comment" type="xs:string"/>
-				<xs:attribute name="delemiter" type="xs:string"/>
+				<xs:attribute name="comment" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Kommentarzeichen. Zeilen im csv, die mit diesem String beginnen, werden ignoriert.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="delemiter" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Spaltentrennzeichen des csv.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="featuremapping" type="FeaturemappingSourceType" substitutionGroup="source"/>
+	<xs:element name="featuremapping" type="FeaturemappingSourceType" substitutionGroup="source">
+		<xs:annotation>
+			<xs:documentation>Eine Datenquelle, die Daten aus zwei Quellen liest und dann Daten aus der ersten in die zweite Quelle überträgt. Letztere ist dann das Ergebnis dieser Datenquelle.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="FeaturemappingSourceType">
 		<xs:complexContent>
 			<xs:extension base="SourceType">
 				<xs:sequence>
-					<xs:element ref="source" minOccurs="2" maxOccurs="2"/>
-					<xs:element ref="mapping" minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="source" minOccurs="2" maxOccurs="2">
+						<xs:annotation>
+							<xs:documentation>Die beiden Datenquellen, die gelesen werden. Die zweite wird als Ergebnis der Operation (nach den diversen Änderungen betrachtet).</xs:documentation>
+						</xs:annotation>
 					</xs:element>
+					<xs:element ref="mapping" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="mapping" type="MappingType"/>
+	<xs:element name="mapping" type="MappingType">
+		<xs:annotation>
+			<xs:documentation>
+				<pr>Beschreibt, die Daten der einen Datenquelle in die andere Datenquelle geschrieben werden.</pr>
+				<pr>Prinzipiell werden FeatureProperties einer FeatureListe aus der ersten Quelle in enie FeatureList der zweiten Quelle geschrieben.</pr>
+				<pr>Die Daten werden Dabei entweder überschrieben oder neu angehängt.</pr>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="MappingType">
 		<xs:sequence>
 			<xs:element name="map" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
-					<xs:attribute name="from" type="xs:string" use="required"/>
-					<xs:attribute name="to" type="xs:string" use="required"/>
+					<xs:attribute name="from" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Name der FeatureProperty aus der gelesen wird.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="to" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Name der FeatureProperty in die geschrieben wird.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="fromPath" type="xs:string"/>
-		<xs:attribute name="fromID" type="xs:string"/>
-		<xs:attribute name="toPath" type="xs:string"/>
-		<xs:attribute name="toID" type="xs:string"/>
+		<xs:attribute name="fromPath" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Aus diesen Features der ersten Quelle wird gelesen. Muss eine FeatureList sein.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="fromID" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>ID der Quelle (Name der Property) für Zuordnungen zwischen Quelle und Ziel.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="toPath" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>In diese Features der zweiten Quelle wird geschrieben. Muss eine FeatureList sein.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="toID" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>ID des Ziels (Name der Property) für zuordnungen zwiuschen Quelle und Ziel.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="addFeaturesMapping" type="AddFeaturesMappingType" substitutionGroup="mapping"/>
+	<xs:element name="addFeaturesMapping" type="AddFeaturesMappingType" substitutionGroup="mapping">
+		<xs:annotation>
+			<xs:documentation>Fügt für jedes Feature der ersten FeatureList ein neues Element in die zweite FeatureList ein. Die Properties werden dann entsprechend der Zuordnung gesetzt.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="AddFeaturesMappingType">
 		<xs:complexContent>
 			<xs:extension base="MappingType">
-				<xs:attribute name="overwriteExisting" type="xs:boolean" use="optional" default="false"/>
+				<xs:attribute name="overwriteExisting" type="xs:boolean" use="optional" default="false">
+					<xs:annotation>
+						<xs:documentation>Falls false, wird nichts gemacht, wenn schon ein Feature mit der gleichen ID existiert. Ansonsten wird das Feature beibehalten aber seine Properties entsprechend überschrieben.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="changeFeaturesMapping" type="changeFeaturesMappingType" substitutionGroup="mapping"/>
+	<xs:element name="changeFeaturesMapping" type="changeFeaturesMappingType" substitutionGroup="mapping">
+		<xs:annotation>
+			<xs:documentation>Ändert lediglich bereits vorhandene Features der zweiten Liste. Für jedes Feature der ersten Liste wird einen mit gleicher ID in der zweiten gesucht und geändert, falls vorhanden.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="changeFeaturesMappingType">
 		<xs:complexContent>
-			<xs:extension base="MappingType">
-			</xs:extension>
+			<xs:extension base="MappingType"/>
 		</xs:complexContent>
 	</xs:complexType>
 </xs:schema>
