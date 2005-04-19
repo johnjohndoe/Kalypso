@@ -45,16 +45,16 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget;
+import org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  */
-public class EditRelationsWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class CoordinateInfoWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
 
-  private IWidget m_widget=null;
+  private IWidget m_widget = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -94,7 +94,7 @@ public class EditRelationsWidgetDelegate extends AbstractGisMapEditorActionDeleg
   public IWidget getWidget()
   {
     if( m_widget == null )
-      m_widget = new EditRelationWidget( "Edit Relation", "Editieren von Relationen" );
+      m_widget = new CoordinateInfoWidget( "Edit Relation", "Editieren von Relationen" );
     return m_widget;
   }
 }

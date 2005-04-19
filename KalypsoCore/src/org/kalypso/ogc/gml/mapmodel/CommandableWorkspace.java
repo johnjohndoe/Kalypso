@@ -57,7 +57,7 @@ import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.command.ICommandManagerListener;
 
 /**
- * Decorator über einen Workspace, der diesen um die F?higkeiten eines
+ * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.util.command.ICommandManager ICommandManagers}erweitert
  * 
  * @author belger
