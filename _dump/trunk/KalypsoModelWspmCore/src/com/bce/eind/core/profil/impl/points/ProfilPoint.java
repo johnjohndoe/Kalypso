@@ -11,7 +11,6 @@ import java.util.Iterator;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilPointProperties;
 
 /**
  * @author kimwerner
