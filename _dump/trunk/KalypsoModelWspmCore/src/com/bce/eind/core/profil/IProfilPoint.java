@@ -5,19 +5,22 @@ package com.bce.eind.core.profil;
 
 import java.util.Collection;
 
+import com.bce.eind.core.profil.IProfil.POINT_PROPERTY;
+
 /**
  * @author kimwerner
  */
 public interface IProfilPoint
 {
-  public double getValueFor( final IProfilPointProperty pointProperty ) throws ProfilDataException;
+  public double getValueFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
-  public boolean setValueFor( final IProfilPointProperty pointProperty, final double value )
-      throws ProfilDataException;
+  //public boolean setValueFor( final IProfilPointProperty pointProperty, final double value )
+  //    throws ProfilDataException;
 
-  public boolean hasProperty( final IProfilPointProperty pointProperty );
+  public boolean hasProperty( final POINT_PROPERTY pointProperty );
 
   public IProfilPoint clonePoint( );
 
-  public Collection<IProfilPointProperty> getProperties( );
-}
+  public Collection<POINT_PROPERTY> getProperties( );
+}  
+

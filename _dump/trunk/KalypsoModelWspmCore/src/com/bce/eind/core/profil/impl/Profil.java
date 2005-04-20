@@ -13,11 +13,12 @@ import com.bce.eind.ProfilBuildingFactory;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.IProfilPointProperties;
 import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.ProfilListener;
 import com.bce.eind.core.profil.impl.devider.DeviderKey;
+import com.bce.eind.core.profil.impl.points.ProfilPoint;
+import com.bce.eind.core.profil.impl.points.ProfilPointProperties;
 import com.bce.eind.core.profil.impl.points.ProfilPoints;
 import com.bce.eind.core.profil.util.ProfilUtil;
 
@@ -30,10 +31,10 @@ public class Profil implements IProfil
   private IProfilBuilding m_building;
 
   private String m_comment = "";
-  
+
   private IProfil.RAUHEITEN_TYP m_rauheit;
 
- //private final HashMap<IProfilPointProperty, Object> m_extendedPointData;
+  // private final HashMap<IProfilPointProperty, Object> m_extendedPointData;
 
   /*
    * TODO: Kim: diese kommentare zu richtigen javadocs machen und '(non-Javadoc)' entfernen Am
@@ -55,12 +56,12 @@ public class Profil implements IProfil
     m_profilMetaData = new HashMap<METADATA, Object>();
     m_points = new ProfilPoints();
     m_unknownData = new Vector();
-  //  m_extendedPointData = new HashMap<IProfilPointProperty, Object>();
-    m_points.addProperty( IProfilPointProperties.BREITE );
-    m_points.addProperty( IProfilPointProperties.HOEHE );
-    m_points.addProperty( IProfilPointProperties.RAUHEIT );
-    m_points.addProperty( IProfilPointProperties.TRENNFLAECHE );
-    m_points.addProperty( IProfilPointProperties.DURCHSTROEMTE );
+    // m_extendedPointData = new HashMap<IProfilPointProperty, Object>();
+    m_points.addProperty( POINT_PROPERTY.BREITE );
+    m_points.addProperty( POINT_PROPERTY.HOEHE );
+    m_points.addProperty( POINT_PROPERTY.RAUHEIT );
+    m_points.addProperty( POINT_PROPERTY.TRENNFLAECHE );
+    m_points.addProperty( POINT_PROPERTY.DURCHSTROEMTE );
     m_building = ProfilBuildingFactory.createProfilBuilding( IProfil.BUILDING_TYP.BLD_NONE );
   }
 
@@ -107,25 +108,25 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#addColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
-  public boolean addProfilPointProperty( IProfilPointProperty columnKey )
+  public boolean addProfilPointProperty( POINT_PROPERTY pointProperty )
   {
-    if( (columnKey == IProfilPointProperties.BEWUCHS_AX)
-        | (columnKey == IProfilPointProperties.BEWUCHS_AY)
-        | (columnKey == IProfilPointProperties.BEWUCHS_DP) )
+    if( (pointProperty == POINT_PROPERTY.BEWUCHS_AX)
+        | (pointProperty == POINT_PROPERTY.BEWUCHS_AY)
+        | (pointProperty == POINT_PROPERTY.BEWUCHS_DP) )
     {
-      m_points.addProperty( IProfilPointProperties.BEWUCHS_AX );
-      m_points.addProperty( IProfilPointProperties.BEWUCHS_AY );
-      m_points.addProperty( IProfilPointProperties.BEWUCHS_DP );
+      m_points.addProperty( POINT_PROPERTY.BEWUCHS_AX );
+      m_points.addProperty( POINT_PROPERTY.BEWUCHS_AY );
+      m_points.addProperty( POINT_PROPERTY.BEWUCHS_DP );
       return true;
     }
-    if( (columnKey == IProfilPointProperties.HOCHWERT)
-        | (columnKey == IProfilPointProperties.RECHTSWERT) )
+    if( (pointProperty == POINT_PROPERTY.HOCHWERT)
+        | (pointProperty == POINT_PROPERTY.RECHTSWERT) )
     {
-      m_points.addProperty( IProfilPointProperties.HOCHWERT );
-      m_points.addProperty( IProfilPointProperties.RECHTSWERT );
+      m_points.addProperty( POINT_PROPERTY.HOCHWERT );
+      m_points.addProperty( POINT_PROPERTY.RECHTSWERT );
       return true;
     }
-    m_points.addProperty( columnKey );
+    m_points.addProperty( pointProperty );
     // KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
     return true;
   }
@@ -199,7 +200,7 @@ public class Profil implements IProfil
    */
   public TRENNFLAECHEN_TYP getDeviderTyp( DeviderKey deviderKey )
   {
-    if( deviderKey.getProfilPointProperty() != IProfilPointProperties.TRENNFLAECHE )
+    if( deviderKey.getProfilPointProperty() != ProfilPointProperties.TRENNFLAECHE )
       return IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_UNDEFINED;
     final IProfilPoint pktTrennflaeche = this.getDevider( deviderKey );
 
@@ -224,7 +225,7 @@ public class Profil implements IProfil
    *      com.bce.eind.core.profilinterface.IProfilPoint,
    *      com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
-  public final LinkedList<IProfilPointProperty> getExistingPointProperties( )
+  public final LinkedList<POINT_PROPERTY> getExistingPointProperties( )
   {
     return m_points.getExistingProperties();
   }
@@ -234,12 +235,10 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#getExtendedTableData(com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
- /* public Object getExtendedPointData( IProfilPointProperty pointProperty )
-  {
-
-    return this.m_extendedPointData.get( pointProperty );
-  }
-*/
+  /*
+   * public Object getExtendedPointData( IProfilPointProperty pointProperty ) { return
+   * this.m_extendedPointData.get( pointProperty ); }
+   */
   /*
    * @return null, falls point der letzte Punkt ist
    * 
@@ -318,7 +317,7 @@ public class Profil implements IProfil
       final IProfilPoint pt = ptIt.next();
       try
       {
-        if( pt.getValueFor( IProfilPointProperties.BREITE ) == breite )
+        if( pt.getValueFor( POINT_PROPERTY.BREITE ) == breite )
           pointList.add( pt );
       }
       catch( ProfilDataException e )
@@ -381,7 +380,7 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#getTableDataKeys()
    */
-  public LinkedList<IProfilPointProperty> getProfilPointProperties( final boolean filterNonVisible )
+  public LinkedList<POINT_PROPERTY> getProfilPointProperties( final boolean filterNonVisible )
   {
     if( filterNonVisible )
       return m_points.getVisibleProperties();
@@ -411,13 +410,13 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#getValuesFor(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
-  public double[] getValuesFor( IProfilPointProperty columnKey ) throws ProfilDataException
+  public double[] getValuesFor( POINT_PROPERTY pointProperty ) throws ProfilDataException
   {
     final double[] values = new double[m_points.size()];
     int i = 0;
     for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
     {
-      values[i] = ptIt.next().getValueFor( columnKey );
+      values[i] = ptIt.next().getValueFor( pointProperty );
       i++;
     }
     return values;
@@ -456,9 +455,9 @@ public class Profil implements IProfil
   public IProfilPoint insertPoint( IProfilPoint thePointBefore, double breite, double hoehe )
       throws ProfilDataException
   {
-    final IProfilPoint point = m_points.addPoint( thePointBefore );
-    point.setValueFor( IProfilPointProperties.HOEHE, hoehe );
-    point.setValueFor( IProfilPointProperties.BREITE, breite );
+    final ProfilPoint point = (ProfilPoint)m_points.addPoint( thePointBefore );
+    point.setValueFor(POINT_PROPERTY.HOEHE, hoehe );
+    point.setValueFor( POINT_PROPERTY.BREITE, breite );
     // KIM fireTableChanged( new ProfilTableEvent( null, point ) );
     return point;
   }
@@ -472,11 +471,11 @@ public class Profil implements IProfil
   public void moveDevider( DeviderKey deviderKey, IProfilPoint newPosition )
       throws ProfilDataException
   {
-    final IProfilPoint oldPosition = getDevider( deviderKey );
+    final ProfilPoint oldPosition = (ProfilPoint)getDevider( deviderKey );
     if( !(profilPointExists( newPosition ) & (profilPointExists( oldPosition ))) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
     final double deviderValue = oldPosition.getValueFor( deviderKey.getProfilPointProperty() );
-    newPosition.setValueFor( deviderKey.getProfilPointProperty(), deviderValue );
+    ((ProfilPoint)newPosition).setValueFor( deviderKey.getProfilPointProperty(), deviderValue );
     oldPosition.setValueFor( deviderKey.getProfilPointProperty(), 0.0 );
     // KIM fireTableChanged( new ProfilTableEvent( deviderKey.getColumnKey(), newPosition ) );
   }
@@ -513,7 +512,7 @@ public class Profil implements IProfil
   public IProfilBuilding removeProfilBuilding( )
   {
     final IProfilBuilding oldBuilding = m_building;
-    for( final Iterator<IProfilPointProperty> pbIt = m_building.getProfilPointProperties()
+    for( final Iterator<POINT_PROPERTY> pbIt = m_building.getProfilPointProperties()
         .iterator(); pbIt.hasNext(); )
     {
       removeProfilPointProperty( pbIt.next() );
@@ -544,24 +543,24 @@ public class Profil implements IProfil
    * 
    * @see com.bce.eind.core.profilinterface.IProfil#removeColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
-  public boolean removeProfilPointProperty( IProfilPointProperty columnKey )
+  public boolean removeProfilPointProperty( POINT_PROPERTY pointProperty )
   {
     boolean result;
-    if( (columnKey == IProfilPointProperties.BEWUCHS_AX)
-        | (columnKey == IProfilPointProperties.BEWUCHS_AY)
-        | (columnKey == IProfilPointProperties.BEWUCHS_DP) )
+    if( (pointProperty == POINT_PROPERTY.BEWUCHS_AX)
+        | (pointProperty == POINT_PROPERTY.BEWUCHS_AY)
+        | (pointProperty == POINT_PROPERTY.BEWUCHS_DP) )
     {
-      result = (m_points.removeProperty( IProfilPointProperties.BEWUCHS_AX )
-          & m_points.removeProperty( IProfilPointProperties.BEWUCHS_AY ) & m_points
-          .removeProperty( IProfilPointProperties.BEWUCHS_DP ));
+      result = (m_points.removeProperty( POINT_PROPERTY.BEWUCHS_AX )
+          & m_points.removeProperty( POINT_PROPERTY.BEWUCHS_AY ) & m_points
+          .removeProperty( POINT_PROPERTY.BEWUCHS_DP ));
     }
-    if( (columnKey == IProfilPointProperties.HOCHWERT)
-        | (columnKey == IProfilPointProperties.RECHTSWERT) )
+    if( (pointProperty == POINT_PROPERTY.HOCHWERT)
+        | (pointProperty == POINT_PROPERTY.RECHTSWERT) )
     {
-      result = (m_points.removeProperty( IProfilPointProperties.HOCHWERT ) & m_points
-          .removeProperty( IProfilPointProperties.RECHTSWERT ));
+      result = (m_points.removeProperty( POINT_PROPERTY.HOCHWERT ) & m_points
+          .removeProperty( POINT_PROPERTY.RECHTSWERT ));
     }
-    result = m_points.removeProperty( columnKey );
+    result = m_points.removeProperty( pointProperty );
     // KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
     return result;
   }
@@ -578,13 +577,13 @@ public class Profil implements IProfil
   }
 
   public void setDevider( IProfilPoint leftPoint, IProfilPoint rightPoint,
-      IProfilPointProperty columnKey ) throws ProfilDataException
+      POINT_PROPERTY pointProperty ) throws ProfilDataException
   {
     if( !(profilPointExists( leftPoint ) & (profilPointExists( rightPoint ))) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
-    setValuesFor( columnKey, 0.0 );
-    setValueFor( leftPoint, columnKey, -1.0 );
-    setValueFor( rightPoint, columnKey, 1.0 );
+    setValuesFor( pointProperty, 0.0 );
+    setValueFor( leftPoint, pointProperty, -1.0 );
+    setValueFor( rightPoint, pointProperty, 1.0 );
   }
 
   /*
@@ -596,14 +595,14 @@ public class Profil implements IProfil
   public boolean setDeviderTyp( DeviderKey deviderKey, TRENNFLAECHEN_TYP deviderTyp )
       throws ProfilDataException
   {
-    if( deviderKey.getProfilPointProperty() != IProfilPointProperties.TRENNFLAECHE )
+    if( deviderKey.getProfilPointProperty() != ProfilPointProperties.TRENNFLAECHE )
       throw new ProfilDataException( "Trenner muﬂ vom Typ Trennfl‰che sein" );
-    final IProfilPoint point = getDevider( deviderKey );
+    final ProfilPoint point = (ProfilPoint)getDevider( deviderKey );
     if( point == null )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
-    final IProfilPointProperty columnKey = deviderKey.getProfilPointProperty();
+    final POINT_PROPERTY pointProperty = deviderKey.getProfilPointProperty();
     final double value = deviderKey.getValue() * deviderTyp.ordinal();
-    final boolean result = point.setValueFor( columnKey, value );
+    final boolean result = point.setValueFor( pointProperty, value );
     // KIM fireTableChanged( new ProfilTableEvent( deviderKey.getColumnKey(), point ) );
     return result;
   }
@@ -626,12 +625,11 @@ public class Profil implements IProfil
    * @see com.bce.eind.core.profilinterface.IProfil#setExtendedTableData(com.bce.eind.core.profildata.tabledata.TableDataKey,
    *      java.lang.Object)
    */
- /* public void setProfilData( IProfilPointProperty pointProperty, Object value )
-  {
-    this.m_extendedPointData.put( pointProperty, value );
-    fireProfilDataChanged( pointProperty, value );
-  }
-*/
+  /*
+   * public void setProfilData( IProfilPointProperty pointProperty, Object value ) {
+   * this.m_extendedPointData.put( pointProperty, value ); fireProfilDataChanged( pointProperty,
+   * value ); }
+   */
   /*
    * (non-Javadoc)
    * 
@@ -653,16 +651,16 @@ public class Profil implements IProfil
    */
   public void setRauheitTyp( RAUHEITEN_TYP r )
   {
-    m_rauheit = r ;
-    fireProfilDataChanged( IProfilPointProperties.RAUHEIT, r );
+    m_rauheit = r;
+    fireProfilDataChanged( ProfilPointProperties.RAUHEIT, r );
   }
 
-  public boolean setValueFor( IProfilPoint point, IProfilPointProperty columnKey, double value )
+  public boolean setValueFor( IProfilPoint point, POINT_PROPERTY pointProperty, double value )
       throws ProfilDataException
   {
     if( profilPointExists( point ) )
     {
-      final boolean result = point.setValueFor( columnKey, value );
+      final boolean result = ((ProfilPoint)point).setValueFor( pointProperty, value );
       // KIM fireTableChanged( new ProfilTableEvent( columnKey, point ) );
       return result;
     }
@@ -675,13 +673,23 @@ public class Profil implements IProfil
    * @see com.bce.eind.core.profilinterface.IProfil#setValuesFor(com.bce.eind.core.profildata.tabledata.ColumnKey,
    *      double)
    */
-  public void setValuesFor( IProfilPointProperty columnKey, double value )
+  public void setValuesFor(POINT_PROPERTY pointProperty, double value )
       throws ProfilDataException
   {
     for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
     {
-      ptIt.next().setValueFor( columnKey, value );
+      ((ProfilPoint)ptIt.next()).setValueFor( pointProperty, value );
     }
     // KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.bce.eind.core.profil.IProfil#getPointProperty(com.bce.eind.core.profil.IProfil.POINT_PROPERTY)
+   */
+  public IProfilPointProperty getPointProperty( POINT_PROPERTY pointProperty )
+  {
+    return ProfilPointProperties.getPointProperty(pointProperty);
   }
 }

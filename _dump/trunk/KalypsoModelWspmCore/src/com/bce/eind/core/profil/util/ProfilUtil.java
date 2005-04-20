@@ -5,9 +5,11 @@ package com.bce.eind.core.profil.util;
 
 import java.util.Iterator;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.IProfilPointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.impl.points.ProfilPoint;
+import com.bce.eind.core.profil.impl.points.ProfilPointProperties;
 
 /**
  * @author kimwerner
@@ -20,15 +22,15 @@ public class ProfilUtil
     if( (startPoint == null) | (endPoint == null) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
     final IProfilPoint point = startPoint.clonePoint();
-    for( final Iterator<IProfilPointProperty> ppIt = point.getProperties().iterator(); ppIt.hasNext(); )
+    for( final Iterator<IProfil.POINT_PROPERTY> ppIt = point.getProperties().iterator(); ppIt.hasNext(); )
     {
-      final IProfilPointProperty ppp = ppIt.next();
-      if( ppp.isInterpolation() )
+      final IProfil.POINT_PROPERTY ppp = ppIt.next();
+      if(ProfilPointProperties.getPointProperty(ppp).isInterpolation() )
       {
         try
         {
           final double m_x = (startPoint.getValueFor( ppp ) + endPoint.getValueFor( ppp )) / 2.0;
-          point.setValueFor( ppp, m_x );
+          ((ProfilPoint)point).setValueFor( ppp, m_x );
         }
         catch( ProfilDataException e )
         {
