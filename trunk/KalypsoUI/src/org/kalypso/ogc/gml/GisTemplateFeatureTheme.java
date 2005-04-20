@@ -117,7 +117,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final String[] m_styleNames;
 
-  private IKalypsoFeatureTheme m_theme = null;
+  private KalypsoFeatureTheme m_theme = null;
   
   /** Um bei einem Neuladen der Daten die Selektion zu erhalten
    featureId -> selection */
@@ -374,7 +374,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.dispose();
       m_theme = null;
 
-      // schon mal mitteilen, dass sich das Thema geändert hat
+      // schon mal mitteilen, dass sich das Thema ge?ndert hat
       fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
     }
 
@@ -480,5 +480,4 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     m_loaded = true;
     return m_loaded;
   }
-
 }

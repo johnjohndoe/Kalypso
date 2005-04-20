@@ -19,7 +19,6 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -100,7 +99,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     {
       final String ftpName = getFeatureTypeProperty().getName();
 
-      final GMLWorkspace workspace = new GMLWorkspace_Impl( null, feature, null, null, null, null );
+      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( null, feature, null, null, null, null );
       final CommandableWorkspace c_workspace = new CommandableWorkspace( workspace );
 
       m_kft = new KalypsoFeatureTheme( c_workspace, ftpName, ftpName );

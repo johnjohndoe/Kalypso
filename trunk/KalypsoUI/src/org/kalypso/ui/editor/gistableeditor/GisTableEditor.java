@@ -45,12 +45,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.Locale;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -77,7 +75,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * <p>
@@ -92,7 +90,7 @@ import org.kalypso.util.command.ICommandTarget;
  * @author belger
  */
 public class GisTableEditor extends AbstractEditorPart implements
-    ISelectionProvider, ICommandTarget
+    ISelectionProvider
 {
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
