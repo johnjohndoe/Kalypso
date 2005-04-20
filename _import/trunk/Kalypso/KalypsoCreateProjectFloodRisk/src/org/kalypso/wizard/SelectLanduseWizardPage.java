@@ -6,11 +6,14 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
@@ -76,8 +79,21 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
   File m_file;
 
+  private String EPSG_31467 = "EPSG:31467";
+
+  private String EPSG_31469 = "EPSG:31469";
+
+  private String[] coordinateSystems = new String[]
+  {
+      EPSG_31467,
+      EPSG_31469 };
+
   private CS_CoordinateSystem defaultCS = ConvenienceCSFactory.getInstance().getOGCCSByName(
-      "EPSG:31467" );
+      EPSG_31467 );
+
+  CS_CoordinateSystem selectedCoordinateSystem;
+
+  String selectedCoordinateSystemName = EPSG_31467;
 
   public SelectLanduseWizardPage()
   {
@@ -152,6 +168,28 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       }
     } );
 
+    //line2
+    Label csLabel = new Label( group, SWT.NONE );
+    csLabel.setText( "Coordinate system: " );
+
+    final Combo csCombo = new Combo( group, SWT.NONE );
+    csCombo.setItems( coordinateSystems );
+    csCombo.select( csCombo.indexOf( selectedCoordinateSystemName ) );
+
+    GridData data3 = new GridData();
+    data3.horizontalSpan = 2;
+    csCombo.setLayoutData( data3 );
+
+    csCombo.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        int selectedIndex = csCombo.getSelectionIndex();
+        selectedCoordinateSystemName = csCombo.getItem( selectedIndex );
+        validate();
+      }
+    } );
+
   }
 
   String chooseFile( File selectedFile, String[] filterExtensions )
@@ -198,6 +236,16 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       error.append( "Datei nicht ausgewählt\n\n" );
       setPageComplete( false );
     }
+    
+    if( selectedCoordinateSystemName != null )
+    {
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
+          selectedCoordinateSystemName );
+      if(selectedCoordinateSystem==null){
+        error.append("Koordinatensystem existiert nicht\n\n");
+        setPageComplete(false);
+      }
+    }
 
     if( error.length() > 0 )
       setMessage( error.toString() );
@@ -209,10 +257,10 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
   {
     return m_file;
   }
-  
-  //TODO: Coordinatensystem vom Benutzer abfragen
-  public CS_CoordinateSystem getSelectedCoordinateSystem(){
-    return defaultCS;
+
+  public CS_CoordinateSystem getSelectedCoordinateSystem()
+  {
+    return selectedCoordinateSystem;
   }
 
   /**
