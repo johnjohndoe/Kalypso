@@ -57,7 +57,7 @@ import org.kalypso.util.command.ICommandManager;
 import org.kalypso.util.command.ICommandManagerListener;
 
 /**
- * Decorator Ã¼ber einen Workspace, der diesen um die FÃ¤higkeiten eines
+ * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.util.command.ICommandManager ICommandManagers}erweitert
  * 
  * @author belger
@@ -68,7 +68,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
 
   private final ICommandManager m_commandManager = new DefaultCommandManager();
 
-  public CommandableWorkspace( GMLWorkspace workspace )
+  public CommandableWorkspace( final GMLWorkspace workspace )
   {
     /** it does not make sence decorate something else than the real workspace<br>
      * 	the UML looks also nicer without recursive dependencies here 
