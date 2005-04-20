@@ -123,6 +123,7 @@ public abstract class GridUtils
     int nRows = 0;
     GM_Point origin = null;
     //Gauß-Krüger
+    //TODO: cs abfragen
     CS_CoordinateSystem srs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
     double[] offset = new double[2];
     String nodata = null;
