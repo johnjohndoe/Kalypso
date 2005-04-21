@@ -1,6 +1,7 @@
 package KalypsoPluginRasterImport;
 
 import java.io.File;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -24,6 +27,10 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -94,6 +101,12 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   File m_targetFile = null;
 
   File m_sourceFile = null;
+  
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
+
+  CS_CoordinateSystem selectedCoordinateSystem;
+
+  String selectedCoordinateSystemName;
 
   public ImportRasterSelectionWizardPage( String pageName )
   {
@@ -128,7 +141,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     createControlSource( m_topLevel );
     createControlTarget( m_topLevel );
     setControl( m_topLevel );
-    validate();
+    //validate();
   }
 
   public void createControlSource( Composite parent )
@@ -202,6 +215,47 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
       public void widgetDefaultSelected( SelectionEvent e )
       {// default
+      }
+    } );
+    
+    Label dummyLabel = new Label(group,SWT.NONE);
+    dummyLabel.setText("");
+    
+    // line 3
+    Label csLabel = new Label( group, SWT.NONE );
+    csLabel.setText( "Coordinate system: " );
+
+    final Combo csCombo = new Combo( group, SWT.NONE );
+    csCombo.setItems( coordinateSystems );
+    try
+    {
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+    }
+    catch( RemoteException e1 )
+    {
+      e1.printStackTrace();
+    }
+    csCombo.select( csCombo.indexOf( selectedCoordinateSystemName ) );
+
+    GridData data3 = new GridData();
+    data3.horizontalSpan = 2;
+    csCombo.setLayoutData( data3 );
+
+    csCombo.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        selectedCoordinateSystemName = csCombo.getText();
+        validate();
+      }
+    } );
+
+    csCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
+        validate();
       }
     } );
   }
@@ -305,6 +359,17 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
       error.append( "Quelle nicht ausgewählt\n" );
       setPageComplete( false );
     }
+    
+    if( selectedCoordinateSystemName != null )
+    {
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
+          selectedCoordinateSystemName );
+      if( selectedCoordinateSystem == null )
+      {
+        error.append( "Koordinatensystem existiert nicht\n" );
+        setPageComplete( false );
+      }
+    }
 
     if( m_targetFile != null )
     {
@@ -318,6 +383,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     }
     if( error.length() > 0 )
       setErrorMessage( error.toString() );
+      //setMessage( error.toString() );
     else
       setMessage( "Eingaben OK" );
   }
@@ -383,6 +449,11 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   public ISelection getSelection()
   {
     return new RasterImportSelection( m_sourceFile, m_targetFile, m_format );
+  }
+  
+  public CS_CoordinateSystem getSelectedCoordinateSystem()
+  {
+    return selectedCoordinateSystem;
   }
 
   /**
