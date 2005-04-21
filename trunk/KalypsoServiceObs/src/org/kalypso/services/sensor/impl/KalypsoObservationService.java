@@ -84,7 +84,7 @@ import org.xml.sax.InputSource;
  */
 public class KalypsoObservationService implements IObservationService
 {
-  private List m_repositories = null;
+  private final List m_repositories;
 
   private ItemBean[] m_repositoryBeans = null;
 
@@ -105,6 +105,7 @@ public class KalypsoObservationService implements IObservationService
    */
   public KalypsoObservationService( ) throws RemoteException
   {
+    m_repositories = new Vector();
     m_mapBean2Item = new Hashtable( 512 );
     m_mapItem2Beans = new Hashtable( 512 );
     m_mapId2Rep = new Hashtable();
@@ -130,6 +131,14 @@ public class KalypsoObservationService implements IObservationService
     init();
   }
 
+  private final void clearRepositories()
+  {
+    for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
+      ((IRepository) it.next()).dispose();
+    
+    m_repositories.clear();
+  }
+  
   /**
    * Initialize the Service according to configuration.
    * 
@@ -141,6 +150,7 @@ public class KalypsoObservationService implements IObservationService
     m_mapItem2Beans.clear();
     m_mapId2Rep.clear();
     m_repositoryBeans = null;
+    clearRepositories();
 
     try
     {
@@ -151,7 +161,6 @@ public class KalypsoObservationService implements IObservationService
 
       // this call also closes the stream
       final List facConfs = RepositoryConfigUtils.loadConfig( stream );
-      m_repositories = new Vector( facConfs.size() );
 
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
@@ -187,7 +196,7 @@ public class KalypsoObservationService implements IObservationService
    */
   protected void finalize( ) throws Throwable
   {
-    m_repositories.clear();
+    clearRepositories();
     m_repositoryBeans = null;
     m_mapBean2Item.clear();
     m_mapItem2Beans.clear();

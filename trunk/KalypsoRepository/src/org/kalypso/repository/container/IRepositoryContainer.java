@@ -47,17 +47,12 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
- * Allgemeine Interface für Repositories Container:
- * <p>- Liste von Repositories
- * <p>- Handlung von Listeners
+ * General Interface for managing repositories, listeners, and dispose.
  * 
  * @author schlienger
  */
 public interface IRepositoryContainer
 {
-  /**
-   * @return the list of repositories
-   */
   public List getRepositories();
 
   /**
@@ -70,11 +65,6 @@ public interface IRepositoryContainer
    */
   public IRepositoryItem findItem( final String id ) throws NoSuchElementException;
   
-  /**
-   * Adds a repository.
-   * 
-   * @param rep the one to add
-   */
   public void addRepository( final IRepository rep );
 
   public void removeRepository( final IRepository rep );
@@ -82,4 +72,6 @@ public interface IRepositoryContainer
   public void addRepositoryContainerListener( final IRepositoryContainerListener l );
 
   public void removeRepositoryContainerListener( final IRepositoryContainerListener l );
+
+  public void dispose();
 }

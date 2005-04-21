@@ -74,7 +74,6 @@ import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvi
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
-import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -98,7 +97,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 {
   private TreeViewer m_repViewer = null;
 
-  private final DefaultRepositoryContainer m_repContainer;
+  private final IRepositoryContainer m_repContainer;
 
   private RemoveRepositoryAction m_removeAction = null;
 

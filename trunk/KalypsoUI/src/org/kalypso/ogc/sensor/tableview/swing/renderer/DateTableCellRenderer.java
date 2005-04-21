@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Component;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -82,6 +83,12 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     final JLabel label = (JLabel) super.getTableCellRendererComponent( table,
         value, isSelected, hasFocus, row, column );
 
+    // TRICKY: sometimes it comes here but value is not a date. This must be
+    // a threading problem. The workaround is to return null. I'm not sure
+    // if that'll always work correctly though.
+    if( !(value instanceof Date) )
+      return null;
+    
     label.setText( df.format( value ) );
 
     if( !isSelected )

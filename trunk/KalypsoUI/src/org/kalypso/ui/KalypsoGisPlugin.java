@@ -59,11 +59,6 @@ import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -79,6 +74,7 @@ import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
+import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
@@ -86,6 +82,11 @@ import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
@@ -109,7 +110,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private CS_CoordinateSystem myCoordinateSystem = null;
 
   /** Manages the list of repositories. */
-  private DefaultRepositoryContainer m_tsRepositoryContainer = null;
+  private IRepositoryContainer m_tsRepositoryContainer = null;
 
   private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
 
@@ -390,6 +391,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     // clear the observation cache
     ObservationCache.clearCache();
+    
+    if( m_tsRepositoryContainer != null )
+      m_tsRepositoryContainer.dispose();
   }
 
   public static String getId()
@@ -462,7 +466,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return myCoordinateSystem;
   }
 
-  public DefaultRepositoryContainer getRepositoryContainer()
+  public IRepositoryContainer getRepositoryContainer()
   {
     if( m_tsRepositoryContainer == null )
       m_tsRepositoryContainer = new DefaultRepositoryContainer();

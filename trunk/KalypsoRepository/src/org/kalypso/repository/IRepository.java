@@ -135,6 +135,11 @@ public interface IRepository extends IRepositoryItem
    * @throws RepositoryException
    */
   public void reload( ) throws RepositoryException;
+  
+  /**
+   * Clears potential resources
+   */
+  public void dispose();
 
   public void addRepositoryListener( final IRepositoryListener l );
 

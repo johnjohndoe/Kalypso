@@ -52,7 +52,7 @@ import org.kalypso.repository.RepositoryException;
 
 
 /**
- * Beinhaltet eine Liste von Repositories und verwaltet Listeners.
+ * Default implementation.
  * 
  * @author schlienger
  */
@@ -70,6 +70,15 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   public DefaultRepositoryContainer( IRepository[] repositories )
   {
     m_reps.addAll( Arrays.asList( repositories ) );
+  }
+  
+  public void dispose( )
+  {
+    for( final Iterator it = m_reps.iterator(); it.hasNext(); )
+      ((IRepository) it.next()).dispose();
+
+    m_reps.clear();
+    m_listeners.clear();
   }
 
   public void addRepository( final IRepository rep )
@@ -92,6 +101,8 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   public void removeRepository( IRepository rep )
   {
     m_reps.remove( rep );
+    
+    rep.dispose();
     
     fireRepositoryChanged();
   }
