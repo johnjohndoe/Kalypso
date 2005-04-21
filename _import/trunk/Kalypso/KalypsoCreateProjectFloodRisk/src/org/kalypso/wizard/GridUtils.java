@@ -24,7 +24,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
@@ -117,13 +116,11 @@ public abstract class GridUtils
    *          input file
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridCoverage importGridArc( File in )
+  public static RectifiedGridCoverage importGridArc( File in, CS_CoordinateSystem cs)
   {
     int nCols = 0;
     int nRows = 0;
     GM_Point origin = null;
-    //Gauß-Krüger
-    CS_CoordinateSystem srs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
     double[] offset = new double[2];
     String nodata = null;
     Vector rangeSetData = new Vector();
@@ -147,7 +144,7 @@ public abstract class GridUtils
       double originX = new Double( data[2] ).doubleValue();
       double originY = new Double( data[3] ).doubleValue();
       //double originZ = 0;
-      origin = GeometryFactory.createGM_Point( originX, originY, srs );
+      origin = GeometryFactory.createGM_Point( originX, originY, cs );
       offset[0] = ( new Double( data[4] ) ).doubleValue();
       offset[1] = ( new Double( data[4] ) ).doubleValue();
       //offset[2] = 0;

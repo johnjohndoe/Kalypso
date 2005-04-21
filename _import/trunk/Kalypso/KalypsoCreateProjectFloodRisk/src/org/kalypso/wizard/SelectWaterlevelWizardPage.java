@@ -1,6 +1,7 @@
 package org.kalypso.wizard;
 
 import java.io.File;
+import java.rmi.RemoteException;
 import java.util.Vector;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -15,6 +16,7 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
@@ -26,6 +28,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -83,6 +89,12 @@ public class SelectWaterlevelWizardPage extends WizardPage
   Vector waterlevelGrids = new Vector();
 
   protected File waterlevelFile;
+  
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
+
+  CS_CoordinateSystem selectedCoordinateSystem;
+
+  String selectedCoordinateSystemName;
 
   public SelectWaterlevelWizardPage()
   {
@@ -95,6 +107,11 @@ public class SelectWaterlevelWizardPage extends WizardPage
   public Vector getWaterlevelGrids()
   {
     return waterlevelGrids;
+  }
+  
+  public CS_CoordinateSystem getSelectedCoordinateSystem()
+  {
+    return selectedCoordinateSystem;
   }
 
   /**
@@ -136,7 +153,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     GridData gridData = new GridData( GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
         | GridData.FILL_BOTH );
     tableComposite.setLayoutData( gridData );
-    GridLayout layout = new GridLayout( 3, false );
+    GridLayout layout = new GridLayout( 2, false );
     layout.marginWidth = 4;
     tableComposite.setLayout( layout );
 
@@ -145,6 +162,9 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
     // Create Buttons
     createButtons( tableComposite );
+    
+    // Create CSCombo
+    createCombo(tableComposite);
 
   }
 
@@ -154,7 +174,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
         | SWT.FULL_SELECTION );
     GridData gridData = new GridData( GridData.FILL_BOTH );
     gridData.grabExcessVerticalSpace = true;
-    gridData.horizontalSpan = 3;
+    gridData.horizontalSpan = 2;
     waterlevelTable.setLayoutData( gridData );
 
     TableColumn fileColumn = new TableColumn( waterlevelTable, SWT.LEFT );
@@ -181,8 +201,12 @@ public class SelectWaterlevelWizardPage extends WizardPage
   private void createButtons( Composite parent )
   {
 
+    Composite buttonComp = new Composite(parent, SWT.NULL);
+    GridLayout layout = new GridLayout( 2, false );
+    buttonComp.setLayout( layout );
+    
     // Create and configure the "Add" button
-    Button add = new Button( parent, SWT.PUSH | SWT.CENTER );
+    Button add = new Button( buttonComp, SWT.PUSH | SWT.CENTER );
     add.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
 
     GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
@@ -213,7 +237,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     } );
 
     //  Create and configure the "Delete" button
-    Button delete = new Button( parent, SWT.PUSH | SWT.CENTER );
+    Button delete = new Button( buttonComp, SWT.PUSH | SWT.CENTER );
     delete.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     gridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
     gridData.widthHint = 30;
@@ -236,6 +260,49 @@ public class SelectWaterlevelWizardPage extends WizardPage
         validate();
       }
     } );
+    
+    Label dummyLabel = new Label(parent, SWT.NONE);
+    dummyLabel.setText("");
+  }
+  
+  private void createCombo(Composite parent){
+    Label csLabel = new Label( parent, SWT.NONE );
+    csLabel.setText( "Coordinate system: " );
+
+    final Combo csCombo = new Combo( parent, SWT.NONE );
+    csCombo.setItems( coordinateSystems );
+    try
+    {
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+    }
+    catch( RemoteException e1 )
+    {
+      e1.printStackTrace();
+    }
+    csCombo.select( csCombo.indexOf( selectedCoordinateSystemName ) );
+
+    GridData data3 = new GridData();
+    data3.horizontalSpan = 1;
+    csCombo.setLayoutData( data3 );
+
+    csCombo.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        selectedCoordinateSystemName = csCombo.getText();
+        validate();
+      }
+    } );
+
+    csCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
+        validate();
+      }
+    } );
+
   }
 
   String chooseFile( File selectedFile, String[] filterExtensions )
@@ -267,11 +334,24 @@ public class SelectWaterlevelWizardPage extends WizardPage
     setMessage( null );
     setPageComplete( true );
     StringBuffer error = new StringBuffer();
+    
     if( !( waterlevelGrids.size() > 0 ) )
     {
       error.append( "Keine Dateien ausgewählt\n\n" );
       setPageComplete( false );
     }
+    
+    if( selectedCoordinateSystemName != null )
+    {
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
+          selectedCoordinateSystemName );
+      if( selectedCoordinateSystem == null )
+      {
+        error.append( "Koordinatensystem existiert nicht\n\n" );
+        setPageComplete( false );
+      }
+    }
+    
     if( error.length() > 0 )
       setMessage( error.toString() );
     else

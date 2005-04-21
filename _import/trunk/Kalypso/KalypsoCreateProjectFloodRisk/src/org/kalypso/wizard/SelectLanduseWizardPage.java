@@ -1,6 +1,7 @@
 package org.kalypso.wizard;
 
 import java.io.File;
+import java.rmi.RemoteException;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -20,7 +21,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -79,21 +82,11 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
   File m_file;
 
-  private String EPSG_31467 = "EPSG:31467";
-
-  private String EPSG_31469 = "EPSG:31469";
-
-  private String[] coordinateSystems = new String[]
-  {
-      EPSG_31467,
-      EPSG_31469 };
-
-  private CS_CoordinateSystem defaultCS = ConvenienceCSFactory.getInstance().getOGCCSByName(
-      EPSG_31467 );
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
 
-  String selectedCoordinateSystemName = EPSG_31467;
+  String selectedCoordinateSystemName;
 
   public SelectLanduseWizardPage()
   {
@@ -174,6 +167,14 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     final Combo csCombo = new Combo( group, SWT.NONE );
     csCombo.setItems( coordinateSystems );
+    try
+    {
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+    }
+    catch( RemoteException e1 )
+    {
+      e1.printStackTrace();
+    }
     csCombo.select( csCombo.indexOf( selectedCoordinateSystemName ) );
 
     GridData data3 = new GridData();
@@ -184,8 +185,16 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     {
       public void widgetSelected( SelectionEvent e )
       {
-        int selectedIndex = csCombo.getSelectionIndex();
-        selectedCoordinateSystemName = csCombo.getItem( selectedIndex );
+        selectedCoordinateSystemName = csCombo.getText();
+        validate();
+      }
+    } );
+
+    csCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
         validate();
       }
     } );
@@ -236,14 +245,15 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       error.append( "Datei nicht ausgewählt\n\n" );
       setPageComplete( false );
     }
-    
+
     if( selectedCoordinateSystemName != null )
     {
       selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
           selectedCoordinateSystemName );
-      if(selectedCoordinateSystem==null){
-        error.append("Koordinatensystem existiert nicht\n\n");
-        setPageComplete(false);
+      if( selectedCoordinateSystem == null )
+      {
+        error.append( "Koordinatensystem existiert nicht\n\n" );
+        setPageComplete( false );
       }
     }
 

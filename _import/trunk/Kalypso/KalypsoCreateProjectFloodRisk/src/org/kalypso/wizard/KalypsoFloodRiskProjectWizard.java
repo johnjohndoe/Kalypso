@@ -109,6 +109,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
 /**
@@ -315,11 +316,12 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
   private void createWaterlevelGrids() throws Exception
   {
     Vector waterlevelGrids = selectWaterlevelWizardPage.getWaterlevelGrids();
+    CS_CoordinateSystem cs = selectWaterlevelWizardPage.getSelectedCoordinateSystem();
     int workedPart = 50 / waterlevelGrids.size();
     for( int i = 0; i < waterlevelGrids.size(); i++ )
     {
       File sourceFile = (File)waterlevelGrids.get( i );
-      RectifiedGridCoverage grid = GridUtils.importGridArc( sourceFile );
+      RectifiedGridCoverage grid = GridUtils.importGridArc( sourceFile, cs );
       String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile
           .getName() );
       File targetFile = ( workspacePath.append( projectHandel.getFullPath().append(
