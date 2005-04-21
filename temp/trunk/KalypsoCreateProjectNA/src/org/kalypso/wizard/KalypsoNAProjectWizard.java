@@ -163,7 +163,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   private URL m_modelSchemaURL = getClass().getResource( "resources/.model/schema/namodell.xsd" );
 
   private URL m_hydrotopSchemaURL = getClass()
-      .getResource( "resources/.model/schema/Hydrotope.xsd" );
+      .getResource( "resources/.model/schema/hydrotop.xsd" );
 
   private GMLWorkspace modelWS;
 
@@ -177,7 +177,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   IWorkspace workspace;
 
-  private GMLSchema m_hydrotopeSchema;
+  private GMLSchema m_hydrotopSchema;
 
   private Path m_hydPath;
 
@@ -196,7 +196,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       //      TODO: jh, schemata an zentrale speichern und von dort aufrufen, damit
       // hier nicht ständig aktualisiert werden muss.
       m_modelSchema = GMLSchemaCache.getSchema( m_modelSchemaURL );
-      m_hydrotopeSchema = GMLSchemaCache.getSchema( m_hydrotopSchemaURL );
+      m_hydrotopSchema = GMLSchemaCache.getSchema( m_hydrotopSchemaURL );
       setNeedsProgressMonitor( true );
     }
     catch( MalformedURLException e )
@@ -243,7 +243,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     //        "Hydrotopdatei in den Workspace importieren",
     // ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE,
-        "Hydrotope einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotope" ) );
+        "Hydrotope einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) );
     addPage( createMappingHydrotopPage );
   }
 
@@ -253,7 +253,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     FeatureType ft = null;
     ft = m_modelSchema.getFeatureType( featureName );
     if( ft == null )
-      ft = m_hydrotopeSchema.getFeatureType( featureName );
+      ft = m_hydrotopSchema.getFeatureType( featureName );
     return ft;
   }
 
@@ -340,7 +340,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       mapNode( nodeFeatureList, nodeMapping );
     }
 
-    //map hydrotope shape file
+    //map hydrotop shape file
     HashMap hydMapping = createMappingHydrotopPage.getMapping();
     if( hydMapping != null && hydMapping.size() != 0 )
     {
@@ -425,9 +425,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   private void mapHyd( List sourceFeatureList, HashMap mapping )
   {
     Feature rootFeature = m_hydWS.getRootFeature();
-    FeatureType hydFT = getFeatureType( "Hydrotope" );
-    Feature hydCollectionFE = (Feature)rootFeature.getProperty( "HydrotopeCollectionMember" );
-    List hydList = (List)hydCollectionFE.getProperty( "HydrotopeMember" );
+    FeatureType hydFT = getFeatureType( "Hydrotop" );
+    Feature hydCollectionFE = (Feature)rootFeature.getProperty( "HydrotopCollectionMember" );
+    List hydList = (List)hydCollectionFE.getProperty( "HydrotopMember" );
 
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
@@ -458,55 +458,55 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     //TODO Mapping
   }
 
-  private void addLayer( File sourceFile ) throws Exception
-  {
-    String path = workspacePath.append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" )
-        .toFile().toString();
-    File mapfile = workspacePath
-        .append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" ).toFile();
-    InputStream inputStream = new FileInputStream( mapfile );
-
-    ObjectFactory typeOF = new ObjectFactory();
-    org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
-    Unmarshaller unmarshaller = mapTemplateOF.createUnmarshaller();
-    Gismapview gismapview = (Gismapview)unmarshaller.unmarshal( inputStream );
-    LayersType layers = gismapview.getLayers();
-    List layerList = layers.getLayer();
-    Layer newLayer = mapTemplateOF.createGismapviewTypeLayersTypeLayer();
-
-    //set attributes for the layer
-    newLayer.setName( "Hydrotope" );
-    newLayer.setVisible( true );
-    newLayer.setFeaturePath( "featureMember" );
-    newLayer.setHref( "project:/Shapes/"
-        + FileUtilities.nameWithoutExtension( sourceFile.getName() ) + "#EPSG:31467" );
-    newLayer.setType( "simple" );
-    newLayer.setLinktype( "shape" );
-    newLayer.setActuate( "onRequest" );
-    newLayer.setId( "ID_6" );
-
-    List styleList = newLayer.getStyle();
-    StyleType style = typeOF.createStyledLayerTypeStyleType();
-
-    //set attributes for the style
-    style.setLinktype( "sld" );
-    style.setStyle( "hydrotop" );
-    style.setActuate( "onRequest" );
-    style.setHref( "../.styles/hydrotop.sld" );
-    style.setType( "simple" );
-
-    //add the style to the layer
-    styleList.add( style );
-    layerList.add( newLayer );
-
-    //gismapview.setLayers(layers);
-    // create new layer:
-    //		IPath projectPath = createProjectPage.getLocationPath();
-    Marshaller marshaller = mapTemplateOF.createMarshaller();
-    //		IPath mapViewFile = projectPath.append("/BasisKarten/Hydrotope.gmt");
-    FileWriter fw = new FileWriter( path );
-    marshaller.marshal( gismapview, fw );
-  }
+//  private void addLayer( File sourceFile ) throws Exception
+//  {
+//    String path = workspacePath.append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" )
+//        .toFile().toString();
+//    File mapfile = workspacePath
+//        .append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt" ).toFile();
+//    InputStream inputStream = new FileInputStream( mapfile );
+//
+//    ObjectFactory typeOF = new ObjectFactory();
+//    org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
+//    Unmarshaller unmarshaller = mapTemplateOF.createUnmarshaller();
+//    Gismapview gismapview = (Gismapview)unmarshaller.unmarshal( inputStream );
+//    LayersType layers = gismapview.getLayers();
+//    List layerList = layers.getLayer();
+//    Layer newLayer = mapTemplateOF.createGismapviewTypeLayersTypeLayer();
+//
+//    //set attributes for the layer
+//    newLayer.setName( "Hydrotope" );
+//    newLayer.setVisible( true );
+//    newLayer.setFeaturePath( "featureMember" );
+//    newLayer.setHref( "project:/Shapes/"
+//        + FileUtilities.nameWithoutExtension( sourceFile.getName() ) + "#EPSG:31467" );
+//    newLayer.setType( "simple" );
+//    newLayer.setLinktype( "shape" );
+//    newLayer.setActuate( "onRequest" );
+//    newLayer.setId( "ID_6" );
+//
+//    List styleList = newLayer.getStyle();
+//    StyleType style = typeOF.createStyledLayerTypeStyleType();
+//
+//    //set attributes for the style
+//    style.setLinktype( "sld" );
+//    style.setStyle( "hydrotop" );
+//    style.setActuate( "onRequest" );
+//    style.setHref( "../.styles/hydrotop.sld" );
+//    style.setType( "simple" );
+//
+//    //add the style to the layer
+//    styleList.add( style );
+//    layerList.add( newLayer );
+//
+//    //gismapview.setLayers(layers);
+//    // create new layer:
+//    //		IPath projectPath = createProjectPage.getLocationPath();
+//    Marshaller marshaller = mapTemplateOF.createMarshaller();
+//    //		IPath mapViewFile = projectPath.append("/BasisKarten/Hydrotope.gmt");
+//    FileWriter fw = new FileWriter( path );
+//    marshaller.marshal( gismapview, fw );
+//  }
 
   private void copyResourcesToProject( IPath path )
   {

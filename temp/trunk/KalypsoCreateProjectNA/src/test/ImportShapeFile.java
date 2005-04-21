@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
@@ -25,6 +24,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -116,7 +117,8 @@ public class ImportShapeFile {
 			GMLSchema gmlSchema = GMLSchemaCache.getSchema(schemaURL);
       FeatureType targetFT = gmlSchema.getFeatureType("Node");
       FeatureTypeProperty targetFTP = targetFT.getProperty("num");
-      String key = Locale.getDefault().getLanguage();
+//      String key = Locale.getDefault().getLanguage();
+      final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
       Annotation annotation = targetFTP.getAnnotation(key);
       String label = annotation.getLabel();
       String tooltip = annotation.getTooltip();

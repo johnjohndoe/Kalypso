@@ -52,7 +52,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -79,6 +78,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -621,7 +622,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   public String getToolTip( FeatureTypeProperty ftp )
   {
-    String key = Locale.getDefault().getLanguage();
+//    String key = Locale.getDefault().getLanguage();
+    final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
     Annotation annotation = ftp.getAnnotation( key );
     if( annotation != null )
     {
