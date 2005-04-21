@@ -10,7 +10,7 @@
       <library name="KalypsoWiskiAdapter.jar">
          <export name="*"/>
       </library>
-      <library name="lib/KiWWClient.jar">
+      <library name="lib/kiwwebdp-externalclient.jar">
          <export name="*"/>
       </library>
    </runtime>

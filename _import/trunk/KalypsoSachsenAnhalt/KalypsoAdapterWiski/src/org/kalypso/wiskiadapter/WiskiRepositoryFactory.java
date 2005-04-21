@@ -11,14 +11,12 @@ import org.kalypso.repository.factory.AbstractRepositoryFactory;
  */
 public class WiskiRepositoryFactory extends AbstractRepositoryFactory
 {
-
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
   public boolean configureRepository( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   /**
@@ -26,8 +24,6 @@ public class WiskiRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository( ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new WiskiRepository( "Wiski", getClass().getName(), getConfiguration(), false );
   }
-
 }

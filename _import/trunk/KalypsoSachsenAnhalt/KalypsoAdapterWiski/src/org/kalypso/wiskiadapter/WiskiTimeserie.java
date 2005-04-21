@@ -1,9 +1,12 @@
 package org.kalypso.wiskiadapter;
 
+import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -13,15 +16,21 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.util.conversion.units.SIConverter;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
+import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 
 /**
  * WiskiTimeserie
@@ -30,7 +39,7 @@ import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
  */
 public class WiskiTimeserie implements IObservation
 {
-  private final StationParameter m_parameter;
+  private final TsInfoItem m_tsinfo;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
       this );
@@ -39,22 +48,28 @@ public class WiskiTimeserie implements IObservation
 
   private final SIConverter m_cv;
 
-  public WiskiTimeserie( final StationParameter parameter )
+  private MetadataList m_metadata = null;
+
+  public WiskiTimeserie( final TsInfoItem tsinfo )
   {
-    m_parameter = parameter;
-    
+    m_tsinfo = tsinfo;
+
     m_axes = new IAxis[3];
-    m_axes[0] = new DefaultAxis( TimeserieUtils.getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE, TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class, true );
-    
-    final String wiskiType = parameter.getWiskiType();
+    m_axes[0] = new DefaultAxis( TimeserieUtils
+        .getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE,
+        TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class,
+        true );
+
+    final String wiskiType = tsinfo.getWiskiType();
     final String kalypsoType = WiskiUtils.wiskiType2Kalypso( wiskiType );
-    final String wiskiUnit = parameter.getWiskiUnit();
+    final String wiskiUnit = tsinfo.getWiskiUnit();
     final String kalypsoUnit = TimeserieUtils.getUnit( kalypsoType );
-    
+
     m_cv = new SIConverter( wiskiUnit, kalypsoUnit );
-    
-    m_axes[1] = new DefaultAxis( TimeserieUtils.getName( kalypsoType ), kalypsoType, kalypsoUnit, Double.class, false );
-    
+
+    m_axes[1] = new DefaultAxis( TimeserieUtils.getName( kalypsoType ),
+        kalypsoType, kalypsoUnit, Double.class, false );
+
     m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1] );
   }
 
@@ -63,7 +78,7 @@ public class WiskiTimeserie implements IObservation
    */
   public String getIdentifier( )
   {
-    return m_parameter.getIdentifier();
+    return m_tsinfo.getIdentifier();
   }
 
   /**
@@ -71,7 +86,7 @@ public class WiskiTimeserie implements IObservation
    */
   public String getName( )
   {
-    return m_parameter.getName();
+    return m_tsinfo.getName();
   }
 
   /**
@@ -96,7 +111,24 @@ public class WiskiTimeserie implements IObservation
    */
   public MetadataList getMetadataList( )
   {
-    return m_parameter.getMetadataList();
+    if( m_metadata == null )
+    {
+      m_metadata = new MetadataList();
+
+      try
+      {
+        fetchAlarmLevels( m_metadata );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
+      // note: WQ-Table is only incorporated into metadata
+      // when calling getValues()
+    }
+
+    return m_metadata;
   }
 
   /**
@@ -129,16 +161,20 @@ public class WiskiTimeserie implements IObservation
       final Timestamp from = new Timestamp( dr.getFrom().getTime() );
       final Timestamp to = new Timestamp( dr.getTo().getTime() );
 
-      final WiskiRepository rep = (WiskiRepository) m_parameter.getRepository();
+      final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
 
       //getTsData for specified timeseries (or ts list)
       final HashMap gettsdata = rep.getWiski().getTsData( rep.getUserData(),
-          new long[] { Long.parseLong( m_parameter.getWiskiId() ) }, from, to,
+          new long[] { Long.parseLong( m_tsinfo.getWiskiId() ) }, from, to,
           null );
 
-      final LinkedList data = (LinkedList) ((HashMap) ((HashMap) gettsdata
-          .get( KiWWDataProviderInterface.KEY_TIMESERIES )).get( m_parameter
-          .getWiskiId() )).get( KiWWDataProviderInterface.KEY_TSDATA );
+      final HashMap series = (HashMap) gettsdata
+          .get( KiWWDataProviderInterface.KEY_TIMESERIES );
+      final HashMap serie = (HashMap) series.get( m_tsinfo.getWiskiId() );
+      if( serie == null )
+        return SimpleTuppleModel.EMPTY_TUPPLEMODEL;
+      final LinkedList data = (LinkedList) serie
+          .get( KiWWDataProviderInterface.KEY_TSDATA );
 
       return new WiskiTuppleModel( getAxisList(), data, m_cv );
     }
@@ -163,7 +199,7 @@ public class WiskiTimeserie implements IObservation
    */
   public String getHref( )
   {
-    // TODO Auto-generated method stub
+    // no meaning here
     return null;
   }
 
@@ -189,5 +225,85 @@ public class WiskiTimeserie implements IObservation
   public void clearListeners( )
   {
     m_evtPrv.clearListeners();
+  }
+
+  /**
+   * Helper for translating Wiski Rating-Tables into Kalypso Metadata
+   * 
+   * @param metadata
+   * @param from
+   * @param to
+   * @throws NumberFormatException
+   * @throws RemoteException
+   * @throws KiWWException
+   * @throws WQException
+   */
+  private void fetchWQTable( final MetadataList metadata, final Date from,
+      final Date to ) throws NumberFormatException, RemoteException,
+      KiWWException, WQException
+  {
+    final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
+
+    // TODO WQ-Table holen, Frage: welche Datum muss man mitgeben?
+    final HashMap tables = rep.getWiski().getRatingTables( rep.getUserData(),
+        KiWWDataProviderInterface.OBJECT_TIMESERIES,
+        new Long[] { new Long( m_tsinfo.getWiskiId() ) },
+        new Timestamp( to.getTime() ) );
+
+    final HashMap table = (HashMap) tables.get( m_tsinfo.getWiskiId() );
+
+    final String[] strW = ((String) table.get( "curve_table_stage" ))
+        .split( "," );
+    final String[] strQ = ((String) table.get( "curve_table_flow" ))
+        .split( "," );
+
+    if( strW.length != strQ.length )
+      throw new IllegalArgumentException(
+          "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+
+    final double[] W = new double[strW.length];
+    final double[] Q = new double[strW.length];
+    for( int i = 0; i < strW.length; i++ )
+    {
+      W[i] = Double.parseDouble( strW[i] );
+      Q[i] = Double.parseDouble( strQ[i] );
+    }
+
+    final WQTable wqt = new WQTable( from, W, Q );
+    final WQTableSet set = new WQTableSet( new WQTable[] { wqt } );
+    final String xml = WQTableFactory.createXMLString( set );
+
+    metadata.setProperty( TimeserieConstants.MD_WQTABLE, xml );
+  }
+
+  /**
+   * Helper for translating wiski alarm levels into kalypso metadata
+   * 
+   * @throws KiWWException
+   * @throws RemoteException
+   * @throws NumberFormatException
+   */
+  private void fetchAlarmLevels( final MetadataList md ) throws NumberFormatException, RemoteException, KiWWException
+  {
+    final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
+
+    final HashMap alarmlevel = rep.getWiski().getAlarmLevelList(
+        rep.getUserData(),
+        new Long[] { new Long( Long.parseLong( m_tsinfo.getWiskiId() ) ) },
+        null );
+
+    final List al = (List) alarmlevel.get( m_tsinfo.getWiskiId() );
+    if( al != null )
+    {
+      for( final Iterator it = al.iterator(); it.hasNext(); )
+      {
+        final HashMap map = (HashMap) it.next();
+
+        final String level = (String) map.get( "epv_name" );
+        final String value = (String) map.get( "epv_value" );
+
+        md.put( WiskiUtils.wiskiMetadataName2Kalypso( level ), value );
+      }
+    }
   }
 }

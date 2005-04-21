@@ -40,7 +40,7 @@ public class PSICompactRepository extends AbstractRepository
    * @return item
    * @throws ECommException
    */
-  private PSICompactItem buildStructure( Map nodes, int valueType )
+  private final PSICompactItem buildStructure( Map nodes, int valueType )
       throws ECommException
   {
     final PSICompact psi = PSICompactFactory.getConnection();
@@ -133,7 +133,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( ) throws RepositoryException
+  public final void reload( ) throws RepositoryException
   {
     try
     {
@@ -181,7 +181,7 @@ public class PSICompactRepository extends AbstractRepository
    * 
    * @throws RepositoryException
    */
-  private IRepositoryItem findItemRecursive( final IRepositoryItem item,
+  private final IRepositoryItem findItemRecursive( final IRepositoryItem item,
       final String id ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )

@@ -48,7 +48,7 @@ import java.util.Vector;
  * 
  * @author schlienger
  */
-public class Arrays
+public final class Arrays
 {
   /**
    * Return a list containing the elements of the array.
@@ -435,5 +435,20 @@ public class Arrays
     System.arraycopy( dtmp, 0, dres, 0, itmp );
 
     return dres;
+  }
+  
+  /**
+   * Creates a new Long-array and uses Long.valueOf() for each string in
+   * strArray.
+   * 
+   * @param strArray
+   */
+  public static Long[] toLong( final String[] strArray )
+  {
+    final Long[] longs = new Long[strArray.length];
+    for( int i = 0; i < strArray.length; i++ )
+      longs[i] = Long.valueOf( strArray[i] );
+      
+    return longs;
   }
 }

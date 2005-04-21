@@ -2,10 +2,15 @@ package org.kalypso.wiskiadapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.repository.RepositoryException;
+
+import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 
 /**
  * WiskiUtils
@@ -15,7 +20,7 @@ import org.kalypso.repository.RepositoryException;
 public final class WiskiUtils
 {
   /** name of the property that delivers the group names */
-  final static String PROP_GROUP_NAMES = "GROUP_NAMES";
+  final static String PROP_SUPERGROUPNAMES = "SUPERGROUPNAMES";
 
   /**
    * name of the properties delivering the number of days in the past that can
@@ -68,6 +73,52 @@ public final class WiskiUtils
   public static void forcePropertiesReload( )
   {
     PROPS = null;
+  }
+
+  /**
+   * Parse the commonInfoList type as defined by the WDP (which is a HashMap
+   * with a specific construction). See WDP-Doc for more information on this
+   * structure.
+   * <p>
+   * The parsing here only returns the list of values for the given column. Each
+   * resultset is scanned and the value of the column is fetched in an array.
+   * Finally the array is returned.
+   * 
+   * @param commonInfoList
+   * @return
+   */
+  public static String[] parseCommonInfoList( final HashMap commonInfoList,
+      final String columnName )
+  {
+    final List resultList = (List) commonInfoList
+        .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+
+    return parseResultList( resultList, columnName );
+  }
+
+  /**
+   * Parse the resultList type as defined by the WDP (which is a List of
+   * HashMaps). See WDP-Doc for more information on this structure.
+   * <p>
+   * The parsing here only returns the list of values for the given column. Each
+   * resultset is scanned and the value of the column is fetched in an array.
+   * Finally the array is returned.
+   * 
+   * @param commonInfoList
+   * @return
+   */
+  public static String[] parseResultList( final List resultList,
+      final String columnName )
+  {
+    final String[] results = new String[resultList.size()];
+    int i = 0;
+    for( final Iterator it = resultList.iterator(); it.hasNext(); )
+    {
+      final HashMap map = (HashMap) it.next();
+      results[i++] = (String) map.get( columnName );
+    }
+
+    return results;
   }
 
   /**

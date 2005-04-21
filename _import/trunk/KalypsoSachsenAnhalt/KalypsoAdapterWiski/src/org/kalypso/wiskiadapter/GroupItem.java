@@ -19,23 +19,25 @@ import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
  */
 public class GroupItem implements IRepositoryItem
 {
-  /** Interesting columns for querying stations */
-  private final static String[] COLUMNS_STATION = { "station_no",
-      "station_name", "station_id", "station_longname", "river_name",
-      "station_group_ident" };
-
-  private final WiskiRepository m_rep;
+  /** columns of GROUP */
+  public static final String[] COLUMNS = { "group_id", "group_name" };
 
   private final String m_id;
 
   private final String m_name;
 
-  public GroupItem( final WiskiRepository rep, final String id,
+  private final SuperGroupItem m_parent;
+
+  private final WiskiRepository m_rep;
+
+  public GroupItem( final SuperGroupItem parent, final String id,
       final String name )
   {
-    m_rep = rep;
+    m_parent = parent;
     m_id = id;
     m_name = name;
+    
+    m_rep = (WiskiRepository) m_parent.getRepository();
   }
 
   /**
@@ -44,6 +46,14 @@ public class GroupItem implements IRepositoryItem
   public String getName( )
   {
     return m_name;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
   }
 
   /**
@@ -76,40 +86,33 @@ public class GroupItem implements IRepositoryItem
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     final SimpleRequestFilterTerm filter = new SimpleRequestFilterTerm();
-    filter.addColumnReference( "station_group_ident" );
+    filter.addColumnReference( "tsinfo_group_ident" );
     filter.addOperator( "like" );
     filter.addValue( m_id );
 
     final SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "station_name" );
+    sort.addColumnAscent( "tsinfo_name" );
 
     try
     {
-      final HashMap stationlist = m_rep.getWiski().getStationList(
-          m_rep.getUserData(), COLUMNS_STATION, sort, filter, 15, 0, false,
-          null );
+      final HashMap tsinfolist = m_rep.getWiski()
+          .getTsInfoList( m_rep.getUserData(), TsInfoItem.COLUMNS, sort, filter,
+              15, 0, false, null );
 
-      //    String[] getdl = new String[] { "station_id", "station_name",
-      //        "station_longname", "station_shortname", "station_carteasting",
-      //        "station_cartnorthing", "station_valid_from", "station_no",
-      //        "river_name" };
-      //
-      //    HashMap detaillist = myServerObject.getStationDetailList( ud, getdl,
-      //        new Long[] { new Long( 53949 ) }, null );
-
-      final List resultList = (List) stationlist
+      final List resultList = (List) tsinfolist
           .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
-      final StationItem[] stations = new StationItem[resultList.size()];
+
+      final TsInfoItem[] tsitems = new TsInfoItem[resultList.size()];
 
       int i = 0;
       for( final Iterator it = resultList.iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap) it.next();
-        stations[i++] = new StationItem( m_rep, this, (String) map.get( "station_no" ), 
-            (String) map.get( "station_id" ), (String) map.get( "station_name" ) );
+
+        tsitems[i++] = new TsInfoItem( this, map );
       }
 
-      return stations;
+      return tsitems;
     }
     catch( final Exception e ) // KiWWException and RemoteException
     {

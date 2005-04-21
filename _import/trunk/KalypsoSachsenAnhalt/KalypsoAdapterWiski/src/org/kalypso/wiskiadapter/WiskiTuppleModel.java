@@ -58,8 +58,9 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     switch( getPositionFor( axis ) )
     {
       case 0:
-        return Timestamp.valueOf( (String) ((HashMap) m_data.get( index ))
-            .get( "timestamp" ) );
+//        return Timestamp.valueOf( (String) ((HashMap) m_data.get( index ))
+//            .get( "timestamp" ) );
+        return ((HashMap) m_data.get( index )).get( "timestamp" );
       case 1:
         return getValue( index );
       case 2:
@@ -74,9 +75,11 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     if( m_values[index] == null )
     {
-      double value = Double
-          .parseDouble( (String) ((HashMap) m_data.get( index ))
-              .get( "tsc_value0" ) );
+      double value = ((Number) ((HashMap) m_data.get( index ))
+              .get( "tsc_value0" )).doubleValue();
+//      double value = Double
+//          .parseDouble( (String) ((HashMap) m_data.get( index ))
+//              .get( "tsc_value0" ) );
 
       if( m_vc != null )
         value = m_vc.convert( value );

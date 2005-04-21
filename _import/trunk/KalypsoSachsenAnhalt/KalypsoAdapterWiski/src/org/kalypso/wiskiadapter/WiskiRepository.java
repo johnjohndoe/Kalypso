@@ -2,16 +2,12 @@ package org.kalypso.wiskiadapter;
 
 import java.rmi.Naming;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
-import de.kisters.tsmsystem.common.data.SimpleRequestFilterTerm;
-import de.kisters.tsmsystem.common.data.SimpleRequestSortTerm;
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
@@ -27,9 +23,6 @@ public class WiskiRepository extends AbstractRepository
 
   /** separator of the configuration string */
   private final static String CONF_SEP = "#";
-
-  /** interesting column names for querying groups */
-  private static final String[] COLUMNS_GROUP = { "group_id", "group_name" };
 
   private final static Logger LOG = Logger.getLogger( WiskiRepository.class
       .getName() );
@@ -90,9 +83,6 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
-      //      BCEHelper.configureProxy( "172.16.0.253", "8080", "schlienger",
-      //          "..." );
-
       //create a server object
       final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
           .lookup( m_url );
@@ -122,13 +112,22 @@ public class WiskiRepository extends AbstractRepository
   }
 
   /**
-   * @see java.lang.Object#finalize()
+   * @see org.kalypso.repository.IRepository#dispose()
    */
-  protected void finalize( ) throws Throwable
+  public void dispose( )
   {
-    m_wiski.logout( m_userData, null );
-
-    super.finalize();
+    super.dispose();
+    
+    try
+    {
+      LOG.info( "Logging out from WISKI-WDP" );
+      m_wiski.logout( m_userData, null );
+    }
+    catch( final Exception e ) // KiWWException, RemoteException
+    {
+      e.printStackTrace();
+      LOG.info( e.getLocalizedMessage() );
+    }
   }
 
   /**
@@ -170,52 +169,17 @@ public class WiskiRepository extends AbstractRepository
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     final String prop = WiskiUtils.getProperties().getProperty(
-        WiskiUtils.PROP_GROUP_NAMES );
+        WiskiUtils.PROP_SUPERGROUPNAMES );
     if( prop == null )
       throw new RepositoryException(
           "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
 
-    final String[] groupNames = prop.split( "," );
-
-    final SimpleRequestFilterTerm filtergroup = new SimpleRequestFilterTerm();
-    for( int i = 0; i < groupNames.length; i++ )
-    {
-      if( i > 0 )
-        filtergroup.addOperator( "and" );
-
-      filtergroup.addColumnReference( "group_name" );
-      filtergroup.addOperator( "like" );
-      filtergroup.addValue( groupNames[i] + "%" );
-    }
-
-    final SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "group_name" );
-
-    try
-    {
-      final HashMap grouplist = m_wiski.getGroupList( m_userData,
-          COLUMNS_GROUP, KiWWDataProviderInterface.TIMESERIES_GROUP, sort,
-          filtergroup, 15, 0, false, null );
-
-      final List resultList = (List) grouplist
-          .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
-
-      final GroupItem[] groups = new GroupItem[resultList.size()];
-      int i = 0;
-      for( final Iterator it = resultList.iterator(); it.hasNext(); )
-      {
-        final HashMap map = (HashMap) it.next();
-        groups[i++] = new GroupItem( this, (String) map.get( "group_id" ),
-            (String) map.get( "group_name" ) );
-      }
-
-      return groups;
-    }
-    catch( Exception e ) // RemoteException or KiWWException
-    {
-      e.printStackTrace();
-      throw new RepositoryException( e );
-    }
+    final String[] superGroupNames = prop.split( "," );
+    final IRepositoryItem[] supergroups = new IRepositoryItem[superGroupNames.length];
+    for( int i = 0; i < superGroupNames.length; i++ )
+      supergroups[i] = new SuperGroupItem( this, superGroupNames[i] );
+    
+    return supergroups;
   }
 
   public HashMap getUserData( )
