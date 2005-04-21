@@ -142,7 +142,7 @@ public class FeatureviewHelper
         griddata.setHorizontalSpan( 2 );
 
         table.setLayoutData( griddata );
-        
+
         type = table;
       }
       else
@@ -168,12 +168,13 @@ public class FeatureviewHelper
         groupdata.setVerticalAlignment( "GridData.FILL" );
         groupdata.setHorizontalSpan( 2 );
 
-//        final String lang = Locale.getDefault().getLanguage();
-        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
+        //        final String lang = Locale.getDefault().getLanguage();
+        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+            IKalypsoPreferences.LANGUAGE );
         final Annotation annotation = ftp.getAnnotation( lang );
         final String text = annotation == null ? name : annotation.getLabel();
         final String tooltip = annotation == null ? null : annotation.getTooltip();
-        
+
         group.setLayoutData( groupdata );
         group.setText( text );
         group.setTooltip( tooltip );
@@ -197,25 +198,27 @@ public class FeatureviewHelper
       button.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-//      griddata.setWidthHint( 100 );
+      //      griddata.setWidthHint( 100 );
       button.setLayoutData( griddata );
 
       type = button;
     }
 
-    final String lang = Locale.getDefault().getLanguage();
+//    final String lang = Locale.getDefault().getLanguage();
+    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+        IKalypsoPreferences.LANGUAGE );
     final Annotation annotation = ftp.getAnnotation( lang );
     final String text = annotation == null ? name : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();
 
     if( type != null )
       type.setTooltip( tooltip );
-    
+
     if( addLabel )
     {
       final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
-      
+
       label.setText( text );
       label.setTooltip( tooltip );
       label.setVisible( true );
@@ -278,14 +281,15 @@ public class FeatureviewHelper
       return null;
     }
   }
-  
+
   /**
    * Standardview für eine Property erzeugen
    * 
    * @param type
    * @return featureview
    */
-  public static Featureview createFeatureviewFromFeatureTypeProperty( final FeatureType type, final FeatureTypeProperty ftp )
+  public static Featureview createFeatureviewFromFeatureTypeProperty( final FeatureType type,
+      final FeatureTypeProperty ftp )
   {
     try
     {
