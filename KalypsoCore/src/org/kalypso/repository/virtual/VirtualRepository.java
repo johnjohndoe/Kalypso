@@ -173,6 +173,16 @@ public class VirtualRepository extends AbstractRepository
   }
 
   /**
+   * @see org.kalypso.repository.IRepository#dispose()
+   */
+  public void dispose( )
+  {
+    super.dispose();
+    m_idMap.clear();
+    m_children = null;
+  }
+  
+  /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
   public String getDescription( )

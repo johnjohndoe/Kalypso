@@ -436,26 +436,6 @@
          </menu>
          <action
                toolbarPath="tabelle/edit"
-               label="Zeile hinzufügen"
-               class="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction"
-               tooltip="Fügt eine Zeile hinzu. Öffnet Eingabedialog."
-               icon="icons/obstable/add_row.gif"
-               style="push"
-               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/edit"
-               id="org.kalypso.ui.editor.obstableeditor.actions.AddRowAction">
-         </action>
-         <action
-               toolbarPath="tabelle/edit"
-               label="Zeile entfernen"
-               class="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction"
-               tooltip="Entfernt die ausgewählte Zeile"
-               icon="icons/obstable/rem_row.gif"
-               style="push"
-               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/edit"
-               id="org.kalypso.ui.editor.obstableeditor.actions.RemoveRowAction">
-         </action>
-         <action
-               toolbarPath="tabelle/edit"
                label="Daten speichern"
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
                tooltip="Speichert die grundliegende Daten"

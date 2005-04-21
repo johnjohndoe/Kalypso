@@ -77,6 +77,15 @@ public abstract class AbstractRepository implements IRepository
     m_properties = new Properties();
   }
 
+  /**
+   * @see org.kalypso.repository.IRepository#dispose()
+   */
+  public void dispose( )
+  {
+    m_listeners.clear();
+    m_properties.clear();
+  }
+  
   public String getFactory( )
   {
     return m_factory;

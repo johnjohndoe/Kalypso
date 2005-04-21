@@ -61,6 +61,8 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class SimpleTuppleModel extends AbstractTuppleModel
 {
+  public final static ITuppleModel EMPTY_TUPPLEMODEL = new SimpleTuppleModel( new IAxis[0] );
+  
   /** values are backed by this table model */
   private DefaultTableModel m_tupples;
 

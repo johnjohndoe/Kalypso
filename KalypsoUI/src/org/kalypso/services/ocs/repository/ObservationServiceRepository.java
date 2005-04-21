@@ -59,7 +59,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class ObservationServiceRepository extends AbstractRepository
 {
   /** root item is identified by the null bean */
-  private final ItemBean ROOT_ITEM = null;
+  private final static ItemBean ROOT_ITEM = null;
 
   private final IObservationService m_srv;
 
