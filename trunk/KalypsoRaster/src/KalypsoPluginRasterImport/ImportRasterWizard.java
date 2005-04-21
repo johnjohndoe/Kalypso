@@ -13,6 +13,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -118,6 +119,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
       final String format = selection.getSourceFormat();
+      CS_CoordinateSystem cs = m_page1.getSelectedCoordinateSystem();
 
       if( fileSource.exists() )
       {
@@ -125,7 +127,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
         {
           Dialog monitor = new ProgressMonitorDialog( this.getShell() );
           monitor.open();
-          RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource );
+          RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
           GridUtils.writeRasterData( fileTarget, rasterGrid );
           monitor.close();
         }
