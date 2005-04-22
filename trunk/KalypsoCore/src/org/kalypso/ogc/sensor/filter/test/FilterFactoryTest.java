@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 
 /**
  * FilterFactoryTest
@@ -74,7 +74,7 @@ public class FilterFactoryTest extends TestCase
   public void testCreateFilter() throws SensorException
   {
     IObservation obs = FilterFactory.createFilter( m_ins );
-    assertTrue( obs instanceof WQObservationFilter );
+    assertTrue( obs instanceof WQTimeserieProxy );
   }
 
 }

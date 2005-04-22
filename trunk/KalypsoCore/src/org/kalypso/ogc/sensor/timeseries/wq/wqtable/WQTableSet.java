@@ -19,8 +19,15 @@ public class WQTableSet implements IWQConverter
 
   private final SortedSet m_dates;
 
-  public WQTableSet( final WQTable[] tables )
+  private final String m_fromType;
+
+  private final String m_toType;
+
+  public WQTableSet( final WQTable[] tables, final String fromType, final String toType )
   {
+    m_fromType = fromType;
+    m_toType = toType;
+    
     for( int i = 0; i < tables.length; i++ )
       m_tables.put( tables[i].getValidity(), tables[i] );
 
@@ -48,6 +55,22 @@ public class WQTableSet implements IWQConverter
     return (WQTable) m_tables.get( key );
   }
 
+  /**
+   * @return Returns the fromType.
+   */
+  public String getFromType( )
+  {
+    return m_fromType;
+  }
+  
+  /**
+   * @return Returns the toType.
+   */
+  public String getToType( )
+  {
+    return m_toType;
+  }
+  
   /**
    * @see java.lang.Object#toString()
    */

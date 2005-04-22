@@ -47,7 +47,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
+import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -57,11 +57,11 @@ import org.kalypso.util.runtime.IVariableArguments;
 import org.xml.sax.InputSource;
 
 /**
- * WQObservationFilter
+ * WQTimeserieProxy for proxying W, Q, and V Timeseries.
  * 
  * @author schlienger
  */
-public class WQObservationFilter extends AbstractObservationFilter
+public class WQTimeserieProxy extends AbstractObservationDecorator
 {
   private IAxis[] m_axes;
 
@@ -73,22 +73,32 @@ public class WQObservationFilter extends AbstractObservationFilter
 
   private IWQConverter m_conv = null;
 
+  private final String m_proxyAxisType;
+
+  private final String m_realAxisType;
+
   /**
-   * The argument conf is a String as defined in TimeserieConstants.TYPE_*. It
-   * denotes the type of the value axis of the model that is transformed. Thus,
-   * if the type is W, then this filter generates Q.
+   * Constructor
    * 
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation)
+   * @param realAxisType
+   *          type of the real axis that will be used to proxy another axis
+   * @param proxyAxisType
+   *          type of the axis that should be generated based on the real axis
+   * @param obs
    */
-  public void initFilter( final Object conf, final IObservation obs )
-      throws SensorException
+  public WQTimeserieProxy( final String realAxisType,
+      final String proxyAxisType, final IObservation obs )
   {
-    super.initFilter( conf, obs );
+    super( obs );
 
-    // (one of TimeserieConstants.TYPE_*) denotes the type of the model
-    final String type = conf.toString();
+    m_realAxisType = realAxisType;
+    m_proxyAxisType = proxyAxisType;
 
+    configure( obs );
+  }
+
+  private final void configure( final IObservation obs )
+  {
     final IAxis[] axes = obs.getAxisList();
     m_axes = new IAxis[axes.length + 1];
     for( int i = 0; i < axes.length; i++ )
@@ -97,35 +107,18 @@ public class WQObservationFilter extends AbstractObservationFilter
     m_dateAxis = ObservationUtilities.findAxisByType( axes,
         TimeserieConstants.TYPE_DATE );
 
-    if( TimeserieConstants.TYPE_RUNOFF.equals( type ) )
-    {
-      final String name = TimeserieUtils
-          .getName( TimeserieConstants.TYPE_WATERLEVEL );
-      final String unit = TimeserieUtils
-          .getUnit( TimeserieConstants.TYPE_WATERLEVEL );
+    final String name = TimeserieUtils.getName( m_proxyAxisType );
+    final String unit = TimeserieUtils.getUnit( m_proxyAxisType );
 
-      m_srcAxis = ObservationUtilities.findAxisByType( axes,
-          TimeserieConstants.TYPE_RUNOFF );
-      m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_WATERLEVEL,
-          unit, Double.class, false, false );
-      m_axes[m_axes.length - 1] = m_destAxis;
-    }
-    else if( TimeserieConstants.TYPE_WATERLEVEL.equals( type ) )
-    {
-      final String name = TimeserieUtils
-          .getName( TimeserieConstants.TYPE_RUNOFF );
-      final String unit = TimeserieUtils
-          .getUnit( TimeserieConstants.TYPE_RUNOFF );
+    m_srcAxis = ObservationUtilities.findAxisByType( axes, m_realAxisType );
+    m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class,
+        false, false );
+    m_axes[m_axes.length - 1] = m_destAxis;
 
-      m_srcAxis = ObservationUtilities.findAxisByType( axes,
-          TimeserieConstants.TYPE_WATERLEVEL );
-      m_destAxis = new DefaultAxis( name, TimeserieConstants.TYPE_RUNOFF, unit,
-          Double.class, false, false );
-      m_axes[m_axes.length - 1] = m_destAxis;
-    }
-    else
+    if( name.length() == 0 )
       throw new IllegalArgumentException(
-          "Type is not supported. Must one of W_AVAILABLE or Q_AVAILABE." );
+          "Angegebene Typ für zu erzeugende Achsen wird nicht unterstützt: "
+              + m_proxyAxisType );
   }
 
   /**
@@ -174,7 +167,8 @@ public class WQObservationFilter extends AbstractObservationFilter
               wqtable ) ) );
         }
         else
-          throw new IllegalStateException( "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
+          throw new IllegalStateException(
+              "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
       }
       catch( WQException e )
       {

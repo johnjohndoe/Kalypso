@@ -73,8 +73,6 @@ public class KalypsoObservationServiceTest extends TestCase
     super.setUp();
 
     // because we are not in the server context
-    System.setProperty( ServiceConfig.TEMP_DIR, System
-        .getProperty( "java.io.tmpdir" ) );
     System.setProperty( ServiceConfig.CONF_DIR, getClass().getResource( "." )
         .getFile() );
 

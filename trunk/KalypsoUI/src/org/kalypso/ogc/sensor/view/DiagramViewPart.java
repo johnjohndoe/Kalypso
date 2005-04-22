@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Font;
@@ -94,11 +94,12 @@ public class DiagramViewPart extends ViewPart implements
       return;
     }
 
-    m_subTitle = new TextTitle("", new Font( "Default", Font.PLAIN, 12));
+    m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) );
     m_chart.addSubtitle( m_subTitle );
 
     // chart panel without any popup menu
-    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
+    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false,
+        false, false );
     chartPanel.setMouseZoomable( true, false );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
@@ -121,7 +122,7 @@ public class DiagramViewPart extends ViewPart implements
 
     if( m_chart != null )
       m_chart.dispose();
-    
+
     m_diagView.dispose();
 
     super.dispose();
@@ -158,10 +159,13 @@ public class DiagramViewPart extends ViewPart implements
     {
       final DateRangeArgument dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView.addObservation( new PlainObsProvider( obs, dra ), NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false, null ) );
+      m_diagView
+          .addObservation( new PlainObsProvider( obs, dra ),
+              NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false,
+                  null ) );
 
       // sub title of diagram contains date-range info
-      m_subTitle.setText("");
+      m_subTitle.setText( "" );
       if( dra != null )
         m_subTitle.setText( dra.toString() );
     }
