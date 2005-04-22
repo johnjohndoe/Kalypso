@@ -33,7 +33,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
@@ -58,12 +58,12 @@ public class SpreeInputWorker
    * @param input
    * @return map
    */
-  public static Map hashInput( final CalcJobDataBean[] input )
+  public static Map hashInput( final CalcJobClientBean[] input )
   {
     final Map map = new HashMap( input.length );
     for( int i = 0; i < input.length; i++ )
     {
-      final CalcJobDataBean bean = input[i];
+      final CalcJobClientBean bean = input[i];
       map.put( bean.getId(), bean );
     }
 
@@ -84,7 +84,7 @@ public class SpreeInputWorker
    * @throws IOException
    */
   public static File createNativeInput( final File tmpdir,
-      final CalcJobDataBean[] input, final Properties props,
+      final CalcJobClientBean[] input, final Properties props,
       final PrintWriter logwriter, final TSMap tsmap ) throws IOException
   {
     try
@@ -507,7 +507,7 @@ public class SpreeInputWorker
   public static File checkInput( final String id, final Map input,
       final File basedir ) throws CalcJobServiceException
   {
-    final CalcJobDataBean bean = (CalcJobDataBean) input.get( id );
+    final CalcJobClientBean bean = (CalcJobClientBean) input.get( id );
     if( bean == null )
       throw new CalcJobServiceException( "Eingabedatei für Index <" + id
           + "> fehlt", null );

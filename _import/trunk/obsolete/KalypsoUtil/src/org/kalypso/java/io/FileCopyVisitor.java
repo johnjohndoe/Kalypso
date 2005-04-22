@@ -74,9 +74,10 @@ public class FileCopyVisitor implements FileVisitor
   }
 
   /**
+   * @throws IOException
    * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
    */
-  public boolean visit( final File file )
+  public boolean visit( final File file ) throws IOException
   {
     final String relativePathTo = FileUtilities.getRelativePathTo( m_fromDir, file );
     if( relativePathTo != null )
@@ -112,14 +113,7 @@ public class FileCopyVisitor implements FileVisitor
         }
 
         // sonst kopieren
-        try
-        {
-          FileUtils.copyFile( file, targetFile );
-        }
-        catch( IOException e )
-        {
-          e.printStackTrace();
-        }
+        FileUtils.copyFile( file, targetFile );
         
         return false;
       }

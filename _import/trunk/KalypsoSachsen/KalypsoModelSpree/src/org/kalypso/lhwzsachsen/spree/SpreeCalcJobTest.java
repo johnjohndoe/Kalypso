@@ -17,13 +17,14 @@ import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.Modelspec;
 import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.xml.sax.InputSource;
 
@@ -82,15 +83,15 @@ public class SpreeCalcJobTest extends TestCase
 
     final File basedir = FileUtilities.createNewTempDir( "Spree-CalcJob-Test" );
     
-    final CalcJobDataBean[] input = createInput( testName, basedir );
+    final CalcJobClientBean[] input = createInput( testName, basedir );
 
     cj.run( basedir, input );
 
     // todo: check output
-    final CalcJobDataBean[] output = cj.getResults();
+    final CalcJobClientBean[] output = cj.getCurrentResults();
     for( int i = 0; i < output.length; i++ )
     {
-      final CalcJobDataBean bean = output[i];
+      final CalcJobClientBean bean = output[i];
       System.out.println( bean.getPath() );
     }
 
@@ -99,7 +100,7 @@ public class SpreeCalcJobTest extends TestCase
     return basedir;
   }
 
-  private CalcJobDataBean[] createInput( final String testName, final File basedir ) throws IOException, TypeRegistryException, JAXBException
+  private CalcJobClientBean[] createInput( final String testName, final File basedir ) throws IOException, TypeRegistryException, JAXBException
   {
     final ITypeRegistry typeRegistry = TypeRegistrySingleton.getTypeRegistry();
     if( !typeRegistry.hasClassName( TimeseriesLink.class.getName() ) )
@@ -111,10 +112,6 @@ public class SpreeCalcJobTest extends TestCase
     final String calcCase = "calc";
     final String base = "base";
 
-    final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
-    final File inputcalcdir = new File( inputdir, calcCase );
-    final File inputbasedir = new File( inputdir, base );
-
     final Modelspec spec = (Modelspec)unmarshaller.unmarshal( new InputSource( getClass()
         .getResourceAsStream( "resources/modelspec.xml" ) ) );
     final List inputList = spec.getInput();
@@ -122,7 +119,7 @@ public class SpreeCalcJobTest extends TestCase
     final List inputBeanList = new ArrayList();
     for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
     {
-      final ModelspecType.InputType input = (InputType)iter.next();
+      final ModeldataType.InputType input = (ModeldataType.InputType)iter.next();
       final String inputPath = input.getPath();
 
       final String path = ( input.isRelativeToCalcCase() ? calcCase : base ) + "/" + inputPath;
@@ -136,10 +133,10 @@ public class SpreeCalcJobTest extends TestCase
       FileUtilities.makeFileFromStream( false, inputfile, getClass().getResourceAsStream(
           inputresource ) );
       
-      inputBeanList.add( new CalcJobDataBean( input.getId(), input.getDescription(), path ) );
+      inputBeanList.add( new CalcJobClientBean( input.getId(), input.getDescription(), path ) );
     }
 
-    final CalcJobDataBean[] input = (CalcJobDataBean[])inputBeanList.toArray( new CalcJobDataBean[inputBeanList.size()]  );
+    final CalcJobClientBean[] input = (CalcJobClientBean[])inputBeanList.toArray( new CalcJobClientBean[inputBeanList.size()]  );
     return input;
   }
 }

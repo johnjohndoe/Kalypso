@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,25 +36,48 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.java.io;
 
-import java.io.File;
-import java.io.IOException;
+ ---------------------------------------------------------------------------------------------------*/
+package org.bce.eclipse.core.resources;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.runtime.CoreException;
 
 /**
- * Ein FileVisitor führt eine Operation auf einer Datei durch.
+ * Collects all visited IFiles and deletes duplicates.
  * 
  * @author belger
  */
-public interface FileVisitor
+public class CollectFilesVisitor implements IResourceVisitor
 {
+  private Set m_files = new HashSet();
+
   /**
-   * 'Besucht' eine Datei.
-   * 
-   * @return ob, bei einem recursiven Durchgang, die Rekursion weiterlaufen darf
-   *         oder nicht
+   * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
    */
-  public boolean visit( final File file ) throws IOException;
+  public boolean visit( final IResource resource ) throws CoreException
+  {
+    if( resource.getType() == IResource.FILE )
+      m_files.add( resource );
+
+    return true;
+  }
+
+  /**
+   * Clears collected files, so visitor can be used again.
+   */
+  public void reset()
+  {
+    m_files.clear();
+  }
+
+  public IFile[] getFiles()
+  {
+    return (IFile[])m_files.toArray( new IFile[m_files.size()] );
+  }
 }

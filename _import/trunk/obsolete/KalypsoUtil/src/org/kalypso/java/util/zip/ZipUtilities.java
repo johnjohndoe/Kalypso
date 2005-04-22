@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util.zip;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -48,9 +50,11 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.java.io.FileUtilities;
 
 /**
  * @author belger
@@ -64,10 +68,11 @@ public class ZipUtilities
 
   public static void unzip( final File zip, final File targetdir ) throws ZipException, IOException
   {
-    FileInputStream zipIS = null;
+    InputStream zipIS = null;
     try
     {
-      zipIS = new FileInputStream( zip );
+
+      zipIS = new BufferedInputStream( new FileInputStream( zip ) );
       unzip( zipIS, targetdir );
     }
     finally
@@ -85,7 +90,7 @@ public class ZipUtilities
       final ZipEntry entry = zis.getNextEntry();
       if( entry == null )
         break;
-      
+
       final File newfile = new File( targetdir, entry.getName() );
       if( entry.isDirectory() )
         newfile.mkdirs();
@@ -107,5 +112,68 @@ public class ZipUtilities
         }
       }
     }
+  }
+
+  /**
+   * Puts given files into a zip archive.
+   * 
+   * @param zipfile
+   *          Target file. will be created rep. overwritten.
+   * @param files
+   *          The files to zip
+   * @param basedir
+   *          If given (i.e. != null) zipentries are genereates as relativ to
+   *          this basedir 8alle files must be within this dir). If null, alle
+   *          ZipEntries are create with full path.
+   * @throws IOException
+   *  
+   */
+  public static void zip( final File zipfile, final File[] files, final File basedir )
+      throws IOException
+  {
+    ZipOutputStream zos = null;
+    try
+    {
+      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
+
+      for( int i = 0; i < files.length; i++ )
+      {
+        final File file = files[i];
+
+        final String relativePathTo = FileUtilities.getRelativePathTo( basedir, file );
+        writeZipEntry( zos, file, relativePathTo );
+      }
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zos );
+    }
+  }
+
+  /**
+   * Writes a single File into a Zip-Stream
+   * 
+   * @param pathname The name of the zip entry (relative Path into zip archive).
+   */
+  public static void writeZipEntry( final ZipOutputStream zos, final File file,
+      final String pathname ) throws IOException
+  {
+    final ZipEntry newEntry = new ZipEntry( pathname );
+    zos.putNextEntry( newEntry );
+
+    InputStream contentStream = null;
+
+    try
+    {
+      contentStream = new BufferedInputStream( new FileInputStream( file ) );
+      
+      CopyUtils.copy( contentStream, zos );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contentStream );
+    }
+
+    zos.closeEntry();
   }
 }

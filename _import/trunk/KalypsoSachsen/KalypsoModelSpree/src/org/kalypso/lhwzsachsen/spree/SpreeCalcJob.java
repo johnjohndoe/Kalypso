@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.ObservationType;
 
@@ -253,16 +253,16 @@ public class SpreeCalcJob extends AbstractCalcJob
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.service.CalcJobDataBean[])
+   *      org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public void run( final File basedir, final CalcJobDataBean[] input )
+  public void run( final File basedir, final CalcJobClientBean[] input )
       throws CalcJobServiceException
   {
     final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
     final File outputdir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
     outputdir.mkdirs();
     final File logfile = new File( outputdir, "spree.log" );
-    addResult( new CalcJobDataBean( "LOG", "Spree-Log", FileUtilities.getRelativeFileTo( outputdir,
+    addResult( new CalcJobClientBean( "LOG", "Spree-Log", FileUtilities.getRelativeFileTo( outputdir,
         logfile ).getPath() ) );
 
     PrintWriter pw = null;
@@ -401,7 +401,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         e1.printStackTrace();
       }
-      addResult( new CalcJobDataBean( "GML", "Geänderte Eingangsdaten", outFileRelative.getPath() ) );
+      addResult( new CalcJobClientBean( "GML", "Geänderte Eingangsdaten", outFileRelative.getPath() ) );
     }
     
   }
@@ -421,7 +421,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       is.close();
       os.close();
 
-      addResult( new CalcJobDataBean( toCopy.getName(), toCopy.getName(), FileUtilities
+      addResult( new CalcJobClientBean( toCopy.getName(), toCopy.getName(), FileUtilities
           .getRelativeFileTo( outputdir, targetfile ).getPath() ) );
     }
     catch( final IOException e )
@@ -656,7 +656,7 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
             "resources/empty.zml" ) );
-        addResult( new CalcJobDataBean( column, column, outFileRelative.getPath() ) );
+        addResult( new CalcJobClientBean( column, column, outFileRelative.getPath() ) );
         continue;
       }
 
@@ -716,7 +716,7 @@ public class SpreeCalcJob extends AbstractCalcJob
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
             "resources/empty.zml" ) );
 
-      addResult( new CalcJobDataBean( column, column, outFileRelative.getPath() ) );
+      addResult( new CalcJobClientBean( column, column, outFileRelative.getPath() ) );
     }
   }
 }

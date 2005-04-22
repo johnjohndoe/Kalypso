@@ -286,12 +286,15 @@ public class FileUtilities
    * returned by this method won't produce a good result. Use the
    * <code>getRelativeFileTo()</code> method instead.
    * 
-   * @param basedir
+   * @param basedir if null, the absolute path of absoluteFile is returned.
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
   public static String getRelativePathTo( final File basedir, final File absoluteFile )
   {
+    if( basedir == null )
+      return absoluteFile.getAbsolutePath();
+    
     final String baseAbs = basedir.getAbsolutePath();
     final String absAbs = absoluteFile.getAbsolutePath();
     if( !absAbs.startsWith( baseAbs ) )
@@ -390,8 +393,9 @@ public class FileUtilities
    * enthaltenen Dateien besuchen.
    * 
    * @param recurse Falls true, werden auch Unterverzeichnisse besucht
+   * @throws IOException
    */
-  public static void accept( final File root, final FileVisitor visitor, final boolean recurse )
+  public static void accept( final File root, final FileVisitor visitor, final boolean recurse ) throws IOException
   {
     // zuerst die Datei selbst
     final boolean stop = !visitor.visit( root );
