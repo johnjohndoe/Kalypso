@@ -52,6 +52,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -84,6 +86,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.GismapviewType.LayersType;
@@ -108,6 +111,9 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
+import org.kalypsodeegree_impl.io.shpapi.DBaseException;
+import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
+import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
@@ -141,6 +147,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
   private IProgressMonitor monitor;
 
+  private CheckAutoGenerateWizardPage checkAutoGenerateWizardPage;
+
   public KalypsoFloodRiskProjectWizard()
   {
     super();
@@ -164,6 +172,9 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
     selectLanduseWizardPage = new SelectLanduseWizardPage();
     addPage( selectLanduseWizardPage );
+
+    checkAutoGenerateWizardPage = new CheckAutoGenerateWizardPage();
+    addPage( checkAutoGenerateWizardPage );
 
     selectWaterlevelWizardPage = new SelectWaterlevelWizardPage();
     addPage( selectWaterlevelWizardPage );
@@ -231,6 +242,11 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
       monitor.worked( 40 );
       if( monitor.isCanceled() )
         performCancle();
+
+      if( checkAutoGenerateWizardPage.isCheck() )
+      {
+        autogenerateLanduseCollection();
+      }
 
       createWaterlevelGrids();
 
@@ -311,6 +327,25 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         .getSelectedCoordinateSystem(), null );
     return new KalypsoFeatureTheme( new CommandableWorkspace( shapeWS ), "featureMember",
         "Landnutzung" );
+  }
+
+  private void autogenerateLanduseCollection() throws Exception
+  {
+    URL contextModelURL = workspacePath.append(
+        projectHandel.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL();
+    URL contextModelSchemaURL = workspacePath.append(
+        projectHandel.getFullPath() + "/.model/schema/contextModell.xsd" ).toFile().toURL();
+    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace(contextModelURL, contextModelSchemaURL);
+    ShapeFile shape = checkAutoGenerateWizardPage.getShape();
+    String propertyName = checkAutoGenerateWizardPage.getPropertyName();
+    HashSet landuseTypeSet = new HashSet();
+    for( int i = 0; i < shape.getRecordNum(); i++ )
+    {
+      String propertyValue = (String)shape.getFeatureByRecNo( i ).getProperty( propertyName );
+      if(!landuseTypeSet.contains(propertyValue)){
+        landuseTypeSet.add(propertyValue);
+      }
+    }
   }
 
   private void createWaterlevelGrids() throws Exception

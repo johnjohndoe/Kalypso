@@ -16,10 +16,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -194,6 +197,14 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     {
       public void modifyText( ModifyEvent e )
       {
+        setPageComplete( false );
+      }
+    } );
+
+    csCombo.addListener( SWT.DefaultSelection, new Listener()
+    {
+      public void handleEvent( Event e )
+      {
         selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
         validate();
       }
@@ -228,11 +239,12 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
   {
     setErrorMessage( null );
     setMessage( null );
-    setPageComplete( true );
+    setPageComplete( false );
     StringBuffer error = new StringBuffer();
     if( m_file != null )
     {
       m_textFileSource.setText( m_file.getAbsolutePath() );
+      prepareNextPage();
       if( !m_file.exists() )
       {
         error.append( "Datei existiert nicht\n\n" );
@@ -260,7 +272,10 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     if( error.length() > 0 )
       setMessage( error.toString() );
     else
+    {
       setMessage( "Eingabe OK" );
+      setPageComplete( true );
+    }
   }
 
   public File getLanduseDataFile()
@@ -271,6 +286,18 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
   public CS_CoordinateSystem getSelectedCoordinateSystem()
   {
     return selectedCoordinateSystem;
+  }
+
+  private void prepareNextPage()
+  {
+    CheckAutoGenerateWizardPage nextPage = (CheckAutoGenerateWizardPage)getNextPage();
+    String currentShapeBaseFile = FileUtilities.nameWithoutExtension( getLanduseDataFile()
+        .toString() );
+    if( nextPage.isCheck() && !currentShapeBaseFile.equals(nextPage.getShapeBaseFile()) )
+    {
+      nextPage.setShapeBaseFile( currentShapeBaseFile );
+      nextPage.loadLanduseProperties();
+    }
   }
 
   /**
