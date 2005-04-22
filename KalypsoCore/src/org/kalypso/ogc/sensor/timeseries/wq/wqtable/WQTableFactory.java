@@ -11,9 +11,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.binding.wqtable.ObjectFactory;
-import org.kalypso.binding.wqtable.WQTable;
-import org.kalypso.binding.wqtable.WQTableList;
+import org.kalypso.binding.ratingtable.ObjectFactory;
+import org.kalypso.binding.ratingtable.RatingTable;
+import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
 
@@ -32,49 +32,69 @@ public class WQTableFactory
   }
 
   /**
+   * Parses the xml and return the binding object
+   * 
+   * @param ins
+   * @return
+   */
+  public static RatingTableList parseSimple( final InputSource ins )
+      throws WQException
+  {
+    try
+    {
+      final Unmarshaller unm = m_objectFactory.createUnmarshaller();
+      final RatingTableList xmlTableList = (RatingTableList) unm
+          .unmarshal( ins );
+
+      return xmlTableList;
+    }
+    catch( final Exception e )
+    {
+      throw new WQException( e );
+    }
+  }
+
+  /**
    * Parses the xml and creates a WQTableSet object.
    * 
    * @param ins
    * @return newly created WQTableSet object
    * @throws WQException
    */
-  public static WQTableSet parse( final InputSource ins )
-      throws WQException
+  public static WQTableSet parse( final InputSource ins ) throws WQException
   {
     try
     {
-      final Unmarshaller unm = m_objectFactory.createUnmarshaller();
-      final List xmlTables = ((WQTableList) unm.unmarshal( ins )).getTable();
-      final org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable[] tables = new org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable[xmlTables
-          .size()];
+      final RatingTableList xmlTableList = parseSimple( ins );
+      final List xmlTables = xmlTableList.getTable();
+      final WQTable[] tables = new WQTable[xmlTables.size()];
       int iTable = 0;
       for( final Iterator it = xmlTables.iterator(); it.hasNext(); )
       {
-        final WQTable xmlTable = (WQTable) it.next();
+        final RatingTable xmlTable = (RatingTable) it.next();
 
         final Date validity = xmlTable.getValidity().getTime();
         final int offset = xmlTable.getOffset();
 
-        final String[] strW = xmlTable.getW().split( "," );
-        final String[] strQ = xmlTable.getQ().split( "," );
+        final String[] strX = xmlTable.getX().split( "," );
+        final String[] strY = xmlTable.getY().split( "," );
 
-        if( strW.length != strQ.length )
+        if( strX.length != strY.length )
           throw new WQException(
               "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
 
-        final double[] W = new double[strW.length];
-        final double[] Q = new double[strW.length];
-        for( int i = 0; i < strW.length; i++ )
+        final double[] W = new double[strX.length];
+        final double[] Q = new double[strX.length];
+        for( int i = 0; i < strX.length; i++ )
         {
-          W[i] = Double.parseDouble( strW[i] );
-          Q[i] = Double.parseDouble( strQ[i] );
+          W[i] = Double.parseDouble( strX[i] );
+          Q[i] = Double.parseDouble( strY[i] );
         }
 
-        tables[iTable++] = new org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable(
-            validity, offset, W, Q );
+        tables[iTable++] = new WQTable( validity, offset, W, Q );
       }
 
-      return new WQTableSet( tables );
+      return new WQTableSet( tables, xmlTableList.getFromType(), xmlTableList.getToType() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
@@ -94,24 +114,28 @@ public class WQTableFactory
   {
     try
     {
-      final WQTableList xmlTables = m_objectFactory.createTables();
-
-      final org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable[] tables = wqset.getTables();
+      final RatingTableList xmlTables = m_objectFactory.createTables();
+      xmlTables.setFromType( wqset.getFromType() );
+      xmlTables.setToType( wqset.getToType() );
+      
+      final WQTable[] tables = wqset.getTables();
       for( int i = 0; i < tables.length; i++ )
       {
-        final WQTable xmlTable = m_objectFactory.createWQTable();
+        final RatingTable xmlTable = m_objectFactory.createRatingTable();
         final Calendar cal = Calendar.getInstance();
         cal.setTime( tables[i].getValidity() );
         xmlTable.setValidity( cal );
         xmlTable.setOffset( tables[i].getOffset() );
-        
+
         final WQPair[] pairs = tables[i].getPairs();
         final double[] W = new double[pairs.length];
         final double[] Q = new double[pairs.length];
         WQPair.convert2doubles( pairs, W, Q );
-        xmlTable.setW( ArrayUtils.toString( W ).replaceAll( "\\{", "").replaceAll( "\\}", "" ) );
-        xmlTable.setQ( ArrayUtils.toString( Q ).replaceAll( "\\{", "").replaceAll( "\\}", "" ) );
-        
+        xmlTable.setX( ArrayUtils.toString( W ).replaceAll( "\\{", "" )
+            .replaceAll( "\\}", "" ) );
+        xmlTable.setY( ArrayUtils.toString( Q ).replaceAll( "\\{", "" )
+            .replaceAll( "\\}", "" ) );
+
         xmlTables.getTable().add( xmlTable );
       }
 

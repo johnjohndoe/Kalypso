@@ -329,11 +329,6 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return m_intervallModel.getElement( index, axis );
   }
 
-  /*
-   * 
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
-   */
   public void setElement( int index, Object element, IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName()
@@ -341,11 +336,6 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     // TODO support it
   }
 
-  /*
-   * 
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
-   */
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( element instanceof Date )

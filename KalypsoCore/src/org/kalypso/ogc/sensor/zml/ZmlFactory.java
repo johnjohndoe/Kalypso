@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -221,7 +222,7 @@ public class ZmlFactory
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
       // url handling.
-      return parseXML( new InputSource( inputStream ), identifier, url );
+      return parseXML( new InputSource( new BufferedInputStream( inputStream ) ), identifier, url );
     }
     catch( IOException e )
     {

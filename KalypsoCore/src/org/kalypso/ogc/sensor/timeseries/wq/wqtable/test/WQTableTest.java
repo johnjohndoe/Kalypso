@@ -92,7 +92,7 @@ public class WQTableTest extends TestCase
   
   public void testDiverses() throws WQException, ParseException
   {
-    final InputStream stream = getClass().getResourceAsStream( "wqtable-example.xml" );
+    final InputStream stream = getClass().getResourceAsStream( "ratingtable-example.xml" );
     
     final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
     
