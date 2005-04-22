@@ -162,7 +162,8 @@ grant {
 	permission java.net.SocketPermission "*", "connect,resolve";
 
 	permission java.io.FilePermission "d:\\Programme\\PSI\\lhwz\\dist\\-", "read,write,delete";
-	
+
+	permission java.io.FilePermission "d:\\Programme\\kalypso\\Tomcat5.0\\temp\\-", "read,write,delete";
 };
 
 // You can assign additional permissions to particular web applications by

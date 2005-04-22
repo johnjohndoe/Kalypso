@@ -1,11 +1,9 @@
 package org.kalypso.lhwzsachsen.spree;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -27,11 +25,6 @@ import java.util.Properties;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.output.NullOutputStream;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -45,10 +38,17 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.ObservationType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * <p>
@@ -57,7 +57,7 @@ import org.kalypso.zml.ObservationType;
  * 
  * @author Belger
  */
-public class SpreeCalcJob extends AbstractCalcJob
+public class SpreeCalcJob implements ICalcJob
 {
   public static final String VHS_FILE = "_vhs.dbf";
 
@@ -251,19 +251,16 @@ public class SpreeCalcJob extends AbstractCalcJob
       "Zwipar.dbf",
       "xHWKERNEL.DLL" };
 
+  
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.service.CalcJobClientBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater, org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File basedir, final CalcJobClientBean[] input )
-      throws CalcJobServiceException
+  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
+      final ICalcMonitor monitor ) throws CalcJobServiceException
   {
-    final File inputdir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
-    final File outputdir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
     outputdir.mkdirs();
     final File logfile = new File( outputdir, "spree.log" );
-    addResult( new CalcJobClientBean( "LOG", "Spree-Log", FileUtilities.getRelativeFileTo( outputdir,
-        logfile ).getPath() ) );
 
     PrintWriter pw = null;
 
@@ -273,41 +270,41 @@ public class SpreeCalcJob extends AbstractCalcJob
       pw.println( "Spree - Modell Berechnung wird gestartet" );
       pw.println();
 
-      if( isCanceled() )
+      if( monitor.isCanceled() )
         return;
 
       final Properties props = new Properties();
-      setMessage( "Dateien für Rechenkern werden erzeugt" );
+      monitor.setMessage( "Dateien für Rechenkern werden erzeugt" );
       pw.println( "Dateien für Rechenkern werden erzeugt" );
       final TSMap tsmap = new TSMap();
-      final File exedir = SpreeInputWorker.createNativeInput( inputdir, input, props, pw, tsmap );
+      final File exedir = SpreeInputWorker.createNativeInput( tmpdir, inputProvider, props, pw, tsmap );
 
       final File napFile = (File)props.get( DATA_NAPFILE );
       final File vhsFile = (File)props.get( DATA_VHSFILE );
       final File flpFile = (File)props.get( DATA_FLPFILE );
       final File tsFile = (File)props.get( DATA_TSFILE );
-      copyAndAddToOutput( ".native/in", outputdir, napFile );
-      copyAndAddToOutput( ".native/in", outputdir, vhsFile );
-      copyAndAddToOutput( ".native/in", outputdir, flpFile );
-      copyAndAddToOutput( ".native/in", outputdir, tsFile );
+      resultEater.addResult( "NAP_IN", napFile );
+      resultEater.addResult( "VHS_IN", vhsFile );
+      resultEater.addResult( "FLP_IN", flpFile );
+      resultEater.addResult( "TS_IN", tsFile );
 
-      progress( 33 );
-      if( isCanceled() )
+      monitor.setProgress( 33 );
+      if( monitor.isCanceled() )
         return;
 
-      setMessage( "Rechenkern wird aufgerufen" );
+      monitor.setMessage( "Rechenkern wird aufgerufen" );
       pw.println( "Rechenkern wird aufgerufen" );
       prepareExe( exedir, pw );
-      startCalculation( exedir, props, pw );
-      copyAndAddToOutput( ".native/out", outputdir, napFile );
-      copyAndAddToOutput( ".native/out", outputdir, vhsFile );
-      copyAndAddToOutput( ".native/out", outputdir, flpFile );
-      copyAndAddToOutput( ".native/out", outputdir, tsFile );
-      progress( 33 );
-      if( isCanceled() )
+      startCalculation( exedir, props, pw, monitor );
+      resultEater.addResult( "NAP_OUT", napFile );
+      resultEater.addResult( "VHS_OUT", vhsFile );
+      resultEater.addResult( "FLP_OUT", flpFile );
+      resultEater.addResult( "TS_OUT", tsFile );
+      monitor.setProgress( 33 );
+      if( monitor.isCanceled() )
         return;
 
-      setMessage( "Ergebnisse werden zurückgelesen" );
+      monitor.setMessage( "Ergebnisse werden zurückgelesen" );
       pw.println( "Ergebnisse werden zurückgelesen" );
       try
       {
@@ -320,13 +317,13 @@ public class SpreeCalcJob extends AbstractCalcJob
         e.printStackTrace();
         throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
       }
-      progress( 34 );
-      if( isCanceled() )
+      monitor.setProgress( 34 );
+      if( monitor.isCanceled() )
         return;
 
       pw.println( "Berechnung beendet" );
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 
@@ -337,7 +334,11 @@ public class SpreeCalcJob extends AbstractCalcJob
     {
       if( pw != null )
         pw.close();
+
+      resultEater.addResult( "ERGEBNISSE", outputdir );
     }
+    
+    
   }
 
   private void fetchOptimalValues( final Properties props, final File outdir )
@@ -378,7 +379,6 @@ public class SpreeCalcJob extends AbstractCalcJob
     // gml in Ergebnisse schreiben
     final String outfilename = "calcCase.gml";
     final File outFile = new File( outdir, outfilename );
-    final File outFileRelative = FileUtilities.getRelativeFileTo( outdir, outFile );
     
     FileOutputStream fos = null;
     try
@@ -401,38 +401,10 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         e1.printStackTrace();
       }
-      addResult( new CalcJobClientBean( "GML", "Geänderte Eingangsdaten", outFileRelative.getPath() ) );
-    }
-    
-  }
-
-  private void copyAndAddToOutput( final String subdirname, final File outputdir, final File toCopy )
-      throws CalcJobServiceException
-  {
-    try
-    {
-      final File subdir = new File( outputdir, subdirname );
-      subdir.mkdirs();
-      final File targetfile = new File( outputdir, subdirname + "/" + toCopy.getName() );
-
-      final InputStream is = new FileInputStream( toCopy );
-      final OutputStream os = new FileOutputStream( targetfile );
-      CopyUtils.copy( is, os );
-      is.close();
-      os.close();
-
-      addResult( new CalcJobClientBean( toCopy.getName(), toCopy.getName(), FileUtilities
-          .getRelativeFileTo( outputdir, targetfile ).getPath() ) );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-
-      throw new CalcJobServiceException( "Fehler beim Übertragen der Ergebnisdateien", e );
     }
   }
 
-  private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter )
+  private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter, final ICalcMonitor monitor )
       throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
@@ -477,7 +449,7 @@ public class SpreeCalcJob extends AbstractCalcJob
           // noch nicht fertig
         }
 
-        if( isCanceled() )
+        if( monitor.isCanceled() )
         {
           process.destroy();
           return;
@@ -570,14 +542,6 @@ public class SpreeCalcJob extends AbstractCalcJob
     file.setLastModified( 0 );
   }
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#disposeJob()
-   */
-  public void disposeJob()
-  {
-  // die dateien werden extern gelöscht, sonst hab ich nix gemacht
-  }
-
   public void writeResultsToFolder( final String tsFilename, final File outdir, final TSMap tsmap ) throws Exception
   {
     final Collection features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
@@ -656,7 +620,6 @@ public class SpreeCalcJob extends AbstractCalcJob
       {
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
             "resources/empty.zml" ) );
-        addResult( new CalcJobClientBean( column, column, outFileRelative.getPath() ) );
         continue;
       }
 
@@ -715,8 +678,14 @@ public class SpreeCalcJob extends AbstractCalcJob
       else
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
             "resources/empty.zml" ) );
-
-      addResult( new CalcJobClientBean( column, column, outFileRelative.getPath() ) );
     }
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
+   */
+  public URL getSpezifikation()
+  {
+    return getClass().getResource( "spreecalcjob_spec.xml" );
   }
 }

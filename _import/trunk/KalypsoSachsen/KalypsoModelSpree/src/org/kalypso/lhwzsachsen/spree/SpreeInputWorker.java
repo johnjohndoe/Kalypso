@@ -18,13 +18,10 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
-import org.kalypsodeegree_impl.io.shpapi.FieldDescriptor;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.StreamUtilities;
+import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -33,8 +30,14 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
+import org.kalypsodeegree_impl.io.shpapi.FieldDescriptor;
 
 /**
  * Diese Klasse sammelt alles, was mit dem Erzeugen der Nativen Daten aus den
@@ -44,7 +47,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  */
 public class SpreeInputWorker
 {
-  private final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class
+  protected final static Logger LOGGER = Logger.getLogger( SpreeInputWorker.class
       .getName() );
 
   private SpreeInputWorker( )
@@ -74,37 +77,30 @@ public class SpreeInputWorker
    * <p>
    * Converts inputfiles to nativefiles and reads control parameters
    * </p>
-   * @param tmpdir
-   * @param input
-   * @param props
-   * @param logwriter
-   * @param tsmap
    * 
    * @return Location of native files
    * @throws IOException
    */
   public static File createNativeInput( final File tmpdir,
-      final CalcJobClientBean[] input, final Properties props,
-      final PrintWriter logwriter, final TSMap tsmap ) throws IOException
+      final ICalcDataProvider inputProvider, final Properties props,
+      final PrintWriter logwriter, final TSMap tsmap ) throws Exception
   {
     try
     {
       final File nativedir = new File( tmpdir, "native" );
       nativedir.mkdirs();
 
-      final Map inputMap = hashInput( input );
 
-      final File controlGML = checkInput( "CONTROL_GML", inputMap, tmpdir );
-      final File controlXSD = checkInput( "CONTROL_XSD", inputMap, tmpdir );
+      final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
+      final URL controlSchemaURL = inputProvider.getURLForID( "CONTROL_XSD" );
+      
+      logwriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
-      logwriter.println( "Lese Steuerparameter: " + controlGML.getName() );
-
-      final Map map = parseControlFile( controlGML, controlXSD, nativedir );
+      final Map map = parseControlFile( controlGmlURL, controlSchemaURL, nativedir );
       props.putAll( map );
 
-      logwriter.println( "Lese Modelldaten: " + controlGML );
-
-      final GMLWorkspace workspace = loadGML( tmpdir, inputMap );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputProvider.getURLForID( "GML" ), inputProvider.getURLForID( "MODELL_XSD" ) );
+      
       props.put( SpreeCalcJob.DATA_GML,workspace );
 
       final String tsFilename = writeNonTs( props, logwriter, workspace );
@@ -116,7 +112,7 @@ public class SpreeInputWorker
           workspace, logwriter );
 
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
-      readZML( tmpdir, inputMap, tsmap );
+      readZML( inputProvider, tsmap );
       calcNiederschlagsummen( tsmap );
       createTimeseriesFile( tsFilename, tsmap );
 
@@ -330,35 +326,26 @@ public class SpreeInputWorker
   /**
    * Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map)
    *  
-   * @param inputdir
-   * @param inputMap
-   * @param tsmap
-   * @return tabelle
    * @throws IOException
    */
-  public static TSMap readZML( final File inputdir, final Map inputMap,
+  public static TSMap readZML( final ICalcDataProvider inputProvider,
       final TSMap tsmap ) throws IOException
   {
+    final URL zmlURL = inputProvider.getURLForID( "ZML" );
+    final String zmlURLstr = zmlURL.toExternalForm();
+    final URL zmlURLDir = new URL( zmlURLstr + "/" );
+    
+    final IUrlResolver urlUtilities = new UrlUtilities();
+    
     // alle Zeitreihen lesen
     for( int i = 0; i < SpreeCalcJob.TS_DESCRIPTOR.length; i++ )
     {
       final TSDesc tsDesc = SpreeCalcJob.TS_DESCRIPTOR[i];
 
-      File obsFile = null;
+      final URL obsURL = urlUtilities.resolveURL( zmlURLDir, tsDesc.id + ".zml" );
       try
       {
-        obsFile = checkInput( tsDesc.id, inputMap, inputdir );
-      }
-      catch( final CalcJobServiceException cse )
-      {
-        // ignore, file is not present
-        // todo: better: check if required?
-        continue;
-      }
-
-      try
-      {
-        final IObservation obs = ZmlFactory.parseXML( obsFile.toURL(), "" );
+        final IObservation obs = ZmlFactory.parseXML( obsURL, "" );
 
         tsmap.addObservation( obs, tsDesc.id );
 
@@ -378,14 +365,14 @@ public class SpreeInputWorker
         // passiert, wenn es keine entsprechende Axen giebt
         nse.printStackTrace();
 
-        throw new CalcJobServiceException( "Fehlerhafte Eingabedateien: " + obsFile.getAbsolutePath(), nse );
+        throw new CalcJobServiceException( "Fehlerhafte Eingabedateien: " + obsURL.toString(), nse );
       }
       catch( final SensorException se )
       {
         se.printStackTrace();
-
-        throw new CalcJobServiceException(
-            "Fehler beim Einlesen der Zeitreihen: " + obsFile.getAbsolutePath(), se );
+//
+//        throw new CalcJobServiceException(
+//            "Fehler beim Einlesen der Zeitreihen: " + obsURL.toString(), se );
       }
     }
 
@@ -418,39 +405,12 @@ public class SpreeInputWorker
     }
   }
 
-  public static GMLWorkspace loadGML( final File inputdir, final Map map )
-      throws CalcJobServiceException
-  {
-    // GML lesen
-    try
-    {
-      final File xsdFile = checkInput( "MODELL_XSD", map, inputdir );
-      final File gmlFile = checkInput( "GML", map, inputdir );
-
-      return GmlSerializer
-          .createGMLWorkspace( gmlFile.toURL(), xsdFile.toURL() );
-    }
-    catch( final Exception ioe )
-    {
-      ioe.printStackTrace();
-
-      throw new CalcJobServiceException( "Fehler beim Lesen der Basisdaten",
-          ioe );
-    }
-  }
-
-  public static Map parseControlFile( final File controlGML,
-      final File controlXSD, final File nativedir )
+  public static Map parseControlFile( final URL gmlURL,
+      final URL schemaURL, final File nativedir )
       throws CalcJobServiceException
   {
     try
     {
-      final URL gmlURL = controlGML.toURL();
-      LOGGER.info( "GML-URL: " + gmlURL.toString() );
-
-      final URL schemaURL = controlXSD.toURL();
-      LOGGER.info( "Schema-URL: " + schemaURL.toString() );
-
       final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL,
           schemaURL ).getRootFeature();
 
