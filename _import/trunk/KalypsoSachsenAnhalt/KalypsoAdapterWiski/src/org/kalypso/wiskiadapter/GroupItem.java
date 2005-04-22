@@ -2,15 +2,11 @@ package org.kalypso.wiskiadapter;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-
-import de.kisters.tsmsystem.common.data.SimpleRequestFilterTerm;
-import de.kisters.tsmsystem.common.data.SimpleRequestSortTerm;
-import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
+import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 
 /**
  * GroupItem
@@ -19,9 +15,6 @@ import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
  */
 public class GroupItem implements IRepositoryItem
 {
-  /** columns of GROUP */
-  public static final String[] COLUMNS = { "group_id", "group_name" };
-
   private final String m_id;
 
   private final String m_name;
@@ -36,7 +29,7 @@ public class GroupItem implements IRepositoryItem
     m_parent = parent;
     m_id = id;
     m_name = name;
-    
+
     m_rep = (WiskiRepository) m_parent.getRepository();
   }
 
@@ -85,27 +78,14 @@ public class GroupItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    final SimpleRequestFilterTerm filter = new SimpleRequestFilterTerm();
-    filter.addColumnReference( "tsinfo_group_ident" );
-    filter.addOperator( "like" );
-    filter.addValue( m_id );
-
-    final SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "tsinfo_name" );
-
     try
     {
-      final HashMap tsinfolist = m_rep.getWiski()
-          .getTsInfoList( m_rep.getUserData(), TsInfoItem.COLUMNS, sort, filter,
-              15, 0, false, null );
-
-      final List resultList = (List) tsinfolist
-          .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
-
-      final TsInfoItem[] tsitems = new TsInfoItem[resultList.size()];
+      final GetTsInfoList call = new GetTsInfoList( m_id );
+      m_rep.executeWiskiCall( call );
+      final TsInfoItem[] tsitems = new TsInfoItem[call.getResultList().size()];
 
       int i = 0;
-      for( final Iterator it = resultList.iterator(); it.hasNext(); )
+      for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap) it.next();
 

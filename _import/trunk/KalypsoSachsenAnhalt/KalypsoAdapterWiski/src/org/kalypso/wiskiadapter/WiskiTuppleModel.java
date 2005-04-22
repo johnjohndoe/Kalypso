@@ -3,6 +3,7 @@ package org.kalypso.wiskiadapter;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,8 +59,6 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     switch( getPositionFor( axis ) )
     {
       case 0:
-//        return Timestamp.valueOf( (String) ((HashMap) m_data.get( index ))
-//            .get( "timestamp" ) );
         return ((HashMap) m_data.get( index )).get( "timestamp" );
       case 1:
         return getValue( index );
@@ -77,9 +76,6 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     {
       double value = ((Number) ((HashMap) m_data.get( index ))
               .get( "tsc_value0" )).doubleValue();
-//      double value = Double
-//          .parseDouble( (String) ((HashMap) m_data.get( index ))
-//              .get( "tsc_value0" ) );
 
       if( m_vc != null )
         value = m_vc.convert( value );
@@ -139,8 +135,18 @@ public class WiskiTuppleModel extends AbstractTuppleModel
    */
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
-    // TODO Auto-generated method stub
-    return 0;
+    if( getPositionFor( axis ) == 0 )
+    {
+      final Date date = (Date) element;
+      
+      for( final Iterator it = m_data.iterator(); it.hasNext(); )
+      {
+        final HashMap map = (HashMap) it.next();
+        if( date.equals( map.get( "timestamp" ) ) )
+            return m_data.indexOf( map );
+      }
+    }
+    
+    return -1;
   }
-
 }

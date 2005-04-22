@@ -2,15 +2,11 @@ package org.kalypso.wiskiadapter;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-
-import de.kisters.tsmsystem.common.data.SimpleRequestFilterTerm;
-import de.kisters.tsmsystem.common.data.SimpleRequestSortTerm;
-import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
+import org.kalypso.wiskiadapter.wiskicall.GetGroupList;
 
 /**
  * SuperGroupItem
@@ -74,27 +70,14 @@ public class SuperGroupItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    final SimpleRequestFilterTerm filtergroup = new SimpleRequestFilterTerm();
-    filtergroup.addColumnReference( "supergroup_name" );
-    filtergroup.addOperator( "like" );
-    filtergroup.addValue( m_name );
-
-    final SimpleRequestSortTerm sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "group_name" );
-
     try
     {
-      final HashMap grouplist = m_rep.getWiski().getGroupList(
-          m_rep.getUserData(), GroupItem.COLUMNS,
-          KiWWDataProviderInterface.TIMESERIES_GROUP, sort, filtergroup, 15, 0,
-          false, null );
+      final GetGroupList call = new GetGroupList( m_name );
+      m_rep.executeWiskiCall( call );
 
-      final List resultList = (List) grouplist
-          .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
-
-      final GroupItem[] groups = new GroupItem[resultList.size()];
+      final GroupItem[] groups = new GroupItem[call.getResultList().size()];
       int i = 0;
-      for( final Iterator it = resultList.iterator(); it.hasNext(); )
+      for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap) it.next();
         groups[i++] = new GroupItem( this, (String) map.get( "group_id" ),

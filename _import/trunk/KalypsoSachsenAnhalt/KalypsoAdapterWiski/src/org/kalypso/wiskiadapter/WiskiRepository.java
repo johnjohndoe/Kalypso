@@ -1,14 +1,18 @@
 package org.kalypso.wiskiadapter;
 
 import java.rmi.Naming;
+import java.rmi.NoSuchObjectException;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.wiskiadapter.wiskicall.IWiskiCall;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
+import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
 /**
@@ -27,19 +31,17 @@ public class WiskiRepository extends AbstractRepository
   private final static Logger LOG = Logger.getLogger( WiskiRepository.class
       .getName() );
 
-  private String m_url;
+  private KiWWDataProviderRMIf m_wiski = null;
 
-  private String m_domain;
+  private final HashMap m_userData;
 
-  private String m_logonName;
+  private final String m_url;
 
-  private String m_password;
+  private final String m_domain;
 
-  private String m_language;
+  private final String m_logonName;
 
-  private KiWWDataProviderRMIf m_wiski;
-
-  private HashMap m_userData;
+  private final String m_password;
 
   /**
    * Constructor
@@ -68,9 +70,15 @@ public class WiskiRepository extends AbstractRepository
     m_domain = items[1];
     m_logonName = items[2];
     m_password = items[3];
-    m_language = items[4];
+    final String language = items[4];
 
-    m_wiski = init();
+    m_userData = new HashMap();
+    m_userData.put( "domain", m_domain );
+    m_userData.put( "logonName", m_logonName );
+    m_userData.put( "password", m_password );
+    m_userData.put( "language", language );
+
+    m_wiski = wiskiInit();
   }
 
   /**
@@ -79,7 +87,7 @@ public class WiskiRepository extends AbstractRepository
    * 
    * @throws RepositoryException
    */
-  private final KiWWDataProviderRMIf init( ) throws RepositoryException
+  private final KiWWDataProviderRMIf wiskiInit( ) throws RepositoryException
   {
     try
     {
@@ -87,12 +95,6 @@ public class WiskiRepository extends AbstractRepository
       final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
           .lookup( m_url );
       LOG.info( "Wiski About()=" + myServerObject.about() );
-
-      m_userData = new HashMap();
-      m_userData.put( "domain", m_domain );
-      m_userData.put( "logonName", m_logonName );
-      m_userData.put( "password", m_password );
-      m_userData.put( "language", m_language );
 
       final HashMap auth = myServerObject.getUserAuthorisation( m_domain,
           m_logonName, m_password, "myhost.kisters.de", null );
@@ -117,7 +119,12 @@ public class WiskiRepository extends AbstractRepository
   public void dispose( )
   {
     super.dispose();
-    
+
+    wiskiLogout();
+  }
+
+  private final void wiskiLogout( )
+  {
     try
     {
       LOG.info( "Logging out from WISKI-WDP" );
@@ -178,7 +185,7 @@ public class WiskiRepository extends AbstractRepository
     final IRepositoryItem[] supergroups = new IRepositoryItem[superGroupNames.length];
     for( int i = 0; i < superGroupNames.length; i++ )
       supergroups[i] = new SuperGroupItem( this, superGroupNames[i] );
-    
+
     return supergroups;
   }
 
@@ -187,8 +194,30 @@ public class WiskiRepository extends AbstractRepository
     return m_userData;
   }
 
-  public KiWWDataProviderRMIf getWiski( )
+  /**
+   * Performs a call on the wiski remote object. This should be used in order
+   * to allow automatic reloging in if the session has timed out.
+   * 
+   * @throws RemoteException
+   * @throws KiWWException
+   * @throws RepositoryException
+   */
+  public void executeWiskiCall( final IWiskiCall call ) throws RemoteException,
+      KiWWException, RepositoryException
   {
-    return m_wiski;
+    try
+    {
+      call.execute( m_wiski, m_userData );
+    }
+    catch( final NoSuchObjectException e )
+    {
+      // normally, if we get this exception, that means wiski has logged us
+      // out. So we try here to reconnect and to perform the call again.
+      wiskiLogout();
+      
+      wiskiInit();
+      
+      call.execute( m_wiski, m_userData );
+    }
   }
 }

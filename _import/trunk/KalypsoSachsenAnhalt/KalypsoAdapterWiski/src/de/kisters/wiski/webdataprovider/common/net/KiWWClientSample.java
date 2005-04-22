@@ -69,10 +69,12 @@ public final class KiWWClientSample
       {
         System.out.println( " login permitted" );
 
-        findOutColumnNames( myServerObject );
+        //findOutColumnNames( myServerObject );
 
         //wiskiExample( myServerObject, auth, from, to );
 
+        bceDump( myServerObject );
+        
         //logout
         myServerObject.logout( auth, null );
         System.out.println( "logout" );
@@ -87,6 +89,11 @@ public final class KiWWClientSample
       System.err.println( "error=" + e );
       e.printStackTrace();
     }
+  }
+
+  private static void bceDump( final KiWWDataProviderRMIf myServerObject )
+  {
+    
   }
 
   private static void findOutColumnNames(

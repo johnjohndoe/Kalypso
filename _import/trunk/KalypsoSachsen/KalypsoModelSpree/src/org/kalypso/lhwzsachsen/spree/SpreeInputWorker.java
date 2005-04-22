@@ -28,7 +28,7 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
@@ -354,9 +354,10 @@ public class SpreeInputWorker
           // neuen Namen generieren
           final String qName = "Q_" + tsDesc.id.substring( 2 );
 
-          final WQObservationFilter filter = new WQObservationFilter();
-          filter.initFilter( TimeserieConstants.TYPE_WATERLEVEL, obs );
-
+          final WQTimeserieProxy filter = new WQTimeserieProxy(
+              TimeserieConstants.TYPE_WATERLEVEL,
+              TimeserieConstants.TYPE_RUNOFF, obs );
+          
           tsmap.addObservation( filter, qName );
         }
       }

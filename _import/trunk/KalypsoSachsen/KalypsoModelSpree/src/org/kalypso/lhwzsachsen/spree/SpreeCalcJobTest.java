@@ -13,19 +13,16 @@ import javax.xml.bind.Unmarshaller;
 
 import junit.framework.TestCase;
 
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.Modelspec;
-import org.kalypso.model.xml.ModelspecType;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.xml.sax.InputSource;
 
 /**

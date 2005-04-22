@@ -15,14 +15,6 @@ import org.kalypso.repository.RepositoryException;
  */
 public class TsInfoItem implements IRepositoryItem
 {
-  /** Columns of TSINFO */
-  public final static String[] COLUMNS = { "tsinfo_id", "tsinfo_name",
-      "tsinfo_group_ident", "tsinfo_unitname", "tsinfo_distunit",
-      "tsinfo_distcount", "tsinfo_precision", "tsinfo_timelevel",
-      "tsinfo_valuetype", "parametertype_name", "parametertype_longname",
-      "stationparameter_id", "stationparameter_name",
-      "stationparameter_longname", "station_id", "station_no", "station_name" };
-
   private final GroupItem m_group;
 
   private final WiskiRepository m_rep;
@@ -37,7 +29,7 @@ public class TsInfoItem implements IRepositoryItem
     m_group = item;
     m_map = new Properties();
     m_map.putAll( map );
-    
+
     m_rep = (WiskiRepository) m_group.getRepository();
   }
 
@@ -109,34 +101,47 @@ public class TsInfoItem implements IRepositoryItem
     {
       if( m_ts == null )
         m_ts = new WiskiTimeserie( this );
-      
+
       return m_ts;
     }
 
     return null;
   }
 
-  /**
-   * @return the wiski parameter unit
-   */
   String getWiskiUnit( )
   {
     return m_map.getProperty( "tsinfo_unitname" );
   }
 
-  /**
-   * @return the wiski parameter type
-   */
   String getWiskiType( )
   {
     return m_map.getProperty( "parametertype_name" );
   }
 
-  /**
-   * @return wiski id
-   */
-  String getWiskiId( )
+  Long getWiskiId( )
   {
-    return m_map.getProperty( "tsinfo_id" );
+    return Long.valueOf( m_map.getProperty( "tsinfo_id" ) );
+  }
+
+  String getWiskiName( )
+  {
+    return m_map.getProperty( "tsinfo_name" );
+  }
+
+  String getWiskiDescription( )
+  {
+    final StringBuffer bf = new StringBuffer();
+    bf.append( m_map.getProperty( "parametertype_longname" ) ).append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_name" ) ).append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_longname" ) )
+        .append( " - " );
+    bf.append( m_map.getProperty( "station_name" ) );
+
+    return bf.toString();
+  }
+  
+  String getWiskiStationId()
+  {
+    return m_map.getProperty( "station_id" );
   }
 }

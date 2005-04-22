@@ -36,14 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.runtime.args;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.java.util.DateUtilities;
 import org.kalypso.util.runtime.IVariableArguments;
 
@@ -62,11 +63,11 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   /**
    * Simple constructor. Uses current date as from and to.
    */
-  public DateRangeArgument()
+  public DateRangeArgument( )
   {
     this( new Date(), new Date() );
   }
-  
+
   /**
    * Consructor with longs
    * 
@@ -108,7 +109,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   {
     return m_to;
   }
-  
+
   /**
    * Returns true when this range contains the given date.
    * <p>
@@ -120,7 +121,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   {
     if( date == null )
       return false;
-    
+
     return m_from.compareTo( date ) <= 0 && m_to.compareTo( date ) >= 0;
   }
 
@@ -137,7 +138,9 @@ public class DateRangeArgument implements IVariableArguments, Comparable
    * Creates a <code>DateRangeArgument</code> containing the range:
    * 
    * <pre>
-   * [now - pastDays, now]
+   * 
+   *  [now - pastDays, now]
+   *  
    * </pre>.
    * 
    * If pastDays == 0, then the range is null.
@@ -166,16 +169,37 @@ public class DateRangeArgument implements IVariableArguments, Comparable
    */
   public int compareTo( final Object other )
   {
+    if( other == null )
+      return 1;
+    
     if( !(other instanceof DateRangeArgument) )
-      throw new IllegalArgumentException( "Not comparing with a DateRangeArgument" );
-    
+      throw new IllegalArgumentException(
+          "Not comparing with a DateRangeArgument" );
+
     final DateRangeArgument dra = (DateRangeArgument) other;
-    
+
     int cmp = this.m_from.compareTo( dra.m_from );
     if( cmp != 0 )
       return cmp;
-    
+
     cmp = this.m_to.compareTo( dra.m_to );
     return cmp;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean equals( Object obj )
+  {
+    return compareTo( obj ) == 0;
+  }
+  
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  public int hashCode( )
+  {
+    final HashCodeBuilder hcb = new HashCodeBuilder();
+    return hcb.append( m_from ).append( m_to ).hashCode();
   }
 }
