@@ -41,21 +41,26 @@
 package org.kalypso.services.calculation.job.impl;
 
 import java.io.File;
+import java.net.URL;
 
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * @author belger
  */
-public final class CountJob extends AbstractCalcJob
+public final class CountJob implements ICalcJob
 {
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.service.CalcJobDataBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater, org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File basedir, final CalcJobDataBean[] arguments ) throws CalcJobServiceException
-  {
-    while( !isCanceled() )
+  public void run( final File tmpdir, final ICalcDataProvider inputData, final ICalcResultEater outputData,
+      final ICalcMonitor monitor ) throws CalcJobServiceException
+  {  
+    while( !monitor.isCanceled() )
     {
       try
       {
@@ -66,11 +71,20 @@ public final class CountJob extends AbstractCalcJob
         throw new CalcJobServiceException( "Thread interrupted", e );
       }
 
-      final int progress = getProgress();
+      final int progstate = monitor.getProgress();
+      final int progress = progstate;
       if( progress == 100 )
         return;
 
-      progress( 1 );
+      monitor.setProgress( progstate + 1 );
     }
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
+   */
+  public URL getSpezifikation()
+  {
+    return getClass().getResource( "countJob_spec.xml" );
   }
 }

@@ -42,31 +42,21 @@ package org.kalypso.ui.nature;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.rpc.ServiceException;
 
-import org.apache.commons.io.CopyUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -75,7 +65,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -86,23 +75,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.eclipse.core.runtime.LogStatusWrapper;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
-import org.kalypso.model.xml.Modelspec;
-import org.kalypso.model.xml.ModelspecType;
+import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationList;
-import org.kalypso.model.xml.ModelspecType.InputType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.ProxyFactory;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.proxy.CalcJobBean;
-import org.kalypso.services.proxy.CalcJobDataBean;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.nature.calcjob.CalcJobHandler;
 import org.kalypso.util.transformation.TransformationHelper;
 import org.kalypso.util.url.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
@@ -362,7 +346,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * @param type
    * @param folder
    * @param monitor
-   * @return
    * 
    * @throws CoreException
    */
@@ -515,7 +498,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public String getCalcType( ) throws CoreException
   {
-    final Modelspec modelspec = getModelspec( MODELLTYP_MODELSPEC_XML );
+    final ModeldataType modelspec = getModelspec( MODELLTYP_MODELSPEC_XML );
 
     return modelspec.getTypeID();
   }
@@ -571,80 +554,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
   }
 
-  /**
-   * schreibt alle input-Dateien aus der Modelspec in das targetdir
-   * <p>
-   * Dateien relativ zum Calc-Verzeichnis werden nach <targetdir>/input/calc
-   * geschrieben
-   * </p>
-   * <p>
-   * Dateien nicht relativ zum Calc-Verzeichnis werden nach
-   * <targetdir>/input/base geschrieben
-   * </p>
-   * 
-   * @param modelspec
-   * @param folder
-   * @param targetdir
-   * @param monitor
-   * @return beans
-   * @throws CoreException
-   */
-  private CalcJobDataBean[] prepareCalcCaseInput( final Modelspec modelspec,
-      final IFolder folder, final File targetdir, final IProgressMonitor monitor )
-      throws CoreException
-  {
-    final File serverInputDir = new File( targetdir,
-        ICalcServiceConstants.INPUT_DIR_NAME );
-    final File serverCalcDir = new File( serverInputDir, "calc" );
-    final File serverBaseDir = new File( serverInputDir, "base" );
-
-    final IProject project = folder.getProject();
-
-    final List inputList = modelspec.getInput();
-
-    monitor.beginTask( "Kopieren der Daten zum Berechnungsdienst", inputList
-        .size() );
-
-    final List inputBeanList = new ArrayList();
-    for( final Iterator iter = inputList.iterator(); iter.hasNext(); )
-    {
-      final ModelspecType.InputType input = (InputType) iter.next();
-      final String inputPath = input.getPath();
-
-      final IContainer baseresource = input.isRelativeToCalcCase() ? (IContainer) folder
-          : (IContainer) project;
-      final IResource inputResource = baseresource.findMember( inputPath );
-      if( inputResource == null )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Konnte Input-Resource nicht finden: " + inputPath
-                + "\nÜberprüfen Sie die Datei " + MODELLTYP_FOLDER + "/"
-                + MODELLTYP_MODELSPEC_XML, null ) );
-
-      final File basedir = input.isRelativeToCalcCase() ? serverCalcDir
-          : serverBaseDir;
-      final String reldir = (input.isRelativeToCalcCase() ? "calc" : "base")
-          + "/" + inputPath;
-
-      final IResourceVisitor copyVisitor = new CopyResourceToFileVisitor(
-          baseresource, basedir );
-      inputResource.accept( copyVisitor );
-
-      final CalcJobDataBean calcJobDataBean = new CalcJobDataBean( input
-          .getId(), input.getDescription(), reldir );
-      inputBeanList.add( calcJobDataBean );
-
-      monitor.worked( 1 );
-    }
-
-    monitor.done();
-
-    final CalcJobDataBean[] input = (CalcJobDataBean[]) inputBeanList
-        .toArray( new CalcJobDataBean[inputBeanList.size()] );
-    return input;
-
-  }
-
-  private Modelspec getModelspec( String modelSpec ) throws CoreException
+  private ModeldataType getModelspec( String modelSpec ) throws CoreException
   {
     try
     {
@@ -652,7 +562,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final ObjectFactory faktory = new ObjectFactory();
       final Unmarshaller unmarshaller = faktory.createUnmarshaller();
-      return (Modelspec) unmarshaller.unmarshal( file.getContents() );
+      return (ModeldataType)unmarshaller.unmarshal( file.getContents() );
     }
     catch( final JAXBException e )
     {
@@ -661,73 +571,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Fehler beim Laden der Modell-Spezifikation", e ) );
     }
-  }
-
-  private void retrieveOutput( final File serveroutputdir,
-      final IFolder targetfolder, final CalcJobDataBean[] results,
-      final IProgressMonitor monitor ) throws CoreException
-  {
-    monitor.beginTask( "Berechnungsergebniss abrufen", results.length );
-
-    System.out.println( "Results: " + results.length );
-
-    for( int i = 0; i < results.length; i++ )
-    {
-      final CalcJobDataBean bean = results[i];
-
-      final String beanPath = bean.getPath();
-      final File serverfile = new File( serveroutputdir, beanPath );
-
-      final IFile targetfile = targetfolder.getFile( beanPath );
-      FolderUtilities.mkdirs( targetfile.getParent() );
-
-      if( targetfile.exists() ) // loeschen, auch wenn er gerade geladen ist
-      {
-        try
-        {
-          targetfile.delete( true, false, new NullProgressMonitor() );
-        }
-        catch( Exception e )
-        {
-          // TODO hier tritt manchmal eine exception auf, testen...
-          System.out.println( "could not delete File: "
-              + targetfile.getFullPath() );
-          e.printStackTrace();
-          continue;
-        }
-      }
-      
-      // direktes filecopy und danach ein refresh ist besser, wegen charset problemen
-      System.out.println( "Write: " + serverfile.getAbsolutePath() );
-
-      final File targetfileFile = targetfile.getLocation().toFile();
-      FileInputStream fis = null;
-      FileOutputStream fos = null; 
-      try
-      {
-        fis = new FileInputStream( serverfile );
-        fos = new FileOutputStream( targetfileFile );
-        CopyUtils.copy( fis, fos );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-        IOUtils.closeQuietly( fis );
-        IOUtils.closeQuietly( fos );
-      }
-      
-      targetfile.refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 1 ) );
-      System.out.println( "Wrote: " + serverfile.getAbsolutePath() );
-
-      if( monitor.isCanceled() )
-        throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin
-            .getId(), 0, "Vorgang vom Benutzer abgebrochen", null ) );
-    }
-
-    monitor.done();
   }
 
   public GMLWorkspace loadDefaultControl( ) throws CoreException
@@ -840,56 +683,38 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus runCalculation( final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    return runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML, true );
+    return runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML );
   }
 
-  public IStatus runCalculation( final IFolder folder,
-      final IProgressMonitor monitor, final String modelSpec,
-      boolean clearResults ) throws CoreException
+  public IStatus runCalculation( final IFolder calcCaseFolder,
+      final IProgressMonitor monitor, final String modelSpec ) throws CoreException
   {
     if( modelSpec == null )
-      return runCalculation( folder, monitor );
+      return runCalculation( calcCaseFolder, monitor );
     
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5000 );
 
-    final CoreException cancelException = new CoreException( new Status(
-        IStatus.CANCEL, KalypsoGisPlugin.getId(), 0,
-        "Berechnung wurde vom Benutzer abgebrochen", null ) );
-
-    if( !isCalcCalseFolder( folder ) )
+    if( !isCalcCalseFolder( calcCaseFolder ) )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Verzeichnis ist keine Rechenvariante:" + folder.getName(), null ) );
+          "Verzeichnis ist keine Rechenvariante:" + calcCaseFolder.getName(), null ) );
 
     final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
         .getServiceProxyFactory();
 
-    final Modelspec modelspec = getModelspec( modelSpec );
-
-    final SubProgressMonitor subMonitor1 = new SubProgressMonitor( monitor,
-        1000 );
-    subMonitor1.beginTask( "Rechendienst wird initialisiert", 1000 );
-
-    final CalcJobBean job;
-    final ICalculationService calcService;
     try
     {
-      calcService = (ICalculationService) serviceProxyFactory.getProxy(
-          "Kalypso_CalculationService", ClassUtilities
+      final ICalculationService calcService = (ICalculationService)serviceProxyFactory
+          .getProxy( "Kalypso_CalculationService", ClassUtilities
               .getOnlyClassName( ICalculationService.class ) );
 
-      job = calcService.prepareJob( modelspec.getTypeID(), "" );
+      final ModeldataType modelspec = getModelspec( modelSpec );
 
-      if( monitor.isCanceled() )
-      {
-        calcService.disposeJob( job.getId() );
-        throw cancelException;
-      }
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Rechendienstes", e ) );
+      final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
+      cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
+      
+      return doCalcTransformation( "Rechenvariante aktualisieren",
+          ModelNature.TRANS_TYPE_AFTERCALC, calcCaseFolder, new SubProgressMonitor( monitor,
+              1000 ) );
     }
     catch( final ServiceException e )
     {
@@ -897,132 +722,5 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Rechendienst konnte nicht initialisiert werden", e ) );
     }
-
-    subMonitor1.done();
-
-    try
-    {
-      final String jobID = job.getId();
-
-      final File targetdir = new File( job.getBasedir() );
-      if( !targetdir.exists() || !targetdir.isDirectory() )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Ungültiges temporäres Verzeichnis auf Server", null ) );
-
-      // Daten zum Service schieben
-      final CalcJobDataBean[] inputBeans = prepareCalcCaseInput( modelspec,
-          folder, targetdir, new SubProgressMonitor( monitor, 1000 ) );
-      calcService.startJob( jobID, inputBeans );
-
-      if( monitor.isCanceled() )
-        throw cancelException;
-
-      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor,
-          1000 );
-      calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
-      int oldProgess = 0;
-      while( true )
-      {
-        final CalcJobBean bean = calcService.getJob( jobID );
-
-        boolean bStop = false;
-        switch( bean.getState() )
-        {
-          case ICalcServiceConstants.FINISHED:
-          case ICalcServiceConstants.ERROR:
-          case ICalcServiceConstants.CANCELED:
-            bStop = true;
-            break;
-
-          default:
-            break;
-        }
-
-        if( bStop )
-          break;
-
-        try
-        {
-          Thread.sleep( 1000 );
-        }
-        catch( final InterruptedException e1 )
-        {
-          e1.printStackTrace();
-
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Kritischer Fehler", e1 ) );
-        }
-
-        int progress = bean.getProgress();
-        calcMonitor.worked( progress - oldProgess );
-        oldProgess = progress;
-
-        // ab hier bei cancel nicht mehr zurückkehren, sondern
-        // erstmal den Job-Canceln und warten bis er zurückkehrt
-        if( monitor.isCanceled() )
-          calcService.cancelJob( jobID );
-      }
-
-      calcMonitor.done();
-
-      final CalcJobBean jobBean = calcService.getJob( jobID );
-
-      // Abhängig von den Ergebnissen was machen
-      switch( jobBean.getState() )
-      {
-        case ICalcServiceConstants.FINISHED:
-          // Ergebniss abholen
-          final CalcJobDataBean[] results = jobBean.getResults();
-          final IFolder outputfolder = folder.getFolder( "Ergebnisse" );
-          if( clearResults && outputfolder.exists() )
-            outputfolder.delete( false, false, new NullProgressMonitor() );
-
-          final File serveroutputdir = new File( jobBean.getBasedir(),
-              ICalcServiceConstants.OUTPUT_DIR_NAME );
-          retrieveOutput( serveroutputdir, outputfolder, results,
-              new SubProgressMonitor( monitor, 1000 ) );
-
-          return doCalcTransformation( "Rechenvariante aktualisieren",
-              TRANS_TYPE_AFTERCALC, folder, new SubProgressMonitor( monitor,
-                  1000 ) );
-
-        case ICalcServiceConstants.CANCELED:
-          throw cancelException;
-
-        case ICalcServiceConstants.ERROR:
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Rechenvorgang fehlerhaft:\n" + jobBean.getMessage(), null ) );
-
-        default:
-          // darf eigentlich nie vorkommen
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Rechenvorgang fehlerhaft:\n" + jobBean.getMessage(), null ) );
-      }
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Rechendienstes", e ) );
-    }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
-    finally
-    {
-      //            try
-      //            {
-      //              calcService.disposeJob( job.getId() );
-      //            }
-      //            catch( final RemoteException e1 )
-      //            {
-      //              e1.printStackTrace();
-      //      
-      //              throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-      //                  "Kritischer Fehler bei Löschen des Rechen-Jobs", e1 ) );
-      //            }
-    }
   }
-
 }

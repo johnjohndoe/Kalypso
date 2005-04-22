@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,33 +36,42 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.calculation.job.impl;
+
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.services.calculation.service.impl;
 
 import java.io.File;
-
-import org.kalypso.services.calculation.service.CalcJobDataBean;
-
 
 /**
  * @author belger
  */
-public class CopyCalcJob extends AbstractCalcJob
+public class CalcResult
 {
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.service.CalcJobDataBean[])
-   */
-  public void run( final File basedir, final CalcJobDataBean[] arguments ) 
+  private final String m_id;
+
+  private final String m_path;
+
+  private final File m_file;
+
+  public CalcResult( final String id, final String path, final File file )
   {
-    for( int i = 0; i < arguments.length; i++ )
-    {
-      addResult( arguments[i] );
-      
-      if( isCanceled() )
-        return;
-    }
-    
-    progress( 100 );
+    m_id = id;
+    m_path = path;
+    m_file = file;
+  }
+
+  public String getID()
+  {
+    return m_id;
+  }
+
+  public String getPath()
+  {
+    return m_path;
+  }
+
+  public File getFile()
+  {
+    return m_file;
   }
 }

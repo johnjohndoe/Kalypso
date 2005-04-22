@@ -38,27 +38,51 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.calculation.common;
+package org.kalypso.services.calculation.service.impl;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * @author belger
  */
-public interface ICalcServiceConstants
+public class CalcJobFactory
 {
-  public final int CANCELED = 2;
-  public final int ERROR = 4;
-  public final int FINISHED = 1;
-  public final int RUNNING = 0;
-  public final int UNKNOWN = -1;
-  public final int WAITING = 3;
+  private static final Properties m_jobTypes = new Properties();
 
-  /**
-   * @deprecated Don't use it anymore; the input dir is encapsulated by the DataProvider
-   *    -> Andreas: delete it, if have finished refaktoring
-   */
-  public final String INPUT_DIR_NAME = "input";
-  
-  public final String OUTPUT_DIR_NAME = "output";
-  public final String RESULT_DIR_NAME = "Ergebnisse";
-  public final String CALC_DIR_NAME = "calc";
+  public CalcJobFactory( final File typeFile )
+  {
+    try
+    {
+      m_jobTypes.load( new FileInputStream( typeFile ) );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public String[] getSupportedTypes()
+  {
+    return (String[])m_jobTypes.keySet().toArray( new String[0] );
+  }
+
+  public ICalcJob createJob( final String typeID ) throws CalcJobServiceException
+  {
+    try
+    {
+      final String className = m_jobTypes.getProperty( typeID );
+
+      return (ICalcJob)Class.forName( className ).newInstance();
+    }
+    catch( final Exception e )
+    {
+      throw new CalcJobServiceException( "Konnte Job nicht erzeugen für Typ: " + typeID, e );
+    }
+  }
 }

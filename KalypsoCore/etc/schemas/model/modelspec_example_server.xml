@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org
 .\modelspec.xsd" typeID="copy">
-	<input id="MODEL" description="Modell-Grunddaten" path="model.gml" relativeToCalcCase="false"/>
-	<input id="KALIB" description="Kalirbierungsdaten" path="kalib.gml" relativeToCalcCase="true"/>
+	<input id="MODEL" description="Grunddaten des Modells"/>
+	<input id="KALIB" description="Kalibrierungsparameter"/>
+	
+	<output id="LOG" description="Logdatei der Berechnung"/>
 </modelspec>

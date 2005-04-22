@@ -42,6 +42,8 @@ package org.kalypso.services.calculation.service;
 
 import java.rmi.Remote;
 
+import javax.activation.DataHandler;
+
 import org.kalypso.services.IKalypsoService;
 import org.kalypso.services.calculation.job.ICalcJob;
 
@@ -63,7 +65,6 @@ import org.kalypso.services.calculation.job.ICalcJob;
  */
 public interface ICalculationService extends Remote, IKalypsoService
 {
-  //  
   /**
    * Gibt die IDs aller unterstützten JobTypen zurück.
    * 
@@ -72,33 +73,54 @@ public interface ICalculationService extends Remote, IKalypsoService
   public String[] getJobTypes() throws CalcJobServiceException;
 
   /**
+   * Gibt zurück, welche Eingaben für einen bestimmten Job-Typ benötigt werden.
+   * 
+   * @throws CalcJobServiceException
+   */
+  public CalcJobServerBean[] getRequiredInput( final String typeID ) throws CalcJobServiceException;
+
+  /**
+   * Gibt zurück, welche Ergebnisse von einem bestimmten Job-Typ geliefert
+   * werden.
+   * 
+   * @throws CalcJobServiceException
+   */
+  public CalcJobServerBean[] getDeliveringResults( final String typeID )
+      throws CalcJobServiceException;
+
+  /**
    * Gibt den aktuellen Zustand aller vorhandenen {@link ICalcJob}zurück
    * 
    * @throws CalcJobServiceException
    */
-  public CalcJobBean[] getJobs() throws CalcJobServiceException;
+  public CalcJobInfoBean[] getJobs() throws CalcJobServiceException;
 
   /** Gibt den aktuellen Zustand eines einzelnen {@link ICalcJob}zurück */
-  public CalcJobBean getJob( final String jobID ) throws CalcJobServiceException;
+  public CalcJobInfoBean getJob( final String jobID ) throws CalcJobServiceException;
 
   /**
-   * Erzeugt einen neuen Auftrag. Der Auftrag wartet erstmal auf die Daten.
+   * <p>
+   * Erzeugt und startet einen neuen Auftrag (Job).
+   * </p>
+   * <p>
+   * Auftrag wird in eine Warteliste gestellt und (abhängig von der
+   * Implementation) baldmöglichst abgearbeitet.
+   * </p>
    * 
-   * Erzeugt insbsondere das Basis-Verzeichnis für die Eingangsdaten, in welches
-   * diese vom Server kopiert werden müssen.
-   */
-  public CalcJobBean prepareJob( final String typeID, final String description )
-      throws CalcJobServiceException;
-
-  /**
-   * Teilt dem Job mit, dass jetzt alle Daten dem Server übergeben wurden. Der
-   * Auftrag wird jetzt in die Liste gestellt und (abhängig von der
-   * Imlpementation) baldmöglichst abgearbeitet.
-   * 
+   * @param typeID
+   *          Rechentyp des neuen Auftrags.
+   * @param description
+   *          Menschenlesbare Beschreibung des Auftrags.
+   * @param zipHandler
+   *          Die eigentlichen Eingangsdaten für den Job. Der Inhalt muss ein
+   *          JAR-Archiv sein.
    * @param input
-   *          Die Eingabedateien, die der Client zur Verfügung stellt.
+   *          Die Eingabedateien, die der Client zur Verfügung stellt. Die
+   *          relativen Pfade innerhalb der Benas beziehen sich auf Pfade
+   *          innerhalb des Archivs.
    */
-  public void startJob( final String jobID, final CalcJobDataBean[] input )
+  public CalcJobInfoBean startJob( final String typeID, final String description,
+      final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output )
       throws CalcJobServiceException;
 
   /**
@@ -107,13 +129,28 @@ public interface ICalculationService extends Remote, IKalypsoService
   public void cancelJob( final String jobID ) throws CalcJobServiceException;
 
   /**
+   * Gibt die Ergebnisse eines Jobs zurück. Die Funktion kann jederzeit
+   * aufgerufen werden, es werden alle im Moment verfügbaren Ergebnisse
+   * zurückgeschickt. Der Job muss lediglich dafür sorgen, dass die Ergebnisse,
+   * die er angegeben hat, auch tatsächlich da sind.
+   * 
+   * @param jobID
+   *          Die id des Jobs, dessen Ergebnise geholt werden sollen.
+   * @return Die Ergebnisse als ZIP Archiv, sollte in die Rechenvariante als
+   *         Hauptverzeichnis entpackt werden.
+   * @throws CalcJobServiceException
+   */
+  public DataHandler transferCurrentResults( final String jobID ) throws CalcJobServiceException;
+
+  /**
+   * Gibt zurück, welche Ergebniss (IDs) zur Zeit vorliegen.
+   */
+  public String[] getCurrentResults( final String jobID ) throws CalcJobServiceException;
+  
+  /**
    * <p>
-   * Löscht einen Auftrag vollständig
+   * Löscht einen Auftrag und alle temporär angelegten Daten vollständig.
    * <p>
-   * <p>
-   * Löscht auch alle Dateien, die zu diesem Job gehörten, d.h. die URLs von
-   * {@link CalcJobBean#getResults()}sind nicht mehr gültig
-   * </p>
    * <p>
    * Darf nur aufgerufen werden, wenn der Job gecanceled oder fertig ist
    * </p>

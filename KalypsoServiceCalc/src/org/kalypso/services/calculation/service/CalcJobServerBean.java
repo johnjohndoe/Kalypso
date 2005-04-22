@@ -43,21 +43,17 @@ package org.kalypso.services.calculation.service;
 import java.io.Serializable;
 
 /**
- * Bean zum Datenaustausch (Eingabe und Ausgabedaten)
+ * Bean um vom Rechendienst abzufragen, welches Input/Output Verhalten er hat.
  * 
  * @author belger
  */
-public class CalcJobDataBean implements Serializable
+public class CalcJobServerBean implements Serializable
 {
-  private String m_path;
-
-  private String m_name;
-
   private String m_id;
 
-//  private DataHandler m_data;
+  private String m_description;
 
-  public CalcJobDataBean()
+  public CalcJobServerBean()
   {
   // nur für wspcompile
   }
@@ -65,27 +61,14 @@ public class CalcJobDataBean implements Serializable
   /**
    * @param id
    *          ID dieses Datenobjekts
-   * @param name
-   *          Name, für eventuelle Benutzermeldungen
-   * @param path
-   *          Ein relativer Pfad. Hinweis, wie der Server, bzw. der Client die
-   *          Daten ablegen soll, damit die relativen Pfade erhalten bleiben.
-   *          <p>
-   *          Bei Senden zum Server: die Datei wird Relativ zum /basedir/INPUT_DIR_NAME/ abgelegt.
-   *          </p>
-   *          <p>
-   *          Bei Senden zum Client: die Datei wird mit diesem Pfad unterhalb
-   *          der Rechenvariante abgelegt.
-   *          </p>
-//   * @param data Die eigentlichen Daten
+   * @param description
+   *          Beschreibung der Daten
    *  
    */
-  public CalcJobDataBean( final String id, final String name, final String path /*, final DataHandler data */ )
+  public CalcJobServerBean( final String id, final String description )
   {
     m_id = id;
-    m_name = name;
-    m_path = path;
-//    m_data = data;
+    m_description = description;
   }
 
   public final String getId()
@@ -98,40 +81,21 @@ public class CalcJobDataBean implements Serializable
     m_id = id;
   }
 
-  public final String getName()
+  public final String getDescription()
   {
-    return m_name;
+    return m_description;
   }
 
-  public final void setName( String name )
+  public final void setDescription( final String description )
   {
-    m_name = name;
+    m_description = description;
   }
-
-  public final String getPath()
-  {
-    return m_path;
-  }
-
-  public final void setPath( String url )
-  {
-    m_path = url;
-  }
-
-  //  public final DataHandler getData()
-  //  {
-  //    return m_data;
-  //  }
-  //  public final void setData( final DataHandler data )
-  //  {
-  //    m_data = data;
-  //  }
 
   /**
    * @see java.lang.Object#toString()
    */
   public String toString()
   {
-    return super.toString() + "\n ID: " + m_id + "\n NAME: " + m_name + "\n PATH: " + m_path;
+    return super.toString() + "\n ID: " + m_id + "\n Description: " + m_description;
   }
 }

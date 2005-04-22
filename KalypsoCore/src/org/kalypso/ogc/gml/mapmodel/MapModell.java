@@ -46,13 +46,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

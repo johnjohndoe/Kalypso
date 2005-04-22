@@ -36,34 +36,36 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.service;
 
 import java.io.Serializable;
 
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
+import org.kalypso.services.calculation.job.ICalcMonitor;
 
 /**
  * <p>
- * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.job.ICalcJob}
- * </p>
- * <p>
- * Sollte die JavaBean Spezifikation erfüllen
+ * Enthält die aktuellen Daten eines
+ * {@link org.kalypso.services.calculation.job.ICalcJob}
  * </p>
  * 
  * @author Belger
  */
-public class CalcJobBean implements Serializable
+public class CalcJobInfoBean implements Serializable, ICalcMonitor
 {
   /** ID des beschriebenen Jobs */
   private String m_id = null;
 
-  /** Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service übergeben */
-  private String m_description = null;
-  
+  /**
+   * Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service
+   * übergeben
+   */
+  private String m_description;
+
   /** Der Berechnungstyp des Jobs */
-  private String m_type = null;
+  private String m_type;
 
   /** Status des Jobs */
   private int m_state = ICalcServiceConstants.UNKNOWN;
@@ -71,36 +73,32 @@ public class CalcJobBean implements Serializable
   /** Fortschritt des Jobs, ziwschen 0 und 100, -1 bedeutet: unbekannt */
   private int m_progress = -1;
 
-  /** Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung */
-  private String m_message = null;
-
-  /** Die vom Client übergebenen/erwarteten Input-Dateien */
-  private CalcJobDataBean[] m_inputData = null;
-  
-  /** <p>aktuelle Ergebnisse</p>
-   * <p>alle Pfade sind relativ zu <m_basedir>/<OUTPUT_DIR_NAME>/ 
+  /**
+   * Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die
+   * Fehlermeldung
    */
-  private CalcJobDataBean[] m_results = null;
-  
-  /** Das Basis-Verzeichnis, welches zum Übertragen der input/output Dateien zur Verfügung steht */
-  private String m_basedir = null;
-  
-  public CalcJobBean()
+  private String m_message = "Warte auf Ausführung...";
+
+  /**
+   * IDs der aktuellen Ergebnisse
+   */
+  private String[] m_currentResults = new String[0];
+
+  public CalcJobInfoBean()
   {
-    // nur für wscompile
+  // nur für wscompile
   }
-  
-  public CalcJobBean( final String id, final String description, final String type, final int state, final int progress, final String basedir, final CalcJobDataBean[] results )
+
+  public CalcJobInfoBean( final String id, final String description, final String type,
+      final int state, final int progress )
   {
     m_id = id;
     m_description = description;
     m_state = state;
     m_progress = progress;
-    m_results = results;
     m_type = type;
-    m_basedir = basedir;
   }
-  
+
   public String getDescription()
   {
     return m_description;
@@ -111,6 +109,9 @@ public class CalcJobBean implements Serializable
     return m_id;
   }
 
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
+   */
   public int getProgress()
   {
     return m_progress;
@@ -121,6 +122,9 @@ public class CalcJobBean implements Serializable
     return m_state;
   }
 
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
+   */
   public String getMessage()
   {
     return m_message;
@@ -146,45 +150,47 @@ public class CalcJobBean implements Serializable
     m_state = i;
   }
 
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcMonitor#setMessage(java.lang.String)
+   */
   public void setMessage( final String message )
   {
     m_message = message;
   }
 
-  public final CalcJobDataBean[] getResults()
+  public final String[] getCurrentResults()
   {
-    return m_results;
-  }
-  
-  public final void setResults( CalcJobDataBean[] results )
-  {
-    m_results = results;
-  }
-  
-  public final CalcJobDataBean[] getInputData()
-  {
-    return m_inputData;
+    return m_currentResults;
   }
 
-  public final void setInputData( final CalcJobDataBean[] inputData )
+  public final void setCurrentResults( String[] currentResults )
   {
-    m_inputData = inputData;
+    m_currentResults = currentResults;
   }
-  
+
   public final String getType()
   {
     return m_type;
   }
+
   public final void setType( String type )
   {
     m_type = type;
   }
-  public final String getBasedir()
+
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
+   */
+  public void cancel()
   {
-    return m_basedir;
+    m_state = ICalcServiceConstants.CANCELED;
   }
-  public final void setBasedir( String basedir )
+
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
+   */
+  public boolean isCanceled()
   {
-    m_basedir = basedir;
+    return m_state == ICalcServiceConstants.CANCELED;
   }
 }
