@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
 	<!-- Dateien relativ zum Projektverzeichnis (.../input/base/) -->
 	<input id="MODELL_XSD" path=".model/schema/bodemodell.xsd" relativeToCalcCase="false"/>
 	<input id="CONTROL_XSD" path=".model/schema/control.xsd" relativeToCalcCase="false"/>
@@ -18,4 +18,8 @@
 	<input id="QSpeicherDir" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
 	<input id="VSpeicherDir" path="Zeitreihen/Speicherinhalt/Messung" relativeToCalcCase="true"/>
 	<input id="NsGebietDir" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
-</modelspec>
+	
+	<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
+
+	<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+</modeldata>
