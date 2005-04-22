@@ -97,7 +97,7 @@ import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
 import org.kalypso.services.calculation.job.impl.CalcJobHelper;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
@@ -143,7 +143,7 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
     m_urlUtilities = new UrlUtilities();
   }
 
-  public void run( final File basedir, final CalcJobDataBean[] input )
+  public void run( final File basedir, final CalcJobClientBean[] input )
       throws CalcJobServiceException
   {
     final File outDir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
@@ -221,10 +221,10 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
   }
 
   private GMLWorkspace generateASCII( final File exeDir, final File inputDir,
-      final CalcJobDataBean[] beans, File outDir ) throws Exception
+      final CalcJobClientBean[] beans, File outDir ) throws Exception
   {
     // input model
-    final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
+    final CalcJobClientBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
     final File modelFile = new File( inputDir, modellBean.getPath() );
 
     final URL inputModellURL = modelFile.toURL();
@@ -234,14 +234,14 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
     final URL modellURL = modellFile.toURL();
     final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( modellURL, exeDir );
 
-    final CalcJobDataBean metaBean = CalcJobHelper.getBeanForId( META_ID, beans );
+    final CalcJobClientBean metaBean = CalcJobHelper.getBeanForId( META_ID, beans );
     final File metaFile = new File( inputDir, metaBean.getPath() );
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaFile.toURL(), conf
         .getMetaSchemaURL() );
     final Feature metaFE = metaWorkspace.getRootFeature();
     // control
-    final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId( CONTROL_ID, beans );
+    final CalcJobClientBean controlBean = CalcJobHelper.getBeanForId( CONTROL_ID, beans );
     final File controlFile = new File( inputDir, controlBean.getPath() );
     final URL controlURL = controlFile.toURL();
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, conf
@@ -529,7 +529,7 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
         marshaller.marshal( observationType, writer );
         writer.close();
 
-        addResult( new CalcJobDataBean( "ERG" + feature.getId(), "Berechnungsergebnis zu Knoten #"
+        addResult( new CalcJobClientBean( "ERG" + feature.getId(), "Berechnungsergebnis zu Knoten #"
             + feature.getId(), resultPathRelative ) );
       }
     }

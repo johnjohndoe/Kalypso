@@ -51,7 +51,7 @@ import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 
 /**
  * @author doemming
@@ -74,18 +74,18 @@ public class NaModelCalcJobTest extends TestCase
       FileUtils.cleanDirectory( ergDir );
  
 
-    final CalcJobDataBean[] beans = new CalcJobDataBean[]
+    final CalcJobClientBean[] beans = new CalcJobClientBean[]
     {
-        new CalcJobDataBean( NaModelConstants.MODELL_ID, "Modelldaten", "calc/calcCase.gml" ),
+        new CalcJobClientBean( NaModelConstants.MODELL_ID, "Modelldaten", "calc/calcCase.gml" ),
 
-//        new CalcJobDataBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/.nacontrol.gml" ),
-        new CalcJobDataBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/expertControl.gml" ),
+//        new CalcJobClientBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/.nacontrol.gml" ),
+        new CalcJobClientBean( NaModelConstants.CONTROL_ID, "Steuerdaten", "calc/expertControl.gml" ),
 
-        new CalcJobDataBean( NaModelConstants.OPTIMIZECONF_ID, "optimizefile", "calc/.sce.xml" ),     
-        new CalcJobDataBean( NaModelConstants.META_ID, "MetaSteuerdaten", "calc/.calculation" ),
-        new CalcJobDataBean( "NiederschlagDir", "niederschlag", "calc/Niederschlag/" ),
-        new CalcJobDataBean( "ZuflussDir", "zufluesse", "calc/Zufluss/" ),
-        new CalcJobDataBean( "PegelDir", "pegel", "calc/Pegel/" ), };
+        new CalcJobClientBean( NaModelConstants.OPTIMIZECONF_ID, "optimizefile", "calc/.sce.xml" ),     
+        new CalcJobClientBean( NaModelConstants.META_ID, "MetaSteuerdaten", "calc/.calculation" ),
+        new CalcJobClientBean( "NiederschlagDir", "niederschlag", "calc/Niederschlag/" ),
+        new CalcJobClientBean( "ZuflussDir", "zufluesse", "calc/Zufluss/" ),
+        new CalcJobClientBean( "PegelDir", "pegel", "calc/Pegel/" ), };
     try
     {
       final NaModelCalcJob job = new NaModelCalcJob();

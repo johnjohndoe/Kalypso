@@ -83,7 +83,7 @@ import org.kalypso.optimizer.PegelType;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.impl.CalcJobHelper;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.w3c.dom.Document;
@@ -97,13 +97,13 @@ public class NAOptimizingJob implements IOptimizingJob
 {
   private final File m_baseInputDir;
 
-  private final CalcJobDataBean[] m_beans;
+  private final CalcJobClientBean[] m_beans;
 
-  private final CalcJobDataBean m_beanToOptimize;
+  private final CalcJobClientBean m_beanToOptimize;
 
-  private CalcJobDataBean m_lastOptimizedBean = null;
+  private CalcJobClientBean m_lastOptimizedBean = null;
 
-  private CalcJobDataBean m_bestOptimizedBean = null;
+  private CalcJobClientBean m_bestOptimizedBean = null;
 
   private File m_lastOptimizeDir = null;
 
@@ -127,7 +127,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private final AutoCalibration m_autoCalibration;
 
-  public NAOptimizingJob( File baseDir, final CalcJobDataBean[] beans ) throws Exception
+  public NAOptimizingJob( File baseDir, final CalcJobClientBean[] beans ) throws Exception
   {
     m_beans = beans;
 
@@ -151,7 +151,7 @@ public class NAOptimizingJob implements IOptimizingJob
     m_linkCalcedTS = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
 
     // load meta to get measured part of calculation intervall
-    final CalcJobDataBean metaBean = CalcJobHelper.getBeanForId( NaModelConstants.META_ID, beans );
+    final CalcJobClientBean metaBean = CalcJobHelper.getBeanForId( NaModelConstants.META_ID, beans );
     final File metaFile = new File( m_baseInputDir, metaBean.getPath() );
     final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaFile.toURL(),
@@ -161,7 +161,7 @@ public class NAOptimizingJob implements IOptimizingJob
     final Date measuredEndDate = (Date)metaFE.getProperty( "startforecast" );
 
     // optimize configuration
-    final CalcJobDataBean optimizeConfBean = CalcJobHelper.getBeanForId(
+    final CalcJobClientBean optimizeConfBean = CalcJobHelper.getBeanForId(
         NaModelConstants.OPTIMIZECONF_ID, beans );
     final File optimizeFile = new File( m_baseInputDir, optimizeConfBean.getPath() );
     final ObjectFactory fac = new ObjectFactory();
@@ -192,11 +192,11 @@ public class NAOptimizingJob implements IOptimizingJob
     final File optimizeInputDir = new File( optimizeBaseDir, ICalcServiceConstants.INPUT_DIR_NAME );
     optimizeInputDir.mkdirs();
 
-    final CalcJobDataBean[] optimizedBeans = CalcJobHelper.getMergedBeans( m_beans,
-        new CalcJobDataBean[]
+    final CalcJobClientBean[] optimizedBeans = CalcJobHelper.getMergedBeans( m_beans,
+        new CalcJobClientBean[]
         { m_lastOptimizedBean } );
 
-    final CalcJobDataBean[] optimizedBeansII = CalcJobHelper.createBeansForNewBaseDir(
+    final CalcJobClientBean[] optimizedBeansII = CalcJobHelper.createBeansForNewBaseDir(
         optimizedBeans, m_baseInputDir, optimizeInputDir );
 
     final ICalcJob calcJob = new NaModelInnerCalcJob();
@@ -282,7 +282,7 @@ public class NAOptimizingJob implements IOptimizingJob
     t.transform( new DOMSource( dom ), new StreamResult( writer ) );
     writer.close();
     String path = FileUtilities.getRelativePathTo( m_baseInputDir, file );
-    m_lastOptimizedBean = new CalcJobDataBean( NaModelConstants.CONTROL_ID, "optimized control",
+    m_lastOptimizedBean = new CalcJobClientBean( NaModelConstants.CONTROL_ID, "optimized control",
         path );
   }
 
@@ -348,18 +348,18 @@ public class NAOptimizingJob implements IOptimizingJob
   /**
    * @see org.kalypso.optimize.IOptimizingJob#getResults()
    */
-  public CalcJobDataBean[] getResults()
+  public CalcJobClientBean[] getResults()
   {
     final List result = new ArrayList();
     final File jobOutputDir = new File( m_bestOptimizeDir, ICalcServiceConstants.OUTPUT_DIR_NAME );
-    CalcJobDataBean[] calculatedBeans = m_bestCalcJob.getResults();
+    CalcJobClientBean[] calculatedBeans = m_bestCalcJob.getCurrentResults();
 
     try
     {
       final File from = new File( m_baseInputDir, m_bestOptimizedBean.getPath() );
       final File to = new File( m_baseOutputDir, m_beanToOptimize.getPath() );
       FileUtils.copyFile( from, to );
-      result.add( new CalcJobDataBean( NaModelConstants.CONTROL_ID, "optimized control",
+      result.add( new CalcJobClientBean( NaModelConstants.CONTROL_ID, "optimized control",
           m_beanToOptimize.getPath() ) );
     }
     catch( IOException e )
@@ -368,7 +368,7 @@ public class NAOptimizingJob implements IOptimizingJob
     }
     for( int i = 0; i < calculatedBeans.length; i++ )
     {
-      CalcJobDataBean bean = calculatedBeans[i];
+      CalcJobClientBean bean = calculatedBeans[i];
       final File from = new File( jobOutputDir, bean.getPath() );
       final File to = new File( m_baseOutputDir, bean.getPath() );
       try
@@ -381,7 +381,7 @@ public class NAOptimizingJob implements IOptimizingJob
         e.printStackTrace();
       }
     }
-    return (CalcJobDataBean[])result.toArray( new CalcJobDataBean[result.size()] );
+    return (CalcJobClientBean[])result.toArray( new CalcJobClientBean[result.size()] );
   }
 
   /**

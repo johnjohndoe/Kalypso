@@ -53,7 +53,7 @@ import org.kalypso.optimize.OptimizerCalJob;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.impl.CalcJobHelper;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
@@ -65,13 +65,13 @@ public class NaModelCalcJob implements ICalcJob
 
   private ICalcJob m_calcJob = null;
 
-  public void run( File basedir, CalcJobDataBean[] beans ) throws CalcJobServiceException
+  public void run( File basedir, CalcJobClientBean[] beans ) throws CalcJobServiceException
   {
     try
     {
       // testen ob calcjob optimization hat
       final File baseInputDir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
-      final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId( NaModelConstants.CONTROL_ID,
+      final CalcJobClientBean controlBean = CalcJobHelper.getBeanForId( NaModelConstants.CONTROL_ID,
           beans );
       final File controlFile = new File( baseInputDir, controlBean.getPath() );
       final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
@@ -125,10 +125,10 @@ public class NaModelCalcJob implements ICalcJob
     return 0;
   }
 
-  public CalcJobDataBean[] getResults()
+  public CalcJobClientBean[] getCurrentResults()
   {
     if( m_calcJob != null )
-      return m_calcJob.getResults();
+      return m_calcJob.getCurrentResults();
     return null;
   }
 
