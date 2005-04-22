@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.Hashtable;
 
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 
 /**
  * @author doemming
@@ -52,7 +52,7 @@ import org.kalypso.services.calculation.service.CalcJobDataBean;
 
 public class CalcJobHelper
 {
-  public static CalcJobDataBean getBeanForId( String id, CalcJobDataBean[] beans )
+  public static CalcJobClientBean getBeanForId( String id, CalcJobClientBean[] beans )
   {
     for( int i = 0; i < beans.length; i++ )
     {
@@ -62,33 +62,33 @@ public class CalcJobHelper
     return null;
   }
 
-  public static CalcJobDataBean[] getMergedBeans( CalcJobDataBean[] initialBeans,
-      CalcJobDataBean[] beansToAdd )
+  public static CalcJobClientBean[] getMergedBeans( CalcJobClientBean[] initialBeans,
+      CalcJobClientBean[] beansToAdd )
   {
     final Hashtable result = new Hashtable();
     for( int i = 0; i < initialBeans.length; i++ )
     {
-      CalcJobDataBean bean = initialBeans[i];
+      CalcJobClientBean bean = initialBeans[i];
       result.put( bean.getId(), bean );
     }
     for( int i = 0; i < beansToAdd.length; i++ )
     {
-      CalcJobDataBean bean = beansToAdd[i];
+      CalcJobClientBean bean = beansToAdd[i];
       result.put( bean.getId(), bean );
     }
-    return (CalcJobDataBean[])result.values().toArray( new CalcJobDataBean[result.size()] );
+    return (CalcJobClientBean[])result.values().toArray( new CalcJobClientBean[result.size()] );
   }
 
-  public static CalcJobDataBean[] createBeansForNewBaseDir( CalcJobDataBean[] beans,
+  public static CalcJobClientBean[] createBeansForNewBaseDir( CalcJobClientBean[] beans,
       File baseDirOrg, File baseDirNew )
   {
-    CalcJobDataBean[] result = new CalcJobDataBean[beans.length];
+    CalcJobClientBean[] result = new CalcJobClientBean[beans.length];
     for( int i = 0; i < beans.length; i++ )
     {
-      CalcJobDataBean bean = beans[i];
+      CalcJobClientBean bean = beans[i];
       File file = new File( baseDirOrg, bean.getPath() );
       String path = FileUtilities.getRelativePathTo( baseDirNew, file );
-      result[i] = new CalcJobDataBean( bean.getId(), bean.getName(), path );
+      result[i] = new CalcJobClientBean( bean.getId(), path );
     }
     return result;
   }

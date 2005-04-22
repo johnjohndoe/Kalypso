@@ -206,4 +206,17 @@ public class ResourceUtilities
     final String projectName = path.segment( 0 );
     return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
+
+  /** Gets all local files for given resources */
+  public static File[] getLocalFiles( final IResource[] resources )
+  {
+    final File[] files = new File[resources.length];
+    for( int i = 0; i < resources.length; i++ )
+    {
+      final IResource resource = resources[i];
+      files[i] = resource.getLocation().toFile();
+    }
+    
+    return files;
+  }
 }

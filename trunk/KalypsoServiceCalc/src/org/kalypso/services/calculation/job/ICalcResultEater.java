@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,29 +36,52 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.calculation.common;
+
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.services.calculation.job;
+
+import java.io.File;
+
+import javax.activation.DataHandler;
+
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
+ * <p>
+ * Sammelt die Ergebnisse des
+ * {@link org.kalypso.services.calculation.job.ICalcJob}.
+ * </p>
+ * 
+ * <p>
+ * Daneben sammelt der Dateien, die später gelöscht werden sollen, das ist aber
+ * nur für internen gebrauch gedacht.
+ * </p>
+ * 
  * @author belger
  */
-public interface ICalcServiceConstants
+public interface ICalcResultEater
 {
-  public final int CANCELED = 2;
-  public final int ERROR = 4;
-  public final int FINISHED = 1;
-  public final int RUNNING = 0;
-  public final int UNKNOWN = -1;
-  public final int WAITING = 3;
+  public void addResult( final String id, final File file ) throws CalcJobServiceException;
+
+  /** Gibt zurück, welche Ergebnisse momentan verfügbar sind. */
+  public String[] getCurrentResults();
 
   /**
-   * @deprecated Don't use it anymore; the input dir is encapsulated by the DataProvider
-   *    -> Andreas: delete it, if have finished refaktoring
+   * Verpackt die aktuell vorliegenden Ergebnisse
+   * 
+   * @throws CalcJobServiceException
    */
-  public final String INPUT_DIR_NAME = "input";
-  
-  public final String OUTPUT_DIR_NAME = "output";
-  public final String RESULT_DIR_NAME = "Ergebnisse";
-  public final String CALC_DIR_NAME = "calc";
+  public DataHandler packCurrentResults() throws CalcJobServiceException;
+
+  /**
+   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch
+   * gedacht.
+   */
+  public void addFile( final File file );
+
+  /**
+   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird
+   * auch der Inhalt rekursiv gelöscht.
+   */
+  public void disposeFiles();
 }

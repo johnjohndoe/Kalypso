@@ -138,9 +138,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** name der modelspec datei, die verwendet wird */
   public final static String PROP_MODELSPEC = "modelspec";
 
-  /** Ergebnisordner vor Berechnung loeschen ? ["true"|"false"] */
-  public final static String PROP_CLEAR_RESULTS = "clearResultFolder";
-
   private static final String PROP_IGNORETYPE1 = "ignoreType1";
 
   private static final String PROP_IGNORETYPE2 = "ignoreType2";
@@ -845,13 +842,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
               ModelNature.ID );
           final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
-          final String clearResults = getArguments().getProperty( PROP_CLEAR_RESULTS, "true" );
-          boolean doClearResults = true;
-          if( "false".equals( clearResults ) )
-            doClearResults = false;
-
           final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor(
-              monitor, 1000 ), modelspec, doClearResults );
+              monitor, 1000 ), modelspec );
 
           // alle Modellseiten refreshen
           for( int i = 0; i < pages.length; i++ )

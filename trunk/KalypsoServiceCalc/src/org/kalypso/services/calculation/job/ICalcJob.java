@@ -36,32 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.job;
 
 import java.io.File;
+import java.net.URL;
 
-import org.kalypso.services.calculation.service.CalcJobDataBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * @author belger
  */
-public interface ICalcJob extends ICancelable
+public interface ICalcJob
 {
-  public void run( final File basedir, final CalcJobDataBean[] input ) throws CalcJobServiceException;
-  
-  /**
-   * Alles freigeben und evtl. temporäre Dateien löschen (z.B: die URL von
-   * getResult)
-   */
-  public void disposeJob();
+  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater, final ICalcMonitor monitor )
+      throws CalcJobServiceException;
 
-  /** Gibt den aktuellen Fortschritt des Jobs zurück, zwischen 0 und 100*/
-  public int getProgress();
-  
-  public String getMessage();
-  
-  public CalcJobDataBean[] getResults();
+  /** Gibt den Ort der Spezifikation (XML) zurück. */
+  public URL getSpezifikation();
 }

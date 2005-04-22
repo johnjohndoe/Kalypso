@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -56,6 +57,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.kalypso.java.net.IUrlResolver;
@@ -184,10 +186,19 @@ public final class GmlSerializer
     final URLConnection connection = gmlURL.openConnection();
     final String contentEncoding = connection.getContentEncoding();
 
-    final InputStream inputStream = connection.getInputStream();
-    final InputStreamReader isr = contentEncoding == null ? new InputStreamReader( inputStream ) : new InputStreamReader( inputStream, contentEncoding );
+    InputStream inputStream = null;
+    try
+    {
+      inputStream = new BufferedInputStream( connection.getInputStream() );
+      final InputStreamReader isr = contentEncoding == null ? new InputStreamReader( inputStream )
+          : new InputStreamReader( inputStream, contentEncoding );
 
-    return createGMLWorkspace( isr, urlResolver, gmlURL );
+      return createGMLWorkspace( isr, urlResolver, gmlURL );
+    }
+    finally
+    {
+    IOUtils.closeQuietly( inputStream );  
+    }
   }
 
   public static GMLWorkspace createGMLWorkspace( final Reader gmlreader, final IUrlResolver urlResolver, final URL context )

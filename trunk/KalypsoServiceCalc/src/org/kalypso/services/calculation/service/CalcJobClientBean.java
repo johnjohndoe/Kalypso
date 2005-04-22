@@ -36,53 +36,67 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.calculation.job.impl;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.services.calculation.service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import java.io.Serializable;
 
 /**
+ * Bean zum Starten des CalcJobs (Input/Ouput).
+ * Wird benutzt, um dem Server mitzuteilen, wie die IDs den relativen Pfaden auf dem Client zugeordnet sind.
+ * 
  * @author belger
  */
-public class CalcJobFactory
+public class CalcJobClientBean implements Serializable
 {
-  private static final Properties m_jobTypes = new Properties();
+  private String m_id;
 
-  public CalcJobFactory( final File typeFile )
+  private String m_path;
+
+  public CalcJobClientBean()
   {
-    try
-    {
-      m_jobTypes.load( new FileInputStream( typeFile ) );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
+  // nur für wspcompile
   }
 
-  public String[] getSupportedTypes()
+  /**
+   * @param id
+   *          ID dieses Datenobjekts
+   * @param path
+   *          Relativer Pfad innerhalb des Datenarchivs
+   *  
+   */
+  public CalcJobClientBean( final String id, final String path )
   {
-    return (String[])m_jobTypes.keySet().toArray( new String[0] );
+    m_id = id;
+    m_path = path;
   }
 
-  public ICalcJob createJob( final String typeID ) throws CalcJobServiceException
+  public final String getId()
   {
-    try
-    {
-      final String className = m_jobTypes.getProperty( typeID );
+    return m_id;
+  }
 
-      return (ICalcJob)Class.forName( className ).newInstance();
-    }
-    catch( final Exception e )
-    {
-      throw new CalcJobServiceException( "Konnte Job nicht erzeugen für Typ: " + typeID, e );
-    }
+  public final void setId( String id )
+  {
+    m_id = id;
+  }
+
+  public final String getPath()
+  {
+    return m_path;
+  }
+
+  public final void setPath( String url )
+  {
+    m_path = url;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    return super.toString() + "\n ID: " + m_id + "\n PATH: " + m_path;
   }
 }
