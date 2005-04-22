@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
-import org.kalypso.services.calculation.service.CalcJobDataBean;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 
 /**
  * calcjob that optimizes parameters of an encapsulated caljob
@@ -74,9 +74,9 @@ public class OptimizerCalJob extends AbstractCalcJob
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.service.CalcJobDataBean[])
+   *      org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public void run( final File baseDir, final CalcJobDataBean[] input )
+  public void run( final File baseDir, final CalcJobClientBean[] input )
   {
     final File calcDir = new File( baseDir, ICalcServiceConstants.CALC_DIR_NAME );
     try
@@ -87,7 +87,7 @@ public class OptimizerCalJob extends AbstractCalcJob
       m_sceJob.optimize( sceIO );
       if( isCanceled() )
         return;
-      CalcJobDataBean[] results = m_optimizingJob.getResults();
+      CalcJobClientBean[] results = m_optimizingJob.getResults();
       for( int i = 0; i < results.length; i++ )
         addResult( results[i] );
     }
