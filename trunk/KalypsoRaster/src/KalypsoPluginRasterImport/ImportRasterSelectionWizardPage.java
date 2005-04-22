@@ -23,9 +23,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -101,7 +103,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   File m_targetFile = null;
 
   File m_sourceFile = null;
-  
+
   private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
@@ -217,10 +219,10 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
       {// default
       }
     } );
-    
-    Label dummyLabel = new Label(group,SWT.NONE);
-    dummyLabel.setText("");
-    
+
+    Label dummyLabel = new Label( group, SWT.NONE );
+    dummyLabel.setText( "" );
+
     // line 3
     Label csLabel = new Label( group, SWT.NONE );
     csLabel.setText( "Coordinate system: " );
@@ -253,6 +255,14 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     csCombo.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
+      {
+        setPageComplete( false );
+      }
+    } );
+
+    csCombo.addListener( SWT.DefaultSelection, new Listener()
+    {
+      public void handleEvent( Event e )
       {
         selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
         validate();
@@ -359,7 +369,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
       error.append( "Quelle nicht ausgewählt\n" );
       setPageComplete( false );
     }
-    
+
     if( selectedCoordinateSystemName != null )
     {
       selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
@@ -383,7 +393,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     }
     if( error.length() > 0 )
       setErrorMessage( error.toString() );
-      //setMessage( error.toString() );
+    //setMessage( error.toString() );
     else
       setMessage( "Eingaben OK" );
   }
@@ -450,7 +460,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   {
     return new RasterImportSelection( m_sourceFile, m_targetFile, m_format );
   }
-  
+
   public CS_CoordinateSystem getSelectedCoordinateSystem()
   {
     return selectedCoordinateSystem;
