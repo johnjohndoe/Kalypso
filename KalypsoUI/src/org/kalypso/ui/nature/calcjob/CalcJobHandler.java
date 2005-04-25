@@ -40,9 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.nature.calcjob;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,6 +54,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -162,11 +165,21 @@ public class CalcJobHandler
         // clear results as defined in modelspec
         clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
-        //just unzip files
         final IProject project = calcCaseFolder.getProject();
-        ZipUtilities.unzip( handler.getInputStream(), project.getLocation().toFile() );
-        monitor.worked( 1000 );
-        
+
+        //just unzip files
+        InputStream inputStream = null;
+        try
+        {
+          inputStream = new BufferedInputStream( handler.getInputStream() );
+          ZipUtilities.unzip( inputStream, project.getLocation().toFile() );
+          monitor.worked( 1000 );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( inputStream );
+        }
+
         project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
         return;
 
@@ -215,22 +228,24 @@ public class CalcJobHandler
     }
   }
 
-  private void clearResults( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  private void clearResults( final IFolder calcCaseFolder, final IProgressMonitor monitor )
+      throws CoreException
   {
     try
     {
       final IProject project = calcCaseFolder.getProject();
-      
+
       final List clearList = m_modelspec.getClearAfterCalc();
       monitor.beginTask( "Alte Ergebnisse werden gelöscht", clearList.size() );
-      
+
       for( final Iterator clearIt = clearList.iterator(); clearIt.hasNext(); )
       {
         final ModeldataType.ClearAfterCalcType clearType = (ClearAfterCalcType)clearIt.next();
-        
+
         final boolean relToCalc = clearType.isRelativeToCalcCase();
         final String path = clearType.getPath();
-        final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project.findMember( path );
+        final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project
+            .findMember( path );
         if( resource != null )
           resource.delete( false, new SubProgressMonitor( monitor, 1 ) );
       }
@@ -281,11 +296,12 @@ public class CalcJobHandler
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final ModeldataType.OutputType ot = (ModeldataType.OutputType)iter.next();
-      
+
       final String outpath = ot.getPath();
       final boolean relCalcCase = ot.isRelativeToCalcCase();
-      final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath : outpath;
-      
+      final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath
+          : outpath;
+
       output[count++] = new CalcJobClientBean( ot.getId(), path );
     }
 
