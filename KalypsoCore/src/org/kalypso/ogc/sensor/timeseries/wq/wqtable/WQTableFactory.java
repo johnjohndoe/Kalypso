@@ -1,6 +1,9 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -15,6 +18,7 @@ import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+import org.kalypso.util.serializer.ISerializer;
 import org.xml.sax.InputSource;
 
 /**
@@ -22,13 +26,18 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class WQTableFactory
+public class WQTableFactory implements ISerializer
 {
   private static ObjectFactory m_objectFactory = new ObjectFactory();
 
   private WQTableFactory( )
   {
     // not intended to be instanciated
+  }
+  
+  public static WQTableFactory getInstance()
+  {
+    return new WQTableFactory();
   }
 
   /**
@@ -150,6 +159,41 @@ public class WQTableFactory
     catch( final JAXBException e )
     {
       throw new WQException( e );
+    }
+  }
+
+  /**
+   * Reads a WQTableSet from an InputStream
+   * 
+   * @see org.kalypso.util.serializer.ISerializer#read(java.io.InputStream)
+   */
+  public Object read( final InputStream ins ) throws InvocationTargetException
+  {
+    try
+    {
+      return parse( new InputSource(ins) );
+    }
+    catch( final WQException e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
+  }
+
+  /**
+   * @see org.kalypso.util.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
+   */
+  public void write( final Object object, final OutputStream os ) throws InvocationTargetException
+  {
+    try
+    {
+      final String xml = createXMLString( (WQTableSet) object );
+      os.write( xml.getBytes() );
+    }
+    catch( final Exception e ) // WQException, IOException
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
     }
   }
 }
