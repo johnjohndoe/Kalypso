@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor.impl;
 import org.kalypso.ogc.sensor.IAxis;
 
 /**
- * Default implementation of the IAxis interface.
+ * Default implementation of the IAxis interface. This class is immutable.
  * 
  * @author schlienger
  */

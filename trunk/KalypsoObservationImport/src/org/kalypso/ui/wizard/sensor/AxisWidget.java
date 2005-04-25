@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SimpleAxis;
+import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
