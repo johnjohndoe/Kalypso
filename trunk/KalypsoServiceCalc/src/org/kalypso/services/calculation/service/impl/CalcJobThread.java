@@ -48,7 +48,7 @@ import org.kalypso.java.io.FileUtilities;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.services.calculation.job.ICalcResultPacker;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
@@ -63,7 +63,7 @@ final class CalcJobThread extends Thread
 
   private final ICalcDataProvider m_inputData;
 
-  private final ICalcResultEater m_resultEater;
+  private final ICalcResultPacker m_resultPacker;
 
   public CalcJobThread( final String id, final String description, final String typeID, final ICalcJob job, final ModelspecData modelspec, final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
@@ -71,14 +71,14 @@ final class CalcJobThread extends Thread
     
     m_jobBean = new CalcJobInfoBean( "" + id, description, typeID, ICalcServiceConstants.WAITING, -1 );
     m_inputData = new JarCalcDataProvider( zipHandler, input );
-    m_resultEater = new DefaultCalcResultEater( modelspec, output );
+    m_resultPacker = new DefaultCalcResultEater( modelspec, output );
 
     modelspec.checkInput( m_inputData );
   }
 
   public void dispose()
   {
-    m_resultEater.disposeFiles();
+    m_resultPacker.disposeFiles();
   }
 
   public ICalcJob getJob()
@@ -88,7 +88,7 @@ final class CalcJobThread extends Thread
   
   public CalcJobInfoBean getJobBean()
   {
-    m_jobBean.setCurrentResults( m_resultEater.getCurrentResults() );
+    m_jobBean.setCurrentResults( m_resultPacker.getCurrentResults() );
 
     return m_jobBean;
   }
@@ -107,9 +107,9 @@ final class CalcJobThread extends Thread
 
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig
           .getTempDir() );
-      m_resultEater.addFile( tmpdir );
+      m_resultPacker.addFile( tmpdir );
       
-      m_job.run( tmpdir, m_inputData, m_resultEater, m_jobBean );
+      m_job.run( tmpdir, m_inputData, m_resultPacker, m_jobBean );
 
       CalcJobService_impl_Queued.LOGGER.info( "Run finished for ID: " + jobID );
 
@@ -133,11 +133,11 @@ final class CalcJobThread extends Thread
 
   public DataHandler packCurrentResults() throws CalcJobServiceException
   {
-    return m_resultEater.packCurrentResults();
+    return m_resultPacker.packCurrentResults();
   }
 
   public String[] getCurrentResults()
   {
-    return m_resultEater.getCurrentResults();
+    return m_resultPacker.getCurrentResults();
   }
 }
