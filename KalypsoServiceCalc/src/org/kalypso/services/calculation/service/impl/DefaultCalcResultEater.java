@@ -56,14 +56,14 @@ import javax.activation.FileDataSource;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.util.zip.ZipFileVisitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.services.calculation.job.ICalcResultPacker;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * @author belger
  */
-public class DefaultCalcResultEater implements ICalcResultEater
+public class DefaultCalcResultEater implements ICalcResultPacker
 {
   private final Vector m_files = new Vector();
   
@@ -111,7 +111,7 @@ public class DefaultCalcResultEater implements ICalcResultEater
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#getCurrentResults()
+   * @see org.kalypso.services.calculation.job.ICalcResultPacker#getCurrentResults()
    */
   public String[] getCurrentResults()
   {
@@ -126,8 +126,8 @@ public class DefaultCalcResultEater implements ICalcResultEater
   }
 
   /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#packCurrentResults()
+   * @throws CalcJobServiceException 
+   * @see org.kalypso.services.calculation.job.ICalcResultPacker#packCurrentResults()
    */
   public DataHandler packCurrentResults() throws CalcJobServiceException
   {
