@@ -3,6 +3,7 @@ package de.kisters.wiski.webdataprovider.common.net;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -73,8 +74,8 @@ public final class KiWWClientSample
 
         //wiskiExample( myServerObject, auth, from, to );
 
-        bceDump( myServerObject );
-        
+        wqTest( myServerObject, auth );
+
         //logout
         myServerObject.logout( auth, null );
         System.out.println( "logout" );
@@ -91,9 +92,43 @@ public final class KiWWClientSample
     }
   }
 
-  private static void bceDump( final KiWWDataProviderRMIf myServerObject )
+  private static void wqTest( final KiWWDataProviderRMIf myServerObject,
+      final HashMap auth )
   {
-    
+    try
+    {
+      final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+      final Timestamp ts = new Timestamp( sdf.parse( "2004-01-01 00:00:00" )
+          .getTime() );
+      final HashMap ratingTables = myServerObject.getRatingTables( auth,
+          KiWWDataProviderInterface.OBJECT_TIMESERIES, new Long[] { new Long(
+              1024002488 ) }, ts );
+      
+      System.out.println( ratingTables );
+      
+      //getTsInfoList filtered by group_ident
+      String[] gettsinfo = new String[] { "tsinfo_id", "tsinfo_name", "tsinfo_group_ident",
+          "tsinfo_group_name", "stationparameter_name", "tsinfo_unitname",
+          "tsinfo_distcount", "tsinfo_distunit" };
+
+      int maxRows = 15;
+
+      SimpleRequestFilterTerm filter_ts_group = new SimpleRequestFilterTerm();
+      filter_ts_group.addColumnReference( "tsinfo_id" );
+      filter_ts_group.addOperator( "=" );
+      filter_ts_group.addValue( new Long( 1024002488 ) ); 
+
+      final HashMap tsinfolist_group = myServerObject.getTsInfoList( auth, gettsinfo,
+          null, filter_ts_group, maxRows, 0, false, null );
+      final LinkedList resultListinfo = (LinkedList) tsinfolist_group
+          .get( "resultList" );
+      
+      System.out.println( resultListinfo );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   private static void findOutColumnNames(
@@ -124,7 +159,8 @@ public final class KiWWClientSample
   }
 
   private static void wiskiExample( KiWWDataProviderRMIf myServerObject,
-      HashMap auth, Timestamp from, Timestamp to ) throws RemoteException, KiWWException, InterruptedException
+      HashMap auth, Timestamp from, Timestamp to ) throws RemoteException,
+      KiWWException, InterruptedException
   {
     //getStationList filtered by station_name and station_group_name
     String[] getsl = new String[] { "station_no", "station_name", "station_id",

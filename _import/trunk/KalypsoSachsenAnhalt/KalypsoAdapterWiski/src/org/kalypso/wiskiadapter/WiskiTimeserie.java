@@ -279,8 +279,7 @@ public class WiskiTimeserie implements IObservation
    * Helper for translating Wiski Rating-Tables into Kalypso Metadata
    */
   private void fetchWQTable( final MetadataList metadata, final Date from,
-      final Date to ) throws NumberFormatException, WQException,
-      RemoteException, KiWWException, RepositoryException
+      final Date to )
   {
     final String sourceType = m_axes[1].getType();
     final String destType;
@@ -292,20 +291,52 @@ public class WiskiTimeserie implements IObservation
       destType = TimeserieConstants.TYPE_RUNOFF; // here we could have also said
     // TYPE_VOLUME but since we don't know what the client
     // wants at this time we leave TYPE_RUNOFF as default
+    // TODO: find a solution for this problem (not knowing which type...)
     else
       return;
 
     final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
 
     final GetRatingTables call = new GetRatingTables( m_tsinfo.getWiskiId(), to );
-    rep.executeWiskiCall( call );
 
-    final WQTable wqt = new WQTable( from, call.getW(), call.getQ() );
-    final WQTableSet set = new WQTableSet( new WQTable[] { wqt }, sourceType,
-        destType );
-    final String xml = WQTableFactory.createXMLString( set );
+    WQTableSet wqTableSet = null;
 
-    metadata.setProperty( TimeserieConstants.MD_WQTABLE, xml );
+    try
+    {
+      rep.executeWiskiCall( call );
+
+      if( call.hasTable() )
+      {
+        final WQTable wqt = new WQTable( from, call.getW(), call.getQ() );
+        wqTableSet = new WQTableSet( new WQTable[] { wqt }, sourceType,
+            destType );
+
+        RatingTableCache.getInstance().check( wqTableSet,
+            m_tsinfo.getWiskiId(), to );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      // try to load this WQ-Table from the cache
+      wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getWiskiId(),
+          to );
+    }
+
+    if( wqTableSet != null )
+    {
+      try
+      {
+        final String xml;
+        xml = WQTableFactory.createXMLString( wqTableSet );
+        metadata.setProperty( TimeserieConstants.MD_WQTABLE, xml );
+      }
+      catch( WQException e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**

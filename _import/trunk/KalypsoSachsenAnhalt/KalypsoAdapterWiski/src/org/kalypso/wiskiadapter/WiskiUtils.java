@@ -40,7 +40,7 @@ public final class WiskiUtils
    * 
    * @throws RepositoryException
    */
-  public static Properties getProperties( ) throws RepositoryException
+  public static Properties getProperties( )
   {
     // lazy loading
     if( PROPS != null )
@@ -59,7 +59,7 @@ public final class WiskiUtils
     catch( IOException e )
     {
       e.printStackTrace();
-      throw new RepositoryException( e );
+      throw new IllegalStateException( e.getLocalizedMessage() );
     }
     finally
     {
@@ -129,21 +129,13 @@ public final class WiskiUtils
    */
   public static String wiskiType2Kalypso( final String wiskiType )
   {
-    try
-    {
-      final String type = getProperties().getProperty( "TYPE_" + wiskiType );
+    final String type = getProperties().getProperty( "TYPE_" + wiskiType );
 
-      if( type == null )
-        throw new IllegalArgumentException( "Wiski-Typ nicht erkannt: "
-            + wiskiType );
+    if( type == null )
+      throw new IllegalArgumentException( "Wiski-Typ nicht erkannt: "
+          + wiskiType );
 
-      return type;
-    }
-    catch( RepositoryException e )
-    {
-      e.printStackTrace();
-      throw new IllegalArgumentException( e.getLocalizedMessage() );
-    }
+    return type;
   }
 
   /**
@@ -154,21 +146,13 @@ public final class WiskiUtils
    */
   public static String wiskiMetadataName2Kalypso( final String wiskiName )
   {
-    try
-    {
-      final String md = getProperties().getProperty( "MD_" + wiskiName );
+    final String md = getProperties().getProperty( "MD_" + wiskiName );
 
-      if( md == null )
-        throw new IllegalArgumentException( "Wiski-Name nicht erkannt: "
-            + wiskiName );
+    if( md == null )
+      throw new IllegalArgumentException( "Wiski-Name nicht erkannt: "
+          + wiskiName );
 
-      return md;
-    }
-    catch( RepositoryException e )
-    {
-      e.printStackTrace();
-      throw new IllegalArgumentException( e.getLocalizedMessage() );
-    }
+    return md;
   }
 
   /**
@@ -179,21 +163,12 @@ public final class WiskiUtils
    */
   public static Integer wiskiStatus2Kalypso( final String wiskiStatus )
   {
-    try
-    {
-      final String status = getProperties().getProperty(
-          "STATUS_" + wiskiStatus );
+    final String status = getProperties().getProperty( "STATUS_" + wiskiStatus );
 
-      if( status == null )
-        throw new IllegalArgumentException( "Wiski-Status nicht erkannt: "
-            + wiskiStatus );
+    if( status == null )
+      throw new IllegalArgumentException( "Wiski-Status nicht erkannt: "
+          + wiskiStatus );
 
-      return Integer.valueOf( status );
-    }
-    catch( RepositoryException e )
-    {
-      e.printStackTrace();
-      throw new IllegalArgumentException( e.getLocalizedMessage() );
-    }
+    return Integer.valueOf( status );
   }
 }

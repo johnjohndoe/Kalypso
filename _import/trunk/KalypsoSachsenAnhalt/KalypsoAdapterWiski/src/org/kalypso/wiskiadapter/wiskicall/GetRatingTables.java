@@ -40,24 +40,27 @@ public class GetRatingTables implements IWiskiCall
         new Timestamp( m_validity.getTime() ) );
 
     final LinkedList list = (LinkedList) tables.get( m_id );
-    System.out.println(list);
-    final HashMap table = (HashMap) list.getFirst();
-
-    final String[] strW = ((String) table.get( "curve_table_stage" ))
-        .split( "," );
-    final String[] strQ = ((String) table.get( "curve_table_flow" ))
-        .split( "," );
-
-    if( strW.length != strQ.length )
-      throw new IllegalArgumentException(
-          "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
-
-    W = new double[strW.length];
-    Q = new double[strW.length];
-    for( int i = 0; i < strW.length; i++ )
+    System.out.println( "ID:" + m_id + " - " + list );
+    if( list.size() > 0 )
     {
-      W[i] = Double.parseDouble( strW[i] );
-      Q[i] = Double.parseDouble( strQ[i] );
+      final HashMap table = (HashMap) list.getFirst();
+
+      final String[] strW = ((String) table.get( "curve_table_stage" ))
+          .split( "," );
+      final String[] strQ = ((String) table.get( "curve_table_flow" ))
+          .split( "," );
+
+      if( strW.length != strQ.length )
+        throw new IllegalArgumentException(
+            "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+
+      W = new double[strW.length];
+      Q = new double[strW.length];
+      for( int i = 0; i < strW.length; i++ )
+      {
+        W[i] = Double.parseDouble( strW[i] );
+        Q[i] = Double.parseDouble( strQ[i] );
+      }
     }
   }
 
@@ -69,5 +72,10 @@ public class GetRatingTables implements IWiskiCall
   public double[] getQ( )
   {
     return Q;
+  }
+  
+  public boolean hasTable()
+  {
+    return W != null;
   }
 }
