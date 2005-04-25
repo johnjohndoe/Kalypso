@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<SpreeControl fid="foo" xmlns="org.kalypso.spree.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://ww  w.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/control.xsd">
-  <startsimulation>2004-04-26T22:00:00</startsimulation>
-  <startforecast>2004-04-27T10:00:00</startforecast>
-  <editor>belger</editor>
-  <description>Testdaten LfUG</description>
-  <comment>Testdatensatz von LfUG bereitgestellt.</comment>
-  <calctime>2004-11-17T18:11:00</calctime>
-</SpreeControl>

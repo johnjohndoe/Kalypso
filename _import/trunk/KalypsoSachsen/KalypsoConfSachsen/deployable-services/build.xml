@@ -23,7 +23,6 @@
 		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="clean" inheritAll="false" />
@@ -42,10 +41,11 @@
 
 	<target name="build-plugins" depends="build-basic, build-CalcService">
 		<echo message="Building specific plugins for Sachsen" />
-		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+<!--		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+-->
 		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
+<!--		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
+-->
 	</target>
 
 	<target name="modelplugins-dependency" depends="build-plugins">
@@ -54,9 +54,11 @@
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoSpreePlugin/build/deploy" includes="**/*.jar" />
 		</copy>
-		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+<!-- TODO: what about KalypsoOptimize? -->	  
+<!--		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoNA/build/deploy" includes="**/*.jar" />
 		</copy>
+-->		
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
 		</copy>
