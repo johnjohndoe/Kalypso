@@ -582,16 +582,16 @@
          </menu>
          <action
                label="Vorhersage durchführen"
-               icon="etc/kalypso16.gif"
+               icon="icons/kalypso16.gif"
                class="org.kalypso.ui.action.StartCalcWizardAction"
                menubarPath="org.kalypso.menu.model/prognoseStart"
                id="org.kalypso.action.model.checkoutModel">
          </action>
          <action
-               label="Berechnung durchführen"
+               label="Berechnung(en) durchführen"
                icon="icons/rechne.gif"
                class="org.kalypso.ui.action.StartCalculationActionDelegate"
-               tooltip="führt die Berechnung der selektierten Rechenvariante aus, bereits vorhandene Ergebnisdaten werden überschrieben"
+               tooltip="Führt die Berechnung der selektierten Rechenvarianten aus, bereits vorhandene Ergebnisdaten werden überschrieben"
                menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
                id="org.kalypso.action.model.runCalcCase">
          </action>
@@ -636,6 +636,7 @@
             <groupMarker
                   name="calcCaseStart">
             </groupMarker>
+            <separator name="calcCaseDebug"/>
          </menu>
          <action
                label="Archivieren"

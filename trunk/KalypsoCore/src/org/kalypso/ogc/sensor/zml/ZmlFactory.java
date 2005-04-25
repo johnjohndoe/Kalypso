@@ -218,11 +218,13 @@ public class ZmlFactory
         // the OCSUrlStreamHandler )
         inputStream = url.openStream();
       }
+      
+      inputStream = new BufferedInputStream( inputStream ); 
 
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
       // url handling.
-      return parseXML( new InputSource( new BufferedInputStream( inputStream ) ), identifier, url );
+      return parseXML( new InputSource( inputStream ), identifier, url );
     }
     catch( IOException e )
     {
