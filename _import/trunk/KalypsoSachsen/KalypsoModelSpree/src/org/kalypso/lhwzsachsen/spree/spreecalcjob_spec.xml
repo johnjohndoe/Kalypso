@@ -6,12 +6,6 @@
 	<input id="GML"/>
 	<input id="ZML"/>
 	<output id="ERGEBNISSE"/>
-	<output id="NAP_IN"/>
-	<output id="VHS_IN"/>
-	<output id="FLP_IN"/>
-	<output id="TS_IN"/>
-	<output id="NAP_OUT"/>
-	<output id="VHS_OUT"/>
-	<output id="FLP_OUT"/>
-	<output id="TS_OUT"/>
+	<output id="NATIVE_IN_DIR"/>
+	<output id="NATIVE_OUT_DIR"/>
 </modelspec>

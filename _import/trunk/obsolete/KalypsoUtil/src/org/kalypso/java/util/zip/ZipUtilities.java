@@ -47,6 +47,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -99,10 +100,10 @@ public class ZipUtilities
         if( !newfile.getParentFile().exists() )
           newfile.getParentFile().mkdirs();
 
-        FileOutputStream os = null;
+        OutputStream os = null;
         try
         {
-          os = new FileOutputStream( newfile );
+          os = new BufferedOutputStream( new FileOutputStream( newfile ) );
           CopyUtils.copy( zis, os );
         }
         finally

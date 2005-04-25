@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpreeModell fid="root" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/modell.xsd">
+<SpreeModell fid="root" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.spree.modell project:/.model/schema/modell.xsd">
+  <gml:description/>
+  <gml:name/>
   <PegelCollectionAssociation>
     <PegelCollection fid="EZC_1">
       <PegelMember>
@@ -7,7 +9,7 @@
           <Name>Schirgiswalde</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5460570.000064632,5660600.00845752</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5460570.00016158,5660600.021143925</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -45,7 +47,7 @@
           <Name>Bautzen</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5458610.000067921,5670080.008441401</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5458610.000169803,5670080.021103631</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -83,7 +85,7 @@
           <Name>Gröditz 1</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5473800.000043015,5674170.008434269</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5473800.000107538,5674170.021085799</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -102,7 +104,7 @@
             <TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583121.P1_MW" ns1:type="simple" timeaxis="Datum" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_vorhersageAblage>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
-          <Bodenfeuchte>0.0</Bodenfeuchte>
+          <Bodenfeuchte>1.0</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
           <Ausdehnung/>
           <Niederschlag_gemessen>
@@ -121,7 +123,7 @@
           <Name>Jänkendorf</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5487000.000021356,5679730.008424596</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5487000.000053392,5679730.021061616</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -159,7 +161,7 @@
           <Name>Särichen</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5492110.000012964,5681830.008420938</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5492110.000032412,5681830.021052472</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -197,7 +199,7 @@
           <Name>Lieske</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5467400.000053611,5688520.008409362</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5467400.000134027,5688520.021023534</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -226,7 +228,7 @@
           <Name>Boxberg</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5470540.000048492,5696840.008394669</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5470540.00012123,5696840.020986796</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -255,7 +257,7 @@
           <Name>Sprey</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5466760.000054731,5699710.008389591</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5466760.000136828,5699710.020974114</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -284,7 +286,7 @@
           <Name>Spreewitz</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5458780.000067936,5708640.008373685</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5458780.000169841,5708640.020934349</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -313,7 +315,7 @@
           <Name>Spremberg</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5456440.000107773,5716010.012540718</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5456440.000215545,5716010.025081432</gml:coordinates>
             </gml:Point>
           </Ort>
           <Wasserstand_gemessenEingang>
@@ -347,7 +349,7 @@
           <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5482460.000028829,5683900.008417357</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5482460.000072073,5683900.021043521</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abgabe_eingang>
@@ -373,7 +375,7 @@
           <Anfangsstauvolumen>0.0</Anfangsstauvolumen>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5463280.0000602985,5675800.008431527</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5463280.000150746,5675800.02107895</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abgabe_eingang>
@@ -402,7 +404,7 @@
           <Name>ÜL RLK</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5453430.000076779,5711860.008367932</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5453430.000191948,5711860.020919969</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>
@@ -418,7 +420,7 @@
           <Name>ZL RL Lohsa II</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5466790.000054668,5697390.008393805</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5466790.00013667,5697390.020984512</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>
@@ -434,7 +436,7 @@
           <Name>ZL RL Bärwalde</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5466277.000055481,5692313.008402788</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5466277.000138702,5692313.021006971</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>
@@ -450,7 +452,7 @@
           <Name>Abzweig Kleine Spree</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5467640.000053175,5681840.00842103</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5467640.000132938,5681840.021052703</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>
@@ -466,7 +468,7 @@
           <Name>Burgneudorf</Name>
           <Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5457600.000069872,5707320.008376068</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5457600.000174678,5707320.020940305</gml:coordinates>
             </gml:Point>
           </Ort>
           <Abfluss_eingang>

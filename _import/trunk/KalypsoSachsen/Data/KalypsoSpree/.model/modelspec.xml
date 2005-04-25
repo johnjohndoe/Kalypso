@@ -1,39 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
     <input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
     <input id="CONTROL_XSD" path=".model/schema/control.xsd" relativeToCalcCase="false"/>
-    <input id="FEATURE_XSD" path=".model/schema/feature.xsd" relativeToCalcCase="false"/>
-    <input id="GEOMETRY_XSD" path=".model/schema/geometry.xsd" relativeToCalcCase="false"/>
     <input id="MODELL_XSD" path=".model/schema/modell.xsd" relativeToCalcCase="false"/>
-    <input id="OBSLINK_XSD" path=".model/schema/obslink.xsd" relativeToCalcCase="false"/>
-    <input id="XLINKS_XSD" path=".model/schema/xlinks.xsd" relativeToCalcCase="false"/>
-    <input id="XLINKSEXT_XSD" path=".model/schema/xlinksext.xsd" relativeToCalcCase="false"/>
     <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
+    <input id="ZML" path="Zeitreihen" relativeToCalcCase="true"/>
+    <input id="schemas" path=".model/schema" relativeToCalcCase="false"/>
     
-    <input id="PA_BAUTZWB" path="Zeitreihen/PA_BAUTZWB.zml" relativeToCalcCase="true"/>
-    <input id="PA_GROEDI" path="Zeitreihen/PA_GROEDI.zml" relativeToCalcCase="true"/>
-    <input id="PA_JAENKD" path="Zeitreihen/PA_JAENKD.zml" relativeToCalcCase="true"/>
-    <input id="PA_SAERI" path="Zeitreihen/PA_SAERI.zml" relativeToCalcCase="true"/>
-    <input id="PA_SCHIRG" path="Zeitreihen/PA_SCHIRG.zml" relativeToCalcCase="true"/>
+    <output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
+    <output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
+    <output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
 
-    <input id="QP_BURGNEU" path="Zeitreihen/QP_BURGNEU.zml" relativeToCalcCase="true"/>
-
-    <input id="QV_BWALDE" path="Zeitreihen/QV_BWALDE.zml" relativeToCalcCase="true"/>
-    <input id="QV_LOHSA" path="Zeitreihen/QV_LOHSA.zml" relativeToCalcCase="true"/>
-    <input id="QV_RLKETTE" path="Zeitreihen/QV_RLKETTE.zml" relativeToCalcCase="true"/>
-    <input id="QV_SPWIESE" path="Zeitreihen/QV_SPWIESE.zml" relativeToCalcCase="true"/>
-    <input id="QV_TSBAUTZ" path="Zeitreihen/QV_TSBAUTZ.zml" relativeToCalcCase="true"/>
-    <input id="QV_TSQUITZ" path="Zeitreihen/QV_TSQUITZ.zml" relativeToCalcCase="true"/>
-
-    <input id="W_BAUTZWB" path="Zeitreihen/W_BAUTZWB.zml" relativeToCalcCase="true"/>
-    <input id="W_GROEDI" path="Zeitreihen/W_GROEDI.zml" relativeToCalcCase="true"/>
-    <input id="W_JAENKD" path="Zeitreihen/W_JAENKD.zml" relativeToCalcCase="true"/>
-    <input id="W_SAERI" path="Zeitreihen/W_SAERI.zml" relativeToCalcCase="true"/>
-    <input id="W_SCHIRG" path="Zeitreihen/W_SCHIRG.zml" relativeToCalcCase="true"/>
-
-    <input id="W_BOXBRG" path="Zeitreihen/W_BOXBRG.zml" relativeToCalcCase="true"/>
-    <input id="W_LIESKE" path="Zeitreihen/W_LIESKE.zml" relativeToCalcCase="true"/>
-    <input id="W_SPREMB" path="Zeitreihen/W_SPREMB.zml" relativeToCalcCase="true"/>
-    <input id="W_SPREY" path="Zeitreihen/W_SPREY.zml" relativeToCalcCase="true"/>
-    <input id="W_SPWITZ" path="Zeitreihen/W_SPWITZ.zml" relativeToCalcCase="true"/>
-</modelspec>
+    <clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+</modeldata>

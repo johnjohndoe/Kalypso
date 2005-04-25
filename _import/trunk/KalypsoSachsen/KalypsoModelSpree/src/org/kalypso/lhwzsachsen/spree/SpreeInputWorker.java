@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -89,7 +88,6 @@ public class SpreeInputWorker
     {
       final File nativedir = new File( tmpdir, "native" );
       nativedir.mkdirs();
-
 
       final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
       final URL controlSchemaURL = inputProvider.getURLForID( "CONTROL_XSD" );
@@ -352,28 +350,24 @@ public class SpreeInputWorker
         if( tsDesc.id.startsWith( "W_" ) )
         {
           // neuen Namen generieren
-          final String qName = "Q_" + tsDesc.id.substring( 2 );
+          try
+          {
+            final String qName = "Q_" + tsDesc.id.substring( 2 );
 
-          final WQTimeserieProxy filter = new WQTimeserieProxy(
-              TimeserieConstants.TYPE_WATERLEVEL,
-              TimeserieConstants.TYPE_RUNOFF, obs );
-          
-          tsmap.addObservation( filter, qName );
+            final WQTimeserieProxy filter = new WQTimeserieProxy(
+                TimeserieConstants.TYPE_WATERLEVEL, TimeserieConstants.TYPE_RUNOFF, obs );
+
+            tsmap.addObservation( filter, qName );
+          }
+          catch( final Exception e )
+          {
+            LOGGER.info( "WQ-Umrechnung klappt nicht für: " + obsURL );
+          }
         }
-      }
-      catch( final NoSuchElementException nse )
-      {
-        // passiert, wenn es keine entsprechende Axen giebt
-        nse.printStackTrace();
-
-        throw new CalcJobServiceException( "Fehlerhafte Eingabedateien: " + obsURL.toString(), nse );
       }
       catch( final SensorException se )
       {
-        se.printStackTrace();
-//
-//        throw new CalcJobServiceException(
-//            "Fehler beim Einlesen der Zeitreihen: " + obsURL.toString(), se );
+        LOGGER.info( "ZML wurde nicht geladen: " + obsURL );
       }
     }
 

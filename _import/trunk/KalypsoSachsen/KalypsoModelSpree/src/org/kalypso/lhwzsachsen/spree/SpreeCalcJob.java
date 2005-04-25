@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -259,6 +261,7 @@ public class SpreeCalcJob implements ICalcJob
       final ICalcMonitor monitor ) throws CalcJobServiceException
   {
     final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    
     outputdir.mkdirs();
     final File logfile = new File( outputdir, "spree.log" );
 
@@ -279,14 +282,19 @@ public class SpreeCalcJob implements ICalcJob
       final TSMap tsmap = new TSMap();
       final File exedir = SpreeInputWorker.createNativeInput( tmpdir, inputProvider, props, pw, tsmap );
 
+      final File nativedir = new File( tmpdir, ".native" );
+      final File nativeindir = new File( nativedir, "in" );
+      final File nativeoutdir = new File( nativedir, "out" );
+
       final File napFile = (File)props.get( DATA_NAPFILE );
       final File vhsFile = (File)props.get( DATA_VHSFILE );
       final File flpFile = (File)props.get( DATA_FLPFILE );
       final File tsFile = (File)props.get( DATA_TSFILE );
-      resultEater.addResult( "NAP_IN", napFile );
-      resultEater.addResult( "VHS_IN", vhsFile );
-      resultEater.addResult( "FLP_IN", flpFile );
-      resultEater.addResult( "TS_IN", tsFile );
+      FileUtils.copyFileToDirectory( napFile, nativeindir );
+      FileUtils.copyFileToDirectory( vhsFile, nativeindir );
+      FileUtils.copyFileToDirectory( flpFile, nativeindir );
+      FileUtils.copyFileToDirectory( tsFile, nativeindir );
+      resultEater.addResult( "NATIVE_IN_DIR", nativeindir );
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
@@ -296,10 +304,12 @@ public class SpreeCalcJob implements ICalcJob
       pw.println( "Rechenkern wird aufgerufen" );
       prepareExe( exedir, pw );
       startCalculation( exedir, props, pw, monitor );
-      resultEater.addResult( "NAP_OUT", napFile );
-      resultEater.addResult( "VHS_OUT", vhsFile );
-      resultEater.addResult( "FLP_OUT", flpFile );
-      resultEater.addResult( "TS_OUT", tsFile );
+      FileUtils.copyFileToDirectory( napFile, nativeoutdir );
+      FileUtils.copyFileToDirectory( vhsFile, nativeoutdir );
+      FileUtils.copyFileToDirectory( flpFile, nativeoutdir );
+      FileUtils.copyFileToDirectory( tsFile, nativeoutdir );
+      resultEater.addResult( "NATIVE_OUT_DIR", nativeindir );
+
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
         return;
@@ -337,8 +347,6 @@ public class SpreeCalcJob implements ICalcJob
 
       resultEater.addResult( "ERGEBNISSE", outputdir );
     }
-    
-    
   }
 
   private void fetchOptimalValues( final Properties props, final File outdir )
@@ -419,8 +427,8 @@ public class SpreeCalcJob implements ICalcJob
 
       final File exefile = new File( exedir, EXE_FILE );
 
-      final String commandString = exefile.getAbsolutePath() + " " + timeString + " "
-          + tsFile.getAbsolutePath();
+      final String commandString = exefile + " " + timeString + " "
+          + tsFile.getName();
 
       logwriter.println( commandString );
       logwriter.println( "Ausgabe des Rechenkerns" );
@@ -470,18 +478,8 @@ public class SpreeCalcJob implements ICalcJob
     }
     finally
     {
-      try
-      {
-        if( inStream != null )
-          inStream.close();
-
-        if( errStream != null )
-          errStream.close();
-      }
-      catch( final IOException e1 )
-      {
-        e1.printStackTrace();
-      }
+      IOUtils.closeQuietly( inStream );
+      IOUtils.closeQuietly( errStream );
 
       logwriter.println( "#######################" );
       logwriter.println( "#########ENDE#########" );

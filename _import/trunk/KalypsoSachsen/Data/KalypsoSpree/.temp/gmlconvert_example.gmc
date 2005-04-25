@@ -1,0 +1,24 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<target linktype="gml" xlink:href="output.gml" xlink:actuate="onRequest" xlink:type="simple"/>
+	<featuremapping>
+		<csvsource xlink:href="input1.csvl"  comment="*" delemiter=";">
+			<featureproperty name="Name" type="java.lang.String" format="">
+				<column>1</column>
+			</featureproperty>
+			<featureproperty name="Punkt" type="org.deegree.GM_Point" format="">
+				<column>2</column>
+				<column>3</column>
+			</featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="input2.gml"/>
+		<changeFeaturesMapping fromPath="/featureCollection/featureMember" toPath="/PegelCollection/PegelMember[EZG]" sourceProperty="ID" targetProperty="WISKIID">
+			<map from="Name" to="name"/>
+			<map from="Punkt" to="Ort"/>
+		</changeFeaturesMapping>
+		
+		<addFeaturesMapping fromPath="" toPath="">
+			<map from="Name" to="name"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>
