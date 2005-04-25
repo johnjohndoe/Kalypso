@@ -101,6 +101,8 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.xml.XMLTools;
@@ -111,10 +113,8 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
-import org.kalypsodeegree_impl.io.shpapi.DBaseException;
-import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
@@ -148,6 +148,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
   private IProgressMonitor monitor;
 
   private CheckAutoGenerateWizardPage checkAutoGenerateWizardPage;
+
+  private GMLWorkspace landuseShapeWS;
 
   public KalypsoFloodRiskProjectWizard()
   {
@@ -323,9 +325,9 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         "/Landuse/"
             + FileUtilities.nameWithoutExtension( selectLanduseWizardPage.getLanduseDataFile()
                 .getName().toString() ) ) ) ).toString();
-    GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBase, selectLanduseWizardPage
+    landuseShapeWS = ShapeSerializer.deserialize( shapeBase, selectLanduseWizardPage
         .getSelectedCoordinateSystem(), null );
-    return new KalypsoFeatureTheme( new CommandableWorkspace( shapeWS ), "featureMember",
+    return new KalypsoFeatureTheme( new CommandableWorkspace( landuseShapeWS ), "featureMember",
         "Landnutzung" );
   }
 
@@ -335,17 +337,63 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         projectHandel.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL();
     URL contextModelSchemaURL = workspacePath.append(
         projectHandel.getFullPath() + "/.model/schema/contextModell.xsd" ).toFile().toURL();
-    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace(contextModelURL, contextModelSchemaURL);
-    ShapeFile shape = checkAutoGenerateWizardPage.getShape();
+    URL riskContextModelURL = workspacePath.append(
+        projectHandel.getFullPath() + "/Control/riskContextModell.gml" ).toFile().toURL();
+    URL riskContextModelSchemaURL = workspacePath.append(
+        projectHandel.getFullPath() + "/.model/schema/riskContextModell.xsd" ).toFile().toURL();
+
+    String landuseFeatureType = "Landuse";
+    String featureProperty = "Name";
+    String parentFeatureName = "LanduseCollectionMember";
+    String featurePropertyName = "LanduseMember";
+
+    //contextModel
+    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL,
+        contextModelSchemaURL );
+    FeatureType ftLanduse = contextModel.getFeatureType( landuseFeatureType );
+    Feature rootFeature = contextModel.getRootFeature();
+    Feature parentFeature = (Feature)rootFeature.getProperty( parentFeatureName );
+
+    //riskContextModel
+    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL,
+        riskContextModelSchemaURL );
+    FeatureType ftLanduse_risk = riskContextModel.getFeatureType( landuseFeatureType );
+    Feature rootFeature_risk = riskContextModel.getRootFeature();
+    Feature parentFeature_risk = (Feature)rootFeature_risk.getProperty( parentFeatureName );
+
+    Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+    List featureList = (List)shapeRootFeature.getProperty( "featureMember" );
     String propertyName = checkAutoGenerateWizardPage.getPropertyName();
     HashSet landuseTypeSet = new HashSet();
-    for( int i = 0; i < shape.getRecordNum(); i++ )
+    for( int i = 0; i < featureList.size(); i++ )
     {
-      String propertyValue = (String)shape.getFeatureByRecNo( i ).getProperty( propertyName );
-      if(!landuseTypeSet.contains(propertyValue)){
-        landuseTypeSet.add(propertyValue);
+      Feature feat = (Feature)featureList.get( i );
+      String propertyValue = (String)feat.getProperty( propertyName );
+      if( !landuseTypeSet.contains( propertyValue ) )
+      {
+        landuseTypeSet.add( propertyValue );
+        //contextModel
+        Feature landuseFeature = contextModel.createFeature( ftLanduse );
+        landuseFeature.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
+            propertyValue ) );
+        contextModel.addFeature( parentFeature, featurePropertyName, 0, landuseFeature );
+        //riskContextModel
+        Feature landuseFeature_risk = riskContextModel.createFeature( ftLanduse_risk );
+        landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
+            propertyValue ) );
+        riskContextModel.addFeature( parentFeature_risk, featurePropertyName, 0,
+            landuseFeature_risk );
       }
     }
+    //save changes
+    //  contextModel
+    FileWriter fw = new FileWriter( contextModelURL.getFile() );
+    GmlSerializer.serializeWorkspace( fw, contextModel );
+    fw.close();
+    //  riskContextModel
+    FileWriter fw_risk = new FileWriter( riskContextModelURL.getFile() );
+    GmlSerializer.serializeWorkspace( fw_risk, riskContextModel );
+    fw_risk.close();
   }
 
   private void createWaterlevelGrids() throws Exception
