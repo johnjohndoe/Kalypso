@@ -229,6 +229,67 @@ public class KalypsoStatusUtils
 
     return (IAxis[]) list.toArray( new IAxis[list.size()] );
   }
+  
+  /**
+   * Returns the axes that are compatible with the desired Dataclass. You can
+   * specify if you want to exclude the status axes from the result list or not.
+   * <p>
+   * Please note that currently the status axis is of a Number type.
+   * 
+   * @param axes
+   * @param desired
+   * @param excludeStatusAxes
+   *          if true, status axes will not be included in the returned array
+   * @return axes which are compatible with specified Class of data
+   * @throws NoSuchElementException
+   */
+  public static IAxis[] findAxesByClass( final IAxis[] axes, final Class desired,
+      final boolean excludeStatusAxes ) throws NoSuchElementException
+  {
+    final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
+
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( desired.isAssignableFrom( axes[i].getDataClass() ) )
+      {
+        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+          list.add( axes[i] );
+      }
+    }
+
+    if( list.size() == 0 )
+      throw new NoSuchElementException( "No axis found of class: " + desired );
+
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
+  }
+  
+  /**
+   * Returns the first axis that is compatible with the desired Dataclass. You can
+   * specify if you want to exclude the status axes from the result list or not.
+   * <p>
+   * Please note that currently the status axis is of a Number type.
+   * 
+   * @param axes
+   * @param desired
+   * @param excludeStatusAxes
+   *          if true, status axes will not be included in the returned array
+   * @return first axis found
+   * @throws NoSuchElementException
+   */
+  public static IAxis findAxisByClass( final IAxis[] axes, final Class desired,
+      final boolean excludeStatusAxes ) throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( desired.isAssignableFrom( axes[i].getDataClass() ) )
+      {
+        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+          return axes[i];
+      }
+    }
+
+    throw new NoSuchElementException( "No Axis found of class: " + desired );
+  }
 
   /**
    * Checks if bit is in the mask.

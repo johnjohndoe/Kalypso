@@ -85,6 +85,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -111,14 +112,15 @@ public class GrafikLauncher
   /** date format understood by the grafik tool */
   protected final static DateFormat GRAFIK_DF = new SimpleDateFormat(
       "dd.MM.yyyy HH:mm:ss" );
-  
-  private final static NumberFormat GRAFIK_NF_W = NumberFormat.getIntegerInstance();
+
+  private final static NumberFormat GRAFIK_NF_W = NumberFormat
+      .getIntegerInstance();
 
   static
   {
     GRAFIK_NF_W.setMaximumFractionDigits( 0 );
   }
-  
+
   private GrafikLauncher( )
   {
     // no instanciation
@@ -371,9 +373,10 @@ public class GrafikLauncher
     final Map yLines = new HashMap();
 
     final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
-    
+
     final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING,
-        KalypsoGisPlugin.getId(), 0, "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
+        KalypsoGisPlugin.getId(), 0,
+        "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
 
     final TypeObservation[] tobs = (TypeObservation[]) odt.getObservation()
         .toArray( new TypeObservation[0] );
@@ -408,7 +411,7 @@ public class GrafikLauncher
       catch( Exception e )
       {
         final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: "
-          + zmlFile.getName() + " Grund: " + e.getLocalizedMessage();
+            + zmlFile.getName() + " Grund: " + e.getLocalizedMessage();
         logger.warning( msg );
         multiStatus.addMessage( msg, e );
         continue;
@@ -421,8 +424,8 @@ public class GrafikLauncher
       // find out which axes to use
       final IAxis[] axes = obs.getAxisList();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-          Date.class, true )[0];
-      final IAxis[] numberAxes = ObservationUtilities.findAxisByClass( axes,
+          Date.class );
+      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes,
           Number.class, true );
 
       final List displayedAxes = new ArrayList( numberAxes.length );
@@ -500,7 +503,8 @@ public class GrafikLauncher
     for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
     {
       final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
-      writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' );
+      writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " "
+          + vac.label + '\n' );
     }
     yLines.clear();
 

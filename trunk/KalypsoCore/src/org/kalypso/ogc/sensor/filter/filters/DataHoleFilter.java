@@ -82,7 +82,7 @@ public class DataHoleFilter extends AbstractObservationFilter
       throws SensorException
   {
     final ITuppleModel values = super.getValues( args );
-    final IAxis[] valueAxes = ObservationUtilities.findAxisByClass( values
+    final IAxis[] valueAxes = KalypsoStatusUtils.findAxesByClass( values
         .getAxisList(), Number.class, true );
 
     for( int index = 0; index < values.getCount(); index++ )

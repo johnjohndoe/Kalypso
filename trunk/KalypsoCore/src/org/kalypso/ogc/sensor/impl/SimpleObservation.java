@@ -208,7 +208,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    final IAxis[] keys = ObservationUtilities.findAxisByKey( m_axes );
+    final IAxis[] keys = ObservationUtilities.findAxesByKey( m_axes );
 
     for( int i = 0; i < values.getCount(); i++ )
     {

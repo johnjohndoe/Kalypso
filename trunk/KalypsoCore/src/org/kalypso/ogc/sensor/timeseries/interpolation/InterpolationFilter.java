@@ -119,9 +119,9 @@ public class InterpolationFilter extends AbstractObservationFilter
       dr = (DateRangeArgument) args;
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values
-        .getAxisList(), Date.class )[0];
-    final IAxis[] valueAxes = ObservationUtilities.findAxisByClass( values
-        .getAxisList(), Number.class, false );
+        .getAxisList(), Date.class );
+    final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( values
+        .getAxisList(), Number.class );
 
     final SimpleTuppleModel intModel = new SimpleTuppleModel( values
         .getAxisList() );

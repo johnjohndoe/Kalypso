@@ -118,7 +118,7 @@ final class RememberForSync
       IAxis[] axes = obs.getAxisList();
 
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-          Date.class )[0];
+          Date.class );
 
       final List axisList = Arrays.asList( axes );
       axisList.remove( dateAxis );

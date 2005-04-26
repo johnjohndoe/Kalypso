@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.util.Date;
@@ -70,7 +70,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
       throws SensorException
   {
     super( models[0].getAxisList() );
-    
+
     Date lastDate = DateUtilities.getMinimum();
 
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
@@ -78,12 +78,8 @@ public class ForecastTuppleModel extends AbstractTuppleModel
     for( int i = 0; i < models.length; i++ )
     {
       final IAxis[] axes = models[i].getAxisList();
-      final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( axes,
+      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
           Date.class );
-      if( dateAxes.length == 0 )
-        throw new IllegalArgumentException( "no date axis" );
-
-      final IAxis dateAxis = dateAxes[0];
 
       for( int rowIx = 0; rowIx < models[i].getCount(); rowIx++ )
       {

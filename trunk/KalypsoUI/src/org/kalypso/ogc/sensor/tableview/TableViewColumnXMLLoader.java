@@ -79,7 +79,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   {
     final IObservation obs = (IObservation)newValue;
 
-    final IAxis keyAxis = ObservationUtilities.findAxisByKey( obs.getAxisList() )[0];
+    final IAxis keyAxis = ObservationUtilities.findAxesByKey( obs.getAxisList() )[0];
 
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
     final TableView m_view = (TableView)m_data[0];
