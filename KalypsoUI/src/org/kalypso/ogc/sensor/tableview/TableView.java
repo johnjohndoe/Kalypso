@@ -85,7 +85,7 @@ public class TableView extends ObsView
         return;
 
       // actually just the first key axis is relevant in our case
-      final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( axes );
+      final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
 
       // do not continue if no key axis
       if( keyAxes.length == 0 )

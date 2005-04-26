@@ -47,6 +47,7 @@ import java.util.Map;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
@@ -177,9 +178,9 @@ public class DiagView extends ObsView
     final IObservation obs = provider.getObservation();
     if( obs != null )
     {
-      final IAxis[] valueAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(),
+      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClass( obs.getAxisList(),
           Number.class, true );
-      final IAxis[] keyAxes = ObservationUtilities.findAxisByKey( obs.getAxisList() );
+      final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
 
       if( keyAxes.length == 0 )
         return;

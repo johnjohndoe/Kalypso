@@ -175,15 +175,13 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   {
     IAxis[] axes = getAxisList();
 
-    final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( axes,
-        Date.class, false );
-    if( dra == null || dateAxes.length == 0 )
+    final IAxis dateAxis = ObservationUtilities.findAxisByClassNoEx( axes,
+        Date.class );
+    if( dra == null || dateAxis == null )
     {
       setFrom( copyTupples );
       return;
     }
-
-    final IAxis dateAxis = dateAxes[0];
 
     // uses same row count as original model, adjusted before method finishes
     m_tupples = new DefaultTableModel( copyTupples.getCount(), axes.length );
