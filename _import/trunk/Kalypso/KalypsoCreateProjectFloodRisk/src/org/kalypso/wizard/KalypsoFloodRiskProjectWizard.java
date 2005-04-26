@@ -398,6 +398,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
   private void createWaterlevelGrids() throws Exception
   {
+    URL rasterDataModelSchemaURL = workspacePath.append(
+        projectHandel.getFullPath() + "/.model/schema/RasterDataModel.xsd" ).toFile().toURL();
     Vector waterlevelGrids = selectWaterlevelWizardPage.getWaterlevelGrids();
     CS_CoordinateSystem cs = selectWaterlevelWizardPage.getSelectedCoordinateSystem();
     int workedPart = 50 / waterlevelGrids.size();
@@ -409,7 +411,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
           .getName() );
       File targetFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) ) ).toFile();
-      GridUtils.writeRasterData( targetFile, grid );
+      GridUtils.writeRasterData( targetFile, rasterDataModelSchemaURL, grid );
       File sldFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/.styles/" + sourceFileNameWithoutExtension + ".sld" ) ) ).toFile();
       createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid );
