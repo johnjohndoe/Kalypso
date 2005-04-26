@@ -80,7 +80,34 @@ public class WQTable
   {
     this( validity, offset, WQPair.convert2pairs( W, Q ) );
   }
+  
+  /**
+   * Creates a WQTable with a default offset of 0
+   * 
+   * @param validity
+   *          date up from which this table is valid
+   */
+  public WQTable( final Date validity, final Number[] W, final Number[] Q )
+  {
+    this( validity, 0, W, Q );
+  }
 
+  /**
+   * Creates a WQTable
+   * 
+   * @param validity
+   *          date up from which this table is valid
+   * @param offset
+   *          offset used for W, before conversion W = W + offset
+   * @param W
+   * @param Q
+   */
+  public WQTable( final Date validity, final int offset, final Number[] W,
+      final Number[] Q )
+  {
+    this( validity, offset, WQPair.convert2pairs( W, Q ) );
+  }
+  
   /**
    * Creates a WQTable
    * 
