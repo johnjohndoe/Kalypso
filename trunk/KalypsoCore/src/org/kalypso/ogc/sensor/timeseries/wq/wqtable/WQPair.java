@@ -62,4 +62,17 @@ public final class WQPair
 
     return pairs;
   }
+
+  public static WQPair[] convert2pairs( final Number[] W, final Number[] Q )
+  {
+    if( W.length != Q.length )
+      throw new IllegalArgumentException(
+          "Anzahl von Ws und Qs ist nicht gleich" );
+
+    final WQPair[] pairs = new WQPair[W.length];
+    for( int i = 0; i < W.length; i++ )
+      pairs[i] = new WQPair( W[i].doubleValue(), Q[i].doubleValue() );
+
+    return pairs;
+  }
 }
