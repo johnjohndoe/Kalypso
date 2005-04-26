@@ -29,5 +29,6 @@
 	
 	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 	<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+	<clearAfterCalc path="DivErgebnisse" relativeToCalcCase="true"/>
 	
 </modeldata>

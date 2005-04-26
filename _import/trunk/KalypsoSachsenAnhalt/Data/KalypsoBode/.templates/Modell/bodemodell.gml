@@ -228,7 +228,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -249,7 +251,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -270,7 +274,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -291,7 +297,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -312,7 +320,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -333,7 +343,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -354,7 +366,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -375,7 +389,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -396,7 +412,9 @@
 					<bodepegel:Gebiet/>
 					<bodepegel:Niederschlag_gemessenEingang/>
 					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt/>
+					<bodepegel:Niederschlag_gesamt> 
+						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag_gesamt> 
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -2151,7 +2169,7 @@
 						</gml:Point>
 					</bodespeicher:Ort>
 					<bodespeicher:WISKI_Name>579000</bodespeicher:WISKI_Name>
-					<bodespeicher:Kurz_Name>???</bodespeicher:Kurz_Name>
+					<bodespeicher:Kurz_Name>urapp</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe>
 						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Überleitung_Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
