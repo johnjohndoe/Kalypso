@@ -1,6 +1,7 @@
 package KalypsoPluginRasterImport;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -128,7 +129,8 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
           Dialog monitor = new ProgressMonitorDialog( this.getShell() );
           monitor.open();
           RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
-          GridUtils.writeRasterData( fileTarget, rasterGrid );
+          URL schemaUrl = getClass().getResource( "../schema/RasterDataModel.xsd" );
+          GridUtils.writeRasterData( fileTarget, schemaUrl, rasterGrid );
           monitor.close();
         }
         else

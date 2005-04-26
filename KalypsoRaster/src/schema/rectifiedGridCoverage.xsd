@@ -3,7 +3,6 @@
 	<!-- ==============================================================
        includes and imports
 	============================================================== -->
-	<import namespace="http://www.opengis.net/gml" schemaLocation="geometry.xsd"/>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<!-- =========================================================== -->
 	<!-- RectifiedGridCoverageMember=========================================================== -->
@@ -49,23 +48,17 @@
 	<!-- =========================================================== -->
 	<!-- grids.xsd==================================================== -->
 	<!-- =========================================================== -->
-	<element name="_ImplicitGeometry" type="gml:AbstractGeometryType" abstract="true" substitutionGroup="gml:_Geometry"/>
-	<!-- =========================================================== -->
-	<element name="Grid" type="rgc:GridType" substitutionGroup="rgc:_ImplicitGeometry"/>
+	<element name="Grid" type="rgc:GridType"/>
 	<!-- =========================================================== -->
 	<complexType name="GridType">
 		<annotation>
 			<documentation>Implicitly defines an unrectified grid, which is a network composed of two or more sets of equally spaced parallel lines in which the members of each set intersect the members of the other sets at right angles.</documentation>
 		</annotation>
-		<complexContent>
-			<extension base="gml:AbstractGeometryType">
-				<sequence>
-					<element name="limits" type="rgc:GridLimitsType"/>
-					<!--<element name="axisName" type="string" maxOccurs="unbounded"/>-->
-				</sequence>
-				<attribute name="dimension" type="positiveInteger" use="required"/>
-			</extension>
-		</complexContent>
+		<sequence>
+			<element name="limits" type="rgc:GridLimitsType"/>
+			<!--<element name="axisName" type="string" maxOccurs="unbounded"/>-->
+		</sequence>
+		<attribute name="dimension" type="positiveInteger" use="required"/>
 	</complexType>
 	<!-- =========================================================== -->
 	<complexType name="GridLimitsType">
