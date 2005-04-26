@@ -10,30 +10,25 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Vector;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverageFactory;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * 
@@ -215,21 +210,13 @@ public abstract class GridUtils
     return RectifiedGridCoverageFactory.createRectifiedGridCoverage( rootFeature );
   }
 
-  public static void writeRasterData( File rasterDataModelGML, RectifiedGridCoverage grid )
+  public static void writeRasterData( File rasterDataModelGML, URL rasterDataModelSchemaUrl, RectifiedGridCoverage grid )
       throws Exception
   {
 
-    String NSRD = "http://elbe.wb.tu-harburg.de/rasterData";
-    String NSGML = "http://www.opengis.net/gml";
-    String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
-
-    Document doc = XMLTools.create();
-
-    Element root = doc.createElement( "RasterDataModel" );
-    root.setAttribute( "xmlns", NSRD );
-    root.setAttribute( "xmlns:gml", NSGML );
-    root.setAttribute( "xmlns:rgc", NSRGC );
-
+    String schemaLocationName = "project:/.model/schema/RasterDataModel.xsd";
+    
+    // set RangeSetDataFile
     if( grid.getRangeSet().getRangeSetDataFile() == null )
     {
       String fileName = rasterDataModelGML.getName();
@@ -238,15 +225,37 @@ public abstract class GridUtils
       grid.getRangeSet().setRangeSetDataFile( new File( rangeSetFileName ) );
     }
 
-    RectifiedGridCoverageFactory.writeRectifiedGridCoverage( grid, root );
+    // load schema
+    final GMLSchema schema = GMLSchemaCache.getSchema( rasterDataModelSchemaUrl );
 
-    doc.appendChild( root );
-    final Source source = new DOMSource( doc );
-    Result result = new StreamResult( rasterDataModelGML );
-    Transformer t = TransformerFactory.newInstance().newTransformer();
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-    t.setOutputProperty( OutputKeys.INDENT, "yes" );
-    t.transform( source, result );
+    // create feature and workspace gml
+    final FeatureType[] types = schema.getFeatureTypes();
+
+    // create rootFeature: RasterDataModel
+    Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0", types[0] );
+    FeatureTypeProperty[] ftps = types[0].getProperties();
+    // create feature: RectifiedGridCoverage
+    Object[] properties = new Object[]
+    {
+        "",
+        "",
+        null,
+        grid.getGridDomain(),
+        grid.getRangeSet() };
+    Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( "RectifiedGridCoverage0",
+        ( (FeatureAssociationTypeProperty)ftps[3] ).getAssociationFeatureType(), properties );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftps[3].getName(),
+        rectifiedGridCoverageFeature ) );
+
+    //create workspace
+    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, rasterDataModelGML.toURL(),
+        schemaLocationName, schema.getTargetNS(), schema.getNamespaceMap() );
+
+    // serialize Workspace
+    FileWriter fw = new FileWriter(rasterDataModelGML);
+    GmlSerializer.serializeWorkspace(fw, workspace);
+    fw.close();
+
   }
 
 }
