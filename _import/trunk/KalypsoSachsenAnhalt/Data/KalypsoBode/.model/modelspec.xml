@@ -13,13 +13,21 @@
 
 	
 	<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
-	<!--	<input id="ZeitreihenDir" path="Zeitreihen" relativeToCalcCase="true"/> -->
-	<input id="QPegelDir" path="Zeitreihen/Pegel/Messung" relativeToCalcCase="true"/>
-	<input id="QSpeicherDir" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
-	<input id="VSpeicherDir" path="Zeitreihen/Speicherinhalt/Messung" relativeToCalcCase="true"/>
-	<input id="NsGebietDir" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
+	<!-- Unterverzeichnisse Messung und Vorhersage! -->
+	<input id="QPegelDirIn" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
+	<input id="QSpeicherDirIn" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
+	<!-- Unterverzeichnisse Messung und Vorhersage! -->
+	<input id="VSpeicherDirIn" path="Zeitreihen/Speicherinhalt" relativeToCalcCase="true"/>
+	<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
 	
-	<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
 
+	<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
+	<output id="QPegelDirOut" path="Zeitreihen/Pegel/Vorhersage" relativeToCalcCase="true"/>
+	<output id="QSpeicherDirOut" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
+	<output id="VSpeicherDirOut" path="Zeitreihen/Speicherinhalt/Vorhersage" relativeToCalcCase="true"/>
+	<output id="DivSpeicherDirOut" path="DivErgebnisse" relativeToCalcCase="true"/>
+	
+	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 	<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+	
 </modeldata>
