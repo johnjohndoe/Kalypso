@@ -20,13 +20,13 @@
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<!--ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" /-->
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<!--ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" /-->
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<!--ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="clean" inheritAll="false" /-->
-		<!--ant antfile="${workspace}/KalypsoWiskiAdapter/etc/ant/build.xml" target="clean" inheritAll="false" /-->
+		<ant antfile="${workspace}/KalypsoWiskiAdapter/etc/ant/build.xml" target="clean" inheritAll="false" />
 	</target>
 
 	<target name="build-basic" depends="prepare">
@@ -40,7 +40,6 @@
 
 	<target name="build-plugins" depends="build-basic, build-CalcService">
 		<echo message="Building specific plugins for Sachsen" />
-		<!--ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" /-->
 		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<!--ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" /-->
 	</target>
@@ -63,18 +62,21 @@
 	</target>
 
 	<target name="build-UserService" depends="build-basic">
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build" inheritAll="false">
+		<!--ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant>
+		</ant-->
 	</target>
 
 	<target name="build-ObsService" depends="build-basic">
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
-		<!--copy todir="${workspace}/KalypsoObsService/build/build-war/WEB-INF/lib">
+
+		<ant antfile="${workspace}/KalypsoWiskiAdapter/etc/ant/build.xml" target="deploy" inheritAll="false" />
+
+		<copy todir="${workspace}/KalypsoObsService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoWiskiAdapter/build/deploy" includes="**/*.jar" />
-		</copy-->
+		</copy>
 	</target>
 
 	<target name="build-CalcService" depends="build-basic">
@@ -84,9 +86,9 @@
 	</target>
 
 	<target name="build-MetaDocService" depends="build-basic">
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build" inheritAll="false">
+		<!--ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant>
+		</ant-->
 	</target>
 
 	<target name="build-services-dev" depends="build-ConfService,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins,modelplugins-dependency">
@@ -103,22 +105,22 @@
 		<!--ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant-->
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
 		<ant antfile="KalypsoConf/etc/ant/build.xml" target="deploy">
 			<property file="deploy.properties" />
 		</ant>
 	</target>
 
 	<target name="redeploy-UserService" depends="build-UserService">
-		<echo message="Redeploying User Service" />
+		<!--echo message="Redeploying User Service" />
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant>
+		</ant-->
 	</target>
 
 	<target name="redeploy-ObsService" depends="build-ObsService">
@@ -129,10 +131,10 @@
 	</target>
 
 	<target name="redeploy-MetaDocService" depends="build-MetaDocService">
-		<echo message="Redeploying MetaDoc Service" />
+		<!--echo message="Redeploying MetaDoc Service" />
 		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy-all" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant>
+		</ant-->
 	</target>
 
 	<target name="redeploy-CalcService" depends="build-CalcService,modelplugins-dependency">
@@ -158,9 +160,9 @@
 
 		<!-- Note: KalypsoConf already there -->
 		<copy tofile="${dep.services}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true" />
-		<copy tofile="${dep.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true" />
+		<!--copy tofile="${dep.services}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true" /-->
 		<copy tofile="${dep.services}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip" overwrite="true" />
-		<copy tofile="${dep.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true" />
+		<!--copy tofile="${dep.services}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true" /-->
 	</target>
 
 </project>

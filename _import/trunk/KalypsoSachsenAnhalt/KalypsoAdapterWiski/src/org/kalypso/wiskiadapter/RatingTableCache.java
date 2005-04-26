@@ -1,6 +1,8 @@
 package org.kalypso.wiskiadapter;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -59,13 +61,14 @@ public class RatingTableCache
   public void check( final WQTableSet wqTableSet, final Long wiskiId,
       final Date validity )
   {
-    final RatingTableKey key = new RatingTableKey( String.valueOf( wiskiId), validity );
-    
+    final RatingTableKey key = new RatingTableKey( String.valueOf( wiskiId ),
+        validity );
+
     final RatingTableKey cacheKey = (RatingTableKey) m_cache.getRealKey( key );
-    
+
     if( cacheKey != null && cacheKey.getValidity().after( key.getValidity() ) )
       return; // no need to overwrite if more recent in the cache
-    
+
     m_cache.addObject( key, wqTableSet );
   }
 
@@ -105,21 +108,31 @@ public class RatingTableCache
 
   private static class KeyFactory implements IKeyFactory
   {
+    private final static String KEY_SEP = "@";
+
+    private final static SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+
     public Object createKey( final String string )
     {
-      final String[] splits = string.split( "-v-" );
-      final RatingTableKey key = new RatingTableKey( splits[0], new Date( Date
-          .parse( splits[1] ) ) );
-
-      return key;
+      final String[] splits = string.split( KEY_SEP );
+      try
+      {
+        final RatingTableKey key = new RatingTableKey( splits[0], DF.parse( splits[1] ) );
+        return key;
+      }
+      catch( ParseException e )
+      {
+        e.printStackTrace();
+        throw new IllegalArgumentException( e.getLocalizedMessage() );
+      }
     }
 
     public String toString( final Object key )
     {
       final RatingTableKey rtkey = (RatingTableKey) key;
       final StringBuffer sb = new StringBuffer();
-      sb.append( rtkey.getWiskiId() ).append( "-v-" ).append(
-          rtkey.getValidity() );
+      sb.append( rtkey.getWiskiId() ).append( KEY_SEP ).append(
+          DF.format( rtkey.getValidity() ) );
 
       return sb.toString();
     }

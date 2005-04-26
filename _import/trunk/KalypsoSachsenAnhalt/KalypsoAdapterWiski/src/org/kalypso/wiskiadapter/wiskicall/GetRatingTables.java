@@ -41,7 +41,6 @@ public class GetRatingTables implements IWiskiCall
         new Timestamp( m_validity.getTime() ) );
 
     final LinkedList list = (LinkedList) tables.get( m_id );
-    System.out.println( "ID:" + m_id + " - " + list );
     if( list.size() > 0 )
     {
       final HashMap table = (HashMap) list.getFirst();
