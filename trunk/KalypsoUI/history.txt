@@ -6,7 +6,6 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
-
 - GmlConverter zum rumwursteln mit gml-daten
 - WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
 - selektierte MapAction gilt jetzt für alle karten
