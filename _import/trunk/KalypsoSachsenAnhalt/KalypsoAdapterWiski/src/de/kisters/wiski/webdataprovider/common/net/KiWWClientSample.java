@@ -106,24 +106,30 @@ public final class KiWWClientSample
       
       System.out.println( ratingTables );
       
-      //getTsInfoList filtered by group_ident
-      String[] gettsinfo = new String[] { "tsinfo_id", "tsinfo_name", "tsinfo_group_ident",
-          "tsinfo_group_name", "stationparameter_name", "tsinfo_unitname",
-          "tsinfo_distcount", "tsinfo_distunit" };
+      final String[] gettsinfo = { "tsinfo_id", "tsinfo_group_ident" };
 
-      int maxRows = 15;
-
-      SimpleRequestFilterTerm filter_ts_group = new SimpleRequestFilterTerm();
-      filter_ts_group.addColumnReference( "tsinfo_id" );
-      filter_ts_group.addOperator( "=" );
-      filter_ts_group.addValue( new Long( 1024002488 ) ); 
+      final SimpleRequestFilterTerm f1 = new SimpleRequestFilterTerm();
+      f1.addColumnReference( "tsinfo_id" );
+      f1.addOperator( "=" );
+      f1.addValue( new Long( 1024002488 ) ); 
 
       final HashMap tsinfolist_group = myServerObject.getTsInfoList( auth, gettsinfo,
-          null, filter_ts_group, maxRows, 0, false, null );
+          null, f1, 15, 0, false, null );
       final LinkedList resultListinfo = (LinkedList) tsinfolist_group
           .get( "resultList" );
       
       System.out.println( resultListinfo );
+      
+      final String groupId = (String) ((HashMap) resultListinfo.getFirst()).get( "tsinfo_group_ident" );
+      
+      final String[] groupinfo = { "group_id", "supergroup_name" };
+      final SimpleRequestFilterTerm f3 = new SimpleRequestFilterTerm();
+      f3.addColumnReference( "group_id" );
+      f3.addOperator( "=" );
+      f3.addValue( Long.valueOf( groupId ) ); 
+      
+      final HashMap groupList = myServerObject.getGroupList( auth, groupinfo, KiWWDataProviderInterface.TIMESERIES_GROUP, null, f3, 0, 0, false, null );
+      System.out.println( groupList );
     }
     catch( final Exception e )
     {

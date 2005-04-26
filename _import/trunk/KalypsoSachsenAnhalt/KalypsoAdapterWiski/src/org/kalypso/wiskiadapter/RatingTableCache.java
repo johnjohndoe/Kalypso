@@ -63,7 +63,7 @@ public class RatingTableCache
     
     final RatingTableKey cacheKey = (RatingTableKey) m_cache.getRealKey( key );
     
-    if( cacheKey.getValidity().after( key.getValidity() ) )
+    if( cacheKey != null && cacheKey.getValidity().after( key.getValidity() ) )
       return; // no need to overwrite if more recent in the cache
     
     m_cache.addObject( key, wqTableSet );

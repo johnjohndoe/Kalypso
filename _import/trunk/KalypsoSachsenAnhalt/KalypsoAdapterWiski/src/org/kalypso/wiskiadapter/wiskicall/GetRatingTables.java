@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;
@@ -22,9 +23,9 @@ public class GetRatingTables implements IWiskiCall
 
   private final Date m_validity;
 
-  private double[] W;
+  private Number[] W;
 
-  private double[] Q;
+  private Number[] Q;
 
   public GetRatingTables( final Long id, final Date validity )
   {
@@ -45,31 +46,21 @@ public class GetRatingTables implements IWiskiCall
     {
       final HashMap table = (HashMap) list.getFirst();
 
-      final String[] strW = ((String) table.get( "curve_table_stage" ))
-          .split( "," );
-      final String[] strQ = ((String) table.get( "curve_table_flow" ))
-          .split( "," );
+      W = (Number[])((List) table.get( "curve_table_stage" )).toArray( new Number[0]);
+      Q = (Number[]) ((List) table.get( "curve_table_flow" )).toArray( new Number[0]);
 
-      if( strW.length != strQ.length )
+      if( W.length != Q.length )
         throw new IllegalArgumentException(
             "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
-
-      W = new double[strW.length];
-      Q = new double[strW.length];
-      for( int i = 0; i < strW.length; i++ )
-      {
-        W[i] = Double.parseDouble( strW[i] );
-        Q[i] = Double.parseDouble( strQ[i] );
-      }
     }
   }
 
-  public double[] getW( )
+  public Number[] getW( )
   {
     return W;
   }
 
-  public double[] getQ( )
+  public Number[] getQ( )
   {
     return Q;
   }
