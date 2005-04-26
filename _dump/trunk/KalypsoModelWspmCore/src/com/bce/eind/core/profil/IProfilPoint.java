@@ -12,6 +12,7 @@ import com.bce.eind.core.profil.IProfil.POINT_PROPERTY;
  */
 public interface IProfilPoint
 {
+  
   public double getValueFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
   //public boolean setValueFor( final IProfilPointProperty pointProperty, final double value )
@@ -22,5 +23,8 @@ public interface IProfilPoint
   public IProfilPoint clonePoint( );
 
   public Collection<POINT_PROPERTY> getProperties( );
+  
+  public  boolean isEqualPosition( final double breite,final double hoehe) throws ProfilDataException; 
+  
 }  
 

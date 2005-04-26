@@ -7,7 +7,7 @@ import com.bce.eind.core.profil.IProfil.POINT_PROPERTY;
 
 public class ProfilPointProperties
 {
-   public final static IProfilPointProperty BEWUCHS_AX = new ProfilPointProperty( "AX", true, true , false, 4 ,POINT_PROPERTY.BEWUCHS_AX);
+   public final static IProfilPointProperty BEWUCHS_AX = new ProfilPointProperty( "AX", true, true , false, 4,POINT_PROPERTY.BEWUCHS_AX);
  
    public  final static IProfilPointProperty BEWUCHS_AY = new ProfilPointProperty( "AY", true, true , false, 4 ,POINT_PROPERTY.BEWUCHS_AY);
 

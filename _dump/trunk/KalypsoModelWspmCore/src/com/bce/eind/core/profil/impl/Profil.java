@@ -33,6 +33,7 @@ public class Profil implements IProfil
   private String m_comment = "";
 
   private IProfil.RAUHEITEN_TYP m_rauheit;
+  
 
   // private final HashMap<IProfilPointProperty, Object> m_extendedPointData;
 
@@ -252,7 +253,7 @@ public class Profil implements IProfil
     if( point == m_points.getLast() )
       return null;
 
-    final ListIterator<IProfilPoint> ptIt = m_points.listIterator( m_points.indexOf( point ) );
+    final ListIterator<IProfilPoint> ptIt = m_points.listIterator( m_points.indexOf( point )+1 );
 
     return ptIt.next();
   }
@@ -312,12 +313,13 @@ public class Profil implements IProfil
   public LinkedList<IProfilPoint> getPointsAtPos( double breite )
   {
     final LinkedList<IProfilPoint> pointList = new LinkedList<IProfilPoint>();
+    final int precision = ProfilPointProperties.getPointProperty(POINT_PROPERTY.BREITE).getPrecision();
     for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
     {
       final IProfilPoint pt = ptIt.next();
       try
       {
-        if( pt.getValueFor( POINT_PROPERTY.BREITE ) == breite )
+        if(Math.abs(pt.getValueFor( POINT_PROPERTY.BREITE )- breite )< Math.exp(-precision))
           pointList.add( pt );
       }
       catch( ProfilDataException e )
@@ -595,7 +597,7 @@ public class Profil implements IProfil
   public boolean setDeviderTyp( DeviderKey deviderKey, TRENNFLAECHEN_TYP deviderTyp )
       throws ProfilDataException
   {
-    if( deviderKey.getProfilPointProperty() != ProfilPointProperties.TRENNFLAECHE )
+    if( deviderKey.getProfilPointProperty() != POINT_PROPERTY.TRENNFLAECHE )
       throw new ProfilDataException( "Trenner muß vom Typ Trennfläche sein" );
     final ProfilPoint point = (ProfilPoint)getDevider( deviderKey );
     if( point == null )
@@ -692,4 +694,14 @@ public class Profil implements IProfil
   {
     return ProfilPointProperties.getPointProperty(pointProperty);
   }
+
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfil#insertPoint(com.bce.eind.core.profil.IProfilPoint, com.bce.eind.core.profil.IProfilPoint)
+   */
+  public boolean insertPoint( IProfilPoint thePointBefore, IProfilPoint point ) throws ProfilDataException
+  {
+       return m_points.insertPoint(thePointBefore, point );
+  }
+
+ 
 }

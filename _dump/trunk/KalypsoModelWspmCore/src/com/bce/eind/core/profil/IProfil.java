@@ -47,24 +47,20 @@ public interface IProfil
 
   public static enum TRENNFLAECHEN_TYP
   {
-    TRENNFLAECHE_BOESCHUNG, TRENNFLAECHE_SOHLE, TRENNFLAECHE_UNDEFINED
+    TRENNFLAECHE_UNDEFINED, TRENNFLAECHE_BOESCHUNG, TRENNFLAECHE_SOHLE
   }
 
-  public static final DeviderKey BORDVOLL_L = new DeviderKey(POINT_PROPERTY.BORDVOLL, -1 );
+  public static final DeviderKey BORDVOLL_L = new DeviderKey( POINT_PROPERTY.BORDVOLL, -1 );
 
   public static final DeviderKey BORDVOLL_R = new DeviderKey( POINT_PROPERTY.BORDVOLL, 1 );
 
-  public static final DeviderKey DURCHSTROEMTE_L = new DeviderKey(
-      POINT_PROPERTY.DURCHSTROEMTE, -1 );
+  public static final DeviderKey DURCHSTROEMTE_L = new DeviderKey( POINT_PROPERTY.DURCHSTROEMTE, -1 );
 
-  public static final DeviderKey DURCHSTROEMTE_R = new DeviderKey(
-      POINT_PROPERTY.DURCHSTROEMTE, 1 );
+  public static final DeviderKey DURCHSTROEMTE_R = new DeviderKey( POINT_PROPERTY.DURCHSTROEMTE, 1 );
 
-  public static final DeviderKey TRENNFLAECHE_L = new DeviderKey(
-      POINT_PROPERTY.TRENNFLAECHE, -1 );
+  public static final DeviderKey TRENNFLAECHE_L = new DeviderKey( POINT_PROPERTY.TRENNFLAECHE, -1 );
 
-  public static final DeviderKey TRENNFLAECHE_R = new DeviderKey(
-      POINT_PROPERTY.TRENNFLAECHE, 1 );
+  public static final DeviderKey TRENNFLAECHE_R = new DeviderKey( POINT_PROPERTY.TRENNFLAECHE, 1 );
 
   public void addCommentLine( final String line );
 
@@ -82,7 +78,7 @@ public interface IProfil
   public String getComment( );
 
   public IProfilPoint getDevider( final DeviderKey deviderKey );
-  
+
   public TRENNFLAECHEN_TYP getDeviderTyp( final DeviderKey deviderKey );
 
   public IProfilPoint getNextPoint( IProfilPoint point ) throws ProfilDataException;
@@ -91,8 +87,8 @@ public interface IProfil
 
   public IProfilPoint getPoint( final int index );
 
-  public IProfilPointProperty getPointProperty(final POINT_PROPERTY pointProperty);
-  
+  public IProfilPointProperty getPointProperty( final POINT_PROPERTY pointProperty );
+
   public List<IProfilPoint> getPoints( );
 
   public List<IProfilPoint> getPoints( final IProfilPoint startPoint );
@@ -122,6 +118,9 @@ public interface IProfil
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
       final double hoehe ) throws ProfilDataException;
 
+  public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
+      throws ProfilDataException;
+
   public void moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
       throws ProfilDataException;
 
@@ -149,7 +148,7 @@ public interface IProfil
 
   public void setRauheitTyp( final RAUHEITEN_TYP r );
 
-  public boolean setValueFor( IProfilPoint point,POINT_PROPERTY pointProperty , double value )
+  public boolean setValueFor( IProfilPoint point, POINT_PROPERTY pointProperty, double value )
       throws ProfilDataException;
 
 }

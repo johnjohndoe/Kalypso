@@ -113,8 +113,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       final ProfilPoint point = (ProfilPoint)ptIt.next();
       try
       {
-        if( (point.getValueFor( POINT_PROPERTY.HOEHE ) == hoehe)
-            & (point.getValueFor( POINT_PROPERTY.BREITE ) == breite) )
+        if(point.isEqualPosition( breite,hoehe))
           return point;
       }
       catch( ProfilDataException e )
@@ -128,5 +127,23 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   public final boolean removePoint( final IProfilPoint point )
   {
     return this.remove( point );
+  }
+  public final boolean insertPoint(final IProfilPoint thePointBefore, final IProfilPoint point ) throws ProfilDataException
+  {
+    if (m_pointProperties.size()!= point.getProperties().size())
+      throw new ProfilDataException("ungültiger Punkt");
+    for (final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator();ppIt.hasNext();)
+    {
+      if(!m_pointProperties.contains(ppIt.next()))
+      {
+        throw new ProfilDataException("ungültiger Punkt");
+      }
+    }
+    final int pktIndex = indexOf( thePointBefore ) + 1;
+    if( pktIndex < size() )
+      add( pktIndex, point );
+    else
+      add( point );
+    return true;
   }
 }

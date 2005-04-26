@@ -29,9 +29,20 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint p4 = p.addPoint(200.0002, -200.0002 );
     final IProfilPoint p2 = p.insertPoint(p1);
     final IProfilPoint p3 = p.insertPoint(p2);
+    
+    assertEquals( "punkt1:",true , p1.isEqualPosition(100.0001,-100.0001 ));
+    assertEquals( "punkt2:",true , p2.isEqualPosition(150.00015,-150.00015 ));
+    assertEquals( "punkt3:",true , p3.isEqualPosition(175.0002,-175.0002 ));
+    assertEquals( "punkt4:",true , p4.isEqualPosition(200.0002,-200.0002 ));
+
+    
+    
+    
     p.setDevider(p1,p4,POINT_PROPERTY.DURCHSTROEMTE);
     p.setDevider(p2,p3,POINT_PROPERTY.TRENNFLAECHE);
     p.setDeviderTyp(IProfil.TRENNFLAECHE_L,IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG);
+
+
     return p;
   }
  /* final IProfilPoint pkt4 = p.getPoints().get( 3 );
@@ -57,15 +68,15 @@ public class ProfilDataTest extends TestCase
     final IProfil p = testAddInsertPoint( );
 
     assertEquals( "Anzahl Koordinaten:",4, p.getPointsCount() );
-
+  
     final IProfilPoint pktTrennL = p.getDevider( IProfil.TRENNFLAECHE_L );
-    assertEquals( "Trennfläche links:", 150.00015, pktTrennL.getValueFor( POINT_PROPERTY.BREITE ) );
+    assertEquals( "Trennfläche links:",true , pktTrennL.isEqualPosition( 150.00015,-150.00015 ));
     final IProfilPoint pktTrennR = p.getDevider( IProfil.TRENNFLAECHE_R );
-    assertEquals( "Trennfläche rechts:", 51.31, pktTrennR.getValueFor( POINT_PROPERTY.BREITE ) );
+    assertEquals( "Trennfläche rechts:",true , pktTrennR.isEqualPosition(175.0002,-175.0002) );
     final IProfilPoint pktDurchL = p.getDevider( IProfil.DURCHSTROEMTE_L );
-    assertEquals( "Durchstroemte links:", -200.0, pktDurchL.getValueFor( POINT_PROPERTY.BREITE ) );
+    assertEquals( "Durchstroemte links:", true , pktDurchL.isEqualPosition(100.0001,-100.0001) );
     final IProfilPoint pktDurchR = p.getDevider( IProfil.DURCHSTROEMTE_R );
-    assertEquals( "Durchstroemte rechts:", 296.82, pktDurchR.getValueFor( POINT_PROPERTY.BREITE ) );
+    assertEquals( "Durchstroemte rechts:",true,pktDurchR.isEqualPosition( 200.0002,-200.0002 ) );
 
     p.setDeviderTyp( IProfil.TRENNFLAECHE_R, IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG );
     assertEquals( "Trennfläche rechts Typ:", IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG, p
@@ -80,7 +91,7 @@ public class ProfilDataTest extends TestCase
     assertEquals( "neu Durchstroemte rechts:", pktTrennR.getValueFor( POINT_PROPERTY.BREITE ), newPkt
         .getValueFor( POINT_PROPERTY.BREITE ) );
   }
-
+  /*
   public void testSplitSegment( ) throws Exception
   {
     final IProfil p = testAddInsertPoint( );
@@ -142,5 +153,5 @@ public class ProfilDataTest extends TestCase
     p.setProfilMetaData(METADATA.STATUS,new String("Na so was"));
     p.setRauheitTyp(IProfil.RAUHEITEN_TYP.RAUHEIT_KST);
     p.removeProfilListener( testListener );
-  }
+  }*/
 }
