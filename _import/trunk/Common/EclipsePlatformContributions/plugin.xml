@@ -18,6 +18,7 @@
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.compare"/>
    </requires>
    <extension
          point="org.eclipse.core.runtime.adapters">
