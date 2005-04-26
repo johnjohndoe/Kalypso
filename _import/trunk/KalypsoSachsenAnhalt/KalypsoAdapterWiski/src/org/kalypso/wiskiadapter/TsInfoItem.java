@@ -123,6 +123,11 @@ public class TsInfoItem implements IRepositoryItem
     return Long.valueOf( m_map.getProperty( "tsinfo_id" ) );
   }
 
+  String getWiskiIdAsString( )
+  {
+    return m_map.getProperty( "tsinfo_id" );
+  }
+
   String getWiskiName( )
   {
     return m_map.getProperty( "tsinfo_name" );

@@ -1,9 +1,12 @@
 package org.kalypso.wiskiadapter;
 
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -11,6 +14,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
@@ -32,7 +36,9 @@ import org.kalypso.wiskiadapter.wiskicall.GetRatingTables;
 import org.kalypso.wiskiadapter.wiskicall.GetStationDetailList;
 import org.kalypso.wiskiadapter.wiskicall.GetTsData;
 import org.kalypso.wiskiadapter.wiskicall.IsTsWritable;
+import org.kalypso.wiskiadapter.wiskicall.SetTsData;
 
+import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 
 /**
@@ -236,10 +242,66 @@ public class WiskiTimeserie implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  public void setValues( ITuppleModel values ) throws SensorException
+  public void setValues( final ITuppleModel values ) throws SensorException
   {
-    // TODO Auto-generated method stub
+    final HashMap timeseries_map = new HashMap();
+    final HashMap tsID_map = new HashMap();
+    final HashMap ts_values_map = new HashMap();
+    final HashMap value_tsinfo_map = new HashMap();
+    final LinkedList value_tscoldesc_ll = new LinkedList();
+    final HashMap value_tscoldesc_map = new HashMap();
+    final LinkedList value_tsdata_ll = new LinkedList();
+    final LinkedHashMap value_tstamp_hash_lmap = new LinkedHashMap();
 
+    final IAxis dateAxis = ObservationUtilities.findAxisByClass( values
+        .getAxisList(), Date.class );
+    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( values
+        .getAxisList(), Number.class, true );
+    //final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values
+      //  .getAxisList(), valueAxis );
+
+    for( int ix = 0; ix < values.getCount(); ix++ )
+    {
+      final HashMap row = new HashMap();
+      
+      final Date date = (Date) values.getElement( ix, dateAxis );
+      final Number value = (Number) values.getElement( ix, valueAxis );
+      //final Number status = (Number) values.getElement( ix, statusAxis );
+      
+      row.put( "timestamp", new Timestamp( date.getTime() ) );
+      row.put( "tsc_value0", new Double( value.doubleValue() ) );
+      row.put( "status", new Long( 0 ) );
+
+      value_tsdata_ll.add( row );
+    }
+
+    //compose setTsData HashMap
+    ts_values_map.put( KiWWDataProviderInterface.KEY_TSINFO, value_tsinfo_map );
+
+    value_tscoldesc_ll.add( value_tscoldesc_map );
+    ts_values_map.put( KiWWDataProviderInterface.KEY_TSCOLDESC,
+        value_tscoldesc_ll );
+    ts_values_map.put( KiWWDataProviderInterface.KEY_TSDATA, value_tsdata_ll );
+    ts_values_map.put( KiWWDataProviderInterface.KEY_TSTAMP_HASH,
+        value_tstamp_hash_lmap );
+    tsID_map.put( m_tsinfo.getWiskiIdAsString(), ts_values_map );
+    timeseries_map.put( KiWWDataProviderInterface.KEY_TIMESERIES, tsID_map );
+
+    //setTsData
+    final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
+    final SetTsData call = new SetTsData( timeseries_map );
+    try
+    {
+      rep.executeWiskiCall( call );
+    }
+    catch( final Exception e ) // RemoteException, KiWWException,
+                               // RepositoryException
+    {
+      throw new SensorException( e );
+    }
+
+    if( !call.isSuccess() )
+      throw new SensorException( "Konnte Daten nicht zurückschreiben." );
   }
 
   /**

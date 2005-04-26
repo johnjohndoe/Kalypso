@@ -24,6 +24,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
@@ -292,9 +293,9 @@ public class PSICompactImpl implements PSICompact
 
       final ITuppleModel values = obs.getValues( null );
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs
-          .getAxisList(), Date.class )[0];
-      final IAxis valueAxis = ObservationUtilities.findAxisByClass( obs
-          .getAxisList(), Number.class, true )[0];
+          .getAxisList(), Date.class );
+      final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( obs
+          .getAxisList(), Number.class, true );
 
       final ArchiveData[] data = new ArchiveData[values.getCount()];
       for( int i = 0; i < data.length; i++ )
@@ -458,8 +459,8 @@ public class PSICompactImpl implements PSICompact
       if( p != null )
         omd.setLevel( Double.valueOf(p).doubleValue() );
 
-      final IAxis nba = ObservationUtilities.findAxisByClass(
-          obs.getAxisList(), Number.class, true )[0];
+      final IAxis nba = KalypsoStatusUtils.findAxisByClass(
+          obs.getAxisList(), Number.class, true );
 
       omd.setUnit( whichUnit( nba.getUnit() ) );
     }
@@ -568,8 +569,8 @@ public class PSICompactImpl implements PSICompact
     if( m_id2zml.containsKey( id ) )
     {
       final IObservation obs = getZmlObs( id );
-      final IAxis nba = ObservationUtilities.findAxisByClass(
-          obs.getAxisList(), Number.class, true )[0];
+      final IAxis nba = KalypsoStatusUtils.findAxisByClass(
+          obs.getAxisList(), Number.class, true );
 
       return toMeasType( nba.getType() );
     }

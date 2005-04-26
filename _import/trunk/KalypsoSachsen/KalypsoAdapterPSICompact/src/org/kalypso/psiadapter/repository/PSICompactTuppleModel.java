@@ -80,10 +80,10 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final IAxis[] axes = model.getAxisList();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-        Date.class )[0];
-    final IAxis valueAxis = ObservationUtilities.findAxisByClass( axes,
-        Number.class, true )[0];
-    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxis( axes );
+        Date.class );
+    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes,
+        Number.class, true );
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
 
     final ArchiveData[] data = constructData( model, dateAxis, valueAxis,
         statusAxis, vc );
