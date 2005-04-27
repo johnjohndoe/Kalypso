@@ -77,7 +77,7 @@ public interface Constants2D {
 
     public final String INPUT_DIR_NAME = "input";
     public final String OUTPUT_DIR_NAME = "output";
-    public final String RESULT_DIR_NAME = "Results";
+    public final String RESULT_DIR_NAME = "results";
     public final String CALC_DIR_NAME = "calc";
 //    public final String BASE_DIR_NAME = "C:/Programme/eclipse/workspace/Kalypso2d";
     public final String BASE_DIR_NAME = "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST";

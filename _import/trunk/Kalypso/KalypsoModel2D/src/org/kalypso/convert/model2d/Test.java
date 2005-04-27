@@ -52,7 +52,6 @@ package org.kalypso.convert.model2d;
 
 import java.io.File;
 
-import org.kalypso.calc2d.CalcJob2dModel;
 import org.kalypso.calc2d.Constants2D;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
@@ -73,8 +72,8 @@ public class Test
     File baseDir = new File( Constants2D.BASE_DIR_NAME );
     System.out.println("baseDir: " + baseDir);
 
-    CalcJob2dModel calc = new CalcJob2dModel();
-    calc.run( baseDir, null );
+//    CalcJob2dModel_old calc = new CalcJob2dModel_old();
+//    calc.run( baseDir, null );
 
   }
 

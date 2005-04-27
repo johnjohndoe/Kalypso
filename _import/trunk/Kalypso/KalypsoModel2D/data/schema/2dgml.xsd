@@ -2,7 +2,7 @@
 <xs:schema targetNamespace="http://elbe.wb.tu-harburg.de/2dModel" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:wb="http://elbe.wb.tu-harburg.de/2dModel" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!--xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/geometry.xsd"/-->
 	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-<!--xs:import namespace="http://www.opengis.net/gml" schemaLocation="./data/schema/feature.xsd"/-->
+	<!--xs:import namespace="http://www.opengis.net/gml" schemaLocation="./data/schema/feature.xsd"/-->
 	<!-- ==============================================================
 						global element declarations
 		============================================================== -->
@@ -67,14 +67,6 @@
 					<xs:element name="TimeGradientOfFormerTimeWarps1" type="xs:float" minOccurs="0"/>
 					<xs:element name="TimeGradientOfFormerTimeWarps2" type="xs:float" minOccurs="0"/>
 					<xs:element name="TimeGradientOfFormerTimeWarps3" type="xs:float" minOccurs="0"/>
-					<!--xs:element name="info1" type="xs:float" minOccurs="0"/>
-					<xs:element name="info2" type="xs:float" minOccurs="0"/>
-					<xs:element name="info3" type="xs:float" minOccurs="0"/>
-					<xs:element name="info4" type="xs:float" minOccurs="0"/>
-					<xs:element name="info5" type="xs:float" minOccurs="0"/>
-					<xs:element name="info6" type="xs:float" minOccurs="0"/-->
-					<!--xs:element name="id" type="xs:integer"/-->
-					<!--xs:element name="geometry" type="gml:CoordType"/-->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -120,15 +112,10 @@
 					<xs:element ref="gml:polygonProperty"/>
 					<xs:element name="roughness" type="xs:string"/>
 					<xs:element name="color" type="xs:string"/>
-					<!--xs:element name="param1" type="xs:integer" minOccurs="0"/>
-					<xs:element name="param2" type="xs:integer" minOccurs="0"/>
-					<xs:element name="param3" type="xs:integer" minOccurs="0"/>
-					<xs:element name="param4" type="xs:integer" minOccurs="0"/-->
 					<xs:element name="roughnessOld" type="xs:string" minOccurs="0"/>
 					<xs:element name="roughnessInTimeWarp" type="xs:string" minOccurs="0"/>
 					<xs:element name="orderOfProcessing" type="xs:integer" minOccurs="0"/>
 					<xs:element name="defaultMass" type="xs:float" minOccurs="0"/>
-					<!--element name="feId" type="xs:integer"/-->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

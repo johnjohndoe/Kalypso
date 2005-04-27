@@ -121,8 +121,9 @@ public class ConvertBC2GML {
     private static String XSI_schemaLocation_NS = "http://elbe.wb.tu-harburg.de/2dModel C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\bc_gml2.xsd";
     
     //TODO locations of schema und gmlFile of 2d -> dynamic
-    private static String gml2dFile = "./data/test/myMesh.gml";
-    private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\2dgml.xsd";
+    private static String gml2dFile = "c:/Programme/eclipse/workspace/Kalypso2d/data/test/myMesh.gml";
+//    private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\2dgml.xsd";
+    private static String gml2dSchema = "c:/Programme/eclipse/workspace/Kalypso2d/data/schema/2dgml.xsd";
     
     
     public static void createGML(String outFile) {
@@ -574,7 +575,8 @@ public class ConvertBC2GML {
         
         try {
 	        URL gmlURL = new File(gml2dFile).toURL();
-	        URL schemaUrl = new URL(gml2dSchema);
+//	        URL schemaUrl = new URL(gml2dSchema);
+	        URL schemaUrl = new File(gml2dSchema).toURL();
 
 	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
 	        final Feature rootFeature = ws.getRootFeature();

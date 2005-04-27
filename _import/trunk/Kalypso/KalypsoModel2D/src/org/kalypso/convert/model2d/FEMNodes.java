@@ -125,7 +125,7 @@ public class FEMNodes {
 
                     if ( !(""+fpFE.getProperty("xVelocity")).equalsIgnoreCase("0") &&
                          !(""+fpFE.getProperty("yVelocity")).equalsIgnoreCase("0")) {
-                        System.out.println("000000000000000000000");
+//                        System.out.println("000000000000000000000");
                         sbNode.append(va);
 
                         this.addFPInfo(fpFE, "GA","timeGradient1", "timeGradient2","timeGradient3", sbNode, countNode);

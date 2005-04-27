@@ -46,78 +46,96 @@
 
  E-Mail:
  katharina.lupp@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.model2d;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-
 
 /**
  * this class converts the femXMLFile...
  * 
  * Created on 16.12.2004
  * 
- * @author Katharina Lupp<a href="mailto:k.lupp@web.de>Katharina Lupp </a>
+ * @author Katharina Lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
 public class AsciiFactory {
 
+	final File exeDir;
 
-    /**
-     * creates the .2d asci file 
-     * @param sbFP
-     * @param sbAR
-     * @param sbFE
-     * @param sbRK
-     */
-    public void createAsciiFile(StringBuffer sbFP, StringBuffer sbAR, StringBuffer sbFE, StringBuffer sbRK){
-        try{
-            StringBuffer sbALL = new StringBuffer();
-            sbALL.append(sbFP.toString());
-            sbALL.append(sbAR.toString());
-            sbALL.append(sbFE.toString());
-            sbALL.append(sbRK.toString());
-                
-    	      OutputStreamWriter writer =
-    	            new OutputStreamWriter( new FileOutputStream
-                            ("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start\\model.2d"), "UTF-8" );
-    	      writer.write(sbALL.toString());
-    	      writer.close();
-            
-      }catch(Exception ex){
-          System.out.println("error occurred in creating test file ");
-      }
-    }
-    
-    /**
-     * creates ascii file of boundary conditions
-     * @param sbGeneral
-     */
-    public void createBCAsciiFile(StringBuffer sbGeneral, StringBuffer general2SB, StringBuffer geomSB, StringBuffer iterationSB,
-            					  StringBuffer viscSB, StringBuffer lineSB, StringBuffer sbDis, StringBuffer sbDyn){
-        try{
-		    StringBuffer sbALL = new StringBuffer();
-		    sbALL.append("Start Boundary Conditions"+"\n");
-		    sbALL.append("x"+"\n");
-            sbALL.append(sbGeneral.toString());
-//		    sbALL.append("x"+"\n");
-            sbALL.append(general2SB.toString());
-            sbALL.append(geomSB.toString());
-            sbALL.append(iterationSB.toString());
-            sbALL.append(viscSB.toString());
-            sbALL.append(lineSB.toString());
-            sbALL.append(sbDis.toString());
-            sbALL.append(sbDyn.toString());
+	final String BC_File = "bc_2204.txt";
 
-            OutputStreamWriter writer =
-//				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\testBC050305.txt"), "UTF-8" );
-				new OutputStreamWriter( new FileOutputStream("C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start2\\bc.txt"), "UTF-8" );
-	        writer.write(sbALL.toString());
+	final String MODELL_FILE = "model_tmp.2d";
+
+	public AsciiFactory(File exeDir) {
+		this.exeDir = exeDir;
+	}
+
+	/**
+	 * creates the .2d asci file
+	 * 
+	 * @param sbFP
+	 * @param sbAR
+	 * @param sbFE
+	 * @param sbRK
+	 */
+	public void createAsciiFile(StringBuffer sbFP, StringBuffer sbAR,
+			StringBuffer sbFE, StringBuffer sbRK) {
+		try {
+			StringBuffer sbALL = new StringBuffer();
+			sbALL.append(sbFP.toString());
+			sbALL.append(sbAR.toString());
+			sbALL.append(sbFE.toString());
+			sbALL.append(sbRK.toString());
+			OutputStreamWriter writer = new OutputStreamWriter(
+					new FileOutputStream(new File(exeDir, MODELL_FILE)
+					//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\src\\org\\kalypso\\calc2d\\start\\model_tmp.2d")
+					), "UTF-8");
+			//							"\\org\\kalypso\\calc2d\\start\\model_tmp.2d"),"UTF-8");
+			//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start2\\model_2204.2d"),"UTF-8");
+			writer.write(sbALL.toString());
 			writer.close();
-      }catch(Exception ex){
-          System.out.println("error occurred in creating test file ");
-      }
-    }
+
+		} catch (Exception ex) {
+			System.out.println("error occurred in creating test file ");
+		}
+	}
+
+	/**
+	 * creates ascii file of boundary conditions
+	 * 
+	 * @param sbGeneral
+	 */
+	public void createBCAsciiFile(StringBuffer sbGeneral,
+			StringBuffer general2SB, StringBuffer geomSB,
+			StringBuffer iterationSB, StringBuffer viscSB, StringBuffer lineSB,
+			StringBuffer sbDis, StringBuffer sbDyn) {
+		try {
+			StringBuffer sbALL = new StringBuffer();
+			sbALL.append("Start Boundary Conditions" + "\n");
+			sbALL.append("x" + "\n");
+			sbALL.append(sbGeneral.toString());
+			//		    sbALL.append("x"+"\n");
+			sbALL.append(general2SB.toString());
+			sbALL.append(geomSB.toString());
+			sbALL.append(iterationSB.toString());
+			sbALL.append(viscSB.toString());
+			sbALL.append(lineSB.toString());
+			sbALL.append(sbDis.toString());
+			sbALL.append(sbDyn.toString());
+
+			OutputStreamWriter writer = new OutputStreamWriter(
+					new FileOutputStream(new File(exeDir, BC_File))
+					//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\src\\org\\kalypso\\calc2d\\start\\bc_2204.txt"),
+					//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start2\\bc_2204.txt"),
+					, "UTF-8");
+			writer.write(sbALL.toString());
+			writer.close();
+		} catch (Exception ex) {
+			System.out.println("error occurred in creating test file ");
+		}
+	}
 
 }

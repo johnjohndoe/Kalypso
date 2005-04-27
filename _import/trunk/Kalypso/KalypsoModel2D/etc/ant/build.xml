@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="Kalypso2d" default="deploy">
+
+	<property name="project" value="${workspace}/Kalypso2d" />
+
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+	<property name="project-name" value="Kalypso2d" />
+
+	<path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		
+		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
+
+		<!-- java code from binding needs also jwsdp-shared libs-->
+		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="**/*.jar" />
+		
+		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCalcService/build/deploy" includes="**/*.jar"/>
+	</path>
+
+	<!-- overriden to also copy non-java files -->
+	<target name="compile" depends="prepare">
+		<antcall target="commonbuild.compile" />
+		<copy todir="${project.bin}">
+			<fileset dir="${project.src}" excludes="**/*.java"/>
+		</copy>
+	</target>
+</project>
+

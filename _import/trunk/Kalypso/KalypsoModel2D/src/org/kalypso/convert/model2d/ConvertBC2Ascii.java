@@ -73,11 +73,17 @@ public class ConvertBC2Ascii {
     //TODO locations of schema und gmlFile of 2d -> dynamic
     private static String gml2dFile = "./data/test/myMesh.gml";
     private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
+	private final File exeDir;
     
-    public void convertBC2Ascii(String inputFile, String schemaBC){
+    /**
+	 * @param exeDir
+	 */
+	public ConvertBC2Ascii(File exeDir) {
+		this.exeDir = exeDir;
+	}
+
+	public void convertBC2Ascii(URL gmlURL, URL schemaUrl ){
         try{
-	        URL gmlURL = new File(inputFile).toURL();
-	        URL schemaUrl = new File(schemaBC).toURL();
 	        System.out.println(gmlURL+", "+ schemaUrl);
 	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
 	        
@@ -107,7 +113,7 @@ public class ConvertBC2Ascii {
 	        DynamicBC dynBC = new DynamicBC();
 	        StringBuffer sbDyn = dynBC.createDynamicBC(ws, rootFeature);
 	        
-	        AsciiFactory fac = new AsciiFactory();
+	        AsciiFactory fac = new AsciiFactory(exeDir);
 	        fac.createBCAsciiFile(generalSB, general2SB, bcGeomSB, iterationSB, viscSB, lineSB,
 	                			sbDis, sbDyn);
 	        
@@ -121,53 +127,53 @@ public class ConvertBC2Ascii {
 
     }
     
-    public static void convertBC2Ascii(HashMap map){
-        try{
-	        URL gmlURL = new File((String)map.get("InputFile")).toURL();
-//	        URL schemaUrl = new URL((String)map.get("SchemaLocation"));
-	        URL schemaUrl = new URL("http://elbe.wb.tu-harburg.de/2dModel C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\bc_gml2.xsd");
-	        System.out.println(gmlURL+", "+ schemaUrl);
-	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
-	        
-	        final Feature rootFeature = ws.getRootFeature();
-	        
-	        GeneralBC generalBC = new GeneralBC();
-	        StringBuffer generalSB = generalBC.createGeneralBC(ws, rootFeature);
-	        
-	        GeneralBC general2BC = new GeneralBC();
-	        StringBuffer general2SB = general2BC.createGeneral2BC(ws, rootFeature);
-	        
-	        BCGeom geom = new BCGeom();
-	        StringBuffer bcGeomSB = geom.createBCGeom(ws, rootFeature);
-	        
-	        IterationBC iteration = new IterationBC();
-	        StringBuffer iterationSB = iteration.createIterationProp(ws, rootFeature);
-	        
-	        Viscosity viscosity = new Viscosity();
-	        StringBuffer viscSB = viscosity.createViscosity(ws, rootFeature);
-	        
-	        LineBC line = new LineBC();
-	        StringBuffer lineSB = line.createLineBC(ws, rootFeature, gml2dFile, gml2dSchema);
-	        
-	        DischargeBC discharge = new DischargeBC();
-	        StringBuffer sbDis = discharge.createDischarge(ws, rootFeature);
-	        
-	        DynamicBC dynBC = new DynamicBC();
-	        StringBuffer sbDyn = dynBC.createDynamicBC(ws, rootFeature);
-	        
-	        AsciiFactory fac = new AsciiFactory();
-	        fac.createBCAsciiFile(generalSB, general2SB, bcGeomSB, iterationSB, viscSB, lineSB,
-	                			sbDis, sbDyn);
-	        
-	    } catch (MalformedURLException urlEx) {
-	        System.out.println("MalformedURLException");
-	        urlEx.printStackTrace();
-	    } catch (Exception ex) {
-	        System.out.println("Exception in Inserting2dGML");
-	        ex.printStackTrace();
-	    }
-
-    }
+//    public static void convertBC2Ascii(HashMap map){
+//        try{
+//	        URL gmlURL = new File((String)map.get("InputFile")).toURL();
+////	        URL schemaUrl = new URL((String)map.get("SchemaLocation"));
+//	        URL schemaUrl = new URL("http://elbe.wb.tu-harburg.de/2dModel C:\\Programme\\eclipse\\workspace\\Kalypso2d\\data\\schema\\bc_gml2.xsd");
+//	        System.out.println(gmlURL+", "+ schemaUrl);
+//	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+//	        
+//	        final Feature rootFeature = ws.getRootFeature();
+//	        
+//	        GeneralBC generalBC = new GeneralBC();
+//	        StringBuffer generalSB = generalBC.createGeneralBC(ws, rootFeature);
+//	        
+//	        GeneralBC general2BC = new GeneralBC();
+//	        StringBuffer general2SB = general2BC.createGeneral2BC(ws, rootFeature);
+//	        
+//	        BCGeom geom = new BCGeom();
+//	        StringBuffer bcGeomSB = geom.createBCGeom(ws, rootFeature);
+//	        
+//	        IterationBC iteration = new IterationBC();
+//	        StringBuffer iterationSB = iteration.createIterationProp(ws, rootFeature);
+//	        
+//	        Viscosity viscosity = new Viscosity();
+//	        StringBuffer viscSB = viscosity.createViscosity(ws, rootFeature);
+//	        
+//	        LineBC line = new LineBC();
+//	        StringBuffer lineSB = line.createLineBC(ws, rootFeature, gml2dFile, gml2dSchema);
+//	        
+//	        DischargeBC discharge = new DischargeBC();
+//	        StringBuffer sbDis = discharge.createDischarge(ws, rootFeature);
+//	        
+//	        DynamicBC dynBC = new DynamicBC();
+//	        StringBuffer sbDyn = dynBC.createDynamicBC(ws, rootFeature);
+//	        
+//	        AsciiFactory fac = new AsciiFactory();
+//	        fac.createBCAsciiFile(generalSB, general2SB, bcGeomSB, iterationSB, viscSB, lineSB,
+//	                			sbDis, sbDyn);
+//	        
+//	    } catch (MalformedURLException urlEx) {
+//	        System.out.println("MalformedURLException");
+//	        urlEx.printStackTrace();
+//	    } catch (Exception ex) {
+//	        System.out.println("Exception in Inserting2dGML");
+//	        ex.printStackTrace();
+//	    }
+//
+//    }
     
     /**
      * prints out helping information
@@ -197,40 +203,40 @@ public class ConvertBC2Ascii {
         }
     }
 
-    /**
-     * 
-     * @param args
-     *            the command-line arguments
-     */
-    public static void main(String[] args) {
-        HashMap argsmap = null;
-        // no parameter given
-        if (args.length == 0) {
-            System.out.println("ConvertBC2Ascii: missing arguments");
-            //System.exit(1);
-        } else if (args[0].equals("--help") || args[0].equals("-help")) {
-            usage(0);
-            System.exit(0);
-        } else if (args.length >= 2) {
-            // two or more parameter
-            argsmap = new HashMap();
-            for (int i = 0; i < args.length; i += 2) {
-                argsmap.put(args[i], args[i + 1]);
-            }
-        }
-        if (args[0].equalsIgnoreCase("ConvertBC2Ascii"))
-            usage(0);
-        if (argsmap.get("-i") != null && argsmap.get("-s") != null) {
-            HashMap argsmap2 = new HashMap();
-            argsmap2.put("InputFile", argsmap.get("-i"));
-            argsmap2.put("SchemaLocation", argsmap.get("-s"));
-            try {
-                convertBC2Ascii(argsmap2);
-                System.out.println("EOF Kalypso2d ConvertBC2Ascii");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    /**
+//     * 
+//     * @param args
+//     *            the command-line arguments
+//     */
+//    public static void main(String[] args) {
+//        HashMap argsmap = null;
+//        // no parameter given
+//        if (args.length == 0) {
+//            System.out.println("ConvertBC2Ascii: missing arguments");
+//            //System.exit(1);
+//        } else if (args[0].equals("--help") || args[0].equals("-help")) {
+//            usage(0);
+//            System.exit(0);
+//        } else if (args.length >= 2) {
+//            // two or more parameter
+//            argsmap = new HashMap();
+//            for (int i = 0; i < args.length; i += 2) {
+//                argsmap.put(args[i], args[i + 1]);
+//            }
+//        }
+//        if (args[0].equalsIgnoreCase("ConvertBC2Ascii"))
+//            usage(0);
+//        if (argsmap.get("-i") != null && argsmap.get("-s") != null) {
+//            HashMap argsmap2 = new HashMap();
+//            argsmap2.put("InputFile", argsmap.get("-i"));
+//            argsmap2.put("SchemaLocation", argsmap.get("-s"));
+//            try {
+//                convertBC2Ascii(argsmap2);
+//                System.out.println("EOF Kalypso2d ConvertBC2Ascii");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 }
