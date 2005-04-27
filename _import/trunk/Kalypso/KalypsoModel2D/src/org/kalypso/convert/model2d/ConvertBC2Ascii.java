@@ -71,9 +71,12 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class ConvertBC2Ascii {
     
     //TODO locations of schema und gmlFile of 2d -> dynamic
-    private static String gml2dFile = "./data/test/myMesh.gml";
-    private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
-	private final File exeDir;
+//    private static String gml2dFile = "./data/test/myMesh.gml";
+//    private static String gml2dSchema = "http://elbe.wb.tu-harburg.de/2dModel c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
+//    private static String gml2dSchema = "c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
+//    private static String gml2dFile = "c:/Programme/eclipse/workspace/Kalypso2d/data/test/calcCaseResultMesh.gml";
+//    private static String gml2dSchema = "c:/Programme/eclipse/workspace/Kalypso2d/data/schema/bc_gml2.xsd";
+	 private final File exeDir;
     
     /**
 	 * @param exeDir
@@ -82,7 +85,7 @@ public class ConvertBC2Ascii {
 		this.exeDir = exeDir;
 	}
 
-	public void convertBC2Ascii(URL gmlURL, URL schemaUrl ){
+	public void convertBC2Ascii(URL gmlURL, URL schemaUrl, URL modelGML, URL modelSchema ){
         try{
 	        System.out.println(gmlURL+", "+ schemaUrl);
 	        GMLWorkspace ws = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
@@ -105,7 +108,8 @@ public class ConvertBC2Ascii {
 	        StringBuffer viscSB = viscosity.createViscosity(ws, rootFeature);
 	        
 	        LineBC line = new LineBC();
-	        StringBuffer lineSB = line.createLineBC(ws, rootFeature, gml2dFile, gml2dSchema);
+//	        StringBuffer lineSB = line.createLineBC(ws, rootFeature, gml2dFile, gml2dSchema);
+	        StringBuffer lineSB = line.createLineBC(ws, rootFeature, modelGML, modelSchema);
 	        
 	        DischargeBC discharge = new DischargeBC();
 	        StringBuffer sbDis = discharge.createDischarge(ws, rootFeature);

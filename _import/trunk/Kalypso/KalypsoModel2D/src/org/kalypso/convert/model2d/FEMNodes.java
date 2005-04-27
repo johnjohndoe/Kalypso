@@ -118,6 +118,10 @@ public class FEMNodes {
                 
                 if(fpFE.getProperty("xVelocity")!= null && fpFE.getProperty("yVelocity")!= null
                         && fpFE.getProperty("riverDepth")!=null && fpFE.getProperty("waterLevel")!= null){
+                  
+                  String s_xv = ""+fpFE.getProperty("xVelocity");
+                  String s_yv = ""+fpFE.getProperty("yVelocity");
+                  if(!s_xv.equalsIgnoreCase("0") && !s_yv.equalsIgnoreCase("0")){
                     va = "VA   "+countNode+"   "+fpFE.getProperty("xVelocity")
                     							 +"   "+fpFE.getProperty("yVelocity")
                     							 +"   "+fpFE.getProperty("riverDepth")
@@ -134,6 +138,7 @@ public class FEMNodes {
                         this.addFPInfo(fpFE, "GO","TimeGradientOfFormerTimeWarps1", "TimeGradientOfFormerTimeWarps2",
                                 		"TimeGradientOfFormerTimeWarps3", sbNode, countNode);
                     }
+                  }
                 }
 
                 countNode++;

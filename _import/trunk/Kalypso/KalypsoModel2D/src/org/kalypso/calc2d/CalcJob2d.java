@@ -64,8 +64,6 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
@@ -82,269 +80,252 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  *  
  */
-public class CalcJob2d implements ICalcJob {
+public class CalcJob2d implements ICalcJob
+{
 
-	private final String EXE_FILE = "/start/StartSimulation.bat";
+  private final String EXE_FILE = "StartSimulation.bat";
 
-	public static final String MODELL_ID="Modell";
-	public  static final String CONTROL_ID="Control";
-	private boolean succeeded = false;
+  public static final String MODELL_ID = "Modell";
 
-	private final String resourceBase = "/calc2d/";
+  public static final String CONTROL_ID = "Control";
 
-	private final String CONF_FILE = "start/SimConfig.conf";
+  private boolean succeeded = false;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-	 */
-	public URL getSpezifikation() {
-		return getClass().getResource("2d_spec.xml");
-	}
+  //	private final String resourceBase = "/calc2d/";
+  //
+  private final String CONF_FILE = "SimConfig.txt";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-	 *      org.kalypso.services.calculation.job.ICalcDataProvider,
-	 *      org.kalypso.services.calculation.job.ICalcResultEater,
-	 *      org.kalypso.services.calculation.job.ICalcMonitor)
-	 */
-	public void run(File tmpdir, ICalcDataProvider inputProvider,
-			ICalcResultEater resultEater, ICalcMonitor monitor)
-			throws CalcJobServiceException {
-		
-//		final File inputDataDir = new File(basedir, Constants2D.INPUT_DIR_NAME);
-//		System.out.println("inputDataDir: " + inputDataDir);
-//		inputDataDir.mkdir();
-//		prepareDirectory(inputDataDir);
+  private final String SIM_EXE_FILE = "Kalypso_2D_vers1_2_3_large.exe";
 
-		
-		final URL schemaModellURL= getClass().getResource("schema/2dgml.xsd");
-		final URL schemaControlURL= getClass().getResource("schema/bc_gml2.xsd");
-		final File exeDir = new File(tmpdir, "simulation");
-		exeDir.mkdirs();
-		System.out.println("exeDir: " + exeDir);
+  private final String DGM_FILE = "work.dgn";
 
-		try {
-			monitor.setMessage("creating file system for simulation...");
-			if (monitor.isCanceled())
-				return;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
+   */
+  public URL getSpezifikation()
+  {
+    return getClass().getResource( "2d_spec.xml" );
+  }
 
-			monitor.setMessage("generating ascii files for 2D simulation...");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider,
+   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcMonitor)
+   */
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
+      ICalcMonitor monitor ) throws CalcJobServiceException
+  {
 
-			//      copyTemplates(basedir);
+    //		final File inputDataDir = new File(basedir, Constants2D.INPUT_DIR_NAME);
+    //		System.out.println("inputDataDir: " + inputDataDir);
+    //		inputDataDir.mkdir();
+    //		prepareDirectory(inputDataDir);
 
-			ConvertGML2Asci gml2asci = new ConvertGML2Asci(exeDir);
-			
-			gml2asci.convertGML2Asci(inputProvider.getURLForID(MODELL_ID),
-					schemaModellURL);
-			monitor.setMessage("generating mesh ascii file");
+    final URL schemaModellURL = getClass().getResource( "schema/2dgml.xsd" );
+    final URL schemaControlURL = getClass().getResource( "schema/bc_gml2.xsd" );
+    final File exeDir = new File( tmpdir, "simulation" );
+    exeDir.mkdirs();
+    System.out.println( "exeDir: " + exeDir );
 
-			ConvertBC2Ascii bc2asci = new ConvertBC2Ascii(exeDir);
-			bc2asci.convertBC2Ascii(inputProvider.getURLForID(CONTROL_ID), schemaControlURL);
-			monitor.setMessage("generating boundary conditions ascii file");
+    try
+    {
+      monitor.setMessage( "creating file system for simulation..." );
+      if( monitor.isCanceled() )
+        return;
 
-			monitor.setMessage("starting 2D simulation...");
+      monitor.setMessage( "generating ascii files for 2D simulation..." );
 
-			if (monitor.isCanceled())
-				return;
-			startCalculation(monitor,exeDir);
-			checkSucceeded(exeDir);
+      //      copyTemplates(basedir);
 
-			if (isSucceeded()) {
-				monitor.setMessage("loading results...");
-				//TODO load results
-				//        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
-				System.out.println("Finished 2D Simulation successfully.");
-			} else
-				System.out.println("Finished 2D Simulation not successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CalcJobServiceException(
-					"simulation couldn't be finished", e);
-		}
-	}
+      ConvertGML2Asci gml2asci = new ConvertGML2Asci( exeDir );
 
-	/**
-	 * 
-	 * @see org.kalypso.calc2d
-	 */
-	private void copyTemplates(File basedir) throws IOException {
-		System.out.println("destdir: " + basedir);
-		System.out.println("resourceBase: " + resourceBase);
+      gml2asci.convertGML2Asci( inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
+      monitor.setMessage( "generating mesh ascii file" );
 
-		String[] templateResources = getTemplateResources();
-		for (int i = 0; i < templateResources.length; i++) {
-			final File destFile = new File(basedir, templateResources[i]);
-			final String resource = resourceBase + templateResources[i];
-			System.out.print("resource: " + resource);
-			if (!destFile.exists()) {
-				try {
-					final InputStream inputStream = getClass()
-							.getResourceAsStream(resource);
-					FileUtilities.makeFileFromStream(false, destFile,
-							inputStream);
-					System.out.println(" ...copied");
-				} catch (Exception e) {
-					e.printStackTrace();
+      ConvertBC2Ascii bc2asci = new ConvertBC2Ascii( exeDir );
+      //			bc2asci.convertBC2Ascii(inputProvider.getURLForID(CONTROL_ID),
+      // schemaControlURL);
+      bc2asci.convertBC2Ascii( inputProvider.getURLForID( CONTROL_ID ), schemaControlURL,
+          inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
+      monitor.setMessage( "generating boundary conditions ascii file" );
 
-					System.out.println("ERR: " + resource + " max not exist");
-				}
-			} else
-				System.out.println(" exists");
-		}
-	}
+      copySim( exeDir );
 
-	/**
-	 * 
-	 * @see org.kalypso.calc2d
-	 * @return String[]
-	 */
-	private String[] getTemplateResources() throws IOException {
-		List result = new ArrayList();
-		File file = new File(resourceBase, CONF_FILE);
+      monitor.setMessage( "starting 2D simulation..." );
 
-		InputStream resourceAsStream = getClass()
-				.getResourceAsStream(CONF_FILE);
+      if( monitor.isCanceled() )
+        return;
+      startCalculation( monitor, exeDir );
+      checkSucceeded( exeDir );
 
-		System.out.println("resourceAsStream: " + resourceAsStream);
-		System.out.println("class: " + getClass());
-		System.out.println("rb+conf: " + resourceBase + CONF_FILE);
-		System.out.println(getClass().getResource(CONF_FILE));
+      if( isSucceeded() )
+      {
+        monitor.setMessage( "loading results..." );
+        //TODO load results
+        //        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
+        System.out.println( "Finished 2D Simulation successfully." );
+      }
+      else
+        System.out.println( "Finished 2D Simulation not successfully." );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "simulation couldn't be finished", e );
+    }
+  }
 
-		LineNumberReader reader = new LineNumberReader(new InputStreamReader(
-				getClass().getResourceAsStream(resourceBase + CONF_FILE)));
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null)
-				if (!line.startsWith("#"))
-					result.add(line);
-		} catch (IOException e) {
-			throw e;
-		} finally {
-			reader.close();
-		}
-		return (String[]) result.toArray(new String[result.size()]);
-	}
+  /**
+   * copies files necessary for 2d simulation to start
+   */
+  private void copySim( File basedir ) throws IOException
+  {
 
-//	/**
-//	 * 
-//	 * @param dir
-//	 */
-//	private void prepareDirectory(File dir) {
-//		for (int i = 0; i < inputSubDirs.length; i++)
-//			(new File(dir, inputSubDirs[i])).mkdirs();
-//	}
+    final File simExeFile = new File( basedir, SIM_EXE_FILE );
+    final File configFile = new File( basedir, CONF_FILE );
+    final File dgmFile = new File( basedir, DGM_FILE );
+    final File exeFile = new File( basedir, EXE_FILE );
 
-	/**
-	 * @return boolean succeeded
-	 */
-	public boolean isSucceeded() {
-		return succeeded;
-	}
+    final InputStream simInputStream = getClass().getResourceAsStream( SIM_EXE_FILE );
+    final InputStream exeInputStream = getClass().getResourceAsStream( EXE_FILE );
+    final InputStream confInputStream = getClass().getResourceAsStream( CONF_FILE );
+    final InputStream dgmInputStream = getClass().getResourceAsStream( DGM_FILE );
 
-	/**
-	 * starts 2D simulation
-	 * @param monitor
-	 */
-	private void startCalculation(ICalcMonitor monitor, final File basedir)
-			throws CalcJobServiceException {
-		InputStreamReader inStream = null;
-		InputStreamReader errStream = null;
-		PrintWriter outWriter = null;
-		PrintWriter errWriter = null;
+    FileUtilities.makeFileFromStream( false, simExeFile, simInputStream );
+    FileUtilities.makeFileFromStream( false, exeFile, exeInputStream );
+    FileUtilities.makeFileFromStream( false, configFile, confInputStream );
+    FileUtilities.makeFileFromStream( false, dgmFile, dgmInputStream );
+  }
 
-		try {
-			final File exeFile = new File(basedir, EXE_FILE);
-			final File exeDir = exeFile.getParentFile();
-			final String commandString = exeFile.getAbsolutePath();
-			System.out.println("commandString: " + commandString);
+  /**
+   * @return boolean succeeded
+   */
+  public boolean isSucceeded()
+  {
+    return succeeded;
+  }
 
-			final Process process = Runtime.getRuntime().exec(commandString,
-					null, exeDir);
+  /**
+   * starts 2D simulation
+   * 
+   * @param monitor
+   */
+  private void startCalculation( ICalcMonitor monitor, final File basedir )
+      throws CalcJobServiceException
+  {
+    InputStreamReader inStream = null;
+    InputStreamReader errStream = null;
+    PrintWriter outWriter = null;
+    PrintWriter errWriter = null;
 
-			outWriter = new PrintWriter(new FileWriter(new File(basedir,
-					"exe.log")));
-			errWriter = new PrintWriter(new FileWriter(new File(basedir,
-					"exe.err")));
+    try
+    {
+      final File exeFile = new File( basedir, EXE_FILE );
+      final File exeDir = exeFile.getParentFile();
+      final String commandString = exeFile.getAbsolutePath();
+      System.out.println( "commandString: " + commandString );
 
-			inStream = new InputStreamReader(process.getInputStream());
-			errStream = new InputStreamReader(process.getErrorStream());
-			while (true) {
-				CopyUtils.copy(inStream, outWriter);
-				CopyUtils.copy(errStream, errWriter);
+      final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
 
-				try {
-					process.exitValue();
-					return;
-				} catch (IllegalThreadStateException e) {
-					e.printStackTrace();
-				}
+      outWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
+      errWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
 
-				if (monitor.isCanceled()) {
-					process.destroy();
-					return;
-				}
-				Thread.sleep(100);
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
-			throw new CalcJobServiceException("error occurred...", e);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-			throw new CalcJobServiceException("error occurred...", e);
-		} finally {
-			try {
-				if (outWriter != null)
-					outWriter.close();
+      inStream = new InputStreamReader( process.getInputStream() );
+      errStream = new InputStreamReader( process.getErrorStream() );
+      while( true )
+      {
+        CopyUtils.copy( inStream, outWriter );
+        CopyUtils.copy( errStream, errWriter );
 
-				if (errWriter != null)
-					errWriter.close();
+        try
+        {
+          process.exitValue();
+          return;
+        }
+        catch( IllegalThreadStateException e )
+        {
+          e.printStackTrace();
+        }
 
-				if (inStream != null)
-					inStream.close();
+        if( monitor.isCanceled() )
+        {
+          process.destroy();
+          return;
+        }
+        Thread.sleep( 100 );
+      }
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "error occurred...", e );
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "error occurred...", e );
+    }
+    finally
+    {
+      try
+      {
+        if( outWriter != null )
+          outWriter.close();
 
-				if (errStream != null)
-					errStream.close();
-			} catch (final IOException e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
+        if( errWriter != null )
+          errWriter.close();
 
-	/**
-	 * checks if calculation of simulations is succeeded
-	 */
-	public void checkSucceeded(final File inputDir) {
-		Reader logFileReader = null;
-		LineNumberReader reader = null;
-		try {
-			final File logDir = new File(inputDir, "start2");
-			final File logFile = new File(logDir, "out.2d");
-			logFileReader = new FileReader(logFile);
-			reader = new LineNumberReader(logFileReader);
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.indexOf("calculation finished without errors") >= 0)
-					succeeded = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(reader);
-			IOUtils.closeQuietly(logFileReader);
-		}
-	}
+        if( inStream != null )
+          inStream.close();
 
-	private void loadResults(final File outputDir) {
+        if( errStream != null )
+          errStream.close();
+      }
+      catch( final IOException e1 )
+      {
+        e1.printStackTrace();
+      }
+    }
+  }
 
-	}
+  /**
+   * checks if calculation of simulations is succeeded
+   */
+  public void checkSucceeded( final File inputDir )
+  {
+    Reader logFileReader = null;
+    LineNumberReader reader = null;
+    try
+    {
+      final File logFile = new File( inputDir, "out.2d" );
+      logFileReader = new FileReader( logFile );
+      reader = new LineNumberReader( logFileReader );
+      String line;
+      while( ( line = reader.readLine() ) != null )
+      {
+        if( line.indexOf( " KALYPSO-2D: instationaere Berechnung ordnungsgemaess gelaufen" ) >= 0 )
+          succeeded = true;
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+      IOUtils.closeQuietly( logFileReader );
+    }
+  }
 
-	//  public boolean isSucceeded()
-	//  {
-	//    return succeeded;
-	//  }
+  //	private void loadResults(final File outputDir) {
+  //
+  //	}
+
 
 }

@@ -90,11 +90,7 @@ public class AsciiFactory {
 			sbALL.append(sbFE.toString());
 			sbALL.append(sbRK.toString());
 			OutputStreamWriter writer = new OutputStreamWriter(
-					new FileOutputStream(new File(exeDir, MODELL_FILE)
-					//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\src\\org\\kalypso\\calc2d\\start\\model_tmp.2d")
-					), "UTF-8");
-			//							"\\org\\kalypso\\calc2d\\start\\model_tmp.2d"),"UTF-8");
-			//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start2\\model_2204.2d"),"UTF-8");
+					new FileOutputStream(new File(exeDir, MODELL_FILE)), "UTF-8");
 			writer.write(sbALL.toString());
 			writer.close();
 
@@ -127,10 +123,7 @@ public class AsciiFactory {
 			sbALL.append(sbDyn.toString());
 
 			OutputStreamWriter writer = new OutputStreamWriter(
-					new FileOutputStream(new File(exeDir, BC_File))
-					//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\src\\org\\kalypso\\calc2d\\start\\bc_2204.txt"),
-					//							"C:\\Programme\\eclipse\\workspace\\Kalypso2d\\sim\\start2\\bc_2204.txt"),
-					, "UTF-8");
+					new FileOutputStream(new File(exeDir, BC_File)), "UTF-8");
 			writer.write(sbALL.toString());
 			writer.close();
 		} catch (Exception ex) {

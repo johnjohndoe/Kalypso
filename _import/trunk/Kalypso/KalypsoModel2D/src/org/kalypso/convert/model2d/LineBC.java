@@ -89,7 +89,7 @@ public class LineBC {
      * @param ws
      * @param rootFeature
      */
-    public StringBuffer createLineBC(GMLWorkspace ws, Feature rootFeature, String file2d, String schema2d){
+    public StringBuffer createLineBC(GMLWorkspace ws, Feature rootFeature, URL file2d, URL schema2d){
         Feature lineCollectionFE = ws.resolveLink(rootFeature, "lineCollectionMember");
         List list = (List) lineCollectionFE.getProperty("lineMember");
         StringBuffer sb = new StringBuffer();
@@ -97,9 +97,10 @@ public class LineBC {
         sb.append("   NCL Kontinuitaetslinien (d.h. Knotennummern der Linien)"+"\n");
       
         try {
-	        URL gmlURL = new File(file2d).toURL();
-	        URL schemaUrl = new URL(schema2d);
-	        GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+//	        URL gmlURL = new File(file2d).toURL();
+//	        URL schemaUrl = new File(schema2d).toURL();
+//	        GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace(gmlURL, schemaUrl);
+	        GMLWorkspace ws2d = GmlSerializer.createGMLWorkspace(file2d, schema2d);
 	        final Feature rootFeature2d = ws2d.getRootFeature();
 	        
 	        for (int i = 0; i < list.size(); i++) {

@@ -205,7 +205,7 @@ public class CalcJob2dTest extends TestCase
     try
     {
       final ICalcJob job = new CalcJob2d();
-      final File tmpDir = new File( "C:\\temp\\2DCalcTest" );
+      final File tmpDir = new File( "C:\\Temp\\2DCalcTest" );
       tmpDir.mkdirs();
       FileUtils.cleanDirectory( tmpDir );
       job.run( tmpDir, dataProvider, resultEater, monitor );

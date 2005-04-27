@@ -107,7 +107,7 @@ public class IterationBC {
                     new Integer( (int)Double.parseDouble(""+iterationFE.getProperty("IDEN")) ),
                     //TODO iConf in schema integrieren
 //                    new Integer( (int)Double.parseDouble(""+iterationFE.getProperty("ICONVG")) ),
-                    new Integer( 0 ),
+                    new Integer( 1 ),
                     new Integer( (int)Double.parseDouble(""+iterationFE.getProperty("IGRAV")) ),
                     //TODO IPASCHE
                     new Integer(0),
@@ -123,7 +123,14 @@ public class IterationBC {
                 e.printStackTrace();
             }
             
-//            sb.append(blockValues+"\n");
+              String s  = " convx"+"\n";
+              String s2 = " convy"+"\n";
+              String s3 = " convh"+"\n";
+              String s4 = "    0.0010    0.0010    0.0010"+"\n";
+              sb.append(s);
+              sb.append(s2);
+              sb.append(s3);
+              sb.append(s4);
             sb.append("x"+"\n");
         }
         
