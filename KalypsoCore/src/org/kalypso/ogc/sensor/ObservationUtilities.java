@@ -455,7 +455,6 @@ public class ObservationUtilities
    *          row index for which objects will be taken
    * @param axisList
    *          columns for which objects will be taken
-   * @return
    * @throws SensorException
    */
   public static Object[] getElements( final ITuppleModel tuppleModel,

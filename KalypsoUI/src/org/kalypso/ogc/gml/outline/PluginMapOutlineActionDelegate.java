@@ -1,10 +1,3 @@
-package org.kalypso.ogc.gml.outline;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.util.list.IListManipulator;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -45,7 +38,18 @@ import org.kalypso.util.list.IListManipulator;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.outline;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.util.list.IListManipulator;
+
+/**
+ * Superclass for plugins that modify the map model
+ * 
+ * @author kuepfer
+ */
 public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
 {
 
@@ -53,11 +57,6 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
 
   private PluginMapOutlineAction m_innerAction = null;
 
-  /*
-   * superclass for plugins that modify the map model
-   * 
-   * @author kuepfer
-   */
   public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image,
       final String tooltipText, final GisMapOutlineViewer selectionProvider,
       IConfigurationElement configurationElement, IListManipulator listManipulator )
@@ -93,6 +92,7 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
    */
   protected void refresh()
   {
+  //
   }
 
 }

@@ -44,7 +44,6 @@ import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -74,10 +73,8 @@ public class AutoProxyFactory implements IProxyFactory
    * 
    * @param obs
    * @return either a proxy observation or the original observation
-   * @throws SensorException
    */
   public IObservation proxyObservation( final IObservation obs )
-      throws SensorException
   {
     // direct assignment, just to be able to use 'proxy' as name everywhere
     IObservation proxy = obs;
@@ -135,7 +132,6 @@ public class AutoProxyFactory implements IProxyFactory
   }
 
   private static IObservation proxyForWQWechmann( final IObservation obs )
-      throws SensorException
   {
     final MetadataList mdl = obs.getMetadataList();
 
