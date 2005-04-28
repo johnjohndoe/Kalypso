@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <observation editable="false" xmlns="zml.kalypso.org">
-    <name>HWR Kalte Bode</name>
+    <name/>
     <metadataList>
         <metadata name="tubig_kommentar" value="kabo.vvs"/>
     </metadataList>
