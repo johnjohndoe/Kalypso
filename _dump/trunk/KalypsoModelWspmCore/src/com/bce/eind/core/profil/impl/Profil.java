@@ -50,13 +50,13 @@ public class Profil implements IProfil
 
   private final HashMap<METADATA, Object> m_profilMetaData;
 
-  private final List m_unknownData;
+  private final List<Object> m_unknownData;
 
   public Profil( )
   {
     m_profilMetaData = new HashMap<METADATA, Object>();
     m_points = new ProfilPoints();
-    m_unknownData = new Vector();
+    m_unknownData = new Vector<Object>();
     // m_extendedPointData = new HashMap<IProfilPointProperty, Object>();
     m_points.addProperty( POINT_PROPERTY.BREITE );
     m_points.addProperty( POINT_PROPERTY.HOEHE );
