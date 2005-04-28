@@ -1,14 +1,14 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import java.util.Map;
+import java.util.HashMap;
 
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -53,9 +53,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypeProperty
+public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
-  private final String m_namespace = "virtual";
 
   private final static String DECORATED_NS = "http://elbe.wb.tu-harburg.de/2dModel";
 
@@ -65,7 +64,6 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-  private final String m_name = "arrow_velocity";
 
   /*
    * 
@@ -73,7 +71,7 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
    */
   public VirtualVelocityFeatureTypeProperty( FeatureType ft )
   {
-  //
+    super("arrow_velocity","virtual",new HashMap()) ;
   }
 
   /**
@@ -105,27 +103,11 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getName()
-   */
-  public String getName()
-  {
-    return m_name;
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
    */
   public String getType()
   {
     return GM_LineString.class.getName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
-   */
-  public Annotation getAnnotation( String lang )
-  {
-    return null;
   }
 
   /**
@@ -137,14 +119,6 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getNamespace()
-   */
-  public String getNamespace()
-  {
-    return m_namespace;
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
    */
   public boolean isGeometryProperty()
@@ -152,11 +126,4 @@ public class VirtualVelocityFeatureTypeProperty implements VirtualFeatureTypePro
     return true;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
-   */
-  public Map getAnnotationMap()
-  {
-    return null;
-  }
 }

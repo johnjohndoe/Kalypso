@@ -14,6 +14,8 @@ public class Annotation
 
   private final String m_lang;
 
+  public static final String UNSUPPORTED_LANG_KEY = "unsupportedLanuage";
+
   public Annotation( String lang, String label, String tooltip, String description )
   {
     m_lang = lang;

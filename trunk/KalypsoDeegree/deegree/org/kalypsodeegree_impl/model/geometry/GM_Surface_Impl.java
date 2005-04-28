@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
@@ -476,12 +477,19 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * 
    * 
-   * @return
    */
   public String toString()
   {
     String ret = getClass().getName() + ":\n";
     ret += ( "envelope = " + envelope + "\n" );
+    try
+    {
+      ret += " CRS: "+getCoordinateSystem().getName()+"\n";
+    }
+    catch( RemoteException e )
+    {
+      e.printStackTrace();
+    }
     ret += ( "patch = " + patch + "\n" );
     return ret;
   }

@@ -62,11 +62,8 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -81,14 +78,8 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializable
+public class FeatureTypeProperty_Impl extends AbstractFeatureType implements FeatureTypeProperty, Serializable
 {
-  private final Map m_annotationMap;
-
-  private final String m_namespace;
-
-  private final String m_name;
-
   private final String m_type;
 
   private final boolean m_nullable;
@@ -100,24 +91,9 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   protected FeatureTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
       Map annotationMap )
   {
-    m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
-    m_name = name;
-    m_namespace = namespace;
+    super(name,namespace,annotationMap);
     m_type = type;
     m_nullable = nullable;
-
-    final String localKey = Locale.getDefault().getLanguage();
-    if( !m_annotationMap.containsKey( localKey ) )
-      m_annotationMap.put( localKey, new Annotation( localKey, m_name, "", m_namespace + ":"
-          + m_name ) );
-  }
-
-  /**
-   * returns the name of the property
-   */
-  public String getName()
-  {
-    return m_name;
   }
 
   /**
@@ -139,15 +115,10 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
   public String toString()
   {
     String ret = null;
-    ret = "name = " + m_name + "\n";
+    ret = "name = " + getName() + "\n";
     ret += "type = " + m_type + "\n";
     ret += "nullable = " + m_nullable + "\n";
     return ret;
-  }
-
-  public String getNamespace()
-  {
-    return m_namespace;
   }
 
   /**
@@ -159,21 +130,9 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
         && !m_type.endsWith( "Envelope" );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
-   */
-  public Annotation getAnnotation( String lang )
-  {
-    return (Annotation)m_annotationMap.get( lang );
-  }
+  
+  
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
-   */
-  public Map getAnnotationMap()
-  {
-    return m_annotationMap;
-  }
 
   /**
    * 
@@ -193,8 +152,8 @@ public class FeatureTypeProperty_Impl implements FeatureTypeProperty, Serializab
    */
   public int hashCode()
   {
-    if( m_namespace != null )
-      return ( m_name + m_namespace ).hashCode();
-    return m_name.hashCode();
+    if( getNamespace() != null )
+      return ( getName() + getNamespace() ).hashCode();
+    return getName().hashCode();
   }
 }

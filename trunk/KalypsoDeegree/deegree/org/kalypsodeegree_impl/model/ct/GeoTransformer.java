@@ -171,9 +171,12 @@ final public class GeoTransformer
   {
     CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap(
         geo.getCoordinateSystem() );
+    
+    
     ConvenienceTransformFactory ctf = null;
     ctf = ConvenienceTransformFactory.getInstance();
-
+    if(cs.equals(targetCS))
+      return geo;
     MathTransform trans = ctf.getTransform( cs, targetCS );
 
     if( geo instanceof GM_Point )
@@ -391,7 +394,6 @@ final public class GeoTransformer
     Debug.debugMethodBegin( this, "transformPositions" );
 
     GM_Position[] newpos = new GM_Position[pos.length];
-
     for( int k = 0; k < pos.length; k++ )
     {
       double[] din = pos[k].getAsArray();

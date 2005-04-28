@@ -157,7 +157,7 @@ public class AddHeavyRelationshipCommand implements ICommand
       break;
     }
     // remove relation feature and also first link
-    m_workspace.removeLinkedFeature( m_srcFE, m_linkFT1.getName(), m_newFeature );
+    m_workspace.removeLinkedAsCompositionFeature(m_srcFE, m_linkFT1.getName(), m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }

@@ -570,28 +570,43 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     throw new Exception( "New Feature violates maxOccurs" );
   }
 
-  public void removeLinkedFeature( Feature parentFeature, String propName, Feature linkFeature )
+/**
+ * 
+ * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
+ */
+  public void removeLinkedFeature( Feature parentFeature, String propName, Feature childFeature )
   {
-    Object prop = parentFeature.getProperty( propName );
-    Object properties[] = parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
-
-    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propIndex );
-
-    if( maxOccurs == 1 )
+    final Object prop = parentFeature.getProperty( propName );
+    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propName);
+    switch(maxOccurs)
     {
-      properties[propIndex] = null;
-    }
-    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
-    {
+      case 1:
+        parentFeature.setProperty(FeatureFactory.createFeatureProperty(propName, null));
+      break;  
+      default:
       List list = (List)prop;
-      list.remove( linkFeature.getId() );
+      list.remove( childFeature.getId() );
     }
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
+   */
+  public void removeLinkedAsCompositionFeature( Feature parentFeature, String propName, Feature childFeature )
+  {
+    final Object prop = parentFeature.getProperty( propName );
+    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propName);
+    switch(maxOccurs)
+    {
+      case 1:
+        parentFeature.setProperty(FeatureFactory.createFeatureProperty(propName, null));
+      break;  
+      default:
+      List list = (List)prop;
+      list.remove( childFeature);
+    }
+  }
+  
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
    */
@@ -599,4 +614,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_nsMap;
   }
+
+  
 }

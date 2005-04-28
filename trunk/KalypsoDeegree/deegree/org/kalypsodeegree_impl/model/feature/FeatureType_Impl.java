@@ -63,10 +63,8 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
@@ -81,13 +79,11 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-class FeatureType_Impl implements FeatureType, Serializable
+class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Serializable
 {
-  private final String m_namespace;
 
   private final String m_substitutionGroup;
 
-  private final String m_name;
 
   private final FeatureTypeProperty[] m_properties;
 
@@ -99,18 +95,15 @@ class FeatureType_Impl implements FeatureType, Serializable
 
   private int m_defaultGeometryPropPos = -1;
 
-  private final Map m_annotationsMap;
-
   private FeatureTypeProperty[] m_virtualProperties = new FeatureTypeProperty[0];
 
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
       int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
-    m_annotationsMap = annotationMap == null ? new HashMap() : annotationMap;
+    super(name,namespace,annotationMap);
+    
     m_substitutionGroup = substitutionGroup;
-    this.m_name = name;
-    m_namespace = namespace;
-    this.m_properties = properties;
+    m_properties = properties;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
     m_posOfFTP = new HashMap();
@@ -127,21 +120,6 @@ class FeatureType_Impl implements FeatureType, Serializable
       m_posOfFTP.put( properties[i].getNamespace() + ":" + properties[i].getName(), new int[]
       { i } );
     }
-    // make default annotation
-    final String localKey = Locale.getDefault().getLanguage();
-    if( !m_annotationsMap.containsKey( localKey ) )
-    {
-      m_annotationsMap.put( localKey, new Annotation( localKey, m_name, "", m_namespace + ":"
-          + m_name ) );
-    }
-  }
-
-  /**
-   * returns the name of the FeatureType
-   */
-  public String getName()
-  {
-    return m_name;
   }
 
   /**
@@ -172,7 +150,7 @@ class FeatureType_Impl implements FeatureType, Serializable
     String ret = null;
     // ret = "parents = " + parents + "\n";
     // ret += "children = " + children + "\n";
-    ret += "name = " + m_name + "\n";
+    ret += "name = " + getName() + "\n";
     ret += "properties = ";
     for( int i = 0; i < m_properties.length; i++ )
     {
@@ -181,10 +159,6 @@ class FeatureType_Impl implements FeatureType, Serializable
     return ret;
   }
 
-  public String getNamespace()
-  {
-    return m_namespace;
-  }
 
   public int getMinOccurs( int pos )
   {
@@ -210,22 +184,6 @@ class FeatureType_Impl implements FeatureType, Serializable
   public int getDefaultGeometryPropertyPosition()
   {
     return m_defaultGeometryPropPos;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureType#getAnnotation(java.lang.String)
-   */
-  public Annotation getAnnotation( String langKey )
-  {
-    return (Annotation)m_annotationsMap.get( langKey );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureType#getAnnotationMap()
-   */
-  public Map getAnnotationMap()
-  {
-    return m_annotationsMap;
   }
 
   public String getSubstitutionGroup()
@@ -279,10 +237,10 @@ class FeatureType_Impl implements FeatureType, Serializable
     if( obj == null || ( !( obj instanceof FeatureType ) ) )
       return false;
     final FeatureType other = (FeatureType)obj;
-    if( m_namespace != null )
-      if( !m_namespace.equals( other.getNamespace() ) )
+    if( getNamespace() != null )
+      if( !getNamespace().equals( other.getNamespace() ) )
         return false;
-    if( !m_name.equals( other.getName() ) )
+    if( !getName().equals( other.getName() ) )
       return false;
     return true;
   }
@@ -292,9 +250,9 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public int hashCode()
   {
-    if( m_namespace != null )
-      return ( m_namespace + m_name ).hashCode();
-    return m_name.hashCode();
+    if( getNamespace() != null )
+      return ( getNamespace() + getName()).hashCode();
+    return getName().hashCode();
   }
 
   /**
@@ -302,7 +260,12 @@ class FeatureType_Impl implements FeatureType, Serializable
    */
   public boolean isVirtuelProperty( String propertyName )
   {
-    return !m_posOfFTP.containsKey( propertyName );
+    for( int i = 0; i < m_virtualProperties.length; i++ )
+    {
+      if( m_virtualProperties[i].getName().equals( propertyName ) )
+        return true;
+    }
+    return false;
   }
 
   /**
