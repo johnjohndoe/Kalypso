@@ -43,7 +43,5 @@ package org.kalypso.ogc.gml.outline;
 
 public interface PluginMapOutlineAction
 {
-
   void run( GisMapOutlineViewer outlineviewer );
-  
 }

@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.featureview;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;

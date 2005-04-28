@@ -87,7 +87,7 @@ public class MetadocServiceWrapper
    * @param fileExtension
    *          Extension with '.' (e.g. '.csv')
    * @param username
-   * @return
+   * @return the prepared document
    * @throws CoreException
    */
   public Document prepareDocument( final String fileExtension,

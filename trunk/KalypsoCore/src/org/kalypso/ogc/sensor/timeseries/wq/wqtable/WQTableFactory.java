@@ -44,7 +44,6 @@ public class WQTableFactory implements ISerializer
    * Parses the xml and return the binding object
    * 
    * @param ins
-   * @return
    */
   public static RatingTableList parseSimple( final InputSource ins )
       throws WQException

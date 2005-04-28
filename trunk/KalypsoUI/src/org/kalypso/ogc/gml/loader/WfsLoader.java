@@ -1,7 +1,5 @@
 package org.kalypso.ogc.gml.loader;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +23,6 @@ import org.deegree.services.wfs.capabilities.FeatureType;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.java.io.StreamUtilities;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;

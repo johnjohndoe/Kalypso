@@ -89,8 +89,6 @@ public class WQTuppleModel extends AbstractTuppleModel
    *          source axis from which values are read
    * @param destAxis
    *          destination axis for which values are computed
-   * @param wsets
-   *          parameters used to perform the conversion
    */
   public WQTuppleModel( final ITuppleModel model, final IAxis[] axes,
       final IAxis dateAxis, final IAxis srcAxis, final IAxis destAxis,

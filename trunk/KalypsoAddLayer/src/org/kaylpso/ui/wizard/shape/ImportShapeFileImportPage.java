@@ -417,8 +417,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
         ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getControl()
             .getShell(), root, IResource.FILE );
         dialog.open();
-        Object[] seleciton = dialog.getResult();
-        
+        dialog.getResult();
       }
     }
     if( e.widget instanceof Combo )
