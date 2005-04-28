@@ -96,13 +96,12 @@ public class ResourceCompareInputWrapper extends CompareEditorInput
 
   private IResource fRightResource;
 
-  private DiffTreeViewer fDiffViewer;
+  protected DiffTreeViewer fDiffViewer;
 
-  private IAction fOpenAction;
+  protected IAction fOpenAction;
 
   class MyDiffNode extends DiffNode
   {
-
     private boolean fDirty = false;
 
     private ITypedElement fLastId;
@@ -439,14 +438,12 @@ public class ResourceCompareInputWrapper extends CompareEditorInput
             leftLabel,
             rightLabel } );
       }
-      else
+
+      final String format = Utilities.getString( "ResourceCompare.twoWay.tooltip" ); //$NON-NLS-1$
+      return MessageFormat.format( format, new String[]
       {
-        String format = Utilities.getString( "ResourceCompare.twoWay.tooltip" ); //$NON-NLS-1$
-        return MessageFormat.format( format, new String[]
-        {
-            leftLabel,
-            rightLabel } );
-      }
+          leftLabel,
+          rightLabel } );
     }
     // fall back
     return super.getToolTipText();

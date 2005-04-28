@@ -249,7 +249,6 @@ public class FileCache
    * perform additional key-comparisons.
    * 
    * @param key
-   * @return
    */
   public Object getRealKey( final Object key )
   {

@@ -46,7 +46,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.runtime.CoreException;
 
 /**
  * Collects all visited IFiles and deletes duplicates.
@@ -60,7 +59,7 @@ public class CollectFilesVisitor implements IResourceVisitor
   /**
    * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
    */
-  public boolean visit( final IResource resource ) throws CoreException
+  public boolean visit( final IResource resource )
   {
     if( resource.getType() == IResource.FILE )
       m_files.add( resource );
