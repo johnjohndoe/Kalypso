@@ -3,9 +3,7 @@ package org.kalypsodeegree_impl.gml.schema.virtual;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -13,7 +11,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -58,16 +56,10 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureTypeProperty
+public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
 
-  private final String m_name;
-
   private final String m_type;
-
-  private final Map m_annotations;
-
-  private final String m_namespace;
 
   private String m_linkName;
 
@@ -77,20 +69,9 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
    */
   public VirtualFeatureAssociationTypeProperty( FeatureAssociationTypeProperty ftp )
   {
+    super("link_" + ftp.getName(),"virtual",new HashMap());
     m_linkName = ftp.getName();
-    m_name = "link_" + ftp.getName();
     m_type = GM_LineString.class.getName();
-    m_annotations = new HashMap();
-    m_namespace = "virtual";
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getName()
-   */
-  public String getName()
-  {
-    return m_name;
   }
 
   /**
@@ -102,27 +83,11 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
-   */
-  public Annotation getAnnotation( String lang )
-  {
-    return (Annotation)m_annotations.get( lang );
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
    */
   public boolean isNullable()
   {
     return true;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getNamespace()
-   */
-  public String getNamespace()
-  {
-    return m_namespace;
   }
 
   /**
@@ -133,14 +98,6 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
     return true;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
-   */
-  public Map getAnnotationMap()
-  {
-    return m_annotations;
-  }
-
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
     if( workspace == null )
@@ -148,7 +105,7 @@ public class VirtualFeatureAssociationTypeProperty implements VirtualFeatureType
     try
     {
       final GM_Object srcGeo = feature.getDefaultGeometryProperty();
-      GM_Position src = srcGeo.getCentroid().getPosition();
+//      GM_Position src = srcGeo.getCentroid().getPosition();
       if( srcGeo == null )
         return null;
       final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor(

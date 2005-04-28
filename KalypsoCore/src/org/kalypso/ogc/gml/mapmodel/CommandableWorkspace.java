@@ -70,10 +70,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
 
   public CommandableWorkspace( final GMLWorkspace workspace )
   {
-    /** it does not make sence decorate something else than the real workspace<br>
-     * 	the UML looks also nicer without recursive dependencies here 
+    /**
+     * it does not make sence decorate something else than the real workspace
+     * <br>
+     * the UML looks also nicer without recursive dependencies here
      */
-    m_workspace = (GMLWorkspace_Impl) workspace;
+    m_workspace = (GMLWorkspace_Impl)workspace;
   }
 
   public void addCommandManagerListener( ICommandManagerListener l )
@@ -268,6 +270,17 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public void removeLinkedFeature( Feature parentFeature, String propName, Feature linkFeature )
   {
     m_workspace.removeLinkedFeature( parentFeature, propName, linkFeature );
+  }
+
+  /**
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
+   */
+  public void removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
+      Feature childFeature )
+  {
+    m_workspace.removeLinkedAsCompositionFeature( parentFeature, propName, childFeature );
   }
 
   /**

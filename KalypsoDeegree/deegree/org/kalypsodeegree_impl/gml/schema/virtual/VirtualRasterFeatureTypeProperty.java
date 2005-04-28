@@ -1,14 +1,14 @@
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
-import java.util.Map;
+import java.util.HashMap;
 
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -52,7 +52,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypeProperty
+public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implements
+    VirtualFeatureTypeProperty
 {
   private final FeatureTypeProperty m_ftp;
 
@@ -62,6 +63,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
    */
   public VirtualRasterFeatureTypeProperty( FeatureTypeProperty ftp )
   {
+    super( "RasterBoundary_" + ftp.getName(), "virtual", new HashMap() );
     m_ftp = ftp;
   }
 
@@ -77,7 +79,7 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
     CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( targetSrs ) );
     RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
-    if(rgDomain==null)
+    if( rgDomain == null )
       return null;
     try
     {
@@ -91,27 +93,11 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getName()
-   */
-  public String getName()
-  {
-    return "RasterBoundary_" + m_ftp.getName();
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
    */
   public String getType()
   {
     return GM_Polygon.class.getName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotation(java.lang.String)
-   */
-  public Annotation getAnnotation( String lang )
-  {
-    return null;
   }
 
   /**
@@ -123,27 +109,10 @@ public class VirtualRasterFeatureTypeProperty implements VirtualFeatureTypePrope
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getNamespace()
-   */
-  public String getNamespace()
-  {
-    return "virtual";
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
    */
   public boolean isGeometryProperty()
   {
     return true;
   }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getAnnotationMap()
-   */
-  public Map getAnnotationMap()
-  {
-    return null;
-  }
-
 }

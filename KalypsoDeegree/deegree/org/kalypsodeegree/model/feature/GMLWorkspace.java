@@ -67,8 +67,22 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception;
-  
-  public void removeLinkedFeature(Feature parentFeature, String propName, Feature linkFeature);
+
+  /**
+   * removes a related feature from the parent. Works only if the child is
+   * linked <br>
+   * <i>and the relation is not a composition </i>
+   * see also @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
+   */
+  public void removeLinkedFeature( Feature parentFeature, String propName, Feature childFeature );
+
+  /**
+   * removes a related feature from the parent. Works only if the child is a
+   * composition <br>
+   * <i>and the relation is not linked </i>
+   */
+  public void removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
+      Feature childFeature );
 
   public Map getNamespaceMap();
 }
