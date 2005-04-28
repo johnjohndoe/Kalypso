@@ -636,7 +636,8 @@
             <groupMarker
                   name="calcCaseStart">
             </groupMarker>
-            <separator name="calcCaseDebug"/>
+            <separator />
+            <groupMarker name="calcCaseDebug"/>
          </menu>
          <action
                label="Archivieren"
