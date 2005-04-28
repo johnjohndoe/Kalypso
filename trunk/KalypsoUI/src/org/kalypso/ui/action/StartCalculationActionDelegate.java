@@ -41,17 +41,11 @@
 package org.kalypso.ui.action;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.ui.nature.ModelNature;
 
 /**
  * @author belger
@@ -84,39 +78,11 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
-    
     if( calcCasesToCalc == null )
       return;
     
     for( int i = 0; i < calcCasesToCalc.length; i++ )
-    {
-      final IFolder folder = calcCasesToCalc[i];
-
-      final Job job = new Job( "Berechne: " + folder.getName() )
-      {
-        /**
-         * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        protected IStatus run( final IProgressMonitor monitor )
-        {
-          try
-          {
-            final ModelNature nature = (ModelNature)folder.getProject().getNature( ModelNature.ID );
-            nature.runCalculation( folder, monitor );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-
-            return e.getStatus();
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
-      job.setUser( true );
-      job.schedule();
-    }
+      new CalcCaseJob( calcCasesToCalc[i] ).schedule();
   }
 
   /**
@@ -126,6 +92,8 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     // mir doch egal!
+    
+    // wir nehmen immer die selektion des navigators, nicht die hier gesetzte
   }
 
 }
