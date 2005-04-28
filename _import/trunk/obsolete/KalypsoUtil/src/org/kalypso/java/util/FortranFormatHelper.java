@@ -60,13 +60,13 @@ public class FortranFormatHelper
 
   public final static Pattern pPairFormat = Pattern.compile( "^.+,.+$" );
 
-  final static String textRegExp = "[a-zA-Z0-9_\\. ]";
+  final static String textRegExp = "[a-zA-Z0-9_\\., \\(\\)-äÄüÜöÖß]";
 
   final static String freeFormat = "\\s*[\\\\a-zA-Z0-9_:\\.-]+\\s*";
 
   final static String decimalPoint = "[ \\.]";
 
-  final static String decimalValue = "[0-9 ]";
+  final static String decimalValue = "[0-9 -]";  
 
   final static DecimalFormat decimalFormat;
   static
