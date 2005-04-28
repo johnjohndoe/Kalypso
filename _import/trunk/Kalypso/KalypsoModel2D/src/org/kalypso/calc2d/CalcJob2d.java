@@ -161,7 +161,7 @@ public class CalcJob2d implements ICalcJob
       if( monitor.isCanceled() )
         return;
       startCalculation( monitor, exeDir );
-      checkSucceeded( exeDir );
+      checkSucceeded( monitor, exeDir );
 
       if( isSucceeded() )
       {
@@ -207,7 +207,7 @@ public class CalcJob2d implements ICalcJob
    */
   public boolean isSucceeded()
   {
-    return succeeded;
+    return this.succeeded;
   }
 
   /**
@@ -296,7 +296,7 @@ public class CalcJob2d implements ICalcJob
   /**
    * checks if calculation of simulations is succeeded
    */
-  public void checkSucceeded( final File inputDir )
+  public void checkSucceeded( ICalcMonitor monitor, final File inputDir )
   {
     Reader logFileReader = null;
     LineNumberReader reader = null;
@@ -311,6 +311,14 @@ public class CalcJob2d implements ICalcJob
         if( line.indexOf( " KALYPSO-2D: instationaere Berechnung ordnungsgemaess gelaufen" ) >= 0 )
           succeeded = true;
       }
+      
+      if( isSucceeded() )
+      {
+         monitor.setMessage( "loading results" );
+
+//        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
+      }
+      
     }
     catch( Exception e )
     {
@@ -323,9 +331,10 @@ public class CalcJob2d implements ICalcJob
     }
   }
 
-  //	private void loadResults(final File outputDir) {
-  //
-  //	}
+
+//  	private void loadResults(final File outputDir) {
+//  
+//  	}
 
 
 }

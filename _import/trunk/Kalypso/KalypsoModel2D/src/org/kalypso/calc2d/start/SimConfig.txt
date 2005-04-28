@@ -1,6 +1,4 @@
-bc.txt
-model_tmp.2d
 bc_2204.txt
-#model.2d
-#2d
+model_tmp.2d
+2d
 0

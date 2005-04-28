@@ -70,6 +70,8 @@ import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualVelocityFeatureTypePropertyHandler;
 
 /**
  * 
@@ -83,6 +85,9 @@ public class CalcJob2dTest extends TestCase
 {
   public void test2dModell() throws Exception
   {
+    VirtualFeatureTypeRegistry vRegistry = VirtualFeatureTypeRegistry.getInstance();
+    vRegistry.register(new VirtualVelocityFeatureTypePropertyHandler());
+    
     ICalcDataProvider dataProvider = new ICalcDataProvider()
     {
       /**
