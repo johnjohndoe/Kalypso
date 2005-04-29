@@ -9,7 +9,7 @@
       ws="win32"
       nl="de"
       arch="x86"
-      image="splash.bmp"
+      image="kalypso32.bmp"
       primary="true">
 
    <install-handler/>
@@ -45,7 +45,7 @@
          id="org.kalypso.core"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.dcadapter"
@@ -57,48 +57,78 @@
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.grafikmanual"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.manual"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.product"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.repository"
          download-size="0"
          install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.tuhhmanual"
+         download-size="0"
+         install-size="0"
          version="0.0.5"/>
+
+   <plugin
+         id="org.kalypso.ui.observationimport"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.ui"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.util"
          download-size="0"
          install-size="0"
-         version="0.0.5"/>
+         version="1.0.0"/>
+
+   <plugin
+         id="org.bce.eclipse.platform.contrib"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.debug"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.jwsdp"
+         download-size="0"
+         install-size="0"
+         version="1.4"/>
 
    <plugin
          id="org.kalypso.wizard"
          download-size="0"
          install-size="0"
          version="0.0.1"/>
-
-   <plugin
-         id="org.kalypso.ui.observationimport"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
 
 </feature>
