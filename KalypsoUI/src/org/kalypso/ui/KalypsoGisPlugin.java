@@ -59,7 +59,15 @@ import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -84,6 +92,7 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
@@ -91,6 +100,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
+
+import com.sun.corba.se.connection.GetEndPointInfoAgainException;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -132,6 +143,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   //    private static final String DEFAULT_CRS = "EPSG:4326";
   private static final String DEFAULT_CRS = "EPSG:31469";
+
+  private DefaultStyleFactory m_defaultStyleFactory;
+
+  private IProject m_defaultStyleProject;
 
   // TODO put definition in preferences dialog
   // TODO add crs attribute in boundingbox of *.gmt files
@@ -307,7 +322,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // register the observation webservice url stream handler
     final Hashtable properties = new Hashtable( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
-    { ServiceRepositoryObservation.SCHEME_OCS } );
+    {
+      ServiceRepositoryObservation.SCHEME_OCS
+    } );
     context.registerService( URLStreamHandlerService.class.getName(), new OcsURLStreamHandler(),
         properties );
   }
@@ -339,6 +356,44 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass().getClassLoader() );
 
     return m_loaderFactory;
+  }
+
+  public DefaultStyleFactory getDefaultStyleFactory()
+  {
+
+    if( m_defaultStyleFactory == null )
+    {
+      try
+      {
+        String dir = getPluginPreferences().getString( IKalypsoPreferences.DEFAULT_STYLE_DIRECTORY );
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRoot root = workspace.getRoot();
+        if( root.getLocation().isValidPath( dir ) )
+        {
+          m_defaultStyleProject = root.getProject( dir );
+          if( !m_defaultStyleProject.exists() )
+            m_defaultStyleProject.create( null );
+          m_defaultStyleProject.open( null );
+        }
+        String string = m_defaultStyleProject.getLocation().toFile().toString();
+        m_defaultStyleFactory = DefaultStyleFactory.getFactory( string );
+      }
+      catch( Exception e )
+      {
+        MessageDialog
+            .openError(
+                null,
+                "Default Style Factory",
+                "Default style folder was not created, DefaultStyleFactory is not available.\nCheck your Kalypso preferences" );
+        return null;
+      }
+    }
+    return m_defaultStyleFactory;
+  }
+
+  public IProject getDefaultStyleFactoryWorkspaceLocation()
+  {
+    return m_defaultStyleProject;
   }
 
   public ResourcePool getPool()
@@ -391,7 +446,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     // clear the observation cache
     ObservationCache.clearCache();
-    
+
     if( m_tsRepositoryContainer != null )
       m_tsRepositoryContainer.dispose();
   }
@@ -444,8 +499,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public String getLang()
   {
-    return getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );  
+    return getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
   }
+
   public CS_CoordinateSystem getCoordinatesSystem()
   {
     if( myCoordinateSystem == null )

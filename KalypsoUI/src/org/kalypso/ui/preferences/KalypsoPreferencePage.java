@@ -41,6 +41,7 @@
 package org.kalypso.ui.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -107,6 +108,9 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
         "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
+    addField( new StringFieldEditor( IKalypsoPreferences.DEFAULT_STYLE_DIRECTORY,
+        "Default SLD&Ordner:", getFieldEditorParent() ) );
+
     addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS,
         "Globales &Koordinatensystem:", getFieldEditorParent() ) );
     addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1,
@@ -114,10 +118,15 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
         {
             {
                 "&Deutsch",
-                "de" },
+                "de"
+            },
             {
                 "&English",
-                "en" } }, getFieldEditorParent() ) );
+
+                "en"
+            }
+        }, getFieldEditorParent() ) );
+
 
     //
     //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
@@ -133,7 +142,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
    */
   public void init( IWorkbench workbench )
   {
-  // empty
+    // empty
   }
 
   /**

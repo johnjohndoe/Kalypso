@@ -3,20 +3,24 @@ package org.kaylpso.ui.wizard.wfs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import org.deegree.gml.GMLProperty;
+import javax.naming.OperationNotSupportedException;
+
 import org.deegree.services.wfs.capabilities.FeatureType;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
-import org.deegree_impl.gml.GMLDocument_Impl;
+import org.deegree.services.wms.StyleNotDefinedException;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,12 +34,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
-import org.w3c.dom.Document;
+import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.xml.sax.SAXException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -79,13 +85,14 @@ import org.xml.sax.SAXException;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class ImportWfsWizardPage extends WizardPage implements ModifyListener, SelectionListener
+public class ImportWfsWizardPage extends WizardPage implements ModifyListener, SelectionListener,
+    FocusListener
 {
-  private Combo url = null;
+  private Combo m_url = null;
 
-  private Text pass = null;
+  private Text m_pass = null;
 
-  private Text user = null;
+  private Text m_user = null;
 
   protected Button getDefault;
 
@@ -99,36 +106,37 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
 
   protected static final String bufferDefault = "10";
 
-  private Composite layerSelection;
+  private Composite m_layerSelection;
 
-  private FeatureType[] ftl = null;
+  private FeatureType[] m_featureType = null;
 
-  private List listLeftSide;
+  private List m_listLeftSide;
 
-  private Button addLayer;
+  private Button m_addLayer;
 
-  private Button removeLayer;
+  private Button m_removeLayer;
 
-  private List listRightSide;
+  private List m_listRightSide;
 
-  private Group layerGroup;
+  private Group m_layerGroup;
 
-  private Composite buttonComposite;
+  private Composite m_buttonComposite;
 
-  private Label labelUser;
+  private Label m_labelUser;
 
-  private Label labelPass;
+  private Label m_labelPass;
 
   private Button m_authentification;
 
-  private Label labelUrl;
+  private Label m_labelUrl;
+
   private static final int MIN_LIST_WITH = 150;
 
   private static final int MIN_DIALOG_WIDTH = 400;
 
   private static final int MIN_LIST_HIGHT = 150;
 
-  //private Button m_multiLayers;
+  private GMLSchema m_schema;
 
   /*
    * 
@@ -185,10 +193,10 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
     fieldGroup.setLayout( new GridLayout( 2, false ) );
     fieldGroup.setText( "Verbindungsdaten" );
     //  add url
-    labelUrl = new Label( fieldGroup, SWT.NONE );
-    labelUrl.setText( "URL:" );
-    labelUrl.setToolTipText( "URL des Web Feature Servers (WFS)" );
-    labelUrl.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
+    m_labelUrl = new Label( fieldGroup, SWT.NONE );
+    m_labelUrl.setText( "URL:" );
+    m_labelUrl.setToolTipText( "URL des Web Feature Servers (WFS)" );
+    m_labelUrl.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
 
     java.util.List recent = new ArrayList();
     if( true )
@@ -199,41 +207,46 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
       recent.add( "http://www2.dmsolutions.ca/cgi-bin/mswfs_gmap" );
       // );
       recent.add( "http://gws2.pcigeomatics.com/wfs1.0.0/wfs" );
-      recent.add("http://134.28.77.120/flowswms/wfs");
+      recent.add( "http://134.28.77.120/flowswms/wfs" );
+      recent.add( "http://134.28.77.120/deegreewms/wfs" );
+      recent.add( "http://134.28.77.120/flowswms/wfs" );
+      recent.add( "http://134.28.77.120/xplanungwms/wfs" );
+      recent.add( "http://localhost:8080/deegreewms/wfs" );
     }
     GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
     gridData.widthHint = 400;
 
-    url = new Combo( fieldGroup, SWT.BORDER | SWT.READ_ONLY );
-    url.setItems( (String[])recent.toArray( new String[recent.size()] ) );
-    url.setVisibleItemCount( 15 );
-    url.setLayoutData( gridData );
-    url.select( 0 );
-    url.addModifyListener( this );
+    m_url = new Combo( fieldGroup, SWT.BORDER | SWT.READ_ONLY );
+    m_url.setItems( (String[])recent.toArray( new String[recent.size()] ) );
+    m_url.setVisibleItemCount( 15 );
+    m_url.setLayoutData( gridData );
+    m_url.select( 0 );
+    m_url.addModifyListener( this );
+    m_url.addFocusListener( this );
 
     // add spacer
     Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 3 ) );
 
     // usr
-    labelUser = new Label( fieldGroup, SWT.NONE );
-    labelUser.setText( "Benutzername:" );
-    labelUser.setToolTipText( "Server Login Benutzername" );
-    labelUser.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
+    m_labelUser = new Label( fieldGroup, SWT.NONE );
+    m_labelUser.setText( "Benutzername:" );
+    m_labelUser.setToolTipText( "Server Login Benutzername" );
+    m_labelUser.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
 
-    user = new Text( fieldGroup, SWT.BORDER );
-    user.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    user.addModifyListener( this );
+    m_user = new Text( fieldGroup, SWT.BORDER );
+    m_user.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_user.addModifyListener( this );
 
     // pass
-    labelPass = new Label( fieldGroup, SWT.NONE );
-    labelPass.setText( "Passwort:" );
-    labelPass.setToolTipText( "Server Login Passwort" );
-    labelPass.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
+    m_labelPass = new Label( fieldGroup, SWT.NONE );
+    m_labelPass.setText( "Passwort:" );
+    m_labelPass.setToolTipText( "Server Login Passwort" );
+    m_labelPass.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
 
-    pass = new Text( fieldGroup, SWT.BORDER | SWT.PASSWORD );
-    pass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    pass.addModifyListener( this );
+    m_pass = new Text( fieldGroup, SWT.BORDER | SWT.PASSWORD );
+    m_pass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_pass.addModifyListener( this );
 
     /*
      * add advanced stuff
@@ -254,50 +267,44 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
 
   private void createLayerSelectionControl( Composite composite )
   {
-    layerGroup = new Group( composite, SWT.CENTER );
-    layerGroup.setText("Verfügbare Themen des Web Feature Servers");
+    m_layerGroup = new Group( composite, SWT.CENTER );
+    m_layerGroup.setText( "Verfügbare Themen des Web Feature Servers" );
     GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 10;
     gridLayout.horizontalSpacing = 10;
     gridLayout.verticalSpacing = 10;
-    layerGroup.setLayout( gridLayout );
-    layerGroup.setLayoutData( new GridData ( GridData.FILL_HORIZONTAL ) );
+    m_layerGroup.setLayout( gridLayout );
+    m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    layerSelection = new Composite( layerGroup, SWT.NULL );
-    layerSelection.setLayout( new GridLayout( 3, false ) );
-    layerSelection.setLayoutData(new GridData(MIN_DIALOG_WIDTH, SWT.DEFAULT));
+    m_layerSelection = new Composite( m_layerGroup, SWT.NULL );
+    m_layerSelection.setLayout( new GridLayout( 3, false ) );
+    m_layerSelection.setLayoutData( new GridData( MIN_DIALOG_WIDTH, SWT.DEFAULT ) );
 
-    listLeftSide = new List( layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-    listLeftSide.setLayoutData(new GridData(MIN_LIST_WITH ,MIN_LIST_HIGHT));
-    listLeftSide.setItems( getNamesFeatureType() );
-    listLeftSide.addSelectionListener( this );
+    m_listLeftSide = new List( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL
+        | SWT.H_SCROLL );
+    m_listLeftSide.setLayoutData( new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ) );
+    m_listLeftSide.setItems( getNamesFeatureType() );
+    m_listLeftSide.addSelectionListener( this );
 
-    buttonComposite = new Composite( layerSelection, SWT.NULL );
-    buttonComposite.setLayout( new GridLayout() );
-    buttonComposite.setLayoutData(new GridData( 50, SWT.DEFAULT));
+    m_buttonComposite = new Composite( m_layerSelection, SWT.NULL );
+    m_buttonComposite.setLayout( new GridLayout() );
+    m_buttonComposite.setLayoutData( new GridData( 50, SWT.DEFAULT ) );
 
-    addLayer = new Button( buttonComposite, SWT.PUSH );
-    addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
-    addLayer.setToolTipText( "Hinzufügen eines Themas aus der Kartenansicht" );
-    addLayer.addSelectionListener( this );
-    removeLayer = new Button( buttonComposite, SWT.PUSH );
-    removeLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
-    removeLayer.setToolTipText( "Entfernen eines Themas aus der Kartenansicht" );
-    removeLayer.addSelectionListener( this );
+    m_addLayer = new Button( m_buttonComposite, SWT.PUSH );
+    m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
+    m_addLayer.setToolTipText( "Hinzufügen eines Themas zur Kartenansicht" );
+    m_addLayer.addSelectionListener( this );
+    m_removeLayer = new Button( m_buttonComposite, SWT.PUSH );
+    m_removeLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
+    m_removeLayer.setToolTipText( "Entfernen des gewählten Themas aus der Kartenansicht" );
+    m_removeLayer.addSelectionListener( this );
 
-    listRightSide = new List( layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
-    listRightSide.setLayoutData(new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ));
-    listRightSide.addSelectionListener(this); //(TODO implementation of next page to choose table)
+    m_listRightSide = new List( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
+    m_listRightSide.setLayoutData( new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ) );
+    m_listRightSide.addSelectionListener( this );
 
-    
-    //    m_multiLayers = new Button( layerSelection, SWT.CHECK );
-//    m_multiLayers.setText( "Themen zusammenfassen" );
-//    m_multiLayers.setToolTipText( "Alle ausgewählte Themen als Gruppe in Karte einfügen" );
-//    m_multiLayers.setSelection( false );
-//    m_multiLayers.setEnabled( false );
-
-    layerGroup.setVisible( false );
-    layerGroup.pack();
+    m_layerGroup.setVisible( false );
+    m_layerGroup.pack();
 
   }
 
@@ -386,13 +393,13 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
   {
     if( e.widget != null && e.widget instanceof Text )
       ( (Text)e.widget ).setForeground( null );
-    if( e.widget == url )
+    if( e.widget == m_url )
     {
       if( validateURLField() )
       {
-        ftl = getCapabilites( url.getText() );
-        if( ftl == null || url.getText().length() < 1 )
-          layerSelection.setVisible( false );
+        m_featureType = getCapabilites( m_url.getText() );
+        if( m_featureType == null || m_url.getText().length() < 1 )
+          m_layerSelection.setVisible( false );
         updateLayerSelection();
         setErrorMessage( null );
       }
@@ -404,23 +411,23 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
 
   private void updateLayerSelection()
   {
-    if( ftl.length < 1 || ftl == null )
-      layerSelection.setVisible( false );
-    if( listRightSide.getItemCount() < 1 )
-      removeLayer.setEnabled( false );
+    if( m_featureType.length < 1 || m_featureType == null )
+      m_layerSelection.setVisible( false );
+    if( m_listRightSide.getItemCount() < 1 )
+      m_removeLayer.setEnabled( false );
     else
-      removeLayer.setEnabled( true );
-    if( listRightSide.getSelectionCount() > 1 || ftl != null )
+      m_removeLayer.setEnabled( true );
+    if( m_listRightSide.getSelectionCount() > 1 || m_featureType != null )
     {
-      layerGroup.setVisible( true );
-      listLeftSide.setItems( getNamesFeatureType() );
-//      listLeftSide.redraw();
-//      listLeftSide.pack();
-//      listRightSide.redraw();
-//      listRightSide.pack();
-//      layerSelection.pack();
-      layerGroup.redraw();
-      layerGroup.pack();
+      m_layerGroup.setVisible( true );
+      m_listLeftSide.setItems( getNamesFeatureType() );
+      //      listLeftSide.redraw();
+      //      listLeftSide.pack();
+      //      listRightSide.redraw();
+      //      listRightSide.pack();
+      //      layerSelection.pack();
+      m_layerGroup.redraw();
+      m_layerGroup.pack();
       setPageComplete( true );
     }
     getControl().redraw();
@@ -460,171 +467,168 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
   public void widgetSelected( SelectionEvent e )
   {
     Button b;
-    if(e.widget instanceof Button ){
-    b = (Button)e.widget;
-    //    if( b.equals( getDefault ) )
-    //    {
-    //      // allow get was clicked
-    //      if( getDefault.getSelection() && postDefault.getSelection() )
-    //      {
-    //        postDefault.setSelection( false );
-    //      }
-    //    }
-    //    else
-    //    {
-    //      if( b.equals( postDefault ) )
-    //      {
-    //        if( postDefault.getSelection() && getDefault.getSelection() )
-    //        {
-    //          getDefault.setSelection( false );
-    //        }
-    //      }
-    //      else
-    //      {
-    //        if( b.equals( advancedTag ) )
-    //        {
-    //          advanced.setVisible( advancedTag.getSelection() );
-    //        }
-    //      }
-    if( b.equals( addLayer ) )
+    if( e.widget instanceof Button )
     {
-      String[] selection = listLeftSide.getSelection();
-      if( selection != null )
+      b = (Button)e.widget;
+      //    if( b.equals( getDefault ) )
+      //    {
+      //      // allow get was clicked
+      //      if( getDefault.getSelection() && postDefault.getSelection() )
+      //      {
+      //        postDefault.setSelection( false );
+      //      }
+      //    }
+      //    else
+      //    {
+      //      if( b.equals( postDefault ) )
+      //      {
+      //        if( postDefault.getSelection() && getDefault.getSelection() )
+      //        {
+      //          getDefault.setSelection( false );
+      //        }
+      //      }
+      //      else
+      //      {
+      //        if( b.equals( advancedTag ) )
+      //        {
+      //          advanced.setVisible( advancedTag.getSelection() );
+      //        }
+      //      }
+      if( b.equals( m_addLayer ) )
       {
-        addNewSelection( selection );
-        updateLayerSelection();
+        String[] selection = m_listLeftSide.getSelection();
+        if( selection != null )
+        {
+          addNewSelection( selection );
+          updateLayerSelection();
+        }
       }
-    }
-    if( b.equals( removeLayer ) )
-    {
+      if( b.equals( m_removeLayer ) )
+      {
 
-      String[] selection = listRightSide.getSelection();
-      if( selection != null )
-      {
-//        m_multiLayers.setEnabled( true );
-        removeSelection( selection );
-        updateLayerSelection();
+        String[] selection = m_listRightSide.getSelection();
+        if( selection != null )
+        {
+          removeSelection( selection );
+          updateLayerSelection();
+        }
       }
-    }
-    if( b.equals( m_authentification ) )
-    {
-      if( m_authentification.getSelection() )
+      if( b.equals( m_authentification ) )
       {
-        labelUser.setVisible( true );
-        labelPass.setVisible( true );
-        pass.setVisible( true );
-        user.setVisible( true );
+        if( m_authentification.getSelection() )
+        {
+          m_labelUser.setVisible( true );
+          m_labelPass.setVisible( true );
+          m_pass.setVisible( true );
+          m_user.setVisible( true );
+        }
+        else
+        {
+          m_labelUser.setVisible( false );
+          m_labelPass.setVisible( false );
+          m_pass.setVisible( false );
+          m_user.setVisible( false );
+        }
       }
-      else
-      {
-        labelUser.setVisible( false );
-        labelPass.setVisible( false );
-        pass.setVisible( false );
-        user.setVisible( false );
-      }
-    }
-//    if( listRightSide.getItemCount() > 1 )
-//      m_multiLayers.setEnabled( true );
-//    else
-//      m_multiLayers.setEnabled( false );
-    }
-    if(e.widget instanceof List ){
-//     l = (List)e.widget;
-//     if(l == listRightSide && listRightSide.getItemCount() > 0)
-//     {
-//      String[] selection = listRightSide.getSelection();
-//      for( int i = 0; i < selection.length; i++ )
-//      {
-//        FeatureType ft = getFeatureType(selection[i]);
-//      }
-//     }
     }
     getContainer().updateButtons();
   }
 
-  private FeatureType getFeatureType( String ftName )
+  //  private FeatureType getFeatureType( String ftName )
+  //  {
+  //    for( int i = 0; i < m_featureType.length; i++ )
+  //    {
+  //      FeatureType ft = m_featureType[i];
+  //      if( ft.getName().equals( ftName ) )
+  //      {
+  //        org.kalypsodeegree.model.feature.FeatureType featureType = getFeatureType(
+  // ft );
+  //        FeatureTypeProperty[] properties = featureType.getProperties();
+  //      }
+  //
+  //    }
+  //    return null;
+  //  }
+
+  public URL[] getDescribeFeatureTypeURLs( String[] layers ) throws MalformedURLException
   {
-    for( int i = 0; i < ftl.length; i++ )
+    URL[] urls = new URL[layers.length];
+    for( int i = 0; i < layers.length; i++ )
     {
-      FeatureType ft = ftl[i];
-      if(ft.getName().equals(ftName) )
-      {
-      org.kalypsodeegree.model.feature.FeatureType featureType = getFeatureType( ft );
-      FeatureTypeProperty[] properties = featureType.getProperties();
-      //make table with properties and add to Tab to show in dialog to choose for creating a table
-      }
-      
+      String layer = layers[i];
+      urls[i] = getSchemaURL( layer );
+
     }
-    return null;
+    return urls;
   }
 
-  public URL getDescribeFeatureTypeURL( String layer) throws MalformedURLException
+  private URL getSchemaURL( String layer ) throws MalformedURLException
   {
-    String s = url.getText();
-    System.out.print(s);
-    return new URL( s
-        + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );  
+    return new URL( getUrl() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName="
+        + layer );
   }
-  private org.kalypsodeegree.model.feature.FeatureType getFeatureType( FeatureType ft )
-  {
-    try
-    {
-      URL schemaURL =getDescribeFeatureTypeURL(ft.getName());
-      URLConnection cox = schemaURL.openConnection();
-      InputStream is = cox.getInputStream();
-      Reader reader = new InputStreamReader(is);
-      Document doc = XMLTools.parse(reader);
-      GMLDocument_Impl gml = new GMLDocument_Impl(doc);
-      GMLProperty[] properties = gml.getRoot().getProperties();
-      for( int i = 0; i < properties.length; i++ )
-      {
-        GMLProperty property = properties[i];
-        System.out.println(property.getPropertyValue());
-        if(property.getPropertyValue().equals(ft.getName()))
-        System.out.println("");
-      }
-      
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( SAXException e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
+
+  //  private org.kalypsodeegree.model.feature.FeatureType getFeatureType(
+  // FeatureType ft )
+  //  {
+  //    try
+  //    {
+  //      URL schemaURL = getDescribeFeatureTypeURL( ft.getName() );
+  //      URLConnection cox = schemaURL.openConnection();
+  //      InputStream is = cox.getInputStream();
+  //      Reader reader = new InputStreamReader( is );
+  //      Document doc = XMLTools.parse( reader );
+  //      GMLDocument_Impl gml = new GMLDocument_Impl( doc );
+  //      GMLProperty[] properties = gml.getRoot().getProperties();
+  //      for( int i = 0; i < properties.length; i++ )
+  //      {
+  //        GMLProperty property = properties[i];
+  //        System.out.println( property.getPropertyValue() );
+  //        if( property.getPropertyValue().equals( ft.getName() ) )
+  //          System.out.println( "" );
+  //      }
+  //
+  //    }
+  //    catch( MalformedURLException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //    catch( IOException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //    catch( SAXException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //    return null;
+  //  }
 
   private void removeSelection( String[] selection )
   {
-    String[] list = listRightSide.getItems();
+    String[] list = m_listRightSide.getItems();
     for( int i = 0; i < selection.length; i++ )
     {
       String item = selection[i];
       if( contains( item, list ) )
-        listRightSide.remove( item );
+        m_listRightSide.remove( item );
 
     }
   }
 
   private void addNewSelection( String[] selection )
   {
-    String[] original = listRightSide.getItems();
+    String[] original = m_listRightSide.getItems();
     if( original.length > 0 )
       for( int i = 0; i < selection.length; i++ )
       {
         String item = selection[i];
         if( !contains( item, original ) )
-          listRightSide.add( item );
+          m_listRightSide.add( item );
 
       }
     else
-      listRightSide.setItems( selection );
+      m_listRightSide.setItems( selection );
   }
 
   /**
@@ -682,21 +686,20 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
 
   private String[] getNamesFeatureType()
   {
-    if( ftl != null )
+    if( m_featureType != null )
     {
-      String[] res = new String[ftl.length];
+      String[] res = new String[m_featureType.length];
 
-      for( int i = 0; i < ftl.length; i++ )
+      for( int i = 0; i < m_featureType.length; i++ )
       {
-        res[i] = ftl[i].getName();
+        res[i] = m_featureType[i].getName();
       }
       return res;
     }
-    String[] dummy =
+    return new String[]
     {
       ""
     };
-    return dummy;
   }
 
   private boolean contains( String item, String[] list )
@@ -715,13 +718,13 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
   private boolean validateURLField()
   {
     //   checks catchment field entry and file suffix
-    if( url.getText().length() == 0 )
+    if( m_url.getText().length() == 0 )
     {
       setErrorMessage( "Das URL Feld darf nicht leer sein" );
       setPageComplete( false );
       return false;
     }
-    else if( isvalidURL( url.getText() ) == false )
+    else if( isvalidURL( m_url.getText() ) == false )
     {
       setPageComplete( false );
       return false;
@@ -732,54 +735,247 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
     return true;
   }
 
-  public String[] getLayers()
+  public String[] getSelectedFeatureNames()
   {
-    //multilayer does not make sense
-//    if( !isMultiLayer() )
-      return listRightSide.getItems();
-
-//    String[] array = listRightSide.getItems();
-//    String result = "";
-//    for( int i = 0; i < array.length; i++ )
-//    {
-//      String layer = array[i];
-//      if( i > 1 )
-//        result = result + "," + layer;
-//      else
-//        result = result + layer;
-//    }
-//    return new String[]
-//    {
-//      result
-//    };
-
+    return m_listRightSide.getItems();
   }
 
-//  private boolean isMultiLayer()
-//  {
-//    return m_multiLayers.getSelection();
-//  }
+  public org.kalypsodeegree.model.feature.FeatureType[] getSelectedFeatureTypes() throws Exception
+  {
+    String[] selectedLayers = m_listRightSide.getSelection();
+    org.kalypsodeegree.model.feature.FeatureType[] res = new org.kalypsodeegree.model.feature.FeatureType[selectedLayers.length];
+    for( int i = 0; i < selectedLayers.length; i++ )
+    {
+      String name = selectedLayers[i];
+      GMLSchema schema = getFeatureTypeSchema( name );
+      org.kalypsodeegree.model.feature.FeatureType[] ft = schema.getFeatureTypes();
+      for( int j = 0; j < ft.length; j++ )
+      {
+        org.kalypsodeegree.model.feature.FeatureType featureType = ft[j];
+        if( featureType.getName().equals( name ) )
+        {
+          res[i] = featureType;
+        }
+      }
+    }
+    return res;
+  }
 
   public String getUrl()
   {
-    return url.getText();
+    return m_url.getText();
   }
- 
-  
 
-public String guessGeometryType(String layer ) throws Exception
-{
-  final GMLSchema schema = GMLSchemaCache.getSchema(getDescribeFeatureTypeURL(layer));
-  final org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema.getFeatureTypes();
-  for( int i = 0; i < featureTypes.length; i++ )
+  public void cacheFeatureTypeSchema() throws Exception
   {
-    final org.kalypsodeegree.model.feature.FeatureType type = featureTypes[i];    
-    // TODO create style that fits to schema
-    final FeatureTypeProperty property = type.getProperty("GEOM");    
-    if(property!=null)
-      return property.getType();
+    URL[] urls = getDescribeFeatureTypeURLs( getSelectedFeatureNames() );
+    for( int i = 0; i < urls.length; i++ )
+    {
+      URL url = urls[i];
+      GMLSchemaCache.getSchema( url );
+    }
   }
-  return null;
-}
-     
+
+  public String guessGeometryType() throws Exception
+  {
+    final org.kalypsodeegree.model.feature.FeatureType[] featureTypes = getSelectedFeatureTypes();
+    for( int i = 0; i < featureTypes.length; i++ )
+    {
+      final org.kalypsodeegree.model.feature.FeatureType type = featureTypes[i];
+      // TODO create style that fits to schema
+      final FeatureTypeProperty property = type.getProperty( "GEOM" );
+      if( property != null )
+        return property.getType();
+      // check for virtual properties
+      FeatureTypeProperty[] vProperty = type.getVirtuelFeatureTypeProperty();
+      if( vProperty != null )
+      {
+        for( int j = 0; j < vProperty.length; j++ )
+        {
+          FeatureTypeProperty vp = vProperty[i];
+          if( vp.isGeometryProperty() )
+            return vp.getType();
+
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+   */
+  public void focusGained( FocusEvent e )
+  {
+    //do nothing
+  }
+
+  /**
+   * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+   */
+  public void focusLost( FocusEvent e )
+  {
+    Widget w = e.widget;
+    if( w.equals( m_url ) )
+    {
+      if( validateURLField() )
+      {
+        m_featureType = getCapabilites( getUrl() );
+        if( m_featureType == null || m_url.getText().length() < 1 )
+          m_layerSelection.setVisible( false );
+        updateLayerSelection();
+        setErrorMessage( null );
+      }
+      else
+      {
+        setPageComplete( false );
+        setErrorMessage( "Die eingegebene URL ist ungültig" );
+      }
+    }
+  }
+
+  /**
+   * This method returns the schema of a selected feature.
+   * 
+   * @param layer
+   *          name of feature (layer from WFS)
+   * @return schema of the feature
+   * 
+   *  
+   */
+  public GMLSchema getFeatureTypeSchema( String layer ) throws Exception
+  {
+    return GMLSchemaCache.getSchema( getSchemaURL( layer ) );
+  }
+
+  /**
+   * This method returns a featureType from a specific feature property passed
+   * as a java.lang.Class object.
+   * 
+   * @param layer
+   *          name of layer to get the FeatureType
+   * @param clazz
+   *          property type to be searched
+   * @return returns a hash set of feature type properties that is passed trough
+   *         <em>clazz</em> parameter.
+   *  
+   */
+  private org.kalypsodeegree.model.feature.FeatureType[] getFeatureTypes( String[] layer )
+
+  {
+    HashSet res = new HashSet();
+    GMLSchema featureTypeSchema = null;
+    for( int i = 0; i < layer.length; i++ )
+    {
+      String l = layer[i];
+
+      try
+      {
+        featureTypeSchema = getFeatureTypeSchema( l );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      org.kalypsodeegree.model.feature.FeatureType[] featureTypes = featureTypeSchema
+          .getFeatureTypes();
+      for( int j = 0; j < featureTypes.length; j++ )
+      {
+        org.kalypsodeegree.model.feature.FeatureType property = featureTypes[j];
+
+        if( property.getName().equals( l ) )
+        {
+          res.add( property );
+        }
+      }
+    }
+    return (org.kalypsodeegree.model.feature.FeatureType[])res
+        .toArray( new org.kalypsodeegree.model.feature.FeatureType[res.size()] );
+  }
+
+  /**
+   * This Method guesses a geometry type for a feature layer from a wfs
+   * response. Does not support multi geometry features.
+   * 
+   * @param layer
+   *          layer name of the requestet feature
+   * @return type name of geometry property (first one found)
+   */
+  public String guessGeometryType( String layer )
+  {
+    try
+    {
+      GMLSchema schema = getFeatureTypeSchema( layer );
+      org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema.getFeatureTypes();
+      for( int i = 0; i < featureTypes.length; i++ )
+      {
+        org.kalypsodeegree.model.feature.FeatureType featureType = featureTypes[i];
+        FeatureTypeProperty[] properties = featureType.getProperties();
+        for( int j = 0; j < properties.length; j++ )
+        {
+          FeatureTypeProperty property = properties[j];
+          if( property.isGeometryProperty() )
+          {
+            return property.getType();
+          }
+        }
+        FeatureTypeProperty[] vProperty = featureType.getVirtuelFeatureTypeProperty();
+        if( vProperty != null )
+        {
+          for( int j = 0; j < vProperty.length; j++ )
+          {
+            FeatureTypeProperty vp = vProperty[i];
+            if( vp.isGeometryProperty() )
+              return vp.getType();
+          }
+        }
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
+   * @throws Exception,
+   *           OperationNotSupportedException
+   * @throws MalformedURLException
+   * 
+   * 
+   *  
+   */
+  public String guessFeaturePath( String layer ) throws MalformedURLException, Exception,
+      OperationNotSupportedException
+
+  {
+    GMLSchema schema = GMLSchemaCache.getSchema( getSchemaURL( layer ) );
+    org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema.getFeatureTypes();
+    for( int i = 0; i < featureTypes.length; i++ )
+    {
+      org.kalypsodeegree.model.feature.FeatureType ft = featureTypes[i];
+      FeatureTypeProperty[] properties = ft.getProperties();
+      for( int j = 0; j < properties.length; j++ )
+      {
+        FeatureTypeProperty property = properties[j];
+        if( property instanceof FeatureAssociationTypeProperty )
+        {
+          return property.getName();
+        }
+
+      }
+    }
+    throw new OperationNotSupportedException( "Guess of feature path failed!" );
+  }
+
+  public URL setDefautltStyle( String layer ) throws StyleNotDefinedException
+  {
+
+    return KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
+        ( getFeatureTypes( new String[]
+        {
+          layer
+        } )[0] ) );
+  }
 }

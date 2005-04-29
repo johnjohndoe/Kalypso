@@ -57,8 +57,11 @@ import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.io.RunAfterCloseOutputStream;
 import org.kalypso.java.net.IUrlResolver;
@@ -110,6 +113,9 @@ public class UrlResolver implements IUrlResolver
 
       final String relPath = relativeURL.substring( "project:".length() + 1 );
       return new URL( projectURL + "/" + relPath );
+    }
+    else if( relativeURL.startsWith("http://") || relativeURL.startsWith("file:/") ){
+      return new URL ( relativeURL );
     }
 
     return new URL( baseURL, relativeURL );
