@@ -751,7 +751,7 @@ public class ShapeFile
       }
       else
       {
-      System.out.println("no db-type:" + ftp[i].getType());
+//      System.out.println("no db-type:" + ftp[i].getType());
       }
     }
 
