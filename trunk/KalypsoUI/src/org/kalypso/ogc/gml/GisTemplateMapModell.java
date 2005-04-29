@@ -61,6 +61,8 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -69,8 +71,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GisTemplateMapModell implements IMapModell
 {
-  private final MapModell m_modell;
-
+  private final IMapModell m_modell;
   private final URL m_context;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context,
@@ -83,6 +84,7 @@ public class GisTemplateMapModell implements IMapModell
     addTheme( legendTheme );
     enableTheme( legendTheme, false );
 
+    
     final LayersType layerListType = gisview.getLayers();
     final List layerList = layerListType.getLayer();
 
@@ -105,9 +107,8 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  public IKalypsoTheme addTheme(
-      org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer )
-  {
+  public IKalypsoTheme addTheme(org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer)
+  {  
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
     {
@@ -116,7 +117,7 @@ public class GisTemplateMapModell implements IMapModell
     }
     return theme;
   }
-
+      
   public void dispose()
   {
     if( m_modell != null )
@@ -127,10 +128,10 @@ public class GisTemplateMapModell implements IMapModell
   {
     if( "wms".equals( layerType.getLinktype() ) )
     {
-      String layerName = layerType.getName();
+      String layerName = "[" + layerType.getLinktype()+ "] " + layerType.getName();
       String source = layerType.getHref();
       CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerName, source, cs );
+      return new KalypsoWMSTheme( layerName, source, cs);
     }
     return new GisTemplateFeatureTheme( layerType, context );
   }
@@ -139,7 +140,7 @@ public class GisTemplateMapModell implements IMapModell
   public Gismapview createGismapTemplate( final GM_Envelope bbox ) throws JAXBException
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
-
+//
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
     final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
@@ -156,13 +157,16 @@ public class GisTemplateMapModell implements IMapModell
     }
 
     final List layerList = layersType.getLayer();
-
+  
     gismapview.setLayers( layersType );
+    
+//    Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
+//    final List layerList = (List)gismapview.getLayers(); //CK
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
       final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
-
+      
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
@@ -172,20 +176,26 @@ public class GisTemplateMapModell implements IMapModell
       }
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
-        String name = kalypsoTheme.getName();
-        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell
-            .isThemeEnabled( kalypsoTheme ), (KalypsoWMSTheme)kalypsoTheme );
-        layerList.add( layer );
+        String name=kalypsoTheme.getName();
+       GisTemplateHelper.fillLayerType(layer,"ID_"+i,name,m_modell.isThemeEnabled(kalypsoTheme),(KalypsoWMSTheme)kalypsoTheme);
+       layerList.add( layer );    
       }
 
       if( m_modell.isThemeActivated( kalypsoTheme ) )
         layersType.setActive( layer );
     }
 
-    // TODO: zur Zeit validierts nicht, weil die hrefs keine URIs sind
-    // das sollten sie aber sein
-    //    final Validator validator = maptemplateFactory.createValidator();
-    //    validator.validate( gismapview );
+    try
+    {
+      GeoTransformer gt = new GeoTransformer(ConvenienceCSFactory.getInstance().getOGCCSByName("EPSG:4326"));
+      GM_Envelope env = gt.transformEnvelope(bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem());
+      System.out.println( env );
+      
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
 
     return gismapview;
   }
@@ -309,4 +319,8 @@ public class GisTemplateMapModell implements IMapModell
     fireModellEvent( modellEvent );
   }
 
+  public URL getContext()
+  {
+    return m_context;
+  }
 }

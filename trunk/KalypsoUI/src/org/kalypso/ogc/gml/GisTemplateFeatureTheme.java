@@ -146,7 +146,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       final Layer mapLayerType = (Layer)layerType;
 
-      setName( mapLayerType.getName() );
+      setName( "[" + type.toUpperCase()+ "] " + mapLayerType.getName() );
 
       final List stylesList = mapLayerType.getStyle();
 
@@ -304,7 +304,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         
         if( newValue == null )
           return;
-
+          
         m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName() );
 
         m_theme.addModellListener( this );
@@ -374,7 +374,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.dispose();
       m_theme = null;
 
-      // schon mal mitteilen, dass sich das Thema ge?ndert hat
+      // schon mal mitteilen, dass sich das Thema geändert hat
       fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
     }
 
@@ -480,4 +480,5 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     m_loaded = true;
     return m_loaded;
   }
+
 }
