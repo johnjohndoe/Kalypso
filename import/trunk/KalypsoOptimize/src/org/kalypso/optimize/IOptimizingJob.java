@@ -46,7 +46,8 @@ import java.util.TreeMap;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * IOptimizingJob
@@ -87,11 +88,8 @@ public interface IOptimizingJob
    */
   public void setBestEvaluation( boolean wasBest );
 
-  /**
-   * @return result beans of best optimized calculation
-   */
-  public CalcJobClientBean[] getResults();
-
   public AutoCalibration getOptimizeConfiguration();
+
+  public void publishResults( ICalcResultEater resultEater ) throws CalcJobServiceException;
 
 }

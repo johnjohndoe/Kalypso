@@ -41,19 +41,21 @@
 package org.kalypso.optimize;
 
 import java.io.File;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import org.kalypso.optimizer.AutoCalibration;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.services.calculation.job.ICalcResultEater;
 
 /**
  * calcjob that optimizes parameters of an encapsulated caljob
  * 
  * @author doemming
  */
-public class OptimizerCalJob extends AbstractCalcJob
+public class OptimizerCalJob implements ICalcJob
 {
   private final IOptimizingJob m_optimizingJob;
 
@@ -73,36 +75,33 @@ public class OptimizerCalJob extends AbstractCalcJob
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.service.CalcJobClientBean[])
+   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public void run( final File baseDir, final CalcJobClientBean[] input )
+  public URL getSpezifikation()
   {
-    final File calcDir = new File( baseDir, ICalcServiceConstants.CALC_DIR_NAME );
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater, org.kalypso.services.calculation.job.ICalcMonitor)
+   */
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
+  {
     try
     {
       final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
-      m_sceJob = new SceJob( autoCalibration, calcDir );
+      m_sceJob = new SceJob( autoCalibration, tmpdir);
+     
       final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
+      
       m_sceJob.optimize( sceIO );
-      if( isCanceled() )
-        return;
-      CalcJobClientBean[] results = m_optimizingJob.getResults();
-      for( int i = 0; i < results.length; i++ )
-        addResult( results[i] );
+      if( monitor.isCanceled() )
+        return;      
+      m_optimizingJob.publishResults(resultEater);      
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.job.impl.AbstractCalcJob#cancel()
-   */
-  public void cancel()
-  {
-    m_sceJob.cancel();
-    super.cancel();
   }
 }

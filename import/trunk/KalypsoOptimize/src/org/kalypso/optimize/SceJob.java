@@ -194,7 +194,6 @@ public class SceJob
         }
         catch( IllegalThreadStateException e )
         {
-          // noch nicht fertig
           sceIO.handleStreams( outBuffer, errBuffer, inputWriter );
         }
 

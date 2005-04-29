@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.transform;
 
 import java.io.File;
@@ -108,21 +108,22 @@ public class OptimizeModelUtils
       setParameter( calContext.getxPaths(), ( new Double( value ) ).toString(), doc );
   }
 
-//  public static void setParameter_Factor( String[] querys, double value, Document myDom )
-//      throws TransformerException
-//  {
-//    for( int n = 0; n < querys.length; n++ )
-//    {
-//      String query = querys[n];
-//      NodeList nl = getXPath( query, myDom );
-//      for( int i = 0; i < nl.getLength(); i++ )
-//      {
-//        String nodeValue = ( nl.item( i ) ).getNodeValue();
-//        double setValue = value * Double.parseDouble( nodeValue );
-//        ( nl.item( i ) ).setNodeValue( String.valueOf( setValue ) );
-//      }
-//    }
-//  }
+  //  public static void setParameter_Factor( String[] querys, double value,
+  // Document myDom )
+  //      throws TransformerException
+  //  {
+  //    for( int n = 0; n < querys.length; n++ )
+  //    {
+  //      String query = querys[n];
+  //      NodeList nl = getXPath( query, myDom );
+  //      for( int i = 0; i < nl.getLength(); i++ )
+  //      {
+  //        String nodeValue = ( nl.item( i ) ).getNodeValue();
+  //        double setValue = value * Double.parseDouble( nodeValue );
+  //        ( nl.item( i ) ).setNodeValue( String.valueOf( setValue ) );
+  //      }
+  //    }
+  //  }
 
   public static void setParameter( String[] querys, String value, Document myDom )
       throws TransformerException
@@ -184,6 +185,8 @@ public class OptimizeModelUtils
   {
     NodeList nl = null;
     Element documentElement = domNode.getDocumentElement();
+    //    nl = org.apache.xpath.XPathAPI.selectNodeList(domNode, xPathQuery);//,
+    // documentElement);
     nl = org.apache.xpath.XPathAPI.selectNodeList( domNode, xPathQuery, documentElement );
     return nl;
   }
@@ -225,4 +228,3 @@ public class OptimizeModelUtils
     t.transform( src, result );
   }
 }
-
