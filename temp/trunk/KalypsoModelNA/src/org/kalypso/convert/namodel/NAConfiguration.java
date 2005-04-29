@@ -95,6 +95,16 @@ public class NAConfiguration
 
   private final FeatureType m_kmChannelFT;
 
+  private final FeatureType m_bodartFT;
+
+  private final FeatureType m_bodtypFT;
+
+  private final FeatureType m_nutzungFT;
+
+  private final FeatureType m_schneeFT;
+
+  private final FeatureType m_hydFT;
+
   private Date m_simulationForecast;
 
   private Date m_simulationStart;
@@ -105,6 +115,24 @@ public class NAConfiguration
 
   private final URL m_metaSchemaURL;
 
+  private final File m_hydrotopFile;
+
+  private final File m_bodentypFile;
+
+  private final File m_bodenartFile;
+
+  private final File m_schneeFile;
+
+  private final File m_nutzungDir;
+
+  private final URL m_parameterSchemaURL;
+
+  private final URL m_hydrotopSchemaUrl;
+
+  private final URL m_parameterFormatURL;
+
+  private final URL m_hydrotopFormatURL;
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -114,7 +142,11 @@ public class NAConfiguration
     // schemas
     m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
     m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
+    m_parameterSchemaURL = getClass().getResource( "schema/parameter.xsd" );
+    m_hydrotopSchemaUrl = getClass().getResource( "schema/hydrotop.xsd" );
     final GMLSchema schema = GMLSchemaCache.getSchema( m_schemaURL );
+    final GMLSchema paraSchema = GMLSchemaCache.getSchema( m_parameterSchemaURL );
+    final GMLSchema hydSchema = GMLSchemaCache.getSchema( m_hydrotopSchemaUrl );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );
@@ -122,23 +154,38 @@ public class NAConfiguration
     m_stChannelFT = schema.getFeatureType( "StorageChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_catchmentFT = schema.getFeatureType( "Catchment" );
+    m_bodartFT = paraSchema.getFeatureType( "Bodenart" );
+    m_bodtypFT = paraSchema.getFeatureType( "Bodentyp" );
+    m_nutzungFT = paraSchema.getFeatureType( "Nutzung" );
+    m_schneeFT = paraSchema.getFeatureType( "Schnee" );
+    m_hydFT = hydSchema.getFeatureType( "Hydrotop" );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:
     m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
-    // TODO WernerCatchment und JessicaCatchment vergleichen mit kalypsoNa-sourcecode
-    //    m_catchmentFormatURL = getClass().getResource(
-    // "formats/JessicaCatchment.txt" );
+    // TODO WernerCatchment und JessicaCatchment vergleichen mit
+    // kalypsoNa-sourcecode
+    //    m_catchmentFormatURL =
+    // getClass().getResource("formats/JessicaCatchment.txt" );
     m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
     m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
     m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" );
+    m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" );
+    m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" );
 
     // ASCII
     ( new File( asciiBaseDir, "inp.dat" ) ).mkdirs();
+    ( new File( asciiBaseDir, "hydro.top" ) ).mkdirs();
     m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
     m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
     m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );
+    m_nutzungDir = new File( asciiBaseDir, "hydro.top" );
+    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we_nat.hyd" );
+    m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" );
+    m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" );
+    m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" );
+
   }
 
   public static NAConfiguration getAscii2GmlConfiguration( File asciiBaseDir, File gmlBaseDir )
@@ -242,7 +289,7 @@ public class NAConfiguration
   {
     return m_stChannelFT;
   }
-  
+
   public void setSimulationForecasetStart( Date simulationForecast )
   {
     m_simulationForecast = simulationForecast;
@@ -288,4 +335,53 @@ public class NAConfiguration
     return m_metaSchemaURL;
   }
 
+  public File getHydrotopFile()
+  {
+    return m_hydrotopFile;
+  }
+
+  public URL getParameterSchemaURL()
+  {
+    return m_parameterSchemaURL;
+  }
+
+  public URL getHydrotopSchemaUrl()
+  {
+    return m_hydrotopSchemaUrl;
+  }
+
+  public URL getHydrotopFormatURL()
+  {
+    return m_hydrotopFormatURL;
+  }
+
+  public URL getParameterFormatURL()
+  {
+    return m_parameterFormatURL;
+  }
+
+  public File getBodentypFile()
+  {
+    return m_bodentypFile;
+  }
+
+  public File getBodenartFile()
+  {
+    return m_bodenartFile;
+  }
+
+  public File getSchneeFile()
+  {
+    return m_schneeFile;
+  }
+  
+  public File getNutzungDir()
+  {
+    return m_nutzungDir;
+  }
+  
+  public FeatureType getBodartFT()
+  {
+    return m_bodartFT;
+  }
 }

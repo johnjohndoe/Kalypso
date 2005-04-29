@@ -201,8 +201,10 @@ public class NetElement
     {
       final Feature feature = catchmentFeatures[i];
       final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
-      final URL linkURL = m_urlUtils.resolveURL( this.m_manager.m_conf.getGMLModelURL(), link
+      final URL linkURL = m_urlUtils.resolveURL( m_workspace.getContext(), link
           .getHref() );
+//      final URL linkURL = m_urlUtils.resolveURL( this.m_manager.m_conf.getGMLModelURL(), link
+//          .getHref() );
       final String tsFileName = CatchmentManager.getNiederschlagEingabeDateiString( feature );
       final File targetFile = new File( this.m_manager.m_conf.getAsciiBaseDir(), "klima.dat/"
           + tsFileName );

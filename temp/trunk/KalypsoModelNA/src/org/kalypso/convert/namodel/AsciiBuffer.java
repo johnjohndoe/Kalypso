@@ -57,6 +57,14 @@ public class AsciiBuffer
   private final StringBuffer m_channelBuffer = new StringBuffer();
   
   private final StringBuffer m_rhbBuffer = new StringBuffer();
+  
+  private final StringBuffer m_hydBuffer = new StringBuffer();
+  
+  private final StringBuffer m_bodartBuffer = new StringBuffer();
+  
+  private final StringBuffer m_bodtypBuffer = new StringBuffer();
+  
+  private final StringBuffer m_snowBuffer = new StringBuffer();
 
   private final List m_featuresToWrite=new ArrayList();
   
@@ -94,5 +102,21 @@ public class AsciiBuffer
   public StringBuffer getRhbBuffer()
   {
     return m_rhbBuffer;
+  }
+  public StringBuffer getHydBuffer()
+  {
+    return m_hydBuffer;
+  }
+  public StringBuffer getBodartBuffer()
+  {
+    return m_bodartBuffer;
+  }
+  public StringBuffer getBodtypBuffer()
+  {
+    return m_bodtypBuffer;
+  }
+  public StringBuffer getSnowBuffer()
+  {
+    return m_snowBuffer;
   }
 }

@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Technische Universität Hamburg Harburg (Technische Universität Hamburg-Harburg) -->
-<schema xmlns:hyd="http://www.tuhh.de/Hydrotope" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://www.tuhh.de/Hydrotope" elementFormDefault="qualified" version="0.1">
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://www.tuhh.de/hydrotop" elementFormDefault="qualified" version="0.1">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<element name="NAHydrotope" type="hyd:HydrotopeType"/>
-	<complexType name="HydrotopeType">
+	<element name="NAHydrotop" type="hyd:HydrotopType"/>
+	<complexType name="HydrotopType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="HydrotopeCollectionMember" type="hyd:HydrotopeCollectionAssociationType"/>
+					<element name="HydrotopCollectionMember" type="hyd:HydrotopCollectionAssociationType"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<!--___HydrotopeCollection_________________________________________________-->
-	<complexType name="HydrotopeCollectionAssociationType">
+	<!--___HydrotopCollection_________________________________________________-->
+	<complexType name="HydrotopCollectionAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="hyd:HydrotopeCollection"/>
+					<element ref="hyd:HydrotopCollection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="HydrotopeCollection" type="hyd:HydrotopeCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="HydrotopeCollectionType">
+	<element name="HydrotopCollection" type="hyd:HydrotopCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="HydrotopCollectionType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="HydrotopeMember" type="hyd:HydrotopeAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="HydrotopMember" type="hyd:HydrotopAssociationType" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType name="HydrotopeAssociationType">
+	<complexType name="HydrotopAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="hyd:Hydrotope"/>
+					<element ref="hyd:Hydrotop"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Hydrotope" type="hyd:HydrotopeFeatureType" substitutionGroup="gml:_Feature"/>
-	<complexType name="HydrotopeFeatureType">
+	<element name="Hydrotop" type="hyd:HydrotopFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="HydrotopFeatureType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
@@ -55,7 +55,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="flaech" type="long">
+					<element name="flaech" type="double">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Hydrotopflaeche</label>
@@ -110,7 +110,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="fak_vers" type="integer" minOccurs="0">
+					<element name="fak_vers" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Faktor Versiegelung</label>

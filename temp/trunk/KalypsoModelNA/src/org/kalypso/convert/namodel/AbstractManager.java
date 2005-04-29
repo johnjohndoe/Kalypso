@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 import java.io.IOException;
@@ -50,20 +50,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.convert.ASCIIHelper;
+import org.kalypso.java.util.FortranFormatHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypso.convert.ASCIIHelper;
-import org.kalypso.java.util.FortranFormatHelper;
 
 /**
  * @author doemming
  */
 public abstract class AbstractManager
 {
-  private final static HashMap m_map = new HashMap();
+  private final static HashMap m_map = new HashMap(); // intID,StringID
 
   private static final HashMap m_allFeatures = new HashMap(); // (stringID,feature)
 
@@ -73,17 +72,36 @@ public abstract class AbstractManager
   {
     return m_asciiFormat;
   }
-  
+
   public AbstractManager( URL parseDefinition ) throws IOException
   {
-      if( parseDefinition != null )
+    if( parseDefinition != null )
       readParseDefinition( parseDefinition );
 
   }
 
-  public Feature getFeature( int id, FeatureType ft )
+  public Feature getFeature(String asciiStringId,FeatureType ft)
   {
-    IntID intID = new IntID( id, ft );
+    String fId=mapID(asciiStringId, ft);
+    if(!m_allFeatures.containsKey(fId))
+    {
+      Feature feature = FeatureFactory.createFeature( fId, ft);
+      m_allFeatures.put(fId,feature);
+    }
+    return (Feature)m_allFeatures.get(fId);
+  }
+  
+  /**
+   * maps the asciiStringId to the FeatureId 
+   */
+  private String mapID( String asciiStringId, FeatureType ft )
+  {
+    return ft.getName()+"_"+asciiStringId;
+  }
+
+  public Feature getFeature( int asciiID, FeatureType ft )
+  {
+    IntID intID = new IntID( asciiID, ft );
     if( !m_map.containsKey( intID ) )
       createFeature( intID );
     String stringID = (String)m_map.get( intID );
@@ -158,31 +176,29 @@ public abstract class AbstractManager
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public abstract void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception;
-
   public void createProperties( HashMap propCollector, String line, int formatLine )
       throws Exception
   {
-    createProperties(propCollector, line, m_asciiFormat[formatLine]);
-  }
-  
-  protected void createProperties( HashMap propCollector, String line, String formatLine ) throws Exception
-  {
-    final HashMap propertyMap=FortranFormatHelper.scanf( formatLine, line);
-    final Iterator it=propertyMap.keySet().iterator();
-    while(it.hasNext())
-    {
-      final String key=(String)it.next();
-      propCollector.put( key, FeatureFactory.createFeatureProperty( key, propertyMap.get(key) ) );      
-    }  
+    createProperties( propCollector, line, m_asciiFormat[formatLine] );
   }
 
-  
+  protected void createProperties( HashMap propCollector, String line, String formatLine )
+      throws Exception
+  {
+    final HashMap propertyMap = FortranFormatHelper.scanf( formatLine, line );
+    final Iterator it = propertyMap.keySet().iterator();
+    while( it.hasNext() )
+    {
+      final String key = (String)it.next();
+      propCollector.put( key, FeatureFactory.createFeatureProperty( key, propertyMap.get( key ) ) );
+    }
+  }
+
   public String toAscci( Feature feature, int formatLineIndex )
   {
-    return ASCIIHelper.toAsciiLine(feature,m_asciiFormat[formatLineIndex]); 
+    return ASCIIHelper.toAsciiLine( feature, m_asciiFormat[formatLineIndex] );
   }
-  
+
   public void setParsedProperties( Feature feature, Collection collection )
   {
     FeatureType ft = feature.getFeatureType();
@@ -226,7 +242,7 @@ public abstract class AbstractManager
       if( !( object instanceof IntID ) )
         return false;
       IntID other = (IntID)object;
-      if(!( other.getID() == getID() ))
+      if( !( other.getID() == getID() ) )
         return false;
       if( !other.getFeatureType().getNamespace().equals( getFeatureType().getNamespace() ) )
         return false;
@@ -242,7 +258,7 @@ public abstract class AbstractManager
      */
     public int hashCode()
     {
-      return ( Integer.toString(m_intID)+m_ft.getName()+m_ft.getNamespace()).hashCode();
+      return ( Integer.toString( m_intID ) + m_ft.getName() + m_ft.getNamespace() ).hashCode();
     }
 
   }

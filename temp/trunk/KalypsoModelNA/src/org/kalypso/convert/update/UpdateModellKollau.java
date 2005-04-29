@@ -44,11 +44,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import org.kalypso.convert.WeisseElsterConstants;
 import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.zml.obslink.TimeseriesLink;
@@ -58,7 +63,9 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author huebsch
@@ -103,8 +110,6 @@ public class UpdateModellKollau
 
   public UpdateModellKollau() throws Exception
   {
-    //    m_modellURL = getClass().getResource(
-    // "D:\\runtime-workspace\\KalypsoKollau\\modell.gml" );
     m_modellURL = getClass().getResource( "resources/modell.gml" );
 
   }
@@ -113,14 +118,16 @@ public class UpdateModellKollau
   {
     URL schemaURL = KalypsoNADefaultSchema.getDefaultNaModellSchemaURL();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, schemaURL );
-
+    final Feature naModelFe = workspace.getRootFeature();
+    
     // Catchments...
     final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
     //    updateCatchments( catchmentFEs );
     //    updateGebNiederschlagZR( catchmentFEs );
-    updateLZNiederschlagZR( catchmentFEs );
-//    updateNiederschlagZR( catchmentFEs );
+//    updateLZNiederschlagZR( catchmentFEs );
+    //    updateNiederschlagZR( catchmentFEs );
+    updateGeometries( naModelFe, "D:\\Kalypso_NA\\9-Programmtest\\ModellAckermann\\shapes");
     // Nodes
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
@@ -213,6 +220,58 @@ public class UpdateModellKollau
             .generateobsLink( KollauPREFIX_LINK_N_REPSITORY + "Bauhof.zml" );
         setTSLink( feature, "niederschlagZRRepository", linkNiederschlagZRRepository );
       }
+    }
+  }
+
+  private static void updateGeometries( Feature modelFeature, String shapeDir )
+      throws GmlSerializeException
+  {
+    // load ShapeFile
+    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
+        csFac.getCSByName( "EPSG:31467" ) );
+
+    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir
+        + "\\TeilgebieteFlows23042005", cSystem, null );
+    final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty(
+        ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+
+    // insertGeometries
+
+    System.out.println( "inserting geometries: catchments" );
+    Feature catchmentCollection = (Feature)modelFeature.getProperty( "CatchmentCollectionMember" );
+    List catchmentList = (List)catchmentCollection.getProperty( "catchmentMember" );
+    copyProperties( catchmentFeatures, "GEOM", "NETZNR_", (Feature[])catchmentList
+        .toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
+
+  }
+  
+  private static void copyProperties( final List catchmentFeatures, String orgGeomPropName,
+      String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
+  {
+    HashMap orgHash = new HashMap();
+    for( Iterator iter = catchmentFeatures.iterator(); iter.hasNext(); )
+    {
+      final Feature f = (Feature)iter.next();
+      String id = f.getProperty( orgIdPropName ).toString();
+      orgHash.put( id, f );
+    }
+    for( int i = 0; i < destFE.length; i++ )
+    {
+      Feature destFeature = destFE[i];
+      String id = destFeature.getProperty( destIdPropName ).toString();
+      //            System.out.println("processing id=" + id);
+      Feature orgFeaure = (Feature)orgHash.get( id );
+      if( orgFeaure != null )
+      {
+        Object value = orgFeaure.getProperty( orgGeomPropName );
+        if( value == null )
+          System.out.println( "copyvalue is null: id=" + id );
+        FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
+        destFeature.setProperty( fProp );
+      }
+      else
+        System.out.println( "not found in shapeFile: id=" + id );
     }
   }
 

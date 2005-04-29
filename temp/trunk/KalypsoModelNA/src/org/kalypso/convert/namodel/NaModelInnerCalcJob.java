@@ -53,7 +53,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -61,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.logging.Logger;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.transform.Transformer;
@@ -70,18 +70,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 import org.kalypso.convert.namodel.varymodel.CalibarationConfig;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -92,40 +86,31 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.impl.AbstractCalcJob;
-import org.kalypso.services.calculation.job.impl.CalcJobHelper;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.w3c.dom.Document;
 
 /**
- * @author doemming
+ * @author doemming, huebsch
  */
-public class NaModelInnerCalcJob extends AbstractCalcJob
+public class NaModelInnerCalcJob implements ICalcJob
 {
 
   // IDs
-  public static final String META_ID = "MetaSteuerdaten";
-
-  public final static String MODELL_ID = "Modell";
-
-  public final static String CONTROL_ID = "Control";
-
-  // subdirectories to create
-  private final static String[] subDirs =
-  {
-      "lzsim",
-      "start",
-      "zufluss",
-      "hydro.top",
-      "inp.dat",
-      "klima.dat",
-      "out_we.nat" };
 
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
@@ -134,7 +119,7 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
 
   private final String EXE_FILE = "start/kalypso.exe";
 
-  private final String TEMPLATE_CONF_FILE = "misc/resourceFile.conf";
+  //  private final String TEMPLATE_CONF_FILE = "misc/resourceFile.conf";
 
   private boolean m_succeeded = false;
 
@@ -143,45 +128,61 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
     m_urlUtilities = new UrlUtilities();
   }
 
-  public void run( final File basedir, final CalcJobClientBean[] input )
-      throws CalcJobServiceException
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
+   */
+  public URL getSpezifikation()
   {
-    final File outDir = new File( basedir, ICalcServiceConstants.OUTPUT_DIR_NAME );
-    outDir.mkdirs();
-    final StringBuffer logBuffer = new StringBuffer();
-    if( !basedir.exists() )
-      basedir.mkdirs();
-    final File inputDir = new File( basedir, ICalcServiceConstants.INPUT_DIR_NAME );
-    //    final File calcDir = new File( inputDir,
-    // ICalcServiceConstants.CALC_DIR_NAME );
-    final File exeDir = new File( basedir, "sim" );
+    // TODO
+    return null;
+  }
 
+  /**
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider,
+   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcMonitor)
+   */
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
+      ICalcMonitor monitor ) throws CalcJobServiceException
+  {
+    final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
+    final Logger logger = Logger.getAnonymousLogger();
     try
     {
-      setMessage( "richte Berechnungsverzeichnis ein" );
-      if( isCanceled() )
+      monitor.setMessage( "richte Berechnungsverzeichnis ein" );
+      if( monitor.isCanceled() )
         return;
-      prepareBaseDir( exeDir );
-      // kopiere template aus resourcen:
-      if( isCanceled() )
+
+      // unzip templates aus inputdir (wird vom client als .asciitemplate.zip
+      // -siehe modelspec- dorthin kopiert):
+      if( monitor.isCanceled() )
         return;
-      copyTemplates( exeDir );
+      unzipTemplates( inputProvider.getURLForID( NaModelConstants.IN_TEMPLATE_ID ), tmpdir );
+
       // generiere ascii-dateien
-      setMessage( "generiere ASCII-Dateien (Modelldaten und Zeitreihen)" );
-      if( isCanceled() )
+      monitor.setMessage( "generiere ASCII-Dateien (Modelldaten und Zeitreihen)" );
+      if( monitor.isCanceled() )
         return;
-      final GMLWorkspace modellWorkspace = generateASCII( exeDir, inputDir, input, outDir );
+
+      final GMLWorkspace modellWorkspace = generateASCII( tmpdir, inputProvider );
+
+      // kopiere executable aus resourcen:
+      if( monitor.isCanceled() )
+        return;
+      //      copyTemplates( exeDir );
+      copyExecutable( tmpdir );
+
       // starte berechnung
-      setMessage( "starte Simulationskern" );
-      if( isCanceled() )
+      monitor.setMessage( "starte Simulationskern" );
+      if( monitor.isCanceled() )
         return;
-      startCalculation( exeDir );
-      checkSucceeded( exeDir );
+      startCalculation( tmpdir, monitor );
+      checkSucceeded( tmpdir );
       if( isSucceeded() )
       {
-        setMessage( "lade Ergebnisse" );
-
-        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
+        monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
+        loadResults( tmpdir, modellWorkspace, logger, resultDir, resultEater );
       }
       System.out.println( "fertig" );
     }
@@ -220,41 +221,60 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
     }
   }
 
-  private GMLWorkspace generateASCII( final File exeDir, final File inputDir,
-      final CalcJobClientBean[] beans, File outDir ) throws Exception
+  private GMLWorkspace generateASCII( File tmpDir, ICalcDataProvider dataProvider )
+      throws Exception
   {
     // input model
-    final CalcJobClientBean modellBean = CalcJobHelper.getBeanForId( MODELL_ID, beans );
-    final File modelFile = new File( inputDir, modellBean.getPath() );
+    //    final CalcJobDataBean modellBean = CalcJobHelper.getBeanForId(
+    // IN_MODELL_ID,
+    // beans );
+    //    final File modelFile = new File( inputDir, modellBean.getPath() );
 
-    final URL inputModellURL = modelFile.toURL();
-    final File modellFile = new File( modelFile.getParentFile(), "namodellBerechnung.gml" );
+    final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
 
     // calualtion model
-    final URL modellURL = modellFile.toURL();
-    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( modellURL, exeDir );
+    final URL newModellURL = newModellFile.toURL();
+    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
 
-    final CalcJobClientBean metaBean = CalcJobHelper.getBeanForId( META_ID, beans );
-    final File metaFile = new File( inputDir, metaBean.getPath() );
-
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaFile.toURL(), conf
-        .getMetaSchemaURL() );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+        .getURLForID( NaModelConstants.IN_META_ID ), conf.getMetaSchemaURL() );
     final Feature metaFE = metaWorkspace.getRootFeature();
     // control
-    final CalcJobClientBean controlBean = CalcJobHelper.getBeanForId( CONTROL_ID, beans );
-    final File controlFile = new File( inputDir, controlBean.getPath() );
-    final URL controlURL = controlFile.toURL();
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlURL, conf
-        .getControlSchemaURL() );
+    //    final CalcJobDataBean controlBean = CalcJobHelper.getBeanForId(
+    // IN_CONTROL_ID,
+    // beans );
+    //    final File controlFile = new File( inputDir, controlBean.getPath() );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+        .getURLForID( NaModelConstants.IN_CONTROL_ID ), conf.getControlSchemaURL() );
+
+    //  model Hydrotop
+    final GMLWorkspace hydrotopWorkspace;
+    if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+          .getURLForID( NaModelConstants.IN_HYDROTOP_ID ), conf.getHydrotopSchemaUrl() );
+    else
+      hydrotopWorkspace = null;
+
+    //model Parameter
+    final GMLWorkspace parameterWorkspace;
+    if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+          .getURLForID( NaModelConstants.IN_PARAMETER_ID ), conf.getParameterSchemaURL() );
+    else
+      parameterWorkspace = null;
 
     // initialize model with values of control file
-    initializeModell( controlWorkspace.getRootFeature(), inputModellURL, modellFile );
+    initializeModell( controlWorkspace.getRootFeature(), dataProvider
+        .getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
     // TODO copy result
-    //    copyResult( inputDir, modellFile, outDir, MODELL_ID, modellFile.getName()
+    //    copyResult( inputDir, modellFile, outDir, IN_MODELL_ID,
+    // modellFile.getName()
     // );
 
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, conf
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL, conf
         .getSchemaURL() );
+    ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider
+        .getURLForID( NaModelConstants.IN_MODELL_ID ) );
     conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
     conf.setSimulationForecasetStart( (Date)metaFE.getProperty( "startforecast" ) );
     // TODO add endsimulation [in hours after forecast start] in control.xsd and
@@ -277,35 +297,44 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
     // generate control files
-    NAControlConverter.featureToASCII( conf, exeDir, controlWorkspace, modellWorkspace );
+    NAControlConverter.featureToASCII( conf, tmpDir, controlWorkspace, modellWorkspace );
 
     // update model with factor values from control
     updateFactorParameter( modellWorkspace );
 
     // modell files
-    NAModellConverter.featureToAscii( conf, modellWorkspace );
+    NAModellConverter.featureToAscii( conf, modellWorkspace, parameterWorkspace, hydrotopWorkspace );
 
     // create temperatur und verdunstung timeseries
+    File tmpFile = new File( tmpDir, "klima.dat/std.tmp" );
+    File verFile = new File( tmpDir, "klima.dat/std.ver" );
     final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf
         .getSimulationEnd() );
-    writer.writeTmpFile( new File( exeDir, "klima.dat/std.tmp" ) );
-    writer.writeVerdFile( new File( exeDir, "klima.dat/std.ver" ) );
+
+    if( !tmpFile.exists() )
+    {
+      writer.writeTmpFile( new File( tmpDir, "klima.dat/std.tmp" ) );
+    }
+    if( !verFile.exists() )
+    {
+      writer.writeVerdFile( new File( tmpDir, "klima.dat/std.ver" ) );
+    }
     return modellWorkspace;
   }
 
-  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputMOdelFile )
+  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile )
       throws IOException, Exception
   {
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
 
-    Document modelDoc = XMLHelper.getAsDOM( inputModellURL, false );
+    Document modelDoc = XMLHelper.getAsDOM( inputModellURL, true );
 
     OptimizeModelUtils.initializeModel( modelDoc, config.getCalContexts() );
 
     // TODO: take charset from Document
     final String charset = "UTF-8";
-    final Writer writer = new OutputStreamWriter( new FileOutputStream( outputMOdelFile ), charset );
+    final Writer writer = new OutputStreamWriter( new FileOutputStream( outputModelFile ), charset );
     final Transformer t = TransformerFactory.newInstance().newTransformer();
     t.transform( new DOMSource( modelDoc ), new StreamResult( writer ) );
     writer.close();
@@ -397,25 +426,26 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
   }
 
   private void loadResults( final File inputDir, final GMLWorkspace modellWorkspace,
-      final StringBuffer log, final File outputDir ) throws Exception
+      final Logger logger, final File outputDir, ICalcResultEater resultEater ) throws Exception
   {
-    loadTSResults( inputDir, modellWorkspace, log, outputDir );
-    loadLogs( inputDir, outputDir, log );
+    loadTSResults( inputDir, modellWorkspace, logger, outputDir, resultEater );
+    loadLogs( inputDir, logger, resultEater );
+    resultEater.addResult( NaModelConstants.OUT_ZML, outputDir );
   }
 
-  private void loadTSResults( File simDir, GMLWorkspace modellWorkspace, StringBuffer log,
-      File outputDir ) throws Exception
+  private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger,
+      File outputDir, ICalcResultEater resultEater ) throws Exception
   {
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
-    final File ascciResultDir = new File( simDir, "out_we.nat" );
+    final File ascciResultDir = new File( inputDir, "out_we.nat" );
     MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[]
     { "*.qgs" }, false, false, true );
     File[] qgsFiles = ascciResultDir.listFiles( filter );
     if( qgsFiles.length != 0 )
     {
       // read ascii result file
-      log.append( "lese ergebnissdatei " + qgsFiles[0].getName() + "\n" );
+      logger.info( "lese ergebnissdatei " + qgsFiles[0].getName() + "\n" );
       final BlockTimeSeries ts = new BlockTimeSeries();
       ts.importBlockFile( qgsFiles[0] );
 
@@ -438,7 +468,7 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
-        log.append( "lese berechneten Abfluss fuer Knoten #" + key + "\n" );
+        logger.info( "lese berechneten Abfluss fuer Knoten #" + key + "\n" );
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
@@ -475,8 +505,8 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
           if( ( new File( pegelURL.getFile() ) ).exists() )
           {
 
-            log
-                .append( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
+            logger
+                .info( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[]
             {
@@ -490,8 +520,8 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
                 TimeserieConstants.MD_GKR,
                 TimeserieConstants.MD_HOEHENANGABEART,
                 TimeserieConstants.MD_PEGELNULLPUNKT,
-                TimeserieConstants.MD_WQTABLE,
                 TimeserieConstants.MD_WQWECHMANN,
+                TimeserieConstants.MD_WQTABLE,
                 TimeserieConstants.MD_VORHERSAGE } );
 
           }
@@ -500,14 +530,16 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
         TimeseriesLink resultLink = (TimeseriesLink)feature.getProperty( "qberechnetZR" );
         if( resultLink == null )
         {
-          log
-              .append( "ergebnis konnte nicht geschrieben werden, da ergebnislink nicht gesetzt ist FID=#"
+          logger
+              .info( "ergebnis konnte nicht geschrieben werden, da ergebnislink nicht gesetzt ist FID=#"
                   + feature.getId() + " ." );
           continue;
         }
-        //        String resultPathRelative = resultLink.getHref();
-        String resultPathRelative = ZmlURL.getIdentifierPart( FileUtilities.getRelativePathTo(
-            new File( outputDir, "Ergebnisse" ), new File( outputDir, resultLink.getHref() ) ) );
+        String resultPathRelative = resultLink.getHref();
+        //        String resultPathRelative = ZmlURL.getIdentifierPart(
+        // FileUtilities.getRelativePathTo(
+        //            new File( outputDir, "Ergebnisse" ), new File( outputDir,
+        // resultLink.getHref() ) ) );
 
         final File resultFile = new File( outputDir, resultPathRelative );
         //        final File resultFile = new File( outputDir, resultPathRelative );
@@ -523,14 +555,10 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
         FileOutputStream stream = new FileOutputStream( resultFile );
-
-        //        final FileWriter writer = new FileWriter( resultFile );
         OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
         marshaller.marshal( observationType, writer );
-        writer.close();
-
-        addResult( new CalcJobClientBean( "ERG" + feature.getId(), "Berechnungsergebnis zu Knoten #"
-            + feature.getId(), resultPathRelative ) );
+        IOUtils.closeQuietly( writer );
+        IOUtils.closeQuietly( stream );
       }
     }
   }
@@ -546,106 +574,147 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
     }
   }
 
-  private void addDirToResults( File inputbaseDir, String inputDirName, File outputFolder )
+  //  private void addDirToResults( File JutbaseDir, String inputDirName, File
+  // outputFolder )
+  //  {
+  //    final File inpDir = new File( inputbaseDir, inputDirName );
+  //    // inputdateien
+  //    final File[] inpDirResults = inpDir.listFiles();
+  //    for( int i = 0; i < inpDirResults.length; i++ )
+  //    {
+  //      final File file = inpDirResults[i];
+  //      copyResult( inputbaseDir, file, outputFolder, file.getName(),
+  // file.getName() );
+  //    }
+  //  }
+
+  private void loadLogs( final File tmpDir, final Logger logger, ICalcResultEater resultEater )
   {
-    final File inpDir = new File( inputbaseDir, inputDirName );
-    // inputdateien
-    final File[] inpDirResults = inpDir.listFiles();
-    for( int i = 0; i < inpDirResults.length; i++ )
-    {
-      final File file = inpDirResults[i];
-      copyResult( inputbaseDir, file, outputFolder, file.getName(), file.getName() );
-    }
-  }
-
-  private void loadLogs( final File simDir, final File outputdir, final StringBuffer log )
-  {
-    // TODO: use it, or REMOVE it
-    log.getClass();
-
-    addDirToResults( simDir, "inp.dat", outputdir );
-    addDirToResults( simDir, "start", outputdir );
-    addDirToResults( simDir, "klima.dat", outputdir );
-    addDirToResults( simDir, "out_we.nat", outputdir );
-    // log und error dateien:
-    final File logDir = new File( simDir, "start" );
-    final File logFile = new File( logDir, "output.res" );
-    if( logFile.exists() )
-      copyResult( logDir, logFile, outputdir, FileUtilities.getSuffix( logFile ), logFile.getName() );
-
-    final File errFile = new File( logDir, "output.err" );
-    if( errFile.exists() )
-      copyResult( logDir, errFile, outputdir, FileUtilities.getSuffix( errFile ), errFile.getName() );
-
-    final File exeerrFile = new File( simDir, "exe.err" );
-    if( exeerrFile.exists() )
-      copyResult( simDir, exeerrFile, outputdir, FileUtilities.getSuffix( exeerrFile ), exeerrFile
-          .getName() );
-
-    final File exelogFile = new File( simDir, "exe.log" );
-    if( exelogFile.exists() )
-      copyResult( simDir, exelogFile, outputdir, FileUtilities.getSuffix( exelogFile ), exelogFile
-          .getName() );
-  }
-
-  private void prepareBaseDir( File baseDir )
-  {
-    for( int i = 0; i < subDirs.length; i++ )
-      ( new File( baseDir, subDirs[i] ) ).mkdirs();
-  }
-
-  private void copyTemplates( File basedir ) throws IOException
-  {
-    String[] templateResources = getTemplateResources();
-    for( int i = 0; i < templateResources.length; i++ )
-    {
-      final File destFile = new File( basedir, templateResources[i] );
-      final String resource = m_resourceBase + templateResources[i];
-      System.out.print( "resource: " + resource );
-      if( !destFile.exists() )
-      {
-        try
-        {
-          final InputStream inputStream = getClass().getResourceAsStream( resource );
-          FileUtilities.makeFileFromStream( false, destFile, inputStream );
-          System.out.println( " ...copied" );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-
-          System.out.println( "ERR: " + resource + " max not exist" );
-        }
-      }
-      else
-        System.out.println( " exists" );
-    }
-  }
-
-  private String[] getTemplateResources() throws IOException
-  {
-    List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( getClass()
-        .getResourceAsStream( TEMPLATE_CONF_FILE ) ) );
-    String line = null;
     try
     {
-      while( ( line = reader.readLine() ) != null )
-        if( !line.startsWith( "#" ) )
-          result.add( line );
+      resultEater.addResult( NaModelConstants.LOG_EXE_STDOUT_ID, new File( tmpDir, "exe.log" ) );
     }
-    catch( IOException e )
+    catch( CalcJobServiceException e )
     {
-      throw e;
+      e.printStackTrace();
+      logger.info( e.getMessage() );
     }
-    finally
+    try
     {
-      reader.close();
+      resultEater.addResult( NaModelConstants.LOG_EXE_ERROUT_ID, new File( tmpDir, "exe.err" ) );
     }
-    return (String[])result.toArray( new String[result.size()] );
+    catch( CalcJobServiceException e )
+    {
+      e.printStackTrace();
+      logger.info( e.getMessage() );
+    }
+
+    final File logDir = new File( tmpDir, "start" );
+    try
+    {
+      resultEater
+          .addResult( NaModelConstants.LOG_OUTRES_ID, new File( tmpDir, "start/output.res" ) );
+    }
+    catch( CalcJobServiceException e )
+    {
+      e.printStackTrace();
+      logger.info( e.getMessage() );
+    }
+    try
+    {
+      resultEater
+          .addResult( NaModelConstants.LOG_OUTERR_ID, new File( logDir, "start/output.err" ) );
+      // log und error dateien:
+    }
+    catch( CalcJobServiceException e )
+    {
+      e.printStackTrace();
+      logger.info( e.getMessage() );
+    }
+
   }
 
-  private void startCalculation( final File basedir ) throws CalcJobServiceException
+  private void copyExecutable( File basedir ) throws Exception
+  {
+    final String exeResource = m_resourceBase + EXE_FILE;
+    final File destFile = new File( basedir, EXE_FILE );
+    if( !destFile.exists() )
+    {
+      try
+      {
+        final InputStream inputStream = getClass().getResourceAsStream( exeResource );
+        FileUtilities.makeFileFromStream( false, destFile, inputStream );
+        System.out.println( " ...copied" );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+
+        System.out.println( "ERR: " + exeResource + " max not exist" );
+      }
+    }
+  }
+
+  private void unzipTemplates( URL asciiZipURL, File exeDir )
+  {
+    //    File templateZip = new File( inputDir, ".asciitemplate.zip" );
+    try
+    {
+      InputStream openStream = asciiZipURL.openStream();
+      ZipUtilities.unzip( openStream, exeDir );
+      IOUtils.closeQuietly( openStream );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  //  private void copyTemplates( File basedir ) throws IOException
+  //  {
+  //    String[] templateResources = getTemplateResources();
+  //    for( int i = 0; i < templateResources.length; i++ )
+  //    {
+  //      final String resource = m_resourceBase + templateResources[i];
+  //      System.out.print( "resource: " + resource + "\n" );
+  //      InputStream resourceAsStream = getClass().getResourceAsStream( resource );
+  //      try
+  //      {
+  //        ZipUtilities.unzip( resourceAsStream, basedir );
+  //      }
+  //      finally
+  //      {
+  //        IOUtils.closeQuietly( resourceAsStream );
+  //      }
+  //    }
+  //  }
+
+  //  private String[] getTemplateResources() throws IOException
+  //  {
+  //    List result = new ArrayList();
+  //    LineNumberReader reader = new LineNumberReader( new InputStreamReader(
+  // getClass()
+  //        .getResourceAsStream( TEMPLATE_CONF_FILE ) ) );
+  //    String line = null;
+  //    try
+  //    {
+  //      while( ( line = reader.readLine() ) != null )
+  //        if( !line.startsWith( "#" ) )
+  //          result.add( line );
+  //    }
+  //    catch( IOException e )
+  //    {
+  //      throw e;
+  //    }
+  //    finally
+  //    {
+  //      reader.close();
+  //    }
+  //    return (String[])result.toArray( new String[result.size()] );
+  //  }
+
+  private void startCalculation( final File basedir, final ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -680,7 +749,7 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
           // noch nicht fertig
         }
 
-        if( isCanceled() )
+        if( monitor.isCanceled() )
         {
           // TODO mit remote debugging testen ob dies auch im tomcat
           // funktioniert - sollte eigentlich
@@ -727,4 +796,5 @@ public class NaModelInnerCalcJob extends AbstractCalcJob
   {
     return m_succeeded;
   }
+
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 /**
@@ -46,15 +46,30 @@ package org.kalypso.convert.namodel;
 public interface NaModelConstants
 {
   //Bean IDs
-  public static final String META_ID = "MetaSteuerdaten";
 
-  public final static String MODELL_ID = "Modell";
+  public static final String IN_META_ID = "MetaSteuerdaten";
 
-  public final static String CONTROL_ID = "Control";
+  public final static String IN_MODELL_ID = "Modell";
 
-  /**
-   * BEAN_ID of optimize configuration
-   */
-  public static final String OPTIMIZECONF_ID = "SceConf";
+  public final static String IN_HYDROTOP_ID = "Hydrotop";
 
+  public final static String IN_PARAMETER_ID = "Parameter";
+
+  public final static String IN_CONTROL_ID = "Control";
+
+  public final static String IN_TEMPLATE_ID = "Template";
+
+  public static final String IN_OPTIMIZECONF_ID = "SceConf";
+
+  public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
+
+  public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT";
+
+  public static final String LOG_OUTRES_ID = "LOG_OUTRES";
+
+  public static final String LOG_OUTERR_ID = "LOG_OUTERR";
+
+  public static final String OUT_ZML = "OUT_ZML";
+
+  public static final String OUTPUT_DIR_NAME = "results";
 }
