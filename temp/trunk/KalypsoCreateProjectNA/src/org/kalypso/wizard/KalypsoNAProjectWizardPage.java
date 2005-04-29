@@ -121,7 +121,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private Group targetGroup;
 
-  private Text textField;
+  private Text m_fileField;
 
   private Composite topComposite;
 
@@ -235,9 +235,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
     dataCatchment.widthHint = SIZING_TEXT_FIELD_WIDTH;
 
-    textField = new Text( fileGroup, SWT.BORDER );
-    textField.setLayoutData( dataCatchment );
-    textField.addModifyListener( new ModifyListener()
+    m_fileField = new Text( fileGroup, SWT.BORDER );
+    m_fileField.setLayoutData( dataCatchment );
+    m_fileField.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
@@ -423,7 +423,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         fileURL = ( new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() ) )
             .toURL();
         textStr = fileURL.toString();
-        textField.setText( textStr );
+        m_fileField.setText( textStr );
         readShapeFile( fileURL );
 
       }
@@ -567,31 +567,33 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     return true;
   }
 
-  private boolean validateFileField()
+  private void validateFileField()
   {
+    if( !skipRadioButton.getSelection() )
+    {
+     setPageComplete(true);
+     setMessage("Dieser Dialog wird übersprungen.");
+     return;
+    }
     //	 checks catchment field entry and file suffix
-    if( textField.getText().length() == 0 )
+    if( m_fileField.getText().length() == 0 )
     {
       setErrorMessage( "Bitte eine Datei auswählen!" );
       setPageComplete( false );
-      return false;
     }
-    else if( checkSuffix( textField ) == false )
+    else if( checkSuffix( m_fileField ) == false )
     {
       setErrorMessage( "Falscher Suffix Datei, muss \"shp\" sein!" );
       setPageComplete( false );
-      return false;
     }
     else if( validateFile( fileURL ) == false )
     {
       setErrorMessage( "Gewählte Shape-Datei nicht gültg" );
       setPageComplete( false );
-      return false;
     }
     //setPageComplete(true);
     setErrorMessage( null );
     setMessage( null );
-    return true;
   }
 
   public List getFeatureList()
@@ -657,6 +659,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
           buttonGroup.setVisible( false );
           //remove mapping
           mapping = null;
+          //clear filefield 
+          m_fileField.setText("");
         }
         else
         {
