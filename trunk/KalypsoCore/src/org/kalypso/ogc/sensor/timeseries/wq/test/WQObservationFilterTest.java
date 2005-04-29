@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.timeseries.wq.test;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 
 import junit.framework.TestCase;
 
@@ -63,10 +62,9 @@ public class WQObservationFilterTest extends TestCase
   /**
    * first test
    * 
-   * @throws MalformedURLException
    * @throws SensorException
    */
-  public void testGetValues( ) throws MalformedURLException, SensorException
+  public void testGetValues( ) throws SensorException
   {
     InputStream ins = null;
     try
@@ -91,11 +89,9 @@ public class WQObservationFilterTest extends TestCase
   /**
    * tests schirgiswalde
    * 
-   * @throws MalformedURLException
    * @throws SensorException
    */
-  public void testSchirgiswalde( ) throws MalformedURLException,
-      SensorException
+  public void testSchirgiswalde( ) throws SensorException
   {
     InputStream ins = null;
     try
@@ -117,8 +113,7 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testObsWithoutWQParam( ) throws MalformedURLException,
-      SensorException
+  public void testObsWithoutWQParam( ) throws SensorException
   {
     InputStream ins = null;
     try
@@ -140,8 +135,7 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testWQTable( ) throws MalformedURLException,
-      SensorException
+  public void testWQTable( ) throws SensorException
   {
     InputStream ins = null;
     try
