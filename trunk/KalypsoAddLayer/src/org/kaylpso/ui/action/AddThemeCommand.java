@@ -53,28 +53,40 @@ import org.kalypso.util.command.ICommand;
 
 public class AddThemeCommand implements ICommand
 {
-  
+
   private final org.kalypso.template.gismapview.GismapviewType.LayersType.Layer m_layer;
 
   private final GisTemplateMapModell m_mapModell;
 
   private IKalypsoTheme m_theme;
-/**
- * This command adds a new layer to 
- * 
- * @param model active GisTemplateMapModell from the active Map
- * @param name  name of the layer
- * @param type  type of source (must be a valid loader) ex.: wms, wfs, shape, etc.
- * @param featurePath the feature path in the gml workspace
- * @param source  a String having keywords and (paired values) depending on the Loader context
- * @param stylelinktype keyword for the used style type (normally sld)
- * @param style name of the style
- * @param styleLocation a valid resouce path (of the used plugin or a valid URL )
- * @param styleType if the type is simple or complex
- *  
- **/
+
+  /**
+   * This command adds a new layer to
+   * 
+   * @param model
+   *          active GisTemplateMapModell from the active Map
+   * @param name
+   *          name of the layer
+   * @param type
+   *          type of source (must be a valid loader) ex.: wms, wfs, shape, etc.
+   * @param featurePath
+   *          the feature path in the gml workspace
+   * @param source
+   *          a String having keywords and (paired values) depending on the
+   *          Loader context
+   * @param stylelinktype
+   *          keyword for the used style type (normally sld)
+   * @param style
+   *          name of the style
+   * @param styleLocation
+   *          a valid resouce path (of the used plugin or a valid URL )
+   * @param styleType
+   *          sets the type simple or complex
+   *  
+   */
   public AddThemeCommand( GisTemplateMapModell model, String name, String type, String featurePath,
-      String source , String stylelinktype, String style, String styleLocation , String styleType) throws JAXBException
+      String source, String stylelinktype, String style, String styleLocation, String styleType )
+      throws JAXBException
   {
     m_mapModell = model;
     int id = m_mapModell.getAllThemes().length;
@@ -84,20 +96,20 @@ public class AddThemeCommand implements ICommand
     m_layer.setFeaturePath( featurePath );
     m_layer.setName( name );
     m_layer.setLinktype( type );
-    m_layer.setId("ID_" + id + 1);
-    m_layer.setVisible(true);
-    
+    m_layer.setId( "ID_" + id + 1 );
+    m_layer.setVisible( true );
+
     List styleList = m_layer.getStyle();
     //Style Type
     org.kalypso.template.types.ObjectFactory otype = new org.kalypso.template.types.ObjectFactory();
     StyleType layertype = otype.createStyledLayerTypeStyleType();
-    layertype.setLinktype(stylelinktype);
-    layertype.setStyle(style);
-    layertype.setHref(styleLocation);
-    layertype.setActuate("onRequest");
-    layertype.setType(styleType);
-    styleList.add(layertype);
-    
+    layertype.setLinktype( stylelinktype );
+    layertype.setStyle( style );
+    layertype.setHref( styleLocation );
+    layertype.setActuate( "onRequest" );
+    layertype.setType( styleType );
+    styleList.add( layertype );
+
   }
 
   /**
