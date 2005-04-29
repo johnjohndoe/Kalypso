@@ -1,13 +1,24 @@
 package org.kaylpso.ui.wizard.wfs;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URL;
+
+import javax.naming.OperationNotSupportedException;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -52,8 +63,8 @@ import org.kaylpso.ui.action.AddThemeCommand;
  *  ---------------------------------------------------------------------------*/
 
 public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportWizard
-{  
-  private ImportWfsWizardPage importPage;
+{
+  private ImportWfsWizardPage m_page;
 
   private GisMapOutlineViewer m_outlineviewer;
 
@@ -64,7 +75,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   public ImportWfsSourceWizard()
   {
     super();
-    
+
   }
 
   /**
@@ -76,39 +87,43 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        String[] allLayers = importPage.getLayers();
-        String layers = "";
-        for( int i = 0; i < allLayers.length; i++ )
+        String[] layers = m_page.getSelectedFeatureNames();
+        for( int i = 0; i < layers.length; i++ )
         {
-          String layer = allLayers[i];
-          String layername = layer;
-          if( i != 0 )
-            layers = layers + "," + layer;
-          else
-            layers = layers + layer;
-//          TODO here the featurePath is set to featureMember because this is the root element of the GMLWorkspace
-//           it must be implemented to only set the name of the feature (relative path of feature) 
-          
-          
-          final String geomType=importPage.guessGeometryType(layers);
-          final String defaulStyle;
-          if(geomType==null)
-            defaulStyle="../.styles/unknowndefault.sld";          
-          else if ("org.kalypsodeegree.model.geometry.GM_Point".equals(geomType))
-            defaulStyle="../.styles/pointdefault.sld";
-          else if ("org.kalypsodeegree.model.geometry.GM_LineString".equals(geomType))
-            defaulStyle="../.styles/linestringdefault.sld";
-          else if ("org.kalypsodeegree.model.geometry.GM_Polygon".equals(geomType))
-            defaulStyle="../.styles/polygondefault.sld";
-          else
-            throw new UnsupportedOperationException("no style available for "+geomType);
-            
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell,
-              "[WFS] " + layername, "wfs", "featureMember" , "URL=" + importPage.getUrl() + "#" + "FEATURE=" + layers ,"sld",
-              "default", defaulStyle , "simple" );
+          String layer = layers[i];
+          //Write the defaultStyle to the system-default temporary directory
+          URL style = m_page.setDefautltStyle( layer );
+
+
+          // TODO here the featurePath is set to featureMember because this is
+          // the top feature of the GMLWorkspace
+          // it must be implemented to only set the name of the feature
+          // (relative path of feature)
+          String featurePath = m_page.guessFeaturePath( layer );
+          if( featurePath == null )
+            throw new OperationNotSupportedException(
+                "The guessing of feature path has failed. The user has to choose the feature path, not implemented yet" );
+
+//          final String geomType = m_page.guessGeometryType();
+//          final String defaultStyle;
+//          if( geomType == null )
+//            defaultStyle = "../.styles/unknowndefault.sld";
+//          else if( "org.kalypsodeegree.model.geometry.GM_Point".equals( geomType ) )
+//            defaultStyle = "../.styles/pointdefault.sld";
+//          else if( "org.kalypsodeegree.model.geometry.GM_LineString".equals( geomType ) )
+//            defaultStyle = "../.styles/linestringdefault.sld";
+//          else if( "org.kalypsodeegree.model.geometry.GM_Polygon".equals( geomType ) )
+//            defaultStyle = "../.styles/polygondefault.sld";
+//          else
+//            throw new UnsupportedOperationException( "no style available for " + geomType );
+
+          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer,
+              "wfs", featurePath, "URL=" + m_page.getUrl() + "#" + "FEATURE=" + layer, "sld",
+              layer , style.toString(), "simple" );
           m_outlineviewer.postCommand( command, null );
-          
+
         }
+
       }
       catch( Exception e )
       {
@@ -129,9 +144,9 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   public void addPages()
   {
-    importPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden",
-        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ) ;
-    addPage(importPage );
+    m_page = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden",
+        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    addPage( m_page );
 
   }
 

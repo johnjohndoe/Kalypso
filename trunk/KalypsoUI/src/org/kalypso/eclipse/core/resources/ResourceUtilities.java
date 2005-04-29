@@ -63,6 +63,8 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.urlPatternType;
+
 /**
  * @author belger
  */
@@ -70,7 +72,7 @@ public class ResourceUtilities
 {
   private ResourceUtilities()
   {
-  // do not instantiate
+    // do not instantiate
   }
 
   /**
@@ -136,6 +138,31 @@ public class ResourceUtilities
 
       final Path path2 = new Path( path );
       return path2;
+    }
+    //Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
+    // to an eclipse path
+    else if( urlpath != null && urlpath.startsWith( "http:/" ) || urlpath.startsWith( "file:/" ) )
+    {
+      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+      URL url = null;
+      try
+      {
+        url = root.getLocation().toFile().toURL();
+      }
+      catch( MalformedURLException e )
+      {
+        // just return null
+        e.printStackTrace();
+        return null;
+      }
+      if( urlpath.matches( url.toString() + ".+" ) )
+      {
+        //split the string at the common part (path to workspace) and always take the second
+        //part as the relative eclipse workspace path
+        String[] array = urlpath.split( url.toString() );
+        return new Path( array[1] );
+        
+      }
     }
 
     return null;
@@ -216,7 +243,7 @@ public class ResourceUtilities
       final IResource resource = resources[i];
       files[i] = resource.getLocation().toFile();
     }
-    
+
     return files;
   }
 }
