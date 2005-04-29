@@ -597,7 +597,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   public List getFeatureList()
   {
     Feature rootFeature = sourceWorkspace.getRootFeature();
-    List featureList = (List)rootFeature.getProperty( "featureMember" );
+    List featureList = (List)rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     return featureList;
   }
 
@@ -652,7 +652,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       {
         if( !b.getSelection() )
         {
-          setPageComplete( true );
+//          setPageComplete( true );
           topSCLMappingComposite.setVisible( false );
           buttonGroup.setVisible( false );
           //remove mapping
@@ -660,7 +660,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         }
         else
         {
-          setPageComplete( false );
+//          setPageComplete( true );
           topSCLMappingComposite.setVisible( true );
           buttonGroup.setVisible( true );
         }
