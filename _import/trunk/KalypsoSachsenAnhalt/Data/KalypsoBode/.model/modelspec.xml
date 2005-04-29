@@ -21,11 +21,11 @@
 	<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
 	
 
-	<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
+	<output id="Logs" path="Log-Dateien" relativeToCalcCase="true"/>
 	<output id="QPegelDirOut" path="Zeitreihen/Pegel/Vorhersage" relativeToCalcCase="true"/>
 	<output id="QSpeicherDirOut" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
 	<output id="VSpeicherDirOut" path="Zeitreihen/Speicherinhalt/Vorhersage" relativeToCalcCase="true"/>
-	<output id="DivSpeicherDirOut" path="DivErgebnisse" relativeToCalcCase="true"/>
+	<output id="ZflSpeicherDirOut" path="Zeitreihen/Speicherzufluss" relativeToCalcCase="true"/>
 	
 	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 	<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
