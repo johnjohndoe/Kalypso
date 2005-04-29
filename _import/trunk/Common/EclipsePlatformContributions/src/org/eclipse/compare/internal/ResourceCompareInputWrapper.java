@@ -177,7 +177,6 @@ public class ResourceCompareInputWrapper extends CompareEditorInput
     {
       protected void fillContextMenu( IMenuManager manager )
       {
-
         if( fOpenAction == null )
         {
           fOpenAction = new Action()
