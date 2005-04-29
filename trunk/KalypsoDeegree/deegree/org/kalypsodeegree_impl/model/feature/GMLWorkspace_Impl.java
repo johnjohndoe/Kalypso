@@ -29,7 +29,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 {
   private final Feature m_rootFeature;
 
-  private final URL m_context;
+  private URL m_context;
 
   private final String m_schemaLocation;
 
@@ -248,6 +248,11 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public URL getContext()
   {
     return m_context;
+  }
+  
+  public void setContext(URL context)
+  {
+   m_context=context;  
   }
 
   /**

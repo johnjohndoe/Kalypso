@@ -29,6 +29,14 @@
    <extension
          point="org.kalypso.core.nativeObsAdapter">
       <adapter
+            label="Niederschlag (csv)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
+            axisType="N"/>
+      <adapter
+            label="Abfluss (csv)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
+            axisType="Q"/>
+      <adapter
             label="Niederschlag (grap)"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
             axisType="N"/>
