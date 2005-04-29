@@ -111,7 +111,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
-  public double computeQ( Date date, double W ) throws WQException
+  public double computeQ( Date date, double W )
   {
     final WechmannParams params = getFor( date ).getForW( W );
     return WechmannFunction.computeQ( params, W );

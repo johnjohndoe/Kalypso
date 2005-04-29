@@ -41,11 +41,9 @@
 package org.kalypso.ui.nature;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 
@@ -59,6 +57,9 @@ import org.eclipse.core.runtime.IPath;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
+ * TODO an JH: bist Du sicher, dass diese Klasse überhauipt noch benutzt wird?
+ * Ich glaube nämlich seit kurzem nicht mehr! Gernot
+ * 
  * @author belger
  */
 public class CopyResourceToFileVisitor implements IResourceVisitor
@@ -110,6 +111,9 @@ public class CopyResourceToFileVisitor implements IResourceVisitor
           final InputStream inputstream = inputfile.getContents();
 //          final InputStream inputstream = new InputStream(inputfile.getContents());
           CopyUtils.copy( inputstream, outstream );
+          
+          // TODO an JH: das ist nicht sicher! wenns ne exception gibt, werden die Streams nicht
+          // geschlossen! Besser immer in einem finally-block mit IOUtils.closeQuietly() schlieesen
           inputstream.close();
           outstream.close();
 
