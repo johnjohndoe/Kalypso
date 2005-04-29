@@ -496,7 +496,7 @@ public class DBaseFile
         pos = 0;
       }
       StringBuffer sb = new StringBuffer( column.size );
-      System.out.println(column.size);
+//      System.out.println(column.size);
       int i = 0;
       while( i < column.size )
       {
@@ -821,7 +821,7 @@ public class DBaseFile
         }
         catch( IOException e )
         {
-          System.out.println( e.toString() );
+//          System.out.println( e.toString() );
         }
 
         row[i] = os;

@@ -340,6 +340,9 @@ public class WMSHelper
     int height = highY - lowY;
     // get the required subImage according to the gridExtent
     PlanarImage image = rasterImage.getSubImage( minX, minY, width, height );
+    //this happens when the requested image is empty
+    if(image == null )
+      return;
 
     // get the destinationSurface in target coordinates
     GM_Surface destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
@@ -389,7 +392,7 @@ public class WMSHelper
     GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX()
         + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
     GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
-
+    System.out.println("Buffered Image Env: " + buffImageEnv );
     BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv
         .getHeight(), BufferedImage.TYPE_INT_ARGB );
     Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
@@ -400,6 +403,7 @@ public class WMSHelper
     // draw the image with the given transformation
     bufferGraphics.drawRenderedImage( image, trafo );
     // draw bufferedImage on the screen
+    System.out.println("x: " + buffImageEnv.getMin().getX() + "\ty: " + buffImageEnv.getMin().getY());
     g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
      (int)buffImageEnv.getMin().getY(),
             null );
