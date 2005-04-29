@@ -29,7 +29,7 @@
 	sollte man es im selben JRE wie der Workspace ausführen
 	-->
 	<target name="feature-and-plugins" depends="prepare" description="deploy kalypso feature and plugins">
-    	<pde.exportFeatures features="org.kalypso.enterprise" destination="${dist.client}" exportType="directory" exportSource="false" />
+    	<pde.exportFeatures features="org.kalypso.enterprise.na" destination="${dist.client}" exportType="directory" exportSource="false" />
 	</target>
 
 	<!-- deploy for bce in the project directory on Q-Drive -->
@@ -42,8 +42,8 @@
 		</copy>
 	</target>
 
-    <target name="deploy-for-tuhh" depends="copy-clientbase" description="deploy for bce in the project directory on Q-Drive">
-		<copy todir="C:\\tmp">
+    <target name="deploy-for-tuhh" depends="copy-clientbase" description="deploy for tuhh in the project directory on Q-Drive">
+		<copy todir="D:\\Programme\\KalypsoEnterpriseClient\\kalypso">
 			<fileset dir="${dist.client}" excludes="**/CVS/**"/>
 		</copy>
 	</target>
