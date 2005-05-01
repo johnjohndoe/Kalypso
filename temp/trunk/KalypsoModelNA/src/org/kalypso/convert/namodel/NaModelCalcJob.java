@@ -111,12 +111,4 @@ public class NaModelCalcJob implements ICalcJob
   {
     return getClass().getResource("resources/nacalcjob_spec.xml");
   }
-
-  public boolean isSucceeded()
-  {
-    if( m_calcJob != null )
-      return ( (NaModelInnerCalcJob)m_calcJob ).isSucceeded();
-    return false;
-  }
-
 }

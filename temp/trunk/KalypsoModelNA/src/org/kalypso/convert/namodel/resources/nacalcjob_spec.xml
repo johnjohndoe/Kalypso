@@ -4,11 +4,11 @@
 	<input id="MetaSteuerdaten" description="Schema der Modelldaten"/>
 	<input id="Modell" description="Schema der Steuerdaten"/>
 	
-	<input id="Hydrotop" description="Modelldaten"/>
-	<input id="Parameter" description="Steuerdaten"/>
-	<input id="Control" description="Modelldaten"/>
+	<input id="Hydrotop" description="Modelldaten" optional="true"/>
+	<input id="Parameter" description="Steuerdaten" optional="true"/>
+	<input id="Control" description="Modelldaten" />
 	<input id="Template" description="Steuerdaten"/>
-	<input id="SceConf" description="Modelldaten"/>
+	<input id="SceConf" description="Modelldaten" optional="true"/>
 
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->

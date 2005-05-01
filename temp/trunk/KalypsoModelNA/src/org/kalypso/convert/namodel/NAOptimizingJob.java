@@ -58,6 +58,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -94,33 +95,11 @@ public class NAOptimizingJob implements IOptimizingJob
 {
   private final File m_tmpDir;
 
-  //  private final CalcJobClientBean[] m_beans;
-
-  //  private final URL m_urlToOptimize;
-
-  //  private CalcJobClientBean m_lastOptimizedBean = null;
-  //
-  //  private CalcJobClientBean m_bestOptimizedBean = null;
-
-  private File m_lastOptimizeDir = null;
-
-  private File m_bestOptimizeDir = null;
-
-  private OptimizeCalcResultEater m_lastResultEater = null;
-
-  private OptimizeCalcResultEater m_bestResultEater = null;
-
   private TreeMap m_measuredTS;
 
   private final TimeseriesLink m_linkMeasuredTS;
 
   private final TimeseriesLink m_linkCalcedTS;
-
-  //  private final URL m_control;
-
-  //  private final File m_baseCalcDir;
-
-  //  private final File m_baseOutputDir;
 
   private final AutoCalibration m_autoCalibration;
 
@@ -130,24 +109,22 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private final ICalcMonitor m_monitor;
 
+  private File m_lastOptimizeRunDir = null;
+
+  private File m_bestOptimizeRunDir = null;
+
+  private OptimizeCalcResultEater m_lastResultEater = null;
+
+  private OptimizeCalcResultEater m_bestResultEater = null;
+
+  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far";
+
   public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor )
       throws Exception
   {
-
-    //    m_dataProvider = dataProvider;
-    // prepare dirs
     m_tmpDir = tmpDir;
-    //    m_baseCalcDir = new File( tmpDir, ICalcServiceConstants.CALC_DIR_NAME );
-    //    m_baseOutputDir = new File( tmpDir, ICalcServiceConstants.OUTPUT_DIR_NAME
-    // );
-    //    m_baseTmpTIutDir.mkdirs();
-    //    m_baseCalcDir.mkdirs();
-    //    m_baseOutputDir.mkdirs();
     m_dataProvider = dataProvider;
     m_monitor = monitor;
-
-    // load control to get timeseries to optimize (path of measured and
-    // calculated)
 
     final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
@@ -156,12 +133,6 @@ public class NAOptimizingJob implements IOptimizingJob
     m_linkMeasuredTS = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
     m_linkCalcedTS = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
 
-    // load meta to get measured part of calculation intervall
-    //    final CalcJobClientBean metaBean = CalcJobHelper.getBeanForId(
-    // NaModelConstants.IN_META_ID, beans );
-    //    
-    //    final File metaFile = new File( m_baseTmpDir, metaBean.getPath() );
-    //    
     final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
         .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
@@ -169,11 +140,6 @@ public class NAOptimizingJob implements IOptimizingJob
     final Date measuredStartDate = (Date)metaFE.getProperty( "startsimulation" );
     final Date measuredEndDate = (Date)metaFE.getProperty( "startforecast" );
 
-    // optimize configuration
-    //    final CalcJobClientBean optimizeConfBean = CalcJobHelper.getBeanForId(
-    //        NaModelConstants.IN_OPTIMIZECONF_ID, beans );
-    //    final File optimizeFile = new File( m_baseTmpDir,
-    // optimizeConfBean.getPath() );
     final ObjectFactory fac = new ObjectFactory();
     final Unmarshaller unmarshaller = fac.createUnmarshaller();
     m_autoCalibration = (AutoCalibration)unmarshaller.unmarshal( dataProvider
@@ -196,25 +162,25 @@ public class NAOptimizingJob implements IOptimizingJob
    */
   public void calculate()
   {
-
     final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir );
     optimizeRunDir.mkdirs();
 
-    //    final File optimizeInputDir = new File( optimizeRunDir,
-    // ICalcServiceConstants.INPUT_DIR_NAME );
-    //    optimizeInputDir.mkdirs();
-
-    //    final CalcJobClientBean[] optimizedBeans = CalcJobHelper.getMergedBeans(
-    // m_beans,
-    //        new CalcJobClientBean[]
-    //        { m_lastOptimizedBean } );
-
-    //    final CalcJobClientBean[] optimizedBeansII =
-    // CalcJobHelper.createBeansForNewBaseDir(
-    //        optimizedBeans, m_tmpDir, optimizeInputDir );
-
     final OptimizeCalcDataProvider newDataProvider = new OptimizeCalcDataProvider( m_dataProvider );
     newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedUrl );
+
+    // some generated files from best run can be recycled to increase
+    // performance
+    if( m_bestOptimizeRunDir != null )
+    {
+      try
+      {
+        newDataProvider.addURL( IN_BestOptimizedRunDir_ID, m_bestOptimizeRunDir.toURL() );
+      }
+      catch( MalformedURLException e1 )
+      {
+        // on exception it is simply not used.
+      }
+    }
     final ICalcJob calcJob = new NaModelInnerCalcJob();
     final OptimizeCalcResultEater optimizeResultEater = new OptimizeCalcResultEater();
     try
@@ -225,7 +191,7 @@ public class NAOptimizingJob implements IOptimizingJob
     {
       e.printStackTrace();
     }
-    m_lastOptimizeDir = optimizeRunDir;
+    m_lastOptimizeRunDir = optimizeRunDir;
     m_lastResultEater = optimizeResultEater;
   }
 
@@ -236,18 +202,16 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     if( lastWasBest )
     {
-      clear( m_bestOptimizeDir );
-      m_bestOptimizeDir = m_lastOptimizeDir;
+      clear( m_bestOptimizeRunDir );
+      m_bestOptimizeRunDir = m_lastOptimizeRunDir;
       m_bestResultEater = m_lastResultEater;
-      //      m_bestOptimizedBean = m_lastOptimizedBean;
     }
     else
     {
-      clear( m_lastOptimizeDir );
+      clear( m_lastOptimizeRunDir );
     }
-    m_lastOptimizeDir = null;
+    m_lastOptimizeRunDir = null;
     m_lastResultEater = null;
-    //    m_lastOptimizedBean = null;
   }
 
   private void clear( File dir )
@@ -255,6 +219,7 @@ public class NAOptimizingJob implements IOptimizingJob
     if( dir != null )
     {
       System.out.println( "remove " + dir.toString() );
+      // TODO clean this
       //      try
       //      {
       //        FileUtils.deleteDirectory( dir );
@@ -272,9 +237,6 @@ public class NAOptimizingJob implements IOptimizingJob
    */
   public void optimize( Parameter[] parameterConf, double values[] ) throws Exception
   {
-    //     final File conrolFile = new File( m_tmpDir, m_urlToOptimize.getPath() );
-
-    // TODO check: DOM namespaceaware
     final Document dom = XMLHelper.getAsDOM( m_dataProvider
         .getURLForID( NaModelConstants.IN_CONTROL_ID ), true );
 
@@ -290,7 +252,8 @@ public class NAOptimizingJob implements IOptimizingJob
       e.printStackTrace();
     }
 
-    final Transformer t = TransformerFactory.newInstance().newTransformer();
+    TransformerFactory factory = TransformerFactory.newInstance();
+    final Transformer t = factory.newTransformer();
 
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
     t.setOutputProperty( OutputKeys.INDENT, "yes" );
@@ -305,9 +268,7 @@ public class NAOptimizingJob implements IOptimizingJob
     {
       e.printStackTrace();
     }
-    writer.close();
-
-    //    String path = FileUtilities.getRelativePathTo( m_tmpDir, file );
+    IOUtils.closeQuietly( writer );
 
     m_lastOptimizedUrl = file.toURL();
 
@@ -334,7 +295,6 @@ public class NAOptimizingJob implements IOptimizingJob
         // möglich ist ohne gemessene zeitreihe
         e.printStackTrace();
       }
-      //      File tsFile = new File( m_inputDir, m_linkMeasuredTS.getHref() );
       IObservation observation = ZmlFactory.parseXML( measuredURL, "measured" );
       IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
           TimeserieConstants.TYPE_DATE );
@@ -360,7 +320,7 @@ public class NAOptimizingJob implements IOptimizingJob
   public TreeMap getCalcedTimeSeries() throws MalformedURLException, SensorException
   {
     final TreeMap result = new TreeMap();
-    final File optimizeResultDir = new File( m_lastOptimizeDir, NaModelConstants.OUTPUT_DIR_NAME );
+    final File optimizeResultDir = new File( m_lastOptimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
     String calcHref = m_linkCalcedTS.getHref().replaceFirst(
         "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" );
@@ -392,45 +352,6 @@ public class NAOptimizingJob implements IOptimizingJob
       String id = (String)iter.next();
       resultEater.addResult( id, (File)m_bestResultEater.get( id ) );
     }
-    //    m_bestResultEater.
-    //    final List result = new ArrayList();
-
-    //    final File jobOutputDir = new File( m_bestOptimizeDir,
-    // ICalcServiceConstants.OUTPUT_DIR_NAME );
-    //    CalcJobClientBean[] calculatedBeans =
-    // m_bestResultEater.getCurrentResults();
-    //
-    //    try
-    //    {
-    //      final File from = new File( m_tmpDir, m_bestOptimizedBean.getPath() );
-    //      final File to = new File( m_baseOutputDir, m_urlToOptimize.getPath() );
-    //      FileUtils.copyFile( from, to );
-    //      result.add( new CalcJobClientBean( NaModelConstants.IN_CONTROL_ID,
-    // "optimized
-    // control",
-    //          m_urlToOptimize.getPath() ) );
-    //    }
-    //    catch( IOException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
-    //    for( int i = 0; i < calculatedBeans.length; i++ )
-    //    {
-    //      CalcJobClientBean bean = calculatedBeans[i];
-    //      final File from = new File( jobOutputDir, bean.getPath() );
-    //      final File to = new File( m_baseOutputDir, bean.getPath() );
-    //      try
-    //      {
-    //        FileUtils.copyFile( from, to );
-    //        result.add( bean );
-    //      }
-    //      catch( IOException e )
-    //      {
-    //        e.printStackTrace();
-    //      }
-    //    }
-    //    return (CalcJobClientBean[])result.toArray( new
-    // CalcJobClientBean[result.size()] );
   }
 
   /**

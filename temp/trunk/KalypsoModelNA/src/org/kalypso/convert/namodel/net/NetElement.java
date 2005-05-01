@@ -48,13 +48,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.ASCIIHelper;
 import org.kalypso.convert.namodel.AsciiBuffer;
 import org.kalypso.convert.namodel.CatchmentManager;
 import org.kalypso.convert.namodel.ChannelManager;
 import org.kalypso.convert.namodel.NAZMLGenerator;
+import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.NetFileManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.java.net.UrlUtilities;
@@ -62,6 +62,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
@@ -120,22 +122,26 @@ public class NetElement
 
   private static String[] m_netAsciiFormat;
 
-  private static GMLWorkspace m_workspace;
+  private final GMLWorkspace m_workspace;
+
+  private final NaNodeResultProvider m_nodeResultProvider;
 
   public static void setNetAsciiFormats( String[] formats )
   {
     m_netAsciiFormat = formats;
   }
 
-  public static void setDefaultGmlWorkSpace( GMLWorkspace workspace )
-  {
-    m_workspace = workspace;
-  }
+  //  public static void setDefaultGmlWorkSpace( GMLWorkspace workspace )
+  //  {
+  //    m_workspace = workspace;
+  //  }
 
-  public NetElement( NetFileManager manager, Feature channelFE )
+  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE,NaNodeResultProvider nodeResultProvider )
   {
     m_channelFE = channelFE;
     m_manager = manager;
+    m_workspace = modellWorkspace;
+    m_nodeResultProvider = nodeResultProvider;
   }
 
   public Feature getChannel()
@@ -155,13 +161,13 @@ public class NetElement
 
   public boolean resultExists()
   {
-    return m_manager.resultExists( getDownStreamNode() );
+    return m_nodeResultProvider.resultExists( getDownStreamNode() );
   }
 
   public void removeResult()
   {
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
-    m_manager.removeResult( knotU );
+    m_nodeResultProvider.removeResult( knotU );
   }
 
   /**
@@ -201,12 +207,9 @@ public class NetElement
     {
       final Feature feature = catchmentFeatures[i];
       final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
-      final URL linkURL = m_urlUtils.resolveURL( m_workspace.getContext(), link
-          .getHref() );
-//      final URL linkURL = m_urlUtils.resolveURL( this.m_manager.m_conf.getGMLModelURL(), link
-//          .getHref() );
+      final URL linkURL = m_urlUtils.resolveURL( m_workspace.getContext(), link.getHref() );
       final String tsFileName = CatchmentManager.getNiederschlagEingabeDateiString( feature );
-      final File targetFile = new File( this.m_manager.m_conf.getAsciiBaseDir(), "klima.dat/"
+      final File targetFile = new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat/"
           + tsFileName );
       final File parent = targetFile.getParentFile();
       if( !parent.exists() )
@@ -214,11 +217,13 @@ public class NetElement
 
       if( !NetFileManager.DEBUG )
       {
-
-        final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
-        final FileWriter writer = new FileWriter( targetFile );
-        NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
-        writer.close();
+        if( !targetFile.exists() )
+        {
+          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
+          final FileWriter writer = new FileWriter( targetFile );
+          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
+          IOUtils.closeQuietly( writer );
+        }
       }
     }
   }
@@ -280,10 +285,6 @@ public class NetElement
     asciiBuffer.getNetBuffer()
         .append( ASCIIHelper.toAsciiLine( m_channelFE, m_netAsciiFormat[12] ) );
 
-    // append upstream node:
-    //    if( !resultExists || isRootElement )
-    //    {
-    // find upstream node
     Feature[] features = m_workspace.getFeatures( m_manager.m_conf.getNodeFT() );
     Feature knotO = null;
     for( int i = 0; i < features.length; i++ )
@@ -329,29 +330,8 @@ public class NetElement
     {
       asciiBuffer.getNetBuffer().append( " 0\n" ); // simulate no catchments
     }
-    // unterhalb des rootnodes letzter strang zum endknoten
-    // ohne teilgebiete
-    //    if( isRootElement )
-    //    {
-    //      // end channel
-    //// buffer.append( ENDSTRANG );
-    //      buffer.append(" "+1000xxx);
-    //      // upstream node
-    //      buffer.append( ASCIIHelper.toAsciiLine( knotU, m_netAsciiFormat[11] ) );
-    //      // downstream node
-    //      buffer.append( ENDKNOTEN );
-    //      buffer.append( " 0\n" ); // no catchments
-    //    }
     if( knotO != null && !nodeList.contains( knotO ) )
       nodeList.add( knotO );
-    //    }
-    //    else
-    //    // result exists
-    //    {
-    //      buffer.append( ANFANGSKNOTEN );
-    //      buffer.append( ASCIIHelper.toAsciiLine( knotU, m_netAsciiFormat[11] ) );
-    //      buffer.append( " 0\n" ); // no catchments
-    //    }
     if( knotU != null && !nodeList.contains( knotU ) )
       nodeList.add( knotU );
   }
@@ -360,9 +340,4 @@ public class NetElement
   {
     visitor.visit( this );
   }
-
-  //  public boolean isVirtual()
-  //  {
-  //    return m_virtual;
-  //  }
 }

@@ -74,13 +74,13 @@ public class CalibarationConfig
     String[][] xpathModel = new String[][]
     {
         new String[]
-        { queryBaseCatchment + "/faktorBianf" },
+        { queryBaseCatchment + "/:faktorBianf" },
         new String[]
-        { queryBaseCatchment + "/faktorRetobRetint" },
+        { queryBaseCatchment + "/:faktorRetobRetint" },
         new String[]
-        { queryBaseCatchment + "/faktn" },
+        { queryBaseCatchment + "/:faktn" },
         new String[]
-        { queryBaseCatchment + "/faktorAigw" } };
+        { queryBaseCatchment + "/:faktorAigw" } };
 
     generateAndAddContexts( rootFeatureControl, xpathModel, xpathControl );
     // KMChannels
@@ -93,9 +93,9 @@ public class CalibarationConfig
     final String[][] queryKMChannels = new String[][]
     {
         new String[]
-        { queryBaseKMChannel + "/faktorRkf" },
+        { queryBaseKMChannel + "/:faktorRkf" },
         new String[]
-        { queryBaseKMChannel + "/faktorRnf" } };
+        { queryBaseKMChannel + "/:faktorRnf" } };
     generateAndAddContexts( rootFeatureControl, queryKMChannels, propNamesII );
   }
 

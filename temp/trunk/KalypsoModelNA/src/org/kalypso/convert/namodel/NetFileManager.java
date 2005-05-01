@@ -45,7 +45,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,12 +54,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.convert.namodel.net.visitors.DownStreamVisitor;
@@ -75,6 +69,12 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -334,6 +334,8 @@ public class NetFileManager extends AbstractManager
    */
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
+    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( workspace );
+
     //    x -> rootNode
     //    |
     //    O -> virtueller Strang generiert NR xxx
@@ -355,11 +357,11 @@ public class NetFileManager extends AbstractManager
 
     // list of network elements
     final HashMap netElements = new HashMap();
-    NetElement.setDefaultGmlWorkSpace( workspace );
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = (Feature[])channelList.toArray( new Feature[channelList.size()] );
     for( int i = 0; i < channelFEs.length; i++ )
-      netElements.put( channelFEs[i].getId(), new NetElement( this, channelFEs[i] ) );
+      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i],
+          nodeResultProvider ) );
 
     // find dependencies
     //   dependency: node - node
@@ -459,7 +461,7 @@ public class NetFileManager extends AbstractManager
           //          System.out.println( "impossible net at #" + upStreamFE.getId() );
           // two catchments discharges to the same channel, no need to generate
           // dependency cause it is the same channel
-          // TODO check order of catchments in netfile  
+          // TODO check order of catchments in netfile
           continue;
         }
         downStreamElement.addUpStream( upStreamElement );
@@ -511,12 +513,12 @@ public class NetFileManager extends AbstractManager
     }
     final List nodeCollector = writeAsciiVisitor.getNodeCollector();
     asciiBuffer.getNetBuffer().append( "99999\n" );
-    appendNodeList( workspace, nodeCollector, asciiBuffer );
+    appendNodeList( workspace, nodeCollector, asciiBuffer, nodeResultProvider );
     asciiBuffer.getNetBuffer().append( "99999\n" );
   }
 
-  public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer )
-      throws Exception, Exception
+  public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer,
+      NaNodeResultProvider nodeResultProvider ) throws Exception, Exception
   {
     final Iterator iter = nodeCollector.iterator();
     while( iter.hasNext() )
@@ -537,7 +539,7 @@ public class NetFileManager extends AbstractManager
       final TimeseriesLink zuflussLink;
       final String zuflussFileName;
 
-      if( resultExists( nodeFE ) )
+      if( nodeResultProvider.resultExists( nodeFE ) )
       {
         zuflussLink = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
         zuflussFileName = "result_" + nodeFE.getId();
@@ -578,18 +580,17 @@ public class NetFileManager extends AbstractManager
         if( !parent.exists() )
           parent.mkdirs();
         String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
-        final URL linkURL = m_urlUtilities.resolveURL( m_conf.getGMLModelURL(), zuflussFile );
-
-        //        final URL linkURL = m_urlUtilities.resolveURL(
-        // m_conf.getGMLModelURL(), zuflussLink
-        //            .getHref() );
+        final URL linkURL = m_urlUtilities.resolveURL( workspace.getContext(), zuflussFile );
 
         if( !DEBUG )
         {
-          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
-          final FileWriter writer = new FileWriter( targetFile );
-          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
-          writer.close();
+          if( !targetFile.exists() )
+          {
+            final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
+            final FileWriter writer = new FileWriter( targetFile );
+            NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
+            IOUtils.closeQuietly( writer );
+          }
         }
         asciiBuffer.getNetBuffer().append( "    1234\n" ); // dummyLine
         asciiBuffer.getNetBuffer().append(
@@ -605,33 +606,19 @@ public class NetFileManager extends AbstractManager
     return "Z_" + FeatureHelper.getAsString( nodeFE, "num" ) + ".zufluss";
   }
 
-  public boolean resultExists( Feature nodeFE )
-  {
-    try
-    {
-      final File resultFile = NaModelHelper.getResultFile( m_conf.getGMLModelURL(), nodeFE );
-      if( resultFile == null )
-        return false;
-      return resultFile.exists();
-    }
-    catch( MalformedURLException e )
-    {
-      return false;
-    }
-  }
-
-  public void removeResult( Feature nodeFE )
-  {
-    try
-    {
-      final File resultFile = NaModelHelper.getResultFile( m_conf.getGMLModelURL(), nodeFE );
-      if( resultFile != null && resultFile.exists() )
-        resultFile.delete();
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-  }
+  //  public void removeResult( Feature nodeFE )
+  //  {
+  //    try
+  //    {
+  //      final File resultFile = NaModelHelper.getResultFile(
+  // m_conf.getGMLModelURL(), nodeFE );
+  //      if( resultFile != null && resultFile.exists() )
+  //        resultFile.delete();
+  //    }
+  //    catch( MalformedURLException e )
+  //    {
+  //      e.printStackTrace();
+  //    }
+  //  }
 
 }

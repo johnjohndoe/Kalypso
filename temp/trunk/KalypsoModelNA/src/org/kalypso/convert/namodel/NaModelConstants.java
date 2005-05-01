@@ -72,4 +72,5 @@ public interface NaModelConstants
   public static final String OUT_ZML = "OUT_ZML";
 
   public static final String OUTPUT_DIR_NAME = "results";
+  
 }
