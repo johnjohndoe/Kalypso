@@ -19,65 +19,82 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 <project name="commonbinding" default="deploy">
 
-	<!-- define following properties in importing script
+  <!-- define following properties in importing script
 	
 	<property name="project" value="full path of the project..." />
 	<property name="project-name" value="will be used for naming the jar containing the bindings..." />
 
 	-->
-	
-	<property name="build" value="${java.io.tmpdir}/${project-name}TmpDir" />
-	<property name="build.source" value="${build}/src" />
-	<property name="build.compile" value="${build}/compile" />
 
-	<property name="dest.file.name" value="${project-name}.jar" />
+  <property name="build" value="${java.io.tmpdir}/${project-name}TmpDir" />
+  <property name="build.source" value="${build}/src" />
+  <property name="build.compile" value="${build}/compile" />
 
-	<path id="cpref">
-		<fileset dir="${workspace}/JWSDPInstallation/jwsdp">
-			<include name="jaxb/lib/*.jar" />
-			<include name="jwsdp-shared/lib/*.jar" />
-		</fileset>
-	</path>
+  <property name="dest.file.name" value="${project-name}.jar" />
 
-	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="cpref" />
+  <path id="cpref">
+    <fileset dir="${workspace}/JWSDPInstallation/jwsdp">
+      <include name="jaxb/lib/*.jar" />
+      <include name="jwsdp-shared/lib/*.jar" />
+    </fileset>
+  </path>
 
-	<target name="init" description="erzeugt die Build-Verzeichnisse">
-		<mkdir dir="${build.source}" />
-		<mkdir dir="${build.compile}" />
-	</target>
+  <taskdef name="xjc"
+           classname="com.sun.tools.xjc.XJCTask"
+           classpathref="cpref"
+  />
 
-	<target name="clean" description="cleans it up - totally">
-		<delete includeemptydirs="true">
-			<fileset dir="${build}" includes="**/*" />
-		</delete>
-	</target>
+  <target name="init" description="erzeugt die Build-Verzeichnisse">
+    <mkdir dir="${build.source}" />
+    <mkdir dir="${build.compile}" />
+  </target>
 
-	<target name="generate" depends="init" description="erzeugt die sourcen">
-		<echo message="Generating binding sources für ${project-name}" />
-		<xjc target="${build.source}" extension="true" removeoldoutput="true">
-			<schema dir=".">
-				<include name="**/*.xsd" />
-			</schema>
+  <target name="clean" description="cleans it up - totally">
+    <delete includeemptydirs="true">
+      <fileset dir="${build}" includes="**/*" />
+    </delete>
+  </target>
 
-			<!-- Important Note: the produces element specifies the
+  <target name="generate" depends="init" description="erzeugt die sourcen">
+    <echo message="Generating binding sources für ${project-name}" />
+    <!-- sometimes files are handeled as "up-to-date", but they are not, so this will force to rebuild them (doemming)-->
+    <delete file="${project}/lib/${dest.file.name}" />
+
+    <xjc target="${build.source}" extension="true" removeoldoutput="true">
+      <schema dir=".">
+        <include name="**/*.xsd" />
+      </schema>
+
+      <!-- Important Note: the produces element specifies the
 			files from which the generate-process is depending. If 
 			the files are up-to-date (compared to the schemas) then
 			nothing is done. It is only when changes are discovered
 			that the xjc re-generates the binding-source.			
 			-->
-			<produces file="${project}/lib/${dest.file.name}"/>
-		</xjc>
-	</target>
+      <produces file="${project}/lib/${dest.file.name}" />
+    </xjc>
+  </target>
 
-	<target name="compile" depends="generate" description="compiles the generated sources">
-		<echo message="Compiling binding classes" />
-		<javac debug="${flag-debug}" destdir="${build.compile}" optimize="${flag-optimize}" srcdir="${build.source}" classpathref="cpref"/>
-	</target>
+  <target name="compile"
+          depends="generate"
+          description="compiles the generated sources"
+  >
+    <echo message="Compiling binding classes" />
+    <javac debug="${flag-debug}"
+           destdir="${build.compile}"
+           optimize="${flag-optimize}"
+           srcdir="${build.source}"
+           classpathref="cpref"
+    />
+  </target>
 
-	<target name="deploy" depends="compile" description="package jar">
-		<echo message="Packaging binding classes" />
-		<jar destfile="${project}/lib/${dest.file.name}" basedir="${build.compile}" includes="**/*" />
-	</target>
-	
+  <target name="deploy" depends="compile" description="package jar">
+    <echo message="Packaging binding classes" />
+    <jar destfile="${project}/lib/${dest.file.name}"
+         basedir="${build.compile}"
+         includes="**/*"
+    />
+  </target>
+
 </project>
 

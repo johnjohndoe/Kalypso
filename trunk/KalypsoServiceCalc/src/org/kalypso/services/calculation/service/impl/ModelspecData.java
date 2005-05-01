@@ -73,7 +73,7 @@ public class ModelspecData
     try
     {
       m_modelspec = (ModelspecType)unmarshaller.unmarshal( modelspecUrl );
-      
+
       m_inputHash = createHash( m_modelspec.getInput() );
       m_outputHash = createHash( m_modelspec.getOutput() );
     }
@@ -89,7 +89,7 @@ public class ModelspecData
     for( Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final DataType data = (DataType)iter.next();
-      
+
       map.put( data.getId(), data );
     }
 
@@ -108,7 +108,7 @@ public class ModelspecData
       final DataType input = (DataType)iIt.next();
       final String id = input.getId();
       final String description = input.getDescription();
-      if( !data.hasID( id ) )
+      if( !input.isOptional() && !data.hasID( id ) )
         throw new CalcJobServiceException( "Keine Eingangsdaten für ID " + id + " (" + description
             + ") vorhanden.", null );
     }
@@ -133,7 +133,7 @@ public class ModelspecData
       final DataType data = (DataType)iter.next();
       beans[count++] = new CalcJobServerBean( data.getId(), data.getDescription() );
     }
-    
+
     return beans;
   }
 
