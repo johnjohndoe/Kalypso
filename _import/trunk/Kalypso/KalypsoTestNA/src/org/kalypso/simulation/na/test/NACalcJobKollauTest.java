@@ -1,4 +1,4 @@
-package org.kalypso.simulation.na.test.kollau;
+package org.kalypso.simulation.na.test;
 
 import java.io.File;
 import java.net.URL;
@@ -66,20 +66,36 @@ import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 public class NACalcJobKollauTest extends TestCase
 {
 
-  public void testKollau() throws TypeRegistryException, JAXBException
+  public void testKollau() throws TypeRegistryException, JAXBException, CalcJobServiceException
   {
-    kollau();
-    //    kollauOptimize();
-  }
 
-  public void kollau() throws TypeRegistryException, JAXBException
-  {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
     registry.registerTypeHandler( new DiagramTypeHandler() );
+    try
+    {
+      weisseElster();
+      weisseElsterOptimize();
+      kollau();
+      kollauOptimize();
+    }
+    catch( CalcJobServiceException e )
+    {
+      e.printStackTrace();
+      throw e;
+    }
+  }
 
-    final ICalcJob job = new NaModelInnerCalcJob();
-    final File tmp = FileUtilities.createNewTempDir( "NA_TEST" );
+  private File getTmpDir()
+  {
+    File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\tmp" ) );
+    file.mkdirs();
+    return file;
+  }
+
+  public void weisseElster() throws CalcJobServiceException
+  {
+    final File tmp = getTmpDir();
 
     final ICalcDataProvider dataProvider = new ICalcDataProvider()
     {
@@ -90,13 +106,13 @@ public class NACalcJobKollauTest extends TestCase
       {
         Class clazz = getClass();
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
-          return clazz.getResource( "data/expertControl.gml" );
+          return clazz.getResource( "weisseElster/expertControl.gml" );
         if( NaModelConstants.IN_MODELL_ID.equals( id ) )
-          return clazz.getResource( "data/calcCase.gml" );
+          return clazz.getResource( "weisseElster/calcCase.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
-          return clazz.getResource( "data/.calculation" );
+          return clazz.getResource( "weisseElster/.calculation" );
         if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
-          return clazz.getResource( "data/.asciitemplate.zip" );
+          return clazz.getResource( "weisseElster/.asciitemplate_we.zip" );
         return null;
       }
 
@@ -109,87 +125,16 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = new ICalcResultEater()
-    {
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
-       *      java.io.File)
-       */
-      public void addResult( String id, File file )
-      {
-        System.out.print( "ID" + id + " File:" + file.getAbsolutePath() );
-      }
-    };
-
-    final ICalcMonitor monitor = new ICalcMonitor()
-    {
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
-       */
-      public void cancel()
-      {
-      //  
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
-       */
-      public boolean isCanceled()
-      {
-        return false;
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcMonitor#setProgress(int)
-       */
-      public void setProgress( int progress )
-      {
-      //
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
-       */
-      public int getProgress()
-      {
-        return 0;
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
-       */
-      public String getMessage()
-      {
-        return null;
-      }
-
-      /**
-       * @see org.kalypso.services.calculation.job.ICalcMonitor#setMessage(java.lang.String)
-       */
-      public void setMessage( String message )
-      {
-        System.out.println( message + "\n" );
-      }
-    };
-
-    try
-    {
-      job.run( tmp, dataProvider, resultEater, monitor );
-    }
-    catch( CalcJobServiceException e )
-    {
-      e.printStackTrace();
-    }
+    final ICalcResultEater resultEater = createResultEater();
+    final ICalcMonitor monitor = createMonitor();
+    final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
+    job.run( tmp, dataProvider, resultEater, monitor );
+    assertTrue( job.isSucceeded() );
   }
 
-  public void kollauOptimize() throws TypeRegistryException, JAXBException
+  public void weisseElsterOptimize() throws CalcJobServiceException
   {
-    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
-    registry.registerTypeHandler( new ObservationLinkHandler() );
-    registry.registerTypeHandler( new DiagramTypeHandler() );
-
-    final ICalcJob job = new NaModelCalcJob();
-    final File tmp = FileUtilities.createNewTempDir( "NA_TEST" );
+    final File tmp = getTmpDir();
 
     final ICalcDataProvider dataProvider = new ICalcDataProvider()
     {
@@ -200,15 +145,15 @@ public class NACalcJobKollauTest extends TestCase
       {
         Class clazz = getClass();
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
-          return clazz.getResource( "data/.nacontrol_1.gml" );
+          return clazz.getResource( "weisseElster/.nacontrol_4.gml" );
         if( NaModelConstants.IN_MODELL_ID.equals( id ) )
-          return clazz.getResource( "data/calcCase.gml" );
+          return clazz.getResource( "weisseElster/calcCase.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
-          return clazz.getResource( "data/.calculation" );
+          return clazz.getResource( "weisseElster/.calculation" );
         if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
-          return clazz.getResource( "data/.asciitemplate.zip" );
+          return clazz.getResource( "weisseElster/.asciitemplate_we.zip" );
         if( NaModelConstants.IN_OPTIMIZECONF_ID.equals( id ) )
-          return clazz.getResource( "data/.sce.xml" );
+          return clazz.getResource( "weisseElster/.sce.xml" );
         return null;
       }
 
@@ -221,7 +166,96 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    final ICalcResultEater resultEater = new ICalcResultEater()
+    final ICalcResultEater resultEater = createResultEater();
+    final ICalcMonitor monitor = createMonitor();
+    final ICalcJob job = new NaModelCalcJob();
+    job.run( tmp, dataProvider, resultEater, monitor );
+  }
+
+  public void kollau() throws CalcJobServiceException
+  {
+    final File tmp = getTmpDir();
+
+    final ICalcDataProvider dataProvider = new ICalcDataProvider()
+    {
+      /**
+       * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
+       */
+      public URL getURLForID( String id )
+      {
+        Class clazz = getClass();
+        if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
+          return clazz.getResource( "kollau/expertControl.gml" );
+        if( NaModelConstants.IN_MODELL_ID.equals( id ) )
+          return clazz.getResource( "kollau/calcCase.gml" );
+        if( NaModelConstants.IN_META_ID.equals( id ) )
+          return clazz.getResource( "kollau/.calculation" );
+        if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
+          return clazz.getResource( "kollau/.asciitemplate.zip" );
+        return null;
+      }
+
+      /**
+       * @see org.kalypso.services.calculation.job.ICalcDataProvider#hasID(java.lang.String)
+       */
+      public boolean hasID( String id )
+      {
+        return getURLForID( id ) != null;
+      }
+    };
+
+    final ICalcResultEater resultEater = createResultEater();
+    final ICalcMonitor monitor = createMonitor();
+    final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
+    job.run( tmp, dataProvider, resultEater, monitor );
+    assertTrue( job.isSucceeded() );
+  }
+
+  public void kollauOptimize() throws CalcJobServiceException
+  {
+
+    final NaModelCalcJob job = new NaModelCalcJob();
+    final File tmp = getTmpDir();
+
+    final ICalcDataProvider dataProvider = new ICalcDataProvider()
+    {
+      /**
+       * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
+       */
+      public URL getURLForID( String id )
+      {
+        Class clazz = getClass();
+        if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
+          return clazz.getResource( "kollau/.nacontrol_1.gml" );
+        if( NaModelConstants.IN_MODELL_ID.equals( id ) )
+          return clazz.getResource( "kollau/calcCase.gml" );
+        if( NaModelConstants.IN_META_ID.equals( id ) )
+          return clazz.getResource( "kollau/.calculation" );
+        if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
+          return clazz.getResource( "kollau/.asciitemplate.zip" );
+        if( NaModelConstants.IN_OPTIMIZECONF_ID.equals( id ) )
+          return clazz.getResource( "kollau/.sce.xml" );
+        return null;
+      }
+
+      /**
+       * @see org.kalypso.services.calculation.job.ICalcDataProvider#hasID(java.lang.String)
+       */
+      public boolean hasID( String id )
+      {
+        return getURLForID( id ) != null;
+      }
+    };
+
+    final ICalcResultEater resultEater = createResultEater();
+    final ICalcMonitor monitor = createMonitor();
+
+    job.run( tmp, dataProvider, resultEater, monitor );
+  }
+
+  private ICalcResultEater createResultEater()
+  {
+    return new ICalcResultEater()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
@@ -232,8 +266,11 @@ public class NACalcJobKollauTest extends TestCase
         System.out.print( "ID" + id + " File:" + file.getAbsolutePath() );
       }
     };
+  }
 
-    final ICalcMonitor monitor = new ICalcMonitor()
+  private ICalcMonitor createMonitor()
+  {
+    return new ICalcMonitor()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
@@ -284,14 +321,5 @@ public class NACalcJobKollauTest extends TestCase
       }
     };
 
-    try
-    {
-      job.run( tmp, dataProvider, resultEater, monitor );
-    }
-    catch( CalcJobServiceException e )
-    {
-      e.printStackTrace();
-    }
   }
-
 }

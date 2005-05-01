@@ -80,6 +80,7 @@
 //    final CalcJobDataBean modelBean = new CalcJobDataBean( NaModelConstants.IN_MODELL_ID,
 //        "Modelldaten", "calc/calcCase.gml" );
 //    final File modelFile = new File( baseInputDir, modelBean.getPath() );
+//
 //    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelFile.toURL(),
 //        KalypsoNADefaultSchema.getDefaultNaModellSchemaURL() );
 //    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
