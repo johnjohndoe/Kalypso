@@ -72,8 +72,8 @@ public class FunctionMultiError extends IErrorFunktion
 
   private double calculateError( TreeMap calcedTS, boolean normalize )
   {
-    int c = 0;
-    int error = 0;
+    double c = 0;
+    double error = 0;
     final Iterator iter = m_functions.iterator();
     while( iter.hasNext() )
     {

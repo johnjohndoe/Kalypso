@@ -54,10 +54,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.kalypsodeegree.xml.XMLTools;
+import org.apache.xpath.XPathAPI;
 import org.kalypso.java.xml.XMLUtilities;
+import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -147,7 +147,7 @@ public class OptimizeModelUtils
     {
 
       String query = querys[n];
-      System.out.println( "Query: " + query );
+      //      System.out.println( "Query: " + query );
       NodeList nl = getXPath( query, myDom );
 
       for( int i = 0; i < nl.getLength(); i++ )
@@ -166,7 +166,7 @@ public class OptimizeModelUtils
     {
 
       String query = querys[n];
-      System.out.println( "Query: " + query );
+      //      System.out.println( "Query: " + query );
       NodeList nl = getXPath( query, myDom );
 
       for( int i = 0; i < nl.getLength(); i++ )
@@ -183,11 +183,8 @@ public class OptimizeModelUtils
   public static NodeList getXPath( String xPathQuery, Document domNode )
       throws TransformerException
   {
-    NodeList nl = null;
-    Element documentElement = domNode.getDocumentElement();
-    //    nl = org.apache.xpath.XPathAPI.selectNodeList(domNode, xPathQuery);//,
-    // documentElement);
-    nl = org.apache.xpath.XPathAPI.selectNodeList( domNode, xPathQuery, documentElement );
+    NodeList nl = XPathAPI.selectNodeList( domNode, xPathQuery );
+    //    System.out.println( nl.getLength() + " <- " + xPathQuery );
     return nl;
   }
 
@@ -197,7 +194,7 @@ public class OptimizeModelUtils
     Node node = null;
     try
     {
-      node = org.apache.xpath.XPathAPI.selectSingleNode( domNode, xPathQuery );
+      node = XPathAPI.selectSingleNode( domNode, xPathQuery );
     }
     catch( Exception e )
     {
