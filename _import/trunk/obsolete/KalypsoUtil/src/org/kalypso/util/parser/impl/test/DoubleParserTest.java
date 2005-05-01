@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.parser.impl.test;
 
 import junit.framework.TestCase;
@@ -54,10 +54,10 @@ public class DoubleParserTest extends TestCase
   public void testParse()
   {
     try
-    {                     
-      test(".101",0.101);
-      test("10.10",10.1);
-      test("10",10);
+    {
+      test( ".101", 0.101 );
+      test( "10.10", 10.1 );
+      test( "10", 10 );
     }
     catch( Exception e )
     {
@@ -65,14 +65,14 @@ public class DoubleParserTest extends TestCase
     }
   }
 
-  private void test(String value,double result) throws ParserException
+  private void test( String value, double result ) throws ParserException
   {
     DoubleParser parser = new DoubleParser();
-    Double object = (Double)parser.parse(value);
-    
-    System.out.println(value+" -> "+object.getClass().getName()+": "+object.toString());
-    String string = parser.toStringInternal(object);
-    System.out.println("= "+string+"\n\n");
-    assertTrue(object.doubleValue()==result);   
+    Double object = (Double)parser.parse( value );
+
+    System.out.println( value + " -> " + object.getClass().getName() + ": " + object.toString() );
+    String string = parser.toStringInternal( object );
+    System.out.println( "= " + string + "\n\n" );
+    assertTrue( object.doubleValue() == result );
   }
 }
