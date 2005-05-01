@@ -3,7 +3,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +17,6 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-
-import com.sun.org.apache.xerces.internal.impl.dv.InvalidDatatypeValueException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

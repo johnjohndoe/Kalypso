@@ -54,12 +54,7 @@ public class XMLHelper
     return ( XMLSCHEMA_NS.equals( ns ) && "schema".equals( name ) );
   }
 
-  public static Document getAsDOM( String url, boolean namespaceaware ) throws Exception
-  {
-    return getAsDOM( new URL( url ), namespaceaware );
-  }
-
-  public static Document getAsDOM( File file, boolean namespaceaware ) throws Exception
+    public static Document getAsDOM( File file, boolean namespaceaware ) throws Exception
   {
     return getAsDOM( new FileInputStream( file ), namespaceaware );
   }

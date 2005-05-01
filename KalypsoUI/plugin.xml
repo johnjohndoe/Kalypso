@@ -169,6 +169,7 @@
       </view>
       <view
             allowMultiple="false"
+            icon="icons/kalypso16.gif"
             class="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
             category="Kalypso"
             name="Edit Optionen"
