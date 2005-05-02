@@ -99,6 +99,7 @@ public class CalcJob2dTest extends TestCase
           return getClass().getResource( "calcCaseResultMesh.gml" );
         else if( CalcJob2d.CONTROL_ID.equals( id ) )
           return getClass().getResource( "boundaryConditions.gml" );
+        
         throw new CalcJobServiceException( "resource id=" + id + " not found", null );
       }
 

@@ -55,6 +55,7 @@
 package org.kalypso.calc2d;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -67,9 +68,14 @@ import java.net.URL;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.kalypso.convert.model2d.ConvertAsci2GML;
 import org.kalypso.convert.model2d.ConvertBC2Ascii;
 import org.kalypso.convert.model2d.ConvertGML2Asci;
+import org.kalypso.java.io.FileCopyVisitor;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.util.zip.ZipUtilities;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
@@ -88,6 +94,7 @@ public class CalcJob2d implements ICalcJob
   public static final String MODELL_ID = "Modell";
 
   public static final String CONTROL_ID = "Control";
+  public static final String RESULTS_ID = "ERGEBNISSE";
 
   private boolean succeeded = false;
 
@@ -120,17 +127,12 @@ public class CalcJob2d implements ICalcJob
   public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
       ICalcMonitor monitor ) throws CalcJobServiceException
   {
-
-    //		final File inputDataDir = new File(basedir, Constants2D.INPUT_DIR_NAME);
-    //		System.out.println("inputDataDir: " + inputDataDir);
-    //		inputDataDir.mkdir();
-    //		prepareDirectory(inputDataDir);
-
+    final File outputDir;
+    
     final URL schemaModellURL = getClass().getResource( "schema/2dgml.xsd" );
     final URL schemaControlURL = getClass().getResource( "schema/bc_gml2.xsd" );
     final File exeDir = new File( tmpdir, "simulation" );
     exeDir.mkdirs();
-    System.out.println( "exeDir: " + exeDir );
 
     try
     {
@@ -140,16 +142,11 @@ public class CalcJob2d implements ICalcJob
 
       monitor.setMessage( "generating ascii files for 2D simulation..." );
 
-      //      copyTemplates(basedir);
-
       ConvertGML2Asci gml2asci = new ConvertGML2Asci( exeDir );
-
       gml2asci.convertGML2Asci( inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
       monitor.setMessage( "generating mesh ascii file" );
 
       ConvertBC2Ascii bc2asci = new ConvertBC2Ascii( exeDir );
-      //			bc2asci.convertBC2Ascii(inputProvider.getURLForID(CONTROL_ID),
-      // schemaControlURL);
       bc2asci.convertBC2Ascii( inputProvider.getURLForID( CONTROL_ID ), schemaControlURL,
           inputProvider.getURLForID( MODELL_ID ), schemaModellURL );
       monitor.setMessage( "generating boundary conditions ascii file" );
@@ -166,8 +163,22 @@ public class CalcJob2d implements ICalcJob
       if( isSucceeded() )
       {
         monitor.setMessage( "loading results..." );
+        outputDir = new File( tmpdir, "Ergebnisse" );
+        outputDir.mkdirs();
         //TODO load results
-        //        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
+        FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );        
+        File[] files = exeDir.listFiles( suffixFileFilter );
+        
+        for( int i = 0; i < files.length; i++ )
+        {
+          System.out.println("name of file_" +i + ":: " + files[i].getName());
+          if (!files[i].getName().equalsIgnoreCase("erg.2d")&& !files[i].getName().equalsIgnoreCase("fehler.2d")&& !files[i].getName().equalsIgnoreCase("out.2d")&& !files[i].getName().equalsIgnoreCase("marsh.2d"))
+          {
+              addResult(resultEater,files[i], outputDir, exeDir);
+          }
+          monitor.setProgress(34);
+          
+        }
         System.out.println( "Finished 2D Simulation successfully." );
       }
       else
@@ -178,6 +189,41 @@ public class CalcJob2d implements ICalcJob
       e.printStackTrace();
       throw new CalcJobServiceException( "simulation couldn't be finished", e );
     }
+  }
+
+  private void addResult( ICalcResultEater resultEater, File file, File outputDir, File exeDir )
+  {
+    try
+    {
+      // TODO bitte als GML zurückgeben :-)
+      final URL schemaModellXMLURL = getClass().getResource( "schema/2d.xsd" );      
+      String fileName = file.getName();
+      if(!fileName.equalsIgnoreCase("erg.2d") && !fileName.equalsIgnoreCase("marsh.2d")
+          && !fileName.equalsIgnoreCase("out.2d") && !fileName.equalsIgnoreCase("fehler")){
+      
+          int pos = fileName.indexOf(".");
+          String name = fileName.substring(0,pos);
+          String path = file.getPath();
+          int i = path.lastIndexOf("\\");
+          path = path.substring(0, i+1);
+          String tmpXMLFile = path+"tmp.xml";
+//          String gmlFileName = path+name+".gml";
+          String gmlFileName = outputDir+"\\"+name+".gml";
+          
+          ConvertAsci2GML gmlFile = new ConvertAsci2GML();
+          File gml = gmlFile.convertAsci2GML(file.toString(), tmpXMLFile, "http://elbe.wb.tu-harburg.de", schemaModellXMLURL.toString(), gmlFileName);
+
+          System.out.println("gml.exists:: " + gml.exists());
+          if(gml.exists())
+             resultEater.addResult( "ERGEBNISSE", exeDir  );
+//           resultEater.addResult( "ERGEBNISSE",  outputDir );
+          
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }  
   }
 
   /**
@@ -311,14 +357,14 @@ public class CalcJob2d implements ICalcJob
         if( line.indexOf( " KALYPSO-2D: instationaere Berechnung ordnungsgemaess gelaufen" ) >= 0 )
           succeeded = true;
       }
-      
+
       if( isSucceeded() )
       {
-         monitor.setMessage( "loading results" );
+        monitor.setMessage( "loading results" );
 
-//        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
+        //        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
       }
-      
+
     }
     catch( Exception e )
     {
@@ -330,11 +376,5 @@ public class CalcJob2d implements ICalcJob
       IOUtils.closeQuietly( logFileReader );
     }
   }
-
-
-//  	private void loadResults(final File outputDir) {
-//  
-//  	}
-
 
 }

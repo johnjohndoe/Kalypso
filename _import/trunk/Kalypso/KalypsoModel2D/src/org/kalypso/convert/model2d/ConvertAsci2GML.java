@@ -53,7 +53,15 @@
  */
 package org.kalypso.convert.model2d;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Katharina Lupp <a href="mailto:k.lupp@web.de>Katharina Lupp</a>
@@ -61,13 +69,13 @@ import java.util.HashMap;
  */
 public class ConvertAsci2GML {
     
-    private static String ns;
-    private static String sl;
-    private static String inFile;
-    private static String outFile;
-    private static String gmlInFile;
-    private static String gmlOutFile;
-    private static String slGML;
+//    private static String ns;
+//    private static String sl;
+//    private static String inFile;
+//    private static String outFile;
+//    private static String gmlInFile;
+//    private static String gmlOutFile;
+//    private static String slGML;
     
     /**
      * prints out helping information
@@ -98,60 +106,73 @@ public class ConvertAsci2GML {
     }
     
     
-    public static void main(String[] args) {
-        HashMap argsmap = null;
-        // no parameter given
-        if (args.length == 0) {
-            System.out.println("ConvertAsci2GML: missing arguments");
-            System.exit(1);
-        } else if (args[0].equals("--help")|| args[0].equals("-help")) {
-            usage(0);
-            System.exit(0);
-        } else if (args.length >= 2) {
-            // two or more parameter
-            argsmap = new HashMap();
-            for (int i = 0; i < args.length; i += 2) {
-                argsmap.put(args[i], args[i + 1]);
-            }
-        }
+//    public static void main(String[] args) {
+//        HashMap argsmap = null;
+//        // no parameter given
+//        if (args.length == 0) {
+//            System.out.println("ConvertAsci2GML: missing arguments");
+//            System.exit(1);
+//        } else if (args[0].equals("--help")|| args[0].equals("-help")) {
+//            usage(0);
+//            System.exit(0);
+//        } else if (args.length >= 2) {
+//            // two or more parameter
+//            argsmap = new HashMap();
+//            for (int i = 0; i < args.length; i += 2) {
+//                argsmap.put(args[i], args[i + 1]);
+//            }
+//        }
+//
+//        if (args[0].equalsIgnoreCase("ConvertAsci2GML"))
+//            usage(0);
+//        if (argsmap.get("-i") != null && argsmap.get("-o") != null
+//                && argsmap.get("-n") != null && argsmap.get("-g") != null) {
+//            HashMap argsmap2 = new HashMap();
+//            argsmap2.put("InFile", argsmap.get("-i"));
+//            argsmap2.put("OutFile", argsmap.get("-o"));
+//            
+//            argsmap2.put("GMLOutFile", argsmap.get("-g"));
+//            
+//            argsmap2.put("Namespace", argsmap.get("-n"));
+//            argsmap2.put("SchemaLocation", argsmap.get("-s"));
+//            argsmap2.put("SchemaLocationForGML", argsmap.get("-l"));
+//            
+//            inFile = argsmap2.get("InFile").toString();
+//            outFile = argsmap2.get("OutFile").toString();
+//            ns = argsmap2.get("Namespace").toString();
+//            sl = argsmap2.get("SchemaLocation").toString();
+//            slGML = argsmap2.get("SchemaLocationForGML").toString();
+//	        gmlOutFile = argsmap2.get("GMLOutFile").toString();
+//	        
+//	        try{	            
+//		        ConvertFEMAsci2XML xmlFile = new ConvertFEMAsci2XML();
+//		        xmlFile.startFem2XML(inFile, outFile, ns, sl);
+//		        boolean exists = xmlFile.existsDetailedFP();
+//		        System.out.println("exists: " + exists);
+//		        gmlInFile = outFile;
+//		        ConvertXML2GML gmlFile = new ConvertXML2GML();
+//		        gmlFile.startXML2GML(gmlInFile, gmlOutFile, exists);
+//		        System.out.println("EOF ConvertAsci2GML");
+//	        }catch(Exception ex){
+//	            System.out.println("Error occurred in ConvertAsci2GML: ");
+//	            ex.printStackTrace();
+//	        }
+//        }else{
+//            System.out.println("not all arguments are set");
+//        }
+//         
+//    }
+    
+    public File convertAsci2GML(String in2dFile, String xmlTmpFile, String ns, String sl, 
+                                String gmlOutFile ) {
 
-        if (args[0].equalsIgnoreCase("ConvertAsci2GML"))
-            usage(0);
-        if (argsmap.get("-i") != null && argsmap.get("-o") != null
-                && argsmap.get("-n") != null && argsmap.get("-g") != null) {
-            HashMap argsmap2 = new HashMap();
-            argsmap2.put("InFile", argsmap.get("-i"));
-            argsmap2.put("OutFile", argsmap.get("-o"));
-            
-            argsmap2.put("GMLOutFile", argsmap.get("-g"));
-            
-            argsmap2.put("Namespace", argsmap.get("-n"));
-            argsmap2.put("SchemaLocation", argsmap.get("-s"));
-            argsmap2.put("SchemaLocationForGML", argsmap.get("-l"));
-            
-            inFile = argsmap2.get("InFile").toString();
-            outFile = argsmap2.get("OutFile").toString();
-            ns = argsmap2.get("Namespace").toString();
-            sl = argsmap2.get("SchemaLocation").toString();
-            slGML = argsmap2.get("SchemaLocationForGML").toString();
-	        gmlOutFile = argsmap2.get("GMLOutFile").toString();
-	        
-	        try{	            
-		        ConvertFEMAsci2XML xmlFile = new ConvertFEMAsci2XML();
-		        xmlFile.startFem2XML(inFile, outFile, ns, sl);
-		        boolean exists = xmlFile.existsDetailedFP();
-		        System.out.println("exists: " + exists);
-		        gmlInFile = outFile;
-		        ConvertXML2GML gmlFile = new ConvertXML2GML();
-		        gmlFile.startXML2GML(gmlInFile, gmlOutFile, exists);
-		        System.out.println("EOF ConvertAsci2GML");
-	        }catch(Exception ex){
-	            System.out.println("Error occurred in ConvertAsci2GML: ");
-	            ex.printStackTrace();
-	        }
-        }else{
-            System.out.println("not all arguments are set");
-        }
-         
+          ConvertFEMAsci2XML xmlFile = new ConvertFEMAsci2XML();
+          xmlFile.startFem2XML(in2dFile, xmlTmpFile, ns, sl);//(urlAscii, file.getCanonicalPath(), ns, sl);
+          boolean exists = xmlFile.existsDetailedFP();
+          System.out.println("exists: " + exists);
+          ConvertXML2GML gmlFile = new ConvertXML2GML();
+          File gml = gmlFile.startXML2GML(xmlTmpFile, gmlOutFile, exists);
+          
+          return gml;
     }
 }

@@ -182,7 +182,7 @@ public class ConvertXML2GML {
     /**
      * set the commentString
      */
-    private static void setComment(Simulation2D sim) {
+    private void setComment(Simulation2D sim) {
         if (sim.getComment() != null)
             comment = sim.getComment().getCom();
     }
@@ -192,7 +192,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setRasterFile(Simulation2D sim) {
+    private void setRasterFile(Simulation2D sim) {
         if (sim.getRasterFile() != null)
             rasterFileName = sim.getRasterFile().getName();
     }
@@ -202,7 +202,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setTime(Simulation2D sim) {
+    private void setTime(Simulation2D sim) {
         if (sim.getTime() != null)
             time = sim.getTime().getTimeParam();
     }
@@ -212,7 +212,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setIteration(Simulation2D sim) {
+    private void setIteration(Simulation2D sim) {
         if (sim.getTime() != null)
             iteration = sim.getTime().getIteration();
     }
@@ -223,7 +223,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setAr(Simulation2D sim) {
+    private void setAr(Simulation2D sim) {
         List arList = sim.getAr();
         Simulation2DTypeImpl.ArTypeImpl arType = new Simulation2DTypeImpl.ArTypeImpl();
         for (int i = 0; i < arList.size(); ++i) {
@@ -252,7 +252,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setFE(Simulation2D sim) {
+    private void setFE(Simulation2D sim) {
         List feList = sim.getFe();
         Simulation2DTypeImpl.FeTypeImpl feType = new Simulation2DTypeImpl.FeTypeImpl();
         sizeElements = feList.size();
@@ -280,7 +280,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setRK(Simulation2D sim) {
+    private void setRK(Simulation2D sim) {
         List list = sim.getRk();
         Simulation2DTypeImpl.RkTypeImpl type = new Simulation2DTypeImpl.RkTypeImpl();
         for (int i = 0; i < list.size(); i++) {
@@ -305,7 +305,7 @@ public class ConvertXML2GML {
      * @param type
      * @param i
      */
-    private static void setFP(FpParams.FpType type, int i) {
+    private void setFP(FpParams.FpType type, int i) {
         coordX[i] = m_xoffset + type.getGeometry().getX();
         coordY[i] = m_yoffset + type.getGeometry().getY();
         coordZ[i] = type.getGeometry().getZ();
@@ -314,7 +314,7 @@ public class ConvertXML2GML {
     /**
      * sets the parameters of va (xVelocity, yVelocity, riverDepth, waterLevel )
      */
-    private static void setVA(FpParams.VaType vaType, int i) {
+    private void setVA(FpParams.VaType vaType, int i) {
         xVelocity[i] = vaType.getXVelocity();
         yVelocity[i] = vaType.getYVelocity();
         riverDepth[i] = vaType.getRiverDepth();
@@ -324,7 +324,7 @@ public class ConvertXML2GML {
     /**
      * sets the ga parameters (timeGradient1, timeGradient2, timeGradient3 )
      */
-    private static void setGA(FpParams.GaType gaType, int i) {
+    private void setGA(FpParams.GaType gaType, int i) {
         timeGradient1[i] = gaType.getTimeGradient1();
         timeGradient2[i] = gaType.getTimeGradient2();
         timeGradient3[i] = gaType.getTimeGradient3();
@@ -335,7 +335,7 @@ public class ConvertXML2GML {
      * degreeOfFreedomOfOldTimeGradient2, degreeOfFreedomOfOldTimeGradient3)
      *  
      */
-    private static void setVO(FpParams.VoType voType, int i) {
+    private void setVO(FpParams.VoType voType, int i) {
         degreeOfFreedomOfOldTimeGradient1[i] = voType
                 .getDegreeOfFreedomOfOldTimeGradient1();
         degreeOfFreedomOfOldTimeGradient2[i] = voType
@@ -348,7 +348,7 @@ public class ConvertXML2GML {
      * sets the parameters of go (TimeGradientOfFormerTimeWarps1,
      * TimeGradientOfFormerTimeWarps2, TimeGradientOfFormerTimeWarps3)
      */
-    private static void setGO(FpParams.GoType goType, int i) {
+    private void setGO(FpParams.GoType goType, int i) {
         timeGradientOfFormerTimeWarps1[i] = goType
                 .getTimeGradientOfFormerTimeWarps1();
         timeGradientOfFormerTimeWarps2[i] = goType
@@ -360,7 +360,7 @@ public class ConvertXML2GML {
     /**
      * sets the parameters of zu (info1, info2, info3, info4, info5,info6)
      */
-    private static void setZU(FpParams.ZuType zuType, int i) {
+    private void setZU(FpParams.ZuType zuType, int i) {
         info1[i] = zuType.getInfo1();
         info2[i] = zuType.getInfo2();
         info3[i] = zuType.getInfo3();
@@ -375,7 +375,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setFPInfo(Simulation2D sim, boolean exists) {
+    private void setFPInfo(Simulation2D sim, boolean exists) {
         List list = sim.getFpInfo();
         sizeFP = list.size();
 
@@ -410,7 +410,7 @@ public class ConvertXML2GML {
      * @param e
      * @param i
      */
-    private static void createFPParamsNode(Document doc, Element e, int i,
+    private void createFPParamsNode(Document doc, Element e, int i,
             boolean exists) {
 
         try {
@@ -513,7 +513,7 @@ public class ConvertXML2GML {
      * @param id
      * @return <double>
      */
-    public static double[] getCoordinates(int id) {
+    public double[] getCoordinates(int id) {
         id = id - 1;
         if (id >= 0) {
             double coordx = coordX[id];
@@ -532,7 +532,7 @@ public class ConvertXML2GML {
      * 
      * @param sim
      */
-    private static void setPolygonOfElements(Simulation2D sim) {
+    private void setPolygonOfElements(Simulation2D sim) {
         List arList = sim.getAr();
         for (int i = 0; i < arList.size(); i++) {
 
@@ -624,7 +624,7 @@ public class ConvertXML2GML {
      * @param e
      * @param i
      */
-    private static void createPolygonNode(Document doc, Element e, int i) {
+    private void createPolygonNode(Document doc, Element e, int i) {
         Element polygonPropElement = doc.createElement("gml:polygonProperty");
         e.appendChild(polygonPropElement);
 
@@ -725,7 +725,7 @@ public class ConvertXML2GML {
      * @param e
      * @param i
      */
-    private static void createElementsNode(Document doc, Element e, int i) {
+    private void createElementsNode(Document doc, Element e, int i) {
 
         try {
             Element idElem = doc.createElement("feId");
@@ -765,90 +765,177 @@ public class ConvertXML2GML {
         }
     }
 
-    /**
-     * creates the gml document
-     * 
-     * @param outFile
-     */
-    private static void createGML(String outFile, boolean exists) {
-        Document doc = XMLHelper.createDocument();
-        try {
-            doc.createTextNode("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            Element e = doc.createElement("simulation2d");
-            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns", NS));
-            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:gml",
-                    GML_NS));
-            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:xlink",
-                    XLINK_NS));
-            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:xsi",
-                    XSI_NS));
-            e.setAttributeNode(XMLHelper.createAttribute(doc,
-                    "xsi:schemaLocation", XSI_schemaLocation_NS));
-            doc.appendChild(e);
+    
+    private File createGML(String outFile, boolean exists) {
+      Document doc = XMLHelper.createDocument();
+      File gmlFile = null;
+      try {
+          doc.createTextNode("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+          Element e = doc.createElement("simulation2d");
+          e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns", NS));
+          e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:gml",
+                  GML_NS));
+          e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:xlink",
+                  XLINK_NS));
+          e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:xsi",
+                  XSI_NS));
+          e.setAttributeNode(XMLHelper.createAttribute(doc,
+                  "xsi:schemaLocation", XSI_schemaLocation_NS));
+          doc.appendChild(e);
 
-            /*
-             * feature point
-             */
-            Element fpCollMember = doc
-                    .createElement("featurePointCollectionMember");
-            e.appendChild(fpCollMember);
+          /*
+           * feature point
+           */
+          Element fpCollMember = doc
+                  .createElement("featurePointCollectionMember");
+          e.appendChild(fpCollMember);
 
-            Element pointsColl = doc.createElement("pointsCollection");
-            fpCollMember.appendChild(pointsColl);
-            System.out.println("KNOTEN " + sizeFP);
-            for (int i = 0; i < sizeFP; i++) {
-                Element fpMember = doc.createElement("featurePointMember");
-                pointsColl.appendChild(fpMember);
+          Element pointsColl = doc.createElement("pointsCollection");
+          fpCollMember.appendChild(pointsColl);
+          System.out.println("KNOTEN " + sizeFP);
+          for (int i = 0; i < sizeFP; i++) {
+              Element fpMember = doc.createElement("featurePointMember");
+              pointsColl.appendChild(fpMember);
 
-                Element fpElem = doc.createElement("featurePoint");
-                fpElem.setAttribute("fid", "p" + i);
-                fpMember.appendChild(fpElem);
-                createFPParamsNode(doc, fpElem, i, exists);
-            }
+              Element fpElem = doc.createElement("featurePoint");
+              fpElem.setAttribute("fid", "p" + i);
+              fpMember.appendChild(fpElem);
+              createFPParamsNode(doc, fpElem, i, exists);
+          }
 
-            /*
-             * fem
-             */
-            Element femCollMember = doc.createElement("femCollectionMember");
-            e.appendChild(femCollMember);
+          /*
+           * fem
+           */
+          Element femCollMember = doc.createElement("femCollectionMember");
+          e.appendChild(femCollMember);
 
-            Element meshColl = doc.createElement("meshCollection");
-            femCollMember.appendChild(meshColl);
+          Element meshColl = doc.createElement("meshCollection");
+          femCollMember.appendChild(meshColl);
 
-            System.out.println("MESH " + sizeElements);
-            for (int j = 0; j < sizeElements; j++) {
+          System.out.println("MESH " + sizeElements);
+          for (int j = 0; j < sizeElements; j++) {
 
-                Element meshMember = doc.createElement("meshMember");
-                meshColl.appendChild(meshMember);
+              Element meshMember = doc.createElement("meshMember");
+              meshColl.appendChild(meshMember);
 
-                Element meshElement = doc.createElement("femMesh");
-                //	            meshElement.setAttribute("fid", "m"+j);
-                meshMember.appendChild(meshElement);
-                createElementsNode(doc, meshElement, j);
+              Element meshElement = doc.createElement("femMesh");
+              //              meshElement.setAttribute("fid", "m"+j);
+              meshMember.appendChild(meshElement);
+              createElementsNode(doc, meshElement, j);
 
-                if ((j + 1) == removeElem) {
-                    meshColl.removeChild(meshMember);
-                }
-            }
+              if ((j + 1) == removeElem) {
+                  meshColl.removeChild(meshMember);
+              }
+          }
 
-            OutputStreamWriter writer = new OutputStreamWriter(
-                    new FileOutputStream(outFile), "UTF-8");
+          System.out.println("OUTFILE: " + outFile);
+          gmlFile = new File(outFile);
+          System.out.println("gmlFile: " + gmlFile);
+          
+          OutputStreamWriter writer = new OutputStreamWriter(
+                  new FileOutputStream(outFile), "UTF-8");
 
-            final Transformer t = TransformerFactory.newInstance()
-                    .newTransformer();
+          final Transformer t = TransformerFactory.newInstance()
+                  .newTransformer();
 
-            t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount",
-                    "2");
-            t.setOutputProperty(OutputKeys.INDENT, "yes");
+          t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount",
+                  "2");
+          t.setOutputProperty(OutputKeys.INDENT, "yes");
 
-            t.transform(new DOMSource(e), new StreamResult(writer));
-            writer.close();
+          t.transform(new DOMSource(e), new StreamResult(writer));
+          writer.close();
+         
+      } catch (Exception ex) {
+          ex.printStackTrace();
+      }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
+      return gmlFile;
+  }
+    
+//    /**
+//     * creates the gml document
+//     * 
+//     * @param outFile
+//     */
+//    private static void createGML(String outFile, boolean exists) {
+//        Document doc = XMLHelper.createDocument();
+//        try {
+//            doc.createTextNode("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+//            Element e = doc.createElement("simulation2d");
+//            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns", NS));
+//            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:gml",
+//                    GML_NS));
+//            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:xlink",
+//                    XLINK_NS));
+//            e.setAttributeNode(XMLHelper.createAttribute(doc, "xmlns:xsi",
+//                    XSI_NS));
+//            e.setAttributeNode(XMLHelper.createAttribute(doc,
+//                    "xsi:schemaLocation", XSI_schemaLocation_NS));
+//            doc.appendChild(e);
+//
+//            /*
+//             * feature point
+//             */
+//            Element fpCollMember = doc
+//                    .createElement("featurePointCollectionMember");
+//            e.appendChild(fpCollMember);
+//
+//            Element pointsColl = doc.createElement("pointsCollection");
+//            fpCollMember.appendChild(pointsColl);
+//            System.out.println("KNOTEN " + sizeFP);
+//            for (int i = 0; i < sizeFP; i++) {
+//                Element fpMember = doc.createElement("featurePointMember");
+//                pointsColl.appendChild(fpMember);
+//
+//                Element fpElem = doc.createElement("featurePoint");
+//                fpElem.setAttribute("fid", "p" + i);
+//                fpMember.appendChild(fpElem);
+//                createFPParamsNode(doc, fpElem, i, exists);
+//            }
+//
+//            /*
+//             * fem
+//             */
+//            Element femCollMember = doc.createElement("femCollectionMember");
+//            e.appendChild(femCollMember);
+//
+//            Element meshColl = doc.createElement("meshCollection");
+//            femCollMember.appendChild(meshColl);
+//
+//            System.out.println("MESH " + sizeElements);
+//            for (int j = 0; j < sizeElements; j++) {
+//
+//                Element meshMember = doc.createElement("meshMember");
+//                meshColl.appendChild(meshMember);
+//
+//                Element meshElement = doc.createElement("femMesh");
+//                //	            meshElement.setAttribute("fid", "m"+j);
+//                meshMember.appendChild(meshElement);
+//                createElementsNode(doc, meshElement, j);
+//
+//                if ((j + 1) == removeElem) {
+//                    meshColl.removeChild(meshMember);
+//                }
+//            }
+//System.out.println("OUTFILE: " + outFile);
+//            OutputStreamWriter writer = new OutputStreamWriter(
+//                    new FileOutputStream(outFile), "UTF-8");
+//
+//            final Transformer t = TransformerFactory.newInstance()
+//                    .newTransformer();
+//
+//            t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount",
+//                    "2");
+//            t.setOutputProperty(OutputKeys.INDENT, "yes");
+//
+//            t.transform(new DOMSource(e), new StreamResult(writer));
+//            writer.close();
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//
+//    }
 
     /**
      * starts transformation from xml to gml
@@ -857,8 +944,10 @@ public class ConvertXML2GML {
      * @param outFile
      * @param existsDetailedFP
      */
-    public void startXML2GML(String inFile, String outFile,
+    public File startXML2GML(String inFile, String outFile,
             boolean existsDetailedFP) {
+      
+      File file = null;
         try {
             ObjectFactory fac = new ObjectFactory();
             Unmarshaller unmarshaller = fac.createUnmarshaller();
@@ -870,12 +959,15 @@ public class ConvertXML2GML {
             setFE(sim);
             setRK(sim);
             setPolygonOfElements(sim);
-            createGML(outFile, existsDetailedFP);
+            file = createGML(outFile, existsDetailedFP);
+            
         } catch (Exception e) {
             System.out
                     .println("Error in converting xml file to gml file -> JAXB Exception: ");
             e.printStackTrace();
         }
+
+        return file;
     }
 
 }
