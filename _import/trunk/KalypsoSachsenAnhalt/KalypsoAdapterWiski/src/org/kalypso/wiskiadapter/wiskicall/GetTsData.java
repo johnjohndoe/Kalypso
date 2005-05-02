@@ -25,6 +25,8 @@ public class GetTsData implements IWiskiCall
 
   private LinkedList data = null;
 
+  private Integer utcOffset = null;
+
   public GetTsData( final Long id, final DateRangeArgument dr )
   {
     m_id = id;
@@ -44,13 +46,26 @@ public class GetTsData implements IWiskiCall
 
     final HashMap series = (HashMap) gettsdata
         .get( KiWWDataProviderInterface.KEY_TIMESERIES );
+    
     final HashMap serie = (HashMap) series.get( String.valueOf( m_id ) );
     if( serie != null )
+    {
       data = (LinkedList) serie.get( KiWWDataProviderInterface.KEY_TSDATA );
+    
+      utcOffset = (Integer) ((HashMap) serie.get( KiWWDataProviderInterface.KEY_TSINFO )).get( "utcoffset" );
+    }
   }
   
   public LinkedList getData( )
   {
     return data;
+  }
+  
+  public int getTimeZone()
+  {
+    if( utcOffset != null )
+      return utcOffset.intValue();
+    else
+      return 0;
   }
 }

@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,10 +19,13 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -113,11 +117,18 @@ public class WiskiTimeserie implements IObservation
     {
       try
       {
+        // 1. check if this is a prognose
+        boolean prognosed = m_tsinfo.getWiskiName().indexOf( "Prognose" ) != -1;
+        
         final IsTsWritable call = new IsTsWritable( m_tsinfo.getWiskiId() );
         final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
         rep.executeWiskiCall( call );
 
-        m_editable = call.getEditable();
+        // 2. check if this is editable in the wiski sense
+        boolean editable = call.getEditable().booleanValue();
+        
+        // 3. fact
+        m_editable = new Boolean( prognosed & editable );
       }
       catch( final Exception e )
       {
@@ -244,6 +255,22 @@ public class WiskiTimeserie implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
+    if( !isEditable() )
+      throw new SensorException( toString() + " ist nicht editierbar! Werte. "
+          + "Werte dürfen nicht geschrieben werden." );
+
+    // create a fake observation for filter purposes
+    final IObservation obs = new SimpleObservation();
+    obs.setValues( values );
+
+    // filter values in order to comply with the wiski specification
+    // TODO: currently only 1 HOUR Archive is supported - make it wiski-spec
+    // dependent!
+    final InterpolationFilter intfil = new InterpolationFilter(
+        Calendar.HOUR_OF_DAY, 1, false, 0, KalypsoStati.STATUS_USERMOD
+            .intValue() );
+    intfil.initFilter( null, obs );
+
     final HashMap timeseries_map = new HashMap();
     final HashMap tsID_map = new HashMap();
     final HashMap ts_values_map = new HashMap();
@@ -258,16 +285,18 @@ public class WiskiTimeserie implements IObservation
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( values
         .getAxisList(), Number.class, true );
     //final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values
-      //  .getAxisList(), valueAxis );
+    //  .getAxisList(), valueAxis );
 
-    for( int ix = 0; ix < values.getCount(); ix++ )
+    final ITuppleModel filteredValues = intfil.getValues( null );
+    for( int ix = 0; ix < filteredValues.getCount(); ix++ )
     {
       final HashMap row = new HashMap();
-      
-      final Date date = (Date) values.getElement( ix, dateAxis );
-      final Number value = (Number) values.getElement( ix, valueAxis );
-      //final Number status = (Number) values.getElement( ix, statusAxis );
-      
+
+      final Date date = (Date) filteredValues.getElement( ix, dateAxis );
+      final Number value = (Number) filteredValues.getElement( ix, valueAxis );
+      //final Number status = (Number) filteredValues.getElement( ix,
+      // statusAxis );
+
       row.put( "timestamp", new Timestamp( date.getTime() ) );
       row.put( "tsc_value0", new Double( value.doubleValue() ) );
       row.put( "status", new Long( 0 ) );
@@ -276,6 +305,8 @@ public class WiskiTimeserie implements IObservation
     }
 
     //compose setTsData HashMap
+    // TODO utcoffset
+    //value_tsinfo_map.put( "utcoffset",  );
     ts_values_map.put( KiWWDataProviderInterface.KEY_TSINFO, value_tsinfo_map );
 
     value_tscoldesc_ll.add( value_tscoldesc_map );
@@ -295,7 +326,7 @@ public class WiskiTimeserie implements IObservation
       rep.executeWiskiCall( call );
     }
     catch( final Exception e ) // RemoteException, KiWWException,
-                               // RepositoryException
+    // RepositoryException
     {
       throw new SensorException( e );
     }
@@ -359,29 +390,39 @@ public class WiskiTimeserie implements IObservation
 
     final WiskiRepository rep = (WiskiRepository) m_tsinfo.getRepository();
 
-    final GetRatingTables call = new GetRatingTables( m_tsinfo.getWiskiId(), to );
-
     WQTableSet wqTableSet = null;
 
-    try
+    // 1. first try: using the normal way (our tsinfo)
+    WQTable wqt = internFetchTable( m_tsinfo, rep, from, to );
+    if( wqt == null )
     {
-      rep.executeWiskiCall( call );
+      // 2. this failed, so next try is using sibling of other type
+      // which might also contain a usable rating table
+      
+      // try with sibling of other type: W or Q depending on our type
+      // TODO: how to handle type V (Volume)???
+      String otherType = null;
+      if( m_tsinfo.getWiskiType().equals( "W" ) )
+        otherType = "Q";
+      else
+        otherType = "W";
 
-      if( call.hasTable() )
-      {
-        final WQTable wqt = new WQTable( from, call.getW(), call.getQ() );
-        wqTableSet = new WQTableSet( new WQTable[] { wqt }, sourceType,
-            destType );
-
-        RatingTableCache.getInstance().check( wqTableSet,
-            m_tsinfo.getWiskiId(), to );
-      }
+      final TsInfoItem tsi = m_tsinfo.findSibling( otherType );
+      if( tsi != null )
+        wqt = internFetchTable( tsi, rep, from, to );
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
 
-      // try to load this WQ-Table from the cache
+    if( wqt != null )
+    {
+      // great! we got a table, so let's use it and save it in the cache
+      wqTableSet = new WQTableSet( new WQTable[] { wqt }, sourceType, destType );
+
+      RatingTableCache.getInstance().check( wqTableSet, m_tsinfo.getWiskiId(),
+          to );
+    }
+    else
+    {
+      // still no wqtable, try to load this WQ-Table from the cache
       wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getWiskiId(),
           to );
     }
@@ -390,8 +431,7 @@ public class WiskiTimeserie implements IObservation
     {
       try
       {
-        final String xml;
-        xml = WQTableFactory.createXMLString( wqTableSet );
+        final String xml = WQTableFactory.createXMLString( wqTableSet );
         metadata.setProperty( TimeserieConstants.MD_WQTABLE, xml );
       }
       catch( WQException e )
@@ -399,6 +439,35 @@ public class WiskiTimeserie implements IObservation
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Helper: tries to load the wq table from wiski. If fails or if no table
+   * found, null is returned
+   */
+  private WQTable internFetchTable( final TsInfoItem tsinfo,
+      final WiskiRepository rep, final Date from, final Date to )
+  {
+    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiId(), to );
+    try
+    {
+      rep.executeWiskiCall( call );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+
+      return null;
+    }
+
+    if( call.hasTable() )
+    {
+      final WQTable wqt = new WQTable( from, call.getW(), call.getQ() );
+
+      return wqt;
+    }
+    else
+      return null;
   }
 
   /**

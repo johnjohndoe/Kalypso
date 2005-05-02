@@ -1,12 +1,15 @@
 package org.kalypso.wiskiadapter;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 
 /**
  * TsItem
@@ -144,9 +147,44 @@ public class TsInfoItem implements IRepositoryItem
 
     return bf.toString();
   }
-  
-  String getWiskiStationId()
+
+  String getWiskiStationId( )
   {
     return m_map.getProperty( "station_id" );
+  }
+
+  /**
+   * Helper: finds a sibling timeserie (under same station) of the given
+   * otherType. For instance if 'this' is a timeserie named MyStation.Type.XX,
+   * then the timeserie named MyStation.otherType.XX is looked for.
+   */
+  TsInfoItem findSibling( final String otherType )
+  {
+    final String name = getWiskiName();
+    final String[] splits = name.split( "\\." );
+
+    if( splits.length < 2 )
+      return null;
+
+    splits[1] = otherType;
+    final String otherName = StringUtils.join( splits, '.' );
+    final GetTsInfoList call = new GetTsInfoList( null, otherName );
+    try
+    {
+      m_rep.executeWiskiCall( call );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+
+    if( call.getResultList().size() > 0 )
+    {
+      final HashMap map = (HashMap) call.getResultList().get( 0 );
+      return new TsInfoItem( m_group, map );
+    }
+    else
+      return null;
   }
 }

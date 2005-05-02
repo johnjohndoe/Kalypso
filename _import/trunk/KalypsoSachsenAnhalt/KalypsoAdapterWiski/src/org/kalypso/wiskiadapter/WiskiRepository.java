@@ -96,8 +96,17 @@ public class WiskiRepository extends AbstractRepository
           .lookup( m_url );
       LOG.info( "Wiski About()=" + myServerObject.about() );
 
+      // optional params (used for timeout, entry in seconds)
+      // 28800 = 8 hours
+      // 604800 = 1 week
+      // 125798400 = 1 year
+      final HashMap optParam = new HashMap();
+      optParam.put(
+          KiWWDataProviderInterface.OPT_GETUSERAUTHORISATION_MAXINACTIVE,
+          Integer.toString( 28800 ) );
+
       final HashMap auth = myServerObject.getUserAuthorisation( m_domain,
-          m_logonName, m_password, "myhost.kisters.de", null );
+          m_logonName, m_password, "myhost.kisters.de", optParam );
       LOG.info( "Wiski login=" + auth );
 
       if( auth == null
@@ -195,8 +204,8 @@ public class WiskiRepository extends AbstractRepository
   }
 
   /**
-   * Performs a call on the wiski remote object. This should be used in order
-   * to allow automatic reloging in if the session has timed out.
+   * Performs a call on the wiski remote object. This should be used in order to
+   * allow automatic reloging in if the session has timed out.
    * 
    * @throws RemoteException
    * @throws KiWWException
@@ -214,9 +223,9 @@ public class WiskiRepository extends AbstractRepository
       // normally, if we get this exception, that means wiski has logged us
       // out. So we try here to reconnect and to perform the call again.
       wiskiLogout();
-      
+
       wiskiInit();
-      
+
       call.execute( m_wiski, m_userData );
     }
   }

@@ -42,6 +42,23 @@ public class GetTsInfoList implements IWiskiCall
     sort = new SimpleRequestSortTerm();
     sort.addColumnAscent( "tsinfo_name" );
   }
+  
+  /**
+   * Constructor with tsinfo_name. Note that groupId is ignored here (leaved as
+   * argument in order to overload constructor).
+   * 
+   * @param groupId not used, should be null
+   * @param tsinfo_name name of the timeserie
+   */
+  public GetTsInfoList( final String groupId, final String tsinfo_name )
+  {
+    filter = new SimpleRequestFilterTerm();
+    filter.addColumnReference( "tsinfo_name" );
+    filter.addOperator( "like" );
+    filter.addValue( tsinfo_name );
+
+    sort = null;
+  }
 
   public void execute( KiWWDataProviderRMIf wiski, HashMap userData )
       throws NoSuchObjectException, KiWWException, RemoteException
