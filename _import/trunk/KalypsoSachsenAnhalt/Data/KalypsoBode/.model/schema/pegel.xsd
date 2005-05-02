@@ -41,19 +41,14 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<!-- WISKI_Name ist auch gleichzeitig die offizielle Messstellennummer-->
-					<element name="WISKI_Name" type="string" minOccurs="1"/>
+					<element name="Messstellennummer" type="string" minOccurs="1"/>
 					<element name="Kurz_Name" type="string" minOccurs="1"/>
 					<element name="istEingabePegel" type="boolean"/>
 					<element name="istErgebnisPegel" type="boolean"/>
-					<!-- Server-Daten-->
-					<element name="Ganglinie_gemessenEingang" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
 					<!-- lokal, W und Q (tolle Zeitreihe) *.vw -->
 					<element name="Ganglinie_gemessen" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
 					<!-- lokal, W und Q (tolle Zeitreihe) *.q -->
-					<element name="Ganglinie_ergebnis" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
-					<!-- Server-Daten (offizielle Prognose)-->
-					<element name="Ganglinie_prognoseAblage" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
+					<element name="Ganglinie_gerechnet" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -64,12 +59,8 @@
 			<extension base="bodepegel:PegelType">
 				<sequence>
 					<element name="Gebiet" type="gml:PolygonPropertyType"/>
-					<!-- Server, aus Gebietsniederschlagsmodell -->
-					<element name="Niederschlag_gemessenEingang" type="bodecommon:TimeseriesLinkType"/>
-					<!-- Server, aus Rasterdaten -->
-					<element name="Niederschlag_prognoseEingang" type="bodecommon:TimeseriesLinkType"/>
 					<!-- lokal;   -->
-					<element name="Niederschlag_gesamt" type="bodecommon:TimeseriesLinkType"/>
+					<element name="Niederschlag" type="bodecommon:TimeseriesLinkType"/>
 					<!-- hier kommen ggf. noch die Parameter aus der *.par hin -->
 				</sequence>
 			</extension>

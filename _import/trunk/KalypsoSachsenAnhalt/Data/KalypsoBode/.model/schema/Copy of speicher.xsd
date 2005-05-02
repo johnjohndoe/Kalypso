@@ -46,7 +46,7 @@
 					<!-- lokal,  *.vsa, *.psa-->
 					<element name="Abgabe" type="bodecommon:TimeseriesLinkType"/>
 					<!-- lokal,  *.zfl (nur Prognose)-->
-					<element name="Zufluss_gerechnet" type="bodecommon:TimeseriesLinkType"/>
+					<element name="Zufluss" type="bodecommon:TimeseriesLinkType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -60,10 +60,8 @@
 					<element name="Ganglinie_gemessen" type="bodecommon:TimeseriesLinkType"/>
 					<!-- lokal,  Gesamtganglinie *.i (= *.vvs + *.pv aus Batch) implizit auch das nicht vorhandene *.w über *.wvt-->
 					<element name="Ganglinie_gerechnet" type="bodecommon:TimeseriesLinkType"/>
-					<!-- lokal,  *.vvs-->
-					<element name="Inhalt_gemessen" type="bodecommon:TimeseriesLinkType"/>
-					<!-- lokal,  *.pv-->
-					<element name="Inhalt_gerechnet" type="bodecommon:TimeseriesLinkType"/>
+					<!-- lokal,  *.vvs, *.pv-->
+					<element name="Inhalt" type="bodecommon:TimeseriesLinkType"/>
 					<!-- Stauraum-Parameter, *.sra -->
 					<element name="StauraumParameter" type="bodespeicher:StauraumAssociationType"/>
 					<!-- Mindestabgabe-Parameter, *.qmi -->

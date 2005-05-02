@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- mit relativem Pfad: wird von XML-Spy verstanden
-<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell .model/schema/bodemodell.xsd">
+<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell project:/.model/schema/bodemodell.xsd">
+<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell C:\Programme_inst\eclipse\runtime-workspace\KalypsoBode\.model\schema\bodemodell.xsd">
 -->
-<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/bodemodell.xsd">
+<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell project:/.model/schema/bodemodell.xsd">
 	<bodepegel:PegelCollectionAssociation>
 		<bodepegel:PegelCollection fid="PegelCollection0">
 			<gml:boundedBy>
@@ -25,12 +26,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5265120.666353023,5752160.263210346</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579085</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579085</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>stas</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Staßfurt.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Staßfurt.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Hadmersleben -> Stassfurt]]></bodepegel:Kommentar>
 					<bodepegel:XAW>1.9599</bodepegel:XAW>
@@ -53,12 +54,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5237817.466836101,5757262.4569166275</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579049</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579049</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>wege</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Wegeleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Wegeleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Ditfurt+Hausneindorf -> Wegeleben]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.7505</bodepegel:XAW>
@@ -81,12 +82,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5238766.71591927,5751133.2589417035</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579040</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579040</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>ditf</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Ditfurt.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Ditfurt.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Wendefurt->Ditfurt]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.5024</bodepegel:XAW>
@@ -109,12 +110,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5236078.022653717,5763414.323225588</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579745</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579745</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>nien</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Nienhagen.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Nienhagen.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Mahndorf -> Nienhagen]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.794</bodepegel:XAW>
@@ -137,7 +138,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5273131.126460996,5750908.695825978</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579090</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579090</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>neug</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
@@ -162,12 +163,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5247443.86571238,5769896.309583677</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579070</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579070</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>hadm</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hadmersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hadmersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Wegeleben+Nienhagen+Oschersleben -> Hadmersleben]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.8004</bodepegel:XAW>
@@ -190,12 +191,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5242962.026694506,5751581.344781446</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579620</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579620</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>haus</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hausneindorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hausneindorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Meisdorf->Hausneindorf]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.5884</bodepegel:XAW>
@@ -218,19 +219,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5243204.612193139,5735094.576465873</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579610</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579610</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>meis</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -241,19 +240,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5202064.849923498,5743158.864709639</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579305</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579305</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>elen</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -264,19 +261,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5213844.941062603,5736803.356648105</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>4421200</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>4421200</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>hass</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -287,19 +282,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5222223.011338177,5757795.57484032</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579712</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579712</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>mahn</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -310,19 +303,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5229948.558568242,5729148.945125754</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579605</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579605</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>silb</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -333,19 +324,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5207708.385630242,5742265.26812559</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579209</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579209</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>koen</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -356,19 +345,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5205705.650895029,5751283.956602088</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579705</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579705</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>stei</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -379,19 +366,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5241071.153292574,5772263.0450663855</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579810</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579810</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>osch</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -402,19 +387,17 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5209130.667362792,5737147.612297329</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579405</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579405</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>trau</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gemessenEingang/>
-					<bodepegel:Niederschlag_prognoseEingang/>
-					<bodepegel:Niederschlag_gesamt> 
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -425,12 +408,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5225486.406048773,5741212.732772261</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579020</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579020</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>thal</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Thale.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Thale.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 				</bodepegel:Pegel>
 			</bodepegel:PegelMember>
@@ -442,12 +425,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5218308.349121872,5742049.203931116</gml:coordinates>
 						</gml:Point>
 					</bodepegel:Ort>
-					<bodepegel:WISKI_Name>579006</bodepegel:WISKI_Name>
+					<bodepegel:Messstellennummer>579006</bodepegel:Messstellennummer>
 					<bodepegel:Kurz_Name>wend</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 				</bodepegel:Pegel>
 			</bodepegel:PegelMember>
@@ -475,7 +458,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5231071.410767844,5805231.416728718</gml:coordinates>
 						</gml:Point>
 					</bodeombrometer:Ort>
-					<bodeombrometer:WISKI_Name>440010</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Messstellennummer>440010</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>wefe</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
@@ -487,7 +470,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5238766.71591927,5751133.2589417035</gml:coordinates>
 						</gml:Point>
 					</bodeombrometer:Ort>
-					<bodeombrometer:WISKI_Name>579040</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Messstellennummer>579040</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>ditf</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
@@ -499,7 +482,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5202064.849923498,5743158.864709639</gml:coordinates>
 						</gml:Point>
 					</bodeombrometer:Ort>
-					<bodeombrometer:WISKI_Name>579305</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Messstellennummer>579305</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>elen</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
@@ -511,7 +494,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5213844.941062603,5736803.356648105</gml:coordinates>
 						</gml:Point>
 					</bodeombrometer:Ort>
-					<bodeombrometer:WISKI_Name>579504</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Messstellennummer>579504</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>hass</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
@@ -523,7 +506,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5229948.558568242,5729148.945125754</gml:coordinates>
 						</gml:Point>
 					</bodeombrometer:Ort>
-					<bodeombrometer:WISKI_Name>579605</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Messstellennummer>579605</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>silb</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
@@ -535,7 +518,7 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5222223.011338177,5757795.57484032</gml:coordinates>
 						</gml:Point>
 					</bodeombrometer:Ort>
-					<bodeombrometer:WISKI_Name>579712</bodeombrometer:WISKI_Name>
+					<bodeombrometer:Messstellennummer>579712</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>mahn</bodeombrometer:Kurz_Name>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
@@ -563,18 +546,18 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5206105.143908598,5743473.354427688</gml:coordinates>
 						</gml:Point>
 					</bodespeicher:Ort>
-					<bodespeicher:WISKI_Name>579320</bodespeicher:WISKI_Name>
+					<bodespeicher:Messstellennummer>579320</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>kabo</bodespeicher:Kurz_Name>
-					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Kalte_Bode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Kalte_Bode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Ganglinie_gemessenEingang/>
+					<bodespeicher:Zufluss_gerechnet/>
 					<bodespeicher:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Kalte_Bode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Kalte_Bode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Ganglinie_gemessen>
 					<bodespeicher:Ganglinie_gerechnet/>
-					<bodespeicher:Ganglinie_prognoseAblage/>
+					<bodespeicher:Inhalt_gemessen/>
+					<bodespeicher:Inhalt_gerechnet/>
 					<bodespeicher:StauraumParameter>
 						<bodespeicher:Stauraum fid="Stauraum_kabo">
 							<bodespeicher:Totraum>0.2</bodespeicher:Totraum>
@@ -1089,18 +1072,18 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5216625.661087754,5744001.801473191</gml:coordinates>
 						</gml:Point>
 					</bodespeicher:Ort>
-					<bodespeicher:WISKI_Name>579430</bodespeicher:WISKI_Name>
+					<bodespeicher:Messstellennummer>579430</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>rapp</bodespeicher:Kurz_Name>
-					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Ganglinie_gemessenEingang/>
+					<bodespeicher:Zufluss_gerechnet/>
 					<bodespeicher:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Ganglinie_gemessen>
 					<bodespeicher:Ganglinie_gerechnet/>
-					<bodespeicher:Ganglinie_prognoseAblage/>
+					<bodespeicher:Inhalt_gemessen/>
+					<bodespeicher:Inhalt_gerechnet/>
 					<bodespeicher:StauraumParameter>
 						<bodespeicher:Stauraum fid="Stauraum_rapp">
 							<bodespeicher:Totraum>0.34</bodespeicher:Totraum>
@@ -1606,18 +1589,18 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5218272.876245457,5742160.857450546</gml:coordinates>
 						</gml:Point>
 					</bodespeicher:Ort>
-					<bodespeicher:WISKI_Name>579005</bodespeicher:WISKI_Name>
+					<bodespeicher:Messstellennummer>579005</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>wend</bodespeicher:Kurz_Name>
-					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Ganglinie_gemessenEingang/>
+					<bodespeicher:Zufluss_gerechnet/>
 					<bodespeicher:Ganglinie_gemessen>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Ganglinie_gemessen>
 					<bodespeicher:Ganglinie_gerechnet/>
-					<bodespeicher:Ganglinie_prognoseAblage/>
+					<bodespeicher:Inhalt_gemessen/>
+					<bodespeicher:Inhalt_gerechnet/>
 					<bodespeicher:StauraumParameter>
 						<bodespeicher:Stauraum fid="Stauraum_wend">
 							<bodespeicher:Totraum>0.049</bodespeicher:Totraum>
@@ -2168,12 +2151,12 @@
 							<gml:coordinates cs="," decimal="." ts=" ">5210386.315687956,5741854.463837401</gml:coordinates>
 						</gml:Point>
 					</bodespeicher:Ort>
-					<bodespeicher:WISKI_Name>579000</bodespeicher:WISKI_Name>
+					<bodespeicher:Messstellennummer>579000</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>urapp</bodespeicher:Kurz_Name>
-					<bodespeicher:Abgabe_Eingang/>
 					<bodespeicher:Abgabe>
-						<TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Überleitung_Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Überleitung_Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
+					<bodespeicher:Zufluss_gerechnet/>
 				</bodespeicher:Überleitung>
 			</bodespeicher:SpeicherMember>
 		</bodespeicher:SpeicherCollection>
