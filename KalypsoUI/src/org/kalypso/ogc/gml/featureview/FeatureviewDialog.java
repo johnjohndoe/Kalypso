@@ -52,6 +52,7 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -110,7 +111,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
         SWT.NONE );
     scrolledComposite.setContent( control );
 
-    updateControlSize( scrolledComposite, control );
+   // updateControlSize( scrolledComposite, control );
 
     panel.addControlListener( new ControlAdapter()
     {
@@ -131,9 +132,11 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   protected void updateControlSize( final ScrolledComposite scrolledComposite, final Composite control )
   {
     final Point controlSize = control.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    final Point parentSize = scrolledComposite.getSize();
+    final Rectangle clientArea = scrolledComposite.getClientArea();
+    final int psizex = clientArea.width;
+    final int psizey = clientArea.height;
     
-    final Point newSize = new Point( Math.max( controlSize.x, parentSize.x ), Math.max( controlSize.y, parentSize.y ) );
+    final Point newSize = new Point( Math.max( controlSize.x, psizex ), Math.max( controlSize.y, psizey ) );
     control.setSize( newSize );
   }
 
