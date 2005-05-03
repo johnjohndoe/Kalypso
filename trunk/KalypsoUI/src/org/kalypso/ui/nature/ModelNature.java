@@ -460,8 +460,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final Object startSim = startsimFinder.getResult();
       if( startSim instanceof Date )
       {
-        final String startSimString = Mapper.mapJavaValueToXml( startSim,
-        "dateTime" );
+        final String startSimString = Mapper.mapJavaValueToXml( startSim );
         final Token startSimToken = new ReplaceTokens.Token();
         startSimToken.setKey( "startsim" );
         startSimToken.setValue( startSimString );
@@ -474,7 +473,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( startForecast instanceof Date )
       {
         final String startForecastString = Mapper.mapJavaValueToXml(
-            startForecast, "dateTime" );
+            startForecast );
         final Token startForecastToken = new ReplaceTokens.Token();
         startForecastToken.setKey( "startforecast" );
         startForecastToken.setValue( startForecastString );
@@ -487,7 +486,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         cal.add( Calendar.HOUR_OF_DAY, 48 );
 
         final Date endSim = cal.getTime();
-        final String endSimString = Mapper.mapJavaValueToXml( endSim, "dateTime" );
+        final String endSimString = Mapper.mapJavaValueToXml( endSim );
         final Token endSimToken = new ReplaceTokens.Token();
         endSimToken.setKey( "endsim" );
         endSimToken.setValue( endSimString );
@@ -619,8 +618,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Date now = new Date();
 
-    urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now,
-        "dateTime" ) );
+    urlResolver.addReplaceToken( "time", Mapper.mapJavaValueToXml( now ) );
 
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
@@ -646,15 +644,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final Date forecastTime = cal.getTime();
     urlResolver.addReplaceToken( "startforecast", Mapper.mapJavaValueToXml(
-        forecastTime, "dateTime" ) );
+        forecastTime ) );
 
     // standardzeit abziehen
     final int simDiff = new Integer( m_metadata.getProperty(
         META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
     final Date simTime = cal.getTime();
-    urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime,
-        "dateTime" ) );
+    urlResolver.addReplaceToken( "startsim", Mapper.mapJavaValueToXml( simTime ) );
 
     return urlResolver;
   }

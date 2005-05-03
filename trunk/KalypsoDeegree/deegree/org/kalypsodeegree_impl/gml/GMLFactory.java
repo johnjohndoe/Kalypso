@@ -683,7 +683,7 @@ public class GMLFactory
       prop = doc.createGMLProperty( ftp, href );
     }
     else
-      prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value, ftp.getType() ) );
+      prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value ) );
 
     // TODO integrate typehandler ??
     if( prop != null )
@@ -695,6 +695,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.15  2005/05/03 11:38:52  belger
+ * *** empty log message ***
+ *
  * Revision 1.14  2005/03/13 12:52:15  belger
  * *** empty log message ***
  *

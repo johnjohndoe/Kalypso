@@ -121,7 +121,9 @@ public class ObservationLinkHandler implements ITypeHandler
   {
     try
     {
-    	final NodeList childNodes=((Element)node).getElementsByTagNameNS(getNamespaceUri(),getElementName());
+    	final Element element = (Element)node;
+      final NodeList childNodes=(element).getElementsByTagNameNS(getNamespaceUri(),getElementName());
+      
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
         final Node child = childNodes.item( i );

@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
 import java.awt.geom.Point2D;
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import javax.units.Unit;

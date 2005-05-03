@@ -384,8 +384,10 @@ public class FeatureFactory
         {
           result = createFeature( (GMLFeature)value, linkFTs );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
+          // TODO: was soll denn das?
+          // dadurch bekommt keiner mit, wenn was im GML nicht stimmt!!!
           e.printStackTrace();
         }
       }

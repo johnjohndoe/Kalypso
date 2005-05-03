@@ -40,15 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -84,18 +81,15 @@ public class GmlLoader extends AbstractLoader
   protected Object loadIntern( final String source, final URL context,
       final IProgressMonitor monitor ) throws LoaderException
   {
-    Reader reader = null;
     try
     {
       monitor.beginTask( "GML laden", 1000 );
 
+      
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      reader = new BufferedReader( m_urlResolver.createReader( gmlURL ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
       
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer
-          .createGMLWorkspace( reader, m_urlResolver, gmlURL ) );
-
       try
       {
         final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
@@ -129,7 +123,6 @@ public class GmlLoader extends AbstractLoader
     }
     finally
     {
-      IOUtils.closeQuietly( reader );
       monitor.done();
     }
   }
