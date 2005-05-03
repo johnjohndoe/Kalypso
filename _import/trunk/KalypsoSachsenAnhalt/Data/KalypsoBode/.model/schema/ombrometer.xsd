@@ -45,7 +45,7 @@
 					<element name="Messstellennummer" type="string" minOccurs="1"/>
 					<element name="Kurz_Name" type="string" minOccurs="1"/>
 					<!-- lokal,  *.vns, nur zum Gucken!!!-->
-					<element name="Niederschlag_gemessen" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
+					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>

@@ -46,9 +46,9 @@
 					<element name="istEingabePegel" type="boolean"/>
 					<element name="istErgebnisPegel" type="boolean"/>
 					<!-- lokal, W und Q (tolle Zeitreihe) *.vw -->
-					<element name="Ganglinie_gemessen" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
+					<element name="Ganglinie_gemessen" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<!-- lokal, W und Q (tolle Zeitreihe) *.q -->
-					<element name="Ganglinie_gerechnet" type="bodecommon:TimeseriesLinkType" minOccurs="0"/>
+					<element name="Ganglinie_gerechnet" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -60,7 +60,7 @@
 				<sequence>
 					<element name="Gebiet" type="gml:PolygonPropertyType"/>
 					<!-- lokal;   -->
-					<element name="Niederschlag" type="bodecommon:TimeseriesLinkType"/>
+					<element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!-- hier kommen ggf. noch die Parameter aus der *.par hin -->
 				</sequence>
 			</extension>

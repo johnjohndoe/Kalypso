@@ -44,9 +44,9 @@
 					<element name="Messstellennummer" type="string" minOccurs="1"/>
 					<element name="Kurz_Name" type="string" minOccurs="1"/>
 					<!-- lokal,  *.vsa, *.psa-->
-					<element name="Abgabe" type="bodecommon:TimeseriesLinkType"/>
+					<element name="Abgabe" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!-- lokal,  *.zfl (nur Prognose)-->
-					<element name="Zufluss_gerechnet" type="bodecommon:TimeseriesLinkType"/>
+					<element name="Zufluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -56,14 +56,10 @@
 		<complexContent>
 			<extension base="bodespeicher:AbstractSpeicherType">
 				<sequence>
-					<!-- lokal,  *.vws, *.vvs (mit *.wvt)-->
-					<element name="Ganglinie_gemessen" type="bodecommon:TimeseriesLinkType"/>
-					<!-- lokal,  Gesamtganglinie *.i (= *.vvs + *.pv aus Batch) implizit auch das nicht vorhandene *.w über *.wvt-->
-					<element name="Ganglinie_gerechnet" type="bodecommon:TimeseriesLinkType"/>
-					<!-- lokal,  *.vvs-->
-					<element name="Inhalt_gemessen" type="bodecommon:TimeseriesLinkType"/>
+					<!-- lokal,  *.vvs einschließlich *.vwt über *.wvt-->
+					<element name="Ganglinie_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!-- lokal,  *.pv-->
-					<element name="Inhalt_gerechnet" type="bodecommon:TimeseriesLinkType"/>
+					<element name="Ganglinie_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!-- Stauraum-Parameter, *.sra -->
 					<element name="StauraumParameter" type="bodespeicher:StauraumAssociationType"/>
 					<!-- Mindestabgabe-Parameter, *.qmi -->

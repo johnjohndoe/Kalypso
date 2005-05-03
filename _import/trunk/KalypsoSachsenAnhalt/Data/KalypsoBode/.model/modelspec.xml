@@ -17,12 +17,12 @@
 	<input id="QPegelDirIn" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
 	<input id="QSpeicherDirIn" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
 	<!-- Unterverzeichnisse Messung und Vorhersage! -->
-	<input id="VSpeicherDirIn" path="Zeitreihen/Speicherinhalt" relativeToCalcCase="true"/>
+	<input id="VSpeicherDirIn" path="Zeitreihen/Speicher" relativeToCalcCase="true"/>
 	<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
 	
 
 	<output id="Logs" path="Log-Dateien" relativeToCalcCase="true"/>
-	<output id="Ergebnisse" path="Log-Dateien" relativeToCalcCase="true"/>
+	<output id="Ergebnisse" path="Zeitreihen" relativeToCalcCase="true"/>
 <!--
 	<output id="QPegelDirOut" path="Zeitreihen/Pegel/Vorhersage" relativeToCalcCase="true"/>
 	<output id="QSpeicherDirOut" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
@@ -31,7 +31,6 @@
 -->
 	
 	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
-	<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
-	<clearAfterCalc path="DivErgebnisse" relativeToCalcCase="true"/>
+	<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true"/>
 	
 </modeldata>

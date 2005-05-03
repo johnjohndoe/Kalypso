@@ -2,6 +2,13 @@
 <schema targetNamespace="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" xmlns:obslink="obslink.zml.kalypso.org">
 	<import namespace="http://www.w3.org/1999/xlinkext" 
 		schemaLocation="xlinksext.xsd"/>
+
+	<complexType name="TimeseriesLinkFeatureProperty">
+		<sequence>
+			<element ref="obslink:TimeseriesLink" minOccurs="0" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+
 	<element name="TimeseriesLink" type="obslink:TimeseriesLinkType"/>	
 	
 	<complexType name="TimeseriesLinkType">
