@@ -1,11 +1,13 @@
 package org.kalypso.wiskiadapter;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
@@ -27,12 +29,19 @@ public class WiskiTuppleModel extends AbstractTuppleModel
 
   private final IValueConverter m_vc;
 
+  private final Calendar m_calendar;
+
   public WiskiTuppleModel( final IAxis[] axes, final LinkedList data,
-      final IValueConverter conv )
+      final IValueConverter conv, final TimeZone tz )
   {
     super( axes );
 
     m_vc = conv;
+    
+    if( tz != null )
+      m_calendar = Calendar.getInstance( tz );
+    else
+      m_calendar = Calendar.getInstance();
 
     m_data = data;
     m_values = new Double[m_data.size()];
@@ -59,7 +68,9 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     switch( getPositionFor( axis ) )
     {
       case 0:
-        return ((HashMap) m_data.get( index )).get( "timestamp" );
+        final Date d = (Date) ((HashMap) m_data.get( index )).get( "timestamp" );
+        m_calendar.setTime( d );
+        return m_calendar.getTime();
       case 1:
         return getValue( index );
       case 2:

@@ -43,6 +43,7 @@ package org.kalypso.util.parser.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.kalypso.util.parser.AbstractParser;
 import org.kalypso.util.parser.ParserException;
@@ -131,5 +132,10 @@ public class DateParser extends AbstractParser
     Date d2 = (Date) value2;
 
     return d1.compareTo( d2 );
+  }
+  
+  public void setTimezone( final TimeZone tz )
+  {
+    m_df.setTimeZone( tz );
   }
 }

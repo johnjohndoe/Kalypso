@@ -65,7 +65,7 @@ public class WiskiTimeserie implements IObservation
 
   private Boolean m_editable = null;
 
-  private ITuppleModel m_cachedValues = null;
+  private ITuppleModel m_cachedValues = SimpleTuppleModel.EMPTY_TUPPLEMODEL;
 
   private DateRangeArgument m_cachedDr = null;
 
@@ -92,6 +92,14 @@ public class WiskiTimeserie implements IObservation
     m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1] );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
    */
@@ -239,7 +247,7 @@ public class WiskiTimeserie implements IObservation
         m_cachedValues = SimpleTuppleModel.EMPTY_TUPPLEMODEL;
       else
         m_cachedValues = new WiskiTuppleModel( getAxisList(), call.getData(),
-            m_cv );
+            m_cv, call.getTimeZone() );
 
       return m_cachedValues;
     }

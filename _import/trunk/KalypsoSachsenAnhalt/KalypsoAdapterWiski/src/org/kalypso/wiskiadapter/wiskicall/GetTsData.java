@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TimeZone;
 
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
@@ -61,11 +62,15 @@ public class GetTsData implements IWiskiCall
     return data;
   }
   
-  public int getTimeZone()
+  public TimeZone getTimeZone()
   {
     if( utcOffset != null )
-      return utcOffset.intValue();
+    {
+      final int offset = utcOffset.intValue();
+      final String sign = offset >= 0 ? "+" : "-";
+      return TimeZone.getTimeZone( "UTC" + sign + Math.abs( offset ) );
+    }
     else
-      return 0;
+      return null;
   }
 }
