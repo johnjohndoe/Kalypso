@@ -211,6 +211,7 @@ public class GisTemplateHelper
     final org.kalypso.template.types.ObjectFactory extentedFactory = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
     final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
+    layersType.setActive(null);
 
     if( bbox != null )
     {

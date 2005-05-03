@@ -89,14 +89,14 @@ public class AddThemeCommand implements ICommand
       throws JAXBException
   {
     m_mapModell = model;
-    int id = m_mapModell.getAllThemes().length;
+    int id = m_mapModell.getThemeSize()+1;
     ObjectFactory o = new ObjectFactory();
     m_layer = o.createGismapviewTypeLayersTypeLayer();
     m_layer.setHref( source );
     m_layer.setFeaturePath( featurePath );
     m_layer.setName( name );
     m_layer.setLinktype( type );
-    m_layer.setId( "ID_" + id + 1 );
+    m_layer.setId( "ID_" + id );
     m_layer.setVisible( true );
 
     List styleList = m_layer.getStyle();
@@ -128,6 +128,7 @@ public class AddThemeCommand implements ICommand
   public void process() throws Exception
   {
     m_theme = m_mapModell.addTheme( m_layer );
+    m_mapModell.activateTheme(m_theme);
   }
 
   /**

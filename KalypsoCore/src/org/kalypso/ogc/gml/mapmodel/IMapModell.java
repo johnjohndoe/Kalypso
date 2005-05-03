@@ -42,11 +42,12 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
 
+import org.eclipse.core.resources.IProject;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -100,4 +101,6 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 );
 
   public GM_Envelope getFullExtentBoundingBox();
+  
+  public IProject getProject();
 }

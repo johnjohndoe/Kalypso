@@ -98,12 +98,14 @@ public class ResourceSelectionGroup extends Composite
 
   private String[] m_allowedResourceExtensions;
 
+  private IContainer m_inputContainer;
+
   public ResourceSelectionGroup( Composite parent, Listener listener,
       boolean allowNewContainerName, String message, boolean showClosedProjects,
-      String[] allowedResourceExtensions )
+      String[] allowedResourceExtensions ,IContainer inputContainer)
   {
     this( parent, listener, allowNewContainerName, message, showClosedProjects,
-        SIZING_SELECTION_PANE_HEIGHT, allowedResourceExtensions );
+        SIZING_SELECTION_PANE_HEIGHT, allowedResourceExtensions ,inputContainer);
   }
 
   /*
@@ -111,13 +113,14 @@ public class ResourceSelectionGroup extends Composite
    * @author peiler
    */
   ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewResourceName,
-      String message, boolean showClosedProjects, int heightHint, String[] allowedResourceExtensions )
+      String message, boolean showClosedProjects, int heightHint, String[] allowedResourceExtensions ,IContainer inputContainer)
   {
     super( parent, SWT.NONE );
     m_listener = listener;
     m_allowNewResourceName = allowNewResourceName;
     m_showClosedProjects = showClosedProjects;
     m_allowedResourceExtensions = allowedResourceExtensions;
+    m_inputContainer = inputContainer;
     if( message != null )
       createContents( message, heightHint );
     else if( m_allowNewResourceName )
@@ -235,7 +238,8 @@ public class ResourceSelectionGroup extends Composite
     } );
 
     // This has to be done after the viewer has been laid out
-    treeViewer.setInput( ResourcesPlugin.getWorkspace() );
+    //treeViewer.setInput( ResourcesPlugin.getWorkspace() );
+    treeViewer.setInput(m_inputContainer);
   }
 
 public IPath getResourceFullPath()

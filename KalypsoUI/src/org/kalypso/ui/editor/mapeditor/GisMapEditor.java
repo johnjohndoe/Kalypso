@@ -212,7 +212,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final URL context = ResourceUtilities.createURL( inputFile );
 
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context,
-        KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+        KalypsoGisPlugin.getDefault().getCoordinatesSystem() , inputFile.getProject());
     setMapModell( mapModell );
 
     GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );

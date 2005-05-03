@@ -3,6 +3,7 @@ package org.kaylpso.ui.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.JFaceColors;
@@ -15,7 +16,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
@@ -66,6 +66,8 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   private IResource m_initialSelection;
 
   private String[] m_allowedResourceExtensions;
+  
+  
 
   private boolean m_allowNewResourceName = false;
 
@@ -79,16 +81,19 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
   ResourceSelectionGroup group;
 
+  private IContainer m_inputContainer;
+
   /*
    * 
    * @author peiler
    */
   public KalypsoResourceSelectionDialog( Shell parentShell, IResource initialSelection,
-      String message, String[] allowedResourceExtensions )
+      String message, String[] allowedResourceExtensions, IContainer inputContainer)
   {
     super( parentShell );
     setTitle( IDEWorkbenchMessages.getString( "Resource selection" ) ); //$NON-NLS-1$
     m_allowedResourceExtensions = allowedResourceExtensions;
+    m_inputContainer = inputContainer;
     m_initialSelection = initialSelection;
     resourceValidator = new ResourceSelectionValidator();
     if( message != null )
@@ -138,7 +143,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
     // container selection group
     group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(),
-        m_showClosedProjects, m_allowedResourceExtensions );
+        m_showClosedProjects, m_allowedResourceExtensions , m_inputContainer);
 
     return dialogArea;
   }

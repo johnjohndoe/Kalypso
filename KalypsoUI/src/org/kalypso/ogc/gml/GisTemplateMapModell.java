@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -75,10 +76,10 @@ public class GisTemplateMapModell implements IMapModell
   private final URL m_context;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context,
-      final CS_CoordinateSystem crs )
+      final CS_CoordinateSystem crs, IProject project )
   {
     m_context = context;
-    m_modell = new MapModell( crs );
+    m_modell = new MapModell( crs, project );
     // layer 1 is legend
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
@@ -322,5 +323,13 @@ public class GisTemplateMapModell implements IMapModell
   public URL getContext()
   {
     return m_context;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
+   */
+  public IProject getProject()
+  {
+    return m_modell.getProject();
   }
 }
