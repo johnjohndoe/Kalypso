@@ -11,35 +11,34 @@ import java.util.List;
 
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.ProfilBuildingException;
+import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.ProfilPointProperty;
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfil.BUILDING_VALUES;
 
 /**
  * @author kimwerner
  */
 public abstract class AbstractProfilBuilding implements IProfilBuilding
 {
-  //TODO: m_buildingValues für jede abgeleitete Klasse einfügen
   private final BUILDING_TYP m_buildingTyp;
 
   protected final List<ProfilPointProperty> m_pointProperties;
   
-  private final List<BUILDING_VALUES> m_buildingValues;
+  private final List<ProfilBuildingProperty> m_buildingValues;
 
-  private final HashMap<BUILDING_VALUES, Double> m_values;
+  private final HashMap<ProfilBuildingProperty, Double> m_values;
 
-  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<BUILDING_VALUES> buildingValues)
+  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<ProfilBuildingProperty> buildingValues)
   {
     m_buildingTyp = buildingTyp;
     m_pointProperties = new LinkedList<ProfilPointProperty>();
     m_buildingValues = Collections.unmodifiableList(buildingValues);
-    m_values = new HashMap<BUILDING_VALUES, Double>(buildingValues.size());
+    m_values = new HashMap<ProfilBuildingProperty, Double>(buildingValues.size());
     setValues();
   }
   private void setValues()
   {
-    for(Iterator<BUILDING_VALUES> vIt = m_buildingValues.iterator();vIt.hasNext();)
+    for(Iterator<ProfilBuildingProperty> vIt = m_buildingValues.iterator();vIt.hasNext();)
     {
       m_values.put(vIt.next(),new Double(0.0));
     }
@@ -63,9 +62,9 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /*
    * (non-Javadoc)
    * 
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_VALUES)
+   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.ProfilBuildingProperty)
    */
-  public double getValue( BUILDING_VALUES buildingValue ) throws ProfilBuildingException
+  public double getValue( ProfilBuildingProperty buildingValue ) throws ProfilBuildingException
   {
     if( m_values.containsKey( buildingValue ) )
       return m_values.get( buildingValue );
@@ -75,10 +74,10 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /*
    * (non-Javadoc)
    * 
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_VALUES,
+   * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.ProfilBuildingProperty,
    *      double)
    */
-  public void setValue( BUILDING_VALUES buildingValue, double value ) throws ProfilBuildingException
+  public void setValue( ProfilBuildingProperty buildingValue, double value ) throws ProfilBuildingException
   {
     if( m_values.containsKey( buildingValue ) )
       m_values.put( buildingValue, value );
@@ -94,7 +93,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /**
    * @return Returns the buildingValues.
    */
-  public List<BUILDING_VALUES> getBuildingValues( )
+  public List<ProfilBuildingProperty> getBuildingValues( )
   {
     return m_buildingValues;
   }

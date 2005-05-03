@@ -39,7 +39,10 @@ public class ProfilPoint implements IProfilPoint
       point.addProperty( tdk );
       try
       {
-        point.setValueFor( tdk, this.getValueFor( tdk ) );
+        if( tdk.isClonable() )
+        {
+          point.setValueFor( tdk, this.getValueFor( tdk ) );
+        }
       }
       catch( ProfilDataException e )
       {
@@ -59,7 +62,8 @@ public class ProfilPoint implements IProfilPoint
     return Collections.unmodifiableSet( m_pointProperties.keySet() );
   }
 
-  public final double getValueFor( final ProfilPointProperty pointProperty ) throws ProfilDataException
+  public final double getValueFor( final ProfilPointProperty pointProperty )
+      throws ProfilDataException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
       throw new ProfilDataException( "Profileigenschaft existiert nicht" );
@@ -91,13 +95,15 @@ public class ProfilPoint implements IProfilPoint
     m_pointProperties.put( pointProperty, new Double( value ) );
     return true;
   }
-  public final boolean isPosition( final double breite,final double hoehe) throws ProfilDataException
+
+  public final boolean isPosition( final double breite, final double hoehe )
+      throws ProfilDataException
   {
     final int breitePrecision = ProfilPointProperty.BREITE.getPrecision();
     final int hoehePrecision = ProfilPointProperty.HOEHE.getPrecision();
-    
-     final double deltaB = Math.abs(this.getValueFor( ProfilPointProperty.BREITE )- breite );
-     final double deltaH = Math.abs(this.getValueFor( ProfilPointProperty.HOEHE)- hoehe );
-     return ((deltaB < Math.exp(-breitePrecision) ) & (deltaH < Math.exp(-hoehePrecision)));
+
+    final double deltaB = Math.abs( this.getValueFor( ProfilPointProperty.BREITE ) - breite );
+    final double deltaH = Math.abs( this.getValueFor( ProfilPointProperty.HOEHE ) - hoehe );
+    return ((deltaB < Math.exp( -breitePrecision )) & (deltaH < Math.exp( -hoehePrecision )));
   }
 }

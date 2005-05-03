@@ -70,35 +70,11 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Trennfläche links Typ:", IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_SOHLE, p
         .getDeviderTyp( DeviderKey.TRENNFLAECHE_L ) );
     
-    final IProfilPoint newPkt = p.insertPoint(p.getDevider(DeviderKey.TRENNFLAECHE_L) );
+    final IProfilPoint newPkt = p.insertPoint(p.getDevider(DeviderKey.DURCHSTROEMTE_L) );
 
     p.moveDevider( DeviderKey.DURCHSTROEMTE_L,newPkt );
-    final IProfilPoint aktPkt = p.getDevider(DeviderKey.TRENNFLAECHE_L) ;
+    final IProfilPoint aktPkt = p.getDevider(DeviderKey.DURCHSTROEMTE_L) ;
     assertEquals( "neu Durchstroemte links:", newPkt,aktPkt);
   }
-  /*
-   * public void testSplitSegment( ) throws Exception { final IProfil p = testAddInsertPoint( );
-   * assertEquals( "Anzahl Koordinaten:", 4, p.getPointsCount() ); final IProfilPoint startPoint =
-   * p.getPoint( 0 ); final IProfilPoint nextPoint = p.getNextPoint( startPoint ); final
-   * IProfilPoint middlePoint = ProfilUtil.splitSegment( startPoint, nextPoint ); assertEquals(
-   * "Interpolierter Punkt(Breite):", -194.34, middlePoint.getValueFor( ProfilPointProperty.BREITE ) );
-   * assertEquals( "Interpolierter Punkt(Höhe):", 66.95, middlePoint.getValueFor(
-   * ProfilPointProperty.HOEHE ) ); } public void testClonePoint( ) throws Exception { final IProfil p =
-   * testAddInsertPoint( ); assertEquals( "Anzahl Koordinaten:", 4, p.getPointsCount() ); final
-   * IProfilPoint startPoint = p.getPoint( 3 ); final IProfilPoint clonePoint =
-   * startPoint.clonePoint(); for( final Iterator<ProfilPointProperty> tdkIt =
-   * p.getProfilPointProperties(true).iterator(); tdkIt.hasNext(); ) { final ProfilPointProperty tdk =
-   * tdkIt.next(); assertEquals( tdk.toString(), startPoint.getValueFor( tdk ),
-   * clonePoint.getValueFor( tdk ) ); } } public void testTableListener( ) throws Exception { class
-   * TestListener implements ProfilListener { public void onPointChanged( final IProfilPoint point,
-   * IProfilPointProperty pointProperty ) { // TODO Auto-generated method stub } public void
-   * onMetaDataChanged( METADATA metadata, String value ) { // TODO Auto-generated method stub }
-   * public void onProfilDataChanged( IProfilPointProperty pointProperty, Object value ) { // TODO
-   * Auto-generated method stub } } final IProfil p = testAddInsertPoint( ); assertEquals( "Anzahl
-   * Koordinaten:", 4, p.getPointsCount() ); final TestListener testListener = new TestListener();
-   * p.addProfilListener( testListener ); final IProfilPoint point = p.getPoint( 3 ); p.setValueFor(
-   * point, ProfilPointProperty.RAUHEIT, 0.07 ); p.setProfilMetaData(METADATA.STATUS,new String("Na so
-   * was")); p.setRauheitTyp(IProfil.RAUHEITEN_TYP.RAUHEIT_KST); p.removeProfilListener(
-   * testListener ); }
-   */
+  
 }

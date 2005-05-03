@@ -5,8 +5,8 @@ package com.bce.eind.core.profil.impl.buildings;
 
 import java.util.Arrays;
 
+import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfil.BUILDING_VALUES;
 
 /**
  * @author kimwerner
@@ -16,6 +16,8 @@ public class EiProfilBuilding extends AbstractProfilBuilding
 
   public EiProfilBuilding()
   {
-    super(BUILDING_TYP.BLD_EI,Arrays.asList(BUILDING_VALUES.CENTER_X,BUILDING_VALUES.CENTER_Y));
+    super(BUILDING_TYP.BLD_EI,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
+        ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
+        ProfilBuildingProperty.BEZUGSPUNKT_Y ));
   }
  }

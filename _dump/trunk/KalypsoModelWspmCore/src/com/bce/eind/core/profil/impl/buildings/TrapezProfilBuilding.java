@@ -5,8 +5,8 @@ package com.bce.eind.core.profil.impl.buildings;
 
 import java.util.Arrays;
 
+import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfil.BUILDING_VALUES;
 
 /**
  * @author kimwerner
@@ -14,8 +14,10 @@ import com.bce.eind.core.profil.IProfil.BUILDING_VALUES;
 public class TrapezProfilBuilding extends AbstractProfilBuilding
 {
 
-  public TrapezProfilBuilding()
+  public TrapezProfilBuilding( )
   {
-    super(BUILDING_TYP.BLD_TRAPEZ,Arrays.asList(BUILDING_VALUES.CENTER_X,BUILDING_VALUES.CENTER_Y));
+    super( BUILDING_TYP.BLD_TRAPEZ, Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
+        ProfilBuildingProperty.STEIGUNG, ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
+        ProfilBuildingProperty.BEZUGSPUNKT_Y ) );
   }
- }
+}

@@ -17,54 +17,57 @@ public class ProfilPointProperty
   private final boolean m_interpolation;
 
   private final int m_precision;
+  
+  private final boolean m_clonable;
 
   public final static ProfilPointProperty BEWUCHS_AX = new ProfilPointProperty( "AX", true, true,
-      false, 4 );
+      false,true, 4 );
 
   public final static ProfilPointProperty BEWUCHS_AY = new ProfilPointProperty( "AY", true, true,
-      false, 4 );
+      false,true, 4 );
 
   public final static ProfilPointProperty BEWUCHS_DP = new ProfilPointProperty( "DP", true, true,
-      false, 4 );
+      false,true, 4 );
 
   public final static ProfilPointProperty BREITE = new ProfilPointProperty( "Breite", false, true,
-      true, 4 );
+      true,true, 4 );
 
   public final static ProfilPointProperty DURCHSTROEMTE = new ProfilPointProperty( "Durchströmte",
-      false, false, false, 4 );
+      false, false, false,false, 4 );
 
   public final static ProfilPointProperty HOCHWERT = new ProfilPointProperty( "Hochwert", true,
-      true, true, 4 );
+      true, true,true, 4 );
 
   public final static ProfilPointProperty UNTERKANTEBRUECKE = new ProfilPointProperty(
-      "Brückenunterkante", true, true, false, 4 );
+      "Brückenunterkante", true, true, false,true, 4 );
 
   public final static ProfilPointProperty OBERKANTEBRUECKE = new ProfilPointProperty(
-      "Brückenoberkante", true, true, false, 4 );
+      "Brückenoberkante", true, true, false,true, 4 );
 
   public final static ProfilPointProperty HOEHE = new ProfilPointProperty( "Höhe", false, true,
-      true, 4 );
+      true,true, 4 );
 
   public final static ProfilPointProperty RAUHEIT = new ProfilPointProperty( "Rauheit", false,
-      true, false, 4 );
+      true, false,true, 4 );
 
   public final static ProfilPointProperty RECHTSWERT = new ProfilPointProperty( "Rechtswert", true,
-      true, true, 4 );
+      true, true,true, 4 );
 
   public final static ProfilPointProperty TRENNFLAECHE = new ProfilPointProperty( "Trennefläche",
-      false, false, false, 4 );
+      false, false, false,false, 4 );
 
   public final static ProfilPointProperty BORDVOLL = new ProfilPointProperty( "Bordvollpunkt",
-      true, true, false, 4 );
+      true, true, false,false, 4 );
 
   private ProfilPointProperty( final String label, final boolean optional, final boolean visible,
-      final boolean interpolation, final int precision )
+      final boolean interpolation,final boolean clonable, final int precision )
   {
     m_visible = visible;
     m_optional = optional;
     m_label = label;
     m_interpolation = interpolation;
     m_precision = precision;
+    m_clonable = clonable;
   }
 
   /**
@@ -105,6 +108,14 @@ public class ProfilPointProperty
   public int getPrecision( )
   {
     return m_precision;
+  }
+
+  /**
+   * @return Returns the clonable.
+   */
+  public boolean isClonable( )
+  {
+    return m_clonable;
   }
 
 }
