@@ -98,6 +98,8 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   // METADATEN
 
+  public final static String MD_TIMEZONE = "Zeitzone";
+  
   public final static String MD_WQWECHMANN = "WQ-Parameter";
 
   public final static String MD_WQTABLE = "WQ-Tabelle";
