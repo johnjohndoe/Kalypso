@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -72,10 +73,13 @@ public class MapModell implements IMapModell
   private final CS_CoordinateSystem myCoordinatesSystem;
 
   private IKalypsoTheme m_activeTheme = null;
+  
+  private IProject m_project;
 
-  public MapModell( final CS_CoordinateSystem crs )
+  public MapModell( final CS_CoordinateSystem crs, IProject project )
   {
     myCoordinatesSystem = crs;
+    m_project = project;
   }
 
   public void dispose()
@@ -327,5 +331,13 @@ public class MapModell implements IMapModell
   public void onModellChange( final ModellEvent modellEvent )
   {
     fireModellEvent( modellEvent );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
+   */
+  public IProject getProject()
+  {
+    return m_project;
   }
 }

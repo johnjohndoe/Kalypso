@@ -376,7 +376,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs );
+    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs , mapFile.getProject());
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, m_selectionID );

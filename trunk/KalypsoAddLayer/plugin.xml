@@ -18,6 +18,8 @@
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.kalypso.ui" export="true"/>
       <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
    </requires>
    <extension
          id="mapviewaction"
@@ -27,7 +29,7 @@
             title="AddLayer"
             enabled="true"
             icon="icons/gistable/add_row.gif"
-            class="org.kaylpso.ui.view.action.AddLayerAction"
+            class="org.kaylpso.ui.view.action.AddThemeAction"
             tooltip="Neues Thema zu activer Karte hinzufügen"/>
    </extension>
    <extension
@@ -49,6 +51,19 @@
             class="org.kaylpso.ui.wizard.wfs.ImportWfsSourceWizard"
             name="Web Feature Service"
             id="org.kalypso.ui.wizard.wfs"/>
+      <wizard
+            icon="icon/repository_item.gif"
+            class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
+            name="RasterDataModel (.gml)"
+            id="org.kalypso.ui.wizard.raster"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            class="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"
+            icon="icon/kalypso_gmt.gif"
+            name="GisMapView"
+            id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"/>
    </extension>
 
 </plugin>

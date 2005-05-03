@@ -125,7 +125,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_selectionID = selectionID;
 
     // set empty Modell:
-    setMapModell( new MapModell( crs ) );
+    setMapModell( new MapModell( crs , null) );
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
@@ -349,6 +349,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_wishBBox = wishBBox;
     m_boundingBox = adjustBoundingBox( m_wishBBox );
     m_projection.setSourceRect( m_boundingBox );
+    /*if( m_model != null )
+    {
+      if( m_model.getCoordinatesSystem() != null )
+        m_projection.setSourceCS( m_model.getCoordinatesSystem() );
+    }*/
     // redraw
     onModellChange( null );
   }
