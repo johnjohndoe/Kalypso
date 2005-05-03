@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -71,6 +72,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -218,8 +220,8 @@ public class ZmlFactory
         // the OCSUrlStreamHandler )
         inputStream = url.openStream();
       }
-      
-      inputStream = new BufferedInputStream( inputStream ); 
+
+      inputStream = new BufferedInputStream( inputStream );
 
       // url is given as an argument here (and not tmpUrl) in order not to
       // loose the query part we might have removed because of Eclipse's
@@ -417,18 +419,28 @@ public class ZmlFactory
   }
 
   /**
+   * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
+   */
+  public static ObservationType createXML( final IObservation obs, final IVariableArguments args ) throws FactoryException
+  {
+    return createXML( obs, args, null );
+  }
+  
+  /**
    * Creates an XML-Observation ready for marshalling.
    * 
    * TODO: complete for target property, etc..
    * 
    * @param obs
    * @param args
+   * @param timezone the timezone into which dates should be converted before serialized
    * @return an ObservationType object, ready for marshalling.
    * 
    * @throws FactoryException
    */
   public static ObservationType createXML( final IObservation obs,
-      final IVariableArguments args ) throws FactoryException
+      final IVariableArguments args, final TimeZone timezone )
+      throws FactoryException
   {
     try
     {
@@ -459,6 +471,16 @@ public class ZmlFactory
 
         metadataList.add( mdType );
       }
+      
+      // insert timezone in the metadata is specified
+      if( timezone != null )
+      {
+        final MetadataType mdType = OF.createMetadataType();
+        mdType.setName( TimeserieConstants.MD_TIMEZONE );
+        mdType.setValue( timezone.getID() );
+        
+        metadataList.add( mdType );
+      }
 
       final ITuppleModel values = obs.getValues( args );
 
@@ -483,7 +505,7 @@ public class ZmlFactory
               .createAxisTypeValueArrayType();
 
           valueArrayType.setSeparator( ";" );
-          valueArrayType.setValue( buildValueString( values, axes[i] ) );
+          valueArrayType.setValue( buildValueString( values, axes[i], timezone ) );
 
           axisType.setValueArray( valueArrayType );
 
@@ -500,20 +522,17 @@ public class ZmlFactory
   }
 
   /**
-   * TODO: verbessern
+   * TODO: verbessern: kein If-statement mehr und anderen datentypen?
    * 
-   * @param model
-   * @param axis
    * @return string that contains the serialized values
-   * @throws SensorException
    */
   private static String buildValueString( final ITuppleModel model,
-      final IAxis axis ) throws SensorException
+      final IAxis axis, final TimeZone timezone ) throws SensorException
   {
-    StringBuffer sb = new StringBuffer();
+    final StringBuffer sb = new StringBuffer();
 
     if( java.util.Date.class.isAssignableFrom( axis.getDataClass() ) )
-      buildStringDateAxis( model, axis, sb );
+      buildStringDateAxis( model, axis, sb, timezone );
     else if( Number.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringNumberAxis( model, axis, sb );
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
@@ -535,18 +554,11 @@ public class ZmlFactory
       sb.append( model.getElement( amount, axis ) );
   }
 
-  /**
-   * TODO: marc, check if the date format can be fetched from the properties
-   * here
-   * 
-   * @param model
-   * @param axis
-   * @param sb
-   * @throws SensorException
-   */
   private static void buildStringDateAxis( final ITuppleModel model,
-      final IAxis axis, final StringBuffer sb ) throws SensorException
+      final IAxis axis, final StringBuffer sb, final TimeZone timezone ) throws SensorException
   {
+    XmlTypes.PDATE.setTimezone( timezone );
+    
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
       sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) )
@@ -559,11 +571,6 @@ public class ZmlFactory
   /**
    * Uses the default toString() method of the elements. TODO: check if this
    * always works fine for XML-Schema types
-   * 
-   * @param model
-   * @param axis
-   * @param sb
-   * @throws SensorException
    */
   private static void buildStringNumberAxis( final ITuppleModel model,
       final IAxis axis, final StringBuffer sb ) throws SensorException
@@ -602,36 +609,8 @@ public class ZmlFactory
   {
     final Unmarshaller unmarshaller = OF.createUnmarshaller();
 
-    //    unmarshaller.setProperty(
-    // "http://apache.org/xml/features/validation/schema/normalized-value",
-    // Boolean.FALSE );
-
     return unmarshaller;
   }
-
-  //  /**
-  //   * @return an apache XMLSerializer configured to handle CDATA correctly
-  //   */
-  //  private static XMLSerializer getXMLSerializer( )
-  //  {
-  //    // configure an OutputFormat to handle CDATA
-  //    OutputFormat of = new OutputFormat();
-  //
-  //    // specify which of your elements you want to be handled as CDATA.
-  //    // The use of the '^' between the namespaceURI and the localname
-  //    // seems to be an implementation detail of the xerces code.
-  //    of.setCDataElements( new String[] { "data" } );
-  //
-  //    // set any other options you'd like
-  //    of.setPreserveSpace( true );
-  //    of.setIndenting( true );
-  //
-  //    // create the serializer
-  //    XMLSerializer serializer = new XMLSerializer( of );
-  //    serializer.setOutputByteStream( System.out );
-  //
-  //    return serializer;
-  //  }
 
   /**
    * @param axis

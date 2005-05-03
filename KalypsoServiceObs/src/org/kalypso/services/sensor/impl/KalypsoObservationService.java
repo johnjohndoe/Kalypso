@@ -50,6 +50,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -58,6 +60,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.beans.DateRangeBean;
@@ -98,6 +101,8 @@ public class KalypsoObservationService implements IObservationService
 
   private final Logger m_logger;
 
+  private TimeZone m_timezone = null;
+
   /**
    * Constructs the service by reading the configuration.
    * 
@@ -131,14 +136,14 @@ public class KalypsoObservationService implements IObservationService
     init();
   }
 
-  private final void clearRepositories()
+  private final void clearRepositories( )
   {
     for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
       ((IRepository) it.next()).dispose();
-    
+
     m_repositories.clear();
   }
-  
+
   /**
    * Initialize the Service according to configuration.
    * 
@@ -179,6 +184,39 @@ public class KalypsoObservationService implements IObservationService
       // it can directly fetch the observations without using the default
       // URL resolving stuff
       ZmlFilter.configureFor( m_repositories );
+
+      // load the service properties
+      final Properties props = new Properties();
+      final File fProps = new File( ServiceConfig.getConfDir(),
+          "IObservationService/service.properties" );
+      FileInputStream ins = null;
+      try
+      {
+        ins = new FileInputStream( fProps );
+        props.load( ins );
+      }
+      catch( final IOException e )
+      {
+        m_logger.warning( "Cannot read properties-file: "
+            + e.getLocalizedMessage() );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( ins );
+      }
+
+      // set the timezone according to the properties
+      final String tzName = props.getProperty( "TIMEZONE_NAME" );
+      if( tzName != null )
+      {
+        m_timezone = TimeZone.getTimeZone( tzName );
+        m_logger.info( "TimeZone set on " + m_timezone );
+      }
+      else
+      {
+        m_timezone = null;
+        m_logger.info( "Reset TimeZone. Name not found: " + tzName );
+      }
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
@@ -239,7 +277,8 @@ public class KalypsoObservationService implements IObservationService
       m_logger.info( "Reading data for observation: " + obs.getName()
           + " Arguments: " + args );
 
-      final ObservationType obsType = ZmlFactory.createXML( obs, args );
+      final ObservationType obsType = ZmlFactory.createXML( obs, args,
+          m_timezone );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml",
           m_tmpDir );
@@ -293,7 +332,8 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#writeData(ObservationBean, DataHandler)
+   * @see org.kalypso.services.sensor.IObservationService#writeData(ObservationBean,
+   *      DataHandler)
    */
   public void writeData( final ObservationBean obean, final DataHandler odb )
       throws RemoteException
