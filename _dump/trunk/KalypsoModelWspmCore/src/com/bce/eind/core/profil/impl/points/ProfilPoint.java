@@ -91,7 +91,7 @@ public class ProfilPoint implements IProfilPoint
     m_pointProperties.put( pointProperty, new Double( value ) );
     return true;
   }
-  public final boolean isEqualPosition( final double breite,final double hoehe) throws ProfilDataException
+  public final boolean isPosition( final double breite,final double hoehe) throws ProfilDataException
   {
     final int breitePrecision = ProfilPointProperties.getPointProperty(POINT_PROPERTY.BREITE).getPrecision();
     final int hoehePrecision = ProfilPointProperties.getPointProperty(POINT_PROPERTY.HOEHE).getPrecision();

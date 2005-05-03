@@ -113,7 +113,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       final ProfilPoint point = (ProfilPoint)ptIt.next();
       try
       {
-        if(point.isEqualPosition( breite,hoehe))
+        if(point.isPosition( breite,hoehe))
           return point;
       }
       catch( ProfilDataException e )
