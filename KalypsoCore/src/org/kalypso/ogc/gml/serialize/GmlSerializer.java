@@ -40,13 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -183,25 +181,23 @@ public final class GmlSerializer
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
       throws Exception
   {
-    final URLConnection connection = gmlURL.openConnection();
-    final String contentEncoding = connection.getContentEncoding();
+    BufferedReader reader = null;
 
-    InputStream inputStream = null;
     try
     {
-      inputStream = new BufferedInputStream( connection.getInputStream() );
-      final InputStreamReader isr = contentEncoding == null ? new InputStreamReader( inputStream )
-          : new InputStreamReader( inputStream, contentEncoding );
+      reader = new BufferedReader( urlResolver.createReader( gmlURL ) );
 
-      return createGMLWorkspace( isr, urlResolver, gmlURL );
+      return createGMLWorkspace( reader, urlResolver, gmlURL );
     }
     finally
     {
-    IOUtils.closeQuietly( inputStream );  
+    IOUtils.closeQuietly( reader );  
     }
   }
 
-  public static GMLWorkspace createGMLWorkspace( final Reader gmlreader, final IUrlResolver urlResolver, final URL context )
+  /** Liest einen GMLWorkspace aus einem Reader. Der Reader wird intern
+   * nicht mehr gepuffert. */
+  private static GMLWorkspace createGMLWorkspace( final Reader gmlreader, final IUrlResolver urlResolver, final URL context )
       throws Exception
   {
     // Replace tokens

@@ -200,9 +200,7 @@ public class ExportBerichtWizard extends Wizard
     {
       final FeatureChange fc = (FeatureChange) iter.next();
 
-      final String typename = metadata.get( fc.property ).toString();
-
-      final Object newValue = Mapper.mapJavaValueToXml( fc.newValue, typename );
+      final Object newValue = Mapper.mapJavaValueToXml( fc.newValue );
       metadata.put( fc.property, newValue );
     }
     return docBean;

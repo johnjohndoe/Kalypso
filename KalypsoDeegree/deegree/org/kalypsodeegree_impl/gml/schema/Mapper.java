@@ -133,7 +133,7 @@ public class Mapper
     throw new Exception( "unsupported Type:" + name );
   }
 
-  public static String mapJavaValueToXml( Object value, String xmlType )
+  public static String mapJavaValueToXml( final Object value )
   {
     if( value instanceof DateWithoutTime )
       return XML_DATE_FORMAT.format( (DateWithoutTime) value );
@@ -150,7 +150,6 @@ public class Mapper
 
   /**
    * @param value
-   * @return
    * @throws Exception
    */
   public static Object mapXMLValueToJava( String value, String type )
