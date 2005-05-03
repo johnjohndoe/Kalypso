@@ -10,6 +10,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxisRange;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
 
@@ -135,8 +136,8 @@ public class DataCenterTuppleModel implements ITuppleModel
   {
     final IAxis[] axes = model.getAxisList();
     
-    final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class )[0];
-    final IAxis valueAxis = ObservationUtilities.findAxisByClass( axes, Double.class, true )[0];
+    final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
+    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Double.class, true );
     
     final TimeserieTupple[] tupples = new TimeserieTupple[ model.getCount()];
     
