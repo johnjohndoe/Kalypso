@@ -10,14 +10,14 @@ import java.util.List;
 
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfil.POINT_PROPERTY;
+import com.bce.eind.core.profil.ProfilPointProperty;
 
 /**
  * @author kimwerner
  */
 public class ProfilPoints extends LinkedList<IProfilPoint>
 {
-  private final LinkedList<POINT_PROPERTY> m_pointProperties = new LinkedList<POINT_PROPERTY>();
+  private final LinkedList<ProfilPointProperty> m_pointProperties = new LinkedList<ProfilPointProperty>();
 
   private List<IProfilPoint> m_unmodifiable = Collections.synchronizedList(Collections.unmodifiableList( this ));
 
@@ -26,24 +26,24 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return m_unmodifiable;
   }
 
-  public final LinkedList<POINT_PROPERTY> getExistingProperties( )
+  public final LinkedList<ProfilPointProperty> getExistingProperties( )
   {
     return m_pointProperties;
   }
 
-  public final LinkedList<POINT_PROPERTY> getVisibleProperties( )
+  public final LinkedList<ProfilPointProperty> getVisibleProperties( )
   {
-    LinkedList<POINT_PROPERTY> visibleProperties = new LinkedList<POINT_PROPERTY>();
-    for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    LinkedList<ProfilPointProperty> visibleProperties = new LinkedList<ProfilPointProperty>();
+    for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
-      final POINT_PROPERTY pointProperty = ecIt.next();
-      if( ProfilPointProperties.getPointProperty(pointProperty).isVisible() )
+      final ProfilPointProperty pointProperty = ecIt.next();
+      if( pointProperty.isVisible() )
         visibleProperties.add( pointProperty );
     }
     return visibleProperties;
   }
 
-  public final void addProperty( final POINT_PROPERTY pointProperty )
+  public final void addProperty( final ProfilPointProperty pointProperty )
   {
     if( propertyExists( pointProperty ) )
       return;
@@ -56,9 +56,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
 
   }
 
-  public final boolean removeProperty( final POINT_PROPERTY pointProperty )
+  public final boolean removeProperty( final ProfilPointProperty pointProperty )
   {
-    if( !ProfilPointProperties.getPointProperty(pointProperty).isOptional() )
+    if( !pointProperty.isOptional() )
       return false;
     if( !(propertyExists( pointProperty )) )
       return true;
@@ -71,7 +71,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return true;
   }
 
-  public final boolean propertyExists( final POINT_PROPERTY pointProperty )
+  public final boolean propertyExists( final ProfilPointProperty pointProperty )
   {
     return m_pointProperties.contains( pointProperty );
   }
@@ -80,12 +80,12 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       throws ProfilDataException
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
       point.addProperty( ecIt.next() );
     }
-    point.setValueFor( POINT_PROPERTY.HOEHE, hoehe );
-    point.setValueFor( POINT_PROPERTY.BREITE, breite );
+    point.setValueFor( ProfilPointProperty.HOEHE, hoehe );
+    point.setValueFor( ProfilPointProperty.BREITE, breite );
     this.add( point );
     return point;
   }
@@ -94,7 +94,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       throws ProfilDataException
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
       point.addProperty( ecIt.next() );
     }
@@ -132,7 +132,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   {
     if (m_pointProperties.size()!= point.getProperties().size())
       throw new ProfilDataException("ungültiger Punkt");
-    for (final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator();ppIt.hasNext();)
+    for (final Iterator<ProfilPointProperty> ppIt = point.getProperties().iterator();ppIt.hasNext();)
     {
       if(!m_pointProperties.contains(ppIt.next()))
       {
