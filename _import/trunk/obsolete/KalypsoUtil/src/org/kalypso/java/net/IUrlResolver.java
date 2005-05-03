@@ -74,5 +74,7 @@ public interface IUrlResolver
    */
   public OutputStreamWriter createWriter( final URL url ) throws IOException;
 
+  /** Erzeugt einen (ungepufferten) Reader anhand einer URL. Insbesondere wird
+   * das Encoding des Reader nach bestem Wissen und Gewissen gesetzt. */
   public InputStreamReader createReader( final URL url ) throws IOException;
 }
