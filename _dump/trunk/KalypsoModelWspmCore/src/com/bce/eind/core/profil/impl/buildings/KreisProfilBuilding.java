@@ -6,6 +6,7 @@ package com.bce.eind.core.profil.impl.buildings;
 import java.util.Arrays;
 
 import com.bce.eind.core.profil.ProfilBuildingProperty;
+import com.bce.eind.core.profil.ProfilPointProperty;
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
 
 /**
@@ -18,6 +19,6 @@ public class KreisProfilBuilding extends AbstractProfilBuilding
   {
     super(BUILDING_TYP.BLD_KREIS,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
          ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
-        ProfilBuildingProperty.BEZUGSPUNKT_Y ));
+        ProfilBuildingProperty.BEZUGSPUNKT_Y ,ProfilBuildingProperty.RAUHEIT));
   }
  }

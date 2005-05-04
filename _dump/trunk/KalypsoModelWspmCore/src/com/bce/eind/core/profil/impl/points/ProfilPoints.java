@@ -124,6 +124,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return null;
   }
 
+  
   public final boolean removePoint( final IProfilPoint point )
   {
     return this.remove( point );

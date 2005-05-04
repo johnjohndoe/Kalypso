@@ -15,12 +15,12 @@ import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
 public class BrueckeProfilBuilding extends AbstractProfilBuilding
 {
 
-  public BrueckeProfilBuilding()
+  public BrueckeProfilBuilding( )
   {
-    super(BUILDING_TYP.BLD_BRUECKE,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
-        ProfilBuildingProperty.STEIGUNG, ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
-        ProfilBuildingProperty.BEZUGSPUNKT_Y ));
-    m_pointProperties.add(ProfilPointProperty.OBERKANTEBRUECKE);
-    m_pointProperties.add(ProfilPointProperty.UNTERKANTEBRUECKE);
+    super( BUILDING_TYP.BLD_BRUECKE, Arrays.asList( ProfilBuildingProperty.BREITE,
+        ProfilBuildingProperty.UNTERWASSER, ProfilBuildingProperty.PFEILERFORM,
+        ProfilBuildingProperty.RAUHEIT ) );
+    m_pointProperties.add( ProfilPointProperty.OBERKANTEBRUECKE );
+    m_pointProperties.add( ProfilPointProperty.UNTERKANTEBRUECKE );
   }
- }
+}

@@ -1,6 +1,7 @@
 package com.bce.eind.core.profil;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ProfilBuildingProperty
@@ -24,10 +25,19 @@ public class ProfilBuildingProperty
   public final static ProfilBuildingProperty STEIGUNG = new ProfilBuildingProperty(
       "Verhältnis der Dreieckseiten" );
 
-  public final static List<ProfilBuildingProperty> asList = Arrays.asList(
+  public final static ProfilBuildingProperty RAUHEIT = new ProfilBuildingProperty(
+  "Sohlrauheit" );
+
+public final static ProfilBuildingProperty PFEILERFORM = new ProfilBuildingProperty(
+  "Formbeiwert der Pfeiler" );
+
+public final static ProfilBuildingProperty UNTERWASSER = new ProfilBuildingProperty(
+  "Höhe der Gewässersohle im Unterwasser" );
+ 
+  public final static List<ProfilBuildingProperty> asList = Collections.unmodifiableList(Arrays.asList(
       ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE, ProfilBuildingProperty.STEIGUNG,
       ProfilBuildingProperty.STEIGUNG, ProfilBuildingProperty.SOHLGEFAELLE,
-      ProfilBuildingProperty.BEZUGSPUNKT_X, ProfilBuildingProperty.BEZUGSPUNKT_Y );
+      ProfilBuildingProperty.BEZUGSPUNKT_X, ProfilBuildingProperty.BEZUGSPUNKT_Y,ProfilBuildingProperty.RAUHEIT,ProfilBuildingProperty.PFEILERFORM,ProfilBuildingProperty.UNTERWASSER ));
 
   private ProfilBuildingProperty( final String label )
   {

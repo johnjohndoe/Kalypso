@@ -18,6 +18,6 @@ public class EiProfilBuilding extends AbstractProfilBuilding
   {
     super(BUILDING_TYP.BLD_EI,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
         ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
-        ProfilBuildingProperty.BEZUGSPUNKT_Y ));
+        ProfilBuildingProperty.BEZUGSPUNKT_Y,ProfilBuildingProperty.RAUHEIT ));
   }
  }

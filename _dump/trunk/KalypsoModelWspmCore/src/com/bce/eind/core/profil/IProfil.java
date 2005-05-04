@@ -123,7 +123,7 @@ public interface IProfil
   public boolean setDeviderTyp( final DeviderKey deviderKey, final TRENNFLAECHEN_TYP deviderTyp )
       throws ProfilDataException;
 
-  public void setProfilBuilding( final IProfilBuilding profilBuilding );
+  public void setProfilBuilding( final IProfil.BUILDING_TYP buildingTyp );
 
   public boolean setProfilMetaData( final METADATA metaDataKey, final Object data );
 
