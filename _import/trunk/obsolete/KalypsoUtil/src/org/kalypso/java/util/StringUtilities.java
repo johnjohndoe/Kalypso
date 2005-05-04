@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
 import java.awt.Color;
@@ -57,7 +57,7 @@ public final class StringUtilities
   /**
    * Not intended to be instanciated
    */
-  private StringUtilities()
+  private StringUtilities( )
   {
     // empty
   }
@@ -67,15 +67,17 @@ public final class StringUtilities
    * <p>
    * String has to have the following format: "R;G;B[;A]"
    * <p>
-   * with R, G, B being the Red, Green, Blue components of the color
-   * and expressed as integers in the range (0 - 255).
-   * with A optional, being the alpha composite value in the range (0 - 255).
-   *
+   * with R, G, B being the Red, Green, Blue components of the color and
+   * expressed as integers in the range (0 - 255). with A optional, being the
+   * alpha composite value in the range (0 - 255).
+   * 
    * @param s
-   *
-   * @throws IllegalArgumentException if s is null
+   * 
+   * @throws IllegalArgumentException
+   *           if s is null
    */
-  public static final Color stringToColor( final String s ) throws IllegalArgumentException
+  public static Color stringToColor( final String s )
+      throws IllegalArgumentException
   {
     if( s == null )
       throw new IllegalArgumentException( "Color String is null" );
@@ -84,52 +86,67 @@ public final class StringUtilities
 
     if( sc.length == 3 )
       return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
-                      Integer.parseInt( sc[2] ) );
-    
+          Integer.parseInt( sc[2] ) );
+
     if( sc.length == 4 )
       return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
-          Integer.parseInt( sc[2] ), Integer.parseInt( sc[3]) );
-    
+          Integer.parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
+
     throw new IllegalArgumentException( "Color String has wrong format: " + s );
   }
 
   /**
    * Converts a Color into a String.
    * <p>
-   * String will have same format as specified in @link StringUtilities#stringToColor(String)
-   *
+   * String will have same format as specified in
+   * 
+   * @link StringUtilities#stringToColor(String)
+   * 
    * @param c
-   *
-   * @throws IllegalArgumentException if color is null
+   * 
+   * @throws IllegalArgumentException
+   *           if color is null
    */
-  public static final String colorToString( final Color c )
+  public static String colorToString( final Color c )
   {
     if( c == null )
       throw new IllegalArgumentException( "Color is null" );
 
-    final StringBuffer buf = new StringBuffer(  );
+    final StringBuffer buf = new StringBuffer();
 
-    buf.append( c.getRed(  ) ).append( ";" ).append( c.getGreen(  ) )
-       .append( ";" ).append( c.getBlue(  ) );
+    buf.append( c.getRed() ).append( ";" ).append( c.getGreen() ).append( ";" )
+        .append( c.getBlue() );
 
     // alpha component is optional
     if( c.getAlpha() != 255 )
       buf.append( ";" ).append( c.getAlpha() );
-    
-    return buf.toString(  );
+
+    return buf.toString();
   }
 
   /**
    * Converts a String to a Font.
+   * 
    * <pre>
-   *    FontName;FontStyle;FontSize
+   * 
+   *  
+   *   
+   *    
+   *     
+   *         FontName;FontStyle;FontSize
+   *      
+   *     
+   *    
+   *   
+   *  
    * </pre>
-   *
+   * 
    * @param s
-   *
-   * @throws IllegalArgumentException if s is null
+   * 
+   * @throws IllegalArgumentException
+   *           if s is null
    */
-  public static final Font stringToFont( final String s )
+  public static Font stringToFont( final String s )
   {
     if( s == null )
       throw new IllegalArgumentException( "Font String is null" );
@@ -139,51 +156,113 @@ public final class StringUtilities
     if( sc.length != 3 )
       throw new IllegalArgumentException( "Font String has wrong format" );
 
-    final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
+    final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer
+        .parseInt( sc[2] ) );
 
     return f;
   }
 
   /**
-   * Converts a font to a string. Format is defined in @link StringUtilities#stringToFont(String)
-   *
+   * Converts a font to a string. Format is defined in
+   * 
+   * @link StringUtilities#stringToFont(String)
+   * 
    * @param f
-   *
-   * @throws IllegalArgumentException if f is null
+   * 
+   * @throws IllegalArgumentException
+   *           if f is null
    */
-  public static final String fontToString( final Font f )
+  public static String fontToString( final Font f )
   {
     if( f == null )
       throw new IllegalArgumentException( "Font is null" );
 
-    final StringBuffer buf = new StringBuffer(  );
+    final StringBuffer buf = new StringBuffer();
 
-    buf.append( f.getName(  ) ).append( ";" ).append( f.getStyle(  ) )
-       .append( ";" ).append( f.getSize(  ) );
+    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" )
+        .append( f.getSize() );
 
-    return buf.toString(  );
+    return buf.toString();
   }
 
-  /** 
+  /**
    * Replacement per Pattern-Matching
    * 
    * @param sourceValue
    * @param replaceProperties
    * @return string
    */
-  public static final String replaceAll( final String sourceValue, final Properties replaceProperties )
+  public static String replaceAll( final String sourceValue,
+      final Properties replaceProperties )
   {
     String newString = sourceValue;
-    
-    for( Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
+
+    for( Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt
+        .hasNext(); )
     {
-      final Map.Entry entry = (Entry)replaceIt.next();
+      final Map.Entry entry = (Entry) replaceIt.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
-      
+
       newString = newString.replaceAll( key, value );
     }
-    
+
     return newString;
+  }
+
+  /**
+   * Spans a string onto lines, thus it inserts NEWLINE chars at lineLength + 1
+   * for each line. It firsts removes all existing NEWLINE chars.
+   * 
+   * @param str
+   *          the string to span
+   * @param lineLength
+   *          the number of chars one line must have
+   * @param keepWords
+   *          when true words are not cut at the end of the line but rather
+   *          postponed on the next line
+   * @return newly spaned string or null if str is null
+   */
+  public static String spanOverLines( final String str, final int lineLength,
+      final boolean keepWords )
+  {
+    if( str == null )
+      return null;
+
+    if( lineLength == 0 )
+      return str;
+    
+    str.replaceAll( "\\n", "" );
+
+    final StringBuffer bf = new StringBuffer();
+    int i = 0;
+    while( true )
+    {
+      if( i + lineLength > str.length() )
+      {
+        bf.append( str.substring( i, str.length() ) );
+        break;
+      }
+      else
+      {
+        int curLineLength = lineLength;
+        if( keepWords && str.charAt( i + lineLength - 2) != ' ' && str.charAt( i + lineLength - 1) != ' ' && str.charAt( i + lineLength ) != ' ' )
+        {
+          curLineLength = lineLength - 3;
+          while( curLineLength > 0 && str.charAt( i + curLineLength ) == ' ' )
+            curLineLength--;
+          
+          if( curLineLength == 0 )
+            curLineLength = lineLength;
+        }
+        
+        final String line = str.substring( i, i + curLineLength );
+        bf.append( line ).append( System.getProperty( "line.separator" ) );
+
+        i = i + curLineLength;
+      }
+    }
+
+    return bf.toString();
   }
 }

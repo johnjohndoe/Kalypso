@@ -36,16 +36,19 @@
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		
+		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		
 		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
 	</target>
 
 	<target name="build-plugins" depends="build-basic, build-CalcService">
 		<echo message="Building specific plugins for Sachsen" />
-<!--		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
--->
+		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+
 		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
-<!--		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
--->
+		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
+
 	</target>
 
 	<target name="modelplugins-dependency" depends="build-plugins">
@@ -54,11 +57,11 @@
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoSpreePlugin/build/deploy" includes="**/*.jar" />
 		</copy>
-<!-- TODO: what about KalypsoOptimize? -->	  
-<!--		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+
+		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoNA/build/deploy" includes="**/*.jar" />
 		</copy>
--->		
+		
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
 		</copy>
