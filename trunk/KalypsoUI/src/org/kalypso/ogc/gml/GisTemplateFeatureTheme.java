@@ -145,8 +145,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( layerType instanceof Layer )
     {
       final Layer mapLayerType = (Layer)layerType;
-
-      setName( "[" + type.toUpperCase()+ "] " + mapLayerType.getName() );
+      setType( type.toUpperCase() );
+      setName( mapLayerType.getName() );
 
       final List stylesList = mapLayerType.getStyle();
 
