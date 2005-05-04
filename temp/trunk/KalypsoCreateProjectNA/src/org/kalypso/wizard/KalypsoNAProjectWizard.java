@@ -288,7 +288,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       };
       description.setNatureIds( nanature );
       projectHandel.create( description, null );
-      //      projectHandel.create( null );
       projectHandel.open( null );
       //set charSet for the new project to the UTF-8 standard
       projectHandel.setDefaultCharset( "UTF-8", null );

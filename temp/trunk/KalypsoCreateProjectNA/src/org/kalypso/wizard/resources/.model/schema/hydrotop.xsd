@@ -110,7 +110,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="fak_vers" type="integer" minOccurs="0">
+					<element name="fak_vers" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Faktor Versiegelung</label>
