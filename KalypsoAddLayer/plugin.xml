@@ -56,6 +56,11 @@
             class="org.kaylpso.ui.wizard.gml.KalypsoGmlImportWizard"
             name="GML "
             id="gml"/>
+      <wizard
+            icon="icon/fileGml.gif"
+            class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
+            name="Raster"
+            id="org.kalypso.ui.wizard.raster"/>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
