@@ -55,16 +55,23 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 {
   private String m_name;
+  
+  private String m_type = "unknown type";
+  
   private ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
   
   public AbstractKalypsoTheme( final String name )
   {
     m_name = name;
   }
-
+  public AbstractKalypsoTheme( final String name, final String type )
+  {
+    m_name = name;
+    m_type = type;
+  }
   public String getName()
   {
-    return m_name;
+    return  m_name;
   }
 
   /**
@@ -102,5 +109,13 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   public String toString()
   {
     return m_name;
+  }
+  public String getType()
+  {
+    return "[" + m_type + "] ";
+  }
+  public void setType( String type )
+  {
+    m_type = type;
   }
 }
