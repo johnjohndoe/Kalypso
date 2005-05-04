@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.spree.modell" version="0.1" xmlns:spree="org.kalypso.spree.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/feature.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/xlinks.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/obslink.xsd"/>
 
 	<!-- Eigentliches Spree-Modell -->	
 	<element name="SpreeModell" type="spree:_SpreeModellType"/>
@@ -26,14 +26,14 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="PegelCollection" type="spree:PegelCollectionType"/>
+	<element name="PegelCollection" type="spree:PegelCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="PegelCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="PegelMember" type="spree:PegelAssociationType" minOccurs="10" maxOccurs="10"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	<complexType name="PegelAssociationType">
@@ -77,7 +77,11 @@
 					<element name="BodenfeuchteMin" type="double"/>
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
-					<element name="Ausdehnung" type="double"/>
+					<element name="Ausdehnung" type="double"  minOccurs="0">
+						<annotation>
+							<documentation>Deprecated: Wird nicht mehr benötigt, deshalb optional damit die alten Rechenvarianten noch funktionieren.</documentation>
+						</annotation>
+					</element>
 					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Niederschlag_prognose" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Niederschlag_rechnung" type="obslink:TimeseriesLinkFeatureProperty"/>
@@ -109,14 +113,14 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="TalsperreCollection" type="spree:TalsperreCollectionType"/>
+	<element name="TalsperreCollection" type="spree:TalsperreCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="TalsperreCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="TalsperreMember" type="spree:TalsperreAssociationType" minOccurs="2" maxOccurs="2"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	<complexType name="TalsperreAssociationType">
@@ -155,14 +159,14 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="VorgabeCollection" type="spree:VorgabeCollectionType"/>
+	<element name="VorgabeCollection" type="spree:VorgabeCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="VorgabeCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="spree:EmptyFeatureBaseType">
 				<sequence>
 					<element name="VorgabeMember" type="spree:VorgabeAssociationType" minOccurs="5" maxOccurs="5"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	<complexType name="VorgabeAssociationType">

@@ -13,7 +13,10 @@
 	</complexType>
 	<element name="TimeseriesLink" type="obslink:TimeseriesLinkType"/>
 	<complexType name="TimeseriesLinkType">
-		<attributeGroup ref="xlink:locatorLink"/>
-		<attribute name="linktype" type="string"/>
+		<attributeGroup ref="xlink:simpleLink"/>
+		<!-- Die folgenden Attribute werden nicht mehr gebraucht, sind aber aufgrund der Abwärtskompabilität der Modell-GMLs noch da -->
+		<attribute name="linktype" type="string" use="optional"/>
+		<attribute name="timeaxis" type="string" use="optional"/>
+		<attribute name="valueaxis" type="string" use="optional"/>
 	</complexType>
 </schema>
