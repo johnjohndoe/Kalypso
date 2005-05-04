@@ -263,4 +263,13 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   {
     return null;
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
+   */
+  public String getType()
+  {
+    return "";
+  }
+
 }

@@ -62,7 +62,9 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
    * returns the name of the layer
    */
   public String getName();
-
+  
+  public String getType();
+  
   public void setName( final String name );
   
   public GM_Envelope getBoundingBox();
