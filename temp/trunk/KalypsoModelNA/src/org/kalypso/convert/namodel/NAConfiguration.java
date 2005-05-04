@@ -51,6 +51,7 @@ import java.util.Date;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
  * @author doemming
@@ -144,9 +145,9 @@ public class NAConfiguration
     m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     m_parameterSchemaURL = getClass().getResource( "schema/parameter.xsd" );
     m_hydrotopSchemaUrl = getClass().getResource( "schema/hydrotop.xsd" );
-    final GMLSchema schema = GMLSchemaCache.getSchema( m_schemaURL );
-    final GMLSchema paraSchema = GMLSchemaCache.getSchema( m_parameterSchemaURL );
-    final GMLSchema hydSchema = GMLSchemaCache.getSchema( m_hydrotopSchemaUrl );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( m_schemaURL );
+    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( m_parameterSchemaURL );
+    final GMLSchema hydSchema = GMLSchemaCatalog.getSchema( m_hydrotopSchemaUrl );
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );

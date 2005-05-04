@@ -61,6 +61,7 @@ import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -146,7 +147,7 @@ public class NAModellConverter
     //        insertSHPGeometries( modelRootFeature, shapeDir );
 
     File modelGmlFile = new File( gmlBaseDir, "model.gml" );
-    final GMLSchema modelGmlSchema = GMLSchemaCache.getSchema( conf.getSchemaURL() );
+    final GMLSchema modelGmlSchema = GMLSchemaCatalog.getSchema( conf.getSchemaURL() );
     final Document modelSchema = modelGmlSchema.getSchema();
     //    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl(
     // modelGmlSchema.getFeatureTypes(),
@@ -157,7 +158,7 @@ public class NAModellConverter
     // modelWorkspace );
 
     File parameterGmlFile = new File( gmlBaseDir, "parameter.gml" );
-    final GMLSchema paraGmlSchema = GMLSchemaCache.getSchema( conf.getParameterSchemaURL() );
+    final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( conf.getParameterSchemaURL() );
     final Document paraSchema = paraGmlSchema.getSchema();
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema.getFeatureTypes(),
         parameterRootFeature, null, " project:/.model/schema/parameter.xsd", paraSchema
@@ -243,9 +244,9 @@ public class NAModellConverter
   public NAModellConverter( NAConfiguration conf ) throws Exception
   {
     m_conf = conf;
-    m_modelSchema = GMLSchemaCache.getSchema( conf.getSchemaURL() );
-    GMLSchema m_hydrotopSchema = GMLSchemaCache.getSchema( conf.getHydrotopSchemaUrl() );
-    GMLSchema m_parameterSchema = GMLSchemaCache.getSchema( conf.getParameterSchemaURL() );
+    m_modelSchema = GMLSchemaCatalog.getSchema( conf.getSchemaURL() );
+    GMLSchema m_hydrotopSchema = GMLSchemaCatalog.getSchema( conf.getHydrotopSchemaUrl() );
+    GMLSchema m_parameterSchema = GMLSchemaCatalog.getSchema( conf.getParameterSchemaURL() );
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
