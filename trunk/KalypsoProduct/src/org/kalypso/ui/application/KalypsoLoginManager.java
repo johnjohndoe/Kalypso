@@ -11,8 +11,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.application.login.AppLoginValidator;
+import org.kalypso.ui.application.login.AuthLoginValidator;
+import org.kalypso.ui.application.login.ILoginValidator;
+import org.kalypso.ui.application.login.SingleLoginValidator;
 import org.kalypso.users.User;
-import org.kalypso.users.UserServiceConstants;
 
 /**
  * KalypsoLoginManager
@@ -25,27 +28,6 @@ public final class KalypsoLoginManager
   {
     // not intended to be instanciated
   }
-
-  //  private foo( )
-  //  {
-  //    final String[] userRights = KalypsoGisPlugin.getDefault().getUserRights();
-  //
-  //    final StringBuffer userMsg = new StringBuffer( "Rights from server:" );
-  //    for( int i = 0; i < userRights.length; i++ )
-  //      userMsg.append( "\n'" + userRights[i] + "'" );
-  //
-  //    m_logger.info( userMsg.toString() );
-  //
-  //    final String[] rights = chooseRight( userRights );
-  //
-  //    if( rights.length == 0 )
-  //      return IPlatformRunnable.EXIT_OK;
-  //
-  //    final StringBuffer chooseMsg = new StringBuffer( "Chosen rights:" );
-  //    for( int i = 0; i < rights.length; i++ )
-  //      chooseMsg.append( "\n'" + rights[i] + "'" );
-  //    m_logger.info( chooseMsg.toString() );
-  //  }
 
   public static User startLoginProcedure( )
   {
@@ -60,40 +42,39 @@ public final class KalypsoLoginManager
       e.printStackTrace();
     }
 
-    final String title = "Kalypso - Login";
-    String message = "Es konnten keine Benutzerrechte vom Server ermittelt werden. "
-        + "Geben Sie das Administrator-Passwort ein, um im Administrator-Modus zu starten.";
-    String userName = "Administrator";
+    ILoginValidator lv = null;
+
     boolean useLogin = false;
     boolean useScenario = false;
     String[] scenarios = {};
-    String[] scenarioDescs = {};
-
-    ILoginValidator lv = null;
+    String[] scenarioDescriptions = {};
 
     if( srv != null )
     {
-      message = "Melden Sie sich bitte an.";
-      userName = System.getProperty( "user.name" );
       try
       {
         useLogin = srv.isAskForLogin();
+
+        if( useLogin )
+          lv = new AuthLoginValidator( srv );
+        else
+          lv = new SingleLoginValidator( srv );
+
         useScenario = srv.isAskForScenario();
         scenarios = srv.getScenarios();
-        scenarioDescs = srv.getScenarioDescriptions();
+        scenarioDescriptions = srv.getScenarioDescriptions();
       }
       catch( final RemoteException e )
       {
         e.printStackTrace();
+        lv = new AppLoginValidator();
       }
-
-      if( useLogin )
-        lv = new AuthLoginValidator( srv );
-      else
-        lv = new SingleLoginValidator( srv );
     }
     else
+    {
+      useLogin = true;
       lv = new AppLoginValidator();
+    }
 
     Display display = null;
     Shell shell = null;
@@ -104,20 +85,23 @@ public final class KalypsoLoginManager
       shell.setImage( ImageProvider.IMAGE_KALYPSO_ICON.createImage() );
     }
 
-    String password = null;
+    String username = lv.getDefaultUserName();
     User user = null;
 
     while( true )
     {
+      String password = null;
+
       if( useLogin || useScenario )
       {
-        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, title,
-            message, userName, useLogin, useLogin, useScenario, scenarios,
-            scenarioDescs );
+        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell,
+            "Kalypso - Login", lv.getMessage(), username, lv
+                .userNameChangeable(), lv.passwordEnabled(), useScenario,
+            scenarios, scenarioDescriptions );
 
         if( dlg.open() == Window.OK )
         {
-          userName = dlg.getUserName();
+          username = dlg.getUserName();
           password = dlg.getPassword();
 
           // TODO m_currentScenario = dlg.getSelectedScenario();
@@ -129,10 +113,22 @@ public final class KalypsoLoginManager
         }
       }
 
-      user = lv.validate( userName, password );
+      try
+      {
+        user = lv.validate( username, password );
+        
+        if( user != null )
+          break;
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
 
-      if( user != null )
-        break;
+        // if was using the server, still give a chance to
+        // use kalypso app login
+        lv = new AppLoginValidator( );
+        username = lv.getDefaultUserName();
+      }
     }
 
     KalypsoGisPlugin.getDefault().setUser( user );
@@ -143,76 +139,5 @@ public final class KalypsoLoginManager
       display.dispose();
 
     return user;
-  }
-
-  public static interface ILoginValidator
-  {
-    public User validate( final String username, final String password );
-  }
-
-  private static class AppLoginValidator implements ILoginValidator
-  {
-    public User validate( final String username, final String password )
-    {
-      if( "hochwasser".equals( password ) )
-        return new User( "Administrator",
-            new String[] { UserServiceConstants.RIGHT_ADMIN } );
-
-      return null;
-    }
-  }
-
-  private static class AuthLoginValidator implements ILoginValidator
-  {
-    private final IUserService m_srv;
-
-    public AuthLoginValidator( final IUserService srv )
-    {
-      m_srv = srv;
-    }
-
-    public User validate( final String username, final String password )
-    {
-      try
-      {
-        final String[] rights = m_srv.getRights2( username, password );
-
-        if( rights != null )
-          return new User( username, rights );
-      }
-      catch( final RemoteException e )
-      {
-        e.printStackTrace();
-      }
-
-      return null;
-    }
-  }
-
-  private static class SingleLoginValidator implements ILoginValidator
-  {
-    private final IUserService m_srv;
-
-    public SingleLoginValidator( final IUserService srv )
-    {
-      m_srv = srv;
-    }
-
-    public User validate( final String username, final String password )
-    {
-      try
-      {
-        final String[] rights = m_srv.getRights( username );
-
-        if( rights != null )
-          return new User( username, rights );
-      }
-      catch( final RemoteException e )
-      {
-        e.printStackTrace();
-      }
-
-      return null;
-    }
   }
 }
