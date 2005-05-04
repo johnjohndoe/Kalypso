@@ -4,7 +4,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -55,7 +54,7 @@ public class KalypsoWizardDialog extends WizardDialog
    * 
    *  @author kuepfer
    */
-  public KalypsoWizardDialog( Shell parentShell, IWizard newWizard, GisMapOutlineViewer outlineviewer )
+  public KalypsoWizardDialog( Shell parentShell, IWizard newWizard )
   {
     
     super( parentShell, newWizard );

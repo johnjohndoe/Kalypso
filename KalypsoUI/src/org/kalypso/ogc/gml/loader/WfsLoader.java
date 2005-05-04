@@ -6,46 +6,47 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import org.deegree.services.wfs.capabilities.FeatureType;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.gml.GMLFeature;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.gml.GMLDocument_Impl;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.w3c.dom.Document;
-
+/**
+ * 
+ * @author Kuepferle
+ * 
+ * */
 public class WfsLoader extends AbstractLoader
 {
 
-  private String featureType;
+  private String m_featureType;
+
+  private URL m_schemaURL;
 
   /**
    * Loads a WFS DataSource from the given URL
@@ -69,13 +70,15 @@ public class WfsLoader extends AbstractLoader
       final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
       String path = sourceProps.getProperty( "URL" );
 
-      featureType = sourceProps.getProperty( "FEATURE" );
+      m_featureType = sourceProps.getProperty( "FEATURE" );
+
       if( path != null )
       {
         url = new URL( path );
       }
+      m_schemaURL = new URL( url
+          + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + m_featureType );
 
-      //          String[] array = StringExtend.toArray(source, "#", true);
       //
       //          if (array[0].length() > 0 && array[0].startsWith("http://"))
       //          {
@@ -117,58 +120,9 @@ public class WfsLoader extends AbstractLoader
       ps.print( buildGetFeatureRequest() );
       ps.close();
 
-      //        read response from the WFS server
+      //read response from the WFS server and create a GMLWorkspace
       InputStream is = con.getInputStream();
-//      StreamUtilities.streamCopy(is, new FileOutputStream(new File("D:/temp/wfs-response.xml")));
-//      if(1+1==2)
-//        return null;
-      //Transform response (add default namespace)
-      Document document = XMLTools.parse( new InputStreamReader( is ) );
-      // Use the static TransformerFactory.newInstance() method to instantiate
-      // a TransformerFactory. The javax.xml.transform.TransformerFactory
-      // system property setting determines the actual class to instantiate --
-      // org.apache.xalan.transformer.TransformerImpl.
-      TransformerFactory tFactory = TransformerFactory.newInstance();
-
-      // Use the TransformerFactory to instantiate a Transformer that will work
-      // with
-      // the stylesheet you specify. This method call also processes the
-      // stylesheet
-      // into a compiled Templates object.
-      URL xsltURL = getClass().getResource( "resources/transformGetFeature.xsl" );
-      // TODO this is a big hack around a deegree bug, solve this bug
-      Transformer transformer = tFactory.newTransformer( new StreamSource( xsltURL.openStream() ) );
-
-      // Use the Transformer to apply the associated Templates object to an XML
-      // document
-      // (foo.xml) and write the output to a file (foo.out).
-      StringWriter sw = new StringWriter();
-      transformer.transform( new DOMSource( document ), new StreamResult( sw ) );
-
-      document = XMLTools.parse( new StringReader( sw.toString() ) );
-
-      // load gml
-      final GMLDocument_Impl gmlDoc = new GMLDocument_Impl( document );
-
-      final GMLFeature gmlFeature = gmlDoc.getRootFeature();
-      URL schemaURL = new URL( url
-          + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + featureType );
-      // load schema
-      final GMLSchema schema = GMLSchemaCache.getSchema( schemaURL );
-
-      // create feature and workspace gml
-      final org.kalypsodeegree.model.feature.FeatureType[] types = schema.getFeatureTypes();
-      final Feature feature = FeatureFactory.createFeature( gmlFeature, types );
-
-      // nicht die echte URL der schemaLocation, sondern dass, was im gml steht!
-      final String schemaLocationName = gmlDoc.getSchemaLocationName();
-
-      final CommandableWorkspace workspace = new CommandableWorkspace( new GMLWorkspace_Impl(
-          types, feature, context, schemaLocationName, schema.getTargetNS(), schema
-              .getNamespaceMap() ) );
-
-      //      FileWriter writer = new FileWriter( "d://workspace.gml" );
-      //      GmlSerializer.serializeWorkspace( writer, workspace );
+      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( is, m_schemaURL );
 
       try
       {
@@ -184,7 +138,7 @@ public class WfsLoader extends AbstractLoader
       {
         t.printStackTrace();
       }
-      return workspace;
+      return new CommandableWorkspace( workspace );
 
     }
     catch( final LoaderException le )
@@ -203,18 +157,6 @@ public class WfsLoader extends AbstractLoader
       monitor.done();
 
     }
-  }
-
-  private boolean isRequestedFTavailable( FeatureType[] availableFeatureTypes,
-      String requestedFeatureType )
-  {
-    for( int i = 0; i < availableFeatureTypes.length; i++ )
-    {
-      FeatureType featureType = availableFeatureTypes[i];
-      featureType.getName().equals( requestedFeatureType );
-      return true;
-    }
-    return false;
   }
 
   private WFSCapabilities getCapabilites( String url )
@@ -264,7 +206,7 @@ public class WfsLoader extends AbstractLoader
     StringBuffer sb = new StringBuffer();
     sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );
     sb.append( "<GetFeature outputFormat=\"GML2\" xmlns:gml=\"http://www.opengis.net/gml\">\n" );
-    sb.append( "<Query typeName=\"" + featureType + "\">\n" );
+    sb.append( "<Query typeName=\"" + m_featureType + "\">\n" );
     sb.append( "<Filter>\n" );
     sb.append( "</Filter>\n" );
     sb.append( "</Query>" );
@@ -277,13 +219,64 @@ public class WfsLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
   public void save( final String source, final URL context, final IProgressMonitor monitor,
-      final Object data ) throws LoaderException
+      final Object data )
   {
     // TODO implementation of a transactional WFS
-    throw new LoaderException( "Data can not be saved to a remote WFS, not implemented yet!" );
+    if( data instanceof CommandableWorkspace )
+    {
+      Display display = new Display();
+      MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS",
+          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                ).createImage(),
+          "Sollen die Daten Lokal gespeichrt werden?", MessageDialog.QUESTION, new String[]
+          {
+              "Ja",
+              "Nein"
+          }, 0 );
+      int result = md.open();
+      try
+      {
+        if( result == 0 )
+        {
+          IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+          SaveAsDialog dialog = new SaveAsDialog( new Shell( display ) );
+          dialog.open();
+          IPath targetPath = root.getLocation().append( dialog.getResult() );
+          //          IFile file = root.getFile( targetPath );
+          FileWriter fw = new FileWriter( targetPath.toFile().toString() );
+          GmlSerializer.serializeWorkspace( fw, (GMLWorkspace)data );
+          ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, monitor );
+        }
+        else if( result == 1 )
+        {
+
+          MessageDialog.openError( new Shell( display ), "Operation not supported",
+              "Saving a feature at a remote location is not supported" );
+        }
+
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      catch( GmlSerializeException e )
+      {
+        e.printStackTrace();
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        display.dispose();
+      }
+    }
   }
 
-  private void dumpToFile( String filename, InputStream is )
+  /**
+   * This method is just for debuging, to write an imput stream to a file
+   */
+  private void writeInputStreamToFile( String filename, InputStream is )
   {
 
     try

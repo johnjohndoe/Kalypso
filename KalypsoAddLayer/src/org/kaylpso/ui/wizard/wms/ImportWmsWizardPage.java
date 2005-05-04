@@ -19,6 +19,8 @@ import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -77,8 +79,12 @@ import sun.misc.BASE64Encoder;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
-public class ImportWmsWizardPage extends WizardPage implements ModifyListener, SelectionListener
+/**
+ * 
+ * @author Kuepferle
+ * 
+ * */
+public class ImportWmsWizardPage extends WizardPage implements ModifyListener, SelectionListener, FocusListener
 {
 
   private Combo m_url = null;
@@ -250,11 +256,14 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
       recent.add( "http://134.28.77.120/deegreewms/wms" );
       recent.add( "http://134.28.77.120/wmsconnector/com.esri.wms.Esrimap" );
       recent.add("http://134.28.77.120/xplanungwms/wms");
+      recent.add("http://localhost:8080/deegreewms/wms");
     }
     GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
     gridData.widthHint = 400;
 
     m_url = new Combo( fieldGroup, SWT.BORDER | SWT.READ_ONLY );
+    m_url.addFocusListener(this);
+    m_url.addModifyListener( this );
     m_url.setItems( (String[])recent.toArray( new String[recent.size()] ) );
     m_url.setVisibleItemCount( 15 );
     m_url.setLayoutData( gridData );
@@ -284,7 +293,6 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     m_pass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_pass.addModifyListener( this );
 
-    m_url.addModifyListener( this );
 
   }
 
@@ -700,5 +708,38 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     m_url.removeSelectionListener(this);
     m_addLayer.removeSelectionListener(this);
     m_removeLayer.removeSelectionListener(this);
+  }
+
+  /**
+   * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+   */
+  public void focusGained( FocusEvent e )
+  {
+    //do nothing
+  }
+
+  /**
+   * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+   */
+  public void focusLost( FocusEvent e )
+  {
+    if( e.widget == m_url ){
+      m_listRightSide.removeAll();
+      if( validateURLField() )
+      {
+        m_wmsLayers = getCapabilites( m_url.getText() );
+        if( ( m_wmsLayers != null || m_wmsLayers.length > 0 ) || m_url.getText().length() < 1 )
+          m_layerSelection.setVisible( true );
+        else m_layerSelection.setVisible(false);
+        updateLayerSelection();
+        setErrorMessage( null );
+      }
+      else
+      {
+        setPageComplete( false );
+        setMessage( "Die gewählte URL ist ungültig" );
+      }
+    }
+    getContainer().updateButtons();
   }
 }

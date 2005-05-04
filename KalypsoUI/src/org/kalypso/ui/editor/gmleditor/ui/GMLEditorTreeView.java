@@ -82,7 +82,7 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
 
   protected Clipboard clipboard = null;
 
-  final GMLEditor m_gmlEditor;
+//  final GMLEditor m_gmlEditor;
 
   private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
@@ -91,9 +91,9 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
    * 
    * @param composite
    */
-  public GMLEditorTreeView( Composite composite, GMLEditor gmlEditor )
+  public GMLEditorTreeView( Composite composite )//, GMLEditor gmlEditor )
   {
-    m_gmlEditor = gmlEditor;
+//    m_gmlEditor = gmlEditor;
     clipboard = new Clipboard();
 
     m_composite = composite;
@@ -118,9 +118,9 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     layoutData.verticalAlignment = GridData.FILL;
     m_treeViewer.getControl().setLayoutData( layoutData );
 
-    hookListeners();
-    createActions();
-    createMenu( m_treeViewer.getControl() );
+//    hookListeners();
+//    createActions();
+//    createMenu( m_treeViewer.getControl() );
   }
 
   public void setGmlReader( final GMLReader reader )

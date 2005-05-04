@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -41,7 +40,6 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
-import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.xml.sax.SAXException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -84,7 +82,11 @@ import org.xml.sax.SAXException;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
+/**
+ * 
+ * @author Kuepferle
+ * 
+ * */
 public class ImportWfsWizardPage extends WizardPage implements ModifyListener, SelectionListener,
     FocusListener
 {
@@ -136,9 +138,7 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
 
   private static final int MIN_LIST_HIGHT = 150;
 
-  private GMLSchema m_schema;
-
-  /*
+  /**
    * 
    * @author kuepfer
    */
@@ -854,8 +854,6 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
    * 
    * @param layer
    *          name of layer to get the FeatureType
-   * @param clazz
-   *          property type to be searched
    * @return returns a hash set of feature type properties that is passed trough
    *         <em>clazz</em> parameter.
    *  
@@ -977,5 +975,16 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
         {
           layer
         } )[0] ) );
+  }
+
+  public void removeListeners()
+  {
+    m_addLayer.removeSelectionListener( this );
+    m_listLeftSide.removeSelectionListener( this );
+    m_listRightSide.removeSelectionListener( this );
+    m_url.removeModifyListener( this );
+    m_url.removeFocusListener( this );
+    m_removeLayer.removeSelectionListener( this );
+
   }
 }
