@@ -32,7 +32,7 @@ public class WQPairComparator implements Comparator
     
     if( m_field == W )
       return Double.compare( p1.getW(), p2.getW() );
-    else
-      return Double.compare( p1.getQ(), p2.getQ() );
+
+    return Double.compare( p1.getQ(), p2.getQ() );
   }
 }
