@@ -83,7 +83,7 @@ public class GMLSchema
   private void setImportedSchemas( )
   {
     // <import namespace="http://www.opengis.net/gml"
-    // schemaLocation="http://www.opengis.net/gml feature.xsd"/>
+    // schemaLocation="feature.xsd"/>
     final NodeList nl = m_schemaDoc.getElementsByTagNameNS(
         XMLHelper.XMLSCHEMA_NS, "import" );
     for( int i = 0; i < nl.getLength(); i++ )
@@ -91,21 +91,11 @@ public class GMLSchema
       try
       {
         final Node attributeNode = XMLHelper.getAttributeNode( nl.item( i ),
-            "schemaLocation" );
-        final String schemaLocation = attributeNode.getNodeValue();
+            "namespace" );
+        final String namespace = attributeNode.getNodeValue();
 
-        final String[] locationSplit = schemaLocation.split( " " );
-        if( locationSplit.length == 2 )
-        {
-          final String namespace = locationSplit[0];
-          
-          final GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
-          m_importedSchemas.put( namespace, schema );
-        }
-        else
-          System.out
-              .println( "SchemaLocation muss Namespace UND Location enthalten!" );
-
+        final GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
+        m_importedSchemas.put( namespace, schema );
       }
       catch( final Exception e )
       {
