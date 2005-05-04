@@ -78,7 +78,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
 /**
- * @author doemming
+ * @author Kuepferle
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServiceClient
 {
@@ -86,7 +86,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private Image m_remoteImage = null;
 
- private String m_source = null;
+  private String m_source = null;
 
   private String my_requestId = null;
 
@@ -106,10 +106,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private GM_Envelope m_maxEnv = null;
 
-  public KalypsoWMSTheme( final String themeName, final String source,
+  public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
       final CS_CoordinateSystem localCRS )
   {
-    super( themeName );
+    super( themeName, linktype );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
     m_layers = sourceProps.getProperty( "LAYERS", "" );
     final String service = sourceProps.getProperty( "URL", "" );
@@ -211,10 +211,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     // kann keine selektion zeichnen!
     if( selectionId != 0 )
       return;
-    //the image is only updated when the wish bbox is bigger then bbox of the requestedbbox (image) 
-    if( m_requestedBBox != null
-        && ( m_requestedBBox.equals( bbox ) || m_requestedBBox.contains( bbox ) )
-        && m_remoteImage != null )
+    //the image is only updated when the wish bbox is bigger then bbox of the
+    // requestedbbox (image)
+    if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
     {
 
       GM_Envelope remoteEnv = null;
@@ -386,6 +385,5 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   {
     return m_source;
   }
-
 
 }// class KalypsoWMSTheme
