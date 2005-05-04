@@ -46,12 +46,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -86,7 +87,7 @@ public class ObservationLinkHandler implements ITypeHandler
    */
   public String getTypeName()
   {
-    return getNamespaceUri() + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkType.class );
+    return getNamespaceUri() + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
   }
   
   private String getElementName()
