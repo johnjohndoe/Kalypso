@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.loader;
 
+import java.io.BufferedInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.core.resources.IResource;
@@ -23,6 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -36,14 +39,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
+
 /**
  * 
  * @author Kuepferle
- * 
- * */
+ */
 public class WfsLoader extends AbstractLoader
 {
-
   private String m_featureType;
 
   private URL m_schemaURL;
@@ -62,7 +64,7 @@ public class WfsLoader extends AbstractLoader
   protected Object loadIntern( String source, URL context, IProgressMonitor monitor )
       throws LoaderException
   {
-
+    InputStreamReader reader = null;
     try
     {
       monitor.beginTask( "WFS laden", 1000 );
@@ -118,34 +120,27 @@ public class WfsLoader extends AbstractLoader
 
       PrintStream ps = new PrintStream( con.getOutputStream() );
       ps.print( buildGetFeatureRequest() );
+      // TODO: immer in try/finaslly block schliessen!
       ps.close();
 
       //read response from the WFS server and create a GMLWorkspace
-      InputStream is = con.getInputStream();
-      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( is, m_schemaURL );
+      // TODO: Bitte in zukunft immer die Streams schliessen!
+      // TODO: und immer die Streams buffern
+      // TODO: und immer alles committen, damits keine compiler-Fehler gibt!
+      
+      reader = new InputStreamReader( new BufferedInputStream( con.getInputStream() ) );
 
-      try
-      {
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( reader, new UrlUtilities(),
+          m_schemaURL );
+      reader.close();
 
-        final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
-            FeatureVisitor.DEPTH_INFINITE );
-        workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
-            FeatureVisitor.DEPTH_INFINITE );
+      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
+      workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
 
-      }
-      catch( final Throwable t )
-      {
-        t.printStackTrace();
-      }
       return new CommandableWorkspace( workspace );
-
-    }
-    catch( final LoaderException le )
-    {
-      le.printStackTrace();
-      throw le;
-
     }
     catch( final Exception e )
     {
@@ -155,7 +150,7 @@ public class WfsLoader extends AbstractLoader
     finally
     {
       monitor.done();
-
+      IOUtils.closeQuietly( reader );
     }
   }
 
@@ -226,12 +221,11 @@ public class WfsLoader extends AbstractLoader
     {
       Display display = new Display();
       MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS",
-          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                ).createImage(),
+          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                 ).createImage(),
           "Sollen die Daten Lokal gespeichrt werden?", MessageDialog.QUESTION, new String[]
           {
               "Ja",
-              "Nein"
-          }, 0 );
+              "Nein" }, 0 );
       int result = md.open();
       try
       {
