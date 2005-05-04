@@ -88,6 +88,10 @@ public class RasterExportSelection implements ISelection
     return new File( m_selectedProject.getLocation() + "/"
         + m_pathSource.removeFirstSegments( 1 ).toString() );
   }
+  
+  public IProject getProject(){
+    return m_selectedProject;
+  }
 
   public File getFileTarget()
   {

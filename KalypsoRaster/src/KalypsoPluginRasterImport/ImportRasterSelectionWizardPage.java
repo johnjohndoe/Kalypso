@@ -5,6 +5,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -29,9 +32,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -89,7 +94,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
   private Text m_textFileSource;
 
-  private Text m_textFileTarget;
+  Text m_textFileTarget;
 
   Combo m_formatCombo;
 
@@ -100,9 +105,11 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
   String m_format = formats[0];
 
-  File m_targetFile = null;
+  IPath m_targetPath = null;
 
   File m_sourceFile = null;
+  
+  IProject selectedProject;
 
   private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
 
@@ -311,18 +318,34 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     {
       public void widgetSelected( SelectionEvent e )
       {
-        String targetFileName = chooseFile( m_targetFile, new String[]
-        { "*.gml" } );
-        if( targetFileName != null )
+        try
         {
-          if( targetFileName.indexOf( "." ) == -1 )
-            m_targetFile = new File( targetFileName + ".gml" );
-          else
-            m_targetFile = new File( targetFileName );
+          selectedProject = ResourceUtilities.getSelectedProjects()[0];
+          KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
+          { "gml" } );
+          dialog.open();
+          Object[] result = dialog.getResult();
+          if( result != null )
+          {
+            Path resultPath = (Path)result[0];
+            m_textFileTarget.setText( resultPath.toString() );
+            m_targetPath = resultPath;
+          }
+          validate();
+
         }
-        validate();
+        catch( Exception e1 )
+        {
+          e1.printStackTrace();
+        }
       }
     } );
+  }
+  
+  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  {
+    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource",
+        fileResourceExtensions, selectedProject );
   }
 
   String chooseFile( File selectedFile, String[] filterExtensions )
@@ -381,9 +404,9 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
       }
     }
 
-    if( m_targetFile != null )
+    if( m_targetPath != null )
     {
-      m_textFileTarget.setText( m_targetFile.getName() );
+      setPageComplete( true );
     }
     else
     {
@@ -438,9 +461,9 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     {
       m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource.getText() );
     }
-    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
+    if( m_targetPath != null && !m_targetPath.equals( m_textFileTarget.getText() ) )
     {
-      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
+      m_targetPath = new Path( m_textFileTarget.getText() );
     }
     validate();
   }
@@ -458,7 +481,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
    */
   public ISelection getSelection()
   {
-    return new RasterImportSelection( m_sourceFile, m_targetFile, m_format );
+    return new RasterImportSelection( m_sourceFile, m_targetPath, selectedProject, m_format );
   }
 
   public CS_CoordinateSystem getSelectedCoordinateSystem()
@@ -483,7 +506,8 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
     {
       RasterImportSelection s = ( (RasterImportSelection)selection );
       m_sourceFile = s.getFileSource();
-      m_targetFile = s.getFileTarget();
+      m_targetPath = s.getPathTarget();
+      selectedProject = s.getProject();
     }
   }
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -63,6 +65,8 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
 
   private IStructuredSelection m_selection;
 
+  private IWorkbench m_workbench;
+
   public ImportRasterWizard()
   {
     super();
@@ -78,6 +82,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   public void init( IWorkbench workbench, IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
+    m_workbench = workbench;
     final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
@@ -118,7 +123,8 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
     {
       final RasterImportSelection selection = (RasterImportSelection)m_page1.getSelection();
       final File fileSource = selection.getFileSource();
-      final File fileTarget = selection.getFileTarget();
+      final File fileTarget = selection.getTargetFile();
+      final IProject targetProject = selection.getProject();
       final String format = selection.getSourceFormat();
       CS_CoordinateSystem cs = m_page1.getSelectedCoordinateSystem();
 
@@ -131,6 +137,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
           RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
           URL schemaUrl = getClass().getResource( "../schema/RasterDataModel.xsd" );
           GridUtils.writeRasterData( fileTarget, schemaUrl, rasterGrid );
+          targetProject.refreshLocal(IResource.DEPTH_INFINITE,null);
           monitor.close();
         }
         else
@@ -151,6 +158,10 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
       return false;
     }
     return true;
+  }
+  
+  public IWorkbench getWorkbench(){
+    return m_workbench;
   }
 
 }
