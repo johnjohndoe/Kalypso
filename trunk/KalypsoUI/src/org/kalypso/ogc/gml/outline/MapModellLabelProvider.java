@@ -77,7 +77,7 @@ public class MapModellLabelProvider implements ILabelProvider
     {
       final IKalypsoTheme kalypsoTheme = (IKalypsoTheme)element;
 
-      final StringBuffer sb = new StringBuffer( kalypsoTheme.getName() );
+      final StringBuffer sb = new StringBuffer( kalypsoTheme.getType() + kalypsoTheme.getName() );
       
       // falls aktiviert
       if( m_mapModell != null && m_mapModell.getActiveTheme() == kalypsoTheme )

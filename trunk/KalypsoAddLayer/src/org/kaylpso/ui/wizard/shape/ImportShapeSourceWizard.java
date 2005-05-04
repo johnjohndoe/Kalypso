@@ -1,6 +1,9 @@
 package org.kaylpso.ui.wizard.shape;
 
+import java.net.MalformedURLException;
 import java.util.List;
+
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -9,16 +12,19 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -66,6 +72,11 @@ import org.kaylpso.ui.action.AddThemeCommand;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * @author Kuepferle
+ * 
+ * */
 public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ImportShapeFileImportPage m_page;
@@ -74,10 +85,8 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
   private IProject[] m_selectedProject;
 
-  /*
-   * 
-   * @author kuepfer
-   */
+  private String m_stylePath = null;
+  
   public ImportShapeSourceWizard()
   {
     super();
@@ -92,7 +101,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
     try
     {
-      IPath targetPath = m_page.getWorkspaceLocation();
+      IPath targetPath = m_page.getProjectWorkspaceLocation();
       //copy Shape file to workspace
       String shapeBase = m_page.getShapeBase();
       //read Shapefile from local file system into a GMLWorkspace
@@ -107,31 +116,54 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       int index = shapeBase.lastIndexOf( "/" );
       String target = root.append( targetPath + shapeBase.substring( index ) ).toFile().toString();
       ShapeSerializer.serialize( gml, target );
-      //Add Layer to mapModell
-      IMapModell mapModell = m_outlineviewer.getMapModell();
-      if( m_outlineviewer.getMapModell() != null )
 
-        try
+      //TODO When there is a styles registry get the path from the preferences
+      m_stylePath = "project:/.styles/";
+      String styleHref = m_stylePath + defaultStyle;
+      //Add Layer to mapModell
+      try
+      {
+        ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+        IMapModell mapModell = m_outlineviewer.getMapModell();
+        String filename = shapeBase.substring( index + 1 );
+        String relative = m_page.getRelativeProjectContext() + filename + "#"
+            + m_page.getCRS().getName();
+
+        if( m_outlineviewer.getMapModell() != null && !m_page.isNewMapRequested() )
         {
-          ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+
           index = shapeBase.lastIndexOf( "/" );
-          String filename = shapeBase.substring( index + 1 );
-          String relative = m_page.getRelativeProjectPath() + filename + "#"
-              + m_page.getCRS().getName();
           //        TODO here the featurePath is set to featureMember because this is
           // the root element of the GMLWorkspace
           //        it must be implemented to only set the name of the feature
           // (relative path of feature)
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell,
-              "[Shape] " + filename, "shape", "featureMember", relative, "sld", "default",
-              defaultStyle, "simple" );
+          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, filename,
+              "shape", "featureMember", relative, "sld", "default", styleHref, "simple" );
           m_outlineviewer.postCommand( command, null );
-
         }
-        catch( Exception e )
+        //if the user has choosen a new Map to be generated
+        //TODO is not working yet
+        else if( m_page.isNewMapRequested() )
         {
-          e.printStackTrace();
+          Gismapview gismapview = createEmtpyMap();
+          GisTemplateMapModell modell = new GisTemplateMapModell( gismapview, m_page
+              .getResourceContextURL(), KalypsoGisPlugin.getDefault().getCoordinatesSystem(),
+              m_selectedProject[0] );
+          AddThemeCommand command = new AddThemeCommand( modell, filename, "shape",
+              "featureMember", relative, "sld", "default", styleHref, "simple" );
+          m_outlineviewer.postCommand( command, null );
         }
+        //TODO create default map in project root
+      }
+      catch( MalformedURLException e1 )
+      {
+        e1.printStackTrace();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+
     }
 
     catch( GmlSerializeException e )
@@ -139,6 +171,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       e.printStackTrace();
       // TODO
     }
+    m_page.removeListeners();
     return true;
   }
 
@@ -148,8 +181,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    m_selectedProject = ResourceUtilities.getSelectedProjects();
-    
+    //do nothing
   }
 
   public void addPages()
@@ -157,8 +189,10 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
     m_page = new ImportShapeFileImportPage( "shapefileimport", "ESRI(tm) ein Projekt importieren",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    if(m_selectedProject != null )
-      m_page.setProjectSelection( m_selectedProject );
+    m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
+    if( m_outlineviewer != null )
+      m_page.setMapContextURL( ( (GisTemplateMapModell)m_outlineviewer.getMapModell() )
+          .getContext() );
     addPage( m_page );
 
   }
@@ -176,21 +210,37 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   {
 
     final List features = (List)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    Feature fistFeature = (Feature)features.get( 1 );
+    Feature fistFeature = (Feature)features.get( 0 );
     GM_Object[] geom = fistFeature.getGeometryProperties();
     for( int i = 0; i < geom.length; i++ )
     {
       GM_Object property = geom[i];
       {
         if( property instanceof GM_Point )
-          return "../.styles/pointdefault.sld";
+          return "pointdefault.sld";
         if( property instanceof GM_LineString )
-          return "../.styles/linestringdefault.sld";
+          return "linestringdefault.sld";
         if( property instanceof GM_Surface )
-          return "../.styles/polygondefault.sld";
+          return "polygondefault.sld";
 
       }
     }
     return null;
+  }
+
+  public Gismapview createEmtpyMap()
+  {
+    GM_Envelope bbox = m_outlineviewer.getMapModell().getFullExtentBoundingBox();
+    Gismapview gismapview = null;
+    try
+    {
+      gismapview = GisTemplateHelper.emptyGisView( bbox );
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+      // TODO
+    }
+    return gismapview;
   }
 }

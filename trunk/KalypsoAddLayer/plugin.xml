@@ -37,7 +37,7 @@
          name="dataimport"
          point="org.kalypso.ui.dataimportwizard">
       <wizard
-            icon="icon/repository_item.gif"
+            icon="icon/fileShp.gif"
             class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"
             name="ESRI (tm) Shape "
             id="org.kalypso.ui.wizard.shape"/>
@@ -52,10 +52,10 @@
             name="Web Feature Service"
             id="org.kalypso.ui.wizard.wfs"/>
       <wizard
-            icon="icon/repository_item.gif"
-            class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
-            name="RasterDataModel (.gml)"
-            id="org.kalypso.ui.wizard.raster"/>
+            icon="icon/fileGml.gif"
+            class="org.kaylpso.ui.wizard.gml.KalypsoGmlImportWizard"
+            name="GML "
+            id="gml"/>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">

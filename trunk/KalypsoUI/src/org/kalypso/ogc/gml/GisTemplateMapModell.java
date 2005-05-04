@@ -132,7 +132,7 @@ public class GisTemplateMapModell implements IMapModell
       String layerName = "[" + layerType.getLinktype()+ "] " + layerType.getName();
       String source = layerType.getHref();
       CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerName, source, cs);
+      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs);
     }
     return new GisTemplateFeatureTheme( layerType, context );
   }

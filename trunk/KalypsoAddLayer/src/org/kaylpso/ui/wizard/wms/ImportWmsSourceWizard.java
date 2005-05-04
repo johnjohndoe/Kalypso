@@ -50,7 +50,11 @@ import org.kaylpso.ui.action.AddThemeCommand;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
+/**
+ * 
+ * @author Kuepferle
+ * 
+ * */
 public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ImportWmsWizardPage m_page = null;
@@ -59,10 +63,6 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private GisMapOutlineViewer m_outlineviewer;
 
-  /*
-   * 
-   * @author kuepfer
-   */
   public ImportWmsSourceWizard()
   {
     super();
@@ -94,8 +94,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             layername = "Multi Layer:" + layername;
           layers = layers + layer;
           //          System.out.println( url + "#" + layers );
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, "[WMS] "
-              + layername, "wms", "", url + "#" + layers + "#" + authentification, null, null,
+          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layername, "wms", "", url + "#" + layers + "#" + authentification, null, null,
               null, "simple" );
           m_outlineviewer.postCommand( command, null );
 

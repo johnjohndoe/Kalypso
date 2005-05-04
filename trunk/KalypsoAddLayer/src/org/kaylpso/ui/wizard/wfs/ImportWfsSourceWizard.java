@@ -1,7 +1,5 @@
 package org.kaylpso.ui.wizard.wfs;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.net.URL;
 
 import javax.naming.OperationNotSupportedException;
@@ -12,13 +10,8 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -62,16 +55,17 @@ import org.kaylpso.ui.action.AddThemeCommand;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * @author Kuepferle
+ * 
+ * */
 public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ImportWfsWizardPage m_page;
 
   private GisMapOutlineViewer m_outlineviewer;
 
-  /*
-   * 
-   * @author kuepfer
-   */
   public ImportWfsSourceWizard()
   {
     super();
@@ -104,19 +98,6 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
             throw new OperationNotSupportedException(
                 "The guessing of feature path has failed. The user has to choose the feature path, not implemented yet" );
 
-//          final String geomType = m_page.guessGeometryType();
-//          final String defaultStyle;
-//          if( geomType == null )
-//            defaultStyle = "../.styles/unknowndefault.sld";
-//          else if( "org.kalypsodeegree.model.geometry.GM_Point".equals( geomType ) )
-//            defaultStyle = "../.styles/pointdefault.sld";
-//          else if( "org.kalypsodeegree.model.geometry.GM_LineString".equals( geomType ) )
-//            defaultStyle = "../.styles/linestringdefault.sld";
-//          else if( "org.kalypsodeegree.model.geometry.GM_Polygon".equals( geomType ) )
-//            defaultStyle = "../.styles/polygondefault.sld";
-//          else
-//            throw new UnsupportedOperationException( "no style available for " + geomType );
-
           AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer,
               "wfs", featurePath, "URL=" + m_page.getUrl() + "#" + "FEATURE=" + layer, "sld",
               layer , style.toString(), "simple" );
@@ -130,6 +111,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
         e.printStackTrace();
         return false;
       }
+      m_page.removeListeners();
     return true;
   }
 
