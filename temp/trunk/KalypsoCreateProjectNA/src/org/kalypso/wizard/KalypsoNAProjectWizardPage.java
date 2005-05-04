@@ -152,6 +152,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private Button resetButton;
 
+  private static final int TOOL_TIP = 1;
+
+  private static final int LABEL = 0;
+
+  private static final int DESCRIPTION = 2;
+
   /**
    * @param pageName
    */
@@ -248,11 +254,11 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     browseButton = new Button( fileGroup, SWT.PUSH );
     browseButton.setText( "Durchsuchen..." );
     browseButton.setLayoutData( new GridData( GridData.END ) );
-    browseButton.addSelectionListener(this);
+    browseButton.addSelectionListener( this );
     skipRadioButton = new Button( fileGroup, SWT.CHECK );
     skipRadioButton.setText( "Diese Datei einlesen" );
     skipRadioButton.setSelection( true );
-    skipRadioButton.addSelectionListener(this);
+    skipRadioButton.addSelectionListener( this );
     fileGroup.pack();
 
   }
@@ -331,11 +337,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     for( int i = 0; i < targetFtp.length; i++ )
     {
       FeatureTypeProperty featureTypeProperty = targetFtp[i];
-      getToolTip( featureTypeProperty );
-      String name = featureTypeProperty.getName();
       Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
-      text.setText( name );
-      text.setToolTipText( getToolTip( featureTypeProperty ) );
+      text.setText(getAnnotation( featureTypeProperty, LABEL ));
+      text.setToolTipText( getAnnotation( featureTypeProperty, TOOL_TIP ) );
     }
     targetGroup.pack();
     //OK and Reset buttons group
@@ -348,10 +352,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
     okButton = new Button( buttonGroup, SWT.PUSH );
     okButton.setText( "Zuordnung bestätigen" );
-    okButton.addSelectionListener(this);
+    okButton.addSelectionListener( this );
     resetButton = new Button( buttonGroup, SWT.PUSH );
     resetButton.setText( "Zuordnung zurücksetzen" );
-    resetButton.addSelectionListener(this);
+    resetButton.addSelectionListener( this );
 
     Point size = topMappingComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     topMappingComposite.setSize( size );
@@ -370,7 +374,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
     FeatureType rootFT = rootFeature.getFeatureType();
     FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)rootFT
-        .getProperty( "featureMember" );
+        .getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
     FeatureType shapeFT = associationFeatureTypes[0];
@@ -571,9 +575,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   {
     if( !skipRadioButton.getSelection() )
     {
-     setPageComplete(true);
-     setMessage("Dieser Dialog wird übersprungen.");
-     return;
+      setPageComplete( true );
+      setMessage( "Dieser Dialog wird übersprungen." );
+      return;
     }
     //	 checks catchment field entry and file suffix
     if( m_fileField.getText().length() == 0 )
@@ -605,10 +609,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   public void dispose()
   {
-    okButton.removeSelectionListener(this);
-    resetButton.removeSelectionListener(this);
-    browseButton.removeSelectionListener(this);
-    skipRadioButton.removeSelectionListener(this);
+    okButton.removeSelectionListener( this );
+    resetButton.removeSelectionListener( this );
+    browseButton.removeSelectionListener( this );
+    skipRadioButton.removeSelectionListener( this );
   }
 
   private void storeSelectionData( Widget w )
@@ -618,19 +622,28 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     String str = st.nextToken();
     String name = str.substring( 1, str.length() - 1 );
     w.setData( SOURCE_KEY, name );
-//    System.out
-//        .println( "Quelle: " + w.getData( SOURCE_KEY ) + "\tZiel: " + w.getData( TARGET_KEY ) );
+    //    System.out
+    //        .println( "Quelle: " + w.getData( SOURCE_KEY ) + "\tZiel: " + w.getData(
+    // TARGET_KEY ) );
   }
-
-  public String getToolTip( FeatureTypeProperty ftp )
+/**
+ * This method gets a specified Annotation of a FeatureType
+ * 
+ * */
+  public String getAnnotation( FeatureTypeProperty ftp, int type )
   {
-//    String key = Locale.getDefault().getLanguage();
-    final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
+    //    String key = Locale.getDefault().getLanguage();
+    final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+        IKalypsoPreferences.LANGUAGE );
     Annotation annotation = ftp.getAnnotation( key );
     if( annotation != null )
     {
-      return annotation.getTooltip();
-
+      if( type == TOOL_TIP )
+        return annotation.getTooltip();
+      else if (type == LABEL )
+        return annotation.getLabel();
+      else if( type == DESCRIPTION )
+        return annotation.getDescription();
     }
     return ftp.getName();
   }
@@ -654,17 +667,17 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       {
         if( !b.getSelection() )
         {
-//          setPageComplete( true );
+          //          setPageComplete( true );
           topSCLMappingComposite.setVisible( false );
           buttonGroup.setVisible( false );
           //remove mapping
           mapping = null;
-          //clear filefield 
-          m_fileField.setText("");
+          //clear filefield
+          m_fileField.setText( "" );
         }
         else
         {
-//          setPageComplete( true );
+          //          setPageComplete( true );
           topSCLMappingComposite.setVisible( true );
           buttonGroup.setVisible( true );
         }
