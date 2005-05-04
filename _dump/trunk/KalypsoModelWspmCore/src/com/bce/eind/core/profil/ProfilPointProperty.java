@@ -3,6 +3,7 @@
  */
 package com.bce.eind.core.profil;
 
+
 /**
  * @author kimwerner
  */
@@ -59,6 +60,7 @@ public class ProfilPointProperty
   public final static ProfilPointProperty BORDVOLL = new ProfilPointProperty( "Bordvollpunkt",
       true, true, false,false, 4 );
 
+  
   private ProfilPointProperty( final String label, final boolean optional, final boolean visible,
       final boolean interpolation,final boolean clonable, final int precision )
   {

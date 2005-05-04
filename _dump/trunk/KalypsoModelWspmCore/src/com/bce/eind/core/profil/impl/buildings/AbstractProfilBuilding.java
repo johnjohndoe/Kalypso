@@ -3,6 +3,7 @@
   */
 package com.bce.eind.core.profil.impl.buildings;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,25 +25,19 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
 
   protected final List<ProfilPointProperty> m_pointProperties;
   
-  private final List<ProfilBuildingProperty> m_buildingValues;
+  private final HashMap<ProfilBuildingProperty,Double> m_buildingValues = new HashMap<ProfilBuildingProperty,Double>();
 
-  private final HashMap<ProfilBuildingProperty, Double> m_values;
 
-  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<ProfilBuildingProperty> buildingValues)
+  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<ProfilBuildingProperty> buildingProperties)
   {
     m_buildingTyp = buildingTyp;
     m_pointProperties = new LinkedList<ProfilPointProperty>();
-    m_buildingValues = Collections.unmodifiableList(buildingValues);
-    m_values = new HashMap<ProfilBuildingProperty, Double>(buildingValues.size());
-    setValues();
-  }
-  private void setValues()
-  {
-    for(Iterator<ProfilBuildingProperty> vIt = m_buildingValues.iterator();vIt.hasNext();)
+    for(Iterator<ProfilBuildingProperty> vIt = buildingProperties.iterator();vIt.hasNext();)
     {
-      m_values.put(vIt.next(),new Double(0.0));
+      m_buildingValues.put(vIt.next(),new Double(0.0));
     }
   }
+  
   /**
    * @return Returns the buildingTyp.
    */
@@ -66,8 +61,8 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
    */
   public double getValue( ProfilBuildingProperty buildingValue ) throws ProfilBuildingException
   {
-    if( m_values.containsKey( buildingValue ) )
-      return m_values.get( buildingValue );
+    if(m_buildingValues.containsKey(buildingValue))
+      return m_buildingValues.get( buildingValue );
     throw new ProfilBuildingException( "Eigenschaft existiert nicht" );
   }
 
@@ -79,8 +74,8 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
    */
   public void setValue( ProfilBuildingProperty buildingValue, double value ) throws ProfilBuildingException
   {
-    if( m_values.containsKey( buildingValue ) )
-      m_values.put( buildingValue, value );
+    if( m_buildingValues.containsKey( buildingValue ) )
+      m_buildingValues.put( buildingValue, value );
     throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
   }
   /* (non-Javadoc)
@@ -90,11 +85,19 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   {
      return m_pointProperties.size();
   }
-  /**
-   * @return Returns the buildingValues.
+  
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilBuilding#hasProperty(com.bce.eind.core.profil.ProfilBuildingProperty)
    */
-  public List<ProfilBuildingProperty> getBuildingValues( )
+  public boolean hasProperty( ProfilBuildingProperty profilBuildingProperty )
   {
-    return m_buildingValues;
+    return m_buildingValues.containsKey(profilBuildingProperty);
+  }
+  /* (non-Javadoc)
+   * @see com.bce.eind.core.profil.IProfilBuilding#getProfilBuildingProperties()
+   */
+  public Collection <ProfilBuildingProperty> getProfilBuildingProperties( )
+  {
+    return Collections.unmodifiableCollection(m_buildingValues.keySet());
   }
 }
