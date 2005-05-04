@@ -34,11 +34,11 @@ files:
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
 <!--
 		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/Kalypso2d/etc/ant/build.xml" target="clean" inheritAll="false" />
+-->
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="clean" inheritAll="false" />
--->
-		<ant antfile="${workspace}/Kalypso2d/etc/ant/build.xml" target="clean" inheritAll="false" />
 
 		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="clean" inheritall="false" />
 		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="clean" inheritall="false" />
@@ -75,7 +75,6 @@ files:
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/Kalypso2d/build/deploy" includes="**/*.jar" />
 		</copy>
-
 	-->
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
