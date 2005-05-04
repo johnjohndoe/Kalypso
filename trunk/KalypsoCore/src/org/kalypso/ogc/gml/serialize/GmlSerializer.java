@@ -193,8 +193,10 @@ public final class GmlSerializer
   /**
    * Liest einen GMLWorkspace aus einem Reader. Der Reader wird intern nicht
    * mehr gepuffert.
+   * 
+   * @deprecated Sollte nur intern benutzt werden, benutze satt dessen {@link #createGMLWorkspace(URL, URL)}
    */
-  private static GMLWorkspace createGMLWorkspace( final Reader gmlreader,
+  public static GMLWorkspace createGMLWorkspace( final Reader gmlreader,
       final IUrlResolver urlResolver, final URL context ) throws Exception
   {
     // Replace tokens
