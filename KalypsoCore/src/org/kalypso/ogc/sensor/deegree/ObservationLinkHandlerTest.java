@@ -62,7 +62,6 @@ public class ObservationLinkHandlerTest extends TestCase
 
     final TimeseriesLinkType link = factory.createTimeseriesLinkType();
 
-    link.setActuate( "onDemand" );
     link.setHref( "path=blubb" );
     link.setType( "simple" );
 
