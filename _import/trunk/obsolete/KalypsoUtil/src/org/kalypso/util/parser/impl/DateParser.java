@@ -136,6 +136,9 @@ public class DateParser extends AbstractParser
   
   public void setTimezone( final TimeZone tz )
   {
-    m_df.setTimeZone( tz );
+    if( tz != null )
+      m_df.setTimeZone( tz );
+    else
+      m_df.setTimeZone( TimeZone.getDefault() );
   }
 }

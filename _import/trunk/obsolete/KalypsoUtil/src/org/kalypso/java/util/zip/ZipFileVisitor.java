@@ -84,13 +84,16 @@ public class ZipFileVisitor implements FileVisitor
     m_zos.close();
   }
 
-  public void setBasePattern( String basePattern )
+  public void setBasePattern( final String basePattern )
   {
+    // Sonderfall abfangen, dass ein \E im basePattern ist
+    final String hackpattern = basePattern.replaceAll( "\\\\E", "\\\\E\\\\\\\\E\\\\Q" );
+
     // quote the regexp
-    m_basePattern = "\\Q" + basePattern + "\\E";
+    m_basePattern = "\\Q" + hackpattern + "\\E";
   }
 
-  public void setBaseReplace( String baseReplace )
+  public void setBaseReplace( final String baseReplace )
   {
     m_baseReplace = baseReplace;
   }
