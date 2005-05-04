@@ -63,8 +63,8 @@ import org.kaylpso.ui.action.AddThemeCommand;
 /**
  * 
  * @author Kuepferle
- * 
- * */
+ *  
+ */
 public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private GisMapOutlineViewer m_outlineviewer;
@@ -82,7 +82,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     m_page = new GmlFileImportPage( "GML:importPage",
         "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte",
         ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-      m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
+    m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
     if( m_outlineviewer != null )
       m_page.setMapContextURL( ( (GisTemplateMapModell)m_outlineviewer.getMapModell() )
           .getContext() );
@@ -107,13 +107,13 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
         featureName = m_page.getFeature().getFeatureType().getName();
         featurePath += "[" + featureName + "]";
         styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
-            m_page.getFeature().getFeatureType() );
+            m_page.getFeature().getFeatureType(), null );
       }
       else if( selection instanceof PropertyElement )
       {
         featureName = m_page.getFatp().getName();
         styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
-            (FeatureType)m_page.getFatp() );
+            (FeatureType)m_page.getFatp(), null );
       }
 
       AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName,
@@ -147,7 +147,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-   // nothing to initalize
+  // nothing to initalize
   }
 
   private boolean getParent( IModel element, List list )

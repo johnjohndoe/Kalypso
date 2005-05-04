@@ -974,7 +974,7 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
         ( getFeatureTypes( new String[]
         {
           layer
-        } )[0] ) );
+        } )[0] ), null );
   }
 
   public void removeListeners()
