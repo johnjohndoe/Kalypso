@@ -78,7 +78,7 @@
 	
 	<!-- copy data to the kalypso server -->
 	<target name="deploy-bce" depends="co-sachsen-models" description="Copy the data files to the kalypso server" >
-		<copy todir="\\\\${tomcat.server}\\D\\Programme\\kalypso\\data" overwrite="true">
+		<copy todir="\\\\${tomcat.server.name}\\D\\Programme\\kalypso\\data" overwrite="true">
 			<fileset dir="${dist.data}" includes="*/**" excludes="**/CVS/**" />
 		</copy>
 	</target>
