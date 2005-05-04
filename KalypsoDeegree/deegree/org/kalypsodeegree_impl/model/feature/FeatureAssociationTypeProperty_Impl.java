@@ -65,10 +65,6 @@ public class FeatureAssociationTypeProperty_Impl extends
                 .toArray(new FeatureType[m_associationFeatureTypes.size()]);
     }
 
-    /**
-     * 
-     * 
-     */
     private void checkAssociationBuildingStatus()
     {
         if (m_associatedFT == null && m_associatedNode != null)
