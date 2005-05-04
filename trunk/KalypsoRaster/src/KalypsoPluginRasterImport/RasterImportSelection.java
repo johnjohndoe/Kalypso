@@ -2,6 +2,8 @@ package KalypsoPluginRasterImport;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.ISelection;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -47,20 +49,24 @@ import org.eclipse.jface.viewers.ISelection;
 public class RasterImportSelection implements ISelection
 {
 
-  private final File m_fileTarget;
+  private final IPath m_pathTarget;
+
+  private final IProject m_project;
 
   private final File m_fileSource;
-  
+
   private final String m_format;
 
   /*
    * 
    * @author doemming
    */
-  public RasterImportSelection( File fileSource, File fileTarget, String format)
+  public RasterImportSelection( File fileSource, IPath pathTarget, IProject selectedProject,
+      String format )
   {
     m_fileSource = fileSource;
-    m_fileTarget = fileTarget;
+    m_pathTarget = pathTarget;
+    m_project = selectedProject;
     m_format = format;
   }
 
@@ -69,7 +75,7 @@ public class RasterImportSelection implements ISelection
    */
   public boolean isEmpty()
   {
-    return m_fileSource == null || m_fileTarget == null;
+    return m_fileSource == null || m_pathTarget == null;
   }
 
   public File getFileSource()
@@ -77,12 +83,23 @@ public class RasterImportSelection implements ISelection
     return m_fileSource;
   }
 
-  public File getFileTarget()
+  public IPath getPathTarget()
   {
-    return m_fileTarget;
+    return m_pathTarget;
+  }
+
+  public File getTargetFile()
+  {
+    return new File( m_project.getLocation() + "/"
+        + m_pathTarget.removeFirstSegments( 1 ).toString() );
   }
   
-  public String getSourceFormat(){
+  public IProject getProject(){
+    return m_project;
+  }
+
+  public String getSourceFormat()
+  {
     return m_format;
   }
 }

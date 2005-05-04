@@ -100,7 +100,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
   IPath m_sourcePath = null;
 
-  protected IProject selectedProject;
+  IProject selectedProject;
 
   public ExportRasterSelectionWizardPage( String pageName )
   {
@@ -420,6 +420,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
       RasterExportSelection s = ( (RasterExportSelection)selection );
       m_sourcePath = s.getPathSource();
       m_targetFile = s.getFileTarget();
+      selectedProject = s.getProject();
     }
   }
 }
