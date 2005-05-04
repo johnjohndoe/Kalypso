@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.users;
 
 /**
- * IUserRightsProvider common interface for user rights providers. This interface
- * is used by the KalypsoUserService.
+ * IUserRightsProvider common interface for user rights providers. This
+ * interface is used by the KalypsoUserService.
  * 
  * @author schlienger
  */
@@ -56,4 +56,18 @@ public interface IUserRightsProvider
    * @throws UserRightsException
    */
   public String[] getRights( final String username ) throws UserRightsException;
+
+  /**
+   * Delivers the list of rights the user has after having beeing authenticated
+   * in the rigths provider.
+   * <p>
+   * This operation is optional and might not be implemented by some providers
+   * 
+   * @param username
+   * @param password
+   * @return list of rights
+   * @throws UserRightsException
+   */
+  public String[] getRights( final String username, final String password )
+      throws UserRightsException;
 }

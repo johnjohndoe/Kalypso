@@ -54,8 +54,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.services.user.UserServiceConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.users.UserServiceConstants;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**
@@ -96,7 +96,7 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
 
       // nur Administratoren dürfen Projekte überschreiben
       if( serverProject.exists()
-          && !KalypsoGisPlugin.getDefault().checkUserRight( UserServiceConstants.RIGHT_ADMIN ) )
+          && !KalypsoGisPlugin.getDefault().getUser().hasRight( UserServiceConstants.RIGHT_ADMIN ) )
       {
         MessageDialog
             .openWarning(

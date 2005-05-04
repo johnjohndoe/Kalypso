@@ -38,18 +38,21 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.user;
+package org.kalypso.users;
 
 import java.util.Arrays;
 
 /**
  * @author belger
  */
-public class UserServiceConstants
+public final class UserServiceConstants
 {
   public static final String RIGHT_PROGNOSE = "Vorhersage";
   public static final String RIGHT_EXPERT = "Experte";
   public static final String RIGHT_ADMIN = "Administration";
+  
+  /** Convenience constant = empty array = no rights */
+  public static final String[] NO_RIGHTS = {};
   
   // full list of rights
   private static final String[] RIGHTS = { RIGHT_PROGNOSE, RIGHT_EXPERT, RIGHT_ADMIN };
