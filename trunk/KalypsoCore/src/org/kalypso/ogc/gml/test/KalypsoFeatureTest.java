@@ -45,7 +45,6 @@ import junit.framework.TestCase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -57,7 +56,7 @@ public class KalypsoFeatureTest extends TestCase
   {
     try
     {
-      final GMLSchema schema = GMLSchemaCache.getSchema( KalypsoFeatureTest.class
+      final GMLSchema schema = new GMLSchema( KalypsoFeatureTest.class
           .getResource( "point.xsd" ) );
       final FeatureType featureType = schema.getFeatureTypes()[0];
 

@@ -119,7 +119,7 @@ public class ObservationCache
     }
   }
 
-  public void clear( )
+  private void clear( )
   {
     synchronized( m_cache )
     {

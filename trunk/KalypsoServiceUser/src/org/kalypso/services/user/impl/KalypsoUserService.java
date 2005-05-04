@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.user.impl;
 
 import java.io.File;
@@ -77,6 +77,22 @@ public class KalypsoUserService implements IUserService
    * IUserRigthsProvider
    */
   private static final String PROP_PROVIDER = "PROVIDER";
+
+  private static final String PROP_IMPERSONATE_USER = "IMPERSONATE_USER";
+
+  private static final String PROP_SCENARIO_LIST = "SCENARIO_LIST";
+
+  private static final String PROP_SCENARIO_DESC_LIST = "SCENARIO_DESC_LIST";
+
+  private static final String PROP_CHOOSE_SCENARIO = "CHOOSE_SCENARIO";
+
+  private boolean m_impersonateUser;
+
+  private boolean m_chooseScenario;
+
+  private String[] m_scenarios;
+
+  private String[] m_scenarioDescriptions;
 
   public KalypsoUserService( ) throws RemoteException
   {
@@ -119,8 +135,17 @@ public class KalypsoUserService implements IUserService
       final String className = props.getProperty( PROP_PROVIDER );
       m_rightsProvider = (IUserRightsProvider) ClassUtilities.newInstance(
           className, IUserRightsProvider.class, getClass().getClassLoader() );
+      
+      final String iu = props.getProperty( PROP_IMPERSONATE_USER, "false" );
+      m_impersonateUser = Boolean.valueOf( iu ).booleanValue();
+      final String cs = props.getProperty( PROP_CHOOSE_SCENARIO, "false" );
+      m_chooseScenario = Boolean.valueOf( cs ).booleanValue();
+      final String sl = props.getProperty( PROP_SCENARIO_LIST, "" );
+      m_scenarios = sl.split(";");
+      final String sdl = props.getProperty( PROP_SCENARIO_DESC_LIST, "" );
+      m_scenarioDescriptions = sdl.split(";");
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoUserService", "init", e );
 
@@ -144,9 +169,9 @@ public class KalypsoUserService implements IUserService
     {
       return m_rightsProvider.getRights( username );
     }
-    catch( UserRightsException e )
+    catch( final UserRightsException e )
     {
-      e.printStackTrace();
+      m_logger.info( e.getLocalizedMessage() );
 
       throw new RemoteException( "Exception in getRights()", e );
     }
@@ -158,5 +183,60 @@ public class KalypsoUserService implements IUserService
   public int getServiceVersion( )
   {
     return 0;
+  }
+
+  /**
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String,
+   *      java.lang.String)
+   */
+  public String[] getRights( String username, String password )
+      throws RemoteException
+  {
+    if( m_rightsProvider == null )
+      return null;
+
+    try
+    {
+      return m_rightsProvider.getRights( username, password );
+    }
+    catch( final UserRightsException e )
+    {
+      m_logger.info( e.getLocalizedMessage() );
+
+      throw new RemoteException( "Exception in getRights()", e );
+    }
+
+  }
+
+  /**
+   * @see org.kalypso.services.user.IUserService#isAskForLogin()
+   */
+  public boolean isAskForLogin( )
+  {
+    return m_impersonateUser;
+  }
+
+  /**
+   * @see org.kalypso.services.user.IUserService#isAskForScenario()
+   */
+  public boolean isAskForScenario( )
+  {
+    return m_chooseScenario;
+  }
+
+  /**
+   * @see org.kalypso.services.user.IUserService#getScenarios()
+   */
+  public String[] getScenarios( )
+  {
+    return m_scenarios;
+  }
+
+  /**
+   * @see org.kalypso.services.user.IUserService#getScenarioDescriptions()
+   */
+  public String[] getScenarioDescriptions( ) throws RemoteException
+  {
+    return m_scenarioDescriptions;
   }
 }

@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -99,6 +100,20 @@ public class XMLHelper
       if( inputStream != null )
         inputStream.close();
     }
+  }
+  
+  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer ) throws TransformerException
+  {
+    final TransformerFactory newInstance = TransformerFactory.newInstance();
+
+    final Transformer t = newInstance.newTransformer();
+
+    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
+    t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    if( charset != null )
+      t.setOutputProperty( OutputKeys.ENCODING , charset );
+
+    t.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
   }
 
   public static Node getAttributeNode( Node node, String attributeName )

@@ -52,6 +52,9 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -61,10 +64,6 @@ import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
-import org.kalypso.java.net.UrlUtilities;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 
 /**
  * @author doemming
@@ -89,8 +88,8 @@ public class JMSchemaTest extends TestCase
 
   public void loadSchemaAndCompareIt( String xsdName, final String compareFile ) throws Exception
   {
-
-    final GMLSchema jmSchema = GMLSchemaCache.getSchema( getClass().getResource( xsdName ) );
+    // hier soll doch bestimmt nicht gechached werden!
+    final GMLSchema jmSchema = new GMLSchema( getClass().getResource( xsdName ) );
 
     final FeatureType[] ftps = jmSchema.getFeatureTypes();
     final String result = toString( 0, ftps );
