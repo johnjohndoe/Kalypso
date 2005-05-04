@@ -47,6 +47,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Utilities around the String class.
  * 
@@ -54,6 +56,15 @@ import java.util.Map.Entry;
  */
 public final class StringUtilities
 {
+  /** no alignment, as is (used in spanOverLines) */
+  public final static int ALIGNMENT_NONE = 0;
+  
+  /** left alignment (used in spanOverLines) */
+  public final static int ALIGNMENT_LEFT = 1;
+  
+  /** right alignment (used in spanOverLines) */
+  public final static int ALIGNMENT_RIGHT = 2;
+  
   /**
    * Not intended to be instanciated
    */
@@ -224,7 +235,7 @@ public final class StringUtilities
    * @return newly spaned string or null if str is null
    */
   public static String spanOverLines( final String str, final int lineLength,
-      final boolean keepWords )
+      final boolean keepWords, final int alignment )
   {
     if( str == null )
       return null;
@@ -240,23 +251,43 @@ public final class StringUtilities
     {
       if( i + lineLength > str.length() )
       {
-        bf.append( str.substring( i, str.length() ) );
+        String line = str.substring( i, str.length() );
+        if( alignment == ALIGNMENT_LEFT )
+          line = StringUtils.stripStart( line, null );
+        if( alignment == ALIGNMENT_RIGHT )
+        {
+          line = StringUtils.stripEnd( line, null);
+          line = StringUtils.leftPad( line, lineLength );
+        }
+        bf.append( line );
         break;
       }
       else
       {
         int curLineLength = lineLength;
-        if( keepWords && str.charAt( i + lineLength - 2) != ' ' && str.charAt( i + lineLength - 1) != ' ' && str.charAt( i + lineLength ) != ' ' )
+        if( keepWords && !Character.isWhitespace( str.charAt( i + lineLength - 2) )
+            && !Character.isWhitespace( str.charAt( i + lineLength - 1) )
+            && !Character.isWhitespace( str.charAt( i + lineLength ) ) )
         {
           curLineLength = lineLength - 3;
-          while( curLineLength > 0 && str.charAt( i + curLineLength ) == ' ' )
+          while( curLineLength > 0 && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
             curLineLength--;
           
           if( curLineLength == 0 )
             curLineLength = lineLength;
+          if( curLineLength != lineLength )
+            curLineLength++;
         }
         
-        final String line = str.substring( i, i + curLineLength );
+        String line = str.substring( i, i + curLineLength );
+        if( alignment == ALIGNMENT_LEFT )
+          line = StringUtils.stripStart( line, null );
+        if( alignment == ALIGNMENT_RIGHT )
+        {
+          line = StringUtils.stripEnd( line, null);
+          line = StringUtils.leftPad( line, lineLength );
+        }
+        
         bf.append( line ).append( System.getProperty( "line.separator" ) );
 
         i = i + curLineLength;
