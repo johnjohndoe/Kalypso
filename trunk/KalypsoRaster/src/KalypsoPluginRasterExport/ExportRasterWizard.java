@@ -118,7 +118,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
     try
     {
       final RasterExportSelection selection = (RasterExportSelection)m_page1.getSelection();
-      final File fileSource = selection.getFileSource();
+      final File fileSource = selection.getSourceFile();
       final File fileTarget = selection.getFileTarget();
       final String format = selection.getTargetFormat();
 
