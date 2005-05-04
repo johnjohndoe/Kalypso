@@ -2,6 +2,8 @@ package KalypsoPluginRasterExport;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.ISelection;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -49,17 +51,21 @@ public class RasterExportSelection implements ISelection
 
   private final File m_fileTarget;
 
-  private final File m_fileSource;
-  
+  private final IPath m_pathSource;
+
   private final String m_format;
+
+  private IProject m_selectedProject;
 
   /*
    * 
    * @author doemming
    */
-  public RasterExportSelection( File fileSource, File fileTarget, String format)
+  public RasterExportSelection( IPath pathSource, IProject selectedProject, File fileTarget,
+      String format )
   {
-    m_fileSource = fileSource;
+    m_pathSource = pathSource;
+    m_selectedProject = selectedProject;
     m_fileTarget = fileTarget;
     m_format = format;
   }
@@ -69,20 +75,27 @@ public class RasterExportSelection implements ISelection
    */
   public boolean isEmpty()
   {
-    return m_fileSource == null || m_fileTarget == null;
+    return m_pathSource == null || m_fileTarget == null;
   }
 
-  public File getFileSource()
+  public IPath getPathSource()
   {
-    return m_fileSource;
+    return m_pathSource;
+  }
+
+  public File getSourceFile()
+  {
+    return new File( m_selectedProject.getLocation() + "/"
+        + m_pathSource.removeFirstSegments( 1 ).toString() );
   }
 
   public File getFileTarget()
   {
     return m_fileTarget;
   }
-  
-  public String getTargetFormat(){
+
+  public String getTargetFormat()
+  {
     return m_format;
   }
 }
