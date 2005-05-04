@@ -4,13 +4,6 @@
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 
-	<!-- Wrapper für TimeSeriesLinkType um diesen als Element ins Modell einzubinden -->	
-	<complexType name="TimeseriesLinkType">
-		<sequence>
-			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
-		</sequence>
-	</complexType>
-
 	<!-- Eigentliches Spree-Modell -->	
 	<element name="SpreeModell" type="spree:_SpreeModellType"/>
 	<complexType name="_SpreeModellType">
@@ -66,11 +59,11 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Wasserstand_gemessenEingang" type="spree:TimeseriesLinkType"/>
-					<element name="Wasserstand_gemessen" type="spree:TimeseriesLinkType"/>
-					<element name="Wasserstand_gerechnet" type="spree:TimeseriesLinkType"/>
-					<element name="Wasserstand_vorhersage" type="spree:TimeseriesLinkType"/>
-					<element name="Wasserstand_vorhersageAblage" type="spree:TimeseriesLinkType"/>
+					<element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Wasserstand_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Wasserstand_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Wasserstand_vorhersage" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Wasserstand_vorhersageAblage" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -85,9 +78,9 @@
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Ausdehnung" type="double"/>
-					<element name="Niederschlag_gemessen" type="spree:TimeseriesLinkType"/>
-					<element name="Niederschlag_prognose" type="spree:TimeseriesLinkType"/>
-					<element name="Niederschlag_rechnung" type="spree:TimeseriesLinkType"/>
+					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Niederschlag_prognose" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Niederschlag_rechnung" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -143,11 +136,11 @@
 					<element name="Name" type="string"/>
 					<element name="Anfangsstauvolumen" type="double"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="spree:TimeseriesLinkType"/>
-					<element name="Abgabe" type="spree:TimeseriesLinkType"/>
-					<element name="Abgabe_plausibilisiert" type="spree:TimeseriesLinkType"/>
-					<element name="Zufluss_berechnet" type="spree:TimeseriesLinkType"/>
-					<element name="Stauinhalt" type="spree:TimeseriesLinkType"/>
+					<element name="Abgabe_eingang" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Abgabe" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Abgabe_plausibilisiert" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Zufluss_berechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Stauinhalt" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -188,8 +181,8 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abfluss_eingang" type="spree:TimeseriesLinkType"/>
-					<element name="Abfluss" type="spree:TimeseriesLinkType"/>
+					<element name="Abfluss_eingang" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
