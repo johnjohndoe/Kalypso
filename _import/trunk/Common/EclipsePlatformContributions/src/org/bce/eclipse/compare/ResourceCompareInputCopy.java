@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.eclipse.compare.internal;
+package org.bce.eclipse.compare;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -49,6 +49,9 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ZipFileStructureCreator;
+import org.eclipse.compare.internal.BufferedResourceNode;
+import org.eclipse.compare.internal.CompareUIPlugin;
+import org.eclipse.compare.internal.Utilities;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.Differencer;
@@ -75,7 +78,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author belger
  */
-public class ResourceCompareInputWrapper extends CompareEditorInput
+public class ResourceCompareInputCopy extends CompareEditorInput
 {
 
   private static final boolean NORMALIZE_CASE = true;
@@ -166,7 +169,7 @@ public class ResourceCompareInputWrapper extends CompareEditorInput
   /**
    * Creates an compare editor input for the given selection.
    */
-  public ResourceCompareInputWrapper( CompareConfiguration config )
+  public ResourceCompareInputCopy( CompareConfiguration config )
   {
     super( config );
   }

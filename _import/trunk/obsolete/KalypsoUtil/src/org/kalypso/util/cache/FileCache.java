@@ -1,5 +1,7 @@
 package org.kalypso.util.cache;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -165,7 +167,7 @@ public class FileCache
       else
         file = File.createTempFile( "cache", ".item", m_directory );
 
-      os = new FileOutputStream( file );
+      os = new BufferedOutputStream( new FileOutputStream( file ) );
 
       m_ser.write( object, os );
 
@@ -192,7 +194,7 @@ public class FileCache
     InputStream ins = null;
     try
     {
-      ins = new FileInputStream( file );
+      ins = new BufferedInputStream( new FileInputStream( file ) );
 
       return m_ser.read( ins );
     }

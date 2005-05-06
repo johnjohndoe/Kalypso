@@ -58,19 +58,19 @@ public final class StringUtilities
 {
   /** no alignment, as is (used in spanOverLines) */
   public final static int ALIGNMENT_NONE = 0;
-  
+
   /** left alignment (used in spanOverLines) */
   public final static int ALIGNMENT_LEFT = 1;
-  
+
   /** right alignment (used in spanOverLines) */
   public final static int ALIGNMENT_RIGHT = 2;
-  
+
   /**
    * Not intended to be instanciated
    */
-  private StringUtilities( )
+  private StringUtilities()
   {
-    // empty
+  // empty
   }
 
   /**
@@ -87,8 +87,7 @@ public final class StringUtilities
    * @throws IllegalArgumentException
    *           if s is null
    */
-  public static Color stringToColor( final String s )
-      throws IllegalArgumentException
+  public static Color stringToColor( final String s ) throws IllegalArgumentException
   {
     if( s == null )
       throw new IllegalArgumentException( "Color String is null" );
@@ -96,12 +95,12 @@ public final class StringUtilities
     final String[] sc = s.split( ";" );
 
     if( sc.length == 3 )
-      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
-          Integer.parseInt( sc[2] ) );
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer
+          .parseInt( sc[2] ) );
 
     if( sc.length == 4 )
-      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ),
-          Integer.parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer
+          .parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
 
     throw new IllegalArgumentException( "Color String has wrong format: " + s );
   }
@@ -111,7 +110,7 @@ public final class StringUtilities
    * <p>
    * String will have same format as specified in
    * 
-   * @link StringUtilities#stringToColor(String)
+   * {@link StringUtilities#stringToColor(String)}
    * 
    * @param c
    * 
@@ -167,8 +166,7 @@ public final class StringUtilities
     if( sc.length != 3 )
       throw new IllegalArgumentException( "Font String has wrong format" );
 
-    final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer
-        .parseInt( sc[2] ) );
+    final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
 
     return f;
   }
@@ -176,7 +174,7 @@ public final class StringUtilities
   /**
    * Converts a font to a string. Format is defined in
    * 
-   * @link StringUtilities#stringToFont(String)
+   * {@link StringUtilities#stringToFont(String)}
    * 
    * @param f
    * 
@@ -190,8 +188,8 @@ public final class StringUtilities
 
     final StringBuffer buf = new StringBuffer();
 
-    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" )
-        .append( f.getSize() );
+    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" ).append(
+        f.getSize() );
 
     return buf.toString();
   }
@@ -203,15 +201,13 @@ public final class StringUtilities
    * @param replaceProperties
    * @return string
    */
-  public static String replaceAll( final String sourceValue,
-      final Properties replaceProperties )
+  public static String replaceAll( final String sourceValue, final Properties replaceProperties )
   {
     String newString = sourceValue;
 
-    for( Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt
-        .hasNext(); )
+    for( Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) replaceIt.next();
+      final Map.Entry entry = (Entry)replaceIt.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 
@@ -242,7 +238,7 @@ public final class StringUtilities
 
     if( lineLength == 0 )
       return str;
-    
+
     str.replaceAll( "\\n", "" );
 
     final StringBuffer bf = new StringBuffer();
@@ -256,42 +252,40 @@ public final class StringUtilities
           line = StringUtils.stripStart( line, null );
         if( alignment == ALIGNMENT_RIGHT )
         {
-          line = StringUtils.stripEnd( line, null);
+          line = StringUtils.stripEnd( line, null );
           line = StringUtils.leftPad( line, lineLength );
         }
         bf.append( line );
         break;
       }
-      else
-      {
-        int curLineLength = lineLength;
-        if( keepWords && !Character.isWhitespace( str.charAt( i + lineLength - 2) )
-            && !Character.isWhitespace( str.charAt( i + lineLength - 1) )
-            && !Character.isWhitespace( str.charAt( i + lineLength ) ) )
-        {
-          curLineLength = lineLength - 3;
-          while( curLineLength > 0 && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
-            curLineLength--;
-          
-          if( curLineLength == 0 )
-            curLineLength = lineLength;
-          if( curLineLength != lineLength )
-            curLineLength++;
-        }
-        
-        String line = str.substring( i, i + curLineLength );
-        if( alignment == ALIGNMENT_LEFT )
-          line = StringUtils.stripStart( line, null );
-        if( alignment == ALIGNMENT_RIGHT )
-        {
-          line = StringUtils.stripEnd( line, null);
-          line = StringUtils.leftPad( line, lineLength );
-        }
-        
-        bf.append( line ).append( System.getProperty( "line.separator" ) );
 
-        i = i + curLineLength;
+      int curLineLength = lineLength;
+      if( keepWords && !Character.isWhitespace( str.charAt( i + lineLength - 2 ) )
+          && !Character.isWhitespace( str.charAt( i + lineLength - 1 ) )
+          && !Character.isWhitespace( str.charAt( i + lineLength ) ) )
+      {
+        curLineLength = lineLength - 3;
+        while( curLineLength > 0 && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
+          curLineLength--;
+
+        if( curLineLength == 0 )
+          curLineLength = lineLength;
+        if( curLineLength != lineLength )
+          curLineLength++;
       }
+
+      String line = str.substring( i, i + curLineLength );
+      if( alignment == ALIGNMENT_LEFT )
+        line = StringUtils.stripStart( line, null );
+      if( alignment == ALIGNMENT_RIGHT )
+      {
+        line = StringUtils.stripEnd( line, null );
+        line = StringUtils.leftPad( line, lineLength );
+      }
+
+      bf.append( line ).append( System.getProperty( "line.separator" ) );
+
+      i = i + curLineLength;
     }
 
     return bf.toString();

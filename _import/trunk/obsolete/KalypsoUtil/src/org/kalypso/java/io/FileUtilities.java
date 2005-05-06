@@ -65,6 +65,11 @@ import org.kalypso.java.io.filter.PrefixSuffixFilter;
 public class FileUtilities
 {
   /**
+   * THE system tmp dir "java.io.tmpdir"
+   */
+  public static final File TMP_DIR = new File( System.getProperty( "java.io.tmpdir" ) );
+
+  /**
    * See makeFileFromStream(). this method calls makeFileFromStream with
    * url.openStream() as parameter.
    * 
@@ -238,7 +243,7 @@ public class FileUtilities
    */
   public static File createNewTempDir( final String prefix )
   {
-    return createNewTempDir( prefix, new File( System.getProperty( "java.io.tmpdir" ) ) );
+    return createNewTempDir( prefix, TMP_DIR );
   }
 
   /**
