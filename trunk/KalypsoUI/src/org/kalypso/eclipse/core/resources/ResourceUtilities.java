@@ -63,8 +63,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.sun.xml.rpc.processor.modeler.j2ee.xml.urlPatternType;
-
 /**
  * @author belger
  */

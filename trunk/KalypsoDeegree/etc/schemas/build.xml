@@ -4,8 +4,13 @@
 	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
 	<property name="project" value="${workspace}/KalypsoDeegree" />
-	<property name="project-name" value="sldRasterSymbolizerBinding" />
+	<property name="project-name" value="deegreeBinding" />
 
+    <patternset id="binding.schemata">
+      <include name="etc/schemas/sld/**/*.xsd"/>
+      <include name="deegree/org/kalypsodeegree_impl/gml/schema/schemata/obslink/obslink.xsd"/>
+    </patternset>
+  
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
 
 </project>

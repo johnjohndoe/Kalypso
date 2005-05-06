@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.deegree.gml.GMLException;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.vistors.GMLSchemaVisitor;
 import org.kalypsodeegree_impl.gml.schema.vistors.SubstitutionGroupRegistrator;
@@ -90,11 +91,23 @@ public class GMLSchema
     {
       try
       {
-        final Node attributeNode = XMLHelper.getAttributeNode( nl.item( i ),
+        final Node namespaceNode = XMLHelper.getAttributeNode( nl.item( i ),
             "namespace" );
-        final String namespace = attributeNode.getNodeValue();
+        final String namespace = namespaceNode.getNodeValue();
+        final Node locationNode = XMLHelper.getAttributeNode( nl.item( i ),
+            "schemaLocation" );
+        final String location = locationNode.getNodeValue();
 
-        final GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
+        GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
+        if( schema == null )
+        {
+          final URL url = new URL( getUrl(), location );
+          schema = GMLSchemaCatalog.getSchema( url );
+        }
+        
+        if( schema == null )
+          throw new GMLException( "Could not load schema: namespace='" + namespace + "', location='" + location + "'" );
+        
         m_importedSchemas.put( namespace, schema );
       }
       catch( final Exception e )

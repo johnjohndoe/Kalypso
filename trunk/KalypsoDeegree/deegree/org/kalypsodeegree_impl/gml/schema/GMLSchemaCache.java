@@ -40,18 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema;
 
-import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.util.cache.StringValidityFileCache;
 import org.kalypso.util.cache.StringValidityKey;
 import org.kalypso.util.serializer.ISerializer;
@@ -68,7 +65,7 @@ import org.w3c.dom.Document;
  */
 public class GMLSchemaCache
 {
-  private final static int TIMEOUT = 0;
+  private final static int TIMEOUT = Integer.MAX_VALUE;
 
   private final static int SIZE = 30;
 
@@ -76,11 +73,12 @@ public class GMLSchemaCache
 
   private final StringValidityFileCache m_fileCache;
 
-  public GMLSchemaCache( )
+  public GMLSchemaCache( final File cacheDirectory )
   {
     final LfuCacheFactory factory = new LfuCacheFactory();
     m_memCache = factory.newInstance( "gml.schemas", TIMEOUT, SIZE );
-    m_fileCache = new StringValidityFileCache( new GMLSchemaSerializer(), null );
+    
+    m_fileCache = new StringValidityFileCache( new GMLSchemaSerializer(), cacheDirectory );
   }
 
   /** Lädt das Schmea aus dieser URL und nimmt diese id für den cache */
@@ -90,6 +88,7 @@ public class GMLSchemaCache
     try
     {
       final URLConnection connection = schemaURL.openConnection();
+      connection.connect();
       validity = new Date( connection.getLastModified() );
     }
     catch( final IOException e )
@@ -121,12 +120,12 @@ public class GMLSchemaCache
         schema = (GMLSchema) m_fileCache.get( key );
 
       if( schema != null )
-        m_memCache.addObject( key, new GMLSchemaWrapper( schema, validity ) );
+        m_memCache.addObject( keyID, new GMLSchemaWrapper( schema, validity ) );
 
       return schema;
     }
-    else
-      return sw.getSchema();
+
+    return sw.getSchema();
   }
 
   private static class GMLSchemaSerializer implements ISerializer
@@ -149,24 +148,16 @@ public class GMLSchemaCache
     public void write( final Object object, final OutputStream os )
         throws InvocationTargetException
     {
-      Writer writer = null;
       try
       {
-        writer = new OutputStreamWriter( new BufferedOutputStream( os ) );
-
         final Document document = ((GMLSchema) object).getXMLDocument();
-        XMLHelper.writeDOM( document, null, writer );
-        writer.close();
+        XMLHelper.writeDOM( document, null, os );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
 
         throw new InvocationTargetException( e );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( writer );
       }
     }
   }

@@ -267,26 +267,28 @@ public class WfsLoader extends AbstractLoader
     }
   }
 
-  /**
-   * This method is just for debuging, to write an imput stream to a file
-   */
-  private void writeInputStreamToFile( String filename, InputStream is )
-  {
-
-    try
-    {
-      FileWriter fileWriterGetCap = new FileWriter( filename, true );
-      int i = 0;
-      while( ( i = is.read() ) >= 0 )
-      {
-        fileWriterGetCap.write( (char)i );
-      }
-      fileWriterGetCap.close();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      // TODO: handle exception
-    }
-  }
+  // not used
+  // better use: ioutils.copy(  );
+  // and close stream in finally block
+//  /**
+//   * This method is just for debuging, to write an imput stream to a file
+//   */
+//  private void writeInputStreamToFile( String filename, InputStream is )
+//  {
+//    try
+//    {
+//      FileWriter fileWriterGetCap = new FileWriter( filename, true );
+//      int i = 0;
+//      while( ( i = is.read() ) >= 0 )
+//      {
+//        fileWriterGetCap.write( (char)i );
+//      }
+//      fileWriterGetCap.close();
+//    }
+//    catch( Exception e )
+//    {
+//      e.printStackTrace();
+//      // TODO: handle exception
+//    }
+//  }
 }

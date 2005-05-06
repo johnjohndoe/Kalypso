@@ -118,9 +118,10 @@ public class GMLEditorTreeView implements IGMLDocumentListener, ModellEventListe
     layoutData.verticalAlignment = GridData.FILL;
     m_treeViewer.getControl().setLayoutData( layoutData );
 
-//    hookListeners();
-//    createActions();
-//    createMenu( m_treeViewer.getControl() );
+    // warum war das aukommentiert?
+    hookListeners();
+    createActions();
+    createMenu( m_treeViewer.getControl() );
   }
 
   public void setGmlReader( final GMLReader reader )

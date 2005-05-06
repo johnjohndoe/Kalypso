@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -25,7 +26,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.xpath.XPathAPI;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -101,19 +101,34 @@ public class XMLHelper
         inputStream.close();
     }
   }
-  
+
+  public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os ) throws TransformerException
+  {
+    writeDOM( xmlDOM, charset, new StreamResult( os ) );
+  }
+
   public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer ) throws TransformerException
   {
-    final TransformerFactory newInstance = TransformerFactory.newInstance();
+    // sollte nichte benutzt werden, wenn das charset nicht bekannt ist,
+    // da sonst Mist rauskommt
+    if( charset == null )
+      throw new NullPointerException();
+    
+    writeDOM( xmlDOM, charset, new StreamResult( writer ) );
+  }
+  
+  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult ) throws TransformerException
+  {
+    final TransformerFactory tFactory = TransformerFactory.newInstance();
 
-    final Transformer t = newInstance.newTransformer();
+    final Transformer t = tFactory.newTransformer();
 
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
     t.setOutputProperty( OutputKeys.INDENT, "yes" );
     if( charset != null )
       t.setOutputProperty( OutputKeys.ENCODING , charset );
 
-    t.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
+    t.transform( new DOMSource( xmlDOM ), streamResult );
   }
 
   public static Node getAttributeNode( Node node, String attributeName )
@@ -142,6 +157,11 @@ public class XMLHelper
     try
     {
       // Note for Gernot: unter Windows: org.apache.xpath.XPathApi in jre/rt.jar
+      // TOOD: XPathAPI doesn't seem to bee official part of the JavaAPI (it is not included
+      // under linux). Is there another way to do the same?
+      // ... die API gehört zu Xalan-j und ist nicht bestandteil
+      // der JFC -> sollten wir xalan-j als lib mitaufnehmen?
+      //nl = com.sun.org.apache.xpath.internal.XPathAPI.selectNodeList( domNode, xPathQuery );
       nl = XPathAPI.selectNodeList( domNode, xPathQuery );
     }
     catch( Exception e )

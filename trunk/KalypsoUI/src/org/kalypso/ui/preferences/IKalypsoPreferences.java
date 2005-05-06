@@ -40,7 +40,6 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 
 /**
  * Constants.

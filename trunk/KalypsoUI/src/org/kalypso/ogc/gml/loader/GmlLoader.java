@@ -73,7 +73,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class GmlLoader extends AbstractLoader
 {
   private final IUrlResolver m_urlResolver = new UrlResolver();
-  
+
   /**
    * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
    *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
@@ -85,23 +85,16 @@ public class GmlLoader extends AbstractLoader
     {
       monitor.beginTask( "GML laden", 1000 );
 
-      
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
-      
-      try
-      {
-        final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
-            FeatureVisitor.DEPTH_INFINITE );
-        workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
-            FeatureVisitor.DEPTH_INFINITE );
-      }
-      catch( final Throwable e1 )
-      {
-        e1.printStackTrace();
-      }
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer
+          .createGMLWorkspace( gmlURL, m_urlResolver ) );
+
+      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
+      workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       if( gmlFile != null )
@@ -119,7 +112,7 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
 
-      throw new LoaderException( "Konnte GML nicht laden", e );
+      throw new LoaderException( "GML konnte nicht geladen werden: " + source, e );
     }
     finally
     {
