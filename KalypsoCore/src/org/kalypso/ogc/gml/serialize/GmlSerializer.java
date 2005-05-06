@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.BufferedReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -77,20 +78,19 @@ import org.xml.sax.InputSource;
  */
 public final class GmlSerializer
 {
-  private GmlSerializer( )
+  private GmlSerializer()
   {
-    // do not instantiate this class
+  // do not instantiate this class
   }
 
-  public static void serializeWorkspace( final Writer writer,
-      final GMLWorkspace workspace ) throws GmlSerializeException
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace )
+      throws GmlSerializeException
   {
     serializeWorkspace( writer, workspace, null );
   }
 
-  public static void serializeWorkspace( final Writer writer,
-      final GMLWorkspace workspace, final String charsetEncoding )
-      throws GmlSerializeException
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace,
+      final String charsetEncoding ) throws GmlSerializeException
   {
     try
     {
@@ -99,36 +99,31 @@ public final class GmlSerializer
       final String schemaNamespace = workspace.getSchemaNamespace();
       if( schemaNamespace != null )
       {
-        final GMLNameSpace namespace = new GMLNameSpace_Impl( null,
-            schemaNamespace );
+        final GMLNameSpace namespace = new GMLNameSpace_Impl( null, schemaNamespace );
         gmlDoc.addNameSpace( namespace );
       }
 
       final Map namespaces = workspace.getNamespaceMap();
-      for( final Iterator entryIt = namespaces.entrySet().iterator(); entryIt
-          .hasNext(); )
+      for( final Iterator entryIt = namespaces.entrySet().iterator(); entryIt.hasNext(); )
       {
-        final Map.Entry entry = (Entry) entryIt.next();
-        final GMLNameSpace_Impl ns = new GMLNameSpace_Impl( (String) entry
-            .getKey(), (String) entry.getValue() );
+        final Map.Entry entry = (Entry)entryIt.next();
+        final GMLNameSpace_Impl ns = new GMLNameSpace_Impl( (String)entry.getKey(), (String)entry
+            .getValue() );
         // do not use the xmlns:xmlns namespace, its the LAW!
         if( !ns.getSubSpaceName().equals( "xmlns" ) )
           gmlDoc.addNameSpace( ns );
       }
 
       // TODO: why aren't those already in the namespace map???
-      final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl( "gml",
-          CommonNamespaces.GMLNS );
-      final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl( "xlink",
-          CommonNamespaces.XLINKNS );
-      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl( "xsi",
-          CommonNamespaces.XSINS );
+      final GMLNameSpace gmlNameSpace = new GMLNameSpace_Impl( "gml", CommonNamespaces.GMLNS );
+      final GMLNameSpace xlinkNameSpace = new GMLNameSpace_Impl( "xlink", CommonNamespaces.XLINKNS );
+      final GMLNameSpace xsiNameSpace = new GMLNameSpace_Impl( "xsi", CommonNamespaces.XSINS );
       gmlDoc.addNameSpace( gmlNameSpace );
       gmlDoc.addNameSpace( xlinkNameSpace );
       gmlDoc.addNameSpace( xsiNameSpace );
 
-      final GMLFeature gmlFeature = GMLFactory.createGMLFeature( gmlDoc,
-          workspace.getRootFeature() );
+      final GMLFeature gmlFeature = GMLFactory
+          .createGMLFeature( gmlDoc, workspace.getRootFeature() );
       gmlDoc.setRoot( gmlFeature );
 
       workspace.getContext();
@@ -140,8 +135,7 @@ public final class GmlSerializer
     }
     catch( final Exception e )
     {
-      throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream",
-          e );
+      throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream", e );
     }
   }
 
@@ -150,12 +144,11 @@ public final class GmlSerializer
    *             jetzt über globale Namen referenzieren Diese Implementation
    *             benutzt den cache *nicht*.
    */
-  public static GMLWorkspace createGMLWorkspace( final URL gmlURL,
-      final URL schemaURL ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL schemaURL )
+      throws Exception
   {
     // load gml
-    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM(
-        gmlURL, true ) );
+    final GMLDocument_Impl gml = new GMLDocument_Impl( XMLHelper.getAsDOM( gmlURL, true ) );
 
     final GMLFeature gmlFeature = gml.getRootFeature();
 
@@ -169,12 +162,12 @@ public final class GmlSerializer
     // nicht die echte URL der schemaLocation, sondern dass, was im gml steht!
     final String schemaLocationName = gml.getSchemaLocationName();
 
-    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName,
-        schema.getTargetNS(), schema.getNamespaceMap() );
+    return new GMLWorkspace_Impl( types, feature, gmlURL, schemaLocationName, schema.getTargetNS(),
+        schema.getNamespaceMap() );
   }
 
-  public static GMLWorkspace createGMLWorkspace( final URL gmlURL,
-      final IUrlResolver urlResolver ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
+      throws Exception
   {
     BufferedReader reader = null;
 
@@ -194,7 +187,8 @@ public final class GmlSerializer
    * Liest einen GMLWorkspace aus einem Reader. Der Reader wird intern nicht
    * mehr gepuffert.
    * 
-   * @deprecated Sollte nur intern benutzt werden, benutze satt dessen {@link #createGMLWorkspace(URL, URL)}
+   * @deprecated Sollte nur intern benutzt werden, benutze satt dessen
+   *             {@link #createGMLWorkspace(URL, URL)}
    */
   public static GMLWorkspace createGMLWorkspace( final Reader gmlreader,
       final IUrlResolver urlResolver, final URL context ) throws Exception
@@ -203,14 +197,13 @@ public final class GmlSerializer
     final ReplaceTokens rt = new ReplaceTokens( gmlreader );
     rt.setBeginToken( ':' );
     rt.setEndToken( ':' );
-    for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt
-        .hasNext(); )
+    for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) tokenIt.next();
+      final Map.Entry entry = (Entry)tokenIt.next();
 
       final Token token = new ReplaceTokens.Token();
-      token.setKey( (String) entry.getKey() );
-      token.setValue( (String) entry.getValue() );
+      token.setKey( (String)entry.getKey() );
+      token.setValue( (String)entry.getValue() );
 
       rt.addConfiguredToken( token );
     }
@@ -222,16 +215,37 @@ public final class GmlSerializer
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
 
     // load schema
-    final String schemaURI = gml.getNamespaceURI();
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
+    final GMLSchema schema = loadSchemaForGmlDoc( gml );
 
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
-    final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(),
-        types );
+    final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
-    return new GMLWorkspace_Impl( types, feature, context, gml
-        .getSchemaLocation().toExternalForm(), schema.getTargetNS(), schema
-        .getNamespaceMap() );
+    return new GMLWorkspace_Impl( types, feature, context,
+        gml.getSchemaLocationName(), schema.getTargetNS(), schema.getNamespaceMap() );
+  }
+
+  /**
+   * Lädt ein schema anhand des gml-doc. Immer aus dem Cache. Zuerst per
+   * Namespace, dann per schemaLocation.
+   * @throws MalformedURLException
+   * @throws GmlSerializeException
+   */
+  private static GMLSchema loadSchemaForGmlDoc( final GMLDocument gmldoc ) throws MalformedURLException, GmlSerializeException
+  {
+    final String schemaURI = gmldoc.getDocumentElement().getNamespaceURI();
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
+    if( schema == null )
+    {
+      final URL schemaLocation = gmldoc.getSchemaLocation();
+      final GMLSchema schema2 = GMLSchemaCatalog.getSchema( schemaLocation );
+      
+      if( schema2 == null )
+        throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden.\nWeder über den Namespace: " + schemaURI + "\nNoch über die SchemaLocation: " + schemaLocation );
+      
+      return schema2;
+    }
+
+    return schema;
   }
 }

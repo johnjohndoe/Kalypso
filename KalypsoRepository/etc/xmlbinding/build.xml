@@ -5,6 +5,10 @@
 	<property name="project" value="${workspace}/KalypsoRepository" />
 	<property name="project-name" value="repositoryBinding" />
 
+	  <patternset id="binding.schemata">
+	    <include name="etc/xmlbinding/**/*.xsd"/>
+	  </patternset>
+  
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml"/>
 	
 </project>

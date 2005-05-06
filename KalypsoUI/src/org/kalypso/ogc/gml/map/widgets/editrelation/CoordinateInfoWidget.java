@@ -42,12 +42,15 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -56,6 +59,8 @@ import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import com.braju.format.Format;
 
 /**
  * 
@@ -67,9 +72,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  Composite m_topLevel;
+  protected Composite m_topLevel;
 
-  Text m_textInfo;
+  protected Text m_textInfo;
 
   private GM_Point m_p1 = null;
 
@@ -77,10 +82,9 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
 
   private Point m_movePoint;
 
-  /*
-   * 
-   * @author doemming
-   */
+  /** Für die Ausgabe im Info-Panel */
+  private final String COORD_FORMAT = "%10.4f";
+
   public CoordinateInfoWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -204,28 +208,73 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     return null;
   }
 
-  /**
-   *  
-   */
   private void updateInfoText()
   {
-    final StringBuffer infoBuffer = new StringBuffer();
-    infoBuffer.append( "p1:" );
-    if( m_p1 == null )
-      infoBuffer.append( "\n  nicht gewählt" );
-    else
-      infoBuffer.append( "\n  " + m_p1.getX() + " / " + m_p1.getY() );
-    infoBuffer.append( "\np2:" );
-    if( m_p2 == null )
-      infoBuffer.append( "\n  nicht gewählt" );
-    else
-      infoBuffer.append( "\n  " + m_p2.getX() + " / " + m_p2.getY() );
-    if( m_p1 != null && m_p2 != null )
+    final Double x1 = m_p1 == null ? null : new Double( m_p1.getX() );
+    final Double y1 = m_p1 == null ? null : new Double( m_p1.getY() );
+    final Double x2 = m_p2 == null ? null : new Double( m_p2.getX() );
+    final Double y2 = m_p2 == null ? null : new Double( m_p2.getY() );
+
+    final StringWriter stringWriter = new StringWriter();
+    
+    try
     {
-      infoBuffer.append( "\n\nDistanz:" );
-      infoBuffer.append( "\n  direkt: \t\t" + m_p1.distance( m_p2 ) );
-      infoBuffer.append( "\n  horizontal: \t" + Math.abs( m_p1.getX() - m_p2.getX() ) );
-      infoBuffer.append( "\n  vertikal: \t\t" + Math.abs( m_p1.getY() - m_p2.getY() ) );
+      final PrintWriter pw = new PrintWriter( stringWriter );
+
+      pw.print( "p1:" );
+      if( m_p1 == null )
+        pw.print( "\n  nicht gewählt" );
+      else
+      {
+        pw.print( "\n  " );
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { x1 } );
+        pw.print( " / " );
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { y1 } );
+      }
+
+      pw.print( "\np2:" );
+      if( m_p2 == null )
+        pw.print( "\n  nicht gewählt" );
+      else
+      {
+        pw.print( "\n  " );
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { x2 } );
+        pw.print( " / " );
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { y2 } );
+      }
+
+      if( m_p1 != null && m_p2 != null )
+      {
+        final Double direkt = new Double( m_p1.distance( m_p2 ) );
+        final Double horizontal = new Double( Math.abs( m_p1.getX() - m_p2.getX() ) );
+        final Double vertical = new Double( Math.abs( m_p1.getY() - m_p2.getY() ) );
+
+        pw.print( "\n\nDistanz:" );
+        pw.print( "\n  direkt: \t\t" );
+
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { direkt } );
+
+        pw.print( "\n  horizontal: \t" );
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { horizontal } );
+
+        pw.print( "\n  vertikal: \t\t" );
+        Format.fprintf( pw, COORD_FORMAT, new Double[]
+        { vertical } );
+      }
+    }
+    catch( final IOException e )
+    {
+      // will never happen
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stringWriter );
     }
 
     if( m_textInfo != null && !m_textInfo.isDisposed() )
@@ -236,8 +285,8 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
         {
           if( m_textInfo != null && !m_textInfo.isDisposed() )
           {
-            m_textInfo.setText( infoBuffer.toString() );
-            m_textInfo.setToolTipText( infoBuffer.toString() );
+            m_textInfo.setText( stringWriter.toString() );
+            m_textInfo.setToolTipText( stringWriter.toString() );
             m_topLevel.layout();
           }
         }
@@ -265,17 +314,12 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   public void createControl( Composite parent )
   {
     m_topLevel = new Composite( parent, SWT.NONE );
-    Layout gridLayout = new GridLayout( 1, false );
-    m_topLevel.setLayout( gridLayout );
+    m_topLevel.setLayout( new GridLayout( 1, false ) );
 
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.verticalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    data.grabExcessVerticalSpace = true;
-    m_topLevel.setLayoutData( data );
+    m_topLevel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
+    m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
     m_textInfo.setText( "Info" );
+    m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 }

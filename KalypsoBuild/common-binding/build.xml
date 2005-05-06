@@ -23,6 +23,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	
 	<property name="project" value="full path of the project..." />
 	<property name="project-name" value="will be used for naming the jar containing the bindings..." />
+	
+	** and the following patternset defines, which .xsd files relativ to the project basedir 
+	** files are imported 
+	
+	<patternset id="binding.schemata">
+      <include name="etc/schemas/sld/**/*.xsd"/>
+    </patternset>
 
 	-->
 
@@ -61,8 +68,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     <delete file="${project}/lib/${dest.file.name}" />
 
     <xjc target="${build.source}" extension="true" removeoldoutput="true">
-      <schema dir=".">
-        <include name="**/*.xsd" />
+      <schema dir="${project}">
+        <patternset refid="binding.schemata"/>
       </schema>
 
       <!-- Important Note: the produces element specifies the
