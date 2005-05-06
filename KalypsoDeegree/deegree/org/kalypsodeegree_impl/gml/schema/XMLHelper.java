@@ -26,6 +26,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.xpath.XPathAPI;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -156,12 +157,8 @@ public class XMLHelper
 
     try
     {
-      // Note for Gernot: unter Windows: org.apache.xpath.XPathApi in jre/rt.jar
-      // TOOD: XPathAPI doesn't seem to bee official part of the JavaAPI (it is not included
-      // under linux). Is there another way to do the same?
-      // ... die API gehört zu Xalan-j und ist nicht bestandteil
-      // der JFC -> sollten wir xalan-j als lib mitaufnehmen?
-      //nl = com.sun.org.apache.xpath.internal.XPathAPI.selectNodeList( domNode, xPathQuery );
+      // TODO: Andreas: hab die xalan-j.jar zu deegree hinzugefügt, 
+      // schau mal obs noch geht...
       nl = XPathAPI.selectNodeList( domNode, xPathQuery );
     }
     catch( Exception e )

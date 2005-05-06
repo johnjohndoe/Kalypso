@@ -43,6 +43,9 @@
    <library name="lib/deegreeBinding.jar">
       <export name="*"/>
    </library>
+   <library name="lib/xalan-j/xalan.jar">
+      <export name="*"/>
+   </library>
    </runtime>
    <requires>
       <import plugin="org.kalypso.jwsdp"/>
