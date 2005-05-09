@@ -46,7 +46,7 @@ import java.net.URL;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.java.net.IUrlCatalog;
 
-/*
+/**
  * class UrlCatalogNA
  * 
  * provides the schemas for kalypso rainfall runoff simulation
@@ -55,15 +55,6 @@ import org.kalypso.java.net.IUrlCatalog;
  */
 public class UrlCatalogNA implements IUrlCatalog
 {
-
-  /**
-   *  
-   */
-  public UrlCatalogNA()
-  {
-  // nothing to do here
-  }
-
   /**
    * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
    */
