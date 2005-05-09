@@ -147,7 +147,7 @@ public class UrlUtilities implements IUrlResolver
     final URLConnection connection = url.openConnection();
     final String contentEncoding = connection.getContentEncoding();
     final InputStream inputStream = connection.getInputStream();
-    
+    // TODO: unsauber! wenn kein encoding da, am besten keinen Reader verwenden, da sonst z.B: probleme beim xml-parsen
     if( contentEncoding == null )
       return new InputStreamReader( inputStream );
     
