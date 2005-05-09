@@ -7,8 +7,9 @@
 	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="src" path="/KalypsoDWD"/>
 	<classpathentry kind="src" path="/KalypsoOptimizePlugin"/>
-	<classpathentry exported="true" kind="lib" path="/KalypsoOptimizePlugin/lib/optimizerBinding.jar"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
 	<classpathentry kind="src" path="/JWSDPInstallation"/>
+	<classpathentry kind="lib" path="/KalypsoDWD/lib/dwdBinding.jar"/>
+	<classpathentry kind="lib" path="/KalypsoOptimizePlugin/lib/optimizerBinding.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

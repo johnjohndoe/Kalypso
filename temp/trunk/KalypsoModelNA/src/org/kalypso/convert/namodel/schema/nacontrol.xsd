@@ -387,7 +387,7 @@
 							</documentation>
 						</annotation>
 					<!-- link auf den pegel -->
-					<element name="pegelZR" type="obslink:TimeseriesLinkType"/>
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty"/>
 						<annotation>
 							<documentation xml:lang="de">
 								<label></label>
@@ -396,7 +396,7 @@
 							</documentation>
 						</annotation>
 					<!-- link auf das simulationsergebnis -->
-					<element name="qberechnetZR" type="obslink:TimeseriesLinkType"/>
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty"/>
 						<annotation>
 							<documentation xml:lang="de">
 								<label></label>

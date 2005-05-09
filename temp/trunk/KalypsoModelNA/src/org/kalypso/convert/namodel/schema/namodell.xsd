@@ -5,7 +5,10 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
-	-->
+	
+               <element name="Abfluss" type="obslink:TimeseriesLinkType/>
+        jetzt: <element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty/>
+-->
 	<element name="NaModell" type="na:NaModellType"/>
 	<complexType name="NaModellType">
 		<complexContent>
@@ -89,7 +92,7 @@
 						</annotation>
 					</element>
 					<!-- ZR Zufluss falls zufluss vorhanden -->
-					<element name="zuflussZRRepository" type="obslink:TimeseriesLinkType">
+					<element name="zuflussZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zufluss Eingang</label>
@@ -98,7 +101,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkType">
+					<element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zufluss Eingang</label>
@@ -107,7 +110,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="zuflussZR" type="obslink:TimeseriesLinkType">
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zufluss Berechnung</label>
@@ -119,7 +122,7 @@
 					<element name="nzufPfad" type="string"/>
 					<!-- TODO loeschen -->
 					<!-- ZR Pegel falls Pegel vorhanden-->
-					<element name="pegelZRRepository" type="obslink:TimeseriesLinkType">
+					<element name="pegelZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Pegel(rep)</label>
@@ -128,7 +131,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="pegelZR" type="obslink:TimeseriesLinkType">
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Pegel (lok)</label>
@@ -138,7 +141,7 @@
 						</annotation>
 					</element>
 					<!-- ZR berechnet, hier wird das ergebnis gespeichert-->
-					<element name="qberechnetZR" type="obslink:TimeseriesLinkType">
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abfluss berechnet</label>
@@ -147,7 +150,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="pegelBerechnetZRAblage" type="obslink:TimeseriesLinkType">
+					<element name="pegelBerechnetZRAblage" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>ZR Ablage Berechnung</label>
@@ -634,7 +637,7 @@ siehe bodenkorrekturmember...
 						</annotation>
 						<!-- TODO loeschen, sollte aus relation hervorgehen, JH: nicht löschen, ist weitere Relation. -->
 					</element>
-					<element name="temperaturZRRepository" type="obslink:TimeseriesLinkType">
+					<element name="temperaturZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -648,7 +651,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLinkType">
+					<element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -662,7 +665,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="temperaturZR" type="obslink:TimeseriesLinkType">
+					<element name="temperaturZR" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -677,7 +680,7 @@ siehe bodenkorrekturmember...
 						</annotation>
 					</element>
 					<!-- ZR niederschlag -->
-					<element name="niederschlagZRRepository" type="obslink:TimeseriesLinkType">
+					<element name="niederschlagZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -691,7 +694,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="niederschlagZRRepositoryVorhersage" type="obslink:TimeseriesLinkType">
+					<element name="niederschlagZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -705,7 +708,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="niederschlagZR" type="obslink:TimeseriesLinkType">
+					<element name="niederschlagZR" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -720,7 +723,7 @@ siehe bodenkorrekturmember...
 						</annotation>
 					</element>
 					<!-- temperatur -->
-					<element name="temperaturZRRepository" type="obslink:TimeseriesLinkType">
+					<element name="temperaturZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -729,7 +732,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLinkType">
+					<element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
@@ -738,7 +741,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="temperaturZR" type="obslink:TimeseriesLinkType">
+					<element name="temperaturZR" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>

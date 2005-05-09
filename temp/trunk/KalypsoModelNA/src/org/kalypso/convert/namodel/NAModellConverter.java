@@ -60,7 +60,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -128,8 +127,7 @@ public class NAModellConverter
 
     final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( gmlFile.toURL(),
         asciiBaseDir );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL(), conf
-        .getSchemaURL() );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
     featureToAscii( conf, workspace, null, null );
 
   }
@@ -147,7 +145,7 @@ public class NAModellConverter
     //        insertSHPGeometries( modelRootFeature, shapeDir );
 
     File modelGmlFile = new File( gmlBaseDir, "model.gml" );
-    final GMLSchema modelGmlSchema = GMLSchemaCatalog.getSchema( conf.getSchemaURL() );
+    final GMLSchema modelGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
     final Document modelSchema = modelGmlSchema.getSchema();
     //    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl(
     // modelGmlSchema.getFeatureTypes(),
@@ -158,7 +156,7 @@ public class NAModellConverter
     // modelWorkspace );
 
     File parameterGmlFile = new File( gmlBaseDir, "parameter.gml" );
-    final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( conf.getParameterSchemaURL() );
+    final GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
     final Document paraSchema = paraGmlSchema.getSchema();
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema.getFeatureTypes(),
         parameterRootFeature, null, " project:/.model/schema/parameter.xsd", paraSchema
@@ -244,9 +242,9 @@ public class NAModellConverter
   public NAModellConverter( NAConfiguration conf ) throws Exception
   {
     m_conf = conf;
-    m_modelSchema = GMLSchemaCatalog.getSchema( conf.getSchemaURL() );
-    GMLSchema m_hydrotopSchema = GMLSchemaCatalog.getSchema( conf.getHydrotopSchemaUrl() );
-    GMLSchema m_parameterSchema = GMLSchemaCatalog.getSchema( conf.getParameterSchemaURL() );
+    m_modelSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
+    GMLSchema m_hydrotopSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP );
+    GMLSchema m_parameterSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER);
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );

@@ -61,10 +61,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NaModelCalcJob implements ICalcJob
 {
-  
 
   private ICalcJob m_calcJob = null;
-
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
@@ -77,11 +75,11 @@ public class NaModelCalcJob implements ICalcJob
   {
     try
     {
-      final Logger logger=Logger.getAnonymousLogger();
+      final Logger logger = Logger.getAnonymousLogger();
       // testen ob calcjob optimization hat
-      final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+      //      final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-          .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
+          .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
       final Feature rootFeature = controlWorkspace.getRootFeature();
       final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration",
           false );
@@ -89,8 +87,8 @@ public class NaModelCalcJob implements ICalcJob
       if( optimize )
       {
         final IOptimizingJob optimizeJob;
-        optimizeJob = new NAOptimizingJob(tmpdir,dataProvider,monitor);
-        m_calcJob = new OptimizerCalJob(logger,optimizeJob );
+        optimizeJob = new NAOptimizingJob( tmpdir, dataProvider, monitor );
+        m_calcJob = new OptimizerCalJob( logger, optimizeJob );
       }
       else
         m_calcJob = new NaModelInnerCalcJob();
@@ -109,6 +107,6 @@ public class NaModelCalcJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return getClass().getResource("resources/nacalcjob_spec.xml");
+    return getClass().getResource( "resources/nacalcjob_spec.xml" );
   }
 }

@@ -251,16 +251,16 @@ public class NaModelInnerCalcJob implements ICalcJob
     final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_META_ID ), conf.getMetaSchemaURL() );
+        .getURLForID( NaModelConstants.IN_META_ID ) );
     final Feature metaFE = metaWorkspace.getRootFeature();
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_CONTROL_ID ), conf.getControlSchemaURL() );
+        .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
 
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
       hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-          .getURLForID( NaModelConstants.IN_HYDROTOP_ID ), conf.getHydrotopSchemaUrl() );
+          .getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
     else
       hydrotopWorkspace = null;
 
@@ -268,7 +268,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     final GMLWorkspace parameterWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
       parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-          .getURLForID( NaModelConstants.IN_PARAMETER_ID ), conf.getParameterSchemaURL() );
+          .getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
     else
       parameterWorkspace = null;
 
@@ -276,8 +276,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     initializeModell( controlWorkspace.getRootFeature(), dataProvider
         .getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL, conf
-        .getSchemaURL() );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider
         .getURLForID( NaModelConstants.IN_MODELL_ID ) );
     conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
@@ -502,9 +501,9 @@ public class NaModelInnerCalcJob implements ICalcJob
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
               .getHref() );
+          // TODO new file zulaessig ??
           if( ( new File( pegelURL.getFile() ) ).exists() )
           {
-
             logger
                 .info( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );

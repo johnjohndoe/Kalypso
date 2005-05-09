@@ -50,7 +50,6 @@ import java.util.Date;
 
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
@@ -60,7 +59,7 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 public class NAConfiguration
 {
 
-  private final URL m_schemaURL;
+//  private final URL m_schemaURL;
 
   private final File m_catchmentFile;
 
@@ -114,7 +113,7 @@ public class NAConfiguration
 
   private String m_rootNodeId;
 
-  private final URL m_metaSchemaURL;
+//  private final URL m_metaSchemaURL;
 
   private final File m_hydrotopFile;
 
@@ -126,9 +125,9 @@ public class NAConfiguration
 
   private final File m_nutzungDir;
 
-  private final URL m_parameterSchemaURL;
-
-  private final URL m_hydrotopSchemaUrl;
+//  private final URL m_parameterSchemaURL;
+//
+//  private final URL m_hydrotopSchemaUrl;
 
   private final URL m_parameterFormatURL;
 
@@ -141,13 +140,13 @@ public class NAConfiguration
     m_gmlModelURL = modelURL;
 
     // schemas
-    m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
-    m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
-    m_parameterSchemaURL = getClass().getResource( "schema/parameter.xsd" );
-    m_hydrotopSchemaUrl = getClass().getResource( "schema/hydrotop.xsd" );
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( m_schemaURL );
-    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema( m_parameterSchemaURL );
-    final GMLSchema hydSchema = GMLSchemaCatalog.getSchema( m_hydrotopSchemaUrl );
+//    m_schemaURL = getClass().getResource( "schema/namodell.xsd" );
+//    m_metaSchemaURL = getClass().getResource( "schema/control.xsd" );
+//    m_parameterSchemaURL = getClass().getResource( "schema/parameter.xsd" );
+//    m_hydrotopSchemaUrl = getClass().getResource( "schema/hydrotop.xsd" );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL);
+    final GMLSchema paraSchema = GMLSchemaCatalog.getSchema(NaModelConstants.NS_NAPARAMETER);
+    final GMLSchema hydSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP);
 
     // featuretypes
     m_nodeFT = schema.getFeatureType( "Node" );
@@ -201,10 +200,10 @@ public class NAConfiguration
     return new NAConfiguration( asciiBaseDir, null, modelURL );
   }
 
-  public URL getSchemaURL()
-  {
-    return m_schemaURL;
-  }
+//  public URL getSchemaURL()
+//  {
+//    return m_schemaURL;
+//  }
 
   public URL getChannelFormatURL()
   {
@@ -331,25 +330,25 @@ public class NAConfiguration
     m_rootNodeId = rootNodeID;
   }
 
-  public URL getMetaSchemaURL()
-  {
-    return m_metaSchemaURL;
-  }
+//  public URL getMetaSchemaURL()
+//  {
+//    return m_metaSchemaURL;
+//  }
 
   public File getHydrotopFile()
   {
     return m_hydrotopFile;
   }
 
-  public URL getParameterSchemaURL()
-  {
-    return m_parameterSchemaURL;
-  }
+//  public URL getParameterSchemaURL()
+//  {
+//    return m_parameterSchemaURL;
+//  }
 
-  public URL getHydrotopSchemaUrl()
-  {
-    return m_hydrotopSchemaUrl;
-  }
+//  public URL getHydrotopSchemaUrl()
+//  {
+//    return m_hydrotopSchemaUrl;
+//  }
 
   public URL getHydrotopFormatURL()
   {
