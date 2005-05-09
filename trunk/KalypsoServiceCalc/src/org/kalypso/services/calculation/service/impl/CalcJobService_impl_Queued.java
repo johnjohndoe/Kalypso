@@ -43,7 +43,9 @@ package org.kalypso.services.calculation.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +58,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
+import javax.activation.URLDataSource;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
@@ -101,6 +104,8 @@ public class CalcJobService_impl_Queued implements ICalculationService
   private final Unmarshaller m_unmarshaller;
 
   private Map m_modelspecMap = new HashMap();
+
+  private IUrlCatalog m_catalog;
 
   public CalcJobService_impl_Queued() throws RemoteException
   {
@@ -173,21 +178,20 @@ public class CalcJobService_impl_Queued implements ICalculationService
     }
 
     {
-      final IUrlCatalog catalog;
       if( classCatalogFile == null )
-        catalog = new IUrlCatalog() {
+        m_catalog = new IUrlCatalog() {
           public URL getURL( String key )
           {
             return null;
           }};
           else
-      catalog = new ClassUrlCatalog( classCatalogFile );
+      m_catalog = new ClassUrlCatalog( classCatalogFile );
 
       // TODO: auch den catalog aus der schemaConf nehmen?
       final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
       cacheDir.mkdir();
 
-      GMLSchemaCatalog.init( catalog, cacheDir );
+      GMLSchemaCatalog.init( m_catalog, cacheDir );
     }
     
     LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + m_maxThreads
@@ -481,5 +485,48 @@ public class CalcJobService_impl_Queued implements ICalculationService
       throws CalcJobServiceException
   {
     return getModelspec( typeID ).getOutput();
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
+   */
+  public DataHandler getSchema( final String namespace )  throws CalcJobServiceException
+  {
+    try
+    {
+      final URL url = m_catalog.getURL( namespace );
+      if( url == null )
+        return null;
+      
+      return new DataHandler( new URLDataSource( url ) );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      
+      throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, e );
+    }
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getSchemaValidity(java.lang.String)
+   */
+  public long getSchemaValidity( final String namespace ) throws CalcJobServiceException
+  {
+    try
+    {
+      final URL url = m_catalog.getURL( namespace );
+      if( url == null )
+        return -1;
+      
+      final URLConnection connection = url.openConnection();
+      return connection.getLastModified();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, e );
+    }
   }
 }

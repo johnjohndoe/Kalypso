@@ -41,6 +41,7 @@
 package org.kalypso.services.calculation.service;
 
 import java.rmi.Remote;
+import java.util.Date;
 
 import javax.activation.DataHandler;
 
@@ -65,6 +66,15 @@ import org.kalypso.services.calculation.job.ICalcJob;
  */
 public interface ICalculationService extends Remote, IKalypsoService
 {
+  public long getSchemaValidity( final String namespace ) throws CalcJobServiceException;
+  
+  /**
+   * Katalog-Service des Rechendienstes. Gibt für einen Namespace ein Schema
+   * zurück. Sollte alle Schemata der von der jeweiligen Konfiguration
+   * unterstüzten Modelle kennen.
+   */
+  public DataHandler getSchema( final String namespace ) throws CalcJobServiceException;
+
   /**
    * Gibt die IDs aller unterstützten JobTypen zurück.
    * 
@@ -120,8 +130,8 @@ public interface ICalculationService extends Remote, IKalypsoService
    *          innerhalb des Archivs.
    */
   public CalcJobInfoBean startJob( final String typeID, final String description,
-      final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output )
-      throws CalcJobServiceException;
+      final DataHandler zipHandler, final CalcJobClientBean[] input,
+      final CalcJobClientBean[] output ) throws CalcJobServiceException;
 
   /**
    * Stoppt einen Auftrag
@@ -146,7 +156,7 @@ public interface ICalculationService extends Remote, IKalypsoService
    * Gibt zurück, welche Ergebniss (IDs) zur Zeit vorliegen.
    */
   public String[] getCurrentResults( final String jobID ) throws CalcJobServiceException;
-  
+
   /**
    * <p>
    * Löscht einen Auftrag und alle temporär angelegten Daten vollständig.

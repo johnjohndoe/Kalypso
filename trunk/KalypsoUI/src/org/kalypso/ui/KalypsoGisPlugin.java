@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.MissingResourceException;
@@ -87,6 +88,7 @@ import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
+import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
@@ -95,7 +97,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
@@ -241,7 +242,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           // HACK: wird gehen davon aus, dass nur URLs in der conf (ausser die,
           // die mit einem \\ anfangen) sind
           // um auch relative urls zu erlauben werden diese hier gegen die
-          // conf-url aufgelöst. Geht nur hier, da nur hier die urls der 
+          // conf-url aufgelöst. Geht nur hier, da nur hier die urls der
           // con-dateien bekannt sind.
           final String val;
           if( value.length() == 0 || value.charAt( 0 ) == '\\' )
@@ -261,7 +262,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         }
       }
       catch( final Exception e ) // generic exception used to simplify
-                                 // processing
+      // processing
       {
         // do nothing, try with next location
         e.printStackTrace();
@@ -337,11 +338,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private void configureURLStreamHandler( final BundleContext context )
   {
     // register the observation webservice url stream handler
+    registerUrlStreamHandler( context, ServiceRepositoryObservation.SCHEME_OCS,
+        new OcsURLStreamHandler() );
+    registerUrlStreamHandler( context,
+     CalculationSchemaStreamHandler.PROTOCOL, new CalculationSchemaStreamHandler() );
+  }
+
+  private void registerUrlStreamHandler( final BundleContext context, final String scheme,
+      final URLStreamHandler handler )
+  {
     final Hashtable properties = new Hashtable( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
-    { ServiceRepositoryObservation.SCHEME_OCS } );
-    context.registerService( URLStreamHandlerService.class.getName(), new OcsURLStreamHandler(),
-        properties );
+    { scheme } );
+    context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }
 
   /**
@@ -350,6 +359,17 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public ProxyFactory getServiceProxyFactory()
   {
     return m_proxyFactory;
+  }
+
+  /**
+   * Convenience method that returns the calculation service proxy
+   * 
+   * @throws ServiceException
+   */
+  public ICalculationService getCalculationServiceProxy() throws ServiceException
+  {
+    return (ICalculationService)m_proxyFactory.getProxy( "Kalypso_CalculationService",
+        ClassUtilities.getOnlyClassName( ICalculationService.class ) );
   }
 
   /**
@@ -476,36 +496,38 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
             .warning( "Keine 'SCHEMA_LOCATION' in Kalypso.ini.\nGMLs können vermutlich nicht geladen werden." );
         return;
       }
-      
+
       url = new URL( catalogLocation );
       is = new BufferedInputStream( url.openStream() );
-      
+
       catalog.load( is );
       is.close();
     }
     catch( final Exception e )
     {
-      // exceptions ignorieren, es handelt sich um ein Programmier- oder Konfigurationsproblem.
-      LOGGER
-      .warning( "Fehler beim Laden des Schema-Katalogs : " + catalogLocation + "\nGMLs können vermutlich nicht geladen werden." );
+      // exceptions ignorieren, es handelt sich um ein Programmier- oder
+      // Konfigurationsproblem.
+      LOGGER.warning( "Fehler beim Laden des Schema-Katalogs : " + catalogLocation
+          + "\nGMLs können vermutlich nicht geladen werden." );
 
       e.printStackTrace();
     }
     finally
     {
-      IOUtils.closeQuietly(is);
-      
+      IOUtils.closeQuietly( is );
+
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
-      
-      // todo: maybe load catalogs from extension point?
       final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
-      final IUrlCatalog deegreeCatalog = new DeegreeUrlCatalog( );
-      final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[] { serverUrlCatalog, deegreeCatalog } );
-      
+      final IUrlCatalog calcCatalog = new CalcServiceCatalog();
+      final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
+      {
+          serverUrlCatalog,
+          calcCatalog } );
+
       final IPath stateLocation = getStateLocation();
       final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
       cacheDir.mkdir();
-      
+
       GMLSchemaCatalog.init( theCatalog, cacheDir );
     }
   }
