@@ -90,14 +90,13 @@ public class SpreeInputWorker
       nativedir.mkdirs();
 
       final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
-      final URL controlSchemaURL = inputProvider.getURLForID( "CONTROL_XSD" );
       
       logwriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
-      final Map map = parseControlFile( controlGmlURL, controlSchemaURL, nativedir );
+      final Map map = parseControlFile( controlGmlURL, nativedir );
       props.putAll( map );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputProvider.getURLForID( "GML" ), inputProvider.getURLForID( "MODELL_XSD" ) );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputProvider.getURLForID( "GML" ) );
       
       props.put( SpreeCalcJob.DATA_GML,workspace );
 
@@ -400,14 +399,12 @@ public class SpreeInputWorker
     }
   }
 
-  public static Map parseControlFile( final URL gmlURL,
-      final URL schemaURL, final File nativedir )
+  public static Map parseControlFile( final URL gmlURL, final File nativedir )
       throws CalcJobServiceException
   {
     try
     {
-      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL,
-          schemaURL ).getRootFeature();
+      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL ).getRootFeature();
 
       final Date startSimTime = (Date) controlFeature
           .getProperty( "startsimulation" );

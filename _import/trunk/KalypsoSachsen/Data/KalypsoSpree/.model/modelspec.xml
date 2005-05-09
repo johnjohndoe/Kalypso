@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
     <input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
-    <input id="CONTROL_XSD" path=".model/schema/control.xsd" relativeToCalcCase="false"/>
-    <input id="MODELL_XSD" path=".model/schema/modell.xsd" relativeToCalcCase="false"/>
     <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
     <input id="ZML" path="Zeitreihen" relativeToCalcCase="true"/>
     <input id="schemas" path=".model/schema" relativeToCalcCase="false"/>
