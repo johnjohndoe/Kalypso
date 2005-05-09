@@ -11,15 +11,13 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${jwsdp}/jaxb/lib" includes="*.jar" />
+		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 	</path>
 
 	<target name="binding">
-<!--  
-     <ant antfile="${project}/etc/schemas/build.xml" inheritall="true" target="deploy" dir="${project}/etc/schemas" />
-	-->	
-	  <ant antfile="${project}/etc/schemas/build.xml" inheritall="false" target="deploy" dir="${project}/etc/schemas" />
+<!--		<ant antfile="${project}/etc/schemas/build.xml" inheritall="true" target="deploy" dir="${project}/etc/schemas" />
+	-->	<ant antfile="${project}/etc/schemas/build.xml" inheritall="false" target="deploy" dir="${project}/etc/schemas" />
 	</target>
 
 	<!-- overriden because of dependency to binding and for copying non-java files -->
