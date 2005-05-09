@@ -42,7 +42,7 @@ package org.kalypso.convert.update;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.kalypso.convert.WeisseElsterConstants;
@@ -118,7 +118,7 @@ public class UpdateModell
     //    updateZuflussNamen( workspace );
     File tmpDir = new File( "C:\\TMP" );
     File file = File.createTempFile( "modellUpdate", ".gml", tmpDir );
-    Writer writer = new FileWriter( file );
+    final OutputStreamWriter writer = new FileWriter( file );
     GmlSerializer.serializeWorkspace( writer, workspace );
     writer.close();
     System.out.println( " updated model is written to " + file.getCanonicalPath() );
