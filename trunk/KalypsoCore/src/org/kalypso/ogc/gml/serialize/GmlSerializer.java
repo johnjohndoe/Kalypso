@@ -54,6 +54,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLFeature;
 import org.kalypsodeegree.gml.GMLNameSpace;
@@ -167,6 +168,14 @@ public final class GmlSerializer
         schema.getNamespaceMap() );
   }
 
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL ) throws Exception
+  {
+    // TODO: hack 
+    UrlUtilities utilities = new UrlUtilities();
+    utilities.addReplaceToken("project", "" );  
+    return createGMLWorkspace(gmlURL,utilities);
+  }
+  
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
       throws Exception
   {

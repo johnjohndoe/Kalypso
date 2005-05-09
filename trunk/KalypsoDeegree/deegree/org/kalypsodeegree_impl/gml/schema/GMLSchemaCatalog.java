@@ -13,8 +13,8 @@ import org.kalypso.java.net.IUrlCatalog;
  * welches sich darüberhinaus noch um den XML-Katalog kümmert.
  * </p>
  * <p>
- * Muss vor der ersten Benutzung durch {@link #init(IUrlCatalog, File)}initialisiert
- * werden.
+ * Muss vor der ersten Benutzung durch {@link #init(IUrlCatalog, File)}
+ * initialisiert werden.
  * </p>
  * 
  * @author schlienger
@@ -22,7 +22,7 @@ import org.kalypso.java.net.IUrlCatalog;
 public final class GMLSchemaCatalog
 {
   private final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
-  
+
   private static GMLSchemaCache THE_CACHE;
 
   private static final IllegalStateException NOT_INITIALIZED = new IllegalStateException(
@@ -38,17 +38,18 @@ public final class GMLSchemaCatalog
   /**
    * Initializes the schema-cache. Empties it, if it already exists.
    * 
-   * @throws NullPointerException If catalog or cacheDirectory is null.
+   * @throws NullPointerException
+   *           If catalog or cacheDirectory is null.
    */
   public synchronized static void init( final IUrlCatalog catalog, final File cacheDirectory )
   {
     GMLSchemaCatalog.THE_CATALOG = catalog;
-    
+
     if( catalog == null )
       throw new NullPointerException();
-    
+
     THE_CACHE = new GMLSchemaCache( cacheDirectory );
-    
+
     LOGGER.info( "Schema-Katalog initialisiert mit DIR=" + cacheDirectory );
   }
 
@@ -56,7 +57,8 @@ public final class GMLSchemaCatalog
    * Lädt ein (eventuell gecachetes Schema direkt aus einer URL. Als CacheId
    * wird die URL benutzt.
    * 
-   * @deprecated Zur Zeit deprecated, damit man erkennt, wo sich etwas geändert hat. Kann aber normal benutzt werden.
+   * @deprecated Zur Zeit deprecated, damit man erkennt, wo sich etwas geändert
+   *             hat. Kann aber normal benutzt werden.
    */
   public synchronized static GMLSchema getSchema( final URL schemaURL )
   {
@@ -77,7 +79,7 @@ public final class GMLSchemaCatalog
         LOGGER.warning( "Kein Schema-Eintrag für: " + namespace );
         return null;
       }
-      
+
       // immer gegen die URL cachen, nie den namespace als id nehmen,
       // da sont beim wechseln des catalog die alten
       // schemata geladen werden.
