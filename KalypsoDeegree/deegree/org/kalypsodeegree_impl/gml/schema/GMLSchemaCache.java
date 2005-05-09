@@ -95,7 +95,7 @@ public class GMLSchemaCache
     {
       e.printStackTrace();
 
-      // ignorieren, dann immer die lokalte Kopie nehmen
+      // ignorieren, dann immer die lokale Kopie nehmen
     }
 
     final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( keyID );

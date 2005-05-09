@@ -76,14 +76,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.eclipse.core.runtime.LogStatusWrapper;
-import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.model.xml.CalcCaseConfigType;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.calcjob.CalcJobHandler;
@@ -695,14 +693,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Verzeichnis ist keine Rechenvariante:" + calcCaseFolder.getName(), null ) );
 
-    final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
-        .getServiceProxyFactory();
 
     try
     {
-      final ICalculationService calcService = (ICalculationService)serviceProxyFactory
-          .getProxy( "Kalypso_CalculationService", ClassUtilities
-              .getOnlyClassName( ICalculationService.class ) );
+      final ICalculationService calcService = KalypsoGisPlugin.getDefault()
+        .getCalculationServiceProxy();
 
       final ModeldataType modelspec = getModelspec( modelSpec );
 
