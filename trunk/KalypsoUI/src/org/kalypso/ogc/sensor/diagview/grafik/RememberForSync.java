@@ -2,8 +2,8 @@ package org.kalypso.ogc.sensor.diagview.grafik;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -167,7 +167,7 @@ final class RememberForSync
 
       SetContentHelper helper = new SetContentHelper()
       {
-        protected void write( Writer writer ) throws Throwable
+        protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           ZmlFactory.getMarshaller().marshal( xml, writer );
         }

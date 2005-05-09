@@ -41,17 +41,12 @@
 package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -78,6 +73,11 @@ import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.Mapper;
 
 /**
  * Diese Transformation führt das 'Resolven' der Zeitreihen durch. Dies
@@ -319,7 +319,7 @@ public class ObservationResolver extends AbstractTransformation
 
         final SetContentHelper thread = new SetContentHelper()
         {
-          protected void write( final Writer w ) throws Throwable
+          protected void write( final OutputStreamWriter w ) throws Throwable
           {
             final ObservationType type = ZmlFactory.createXML( obs, null );
             ZmlFactory.getMarshaller().marshal( type, w );

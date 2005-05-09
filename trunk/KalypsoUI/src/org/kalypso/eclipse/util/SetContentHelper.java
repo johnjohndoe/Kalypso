@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -115,7 +114,7 @@ public abstract class SetContentHelper
          */
         protected void runIntern( ) throws Throwable
         {
-          Writer outputStreamWriter = null;
+          OutputStreamWriter outputStreamWriter = null;
           try
           {
             outputStreamWriter = new OutputStreamWriter( m_pos, getCharset() );
@@ -164,7 +163,7 @@ public abstract class SetContentHelper
    * @param writer
    * @throws Throwable
    */
-  protected abstract void write( final Writer writer ) throws Throwable;
+  protected abstract void write( final OutputStreamWriter writer ) throws Throwable;
 
   /**
    * @return the charset used for encoding the file

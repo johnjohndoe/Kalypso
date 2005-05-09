@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.BufferedReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -83,10 +84,10 @@ public final class GmlSerializer
   // do not instantiate this class
   }
 
-  public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace )
+  public static void serializeWorkspace( final OutputStreamWriter writer, final GMLWorkspace workspace )
       throws GmlSerializeException
   {
-    serializeWorkspace( writer, workspace, null );
+    serializeWorkspace( writer, workspace, writer.getEncoding() );
   }
 
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace workspace,

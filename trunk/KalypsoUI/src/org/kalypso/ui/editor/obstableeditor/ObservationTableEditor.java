@@ -41,7 +41,7 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 
 import javax.swing.JScrollPane;
 
@@ -140,7 +140,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
 
     final SetContentHelper helper = new SetContentHelper()
     {
-      protected void write( Writer writer ) throws Throwable
+      protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final ObstableviewType type = TableViewUtils
             .buildTableTemplateXML( template );
