@@ -6,7 +6,6 @@ package com.bce.eind.core.profil.impl.buildings;
 import java.util.Arrays;
 
 import com.bce.eind.core.profil.ProfilBuildingProperty;
-import com.bce.eind.core.profil.ProfilPointProperty;
 import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
 
 /**

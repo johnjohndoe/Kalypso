@@ -1,6 +1,6 @@
 /*
  * Created on 31.03.2005
-  */
+ */
 package com.bce.eind.core.profil.impl.buildings;
 
 import java.util.Collection;
@@ -24,20 +24,20 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   private final BUILDING_TYP m_buildingTyp;
 
   protected final List<ProfilPointProperty> m_pointProperties;
-  
-  private final HashMap<ProfilBuildingProperty,Double> m_buildingValues = new HashMap<ProfilBuildingProperty,Double>();
 
+  private final HashMap<ProfilBuildingProperty, Double> m_buildingValues = new HashMap<ProfilBuildingProperty, Double>();
 
-  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,List<ProfilBuildingProperty> buildingProperties)
+  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,
+      List<ProfilBuildingProperty> buildingProperties )
   {
     m_buildingTyp = buildingTyp;
     m_pointProperties = new LinkedList<ProfilPointProperty>();
-    for(Iterator<ProfilBuildingProperty> vIt = buildingProperties.iterator();vIt.hasNext();)
+    for( Iterator<ProfilBuildingProperty> vIt = buildingProperties.iterator(); vIt.hasNext(); )
     {
-      m_buildingValues.put(vIt.next(),new Double(0.0));
+      m_buildingValues.put( vIt.next(), new Double( 0.0 ) );
     }
   }
-  
+
   /**
    * @return Returns the buildingTyp.
    */
@@ -46,14 +46,16 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
     return m_buildingTyp;
   }
 
- 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
   public List<ProfilPointProperty> getProfilPointProperties( )
   {
-    return Collections.unmodifiableList(m_pointProperties);
+    return Collections.unmodifiableList( m_pointProperties );
   }
+
   /*
    * (non-Javadoc)
    * 
@@ -61,7 +63,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
    */
   public double getValue( ProfilBuildingProperty buildingValue ) throws ProfilBuildingException
   {
-    if(m_buildingValues.containsKey(buildingValue))
+    if( m_buildingValues.containsKey( buildingValue ) )
       return m_buildingValues.get( buildingValue );
     throw new ProfilBuildingException( "Eigenschaft existiert nicht" );
   }
@@ -72,32 +74,46 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.ProfilBuildingProperty,
    *      double)
    */
-  public void setValue( ProfilBuildingProperty buildingValue, double value ) throws ProfilBuildingException
+  public void setValue( ProfilBuildingProperty buildingValue, double value )
+      throws ProfilBuildingException
   {
     if( m_buildingValues.containsKey( buildingValue ) )
+    {
       m_buildingValues.put( buildingValue, value );
-    throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
+    }
+
+    else
+      throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
+
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeyCount()
    */
   public int getProfilPointPropertiesCount( )
   {
-     return m_pointProperties.size();
+    return m_pointProperties.size();
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.bce.eind.core.profil.IProfilBuilding#hasProperty(com.bce.eind.core.profil.ProfilBuildingProperty)
    */
   public boolean hasProperty( ProfilBuildingProperty profilBuildingProperty )
   {
-    return m_buildingValues.containsKey(profilBuildingProperty);
+    return m_buildingValues.containsKey( profilBuildingProperty );
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.bce.eind.core.profil.IProfilBuilding#getProfilBuildingProperties()
    */
-  public Collection <ProfilBuildingProperty> getProfilBuildingProperties( )
+  public Collection<ProfilBuildingProperty> getProfilBuildingProperties( )
   {
-    return Collections.unmodifiableCollection(m_buildingValues.keySet());
+    return Collections.unmodifiableCollection( m_buildingValues.keySet() );
   }
 }

@@ -518,7 +518,7 @@ public class Profil implements IProfil
     {
       removeProfilPointProperty( pbIt.next() );
     }
-    setProfilBuilding( BUILDING_TYP.BLD_NONE );
+    m_building = ProfilBuildingFactory.createProfilBuilding(BUILDING_TYP.BLD_NONE);
     return oldBuilding;
   }
 
