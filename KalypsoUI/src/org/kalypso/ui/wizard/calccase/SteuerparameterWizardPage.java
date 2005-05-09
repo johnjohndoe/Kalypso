@@ -40,14 +40,12 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.calccase;
 
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -73,6 +71,8 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.nature.ModelNature;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -150,7 +150,7 @@ public class SteuerparameterWizardPage extends WizardPage
     final GMLWorkspace workspace = m_workspace;
     final SetContentHelper thread = new SetContentHelper(  )
     {
-      public void write( final Writer w ) throws Throwable
+      public void write( final OutputStreamWriter w ) throws Throwable
       {
         GmlSerializer.serializeWorkspace( w, workspace );
       }

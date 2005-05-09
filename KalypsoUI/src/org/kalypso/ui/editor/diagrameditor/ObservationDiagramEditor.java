@@ -41,7 +41,7 @@
 package org.kalypso.ui.editor.diagrameditor;
 
 import java.awt.Frame;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -125,7 +125,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
 
     final SetContentHelper helper = new SetContentHelper()
     {
-      protected void write( Writer writer ) throws Throwable
+      protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final ObsdiagviewType type = DiagViewUtils.buildDiagramTemplateXML( template );
 

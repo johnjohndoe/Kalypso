@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.outline;
 
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.io.Writer;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -52,10 +52,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
-import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -70,6 +66,10 @@ import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.w3c.dom.Document;
 
 /**
@@ -134,7 +134,7 @@ public class SaveStyleAction extends AbstractOutlineAction
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
           final SetContentHelper thread = new SetContentHelper(  )
           {
-            protected void write( final Writer writer ) throws Throwable
+            protected void write( final OutputStreamWriter writer ) throws Throwable
             {
 
               final Transformer t = TransformerFactory.newInstance().newTransformer();

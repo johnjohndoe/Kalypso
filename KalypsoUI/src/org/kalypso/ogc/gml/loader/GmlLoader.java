@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.loader;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -147,7 +147,7 @@ public class GmlLoader extends AbstractLoader
       {
         final SetContentHelper thread = new SetContentHelper()
         {
-          protected void write( final Writer writer ) throws Throwable
+          protected void write( final OutputStreamWriter writer ) throws Throwable
           {
             GmlSerializer.serializeWorkspace( writer, workspace );
           }
@@ -160,7 +160,7 @@ public class GmlLoader extends AbstractLoader
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) )
       {
-        final Writer w = new FileWriter( new File( gmlURL.getFile() ) );
+        final OutputStreamWriter w = new FileWriter( new File( gmlURL.getFile() ) );
         GmlSerializer.serializeWorkspace( w, workspace );
       }
       else

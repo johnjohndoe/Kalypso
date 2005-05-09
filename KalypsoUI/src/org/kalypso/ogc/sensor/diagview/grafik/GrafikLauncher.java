@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
@@ -212,7 +213,7 @@ public class GrafikLauncher
       // which uses it when reading...
       final SetContentHelper sch = new SetContentHelper()
       {
-        protected void write( final Writer writer ) throws Throwable
+        protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           writer.write( schWriter.toString() );
         }
@@ -527,7 +528,7 @@ public class GrafikLauncher
   {
     final SetContentHelper sch = new SetContentHelper()
     {
-      protected void write( final Writer writer ) throws Throwable
+      protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final ITuppleModel values = obs.getValues( null );
         for( int i = 0; i < values.getCount(); i++ )

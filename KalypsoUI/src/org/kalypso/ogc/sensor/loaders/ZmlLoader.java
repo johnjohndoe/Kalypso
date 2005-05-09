@@ -40,7 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.loaders;
 
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import javax.xml.bind.Marshaller;
@@ -128,7 +128,7 @@ public class ZmlLoader extends AbstractLoader
       // set contents of ZML-file
       final SetContentHelper helper = new SetContentHelper(  )
       {
-        protected void write( final Writer writer ) throws Throwable
+        protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           final Marshaller marshaller = ZmlFactory.getMarshaller();
           marshaller.setProperty( Marshaller.JAXB_ENCODING, getCharset() );

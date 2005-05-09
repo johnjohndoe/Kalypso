@@ -44,8 +44,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -78,7 +78,7 @@ public class FileUtilities
   {
     final SetContentHelper helper = new SetContentHelper()
     {
-      protected void write( final Writer writer ) throws Throwable
+      protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final PrintWriter pwr = new PrintWriter( writer );
         final BufferedReader reader = new BufferedReader(
