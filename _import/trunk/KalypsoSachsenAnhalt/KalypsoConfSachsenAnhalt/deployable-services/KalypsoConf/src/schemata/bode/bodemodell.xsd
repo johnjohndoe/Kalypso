@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.bode.modell" version="0.1" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:bode="org.kalypso.bode.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<import namespace="org.kalypso.bode.pegel" schemaLocation="pegel.xsd"/>
+	<import namespace="org.kalypso.bode.ombrometer" schemaLocation="ombrometer.xsd"/>
+	<import namespace="org.kalypso.bode.speicher" schemaLocation="speicher.xsd"/>
+	<import namespace="org.kalypso.bode.common" schemaLocation="common.xsd"/>
+	<element name="BodeModell" type="bode:_BodeModellType"/>
+	<complexType name="_BodeModellType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="bodepegel:PegelCollectionAssociation"/>
+					<element ref="bodeombrometer:OmbrometerCollectionAssociation"/>
+					<element ref="bodespeicher:SpeicherCollectionAssociation"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.bode.control" version="0.1" xmlns:bode="org.kalypso.bode.control" xmlns:gml="http://www.opengis.net/gml" xmlns:bodecommon="org.kalypso.bode.common" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="org.kalypso.bode.common" schemaLocation="common.xsd"/>
+	<element name="BodeControl" type="bode:_BodeControlType"/>
+	<complexType name="_BodeControlBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="_BodeControlType">
+		<complexContent>
+			<extension base="bode:_BodeControlBaseType">
+				<sequence>
+					<element ref="bode:ControlAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steuerparameter</label>
+								<tooltip>Steuerparameter der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="bode:MetadataAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Metadaten</label>
+								<tooltip>Metadaten der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="ControlAssociation" type="bode:ControlAssociationType">
+	</element>
+	<complexType name="ControlAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bode:Control"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Control" type="bode:ControlType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ControlType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="startsimulation" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Simulation</label>
+								<tooltip>Startzeitpunkt der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="startforecast" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Vorhersage</label>
+								<tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="bode:BatchIDCollectionAssociation"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="BatchIDCollectionAssociation" type="bode:BatchIDCollectionAssociationType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Liste der Batch IDs</label>
+				<tooltip>Liste der Batch IDs</tooltip>
+				<description/>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="BatchIDCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bode:BatchIDCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BatchIDCollection" type="bode:BatchIDCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BatchIDCollectionType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="bode:BatchIDAssociation" minOccurs="1" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="BatchIDAssociation" type="bode:BatchIDAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="BatchIDAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bode:BatchID"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BatchID" type="bode:BatchIDType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BatchIDType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="id" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>ID</label>
+								<tooltip>ID der Batch</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="MetadataAssociation" type="bode:MetadataAssociationType"/>
+	<complexType name="MetadataAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="bode:Metadata"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Metadata" type="bode:MetadataType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MetadataType">
+		<complexContent>
+			<extension base="bodecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="editor" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ersteller</label>
+								<tooltip>Name des Erstellers</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="description" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="comment" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kommentar</label>
+								<tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="calctime" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellungszeitpunkt</label>
+								<tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

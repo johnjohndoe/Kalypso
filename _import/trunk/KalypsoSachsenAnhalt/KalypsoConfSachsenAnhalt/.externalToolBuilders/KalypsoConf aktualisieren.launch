@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launchConfiguration type="org.eclipse.ant.AntBuilderLaunchConfigurationType">
 <stringAttribute key="process_factory_id" value="org.eclipse.ant.ui.remoteAntProcessFactory"/>
+<booleanAttribute key="org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED" value="true"/>
 <booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="true"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="true"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_BUILD_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;launchConfigurationWorkingSet factoryID=&quot;org.eclipse.ui.internal.WorkingSetFactory&quot; name=&quot;workingSet&quot; editPageId=&quot;org.eclipse.ui.resourceWorkingSetPage&quot;&gt;&#10;&lt;item factoryID=&quot;org.eclipse.ui.internal.model.ResourceFactory&quot; path=&quot;/KalypsoConfSachsenAnhalt/deployable-services/KalypsoConf/src&quot; type=&quot;2&quot;/&gt;&#10;&lt;/launchConfigurationWorkingSet&gt;&#10;}"/>
