@@ -172,6 +172,8 @@ public class CalcJob2d implements ICalcJob
           
         }
         System.out.println( "Finished 2D Simulation successfully." );
+        
+        System.out.println( "This is the end ;-)" );
       }
       else
         System.out.println( "Finished 2D Simulation not successfully." );
