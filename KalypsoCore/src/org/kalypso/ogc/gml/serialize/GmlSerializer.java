@@ -40,7 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -54,7 +57,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLFeature;
 import org.kalypsodeegree.gml.GMLNameSpace;
@@ -85,8 +87,8 @@ public final class GmlSerializer
   // do not instantiate this class
   }
 
-  public static void serializeWorkspace( final OutputStreamWriter writer, final GMLWorkspace workspace )
-      throws GmlSerializeException
+  public static void serializeWorkspace( final OutputStreamWriter writer,
+      final GMLWorkspace workspace ) throws GmlSerializeException
   {
     serializeWorkspace( writer, workspace, writer.getEncoding() );
   }
@@ -168,24 +170,63 @@ public final class GmlSerializer
         schema.getNamespaceMap() );
   }
 
+  /** Liest einen GML-Workspace aus einer URL. Es wird kein Token-Replace durchgeführt, das Encoding wird anhand des XML-Headers ermittelt. 
+   * Sollte Client-Seitig nicht benutzt werden.
+   */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL ) throws Exception
   {
-    // TODO: hack 
-    UrlUtilities utilities = new UrlUtilities();
-    utilities.addReplaceToken("project", "" );  
-    return createGMLWorkspace(gmlURL,utilities);
+    InputStream stream = null;
+    try
+    {
+      // Besser streams benutzen, da falls das encoding im reader nicht bekannt
+      // ist garantiert Mist rauskommt
+      // der XML Mechanismus decodiert so schon richtig, zumindest, wenn das
+      // richtige enconding im xml-header steht.
+      stream = new BufferedInputStream( gmlURL.openStream() );
+      
+      return createGMLWorkspace( new InputSource( stream ), gmlURL );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
   }
-  
+
+  /**
+   * Liest ein GML aus einer URL und ersetzt dabei tokens gemäss dem
+   * URL-Resolver.
+   */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver )
       throws Exception
   {
-    BufferedReader reader = null;
+    Reader reader = null;
 
     try
     {
-      reader = new BufferedReader( urlResolver.createReader( gmlURL ) );
+      final InputStreamReader isr = urlResolver.createReader( gmlURL );
+      if( isr.getEncoding() == null )
+      {
+        IOUtils.closeQuietly( isr );
+        throw new NullPointerException( "Es konnte kein Encoding für die GMLUrl ermittelt werden. Dies sollte auf Client-Seite eigentlich nie passieren. Serverseitig darf diese Methode nicht benutzt werden." );
+      }
 
-      return createGMLWorkspace( reader, urlResolver, gmlURL );
+      reader = new BufferedReader( isr );
+      // Replace tokens
+      final ReplaceTokens rt = new ReplaceTokens( reader );
+      rt.setBeginToken( ':' );
+      rt.setEndToken( ':' );
+      for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)tokenIt.next();
+
+        final Token token = new ReplaceTokens.Token();
+        token.setKey( (String)entry.getKey() );
+        token.setValue( (String)entry.getValue() );
+
+        rt.addConfiguredToken( token );
+      }
+
+      return createGMLWorkspace( new InputSource( rt ), gmlURL );
     }
     finally
     {
@@ -193,55 +234,36 @@ public final class GmlSerializer
     }
   }
 
-  /**
-   * Liest einen GMLWorkspace aus einem Reader. Der Reader wird intern nicht
-   * mehr gepuffert.
-   * 
-   * @deprecated Sollte nur intern benutzt werden, benutze satt dessen
-   *             {@link #createGMLWorkspace(URL, URL)}
-   */
-  public static GMLWorkspace createGMLWorkspace( final Reader gmlreader,
-      final IUrlResolver urlResolver, final URL context ) throws Exception
+  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context ) throws Exception, MalformedURLException, GmlSerializeException
   {
-    // Replace tokens
-    final ReplaceTokens rt = new ReplaceTokens( gmlreader );
-    rt.setBeginToken( ':' );
-    rt.setEndToken( ':' );
-    for( final Iterator tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
-    {
-      final Map.Entry entry = (Entry)tokenIt.next();
-
-      final Token token = new ReplaceTokens.Token();
-      token.setKey( (String)entry.getKey() );
-      token.setValue( (String)entry.getValue() );
-
-      rt.addConfiguredToken( token );
-    }
-
-    // load gml
-    final InputSource inputSource = new InputSource( rt );
     final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource, true );
-
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
 
-    // load schema
     final GMLSchema schema = loadSchemaForGmlDoc( gml );
 
+    return createGMLWorkspace( gml, schema, context );
+  }
+  
+  private static GMLWorkspace createGMLWorkspace( final GMLDocument_Impl gml, final GMLSchema schema, final URL context ) throws Exception
+  {
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types );
 
-    return new GMLWorkspace_Impl( types, feature, context,
-        gml.getSchemaLocationName(), schema.getTargetNS(), schema.getNamespaceMap() );
+    return new GMLWorkspace_Impl( types, feature, context, gml.getSchemaLocationName(), schema
+        .getTargetNS(), schema.getNamespaceMap() );
   }
+  
 
   /**
    * Lädt ein schema anhand des gml-doc. Immer aus dem Cache. Zuerst per
    * Namespace, dann per schemaLocation.
+   * 
    * @throws MalformedURLException
    * @throws GmlSerializeException
    */
-  private static GMLSchema loadSchemaForGmlDoc( final GMLDocument gmldoc ) throws MalformedURLException, GmlSerializeException
+  private static GMLSchema loadSchemaForGmlDoc( final GMLDocument gmldoc )
+      throws MalformedURLException, GmlSerializeException
   {
     final String schemaURI = gmldoc.getDocumentElement().getNamespaceURI();
     final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
@@ -249,13 +271,25 @@ public final class GmlSerializer
     {
       final URL schemaLocation = gmldoc.getSchemaLocation();
       final GMLSchema schema2 = GMLSchemaCatalog.getSchema( schemaLocation );
-      
+
       if( schema2 == null )
-        throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden.\nWeder über den Namespace: " + schemaURI + "\nNoch über die SchemaLocation: " + schemaLocation );
-      
+        throw new GmlSerializeException(
+            "GML-Schema konnte nicht geladen werden.\nWeder über den Namespace: " + schemaURI
+                + "\nNoch über die SchemaLocation: " + schemaLocation );
+
       return schema2;
     }
 
     return schema;
+  }
+
+  public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final URL schemaURL ) throws Exception
+  {
+    final GMLSchema schema = new GMLSchema( schemaURL );
+
+    final Document gmlAsDOM = XMLHelper.getAsDOM( new InputSource( inputStream ), true );
+    final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
+    
+    return createGMLWorkspace( gml, schema, schemaURL );
   }
 }
