@@ -90,20 +90,12 @@ public class CalcJob2d implements ICalcJob
 {
 
   private final String EXE_FILE = "StartSimulation.bat";
-
   public static final String MODELL_ID = "Modell";
-
   public static final String CONTROL_ID = "Control";
   public static final String RESULTS_ID = "ERGEBNISSE";
-
   private boolean succeeded = false;
-
-  //	private final String resourceBase = "/calc2d/";
-  //
   private final String CONF_FILE = "SimConfig.txt";
-
   private final String SIM_EXE_FILE = "Kalypso_2D_vers1_2_3_large.exe";
-
   private final String DGM_FILE = "work.dgn";
 
   /*
@@ -195,7 +187,6 @@ public class CalcJob2d implements ICalcJob
   {
     try
     {
-      // TODO bitte als GML zurückgeben :-)
       final URL schemaModellXMLURL = getClass().getResource( "schema/2d.xsd" );      
       String fileName = file.getName();
       if(!fileName.equalsIgnoreCase("erg.2d") && !fileName.equalsIgnoreCase("marsh.2d")
@@ -215,8 +206,8 @@ public class CalcJob2d implements ICalcJob
 
           System.out.println("gml.exists:: " + gml.exists());
           if(gml.exists())
-             resultEater.addResult( "ERGEBNISSE", exeDir  );
-//           resultEater.addResult( "ERGEBNISSE",  outputDir );
+//             resultEater.addResult( "ERGEBNISSE", exeDir  );
+           resultEater.addResult( "ERGEBNISSE",  outputDir );
           
       }
     }
@@ -361,8 +352,6 @@ public class CalcJob2d implements ICalcJob
       if( isSucceeded() )
       {
         monitor.setMessage( "loading results" );
-
-        //        loadResults( exeDir, modellWorkspace, logBuffer, outDir );
       }
 
     }
