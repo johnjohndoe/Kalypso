@@ -59,7 +59,10 @@ import javax.activation.DataHandler;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.net.ClassUrlCatalog;
+import org.kalypso.java.net.IUrlCatalog;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -72,6 +75,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
  * @author Belger
@@ -150,11 +154,15 @@ public class CalcJobService_impl_Queued implements ICalculationService
     // Konfiguration dieser Service-Implementation
     final Properties confProps = new Properties();
     final File confFile = new File( myConfDir, "calculationService.properties" );
+    File classCatalogFile = null;
     try
     {
       confProps.load( new FileInputStream( confFile ) );
       m_maxThreads = Integer.parseInt( confProps.getProperty( "MAX_THREADS", "1" ) );
       m_schedulingPeriod = Long.parseLong( confProps.getProperty( "SCHEDULING_PERIOD", "2000" ) );
+      final String classCatalogName = confProps.getProperty( "CLASS_CATALOG", null );
+      if( classCatalogName != null )
+        classCatalogFile = new File( myConfDir, classCatalogName );
     }
     catch( final IOException e )
     {
@@ -164,8 +172,30 @@ public class CalcJobService_impl_Queued implements ICalculationService
           .warning( "Could not load service configuration file.\nWill proceed with default values" );
     }
 
+    {
+      final IUrlCatalog catalog;
+      if( classCatalogFile == null )
+        catalog = new IUrlCatalog() {
+          public URL getURL( String key )
+          {
+            return null;
+          }};
+          else
+      catalog = new ClassUrlCatalog( classCatalogFile );
+
+      // TODO: auch den catalog aus der schemaConf nehmen?
+      final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
+      cacheDir.mkdir();
+
+      GMLSchemaCatalog.init( catalog, cacheDir );
+    }
+    
     LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + m_maxThreads
         + "\nSCHEDULING_PERIOD = " + m_schedulingPeriod );
+    if( classCatalogFile == null )
+      LOGGER.warning( "Kein Klassen-URL-Katalog angegeben (CLASS_CATALOG). Rechendienst ist vermutlich nicht richtig initialisiert." );
+    else
+      LOGGER.info( "CLASS_CATALOG = " + classCatalogFile.getName() );
   }
 
   /**
@@ -290,8 +320,8 @@ public class CalcJobService_impl_Queued implements ICalculationService
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
   public final CalcJobInfoBean startJob( final String typeID, final String description,
-      final DataHandler zipHandler, final CalcJobClientBean[] input, final CalcJobClientBean[] output )
-      throws CalcJobServiceException
+      final DataHandler zipHandler, final CalcJobClientBean[] input,
+      final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
     CalcJobThread cjt = null;
     synchronized( m_threads )
@@ -313,7 +343,8 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
       final ICalcJob job = m_calcJobFactory.createJob( typeID );
 
-      cjt = new CalcJobThread( "" + id, description, typeID, job, modelspec, zipHandler, input, output );
+      cjt = new CalcJobThread( "" + id, description, typeID, job, modelspec, zipHandler, input,
+          output );
 
       if( id == m_threads.size() )
         m_threads.add( cjt );
@@ -409,14 +440,14 @@ public class CalcJobService_impl_Queued implements ICalculationService
     final CalcJobThread thread = findJobThread( jobID );
     return thread.packCurrentResults();
   }
-  
+
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getCurrentResults(java.lang.String)
    */
   public String[] getCurrentResults( String jobID ) throws CalcJobServiceException
   {
     final CalcJobThread thread = findJobThread( jobID );
-    return thread.getCurrentResults(  );
+    return thread.getCurrentResults();
   }
 
   private ModelspecData getModelspec( final String typeID ) throws CalcJobServiceException

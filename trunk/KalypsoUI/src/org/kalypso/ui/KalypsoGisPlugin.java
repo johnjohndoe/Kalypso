@@ -506,7 +506,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
       cacheDir.mkdir();
       
-      
       GMLSchemaCatalog.init( theCatalog, cacheDir );
     }
   }

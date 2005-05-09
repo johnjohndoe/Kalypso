@@ -52,7 +52,6 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Annotation;
@@ -141,7 +140,7 @@ public class JMSchemaTest extends TestCase
   {
     final URL modellURL = getClass().getResource( "spreemodell/modell.gml" );
     //    final URL schemaURL = getClass().getResource( "spreemodell/modell.xsd" );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL, new UrlUtilities() );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellURL );
     final File file = File.createTempFile( "mode:out", ".gml" );
     file.deleteOnExit();
 

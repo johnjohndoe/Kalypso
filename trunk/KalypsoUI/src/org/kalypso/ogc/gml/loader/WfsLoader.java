@@ -25,7 +25,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -64,7 +63,7 @@ public class WfsLoader extends AbstractLoader
   protected Object loadIntern( String source, URL context, IProgressMonitor monitor )
       throws LoaderException
   {
-    InputStreamReader reader = null;
+    BufferedInputStream inputStream = null;
     try
     {
       monitor.beginTask( "WFS laden", 1000 );
@@ -128,11 +127,10 @@ public class WfsLoader extends AbstractLoader
       // TODO: und immer die Streams buffern
       // TODO: und immer alles committen, damits keine compiler-Fehler gibt!
       
-      reader = new InputStreamReader( new BufferedInputStream( con.getInputStream() ) );
+      inputStream = new BufferedInputStream( con.getInputStream() );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( reader, new UrlUtilities(),
-          m_schemaURL );
-      reader.close();
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, m_schemaURL );
+      inputStream.close();
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
@@ -150,7 +148,7 @@ public class WfsLoader extends AbstractLoader
     finally
     {
       monitor.done();
-      IOUtils.closeQuietly( reader );
+      IOUtils.closeQuietly( inputStream );
     }
   }
 
