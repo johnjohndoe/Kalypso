@@ -10,7 +10,10 @@ import junit.framework.TestCase;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
+import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
@@ -21,6 +24,8 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -68,6 +73,12 @@ public class NACalcJobKollauTest extends TestCase
 
   public void testKollau() throws TypeRegistryException, JAXBException, CalcJobServiceException
   {
+
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
+    {
+        new DeegreeUrlCatalog(),
+        new UrlCatalogNA() } );
+    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
 
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
