@@ -47,9 +47,12 @@ package org.kaylpso.ui.wizard.shape;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -57,12 +60,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -76,6 +78,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.graphics.sld.Layer;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
@@ -86,7 +93,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  
  */
 public class ImportShapeFileImportPage extends WizardPage implements SelectionListener,
-    ModifyListener, KeyListener, FocusListener
+    ModifyListener, KeyListener
 {
 
   //constants
@@ -110,6 +117,25 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   private Combo m_checkCRS;
 
   private IProject m_project;
+
+  //style
+  private Text styleTextField;
+
+  private Button browseButton2;
+
+  protected Path stylePath;
+
+  protected Combo styleNameCombo;
+
+  protected String styleName;
+
+  private boolean checkDefaultStyle = false;
+
+  private Button checkDefaultStyleButton;
+
+  private Label styleNameLabel;
+
+  private Label styleLabel;
 
   /**
    * @param pageName
@@ -198,16 +224,68 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       e1.printStackTrace();
     }
 
-    m_checkCRS.setToolTipText( "Coordinatensystem der ESRI(tm) Shape Datei" );
-    //    m_checkCRS.setEnabled(true);
+    m_checkCRS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_checkCRS.setLayoutData( data );
     m_checkCRS.addSelectionListener( this );
-    //m_checkCRS.addFocusListener( this );
     m_checkCRS.addKeyListener( this );
 
     m_group.pack();
+
+    //  style
+    Group styleGroup = new Group( parent, SWT.NULL );
+    styleGroup.setText( "Style" );
+
+    GridData data3 = new GridData();
+    data3.horizontalAlignment = GridData.FILL;
+    data3.grabExcessHorizontalSpace = true;
+    styleGroup.setLayoutData( data3 );
+    GridLayout gridLayout1 = new GridLayout();
+    gridLayout1.numColumns = 3;
+    styleGroup.setLayout( gridLayout1 );
+
+    styleLabel = new Label( styleGroup, SWT.NONE );
+    styleLabel.setText( "Datei : " );
+
+    styleTextField = new Text( styleGroup, SWT.BORDER );
+    GridData data4 = new GridData();
+    data4.horizontalAlignment = GridData.FILL;
+    data4.grabExcessHorizontalSpace = true;
+    styleTextField.setLayoutData( data4 );
+    styleTextField.setEditable( false );
+
+    browseButton2 = new Button( styleGroup, SWT.PUSH );
+    browseButton2.setText( "Durchsuchen..." );
+    browseButton2.setLayoutData( new GridData( GridData.END ) );
+    browseButton2.addSelectionListener( this );
+
+    styleNameLabel = new Label( styleGroup, SWT.NONE );
+    styleNameLabel.setText( "UserStyle name: " );
+
+    styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
+    GridData data5 = new GridData();
+    data5.horizontalAlignment = GridData.FILL;
+    data5.grabExcessHorizontalSpace = true;
+    styleNameCombo.setLayoutData( data5 );
+    styleNameCombo.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        styleName = styleNameCombo.getText();
+        validate();
+      }
+    } );
+
+    Label dummyLabel = new Label( styleGroup, SWT.NONE );
+    dummyLabel.setText( "" );
+
+    checkDefaultStyleButton = new Button( styleGroup, SWT.CHECK );
+    checkDefaultStyleButton.setSelection( checkDefaultStyle );
+    checkDefaultStyleButton.addSelectionListener( this );
+
+    Label defaultStyleLabel = new Label( styleGroup, SWT.NONE );
+    defaultStyleLabel.setText( "Generate default style" );
 
   }
 
@@ -217,41 +295,61 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     checkCRS.setItems( factory.getKnownCS() );
   }
 
-  public boolean validateFile( URL url )
+  void validate()
   {
-    try
+    setErrorMessage( null );
+    boolean pageComplete = true;
+    if( !checkDefaultStyle )
     {
-      InputStream ios = url.openStream();
-      ios.close();
+      //styleName
+      if( styleName != null )
+      {
+        //ok
+      }
+      else
+      {
+        setErrorMessage( "Bitte einen Style-Namen auswählen!" );
+        pageComplete = false;
+      }
+
+      //styleFile
+      if( styleTextField.getText() != null && styleTextField.getText().length() > 0 )
+      {
+        //ok
+      }
+      else
+      {
+        setErrorMessage( "Bitte eine Style-Datei auswählen!" );
+        pageComplete = false;
+      }
     }
-    catch( IOException e )
+
+    //CoordinateSystem
+    if( checkCRS( m_checkCRS.getText() ) )
     {
-      e.printStackTrace();
-      return false;
+      //ok
     }
-    return true;
+    else
+    {
+      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" );
+      pageComplete = false;
+    }
+
+    // shapeFile
+    if( m_sourceFileText.getText() != null && m_sourceFileText.getText().length() > 0 )
+    {
+      //ok
+    }
+    else
+    {
+      setErrorMessage( "Bitte eine Shape-Datei auswählen!" );
+      pageComplete = false;
+    }
+
+    setPageComplete( pageComplete );
   }
 
-  public File getShapeBaseFile()
-  {
-    return new File( m_project.getLocation()
-        + "/"
-        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 )
-            .toString() ) );
-  }
-
-  public String getShapeBaseRelativePath()
-  {
-    return "project:/"
-        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 )
-            .toString() );
-  }
-
-  public IPath getShapePath()
-  {
-    return m_relativeSourcePath;
-  }
-
+  //SelectionListener
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
@@ -275,6 +373,79 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
           m_relativeSourcePath = resultPath;
         }
       }
+      if( b.equals( browseButton2 ) )
+      {
+        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
+        { "sld" } );
+        dialog.open();
+        Object[] result = dialog.getResult();
+        if( result != null )
+        {
+          Path resultPath = (Path)result[0];
+          styleTextField.setText( resultPath.toString() );
+          stylePath = resultPath;
+          try
+          {
+            IPath basePath = m_project.getLocation();
+            String styleUrl = basePath.toFile().toURL()
+                + stylePath.removeFirstSegments( 1 ).toString();
+            Reader reader = new InputStreamReader( ( new URL( styleUrl ) ).openStream() );
+            StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+            reader.close();
+            Layer[] layers = styledLayerDescriptor.getLayers();
+            Vector styleNameVector = new Vector();
+            for( int i = 0; i < layers.length; i++ )
+            {
+              Layer layer = layers[i];
+              Style[] styles = layer.getStyles();
+              for( int j = 0; j < styles.length; j++ )
+              {
+                styleNameVector.add( styles[j].getName() );
+              }
+            }
+            String[] styleNames = new String[styleNameVector.size()];
+            for( int k = 0; k < styleNameVector.size(); k++ )
+            {
+              styleNames[k] = (String)styleNameVector.get( k );
+            }
+            styleNameCombo.setItems( styleNames );
+            styleNameCombo.select( 0 );
+            styleName = styleNames[0];
+          }
+          catch( MalformedURLException e1 )
+          {
+            e1.printStackTrace();
+          }
+          catch( IOException ioEx )
+          {
+            ioEx.printStackTrace();
+          }
+          catch( XMLParsingException xmlEx )
+          {
+            xmlEx.printStackTrace();
+          }
+        }
+      }
+      if( b.equals( checkDefaultStyleButton ) )
+      {
+        checkDefaultStyle = checkDefaultStyleButton.getSelection();
+        if( checkDefaultStyleButton.getSelection() )
+        {
+          styleLabel.setEnabled( false );
+          styleTextField.setEnabled( false );
+          browseButton2.setEnabled( false );
+          styleNameLabel.setEnabled( false );
+          styleNameCombo.setEnabled( false );
+        }
+        else
+        {
+          styleLabel.setEnabled( true );
+          styleTextField.setEnabled( true );
+          browseButton2.setEnabled( true );
+          styleNameLabel.setEnabled( true );
+          styleNameCombo.setEnabled( true );
+        }
+      }
     }
     if( e.widget instanceof Combo )
     {
@@ -285,12 +456,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
     }
 
-  }
-
-  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
-  {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource",
-        fileResourceExtensions, m_project );
+    validate();
   }
 
   /**
@@ -301,23 +467,60 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   //no default selection
   }
 
+  //ModifyListener
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
   public void modifyText( ModifyEvent e )
   {
-    if( e.widget == m_sourceFileText )
-    {
-      if( m_sourceFileText.getText().length() == 0 )
-      {
-        setErrorMessage( "Bitte eine Datei auswählen!" );
-        setPageComplete( false );
-      }
-      setPageComplete( true );
-      setErrorMessage( null );
-      setMessage( null );
-    }
+    validate();
+  }
 
+  //KeyListener
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
+   */
+  public void keyPressed( KeyEvent e )
+  {
+    Widget w = e.widget;
+    if( w instanceof Combo && e.keyCode == SWT.Selection )
+    {
+      validate();
+    }
+  }
+
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
+   */
+  public void keyReleased( KeyEvent e )
+  {
+  //do nothing
+  }
+
+  public File getShapeBaseFile()
+  {
+    return new File( m_project.getLocation()
+        + "/"
+        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 )
+            .toString() ) );
+  }
+
+  public String getShapeBaseRelativePath()
+  {
+    return "project:/"
+        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 )
+            .toString() );
+  }
+
+  public IPath getShapePath()
+  {
+    return m_relativeSourcePath;
+  }
+
+  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  {
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource",
+        fileResourceExtensions, m_project );
   }
 
   public CS_CoordinateSystem getCRS()
@@ -328,30 +531,6 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   protected void setProjectSelection( IProject project )
   {
     m_project = project;
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
-  public void keyPressed( KeyEvent e )
-  {
-    Widget w = e.widget;
-    if( w instanceof Combo && e.keyCode == SWT.Selection )
-    {
-      setPageComplete( checkCRS( ( (Combo)w ).getText() ) );
-    }
-    else
-    {
-      setPageComplete( false );
-    }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
-  public void keyReleased( KeyEvent e )
-  {
-  //do nothing
   }
 
   private boolean checkCRS( String customCRS )
@@ -365,40 +544,19 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     return result;
   }
 
-  /**
-   * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
-   */
-  public void focusGained( FocusEvent e )
+  public boolean checkDefaultStyle()
   {
-    Widget w = e.widget;
-    if( w == m_checkCRS )
-    {
-      m_checkCRS.setEnabled( true );
-    }
+    return checkDefaultStyle;
   }
 
-  /**
-   * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
-   */
-  public void focusLost( FocusEvent e )
+  public IPath getStylePath()
   {
-    Widget w = e.widget;
-    if( w == m_checkCRS )
-    {
-      for( int i = 0; i < m_checkCRS.getItems().length; i++ )
-      {
-        String name = m_checkCRS.getItems()[i];
-        if( name.equals( m_checkCRS.getText() ) )
-        {
-          setMessage( null );
-          setPageComplete( true );
-          return;
-        }
+    return stylePath;
+  }
 
-      }
-      setMessage( "Das gewählte Coodrdinaten System wird nicht unterstüzt." );
-      setPageComplete( false );
-    }
+  public String getStyleName()
+  {
+    return styleName;
   }
 
   public void removeListeners()

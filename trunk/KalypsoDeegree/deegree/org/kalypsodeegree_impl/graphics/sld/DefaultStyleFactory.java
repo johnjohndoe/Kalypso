@@ -97,9 +97,10 @@ public class DefaultStyleFactory
     throw new IOException( "The name for the default style directory is not a valid path." );
   }
 
-  private String getStyle( FeatureType featureType ) throws StyleNotDefinedException
+  private String getStyle( FeatureType featureType, String styleName )
+      throws StyleNotDefinedException
   {
-    StyledLayerDescriptor sld = createDefaultStyle( featureType );
+    StyledLayerDescriptor sld = createDefaultStyle( featureType, styleName );
     return ( (StyledLayerDescriptor_Impl)sld ).exportAsXML();
   }
 
@@ -114,21 +115,27 @@ public class DefaultStyleFactory
    *         the style is saved in a file
    *  
    */
-  public URL getDefaultStyle( FeatureType featureType ) throws StyleNotDefinedException
+  public URL getDefaultStyle( FeatureType featureType, String styleName )
+      throws StyleNotDefinedException
   {
+    String myStyleName = styleName;
+    if( myStyleName == null )
+    {
+      myStyleName = featureType.getName();
+    }
     try
     {
-    //check if style already exists
-    if( m_defalultStyles.containsKey( generateKey( featureType ) ) )
-      return new URL( (String)m_defalultStyles.get( generateKey( featureType ) ) );
-    //write style to default style
-    File tempFile = null;
-      tempFile = new File( DEFAULT_STYLE_DRECTORY, featureType.getName() + ".sld.default" );
+      //check if style already exists
+      if( m_defalultStyles.containsKey( generateKey( featureType ) ) )
+        return new URL( (String)m_defalultStyles.get( generateKey( featureType ) ) );
+      //write style to default style
+      File tempFile = null;
+      tempFile = new File( DEFAULT_STYLE_DRECTORY, myStyleName + ".sld.default" );
       FileWriter writer = new FileWriter( tempFile );
-      writer.write( getStyle( featureType ) );
+      writer.write( getStyle( featureType, myStyleName ) );
       writer.close();
-    m_defalultStyles.put( generateKey( featureType ), tempFile.toURL().toString() );
-    return tempFile.toURL();
+      m_defalultStyles.put( generateKey( featureType ), tempFile.toURL().toString() );
+      return tempFile.toURL();
     }
     catch( IOException e )
     {
@@ -137,11 +144,14 @@ public class DefaultStyleFactory
     }
   }
 
-  private StyledLayerDescriptor createDefaultStyle( FeatureType featureType )
+  private StyledLayerDescriptor createDefaultStyle( FeatureType featureType, String styleName )
       throws StyleNotDefinedException
   {
-    String styleName = featureType.getName();
     ArrayList symbolizer = new ArrayList();
+    if( featureType.getName().equals( "RectifiedGridCoverage" ) )
+    {
+      symbolizer.add( createRasterSymbolizer() );
+    }
     FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
@@ -164,18 +174,30 @@ public class DefaultStyleFactory
     StyledLayerDescriptor sld = null;
 
     Style[] styles = new Style[]
-    {
-      (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
-          featureTypeStyle )
-    };
+    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
+        featureTypeStyle ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    {
-      SLDFactory.createNamedLayer( "deegree style definition", null, styles )
-    };
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
 
     return sld;
 
+  }
+
+  public static StyledLayerDescriptor createDefaultStyle( String styleName, Symbolizer[] symbolizer )
+  {
+    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
+
+    StyledLayerDescriptor sld = null;
+
+    Style[] styles = new Style[]
+    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
+        featureTypeStyle ) };
+    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
+
+    return sld;
   }
 
   private Symbolizer createTextSymbolizer( FeatureTypeProperty property )
@@ -205,6 +227,11 @@ public class DefaultStyleFactory
     else
       throw new StyleNotDefinedException( "This geometry type: " + type
           + " has no default style available" );
+  }
+
+  private Symbolizer createRasterSymbolizer()
+  {
+    return StyleFactory.createRasterSymbolizer();
   }
 
   private Integer generateKey( FeatureType ft )

@@ -1,5 +1,8 @@
 package org.kaylpso.ui.wizard.raster;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -8,8 +11,13 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kalypso.util.url.UrlResolver;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -62,6 +70,8 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
   private IProject m_project;
 
+  private URL m_mapContextURL;
+
   public ImportRasterSourceWizard()
   {
     super();
@@ -86,19 +96,47 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
     IPath filePath = m_page.getFilePath();
 
-    IPath stylePath = m_page.getStylePath();
-    
-    String styleName = m_page.getStyleName();
+    String stylePath = null;
+
+    String styleName = null;
+
+    if( m_page.checkDefaultStyle() )
+    {
+      UrlResolver urlResolver = new UrlResolver();
+      final URL gmlURL;
+      try
+      {
+        gmlURL = urlResolver.resolveURL( m_mapContextURL, getRelativeProjectPath( filePath ) );
+        GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
+        FeatureType ft = workspace.getFeatureTypeFromPath("RectifiedGridCoverageMember");
+        //FeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
+        styleName = ft.getName();
+        stylePath = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle( ft,
+            styleName ).toString();
+      }
+      catch( MalformedURLException e1 )
+      {
+        e1.printStackTrace();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+    else
+    {
+      stylePath = getRelativeProjectPath( m_page.getStylePath() );
+      styleName = m_page.getStyleName();
+    }
 
     //Add Layer to mapModell
     IMapModell mapModell = m_outlineviewer.getMapModell();
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, "[Raster] "
-            + filePath.lastSegment(), "gml", "RectifiedGridCoverageMember",
-            getRelativeProjectPath( filePath ), "sld", styleName,
-            getRelativeProjectPath( stylePath ), "simple" );
+        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, filePath
+            .lastSegment(), "gml", "RectifiedGridCoverageMember",
+            getRelativeProjectPath( filePath ), "sld", styleName, stylePath, "simple" );
         m_outlineviewer.postCommand( command, null );
       }
       catch( Exception e )
@@ -121,6 +159,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   {
     m_outlineviewer = outlineviewer;
     m_project = m_outlineviewer.getMapModell().getProject();
+    m_mapContextURL = ( (GisTemplateMapModell)m_outlineviewer.getMapModell() ).getContext();
   }
 
   /**
