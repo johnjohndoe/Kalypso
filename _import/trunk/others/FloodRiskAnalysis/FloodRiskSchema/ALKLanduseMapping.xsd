@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk" targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- =========================================================== -->
+	<!-- LanduseList=========================================================== -->
+	<element name="LanduseList" type="hws:LanduseListType"/>
+	<complexType name="LanduseListType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="LanduseCollectionMember" type="hws:LanduseCollectionMemberAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- =========================================================== -->
+	<!-- LanduseCollectionMember=========================================================== -->
+	<complexType name="LanduseCollectionMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:LanduseCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="LanduseCollection" type="hws:LanduseCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="LanduseCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="LanduseMember" type="hws:LanduseMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- LanduseMember=========================================================== -->
+	<complexType name="LanduseMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:Landuse"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Landuse" type="hws:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="LanduseFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Name" type="string"/>
+					<element name="ALKMappingMember" type="hws:ALKMappingMemberAssociationType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ALKMappingMember=========================================================== -->
+	<complexType name="ALKMappingMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:ALKMapping"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="ALKMapping" type="hws:ALKMappingFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ALKMappingFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Name" type="string" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
