@@ -41,9 +41,9 @@
 
 package org.kalypso.convert.namodel;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +73,7 @@ public class NaNodeResultProvider
     m_context = modellWorkspace.getContext();
   }
 
-  private File getResultFile( final Feature nodeFE ) throws MalformedURLException
+  private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
   {
     final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
     if( link == null )
@@ -82,9 +82,7 @@ public class NaNodeResultProvider
     final String href = link.getHref().replaceAll( "\\?.*", "" );
 
     IUrlResolver res = new UrlUtilities();
-    final URL url = res.resolveURL( m_context, href );
-
-    return new File( url.getFile() );
+    return res.resolveURL( m_context, href );
   }
 
   public boolean resultExists( Feature nodeFE )
@@ -93,32 +91,20 @@ public class NaNodeResultProvider
       return false;
     try
     {
-      final File resultFile = getResultFile( nodeFE );
-      if( resultFile == null )
-        return false;
-      return resultFile.exists();
+      final URL resultURL = getResultURL( nodeFE );
+//      resultURL.openConnection();
+      resultURL.openStream();
     }
-    catch( MalformedURLException e )
+    catch( Exception e )
     {
       return false;
     }
+    return true;
   }
 
   public void removeResult( Feature nodeFE )
   {
     if( !removedResults.contains( nodeFE ) )
       removedResults.add( nodeFE );
-
   }
-  //  try
-  //    {
-  //      final File resultFile = getResultFile( m_context, nodeFE );
-  //      if( resultFile != null && resultFile.exists() )
-  //        resultFile.delete();
-  //    }
-  //    catch( MalformedURLException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //  }
 }

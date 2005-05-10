@@ -501,8 +501,18 @@ public class NaModelInnerCalcJob implements ICalcJob
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
               .getHref() );
-          // TODO new file zulaessig ??
-          if( ( new File( pegelURL.getFile() ) ).exists() )
+          boolean itExists;
+          // test if url exists
+          try
+          {
+            pegelURL.openStream();
+            itExists = true;
+          }
+          catch( Exception e )
+          {
+            itExists = false;
+          }
+          if( itExists )
           {
             logger
                 .info( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
