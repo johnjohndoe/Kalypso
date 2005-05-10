@@ -45,21 +45,16 @@
  */
 package org.kalypso.wizard;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.internal.resources.ProjectDescription;
@@ -67,7 +62,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -80,15 +74,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.GismapviewType.LayersType;
-import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
-import org.kalypso.template.types.ObjectFactory;
-import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.util.url.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
@@ -99,8 +86,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
-import org.kalypsodeegree_impl.gml.schema.virtual.GetGeomDestinationFeatureVisitor;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -182,7 +168,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   private Path m_hydPath;
 
   private GMLWorkspace m_hydWS;
-
+  
   //	IStructuredSelection structSelection;
 
   /**
@@ -195,15 +181,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       //      TODO: jh, schemata an zentrale speichern und von dort aufrufen, damit
       // hier nicht ständig aktualisiert werden muss.
-      m_modelSchema = GMLSchemaCache.getSchema( m_modelSchemaURL );
-      m_hydrotopSchema = GMLSchemaCache.getSchema( m_hydrotopSchemaURL );
+      m_modelSchema = GMLSchemaCatalog.getSchema("http://www.tuhh.de/kalypsoNA");
+      m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop" );
       setNeedsProgressMonitor( true );
-    }
-    catch( MalformedURLException e )
-    {
-      // TODO Auto-generated catch block
-      System.out.print( "Schema URL nicht valide" );
-      e.printStackTrace();
     }
     catch( Exception e1 )
     {
@@ -354,12 +334,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       //model.gml
       IPath modelPath2 = workspacePath.append( m_modelPath );
-      Writer modelWriter = new FileWriter( modelPath2.toFile() );
+      OutputStreamWriter modelWriter = new FileWriter( modelPath2.toFile() );
       GmlSerializer.serializeWorkspace( modelWriter, modelWS );
       modelWriter.close();
       //hydrotop.gml
       IPath hydPath = workspacePath.append( m_hydPath );
-      Writer hydrotopWriter = new FileWriter( hydPath.toFile() );
+      OutputStreamWriter hydrotopWriter = new FileWriter( hydPath.toFile() );
       GmlSerializer.serializeWorkspace( hydrotopWriter, m_hydWS );
       hydrotopWriter.close();
     }

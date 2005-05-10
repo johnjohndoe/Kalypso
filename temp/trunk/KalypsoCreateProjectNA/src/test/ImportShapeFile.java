@@ -36,6 +36,7 @@ import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -114,7 +115,7 @@ public class ImportShapeFile {
 			final ITypeRegistry registry = TypeRegistrySingleton
 					.getTypeRegistry();
 			registry.registerTypeHandler(new ObservationLinkHandler());
-			GMLSchema gmlSchema = GMLSchemaCache.getSchema(schemaURL);
+			GMLSchema gmlSchema = GMLSchemaCatalog.getSchema(schemaURL);
       FeatureType targetFT = gmlSchema.getFeatureType("Node");
       FeatureTypeProperty targetFTP = targetFT.getProperty("num");
 //      String key = Locale.getDefault().getLanguage();
