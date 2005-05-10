@@ -40,6 +40,7 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.xml.sax.SAXException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -772,7 +773,7 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
     for( int i = 0; i < urls.length; i++ )
     {
       URL url = urls[i];
-      GMLSchemaCache.getSchema( url );
+      GMLSchemaCatalog.getSchema( url );
     }
   }
 
@@ -845,7 +846,7 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
    */
   public GMLSchema getFeatureTypeSchema( String layer ) throws Exception
   {
-    return GMLSchemaCache.getSchema( getSchemaURL( layer ) );
+    return GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
   }
 
   /**
@@ -948,7 +949,7 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
       OperationNotSupportedException
 
   {
-    GMLSchema schema = GMLSchemaCache.getSchema( getSchemaURL( layer ) );
+    GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
     org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema.getFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
     {
