@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import javax.xml.bind.JAXBException;
 
 import org.deegree.services.wms.StyleNotDefinedException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -88,14 +89,25 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     try
     {
       File shapeBaseFile = m_page.getShapeBaseFile();
+      
+      String stylePath = null;
+      String styleName = null;
+      
+      if( m_page.checkDefaultStyle() )
+      {
       //read Shapefile
       GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseFile.toString(),
           m_page.getCRS(), null );
 
       //get DefaultStyle
-      String styleName = shapeBaseFile.getName();
+      styleName = shapeBaseFile.getName();
       URL styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
           shapeWS.getFeatureType( shapeBaseFile.toString() ), styleName );
+      stylePath = styleHref.toString();
+      }else{
+        stylePath = getRelativeProjectPath( m_page.getStylePath() );
+        styleName = m_page.getStyleName();
+      }
 
       //Add Layer to mapModell
       IMapModell mapModell = m_outlineviewer.getMapModell();
@@ -103,7 +115,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
       AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, themeName,
           "shape", "featureMember", fileName, "sld", styleName,
-          styleHref.toString(), "simple" );
+          stylePath, "simple" );
       m_outlineviewer.postCommand( command, null );
     }
 
@@ -126,6 +138,11 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     }
     m_page.removeListeners();
     return true;
+  }
+  
+  private String getRelativeProjectPath( IPath path )
+  {
+    return "project:/" + path.removeFirstSegments( 1 ).toString();
   }
 
   /**

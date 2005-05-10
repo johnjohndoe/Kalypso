@@ -88,11 +88,13 @@ public class ImportRasterSourceWizardPage extends WizardPage
 
   private Button browseButton1;
 
-  private Button browseButton2;
+  Button browseButton2;
 
   Combo styleNameCombo;
 
   protected String styleName;
+
+  boolean checkDefaultStyle = false;
 
   /*
    * 
@@ -179,7 +181,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     gridLayout1.numColumns = 3;
     styleGroup.setLayout( gridLayout1 );
 
-    Label styleLabel = new Label( styleGroup, SWT.NONE );
+    final Label styleLabel = new Label( styleGroup, SWT.NONE );
     styleLabel.setText( "Datei : " );
 
     styleTextField = new Text( styleGroup, SWT.BORDER );
@@ -251,7 +253,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
       }
     } );
 
-    Label styleNameLabel = new Label( styleGroup, SWT.NONE );
+    final Label styleNameLabel = new Label( styleGroup, SWT.NONE );
     styleNameLabel.setText( "UserStyle name: " );
 
     styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
@@ -266,6 +268,39 @@ public class ImportRasterSourceWizardPage extends WizardPage
         styleName = styleNameCombo.getText();
       }
     } );
+
+    Label dummyLabel = new Label( styleGroup, SWT.NONE );
+    dummyLabel.setText( "" );
+
+    final Button checkDefaultStyleButton = new Button( styleGroup, SWT.CHECK );
+    checkDefaultStyleButton.setSelection( checkDefaultStyle );
+    checkDefaultStyleButton.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        checkDefaultStyle = checkDefaultStyleButton.getSelection();
+        if( checkDefaultStyleButton.getSelection() )
+        {
+          styleLabel.setEnabled( false );
+          styleTextField.setEnabled( false );
+          browseButton2.setEnabled( false );
+          styleNameLabel.setEnabled( false );
+          styleNameCombo.setEnabled( false );
+        }
+        else
+        {
+          styleLabel.setEnabled( true );
+          styleTextField.setEnabled( true );
+          browseButton2.setEnabled( true );
+          styleNameLabel.setEnabled( true );
+          styleNameCombo.setEnabled( true );
+        }
+        validate();
+      }
+    } );
+
+    Label defaultStyleLabel = new Label( styleGroup, SWT.NONE );
+    defaultStyleLabel.setText( "Generate default style" );
 
   }
 
@@ -295,24 +330,27 @@ public class ImportRasterSourceWizardPage extends WizardPage
       setPageComplete( false );
     }
 
-    if( stylePath != null )
+    if( !checkDefaultStyle )
     {
-      setPageComplete( true );
-    }
-    else
-    {
-      error.append( "Bitte Style ausgewählen.\n" );
-      setPageComplete( false );
-    }
+      if( stylePath != null )
+      {
+        setPageComplete( true );
+      }
+      else
+      {
+        error.append( "Bitte Style ausgewählen.\n" );
+        setPageComplete( false );
+      }
 
-    if( styleName != null )
-    {
-      setPageComplete( true );
-    }
-    else
-    {
-      error.append( "Bitte Style name ausgewählen.\n" );
-      setPageComplete( false );
+      if( styleName != null )
+      {
+        setPageComplete( true );
+      }
+      else
+      {
+        error.append( "Bitte Style name ausgewählen.\n" );
+        setPageComplete( false );
+      }
     }
 
     if( error.length() > 0 )
@@ -325,6 +363,11 @@ public class ImportRasterSourceWizardPage extends WizardPage
   public IPath getFilePath()
   {
     return filePath;
+  }
+
+  public boolean checkDefaultStyle()
+  {
+    return checkDefaultStyle;
   }
 
   public IPath getStylePath()
