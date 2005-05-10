@@ -649,7 +649,7 @@ public class DBaseFile
       dbfCol column = (dbfCol)column_info.get( colHeader.get( i ) );
 
       String value = getColumn( column.name.trim() );
-      System.out.print(value);
+//      System.out.print(value);
       if( value != null )
       {
         // cast the value of the i'th column to corresponding datatype
