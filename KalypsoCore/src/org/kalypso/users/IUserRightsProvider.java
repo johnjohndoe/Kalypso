@@ -49,6 +49,12 @@ package org.kalypso.users;
 public interface IUserRightsProvider
 {
   /**
+   * This method is called when the rights consumer (possibly the
+   * KalypsoUserService) shuts down and implementers should clean hold resources
+   */
+  public void dispose( );
+
+  /**
    * Delivers the list of rights the given user has.
    * 
    * @param username

@@ -118,7 +118,7 @@ public class KalypsoUserService implements IUserService
    * 
    * @throws RemoteException
    */
-  private void init( ) throws RemoteException
+  private final void init( ) throws RemoteException
   {
     final File conf = new File( ServiceConfig.getConfDir(),
         "IUserService/userService.properties" );
@@ -157,6 +157,15 @@ public class KalypsoUserService implements IUserService
     }
   }
 
+  /**
+   * @see java.lang.Object#finalize()
+   */
+  protected void finalize( ) throws Throwable
+  {
+    if( m_rightsProvider != null )
+      m_rightsProvider.dispose();
+  }
+  
   /**
    * @see org.kalypso.services.user.IUserService#getRights(java.lang.String)
    */

@@ -36,24 +36,29 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Convenience class for storing references to image descriptors used by the
- * readme tool.
+ * Convenience class for storing references to image descriptors within
+ * KalypsoProduct. Important note: the class must not be named ImageProvider
+ * because the same class exists in the same package in KalypsoUI!
  */
-public class ImageProvider
+public class KPImageProvider
 {
   public static final ImageDescriptor id( final String location )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.product", location );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.product",
+        location );
   }
 
   public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "etc/kalypso16.gif" );
+
   public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = id( "etc/kalypso32.gif" );
+
+  public static final ImageDescriptor IMAGE_LOGIN = id( "etc/login.gif" );
 }
