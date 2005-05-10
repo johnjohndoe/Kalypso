@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -112,8 +113,11 @@ public class FeatureHelper
   /**
    * @throws UnsupportedOperationException If type of object is not supported for clone
    */
-  private static Object cloneData( Object object, final String type )
+  private static Object cloneData( final Object object, final String type )
   {
+    if( object == null )
+      return null;
+
     if( object instanceof String )
       return object;
     
@@ -127,6 +131,12 @@ public class FeatureHelper
       final GM_Position position = point.getPosition();
       final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
       return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
+    }
+
+    if( object instanceof TimeseriesLinkType )
+    {
+      // TODO: eigentlich clonen!
+      return object;
     }
 
     throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type +  "' nicht kopieren." );
