@@ -16,7 +16,7 @@ public class MaulProfilBuilding extends AbstractProfilBuilding
 
   public MaulProfilBuilding()
   {
-    super(BUILDING_TYP.BLD_MAUL,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
+    super(BUILDING_TYP.MAUL,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
         ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
         ProfilBuildingProperty.BEZUGSPUNKT_Y,ProfilBuildingProperty.RAUHEIT ));
   }

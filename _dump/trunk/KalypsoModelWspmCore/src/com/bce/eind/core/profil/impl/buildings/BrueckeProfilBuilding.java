@@ -17,7 +17,7 @@ public class BrueckeProfilBuilding extends AbstractProfilBuilding
 
   public BrueckeProfilBuilding( )
   {
-    super( BUILDING_TYP.BLD_BRUECKE, Arrays.asList( ProfilBuildingProperty.BREITE,
+    super( BUILDING_TYP.BRUECKE, Arrays.asList( ProfilBuildingProperty.BREITE,
         ProfilBuildingProperty.UNTERWASSER, ProfilBuildingProperty.PFEILERFORM,
         ProfilBuildingProperty.RAUHEIT ) );
     m_pointProperties.add( ProfilPointProperty.OBERKANTEBRUECKE );

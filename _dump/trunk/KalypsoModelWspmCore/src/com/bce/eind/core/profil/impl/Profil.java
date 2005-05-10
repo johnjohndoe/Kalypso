@@ -61,7 +61,7 @@ public class Profil implements IProfil
     m_points.addProperty( ProfilPointProperty.RAUHEIT );
     m_points.addProperty( ProfilPointProperty.TRENNFLAECHE );
     m_points.addProperty( ProfilPointProperty.DURCHSTROEMTE );
-    m_building = ProfilBuildingFactory.createProfilBuilding( IProfil.BUILDING_TYP.BLD_NONE );
+    m_building = ProfilBuildingFactory.createProfilBuilding( IProfil.BUILDING_TYP.NONE );
   }
 
   public void addCommentLine( String line )
@@ -125,6 +125,7 @@ public class Profil implements IProfil
       m_points.addProperty( ProfilPointProperty.RECHTSWERT );
       return true;
     }
+
     m_points.addProperty( pointProperty );
     // KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
     return true;
@@ -200,7 +201,7 @@ public class Profil implements IProfil
   public TRENNFLAECHEN_TYP getDeviderTyp( DeviderKey deviderKey )
   {
     if( deviderKey.getProfilPointProperty() != ProfilPointProperty.TRENNFLAECHE )
-      return IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_UNDEFINED;
+      return IProfil.TRENNFLAECHEN_TYP.UNDEFINED;
     final IProfilPoint pktTrennflaeche = this.getDevider( deviderKey );
 
     try
@@ -212,7 +213,7 @@ public class Profil implements IProfil
     catch( ProfilDataException e )
     {
       e.printStackTrace();
-      return IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_UNDEFINED;
+      return IProfil.TRENNFLAECHEN_TYP.UNDEFINED;
     }
 
   }
@@ -518,7 +519,7 @@ public class Profil implements IProfil
     {
       removeProfilPointProperty( pbIt.next() );
     }
-    m_building = ProfilBuildingFactory.createProfilBuilding(BUILDING_TYP.BLD_NONE);
+    m_building = ProfilBuildingFactory.createProfilBuilding(BUILDING_TYP.NONE);
     return oldBuilding;
   }
 
@@ -623,6 +624,24 @@ public class Profil implements IProfil
         .iterator(); pbIt.hasNext(); )
     {
       addProfilPointProperty( pbIt.next() );
+    }
+    
+    if(buildingTyp == IProfil.BUILDING_TYP.BRUECKE)
+    {
+      for(final Iterator<IProfilPoint> pktIt = m_points.iterator();pktIt.hasNext();)
+      {
+        final ProfilPoint pkt = (ProfilPoint)pktIt.next();
+        try
+        {
+          final double h = pkt.getValueFor(ProfilPointProperty.HOEHE);
+          pkt.setValueFor(ProfilPointProperty.OBERKANTEBRUECKE,h);
+          pkt.setValueFor(ProfilPointProperty.UNTERKANTEBRUECKE,h);          
+        }
+        catch( ProfilDataException e )
+        {
+          //TODO:Kim RuntimeException werfen
+        }
+      }
     }
 
   }

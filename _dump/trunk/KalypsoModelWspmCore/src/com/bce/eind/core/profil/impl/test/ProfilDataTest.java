@@ -19,6 +19,12 @@ import com.bce.eind.core.profil.impl.Profil;
  */
 public class ProfilDataTest extends TestCase
 {
+//  private final IProfil m_p = CreateTestProfil();
+//  
+//  public ProfilDataTest() throws Exception
+//  {
+//  }
+  
   public void testRunTest( ) throws Exception
   {
     final IProfil p = CreateTestProfil();
@@ -53,24 +59,24 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Trennfläche links:", p2, tpL );
     assertEquals( "Trennfläche rechts:", p3, tpR );
 
-    p.setRauheitTyp( RAUHEITEN_TYP.RAUHEIT_KS );
+    p.setRauheitTyp( RAUHEITEN_TYP.KS );
     p.setValueFor( p2, ProfilPointProperty.RAUHEIT, 1.2345 );
 
     assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL
         .getValueFor( ProfilPointProperty.RAUHEIT ) );
-    assertEquals( "RauheitTyp:", RAUHEITEN_TYP.RAUHEIT_KS, p.getRauheitTyp() );
+    assertEquals( "RauheitTyp:", RAUHEITEN_TYP.KS, p.getRauheitTyp() );
     return p;
   }
 
   public void setGetMoveDevider( final IProfil p ) throws Exception
   {
 
-    p.setDeviderTyp( DeviderKey.TRENNFLAECHE_R, IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG );
-    assertEquals( "Trennfläche rechts Typ:", IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_BOESCHUNG, p
+    p.setDeviderTyp( DeviderKey.TRENNFLAECHE_R, IProfil.TRENNFLAECHEN_TYP.BOESCHUNG );
+    assertEquals( "Trennfläche rechts Typ:", IProfil.TRENNFLAECHEN_TYP.BOESCHUNG, p
         .getDeviderTyp( DeviderKey.TRENNFLAECHE_R ) );
 
-    p.setDeviderTyp( DeviderKey.TRENNFLAECHE_L, IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_SOHLE );
-    assertEquals( "Trennfläche links Typ:", IProfil.TRENNFLAECHEN_TYP.TRENNFLAECHE_SOHLE, p
+    p.setDeviderTyp( DeviderKey.TRENNFLAECHE_L, IProfil.TRENNFLAECHEN_TYP.SOHLE );
+    assertEquals( "Trennfläche links Typ:", IProfil.TRENNFLAECHEN_TYP.SOHLE, p
         .getDeviderTyp( DeviderKey.TRENNFLAECHE_L ) );
 
     final IProfilPoint newPkt = p.insertPoint( p.getDevider( DeviderKey.DURCHSTROEMTE_L ) );
@@ -82,8 +88,8 @@ public class ProfilDataTest extends TestCase
 
   public void setGetBuilding( final IProfil p ) throws Exception
   {
-    p.setProfilBuilding( IProfil.BUILDING_TYP.BLD_BRUECKE );
-    assertEquals( "neues Gebäude:", IProfil.BUILDING_TYP.BLD_BRUECKE, p.getProfilBuilding()
+    p.setProfilBuilding( IProfil.BUILDING_TYP.BRUECKE );
+    assertEquals( "neues Gebäude:", IProfil.BUILDING_TYP.BRUECKE, p.getProfilBuilding()
         .getBuildingTyp() );
     final IProfilPoint firstPkt = p.getPoint(0);
     p.setValueFor(firstPkt,ProfilPointProperty.OBERKANTEBRUECKE,1000.65432);
@@ -93,7 +99,7 @@ public class ProfilDataTest extends TestCase
         ProfilBuildingProperty.PFEILERFORM ) );
     assertEquals("Hoehe Unterkante: ",1000.23456, firstPkt.getValueFor(ProfilPointProperty.UNTERKANTEBRUECKE));
     p.removeProfilBuilding();
-    assertEquals( "kein Gebäude:", IProfil.BUILDING_TYP.BLD_NONE, p.getProfilBuilding()
+    assertEquals( "kein Gebäude:", IProfil.BUILDING_TYP.NONE, p.getProfilBuilding()
         .getBuildingTyp() );
  
     try

@@ -13,10 +13,9 @@ import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
  */
 public class KreisProfilBuilding extends AbstractProfilBuilding
 {
-
   public KreisProfilBuilding()
   {
-    super(BUILDING_TYP.BLD_KREIS,Arrays.asList( ProfilBuildingProperty.BREITE, ProfilBuildingProperty.HOEHE,
+    super(BUILDING_TYP.KREIS,Arrays.asList( ProfilBuildingProperty.BREITE,
          ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
         ProfilBuildingProperty.BEZUGSPUNKT_Y ,ProfilBuildingProperty.RAUHEIT));
   }

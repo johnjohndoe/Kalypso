@@ -8,7 +8,6 @@ package com.bce.eind.core.profil;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  * @author kimwerner
  */
@@ -16,14 +15,13 @@ public interface IProfil
 {
   public static enum BUILDING_TYP
   {
-    BLD_BRUECKE, BLD_EI, BLD_KREIS, BLD_MAUL, BLD_NONE, BLD_TRAPEZ
+    NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ
   }
 
- /* public static enum BUILDING_VALUES
-  {
-    BEZUGSPUNKT_X,BEZUGSPUNKT_Y,STEIGUNG,SOHLGEFAELLE,HOEHE,BREITE
-  }
-*/
+  /*
+   * public static enum BUILDING_VALUES {
+   * BEZUGSPUNKT_X,BEZUGSPUNKT_Y,STEIGUNG,SOHLGEFAELLE,HOEHE,BREITE }
+   */
   public static enum METADATA
   {
     KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
@@ -36,15 +34,14 @@ public interface IProfil
 
   public static enum RAUHEITEN_TYP
   {
-    RAUHEIT_KS, RAUHEIT_KST, RAUHEIT_UNDEFINED
+    UNDEFINED, KS, KST
   }
 
   public static enum TRENNFLAECHEN_TYP
   {
-    TRENNFLAECHE_UNDEFINED, TRENNFLAECHE_BOESCHUNG, TRENNFLAECHE_SOHLE
+    UNDEFINED, BOESCHUNG, SOHLE
   }
 
-  
   public void addCommentLine( final String line );
 
   public IProfilPoint addPoint( final double breite, final double hoehe )
@@ -90,7 +87,8 @@ public interface IProfil
 
   public List getUnknownObjects( );
 
-  public double[] getValuesFor( final ProfilPointProperty pointProperty ) throws ProfilDataException;
+  public double[] getValuesFor( final ProfilPointProperty pointProperty )
+      throws ProfilDataException;
 
   public int indexOf( final IProfilPoint point );
 

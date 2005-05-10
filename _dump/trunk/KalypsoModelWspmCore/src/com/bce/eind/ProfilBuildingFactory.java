@@ -22,17 +22,17 @@ public class ProfilBuildingFactory
   {
     switch( buildingTyp )
     {
-      case BLD_NONE:
+      case NONE:
         return new NoneProfilBuilding();
-      case BLD_EI:
+      case EI:
         return new EiProfilBuilding();
-      case BLD_KREIS:
+      case KREIS:
         return new KreisProfilBuilding();
-      case BLD_TRAPEZ:
+      case TRAPEZ:
         return new TrapezProfilBuilding();
-      case BLD_MAUL:
+      case MAUL:
         return new MaulProfilBuilding();
-      case BLD_BRUECKE:
+      case BRUECKE:
         return new BrueckeProfilBuilding();
       default:
         return new NoneProfilBuilding();

@@ -16,6 +16,6 @@ public class NoneProfilBuilding extends AbstractProfilBuilding
 
   public NoneProfilBuilding()
   {
-    super(BUILDING_TYP.BLD_NONE,new ArrayList<ProfilBuildingProperty>(0));
+    super(BUILDING_TYP.NONE,new ArrayList<ProfilBuildingProperty>(0));
   }
  }
