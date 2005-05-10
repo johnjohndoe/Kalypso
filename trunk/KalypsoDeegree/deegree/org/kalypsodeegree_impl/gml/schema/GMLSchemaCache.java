@@ -93,39 +93,37 @@ public class GMLSchemaCache
     }
     catch( final IOException e )
     {
-      e.printStackTrace();
-
       // ignorieren, dann immer die lokale Kopie nehmen
+      // e.printStackTrace();
     }
 
+    // if objekt already in memCache and is valid, jsut return it
     final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( keyID );
+    if( sw != null && ( validity == null || validity.before( sw.getValidity() ) ) )
+      return sw.getSchema();
+    
+    // else, try to get it from file cache
+    GMLSchema schema = null;
 
-    if( sw == null || sw.getValidity().before( validity ) )
+    final StringValidityKey key = new StringValidityKey( keyID, validity );
+    final StringValidityKey realKey = m_fileCache.getRealKey( key );
+
+    if( validity != null
+        && ( realKey == null || realKey.getValidity().before( validity ) ) )
     {
-      GMLSchema schema = null;
+      // vom server holen
+      schema = new GMLSchema( schemaURL );
 
-      final StringValidityKey key = new StringValidityKey( keyID, validity );
-      final StringValidityKey realKey = m_fileCache.getRealKey( key );
-
-      if( validity != null
-          && (realKey == null || realKey.getValidity().before( validity )) )
-      {
-        // vom server holen
-        schema = new GMLSchema( schemaURL );
-
-        // als file speichern
-        m_fileCache.addObject( key, schema );
-      }
-      else
-        schema = (GMLSchema) m_fileCache.get( key );
-
-      if( schema != null )
-        m_memCache.addObject( keyID, new GMLSchemaWrapper( schema, validity ) );
-
-      return schema;
+      // als file speichern
+      m_fileCache.addObject( key, schema );
     }
+    else
+      schema = (GMLSchema) m_fileCache.get( key );
 
-    return sw.getSchema();
+    if( schema != null )
+      m_memCache.addObject( keyID, new GMLSchemaWrapper( schema, validity ) );
+
+    return schema;
   }
 
   private static class GMLSchemaSerializer implements ISerializer
