@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
-	<!-- Dateien relativ zum Projektverzeichnis (.../input/base/) -->
-	<input id="MODELL_XSD" path=".model/schema/bodemodell.xsd" relativeToCalcCase="false"/>
-	<input id="CONTROL_XSD" path=".model/schema/control.xsd" relativeToCalcCase="false"/>
-	
-	<!-- Verzeichnisse relativ zum Projektverzeichnis (.../input/base/) -->
-	<input id="SchemaDir" path=".model/schema" relativeToCalcCase="false"/>
-	
 	<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
 	<input id="MODELL_GML" path="bodemodell.gml" relativeToCalcCase="true"/>
 	<input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
-
 	
 	<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
 	<!-- Unterverzeichnisse Messung und Vorhersage! -->
@@ -22,14 +14,8 @@
 	
 
 	<output id="Logs" path="Log-Dateien" relativeToCalcCase="true"/>
-	<output id="Ergebnisse" path="Zeitreihen" relativeToCalcCase="true"/>
-<!--
-	<output id="QPegelDirOut" path="Zeitreihen/Pegel/Vorhersage" relativeToCalcCase="true"/>
-	<output id="QSpeicherDirOut" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
-	<output id="VSpeicherDirOut" path="Zeitreihen/Speicherinhalt/Vorhersage" relativeToCalcCase="true"/>
-	<output id="ZflSpeicherDirOut" path="Zeitreihen/Speicherzufluss" relativeToCalcCase="true"/>
--->
-	
+	<output id="Ergebnisse" path="" relativeToCalcCase="true"/>
+
 	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 	<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true"/>
 	
