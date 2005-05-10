@@ -67,17 +67,19 @@ public interface NaModelConstants
 
   public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA";
 
-  public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT";
-
   public static final String NS_NACONTROL = "org.kalypso.namodell.control";
-
-  public static final String LOG_OUTRES_ID = "LOG_OUTRES";
 
   public static final String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop";
 
-  public static final String LOG_OUTERR_ID = "LOG_OUTERR";
-
   public static final String NS_NAPARAMETER = "http://www.tuhh.de/parameter";
+
+  public static final String NS_OMBROMETER = "http://org.kalypso.ombrometer";
+
+  public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT";
+
+  public static final String LOG_OUTRES_ID = "LOG_OUTRES";
+
+  public static final String LOG_OUTERR_ID = "LOG_OUTERR";
 
   public static final String OUT_ZML = "OUT_ZML";
 

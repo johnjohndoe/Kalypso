@@ -51,7 +51,9 @@ import org.kalypso.java.net.IUrlCatalog;
  * 
  * provides the schemas for kalypso rainfall runoff simulation
  * 
- * created by @author doemming (08.05.2005)
+ * created by
+ * 
+ * @author doemming (08.05.2005)
  */
 public class UrlCatalogNA implements IUrlCatalog
 {
@@ -70,6 +72,8 @@ public class UrlCatalogNA implements IUrlCatalog
       return getClass().getResource( "hydrotop.xsd" );
     if( NaModelConstants.NS_NAPARAMETER.equals( key ) )
       return getClass().getResource( "parameter.xsd" );
+    if( NaModelConstants.NS_OMBROMETER.equals( key ) )
+      return getClass().getResource( "ombrometer.xsd" );
     return null;
   }
 }
