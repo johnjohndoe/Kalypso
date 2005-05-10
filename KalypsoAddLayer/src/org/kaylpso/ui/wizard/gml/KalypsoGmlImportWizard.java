@@ -107,13 +107,13 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
         featureName = m_page.getFeature().getFeatureType().getName();
         featurePath += "[" + featureName + "]";
         styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
-            m_page.getFeature().getFeatureType(), null );
+            m_page.getFeature().getFeatureType(), null);
       }
       else if( selection instanceof PropertyElement )
       {
         featureName = m_page.getFatp().getName();
         styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
-            (FeatureType)m_page.getFatp(), null );
+            (FeatureType)m_page.getFatp(), null);
       }
 
       AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName,

@@ -174,8 +174,10 @@ public class DefaultStyleFactory
     StyledLayerDescriptor sld = null;
 
     Style[] styles = new Style[]
-    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
-        featureTypeStyle ) };
+    {
+      (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "empty Abstract",
+          featureTypeStyle )
+    };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
     { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
