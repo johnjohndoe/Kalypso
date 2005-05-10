@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
 import java.io.File;
@@ -123,7 +123,7 @@ public class UrlUtilities implements IUrlResolver
     catch( final UnknownServiceException e )
     {
       // in diesem Fall unterstütz die URL kein Output
-      
+
       // jetzt versuchen, selbst einen Stream zu öffnen
       final String protocol = url.getProtocol();
       if( "file".equals( protocol ) )
@@ -131,14 +131,15 @@ public class UrlUtilities implements IUrlResolver
         final File file = new File( url.getFile() );
         return new OutputStreamWriter( new FileOutputStream( file ) );
       }
-      
+
       // wenn alles nichts hilfe, doch die esception werden
       throw e;
     }
   }
 
   /**
-   * Erzeugt den Reader anhand der URL und {@link URLConnection#getContentEncoding()}.
+   * Erzeugt den Reader anhand der URL und
+   * {@link URLConnection#getContentEncoding()}.
    * 
    * @see org.kalypso.java.net.IUrlResolver#createReader(java.net.URL)
    */
@@ -147,10 +148,31 @@ public class UrlUtilities implements IUrlResolver
     final URLConnection connection = url.openConnection();
     final String contentEncoding = connection.getContentEncoding();
     final InputStream inputStream = connection.getInputStream();
-    // TODO: unsauber! wenn kein encoding da, am besten keinen Reader verwenden, da sonst z.B: probleme beim xml-parsen
+    // TODO: unsauber! wenn kein encoding da, am besten keinen Reader verwenden,
+    // da sonst z.B: probleme beim xml-parsen
     if( contentEncoding == null )
       return new InputStreamReader( inputStream );
-    
+
     return new InputStreamReader( inputStream, contentEncoding );
   }
+
+  /**
+   *  Öffnet die URL-Connection und gibt null zurück bei Fehler
+   */
+  public static URLConnection connectQuietly( URL url )
+  {
+    URLConnection connection;
+
+    try
+    {
+      connection = url.openConnection();
+      connection.connect();
+    }
+    catch( IOException e )
+    {
+      connection = null;
+    }
+    return connection;
+  }
 }
+
