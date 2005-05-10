@@ -1,32 +1,20 @@
 /*--------------- Kalypso-Header --------------------------------------------------------------------
 
- This file is part of ekalypso:
- Internet based elearning for complex simulation applications
- ("Internet basiertes E-Learning an komplexen Simulationsprogrammen [de]")
-
- The implementation is realised by: 
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- The project is sponsored and supported by:  
- local authority of education and research, 
- E-Learning Consortium Hamburg (ELCH) and
- Multimedia Kontor Hamburg.
-
- As this implementation depends on third party open source 
- java code it is consequently also licenced as open source
- in the hope that it will be useful specially (but not exclusively)
- to other e-learning projects that may extend or use this project.
-
+ This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
+
  Technical University Hamburg-Harburg (TUHH)
  Institute of River and coastal engineering
  Denickestr. 22
  21073 Hamburg, Germany
  http://www.tuhh.de/wb
+
+ and
+
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -45,14 +33,11 @@
  Contact:
 
  E-Mail:
- katharina.lupp@tuhh.de
- 
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+
  ---------------------------------------------------------------------------------------------------*/
-/*
- * 
- * Created on 23.03.2005
- *
- */
 package org.kalypso.java.io;
 
 import java.io.IOException;
@@ -63,57 +48,41 @@ import java.util.Locale;
 import com.braju.format.Format;
 
 /**
- * 
- * -----------------------------------------------------------------
- * 
  * @author katharina lupp <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
- *  
  */
+public class PrintWriter extends java.io.PrintWriter
+{
+  public PrintWriter( final OutputStream out )
+  {
+    super( out );
+  }
 
-public class PrintWriter extends java.io.PrintWriter {
+  public PrintWriter( final OutputStream out, final boolean autoFlush )
+  {
+    super( out, autoFlush );
+  }
 
-    /*
-     * Constructor
-     */
-    public PrintWriter(OutputStream out) {
-        super(out);
+  public PrintWriter( final Writer out )
+  {
+    super( out );
+  }
 
-    }
+  public PrintWriter( final Writer out, final boolean autoFlush )
+  {
+    super( out, autoFlush );
+  }
 
-    /*
-     * Constructor
-     */
-    public PrintWriter(OutputStream out, boolean autoFlush) {
-        super(out, autoFlush);
-
-    }
-
-    /*
-     * Constructor
-     */
-    public PrintWriter(Writer out) {
-        super(out);
-
-    }
-
-    /*
-     * Constructor
-     */
-    public PrintWriter(Writer out, boolean autoFlush) {
-        super(out, autoFlush);
-
-    }
-
-    /**
-     * @see org.kalypso.java.io
-     */
-    public void printf(Locale language, String string, Object[] o) 
+  public void printf( final Locale language, final String string,
+      final Object[] o )
+  {
+    try
     {
-        try {
-            Format.fprintf(this, string, o);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+      Format.fprintf( this, string, o );
     }
-
+    catch( IOException e )
+    {
+      // TODO exception handling???
+      e.printStackTrace();
+    }
+  }
 }

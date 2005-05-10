@@ -28,6 +28,14 @@ public class PSICompactRightsProvider implements IUserRightsProvider
       throw new IllegalStateException(
           "PSI-Compact Schnittstelle konnte nicht initialisiert werden" );
   }
+  
+  /**
+   * @see org.kalypso.users.IUserRightsProvider#dispose()
+   */
+  public void dispose( )
+  {
+    // nothing to do
+  }
 
   /**
    * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String)
