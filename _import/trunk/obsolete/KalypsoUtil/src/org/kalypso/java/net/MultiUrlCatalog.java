@@ -73,7 +73,7 @@ public class MultiUrlCatalog implements IUrlCatalog
       if( url != null )
         return url;
     }
-    
+
     return null;
   }
 
