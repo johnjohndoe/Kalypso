@@ -92,6 +92,7 @@ public class RelationType
       return null;
     case 1:
       return property == null ? null : ftLabel + "." + linkLabel + " ist schon gesetzt";
+    // TODO check if schon vorhanden
     default:
       return ( (List)property ).size()+1 < max ? null : ftLabel + "." + linkLabel
           + " besitzt schon maximale relationen (" + max + ")";
