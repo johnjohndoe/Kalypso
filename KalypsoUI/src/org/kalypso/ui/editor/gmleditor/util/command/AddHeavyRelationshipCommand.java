@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
 
+import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -102,29 +103,29 @@ public class AddHeavyRelationshipCommand implements ICommand
     m_newFeature = m_workspace.createFeature( m_linkFT1.getAssociationFeatureType() );
     // create first link
     final String linkName1 = m_linkFT1.getName();
-    final Object value = m_srcFE.getProperty( linkName1 );
-    final int maxOccurs = m_srcFE.getFeatureType().getMaxOccurs( linkName1 );
-    switch( maxOccurs )
-    {
-    // NO LIST
-    case 1:
-      if( value != null )
-        m_newFeature.setProperty( FeatureFactory.createFeatureProperty( linkName1, m_newFeature ) );
-      else
-        throw new Exception( "link allready set" );
-      break;
-    // LIST
-    case FeatureType.UNBOUND_OCCURENCY:
-      ( (List)value ).add( m_newFeature );
-      break;
-    default:
-      final List list = (List)value;
-      if( list.size() < maxOccurs )
-        ( (List)value ).add( m_newFeature );
-      else
-        throw new Exception( "multiplicity not allowed" );
-      break;
-    }
+    //    final Object value = m_srcFE.getProperty( linkName1 );
+    //    final int maxOccurs = m_srcFE.getFeatureType().getMaxOccurs( linkName1 );
+    m_workspace.addFeature( m_srcFE, linkName1, 0, m_newFeature ); // pos does
+                                                                   // not matter
+    //    switch( maxOccurs )
+    //    {
+    //    // NO LIST
+    //    case 1:
+    //      if( value == null )
+    //      break;
+    //    // LIST
+    //    case FeatureType.UNBOUND_OCCURENCY:
+    //        m_workspace.addFeature(m_srcFE, linkName1, 0,m_newFeature); // pos does
+    // not matter
+    //      break;
+    //    default:
+    //      final List list = (List)value;
+    //      if( list.size() < maxOccurs )
+    //        ( (List)value ).add( m_newFeature );
+    //      else
+    //        throw new Exception( "multiplicity not allowed" );
+    //      break;
+    //    }
     // create second link
     m_workspace.addLinkedFeature( m_newFeature, m_linkFT2.getName(), 0, m_targetFE );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
@@ -157,7 +158,7 @@ public class AddHeavyRelationshipCommand implements ICommand
       break;
     }
     // remove relation feature and also first link
-    m_workspace.removeLinkedAsCompositionFeature(m_srcFE, m_linkFT1.getName(), m_newFeature );
+    m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1.getName(), m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
