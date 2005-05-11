@@ -403,6 +403,8 @@ public class XMLHelper
     final String typeName = attribute.getValue();
     final String typeNameSpace = attribute.getValueNS();
     final GMLSchema typeSchema = schema.getGMLSchema( typeNameSpace );
+    if( typeSchema == null )
+      return null;
     Node contentNode = typeSchema.getContentNode( typeNameSpace, typeName );
     if( contentNode == null )
       return null;
