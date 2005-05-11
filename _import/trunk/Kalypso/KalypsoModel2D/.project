@@ -3,7 +3,7 @@
 	<name>Kalypso2d</name>
 	<comment></comment>
 	<projects>
-		<project>backupdeegree</project>
+		<project>KalypsoDeegree</project>
 		<project>KalypsoUI</project>
 		<project>KalypsoUtil</project>
 	</projects>

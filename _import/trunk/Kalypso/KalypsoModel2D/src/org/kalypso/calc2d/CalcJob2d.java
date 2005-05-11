@@ -56,12 +56,14 @@ package org.kalypso.calc2d;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URL;
@@ -72,10 +74,7 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.convert.model2d.ConvertAsci2GML;
 import org.kalypso.convert.model2d.ConvertBC2Ascii;
 import org.kalypso.convert.model2d.ConvertGML2Asci;
-import org.kalypso.java.io.FileCopyVisitor;
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.util.zip.ZipUtilities;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
@@ -90,13 +89,24 @@ public class CalcJob2d implements ICalcJob
 {
 
   private final String EXE_FILE = "StartSimulation.bat";
+
   public static final String MODELL_ID = "Modell";
+
   public static final String CONTROL_ID = "Control";
+
   public static final String RESULTS_ID = "ERGEBNISSE";
+
   private boolean succeeded = false;
+
   private final String CONF_FILE = "SimConfig.txt";
+
   private final String SIM_EXE_FILE = "Kalypso_2D_vers1_2_3_large.exe";
+
   private final String DGM_FILE = "work.dgn";
+
+  private final static String ID_RESULTS = "ERGEBNISSE";
+
+  private static final String ID_LOG = "LOG";
 
   /*
    * (non-Javadoc)
@@ -120,11 +130,30 @@ public class CalcJob2d implements ICalcJob
       ICalcMonitor monitor ) throws CalcJobServiceException
   {
     final File outputDir;
-    
+
     final URL schemaModellURL = getClass().getResource( "schema/2dgml.xsd" );
     final URL schemaControlURL = getClass().getResource( "schema/bc_gml2.xsd" );
     final File exeDir = new File( tmpdir, "simulation" );
     exeDir.mkdirs();
+
+    //    File result = new File( exeDir, "test.txt" );
+    //    FileWriter writer = null;
+    //    try
+    //    {
+    //      writer = new FileWriter( result );
+    //      writer.write( "pseudo ergebnis" );
+    //    }
+    //    catch( IOException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
+    //    finally
+    //    {
+    //      IOUtils.closeQuietly( writer );
+    //    }
+    //
+    //    resultEater.addResult( ID_RESULTS, exeDir );
+    //    resultEater.addResult( ID_LOG, result );
 
     try
     {
@@ -149,6 +178,7 @@ public class CalcJob2d implements ICalcJob
 
       if( monitor.isCanceled() )
         return;
+      monitor.setProgress( 17 );
       startCalculation( monitor, exeDir );
       checkSucceeded( monitor, exeDir );
 
@@ -157,22 +187,27 @@ public class CalcJob2d implements ICalcJob
         monitor.setMessage( "loading results..." );
         outputDir = new File( tmpdir, "Ergebnisse" );
         outputDir.mkdirs();
-        //TODO load results
-        FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );        
+
+        FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( ".2d" );
         File[] files = exeDir.listFiles( suffixFileFilter );
-        
+
+        monitor.setProgress( 80 );
         for( int i = 0; i < files.length; i++ )
         {
-          System.out.println("name of file_" +i + ":: " + files[i].getName());
-          if (!files[i].getName().equalsIgnoreCase("erg.2d")&& !files[i].getName().equalsIgnoreCase("fehler.2d")&& !files[i].getName().equalsIgnoreCase("out.2d")&& !files[i].getName().equalsIgnoreCase("marsh.2d"))
+          System.out.println( "name of file_" + i + ":: " + files[i].getName() );
+          if( !files[i].getName().equalsIgnoreCase( "erg.2d" )
+              && !files[i].getName().equalsIgnoreCase( "fehler.2d" )
+              && !files[i].getName().equalsIgnoreCase( "out.2d" )
+              && !files[i].getName().equalsIgnoreCase( "marsh.2d" ) )
           {
-              addResult(resultEater,files[i], outputDir, exeDir);
+            addResult( resultEater, files[i], outputDir, exeDir );
           }
-          monitor.setProgress(34);
-          
+          monitor.setProgress( 99 );
         }
+        resultEater.addResult( ID_RESULTS, outputDir );
+
         System.out.println( "Finished 2D Simulation successfully." );
-        
+
         System.out.println( "This is the end ;-)" );
       }
       else
@@ -189,34 +224,50 @@ public class CalcJob2d implements ICalcJob
   {
     try
     {
-      final URL schemaModellXMLURL = getClass().getResource( "schema/2d.xsd" );      
+      final URL schemaModellXMLURL = getClass().getResource( "schema/2d.xsd" );
       String fileName = file.getName();
-      if(!fileName.equalsIgnoreCase("erg.2d") && !fileName.equalsIgnoreCase("marsh.2d")
-          && !fileName.equalsIgnoreCase("out.2d") && !fileName.equalsIgnoreCase("fehler")){
-      
-          int pos = fileName.indexOf(".");
-          String name = fileName.substring(0,pos);
-          String path = file.getPath();
-          int i = path.lastIndexOf("\\");
-          path = path.substring(0, i+1);
-          String tmpXMLFile = path+"tmp.xml";
-//          String gmlFileName = path+name+".gml";
-          String gmlFileName = outputDir+"\\"+name+".gml";
-          
-          ConvertAsci2GML gmlFile = new ConvertAsci2GML();
-          File gml = gmlFile.convertAsci2GML(file.toString(), tmpXMLFile, "http://elbe.wb.tu-harburg.de", schemaModellXMLURL.toString(), gmlFileName);
+      if( !fileName.equalsIgnoreCase( "erg.2d" ) && !fileName.equalsIgnoreCase( "marsh.2d" )
+          && !fileName.equalsIgnoreCase( "out.2d" ) && !fileName.equalsIgnoreCase( "fehler" ) )
+      {
 
-          System.out.println("gml.exists:: " + gml.exists());
-          if(gml.exists())
-//             resultEater.addResult( "ERGEBNISSE", exeDir  );
-           resultEater.addResult( "ERGEBNISSE",  outputDir );
-          
+        int pos = fileName.indexOf( "." );
+        String name = fileName.substring( 0, pos );
+        String path = file.getPath();
+        int i = path.lastIndexOf( "\\" );
+        path = path.substring( 0, i + 1 );
+        String tmpXMLFile = path + "tmp.xml";
+        String gmlFileName = outputDir + "\\" + name + ".gml";
+
+        ConvertAsci2GML gmlFile = new ConvertAsci2GML();
+        File gml = gmlFile.convertAsci2GML( file.toString(), tmpXMLFile,
+            "http://elbe.wb.tu-harburg.de", schemaModellXMLURL.toString(), gmlFileName );
+
+        StringBuffer sb = new StringBuffer();   
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
+        sb.append("<gismapview xmlns=\"gismapview.template.kalypso.org\">");
+        sb.append("<extent bottom=\"5978152.499976501\" left=\"3545304.474577534\" right=\"3548446.416650312\" top=\"5981196.0\"/>");
+        sb.append("<layers active=\"ID_2\">");
+        sb.append(" <layer name=\"Knoten\" visible=\"true\" featurePath=\"featurePointCollectionMember/featurePointMember\" id=\"ID_1\" linktype=\"gml\" ns1:actuate=\"onRequest\" " +
+            "ns1:href=\""+name+".gml\" ns1:type=\"simple\" xmlns:ns1=\"http://www.w3.org/1999/xlink\">");
+        sb.append("<ns2:style linktype=\"sld\" style=\"FEM\" ns1:actuate=\"onRequest\" ns1:href=\"project:/.styles/sldPfeile.sld\" ns1:type=\"simple\" xmlns:ns2=\"types.template.kalypso.org\"/>");
+        sb.append("</layer>");
+        sb.append("<layer name=\"FEM\" visible=\"true\" featurePath=\"femCollectionMember/meshMember\" id=\"ID_2\" linktype=\"gml\" ns3:actuate=\"onRequest\" " +
+            "ns3:href=\""+name+".gml\" ns3:type=\"simple\" xmlns:ns3=\"http://www.w3.org/1999/xlink\">");
+        sb.append("<ns4:style linktype=\"sld\" style=\"FEM\" ns3:actuate=\"onRequest\" ns3:href=\"project:/.styles/sldResults.sld\" ns3:type=\"simple\" xmlns:ns4=\"types.template.kalypso.org\"/>");
+        sb.append(" </layer>");
+        sb.append("</layers>");
+        sb.append("</gismapview>");
+        
+        OutputStreamWriter writer = new OutputStreamWriter(
+            new FileOutputStream(new File(outputDir, name+".gmt")), "UTF-8");
+        writer.write(sb.toString());
+        writer.close();
       }
     }
     catch( Exception e )
     {
       e.printStackTrace();
-    }  
+    }
   }
 
   /**
@@ -280,7 +331,6 @@ public class CalcJob2d implements ICalcJob
       {
         CopyUtils.copy( inStream, outWriter );
         CopyUtils.copy( errStream, errWriter );
-
         try
         {
           process.exitValue();

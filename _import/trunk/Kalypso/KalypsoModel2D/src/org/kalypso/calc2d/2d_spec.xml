@@ -5,7 +5,10 @@
 	<input id="Modell" description="Modelldaten"/>
 	<input id="Control" description="Steuerdaten"/>
 
+	<output id="LOG" description="LOGFILE"/>
 	<output id="ERGEBNISSE" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/>
-	<!--output id="ERG_010.gml" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/>
-	<output id="ERG_011.gml" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/-->
+<!--
+    <output id="ERG_010.gml" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/>
+	<output id="ERG_011.gml" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/>
+-->
 </modelspec>
