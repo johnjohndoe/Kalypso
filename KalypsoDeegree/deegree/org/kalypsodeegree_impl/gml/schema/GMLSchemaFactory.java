@@ -126,7 +126,7 @@ public class GMLSchemaFactory
       if( XMLHelper.isAbstractElementDefinition( cNode ) )
         continue;
       String baseType = XMLHelper.getGMLBaseType( schema, cNode );
-      if( baseType == null )
+      if( DEBUG && baseType == null )
         System.out.println( "BaseType: is null" );
       if( "AbstractFeatureType".equals( baseType ) )
         result.add( node );
