@@ -48,6 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.kalypso.util.cache.StringValidityFileCache;
 import org.kalypso.util.cache.StringValidityKey;
@@ -65,6 +66,8 @@ import org.w3c.dom.Document;
  */
 public class GMLSchemaCache
 {
+  protected final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
+
   private final static int TIMEOUT = Integer.MAX_VALUE;
 
   private final static int SIZE = 30;
@@ -77,19 +80,40 @@ public class GMLSchemaCache
   {
     final LfuCacheFactory factory = new LfuCacheFactory();
     m_memCache = factory.newInstance( "gml.schemas", TIMEOUT, SIZE );
-    
+
     m_fileCache = new StringValidityFileCache( new GMLSchemaSerializer(), cacheDirectory );
   }
 
-  /** Lädt das Schmea aus dieser URL und nimmt diese id für den cache */
-  public GMLSchema getSchema( final String keyID, final URL schemaURL )
+  /**
+   * Schreibt ein schema in diesen Cache.
+   */
+  public void addSchema( final String namespace, final GMLSchemaWrapper schemaWrapper )
   {
+    m_memCache.addObject( namespace, schemaWrapper );
+    m_fileCache.addObject( new StringValidityKey( namespace, schemaWrapper.getValidity() ), schemaWrapper.getSchema() );
+  }
+  
+  /**
+   * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
+   * 
+   * @param namespace
+   *          ID für den Cache, wenn null, wird die id anhand des geladenen
+   *          schemas ermittelt
+   */
+  public GMLSchema getSchema( final String namespace, final URL schemaURL )
+  {
+    if( namespace == null )
+      throw new NullPointerException();
+
     Date validity = null;
     try
     {
-      final URLConnection connection = schemaURL.openConnection();
-      connection.connect();
-      validity = new Date( connection.getLastModified() );
+      if( schemaURL != null )
+      {
+        final URLConnection connection = schemaURL.openConnection();
+        connection.connect();
+        validity = new Date( connection.getLastModified() );
+      }
     }
     catch( final IOException e )
     {
@@ -97,39 +121,47 @@ public class GMLSchemaCache
       // e.printStackTrace();
     }
 
-    // if objekt already in memCache and is valid, jsut return it
-    final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( keyID );
+    // if objekt already in memCache and is valid, just return it
+    final GMLSchemaWrapper sw = (GMLSchemaWrapper)m_memCache.getObject( namespace );
     if( sw != null && ( validity == null || validity.before( sw.getValidity() ) ) )
       return sw.getSchema();
-    
+
     // else, try to get it from file cache
     GMLSchema schema = null;
 
-    final StringValidityKey key = new StringValidityKey( keyID, validity );
+    final StringValidityKey key = new StringValidityKey( namespace, validity );
     final StringValidityKey realKey = m_fileCache.getRealKey( key );
 
-    if( validity != null
-        && ( realKey == null || realKey.getValidity().before( validity ) ) )
+    if( validity != null && ( realKey == null || realKey.getValidity().before( validity ) ) )
     {
-      // vom server holen
-      schema = new GMLSchema( schemaURL );
-
-      // als file speichern
-      m_fileCache.addObject( key, schema );
+      try
+      {
+        if( schemaURL != null )
+          schema = new GMLSchema( schemaURL );
+      }
+      catch( final Exception e )
+      {
+        LOGGER.warning( "Fehler beim Laden von Schema aus URL: " + schemaURL
+            + "\nEs wird versucht die lokale Kopie zu laden." );
+      }
+      // als file speichern falls laden geklappt hat
+      if( schema != null )
+        m_fileCache.addObject( key, schema );
     }
-    else
-      schema = (GMLSchema) m_fileCache.get( key );
+
+    // falls noch valid oder laden hat nicht geklappt: aus dem File-Cache
+    if( schema == null )
+      schema = (GMLSchema)m_fileCache.get( key );
 
     if( schema != null )
-      m_memCache.addObject( keyID, new GMLSchemaWrapper( schema, validity ) );
+      m_memCache.addObject( namespace, new GMLSchemaWrapper( schema, validity ) );
 
     return schema;
   }
 
   private static class GMLSchemaSerializer implements ISerializer
   {
-    public Object read( final InputStream ins )
-        throws InvocationTargetException
+    public Object read( final InputStream ins ) throws InvocationTargetException
     {
       try
       {
@@ -148,7 +180,7 @@ public class GMLSchemaCache
     {
       try
       {
-        final Document document = ((GMLSchema) object).getXMLDocument();
+        final Document document = ( (GMLSchema)object ).getXMLDocument();
         XMLHelper.writeDOM( document, null, os );
       }
       catch( final Exception e )
@@ -160,7 +192,7 @@ public class GMLSchemaCache
     }
   }
 
-  private static class GMLSchemaWrapper
+  public static class GMLSchemaWrapper
   {
     private final GMLSchema m_schema;
 
@@ -172,12 +204,12 @@ public class GMLSchemaCache
       m_validity = validity;
     }
 
-    public GMLSchema getSchema( )
+    public GMLSchema getSchema()
     {
       return m_schema;
     }
 
-    public Date getValidity( )
+    public Date getValidity()
     {
       return m_validity;
     }

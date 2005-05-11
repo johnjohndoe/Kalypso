@@ -11,8 +11,8 @@ import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.MappingType;
 import org.kalypso.gml.util.SourceType;
 import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
+import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -89,7 +89,8 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     {
       final AddFeaturesMappingType addType = (AddFeaturesMappingType)mapping;
       final boolean overwriteExisting = addType.isOverwriteExisting();
-      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, overwriteExisting );
+      final String fID = addType.getFid();
+      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, overwriteExisting, fID );
     }
     else if( mapping instanceof ChangeFeaturesMappingType )
       return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID,

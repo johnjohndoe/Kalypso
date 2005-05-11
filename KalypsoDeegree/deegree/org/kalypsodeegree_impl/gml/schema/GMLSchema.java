@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.gml.schema;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,66 +37,42 @@ public class GMLSchema
 
   private final URL m_url;
 
-  public GMLSchema( final URL documentURL )
+  public GMLSchema( final URL documentURL ) throws Exception
   {
     this( loadDocFromURL( documentURL ), documentURL );
   }
 
-  private static Document loadDocFromURL( final URL documentURL )
+  private static Document loadDocFromURL( final URL documentURL ) throws Exception
   {
-    try
-    {
-      return XMLHelper.getAsDOM( documentURL, true );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
+    return XMLHelper.getAsDOM( documentURL, true );
   }
 
-  public GMLSchema( final Document document, final URL context )
+  public GMLSchema( final Document document, final URL context ) throws Exception
   {
     m_url = context;
     m_nodeFeatureTypeMap = new HashMap();
 
-    try
-    {
-      m_schemaDoc = document;
+    m_schemaDoc = document;
 
-      setNameSpaces();
-      setImportedSchemas();
-      // to force building of featuretypes
-      FeatureType[] featureTypes = getFeatureTypes();
+    setNameSpaces();
+    setImportedSchemas();
+    // to force building of featuretypes
+    FeatureType[] featureTypes = getFeatureTypes();
 
-      for( int i = 0; i < featureTypes.length; i++ )
-        accept( new SubstitutionGroupRegistrator( featureTypes[i] ) );
-
-      //            System.out.println("fts: #" + featureTypes.length);
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    for( int i = 0; i < featureTypes.length; i++ )
+      accept( new SubstitutionGroupRegistrator( featureTypes[i] ) );
   }
 
-  private void setImportedSchemas( )
+  private void setImportedSchemas() throws GMLException, MalformedURLException
   {
     // <import namespace="http://www.opengis.net/gml"
     // schemaLocation="feature.xsd"/>
-    final NodeList nl = m_schemaDoc.getElementsByTagNameNS(
-        XMLHelper.XMLSCHEMA_NS, "import" );
+    final NodeList nl = m_schemaDoc.getElementsByTagNameNS( XMLHelper.XMLSCHEMA_NS, "import" );
     for( int i = 0; i < nl.getLength(); i++ )
     {
-      try
-      {
-        final Node namespaceNode = XMLHelper.getAttributeNode( nl.item( i ),
-            "namespace" );
+        final Node namespaceNode = XMLHelper.getAttributeNode( nl.item( i ), "namespace" );
         final String namespace = namespaceNode.getNodeValue();
-        final Node locationNode = XMLHelper.getAttributeNode( nl.item( i ),
-            "schemaLocation" );
+        final Node locationNode = XMLHelper.getAttributeNode( nl.item( i ), "schemaLocation" );
         final String location = locationNode.getNodeValue();
 
         GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
@@ -104,30 +81,26 @@ public class GMLSchema
           final URL url = new URL( getUrl(), location );
           schema = GMLSchemaCatalog.getSchema( url );
         }
-        
+
         if( schema == null )
-          throw new GMLException( "Could not load schema: namespace='" + namespace + "', location='" + location + "'" );
-        
+          throw new GMLException( "Could not load schema: namespace='" + namespace
+              + "', location='" + location + "'" );
+
         m_importedSchemas.put( namespace, schema );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
     }
   }
 
-  public Document getXMLDocument( )
+  public Document getXMLDocument()
   {
     return m_schemaDoc;
   }
 
-  public String getDefaultNS( )
+  public String getDefaultNS()
   {
     return getNameSpace( "xmlns" );
   }
 
-  public FeatureType[] getFeatureTypes( )
+  public FeatureType[] getFeatureTypes()
   {
     if( m_featureTypes == null )
       try
@@ -141,31 +114,31 @@ public class GMLSchema
       }
 
     Collection result = m_featureTypes.values();
-    return (FeatureType[]) result.toArray( new FeatureType[result.size()] );
+    return (FeatureType[])result.toArray( new FeatureType[result.size()] );
   }
 
   public String getNameSpace( String xmlns )
   {
-    return (String) m_ns.get( xmlns );
+    return (String)m_ns.get( xmlns );
   }
 
-  public Document getSchema( )
+  public Document getSchema()
   {
     return m_schemaDoc;
   }
 
-  public String getTargetNS( )
+  public String getTargetNS()
   {
     return m_targetNS;
   }
 
-  private void setNameSpaces( )
+  private void setNameSpaces()
   {
     // set target namespace
     try
     {
-      m_targetNS = XMLHelper.getAttributeValue( m_schemaDoc
-          .getDocumentElement(), "targetNamespace" );
+      m_targetNS = XMLHelper
+          .getAttributeValue( m_schemaDoc.getDocumentElement(), "targetNamespace" );
     }
     catch( Exception e )
     {
@@ -181,8 +154,7 @@ public class GMLSchema
       try
       {
         Node attribute = nodeMap.item( i );
-        if( "http://www.w3.org/2000/xmlns/"
-            .equals( attribute.getNamespaceURI() ) )
+        if( "http://www.w3.org/2000/xmlns/".equals( attribute.getNamespaceURI() ) )
           m_ns.put( attribute.getLocalName(), attribute.getNodeValue() );
       }
       catch( Exception e )
@@ -200,13 +172,12 @@ public class GMLSchema
 
   public Node getContentNode( String type )
   {
-    NodeList nl = getSchema().getElementsByTagNameNS(
-        "http://www.w3.org/2001/XMLSchema", "complexType" );
+    NodeList nl = getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema",
+        "complexType" );
     nl = XMLHelper.reduceByAttribute( nl, "name", type );
     if( nl.getLength() > 0 ) // complexType ?
       return nl.item( 0 );
-    nl = getSchema().getElementsByTagNameNS(
-        "http://www.w3.org/2001/XMLSchema", "simpleType" );
+    nl = getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema", "simpleType" );
     nl = XMLHelper.reduceByAttribute( nl, "name", type );
     if( nl.getLength() > 0 ) // simpleType ?
       return nl.item( 0 );
@@ -224,7 +195,7 @@ public class GMLSchema
   {
     if( m_targetNS.equals( valueNS ) )
       return this;
-    return (GMLSchema) m_importedSchemas.get( valueNS );
+    return (GMLSchema)m_importedSchemas.get( valueNS );
   }
 
   private void register( Node node )
@@ -243,8 +214,7 @@ public class GMLSchema
       else if( builder.isFeatureType() )
         m_nodeFeatureTypeMap.put( node, builder.toFeatureType() );
       else
-        throw new Exception(
-            "it must be featuretype or featurepropertytype but it is not" );
+        throw new Exception( "it must be featuretype or featurepropertytype but it is not" );
     }
     catch( Exception e )
     {
@@ -271,7 +241,7 @@ public class GMLSchema
   }
 
   /** Returns a map xmlns -> namespaceUri */
-  public Map getNamespaceMap( )
+  public Map getNamespaceMap()
   {
     return m_ns;
   }
@@ -282,13 +252,13 @@ public class GMLSchema
 
   }
 
-  public GMLSchema[] getImportedSchemas( )
+  public GMLSchema[] getImportedSchemas()
   {
     final Collection collection = m_importedSchemas.values();
-    return (GMLSchema[]) collection.toArray( new GMLSchema[collection.size()] );
+    return (GMLSchema[])collection.toArray( new GMLSchema[collection.size()] );
   }
 
-  public URL getUrl( )
+  public URL getUrl()
   {
     return m_url;
   }

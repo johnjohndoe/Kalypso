@@ -74,7 +74,7 @@ public class CsvSourceHandler implements ISourceHandler
       final String encoding = connection.getContentEncoding();
       final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
       
-      return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter() );
+      return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter(), m_type.getLineskip() );
     }
     catch( final Exception e )
     {

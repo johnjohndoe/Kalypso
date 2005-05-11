@@ -59,10 +59,10 @@ public final class CsvFeatureReader
   }
 
   public final GMLWorkspace loadCSV( final Reader reader, final String comment,
-      final String delemiter ) throws IOException, CsvException
+      final String delemiter, final int lineskip ) throws IOException, CsvException
   {
     final List list = new ArrayList();
-    final FeatureType ft = loadCSVIntoList( list, reader, comment, delemiter );
+    final FeatureType ft = loadCSVIntoList( list, reader, comment, delemiter, lineskip );
 
     // featurelist erzeugen
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
@@ -76,7 +76,7 @@ public final class CsvFeatureReader
   }
 
   private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment,
-      final String delemiter ) throws IOException, CsvException
+      final String delemiter, final int lineskip ) throws IOException, CsvException
   {
     final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray(
         new FeatureTypeProperty[0] );
@@ -84,12 +84,17 @@ public final class CsvFeatureReader
         null, null, new HashMap() );
 
     final LineNumberReader lnr = new LineNumberReader( reader );
-
+    int skippedlines = 0;
     while( lnr.ready() )
     {
       final String line = lnr.readLine();
       if( line == null )
         break;
+      if( skippedlines < lineskip )
+      {
+        skippedlines++;
+        continue;
+      }
 
       if( line.startsWith( comment ) )
         continue;
@@ -133,7 +138,7 @@ public final class CsvFeatureReader
       else if( Float.class.getName().equals( type ) )
         data[i] = new Float( tokens[col0] );
       else if( Double.class.getName().equals( type ) )
-        data[i] = new Double( tokens[col0] );
+        data[i] = new Double( tokens[col0].replace( ',', '.' ) );
       else if( GM_Point.class.getName().equals( type ) )
       {
         final int col1 = info.columns[1];

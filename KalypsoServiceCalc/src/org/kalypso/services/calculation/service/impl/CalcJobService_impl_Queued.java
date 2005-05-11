@@ -517,7 +517,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
     {
       final URL url = m_catalog.getURL( namespace );
       if( url == null )
-        return -1;
+        throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, null );
       
       final URLConnection connection = url.openConnection();
       return connection.getLastModified();

@@ -1,6 +1,9 @@
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -9,13 +12,13 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 public final class CsvWriterVisitor implements FeatureVisitor
 {
   private final PrintWriter m_writer;
-  private final String[] m_props;
+  private final Map m_props;
   private final String m_delemiter;
 
-  public CsvWriterVisitor( final PrintWriter writer, final String[] props, final String delemiter )
+  public CsvWriterVisitor( final PrintWriter writer, final Map properties, final String delemiter )
   {
     m_writer = writer;
-    m_props = props;
+    m_props = properties;
     m_delemiter = delemiter;
     
   }
@@ -25,14 +28,16 @@ public final class CsvWriterVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    for( int i = 0; i < m_props.length; i++ )
+    for( final Iterator propIt = m_props.entrySet().iterator(); propIt.hasNext(); )
     {
-      final String prop = m_props[i];
+      final Map.Entry entry = (Entry)propIt.next();
+      final String prop = (String)entry.getKey();
+      final String def = (String)entry.getValue();
+      
       final Object property = f.getProperty( prop );
-      
-      m_writer.print( property );
-      
-      if( i != m_props.length - 1 )
+      m_writer.print( property == null ? def : property );
+
+      if( propIt.hasNext() )
         m_writer.print( m_delemiter );
     }
     
@@ -40,5 +45,4 @@ public final class CsvWriterVisitor implements FeatureVisitor
     
     return true;
   }
-  
 }

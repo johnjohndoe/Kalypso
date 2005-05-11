@@ -10,6 +10,8 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * Indiziert alle besuchten Features anhand einer ihrer Properties.
  * Die Features werden in eine HashMap id -> feature gesteckt.
  * 
+ * <p>Es kann aber auch nach der Feature-ID gehacht werden.</p>
+ * 
  * @author bce
  */
 public class IndexFeaturesVisitor implements FeatureVisitor
@@ -21,7 +23,6 @@ public class IndexFeaturesVisitor implements FeatureVisitor
   public IndexFeaturesVisitor( final String indexProperty )
   {
     m_indexProperty = indexProperty;
-
   }
 
   /**
@@ -29,7 +30,13 @@ public class IndexFeaturesVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final Object property = f.getProperty( m_indexProperty );
+    final Object property;
+    
+    if( m_indexProperty == null )
+      property = f.getId();
+    else
+      property = f.getProperty( m_indexProperty );
+    
     m_index.put( property, f );
     
     return true;
