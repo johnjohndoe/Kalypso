@@ -1,0 +1,53 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Stammdat/met_geb.std"  comment="*" delemiter="&#9;" lineskip="1">
+			<featureproperty name="PNR" type="java.lang.String" format=""><column>0</column></featureproperty>
+			<featureproperty name="Name" type="java.lang.String" format=""><column>1</column></featureproperty>
+			<featureproperty name="Gewaesser" type="java.lang.String" format=""><column>2</column></featureproperty>
+			<featureproperty name="AE" type="java.lang.Double" format=""><column>3</column></featureproperty>
+			<featureproperty name="Stat1" type="java.lang.String" format=""><column>4</column></featureproperty>
+			<featureproperty name="Fakt1" type="java.lang.Double" format=""><column>5</column></featureproperty>
+			<featureproperty name="Stat2" type="java.lang.String" format=""><column>6</column></featureproperty>
+			<featureproperty name="Fakt2" type="java.lang.Double" format=""><column>7</column></featureproperty>
+			<featureproperty name="Stat3" type="java.lang.String" format=""><column>8</column></featureproperty>
+			<featureproperty name="Fakt3" type="java.lang.Double" format=""><column>9</column></featureproperty>
+			<featureproperty name="Stat4" type="java.lang.String" format=""><column>10</column></featureproperty>
+			<featureproperty name="Fakt4" type="java.lang.Double" format=""><column>11</column></featureproperty>
+			<featureproperty name="Stat5" type="java.lang.String" format=""><column>12</column></featureproperty>
+			<featureproperty name="Fakt5" type="java.lang.Double" format=""><column>13</column></featureproperty>
+			<featureproperty name="Snownr" type="java.lang.Integer" format=""><column>14</column></featureproperty>
+			<featureproperty name="QuantNr." type="java.lang.String" format=""><column>15</column></featureproperty>
+			<featureproperty name="Region" type="java.lang.String" format=""><column>16</column></featureproperty>
+			<featureproperty name="LM1" type="java.lang.Integer" format=""><column>17</column></featureproperty>
+			<featureproperty name="LM2" type="java.lang.Integer" format=""><column>18</column></featureproperty>
+			<featureproperty name="LM3" type="java.lang.Integer" format=""><column>19</column></featureproperty>
+			<featureproperty name="LM4" type="java.lang.Integer" format=""><column>20</column></featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="saalemodell_leer.gml"/>
+		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR" fid="${fromID}">
+ 			<map from="PNR" to="PNR"/>
+			<map from="Name" to="Name"/>
+			<map from="Gewaesser" to="Gewaesser"/>
+			<map from="AE" to="AE"/>
+			<map from="Stat1" to="Stat1"/>
+			<map from="Fakt1" to="Fakt1"/>
+			<map from="Stat2" to="Stat2"/>
+			<map from="Fakt2" to="Fakt2"/>
+			<map from="Stat3" to="Stat3"/>
+			<map from="Fakt3" to="Fakt3"/>
+			<map from="Stat4" to="Stat4"/>
+			<map from="Fakt4" to="Fakt4"/>
+			<map from="Stat5" to="Stat5"/>
+			<map from="Fakt5" to="Fakt5"/>
+			<map from="Snownr" to="Snownr"/>
+			<map from="QuantNr." to="QuantNr."/>
+			<map from="Region" to="Region"/>
+			<map from="LM1" to="LM1"/>
+			<map from="LM2" to="LM2"/>
+			<map from="LM3" to="LM3"/>
+			<map from="LM4" to="LM4"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>
