@@ -472,14 +472,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         {
           final FeatureType type = associationFeatureTypes[j];
           if( type.getName().equals( typename ) )
-          {
-            aktuType = type;
-            break;
-          }
+            return type;
         }
+        
+        throw new IllegalArgumentException( "Unknown typename in featurepath: " + typename ); 
       }
-      else
-        aktuType = property.getAssociationFeatureType();
+
+      aktuType = property.getAssociationFeatureType();
     }
 
     return aktuType;

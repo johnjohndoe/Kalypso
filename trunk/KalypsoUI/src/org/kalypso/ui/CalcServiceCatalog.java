@@ -40,8 +40,10 @@ v.doemming@tuhh.de
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.kalypso.java.net.IUrlCatalog;
 
@@ -55,6 +57,21 @@ public class CalcServiceCatalog implements IUrlCatalog
    */
   public URL getURL( final String key ) throws MalformedURLException
   {
-    return new URL( CalculationSchemaStreamHandler.PROTOCOL + "://host:0000/" + key );
+    final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://host:0000/" + key );
+    
+    try
+    {
+      final URLConnection connection = url.openConnection();
+      connection.connect();
+    }
+    catch( final IOException e )
+    {
+      // ignorieren, die URL ist halt odch nicht bekannt
+//      e.printStackTrace();
+      // hier null zurückkgeben, da der Cache sonst schwierrigkeiten bekommt
+      return null;
+    }
+    
+    return url;
   }
 }
