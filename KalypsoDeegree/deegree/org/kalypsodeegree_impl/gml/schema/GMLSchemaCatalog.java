@@ -64,7 +64,10 @@ public final class GMLSchemaCatalog
     {
       final URL schemaURL = THE_CATALOG.getURL( namespace );
       if( schemaURL == null )
+      {
         LOGGER.warning( "Kein Schema-Eintrag für: " + namespace );
+        return null;
+      }
 
       return getSchema( namespace, schemaURL );
     }

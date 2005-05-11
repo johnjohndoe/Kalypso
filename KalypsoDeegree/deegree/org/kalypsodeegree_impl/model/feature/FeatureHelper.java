@@ -98,7 +98,7 @@ public class FeatureHelper
         throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
       if( targetFTP == null )
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
-      
+        
       if( !sourceFTP.getType().equals( targetFTP.getType() ) )
         throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
 
