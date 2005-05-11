@@ -402,6 +402,9 @@ public class FileUtilities
    */
   public static void accept( final File root, final FileVisitor visitor, final boolean recurse ) throws IOException
   {
+    if( !root.exists() )
+      return;
+    
     // zuerst die Datei selbst
     final boolean stop = !visitor.visit( root );
     if( stop || !root.isDirectory() )
