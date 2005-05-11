@@ -3,10 +3,14 @@ package org.kalypso.ogc.gml.convert;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.gml.util.CsvTargetType;
+import org.kalypso.gml.util.CsvTargetType.ColumnType;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.target.ITargetHandler;
 import org.kalypso.ogc.gml.serialize.CsvWriterVisitor;
@@ -45,14 +49,33 @@ public class CsvTargetHandler implements ITargetHandler
       writer = new PrintWriter( new BufferedWriter( m_resolver.createWriter( url ) ) );
 
       final String delemiter = m_target.getDelemiter();
+      final boolean writeHeader = m_target.isWriteHeader();
       final String featurePath = m_target.getFeaturePath();
-      final List column = m_target.getColumn();
-      final String[] props = (String[])column.toArray( new String[column.size()] );
-
+      final List columnList = m_target.getColumn();
+      final Map properties = new LinkedHashMap();
+      for( final Iterator colIt = columnList.iterator(); colIt.hasNext(); )
+      {
+        final CsvTargetType.ColumnType column = (ColumnType)colIt.next();
+        final String property = column.getValue();
+        final String def = column.getDefault();
+        final String label = column.getLabel() == null ?  property : column.getLabel();
+        properties.put( property, def );
+        
+        if( writeHeader )
+        {
+          writer.print( label );
+          if( colIt.hasNext() )
+            writer.print( delemiter );
+        }
+      }
+      
+      if( writeHeader )
+        writer.println();
+      
       final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
       if( featureFromPath instanceof FeatureList )
       {
-        final CsvWriterVisitor visitor = new CsvWriterVisitor( writer, props, delemiter );
+        final CsvWriterVisitor visitor = new CsvWriterVisitor( writer, properties, delemiter );
         ( (FeatureList)featureFromPath ).accept( visitor );
       }
       else

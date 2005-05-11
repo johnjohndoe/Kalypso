@@ -3,6 +3,7 @@ package org.kalypsodeegree_impl.gml.schema;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import org.kalypso.java.net.IUrlCatalog;
@@ -54,18 +55,6 @@ public final class GMLSchemaCatalog
   }
 
   /**
-   * Lädt ein (eventuell gecachetes Schema direkt aus einer URL. Als CacheId
-   * wird die URL benutzt.
-   * 
-   * @deprecated Zur Zeit deprecated, damit man erkennt, wo sich etwas geändert
-   *             hat. Kann aber normal benutzt werden.
-   */
-  public synchronized static GMLSchema getSchema( final URL schemaURL )
-  {
-    return getSchema( schemaURL.toString(), schemaURL );
-  }
-
-  /**
    * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird
    * dieser Name benutzt.
    */
@@ -75,15 +64,9 @@ public final class GMLSchemaCatalog
     {
       final URL schemaURL = THE_CATALOG.getURL( namespace );
       if( schemaURL == null )
-      {
         LOGGER.warning( "Kein Schema-Eintrag für: " + namespace );
-        return null;
-      }
 
-      // immer gegen die URL cachen, nie den namespace als id nehmen,
-      // da sont beim wechseln des catalog die alten
-      // schemata geladen werden.
-      return getSchema( schemaURL );
+      return getSchema( namespace, schemaURL );
     }
     catch( final MalformedURLException e )
     {
@@ -92,12 +75,39 @@ public final class GMLSchemaCatalog
       return null;
     }
   }
-
-  private synchronized static GMLSchema getSchema( final String keyID, final URL schemaUrl )
+  
+  /**
+   * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache
+   * hinzu (mit namespace als key).
+   * 
+   * @return null, wenn schema nicht geladen werden konnte
+   */
+  public synchronized static GMLSchema getSchema( final URL schemaLocation )
   {
     if( THE_CACHE == null )
       throw NOT_INITIALIZED;
 
-    return THE_CACHE.getSchema( keyID, schemaUrl );
+    try
+    {
+      final GMLSchema schema = new GMLSchema( schemaLocation );
+      final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
+      THE_CACHE.addSchema( schema.getTargetNS(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
+      
+      return schema;
+    }
+    catch( final Exception e )
+    {
+      LOGGER.warning( "Konnte Schema nicht aus URL laden: " + schemaLocation );
+      
+      return null;
+    }
+  }
+
+  private synchronized static GMLSchema getSchema( final String namespace, final URL schemaUrl )
+  {
+    if( THE_CACHE == null )
+      throw NOT_INITIALIZED;
+
+    return THE_CACHE.getSchema( namespace, schemaUrl );
   }
 }

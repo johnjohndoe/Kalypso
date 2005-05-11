@@ -48,6 +48,11 @@
 											<xs:documentation>Was geschrieben werden soll, wenn die abgefragte Property null ist..</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
+									<xs:attribute name="label" type="xs:string" use="optional">
+										<xs:annotation>
+											<xs:documentation>Der Spaltenname, falls gesetzt und 'writeHeader' true ist. Sonst wird der Name der Property genommen.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
 								</xs:extension>
 							</xs:simpleContent>
 						</xs:complexType>
@@ -61,6 +66,11 @@
 				<xs:attribute name="delemiter" type="xs:string">
 					<xs:annotation>
 						<xs:documentation>Das Trennzeichen zwischen den Spalteneinträgen.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="writeHeader" type="xs:boolean" use="optional" default="false">
+					<xs:annotation>
+						<xs:documentation>Falls true, wird in die erste Zeile die Spaltennamen geschrieben.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 			</xs:extension>
