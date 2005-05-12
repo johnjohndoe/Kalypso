@@ -238,8 +238,6 @@ public class PSICompactImpl implements PSICompact
   /**
    * Helper for lazy loading the zml observation
    * 
-   * @param id
-   * @return
    * @throws ECommException
    */
   private IObservation getZmlObs( final String id ) throws ECommException
@@ -424,7 +422,7 @@ public class PSICompactImpl implements PSICompact
       if( p != null )
         omd.setAlarm4( Double.valueOf(p).doubleValue() );
 
-      p = mdl.getProperty( TimeserieConstants.MD_FLUSS );
+      p = mdl.getProperty( TimeserieConstants.MD_GEWAESSER );
       if( p != null )
         omd.setRiver( p );
       else

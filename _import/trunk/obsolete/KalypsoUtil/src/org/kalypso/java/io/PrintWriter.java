@@ -52,27 +52,27 @@ import com.braju.format.Format;
  */
 public class PrintWriter extends java.io.PrintWriter
 {
-  public PrintWriter( final OutputStream out )
+  public PrintWriter( final OutputStream outs )
   {
-    super( out );
+    super( outs );
   }
 
-  public PrintWriter( final OutputStream out, final boolean autoFlush )
+  public PrintWriter( final OutputStream outs, final boolean autoFlush )
   {
-    super( out, autoFlush );
+    super( outs, autoFlush );
   }
 
-  public PrintWriter( final Writer out )
+  public PrintWriter( final Writer outs )
   {
-    super( out );
+    super( outs );
   }
 
-  public PrintWriter( final Writer out, final boolean autoFlush )
+  public PrintWriter( final Writer outs, final boolean autoFlush )
   {
-    super( out, autoFlush );
+    super( outs, autoFlush );
   }
 
-  public void printf( final Locale language, final String string,
+  public void printf( final Locale lng, final String string,
       final Object[] o )
   {
     try

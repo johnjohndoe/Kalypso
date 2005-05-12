@@ -163,7 +163,7 @@ public class PSICompactObservationItem implements IObservation
             .convert( psiMD.getAlarm4() ) ) );
       }
 
-      metadata.put( TimeserieConstants.MD_FLUSS, psiMD.getRiver() );
+      metadata.put( TimeserieConstants.MD_GEWAESSER, psiMD.getRiver() );
       metadata.put( TimeserieConstants.MD_FLUSSGEBIET, psiMD.getRiversystem() );
     }
 

@@ -5,16 +5,16 @@
 		name="psicompact" />
 	<repository
 		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
-		conf="D:/Programme/Kalypso/data/mirrored/WeisseElsterVorhersage#*.zml"
+		conf="D:/Programme/Kalypso/Tomcat5.0/webapps/webdav/data/WeisseElsterVorhersage#*.zml"
 		readOnly="true"
 		name="Vorhersage" />
 	<repository
 		factory="org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory"
-		conf="D:/Programme/Kalypso/data/mirrored/Gebietsniederschlag/gebietsNiederschlagRep.xml"
+		conf="D:/Programme/Kalypso/Tomcat5.0/webapps/webdav/data/Gebietsniederschlag/gebietsNiederschlagRep.xml"
 		readOnly="true"
 		name="GebietsNiederschlaege" />
 	<repository
 		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
-		conf="D:/Programme/Kalypso/data/mirrored/Spree#*.zml"
+		conf="D:/Programme/Kalypso/Tomcat5.0/webapps/webdav/data/Spree#*.zml"
 		name="Spree" /> 
 </repconf>

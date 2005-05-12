@@ -19,13 +19,13 @@ public class RatingTableCache
 
   private final StringValidityFileCache m_cache;
 
-  private RatingTableCache( )
+  private RatingTableCache()
   {
-    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(),
-        new File( WiskiUtils.getProperties().getProperty( "CACHE_DIRECTORY" ) ) );
+    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(), new File( WiskiUtils
+        .getProperties().getProperty( "CACHE_DIRECTORY" ) ) );
   }
 
-  public static RatingTableCache getInstance( )
+  public static RatingTableCache getInstance()
   {
     if( m_instance == null )
       m_instance = new RatingTableCache();
@@ -42,8 +42,7 @@ public class RatingTableCache
    */
   public WQTableSet get( final Long wiskiId, final Date validity )
   {
-    return (WQTableSet) m_cache.get( new StringValidityKey( String
-        .valueOf( wiskiId ), validity ) );
+    return (WQTableSet)m_cache.get( new StringValidityKey( String.valueOf( wiskiId ), validity ) );
   }
 
   /**
@@ -54,14 +53,11 @@ public class RatingTableCache
    * @param wiskiId
    * @param to
    */
-  public void check( final WQTableSet wqTableSet, final Long wiskiId,
-      final Date to )
+  public void check( final WQTableSet wqTableSet, final Long wiskiId, final Date to )
   {
-    final StringValidityKey key = new StringValidityKey( String
-        .valueOf( wiskiId ), to );
+    final StringValidityKey key = new StringValidityKey( String.valueOf( wiskiId ), to );
 
-    final StringValidityKey cacheKey = (StringValidityKey) m_cache
-        .getRealKey( key );
+    final StringValidityKey cacheKey = m_cache.getRealKey( key );
 
     if( cacheKey != null && cacheKey.getValidity().after( to ) )
       return; // no need to overwrite if more recent in the cache

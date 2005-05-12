@@ -25,6 +25,9 @@
       <library name="lib/ant-1.6.2.jar">
          <export name="*"/>
       </library>
+      <library name="lib/hb15.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>

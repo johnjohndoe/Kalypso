@@ -33,13 +33,13 @@ public class TsInfoItem implements IRepositoryItem
     m_map = new Properties();
     m_map.putAll( map );
 
-    m_rep = (WiskiRepository) m_group.getRepository();
+    m_rep = (WiskiRepository)m_group.getRepository();
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_map.getProperty( "tsinfo_name" );
   }
@@ -47,7 +47,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return getName();
   }
@@ -55,7 +55,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     // return Wiski external name (not wiski intern id)
     // this is the discussed solution with Kisters
@@ -66,7 +66,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( ) throws RepositoryException
+  public IRepositoryItem getParent() throws RepositoryException
   {
     return m_group;
   }
@@ -74,7 +74,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren() throws RepositoryException
   {
     return false;
   }
@@ -82,7 +82,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
     return null;
   }
@@ -90,7 +90,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return m_rep;
   }
@@ -111,44 +111,43 @@ public class TsInfoItem implements IRepositoryItem
     return null;
   }
 
-  String getWiskiUnit( )
+  String getWiskiUnit()
   {
     return m_map.getProperty( "tsinfo_unitname" );
   }
 
-  String getWiskiType( )
+  String getWiskiType()
   {
     return m_map.getProperty( "parametertype_name" );
   }
 
-  Long getWiskiId( )
+  Long getWiskiId()
   {
     return Long.valueOf( m_map.getProperty( "tsinfo_id" ) );
   }
 
-  String getWiskiIdAsString( )
+  String getWiskiIdAsString()
   {
     return m_map.getProperty( "tsinfo_id" );
   }
 
-  String getWiskiName( )
+  String getWiskiName()
   {
     return m_map.getProperty( "tsinfo_name" );
   }
 
-  String getWiskiDescription( )
+  String getWiskiDescription()
   {
     final StringBuffer bf = new StringBuffer();
     bf.append( m_map.getProperty( "parametertype_longname" ) ).append( " - " );
     bf.append( m_map.getProperty( "stationparameter_name" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_longname" ) )
-        .append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_longname" ) ).append( " - " );
     bf.append( m_map.getProperty( "station_name" ) );
 
     return bf.toString();
   }
 
-  String getWiskiStationId( )
+  String getWiskiStationId()
   {
     return m_map.getProperty( "station_id" );
   }
@@ -181,10 +180,10 @@ public class TsInfoItem implements IRepositoryItem
 
     if( call.getResultList().size() > 0 )
     {
-      final HashMap map = (HashMap) call.getResultList().get( 0 );
+      final HashMap map = (HashMap)call.getResultList().get( 0 );
       return new TsInfoItem( m_group, map );
     }
-    else
-      return null;
+
+    return null;
   }
 }

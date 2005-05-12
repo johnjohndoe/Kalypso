@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.repository.RepositoryException;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 
@@ -37,8 +36,6 @@ public final class WiskiUtils
 
   /**
    * Reads the properties from the configuration file in resources/config.ini
-   * 
-   * @throws RepositoryException
    */
   public static Properties getProperties( )
   {
@@ -83,9 +80,6 @@ public final class WiskiUtils
    * The parsing here only returns the list of values for the given column. Each
    * resultset is scanned and the value of the column is fetched in an array.
    * Finally the array is returned.
-   * 
-   * @param commonInfoList
-   * @return
    */
   public static String[] parseCommonInfoList( final HashMap commonInfoList,
       final String columnName )
@@ -103,9 +97,6 @@ public final class WiskiUtils
    * The parsing here only returns the list of values for the given column. Each
    * resultset is scanned and the value of the column is fetched in an array.
    * Finally the array is returned.
-   * 
-   * @param commonInfoList
-   * @return
    */
   public static String[] parseResultList( final List resultList,
       final String columnName )
@@ -123,9 +114,6 @@ public final class WiskiUtils
 
   /**
    * Uses the property file to convert the wiski type into the kalypso type
-   * 
-   * @param wiskiType
-   * @return
    */
   public static String wiskiType2Kalypso( final String wiskiType )
   {
@@ -140,9 +128,6 @@ public final class WiskiUtils
 
   /**
    * Uses the property file to fetch the corresponding kalypso metadata name
-   * 
-   * @param wiskiLevel
-   * @return
    */
   public static String wiskiMetadataName2Kalypso( final String wiskiName )
   {
@@ -157,9 +142,6 @@ public final class WiskiUtils
 
   /**
    * Uses the property file to convert the wiski status into the kalypso one
-   * 
-   * @param wiskiStatus
-   * @return
    */
   public static Integer wiskiStatus2Kalypso( final String wiskiStatus )
   {
