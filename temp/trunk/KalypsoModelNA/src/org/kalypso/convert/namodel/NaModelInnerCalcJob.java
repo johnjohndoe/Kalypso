@@ -523,7 +523,7 @@ public class NaModelInnerCalcJob implements ICalcJob
                 TimeserieConstants.MD_ALARM_2,
                 TimeserieConstants.MD_ALARM_3,
                 TimeserieConstants.MD_ALARM_4,
-                TimeserieConstants.MD_FLUSS,
+                TimeserieConstants.MD_GEWAESSER,
                 TimeserieConstants.MD_FLUSSGEBIET,
                 TimeserieConstants.MD_GKH,
                 TimeserieConstants.MD_GKR,
