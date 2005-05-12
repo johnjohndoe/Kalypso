@@ -30,7 +30,6 @@ public interface IMetaDocService extends Remote, IKalypsoService
   /**
    * Commits the new document described by the given DocBean.
    * 
-   * @param mdb
    * @throws RemoteException
    */
   public void commitNewDocument( final Map metadata, final DataHandler data,

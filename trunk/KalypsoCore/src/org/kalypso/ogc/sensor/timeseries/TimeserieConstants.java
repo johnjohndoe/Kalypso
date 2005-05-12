@@ -124,7 +124,7 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   public final static String MD_FLUSSGEBIET = "Flussgebiet";
 
-  public final static String MD_FLUSS = "Fluss";
+  public final static String MD_GEWAESSER = "Gewässer";
 
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true),

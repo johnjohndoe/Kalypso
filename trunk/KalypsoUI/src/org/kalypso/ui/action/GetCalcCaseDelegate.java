@@ -36,11 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,7 +64,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.nature.CalcDirCollector;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**
@@ -102,8 +105,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       final File serverProject = ModelActionHelper.checkIsSeverMirrored( serverRoot, project );
 
-      final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
-      final File[] remoteCalcCases = synchronizer.getRemoteCalcCases();
+      final File[] remoteCalcCases = getRemoteCalcCases( serverProject );
 
       final String serverPath = serverProject.getAbsolutePath();
       final int serverPathLength = serverPath.length();
@@ -133,6 +135,8 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       final Object[] result = dialog.getResult();
 
+      final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
+      
       final Job job = new Job( "Rechenvarianten vom Server laden" )
       {
         protected IStatus run( final IProgressMonitor monitor )
@@ -166,7 +170,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
         }
       };
 
-      job.setUser(true);
+      job.setUser( true );
       job.schedule();
     }
     catch( final CoreException ce )
@@ -182,7 +186,24 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-  //
+    // empty
   }
 
+  /**
+   * Helper: uses a visitor to collect the remote calc cases
+   */
+  private static File[] getRemoteCalcCases( final File remoteRoot ) throws CoreException
+  {
+    try
+    {
+      final CalcDirCollector collector = new CalcDirCollector();
+      FileUtilities.accept( remoteRoot, collector, true );
+      return collector.getCalcDirs();
+    }
+    catch( final IOException e )
+    {
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Fehler beim Laden der Daten vom Server: ", e ) );
+    }
+  }
 }
