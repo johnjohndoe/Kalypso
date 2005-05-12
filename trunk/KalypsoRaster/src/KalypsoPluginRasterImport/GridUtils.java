@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.Vector;
 
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -19,7 +18,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCache;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
@@ -112,7 +111,7 @@ public abstract class GridUtils
    *          input file
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridCoverage importGridArc( File in , CS_CoordinateSystem cs)
+  public static RectifiedGridCoverage importGridArc( File in, CS_CoordinateSystem cs )
   {
     int nCols = 0;
     int nRows = 0;
@@ -201,21 +200,19 @@ public abstract class GridUtils
     return ( bd.setScale( scale, mode ) ).doubleValue();
   }
 
-  public static RectifiedGridCoverage readRasterData( File rasterDataModelGML,
-      URL rasterDataModelSchemaUrl ) throws Exception
+  public static RectifiedGridCoverage readRasterData( File rasterDataModelGML ) throws Exception
   {
-    GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( rasterDataModelGML.toURL(),
-        rasterDataModelSchemaUrl );
+    GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( rasterDataModelGML.toURL() );
     Feature rootFeature = gmlWorkspace.getRootFeature();
     return RectifiedGridCoverageFactory.createRectifiedGridCoverage( rootFeature );
   }
 
-  public static void writeRasterData( File rasterDataModelGML, URL rasterDataModelSchemaUrl, RectifiedGridCoverage grid )
+  public static void writeRasterData( File rasterDataModelGML, RectifiedGridCoverage grid )
       throws Exception
   {
 
-    String schemaLocationName = "project:/.model/schema/RasterDataModel.xsd";
-    
+    String rasterDataSchemaNS = "http://elbe.wb.tu-harburg.de/rasterData";
+
     // set RangeSetDataFile
     if( grid.getRangeSet().getRangeSetDataFile() == null )
     {
@@ -226,7 +223,7 @@ public abstract class GridUtils
     }
 
     // load schema
-    final GMLSchema schema = GMLSchemaCache.getSchema( rasterDataModelSchemaUrl );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( rasterDataSchemaNS );
 
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
@@ -249,11 +246,11 @@ public abstract class GridUtils
 
     //create workspace
     GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, rasterDataModelGML.toURL(),
-        schemaLocationName, schema.getTargetNS(), schema.getNamespaceMap() );
+        "", schema.getTargetNS(), schema.getNamespaceMap() );
 
     // serialize Workspace
-    FileWriter fw = new FileWriter(rasterDataModelGML);
-    GmlSerializer.serializeWorkspace(fw, workspace);
+    FileWriter fw = new FileWriter( rasterDataModelGML );
+    GmlSerializer.serializeWorkspace( fw, workspace );
     fw.close();
 
   }

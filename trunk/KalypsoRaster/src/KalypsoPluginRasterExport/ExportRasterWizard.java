@@ -1,7 +1,6 @@
 package KalypsoPluginRasterExport;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -128,8 +127,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
         {
           Dialog monitor = new ProgressMonitorDialog( this.getShell() );
           monitor.open();
-          URL schemaUrl = getClass().getResource( "../schema/RasterDataModel.xsd" );
-          RectifiedGridCoverage grid = GridUtils.readRasterData( fileSource, schemaUrl );
+          RectifiedGridCoverage grid = GridUtils.readRasterData( fileSource );
           GridUtils.exportGridArc( fileTarget, grid );
           monitor.close();
         }
