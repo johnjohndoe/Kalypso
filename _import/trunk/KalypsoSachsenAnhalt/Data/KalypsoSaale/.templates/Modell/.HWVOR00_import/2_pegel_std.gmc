@@ -47,8 +47,8 @@
 			<featureproperty name="MHQ" type="java.lang.Integer" format=""><column>40</column></featureproperty>
 			<featureproperty name="HHQ" type="java.lang.Integer" format=""><column>41</column></featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="saalemodell_leer.gml"/>
-		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="${fromID}">
+		<gmlsource xlink:href="../saalemodell.gml"/>
+		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="${fromID}" handleExisting="change">
 			<map from="PNR" to="PNR"/>
 			<map from="Name" to="Name"/>
 			<map from="Gewaesser" to="Gewaesser"/>
