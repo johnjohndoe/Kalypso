@@ -133,7 +133,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
   private IProject projectHandel;
 
-  private final String m_resourceBase = "resources/.projecttemplate.zip";
+  private final String m_resourceBase = "resources/projecttemplate.zip";
 
   private SelectLanduseWizardPage selectLanduseWizardPage;
 
@@ -335,12 +335,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
   {
     URL contextModelURL = workspacePath.append(
         projectHandel.getFullPath() + "/Control/contextModell.gml" ).toFile().toURL();
-    URL contextModelSchemaURL = workspacePath.append(
-        projectHandel.getFullPath() + "/.model/schema/contextModell.xsd" ).toFile().toURL();
     URL riskContextModelURL = workspacePath.append(
         projectHandel.getFullPath() + "/Control/riskContextModell.gml" ).toFile().toURL();
-    URL riskContextModelSchemaURL = workspacePath.append(
-        projectHandel.getFullPath() + "/.model/schema/riskContextModell.xsd" ).toFile().toURL();
 
     String landuseFeatureType = "Landuse";
     String featureProperty = "Name";
@@ -348,15 +344,13 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     String featurePropertyName = "LanduseMember";
 
     //contextModel
-    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL,
-        contextModelSchemaURL );
+    GMLWorkspace contextModel = GmlSerializer.createGMLWorkspace( contextModelURL );
     FeatureType ftLanduse = contextModel.getFeatureType( landuseFeatureType );
     Feature rootFeature = contextModel.getRootFeature();
     Feature parentFeature = (Feature)rootFeature.getProperty( parentFeatureName );
 
     //riskContextModel
-    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL,
-        riskContextModelSchemaURL );
+    GMLWorkspace riskContextModel = GmlSerializer.createGMLWorkspace( riskContextModelURL );
     FeatureType ftLanduse_risk = riskContextModel.getFeatureType( landuseFeatureType );
     Feature rootFeature_risk = riskContextModel.getRootFeature();
     Feature parentFeature_risk = (Feature)rootFeature_risk.getProperty( parentFeatureName );
@@ -398,8 +392,6 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
   private void createWaterlevelGrids() throws Exception
   {
-    URL rasterDataModelSchemaURL = workspacePath.append(
-        projectHandel.getFullPath() + "/.model/schema/RasterDataModel.xsd" ).toFile().toURL();
     Vector waterlevelGrids = selectWaterlevelWizardPage.getWaterlevelGrids();
     CS_CoordinateSystem cs = selectWaterlevelWizardPage.getSelectedCoordinateSystem();
     int workedPart = 50 / waterlevelGrids.size();
@@ -411,7 +403,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
           .getName() );
       File targetFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) ) ).toFile();
-      GridUtils.writeRasterData( targetFile, rasterDataModelSchemaURL, grid );
+      GridUtils.writeRasterData( targetFile, grid );
       File sldFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/.styles/" + sourceFileNameWithoutExtension + ".sld" ) ) ).toFile();
       createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid );

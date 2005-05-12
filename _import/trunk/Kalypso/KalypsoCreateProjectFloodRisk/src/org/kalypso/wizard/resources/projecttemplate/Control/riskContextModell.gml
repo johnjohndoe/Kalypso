@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RiskContextModel fid="RiskContextModel1" xmlns="http://elbe.wb.tu-harburg.de/floodrisk" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://elbe.wb.tu-harburg.de/floodrisk project:/.model/schema/RiskContextModell.xsd">
+<RiskContextModel fid="RiskContextModel1" xmlns="http://www.tuhh.de/floodrisk/riskContextModel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.tuhh.de/floodrisk/riskContextModel">
   <LanduseCollectionMember>
     <LanduseCollection fid="LanduseCollection1"/>
   </LanduseCollectionMember>
