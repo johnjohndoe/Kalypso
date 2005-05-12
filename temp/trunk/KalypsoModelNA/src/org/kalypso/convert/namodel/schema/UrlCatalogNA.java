@@ -41,10 +41,10 @@
 
 package org.kalypso.convert.namodel.schema;
 
-import java.net.URL;
+import java.util.Map;
 
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.java.net.AbstractUrlCatalog;
 
 /**
  * class UrlCatalogNA
@@ -55,25 +55,19 @@ import org.kalypso.java.net.IUrlCatalog;
  * 
  * @author doemming (08.05.2005)
  */
-public class UrlCatalogNA implements IUrlCatalog
+public class UrlCatalogNA extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
+   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
+   *      java.util.Map)
    */
-  public URL getURL( String key )
+  protected void fillCatalog( final Class myClass, final Map catalog )
   {
-    if( NaModelConstants.NS_NAMETA.equals( key ) )
-      return getClass().getResource( "control.xsd" );
-    if( NaModelConstants.NS_NAMODELL.equals( key ) )
-      return getClass().getResource( "namodell.xsd" );
-    if( NaModelConstants.NS_NACONTROL.equals( key ) )
-      return getClass().getResource( "nacontrol.xsd" );
-    if( NaModelConstants.NS_NAHYDROTOP.equals( key ) )
-      return getClass().getResource( "hydrotop.xsd" );
-    if( NaModelConstants.NS_NAPARAMETER.equals( key ) )
-      return getClass().getResource( "parameter.xsd" );
-    if( NaModelConstants.NS_OMBROMETER.equals( key ) )
-      return getClass().getResource( "ombrometer.xsd" );
-    return null;
+    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "control.xsd" ) );
+    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "namodell.xsd" ) );
+    catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "nacontrol.xsd" ) );
+    catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "hydrotop.xsd" ) );
+    catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "parameter.xsd" ) );
+    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "ombrometer.xsd" ) );
   }
 }
