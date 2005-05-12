@@ -401,6 +401,9 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
       RectifiedGridCoverage grid = GridUtils.importGridArc( sourceFile, cs );
       String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile
           .getName() );
+      File waterlevelDir = ( workspacePath.append( projectHandel.getFullPath().append(
+          "/Waterlevel" ) ) ).toFile();
+      waterlevelDir.mkdir();
       File targetFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) ) ).toFile();
       GridUtils.writeRasterData( targetFile, grid );
