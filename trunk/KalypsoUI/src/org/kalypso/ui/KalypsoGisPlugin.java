@@ -368,6 +368,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public ICalculationService getCalculationServiceProxy() throws ServiceException
   {
+    // TODO: maybe refator, so that m_proxyFactory is never null, if not, order of call to configure...() is importent
     return (ICalculationService)m_proxyFactory.getProxy( "Kalypso_CalculationService",
         ClassUtilities.getOnlyClassName( ICalculationService.class ) );
   }
@@ -467,11 +468,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_mainConf.clear();
 
       configure( m_mainConf );
-      configureSchemaCatalog();
       configureProxy();
       configurePool();
       configureServiceProxyFactory( m_mainConf );
       configureURLStreamHandler( context );
+      // muss NACH dem proxy und dem streamHandler konfiguriert werden!
+      configureSchemaCatalog();
 
       getPreferenceStore().addPropertyChangeListener( this );
     }
@@ -717,8 +719,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       m_mainConf.clear();
       configure( m_mainConf );
-      configureSchemaCatalog();
       configureServiceProxyFactory( m_mainConf );
+      configureSchemaCatalog();
     }
   }
 

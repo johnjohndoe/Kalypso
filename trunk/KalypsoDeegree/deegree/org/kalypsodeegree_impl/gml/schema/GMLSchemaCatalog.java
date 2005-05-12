@@ -1,9 +1,9 @@
 package org.kalypsodeegree_impl.gml.schema;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.java.net.IUrlCatalog;
@@ -60,23 +60,14 @@ public final class GMLSchemaCatalog
    */
   public synchronized static GMLSchema getSchema( final String namespace )
   {
-    try
+    final URL schemaURL = THE_CATALOG.getURL( namespace );
+    if( schemaURL == null )
     {
-      final URL schemaURL = THE_CATALOG.getURL( namespace );
-      if( schemaURL == null )
-      {
-        LOGGER.warning( "Kein Schema-Eintrag für: " + namespace );
-        return null;
-      }
-
-      return getSchema( namespace, schemaURL );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-
+      LOGGER.warning( "Kein Schema-Eintrag für: " + namespace );
       return null;
     }
+
+    return getSchema( namespace, schemaURL );
   }
   
   /**
@@ -100,7 +91,7 @@ public final class GMLSchemaCatalog
     }
     catch( final Exception e )
     {
-      LOGGER.warning( "Konnte Schema nicht aus URL laden: " + schemaLocation );
+      LOGGER.log( Level.SEVERE, "Fehler beim laden eines Schema über die SchemaLocation: " + schemaLocation, e );
       
       return null;
     }

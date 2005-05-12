@@ -43,7 +43,6 @@ package org.kalypso.services.calculation.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.rmi.RemoteException;
@@ -64,6 +63,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.net.AbstractUrlCatalog;
 import org.kalypso.java.net.ClassUrlCatalog;
 import org.kalypso.java.net.IUrlCatalog;
 import org.kalypso.model.xml.ObjectFactory;
@@ -179,10 +179,10 @@ public class CalcJobService_impl_Queued implements ICalculationService
 
     {
       if( classCatalogFile == null )
-        m_catalog = new IUrlCatalog() {
-          public URL getURL( String key )
+        m_catalog = new AbstractUrlCatalog() {
+          protected void fillCatalog( Class myClass, Map catalog )
           {
-            return null;
+            // nix, ist leer
           }};
           else
       m_catalog = new ClassUrlCatalog( classCatalogFile );
@@ -492,20 +492,11 @@ public class CalcJobService_impl_Queued implements ICalculationService
    */
   public DataHandler getSchema( final String namespace )  throws CalcJobServiceException
   {
-    try
-    {
-      final URL url = m_catalog.getURL( namespace );
-      if( url == null )
-        return null;
-      
-      return new DataHandler( new URLDataSource( url ) );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      
-      throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, e );
-    }
+    final URL url = m_catalog.getURL( namespace );
+    if( url == null )
+      return null;
+    
+    return new DataHandler( new URLDataSource( url ) );
   }
 
   /**
@@ -528,5 +519,19 @@ public class CalcJobService_impl_Queued implements ICalculationService
       
       throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, e );
     }
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
+   */
+  public String[] getSupportedSchemata() throws CalcJobServiceException
+  {
+    final Map catalog = m_catalog.getCatalog();
+    final String[] namespaces = new String[catalog.size()];
+    int count = 0;
+    for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
+      namespaces[count++] = (String)mapIt.next();
+    
+    return namespaces;
   }
 }
