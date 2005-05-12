@@ -41,7 +41,6 @@
 package org.kalypso.services.calculation.service;
 
 import java.rmi.Remote;
-import java.util.Date;
 
 import javax.activation.DataHandler;
 
@@ -67,6 +66,8 @@ import org.kalypso.services.calculation.job.ICalcJob;
 public interface ICalculationService extends Remote, IKalypsoService
 {
   public long getSchemaValidity( final String namespace ) throws CalcJobServiceException;
+ 
+  public String[] getSupportedSchemata() throws CalcJobServiceException;
   
   /**
    * Katalog-Service des Rechendienstes. Gibt für einen Namespace ein Schema

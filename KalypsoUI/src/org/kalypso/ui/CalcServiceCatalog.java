@@ -40,38 +40,41 @@ v.doemming@tuhh.de
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Map;
 
-import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.services.proxy.ICalculationService;
 
 /**
  * @author belger
  */
-public class CalcServiceCatalog implements IUrlCatalog
+public class CalcServiceCatalog extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
+   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
-  public URL getURL( final String key ) throws MalformedURLException
+  protected void fillCatalog( final Class myClass, final Map catalog )
   {
-    final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://host:0000/" + key );
-    
     try
     {
-      final URLConnection connection = url.openConnection();
-      connection.connect();
+      final ICalculationService calcService = KalypsoGisPlugin.getDefault()
+          .getCalculationServiceProxy();
+      final String[] namespaces = calcService.getSupportedSchemata();
+      for( int i = 0; i < namespaces.length; i++ )
+      {
+        final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://host:0000/"
+            + namespaces );
+        catalog.put( namespaces[i], url );
+      }
     }
-    catch( final IOException e )
+    catch( final Throwable e )
     {
-      // ignorieren, die URL ist halt odch nicht bekannt
-//      e.printStackTrace();
-      // hier null zurückkgeben, da der Cache sonst schwierrigkeiten bekommt
-      return null;
+      e.printStackTrace();
+      // erstmal ignoreren
+      // wenn auf den Service nicht zugegriffen werden kann ist er entweder nicht da
+      // oder falsch konfiguriert
+      // in beiden Fällen gibts halt nen leeren Katalog
     }
-    
-    return url;
   }
 }
