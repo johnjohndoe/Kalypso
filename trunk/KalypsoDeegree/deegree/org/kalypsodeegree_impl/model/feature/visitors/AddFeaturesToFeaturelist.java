@@ -32,13 +32,13 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   private final Map m_idHash;
 
-  private final boolean m_overwriteExisting;
-
   private final String m_fid;
 
   private Map m_fidHash;
 
   private static final String REPLACE_COUNT = "${count}";
+
+  private final String m_handleExisting;
 
   /**
    * @param fid
@@ -53,13 +53,13 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    */
   public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap,
       final FeatureType featureType, final String fromID, final String toID,
-      final boolean overwriteExisting, final String fid )
+      final String handleExisting, final String fid )
   {
     m_list = list;
     m_featureType = featureType;
     m_propertyMap = propertyMap;
     m_fromID = fromID;
-    m_overwriteExisting = overwriteExisting;
+    m_handleExisting = handleExisting;
     m_fid = fid;
     
     // create index for toID
@@ -80,17 +80,25 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     final Object fromID = f.getProperty( m_fromID );
 
     final Feature existingFeature = (Feature)m_idHash.get( fromID );
-
-    if( existingFeature != null && !m_overwriteExisting )
-      return true;
-
     final String fid = createID( existingFeature, fromID );
-    final Feature feature = FeatureFactory.createDefaultFeature( fid, m_featureType, false );
-    FeatureHelper.copyProperties( f, feature, m_propertyMap );
-    m_list.add( feature );
+
+    final Feature newFeature;
+    if( existingFeature == null || "overwrite".equals( m_handleExisting ))
+      newFeature = FeatureFactory.createDefaultFeature( fid, m_featureType, false );
+    else if( "change".equals( m_handleExisting ) )
+      newFeature = existingFeature;
+    else if( "nothing".equals( m_handleExisting ) )
+        return true;
+    else
+      throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
+
+    FeatureHelper.copyProperties( f, newFeature, m_propertyMap );
+    
+    if( newFeature != existingFeature )
+      m_list.add( newFeature );
     
     // den fid-hash aktuell halten
-    m_fidHash.put( feature.getId(), feature );
+    m_fidHash.put( newFeature.getId(), newFeature );
 
     return true;
   }

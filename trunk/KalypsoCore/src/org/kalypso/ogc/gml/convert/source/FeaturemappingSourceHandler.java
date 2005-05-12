@@ -88,9 +88,9 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     if( mapping instanceof AddFeaturesMappingType )
     {
       final AddFeaturesMappingType addType = (AddFeaturesMappingType)mapping;
-      final boolean overwriteExisting = addType.isOverwriteExisting();
+      final String handleExisting = addType.getHandleExisting();
       final String fID = addType.getFid();
-      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, overwriteExisting, fID );
+      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID );
     }
     else if( mapping instanceof ChangeFeaturesMappingType )
       return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID,
