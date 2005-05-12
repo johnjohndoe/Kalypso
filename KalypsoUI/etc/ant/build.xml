@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoUI" default="fake" basedir=".">
+
+	<!-- 
+		Description: currently only support for generating the service-proxies
+		is provided.
+	
+		* proxy-services
+		* proxy-XXXService
+		
+		When the service interface of a service changes, there is
+		a builder (configured for the KalypsoUI-Project) that 
+		calls the corresponding target from this build file in order
+		to generate the proxy-jar needed to comminucate with the
+		web service (jaxrpc).
+	-->
+	
+	<target name="fake" description="fake target, does nothing">
+	</target>
+	
+	<target name="proxy-UserService">
+		<echo message="Proxy the user service and copy the client jar to Kalypso-UI"/>
+		
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-client" inheritall="false"/>
+ 		<copy file="${workspace}/KalypsoUserService/build/deploy/kalypsoservice_user.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
+	</target>
+
+	<target name="proxy-ObsService">
+		<echo message="Proxy the obs service and copy the client jar to Kalypso-UI"/>
+		
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-client" inheritAll="false"/>
+ 		<copy file="${workspace}/KalypsoObsService/build/deploy/kalypsoservice_observation.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
+	</target>
+
+	<target name="proxy-CalcService">
+		<echo message="Proxy the calc service and copy the client jar to Kalypso-UI"/>
+		
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-client" inheritAll="false"/>
+ 		<copy file="${workspace}/KalypsoCalcService/build/deploy/kalypsoservice_calculation.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
+	</target>
+
+	<target name="proxy-MetaDocService">
+		<echo message="Proxy the metadoc service and copy the client jar to Kalypso-UI"/>
+		
+		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build-client" inheritAll="false"/>
+ 		<copy file="${workspace}/KalypsoMetaDocService/build/deploy/kalypsoservice_metadoc.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
+	</target>
+
+	<target name="proxy-services" depends="proxy-CalcService,proxy-MetaDocService,proxy-ObsService,proxy-UserService" description="Proxies all services into the Kalypso-UI Project">
+		<echo message="Proxies all services into the Kalypso-UI Project"/>
+	</target>
+	
+</project>

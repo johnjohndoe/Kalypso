@@ -64,8 +64,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
   <target name="generate" depends="init" description="erzeugt die sourcen">
     <echo message="Generating binding sources für ${project-name}" />
-    <!-- sometimes files are handeled as "up-to-date", but they are not, so this will force to rebuild them (doemming)-->
-    <delete file="${project}/lib/${dest.file.name}" />
 
     <xjc target="${build.source}" extension="true" removeoldoutput="true">
       <schema dir="${project}">
@@ -76,9 +74,23 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			files from which the generate-process is depending. If 
 			the files are up-to-date (compared to the schemas) then
 			nothing is done. It is only when changes are discovered
-			that the xjc re-generates the binding-source.			
+			that the xjc re-generates the binding-source.
+			
+			Usually a 'produces' comes with a 'depends' element. But
+			according to the documentation of the xjc-task, by default
+			the schemas as defined in the 'schema'-element are
+			automatically added to the 'depends'-set. See the end of
+			this build-file for more information (copy of the xjc-doc
+			on this subject).
+			
+			TRICK: if sometimes the files are handled as up-to-date
+			but they are actually not (for whatever reason, bug?),
+			comment out the 'produces'-element. Else you should leave 
+			it here because if makes the whole deploy process much
+			faster!
 			-->
       <produces file="${project}/lib/${dest.file.name}" />
+
     </xjc>
   </target>
 
@@ -105,3 +117,34 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 </project>
 
+<!-- copy of the XJC-doc concerning "Up-to-date Check"
+
+By default, the XJC binding compiler always compiles the inputs. However, with 
+a little additional setting, it can compare timestamps of the input files and 
+output files and skip compilation if the files are up-to-date.
+
+Ideally, the program should be able to find out all the inputs and outputs and 
+compare their timestamps, but this is difficult and time-consuming. So you have 
+to tell the task input files and output files manually by using nested <depends>
+and <produces> elements. Basically, the XJC binding compiler compares the 
+timestamps specified by the <depends> elements against those of the <produces>
+set. If any one of the "depends" file has a more recent timestamp than some 
+of the files in the "produces" set, it will compile the inputs. Otherwise 
+it will skip the compilation.
+
+This will allow you to say, for example "if any of the .xsd files in this 
+directory are newer than the .java files in that directory, recompile the schema".
+
+Files specified as the schema files and binding files are automatically added 
+to the "depends" set as well, but if those schemas are including/importing 
+other schemas, you have to use a nested <depends> elements. No files are added
+ to the <produces> set, so you have to add all of them manually.
+
+A change in a schema or an external binding file often results in a Java file 
+that stops being generated. To avoid such an "orphan" file, it is often desirable
+to isolate all the generated code into a particular package and delete it before
+compiling a schema. This can be done by using the removeOldOutput attribute. This
+option allows you to remove all the files that match the "produces" filesets 
+before a compilation. Be careful when you use this option so that you don't 
+delete important files.
+-->

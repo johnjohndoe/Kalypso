@@ -76,11 +76,6 @@
 		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
 	</target>
 
-	<!--  HIER GEHTS LOS -->
-	<target name="build" depends="build-client,build-war" description="Executes the targets needed to build the webservice and the client jar.">
-	</target>
-
-	<!-- BUILD-WAR -->
 	<target name="build-war" depends="prepare,generate-wsdl,compile" description="Runs wsdeploy to generate the ties and 
 	                     create a deployable WAR file">
 
@@ -179,10 +174,5 @@
 		</wscompile>
 
 	</target>
-
-	<target name="redeploy-all" depends="build,redeploy" description="Erzeugt alles und kopiert die Client-Jar zum KalypsoUI Projekt">
-		<copy file="${project.deploy}/${client.jar}" todir="${workspace}/KalypsoUI/lib" />
-	</target>
-
 </project>
 

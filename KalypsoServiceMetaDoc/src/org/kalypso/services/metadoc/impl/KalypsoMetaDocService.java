@@ -43,24 +43,22 @@ public class KalypsoMetaDocService implements IMetaDocService
    * 
    * @throws RemoteException
    */
-  public KalypsoMetaDocService( ) throws RemoteException
+  public KalypsoMetaDocService() throws RemoteException
   {
     m_logger = Logger.getLogger( KalypsoMetaDocService.class.getName() );
 
     try
     {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir()
-          + "/IMetaDocService%g.log", 10000000, 1, true ) );
+      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IMetaDocService%g.log",
+          10000000, 1, true ) );
     }
     catch( Exception e ) // generic Exception caught for simplicity
     {
       e.printStackTrace();
-      throw new RemoteException(
-          "Exception in KalypsoMetaDocService.constructor()", e );
+      throw new RemoteException( "Exception in KalypsoMetaDocService.constructor()", e );
     }
 
-    m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig
-        .getTempDir() );
+    m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
 
     init();
@@ -71,7 +69,7 @@ public class KalypsoMetaDocService implements IMetaDocService
    * 
    * @throws RemoteException
    */
-  private void init( ) throws RemoteException
+  private void init() throws RemoteException
   {
     final File conf = new File( ServiceConfig.getConfDir(),
         "IMetaDocService/metadocService.properties" );
@@ -85,8 +83,8 @@ public class KalypsoMetaDocService implements IMetaDocService
 
       // try to instanciate our commiter
       final String className = m_props.getProperty( PROP_COMMITER );
-      m_commiter = (IMetaDocCommiter) ClassUtilities.newInstance( className,
-          IMetaDocCommiter.class, getClass().getClassLoader() );
+      m_commiter = (IMetaDocCommiter)ClassUtilities.newInstance( className, IMetaDocCommiter.class,
+          getClass().getClassLoader() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
@@ -101,14 +99,11 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
 
   /**
-   * @see org.kalypso.services.metadoc.IMetaDocService#prepareNewDocument(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.services.metadoc.IMetaDocService#prepareNewDocument(java.lang.String)
    */
-  public Map prepareNewDocument( final String username )
-      throws RemoteException
+  public Map prepareNewDocument( final String username ) throws RemoteException
   {
-    final String user = (username == null || username.length() == 0) ? "Autor"
-        : username;
+    final String user = ( username == null || username.length() == 0 ) ? "Autor" : username;
 
     try
     {
@@ -127,16 +122,16 @@ public class KalypsoMetaDocService implements IMetaDocService
 
   /**
    * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map,
-   *      javax.activation.DataHandler)
+   *      javax.activation.DataHandler, java.lang.String)
    */
-  public void commitNewDocument( final Map metadata, final DataHandler data, final String fileExtension )
-      throws RemoteException
+  public void commitNewDocument( final Map metadata, final DataHandler data,
+      final String fileExtension ) throws RemoteException
   {
     try
     {
       final File docFile = File.createTempFile( "metadoc-tmp", fileExtension, m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
-      
+
       m_commiter.commitDocument( m_props, metadata, docFile );
     }
     catch( Exception e ) // generic exception caught for simplicity
@@ -150,7 +145,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   /**
    * @see org.kalypso.services.IKalypsoService#getServiceVersion()
    */
-  public int getServiceVersion( )
+  public int getServiceVersion()
   {
     return 0;
   }
