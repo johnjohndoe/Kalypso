@@ -42,7 +42,11 @@ package org.kalypso.java.net;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 /**
  * A {@link PropertyUrlCatalog}based on a properties-hash.
@@ -51,33 +55,46 @@ import java.util.Properties;
  */
 public class PropertyUrlCatalog implements IUrlCatalog
 {
-  private final Properties m_catalog = new Properties();
-
-  private final URL m_context;
+  private final Map m_catalog = new HashMap();
 
   /**
    * The argument is copied into this catalog, so changes to catalog are not
    * backed by this object.
    * 
-   * @param context All entries of catalog are resolved against this url. If null, the entries are tried to parse stand-alone. 
+   * @param context
+   *          All entries of catalog are resolved against this url. If null, the
+   *          entries are tried to parse stand-alone.
    */
   public PropertyUrlCatalog( final URL context, final Properties catalog )
   {
-    m_context = context;
-    m_catalog.putAll( catalog );
+    for( final Iterator iter = catalog.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)iter.next();
+
+      try
+      {
+        m_catalog.put( entry.getKey(), new URL( context, entry.getValue().toString() ) );
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**
-   * @throws MalformedURLException
    * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
    */
-  public URL getURL( final String key ) throws MalformedURLException
+  public URL getURL( final String key )
   {
-    final String property = m_catalog.getProperty( key );
-    if( property == null )
-      return null;
-
-    return m_context == null ? new URL( property ) : new URL( m_context, property );
+    return (URL)m_catalog.get( key );
   }
 
+  /**
+   * @see org.kalypso.java.net.IUrlCatalog#getCatalog()
+   */
+  public Map getCatalog()
+  {
+    return m_catalog;
+  }
 }

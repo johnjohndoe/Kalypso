@@ -40,20 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /**
- * Interface for URL Catalogs. Provides a {@link java.net.URL}for a string key.
+ * Interface for URL Catalogs. Provides {@link java.net.URL}s for a string
+ * keys.
  * 
  * @author belger
  */
 public interface IUrlCatalog
 {
   /**
-   * @return null, if key is not found
-   * 
-   * @throws MalformedURLException
+   * Gibt eine URL für einen namespace zurück. Es sind nur solche namespaces
+   * bekannt, die auch über {@link #getCatalog()}zu finden sind.
    */
-  public URL getURL( final String key ) throws MalformedURLException;
+  public URL getURL( final String namespace );
+
+  /**
+   * Gibt den Katalog als Map zurück.
+   * 
+   * @return Ein Map {@link String}to {@link URL}.
+   */
+  public Map getCatalog();
 }

@@ -1,4 +1,4 @@
-/*----------------    FILE HEADER KALYPSO ------------------------------------------
+/**----------------    FILE HEADER KALYPSO ------------------------------------------
 *
 *  This file is part of kalypso.
 *  Copyright (C) 2004 by:
@@ -33,8 +33,8 @@
 *  Contact:
 * 
 *  E-Mail:
-*  belger@bjoernsen.de
-*  schlienger@bjoernsen.de
+*  g.belger@bjoernsen.de
+*  m.schlienger@bjoernsen.de
 *  v.doemming@tuhh.de
 *   
 *  ---------------------------------------------------------------------------*/
@@ -45,38 +45,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A url-catalog made up from several url-catalogs.
+ * Abstrakter UrlKatalog. Ableitende Klassen müssen nur den konkreten Katalog füllen.
  * 
- * @author gernot
+ * @author belger
  */
-public class MultiUrlCatalog implements IUrlCatalog
+public abstract class AbstractUrlCatalog implements IUrlCatalog
 {
-  private final Map m_catalog = new HashMap();
+  private final HashMap m_catalog = new HashMap();
 
-  public MultiUrlCatalog( final IUrlCatalog[] catalogs )
+  public AbstractUrlCatalog() 
   {
-    for( int i = 0; i < catalogs.length; i++ )
-    {
-      final IUrlCatalog catalog = catalogs[i];
-      m_catalog.putAll( catalog.getCatalog() );
-    }
+    fillCatalog( getClass(), m_catalog );
   }
-
-  /**
-   * Iterates the child catalogs to find the url. The order is as given in the constructor.
-   * 
-   * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
-   */
-  public URL getURL( final String namespace )
-  {
-    return (URL)m_catalog.get( namespace );
-  }
+  
+  protected abstract void fillCatalog( final Class myClass, final Map catalog );
 
   /**
    * @see org.kalypso.java.net.IUrlCatalog#getCatalog()
    */
-  public Map getCatalog()
+  public final Map getCatalog()
   {
     return m_catalog;
+  }
+
+  /**
+   * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
+   */
+  public final URL getURL( final String namespace )
+  {
+    return (URL)m_catalog.get( namespace );
   }
 }

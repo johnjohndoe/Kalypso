@@ -37,8 +37,8 @@ package org.kalypso.java.net;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -50,7 +50,7 @@ import java.util.Properties;
  */
 public class ClassUrlCatalog implements IUrlCatalog
 {
-  private MultiUrlCatalog m_catalog;
+  private IUrlCatalog m_catalog;
 
   /**
    * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die
@@ -85,12 +85,20 @@ public class ClassUrlCatalog implements IUrlCatalog
   /**
    * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
    */
-  public URL getURL( final String key ) throws MalformedURLException
+  public URL getURL( final String key )
   {
     if( m_catalog != null )
       return m_catalog.getURL( key );
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.java.net.IUrlCatalog#getCatalog()
+   */
+  public Map getCatalog()
+  {
+    return m_catalog.getCatalog();
   }
 
 }
