@@ -240,9 +240,9 @@
 	<xs:complexType name="AddFeaturesMappingType">
 		<xs:complexContent>
 			<xs:extension base="MappingType">
-				<xs:attribute name="overwriteExisting" type="xs:boolean" use="optional" default="false">
+				<xs:attribute name="handleExisting" type="handleExistingType" use="optional" default="overwrite">
 					<xs:annotation>
-						<xs:documentation>Falls false, wird nichts gemacht, wenn schon ein Feature mit der gleichen ID existiert. Ansonsten wird das Feature beibehalten aber seine Properties entsprechend überschrieben.</xs:documentation>
+						<xs:documentation>Was passiert, wenn schon ein Feature mit dem gleichen Primärschlüssel da ist?</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 				<xs:attribute name="fid" type="xs:string" use="optional" default="${fromID}">
@@ -263,4 +263,20 @@
 			<xs:extension base="MappingType"/>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:simpleType name="handleExistingType">
+		<xs:annotation>
+			<xs:documentation>
+      Enumeration for addFeatureMappingType.
+      If a feature with the target property (toID) already exists, do what?
+      change: change existing, that is overwrite its properties.
+      overwrite: creates a new feature and sets its properties. The old is removed.
+      nothing: odl features stays.
+      </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="change"/>
+			<xs:enumeration value="overwrite"/>
+			<xs:enumeration value="nothing"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
