@@ -13,6 +13,13 @@
 		calls the corresponding target from this build file in order
 		to generate the proxy-jar needed to comminucate with the
 		web service (jaxrpc).
+		
+		@MARC TODO: Der classpath beruht auf den schon vorhandenen Kompilaten der
+		benötigten Projekte (z.B. KalypsoUtil/build/deploy); diese werden hier aber nicht kompiliert
+		Wo passiert das? Bzw. wie kann die Kimpilierung hier erzwungen werden?
+		Hatte das Problem zuhause, dort war noch nichts vorkompiliert...
+		Alternative: in diesem Fall doch einfach im classpath auf den eclipse-build verweisen, denn die
+		jars werden ja doch ins eclipse projekt kopiert?
 	-->
 	
 	<target name="fake" description="fake target, does nothing">
