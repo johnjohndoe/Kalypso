@@ -144,6 +144,11 @@ grant {
 	permission java.util.PropertyPermission "java.io.tmpdir", "read";
 	
 	permission java.util.logging.LoggingPermission "control";
+	
+	// Wiski LDAP
+	permission java.net.SocketPermission "193.23.163.115:389", "connect,resolve";
+	// Wiski Java-RMI
+	permission java.net.SocketPermission "193.23.163.115:1024-", "connect,resolve";
 };
 
 // You can assign additional permissions to particular web applications by
