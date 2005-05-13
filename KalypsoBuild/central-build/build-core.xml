@@ -3,14 +3,25 @@
 
 	<!-- Description: 
 
-		Builds the most common projects to all Kalypso installations. This
-		build script currently has only one target, namely 'build-core'.
-		It is used from many other scripts such as:
+		Builds the most common projects to all Kalypso installations. The
+		'build-core'-Target is used from many other scripts such as:
 		- KalypsoConf***
 		- KalypsoUI (solve dependencies when generating service-proxies)
 		
+		The 'clean'-Target is the pendant for cleaning the core projects.
+		
 		TODO: extend the list of core projects as needed
 	-->
+	
+	<target name="clean">
+		<echo message="Cleaning most common projects to all installations" />
+		
+		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="clean" inheritAll="false" />
+	</target>
 	
 	<target name="build-core">
 		<echo message="Build most common projects to all installations" />
