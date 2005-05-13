@@ -514,10 +514,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     try
     {
       catalogLocation = m_mainConf.getProperty( SCHEMA_CATALOG );
-      // hier nicht einfach zurückkehren, wenn dieser Katalog nicht da ist
-      // es gibt nämlich noch andere!
-//      if( catalogLocation == null )
-//        return;
+      if( catalogLocation == null )
+        return; // finally wird noch ausgeführt...
 
       LOGGER.info( SCHEMA_CATALOG + " in Kalypso.ini gefunden." );
       url = new URL( catalogLocation );
@@ -528,12 +526,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     }
     catch( final Exception e )
     {
-      // exceptions ignorieren, es handelt sich um ein Programmier- oder
-      // Konfigurationsproblem.
-      LOGGER.warning( "Fehler beim Laden des Schema-Katalogs : "
-          + catalogLocation + "\nGMLs können vermutlich nicht geladen werden." );
-
-//      e.printStackTrace();
+      // exceptions ignorieren: nicht schlimm, Eintrag ist optional
+      LOGGER.info( SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
     }
     finally
     {

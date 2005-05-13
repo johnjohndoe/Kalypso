@@ -123,7 +123,7 @@ public class GMLSchemaCache
 
     // if objekt already in memCache and is valid, just return it
     final GMLSchemaWrapper sw = (GMLSchemaWrapper)m_memCache.getObject( namespace );
-    if( sw != null && ( validity == null || validity.before( sw.getValidity() ) ) )
+    if( sw != null && ( validity == null || validity.compareTo( sw.getValidity() ) <= 0 ) )
       return sw.getSchema();
 
     // else, try to get it from file cache
