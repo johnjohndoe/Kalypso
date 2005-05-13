@@ -140,14 +140,11 @@
 
 	<target name="build-basic" depends="prepare">
 		<echo message="Building basic projects" />
-		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
-
+		
+		<!-- use the central build-core script for the common projects -->
+		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
+		
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
-
-		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
 	</target>
 
 	<target name="build-plugins" depends="build-basic, build-CalcService">
