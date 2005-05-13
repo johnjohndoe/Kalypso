@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="CVS - 한 분기에서 다른 분기로 병합">
+
+	<intro 
+		href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+		<description>
+이 치트 시트는 자동으로 마법사를 실행하고 조치를 수행하고 CVS 분기의 변경사항을 다른 분기나 HEAD로 병합하기 위한 개별 단계를 안내합니다. 치트 시트 사용에 대해 자세히 알거나 사용 가능한 치트 시트의 목록을 보려면 도움말(?)을 클릭하십시오. 이 치트 시트에서 작업을 시작하려면 아래의 "시작" 단추를 클릭하십시오.
+	</description>
+	</intro>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="분기 및 버전 정보 판별">
+		<description>
+이 단계에서 변경사항을 포함하는 분기 또는 버전의 이름과 분기가 작성된 버전을 판별해야 합니다. 이것은 수동 타스크이므로 사용자가 작업을 수행한 다음, 아래의 "완료" 단추를 클릭하여 다음 단계로 이동해야 합니다.
+ 	 
+		</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="대상을 작업공간으로 로드">
+		<description>
+프로젝트를 선택하고 컨텍스트 메뉴에서 바꿀 대상 &gt; 다른 분기 또는 버전을 선택하십시오. 그런 다음 바꿀 분기를 선택하십시오. 이 단계에서 대상이 작업공간에 로드되는지 확인해야 합니다. 이것은 수동 타스크이므로 사용자가 작업을 수행한 다음, 아래의 "완료" 단추를 클릭하여 다음 단계로 이동해야 합니다.
+ 	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm" 
+		title="병합 세부사항">
+		<description>
+프로젝트를 선택하고, 팀 &gt; 병합을 선택하고 필요한 대로 마법사를 완료하십시오. 이 단계는 병합의 세부사항을 지정합니다. 이것은 수동 타스크이므로 사용자가 작업을 수행한 다음, 아래의 "완료" 단추를 클릭하여 다음 단계로 이동해야 합니다.
+ 	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="병합 편집기에 대한 작업">
+		<description>
+병합 편집기에서 수동으로 변경사항을 병합하십시오. 이 단계는 필수 변경사항을 작업공간에 로드합니다. 이것은 수동 타스크이므로 사용자가 작업을 수행한 다음, 아래의 "완료" 단추를 클릭하여 다음 단계로 이동해야 합니다.
+ 	</description>
+	</item>
+
+	<item
+		href="/org.eclipse.platform.doc.user/tasks/tasks-100b.htm"
+		title="변경사항 확약">
+		<description>
+팀 &gt; 저장소와 동기화를 선택한 후 저장소에 대한 모든 변경을 확약하십시오. 이 단계는 작업공간에서 CVS 저장소로 변경사항의 전송을 완료합니다. 이것은 수동 타스크이므로 사용자가 작업을 수행한 다음, 아래의 "완료" 단추를 클릭하여 다음 단계로 이동해야 합니다.
+ 	</description>
+	</item>
+
+</cheatsheet>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!-- ========================== -->
+<!-- Define topics for the Reference -->
+<!-- ========================== -->
+<toc label="参考">
+
+<!-- <topic label="Keyboard shortcuts" /> -->
+<topic label="崩溃恢复" href="reference/ref-8.htm" />
+
+<anchor id="r_aftercrash" />
+
+	<topic label="首选项" href="reference/ref-72.htm">
+		<topic label="工作台" href="reference/ref-10.htm"></topic>
+		<topic label="外观" href="reference/ref-16.htm"></topic>
+		<topic label="比较／修补" href="reference/ref-11.htm"></topic>
+		<topic label="编辑器" href="reference/ref-12.htm"></topic>
+		<topic label="文本编辑器" href="reference/ref-texteditorprefs.htm"></topic>
+		<topic label="功能" href="reference/ref-activitiespref.htm"></topic>
+		<topic label="外部工具" href="reference/ref-exttoolsprefs.htm"></topic>
+		<topic label="文件关联" href="reference/ref-13.htm"></topic>
+		<topic label="颜色和字体" href="reference/ref-fonts.htm"></topic>
+		<topic label="键" href="concepts/accessibility/keyboardshortcuts.htm"/>
+		<topic label="标号修饰" href="reference/ref-decorations.htm"></topic>
+		<topic label="链接的资源" href="reference/ref-14b.htm"></topic>
+		<topic label="本地历史记录" href="reference/ref-14.htm"></topic>
+		<topic label="透视图" href="reference/ref-15.htm"></topic>
+		<topic label="搜索" href="reference/ref-search.htm"></topic>
+		<topic label="启动和关闭" href="reference/ref-startup.htm"></topic>
+		<topic label="Ant" href="reference/ref-antprefs.htm"></topic>
+		<topic label="Ant 编辑器" href="reference/ref-anteditorprefs.htm"></topic>		
+		<topic label="Ant 运行时" href="reference/ref-antruntimeprefs.htm"></topic>		
+		<topic label="构建顺序" href="reference/ref-17.htm"></topic>
+		<topic label="帮助" href="reference/ref-18.htm"></topic>
+		<topic label="帮助服务器" href="reference/ref-helpserver.htm"></topic>
+		<topic label="安装／更新" href="reference/ref-21.htm"></topic>
+		<topic label="自动更新" href="reference/ref-21a.htm"></topic>
+		<topic label="小组" href="reference/ref-19.htm"></topic>
+		<topic label="CVS" href="reference/ref-19cvs.htm"></topic>
+		<topic label="忽略的资源" href="reference/ref-20.htm"></topic>
+		<topic label="文件内容" href="reference/ref-20-fileContent.htm"></topic>
+	</topic>
+    
+    <anchor id="r_afterpref" />
+	
+	<topic label="CVS 团队支持">
+		<topic label="CVS" href="reference/ref-47.htm"></topic>
+		<topic label="CVS 资源库视图" href="reference/ref-32.htm"></topic>
+		<topic label="CVS 工作空间同步" href="reference/ref-33.htm"></topic>
+		<topic label="CVS 资源历史记录视图" href="reference/ref-32a.htm"></topic>
+		<topic label="CVS 控制台" href="reference/ref-32b.htm"></topic>
+		<topic label="添加 CVS 资源库向导" href="reference/ref-40.htm"></topic>
+		<topic label="CVS 检出向导" href="reference/ref-40a.htm"></topic>
+		<topic label="CVS 共享向导" href="reference/ref-40b.htm"></topic>
+		<topic label="合并向导" href="reference/ref-41a.htm"></topic>
+		<topic label="CVS 合并同步" href="reference/ref-33a.htm"></topic>
+		<topic label="从版本控制中忽略资源" href="reference/ref-48a.htm" />
+		<topic label="CVS 标号修饰" href="reference/ref-cvs-decorations.htm" />
+	</topic>
+	
+	<anchor id="r_afterteam" />
+	
+<topic label="用户界面信息" >
+	<topic label="开发环境">
+		<topic label="工作台工具栏" href="reference/ref-2.htm"></topic>
+		<topic label="快捷方式栏" href="reference/ref-3.htm"></topic>
+		<topic label="视图工具栏" href="reference/ref-4.htm"></topic>
+		<topic label="构建" href="reference/ref-5.htm"></topic>
+		<topic label="透视图" href="reference/ref-6.htm"></topic>
+		<topic label="本地历史记录" href="reference/ref-6a.htm"></topic>		
+	</topic>
+
+
+	<topic label="视图和编辑器">
+		<topic label="工作台窗口布局" href="reference/ref-23.htm"></topic>
+		<topic label="编辑器区域" href="reference/ref-24.htm"></topic>
+		<topic label="比较编辑器" href="reference/ref-25.htm"></topic>
+		<topic label="搜索视图" href="reference/ref-26.htm"></topic>
+		<topic label="导航器视图" href="reference/ref-27.htm"></topic>
+		<topic label="书签视图" href="reference/ref-28.htm"></topic>
+		<topic label="属性视图" href="reference/ref-29.htm"></topic>
+		<topic label="大纲视图" href="reference/ref-30.htm"></topic>
+		<topic label="CVS 视图" href="reference/ref-30a.htm"></topic>
+                <topic label="任务视图" href="reference/ref-31.htm"></topic>
+		<topic label="Ant 编辑器" href="reference/ref-anteditor.htm"></topic>
+		<topic label="Ant 视图" href="reference/ref-antview.htm"></topic>
+		<topic label="帮助视图" href="reference/ref-34.htm"></topic>
+	</topic>
+
+	<topic label="向导">
+		<topic label="新建项目向导" href="reference/ref-37.htm"></topic>
+		<topic label="新建文件夹向导" href="reference/ref-38.htm"></topic>
+		<topic label="新建文件向导" href="reference/ref-39.htm"></topic>
+		<topic label="CVS 向导" href="reference/ref-39a.htm"></topic>
+                <topic label="导入向导" href="reference/ref-70.htm"></topic>
+		<topic label="导出向导" href="reference/ref-71.htm"></topic>
+	</topic>
+
+
+	<topic label="帮助目录">
+		<topic label="工作台用户指南" href="reference/ref-43.htm"></topic>
+		<topic label="使用备忘单" href="reference/ref-cheatsheets.htm"></topic>
+	</topic>
+
+	<topic label="搜索">
+		<topic label="文件搜索" href="reference/ref-45.htm"></topic>
+		<topic label="帮助搜索" href="reference/ref-searchw.htm"></topic>
+	</topic>
+
+	<topic label="工作台菜单">
+		<topic label="文件菜单" href="reference/ref-56.htm"></topic>
+		<topic label="编辑菜单
+" href="reference/ref-57.htm"></topic>
+		<topic label="浏览菜单" href="reference/ref-58.htm"></topic>
+		<topic label="项目菜单" href="reference/ref-59.htm"></topic>
+		<topic label="窗口菜单" href="reference/ref-60.htm"></topic>
+		<topic label="帮助菜单" href="reference/ref-61.htm"></topic>
+	</topic>
+
+	<topic label="图标和按钮">
+		<topic label="导航器视图图标" href="reference/ref-65.htm"></topic>
+		<topic label="编辑器区域标记栏" href="reference/ref-66.htm"></topic>
+		<topic label="任务视图" href="reference/ref-67.htm"></topic>
+		<topic label="工具栏按钮" href="reference/ref-68.htm"></topic>
+		<topic label="外部工具和 Ant 图标" href="reference/ref-anticons.htm"></topic>
+	</topic>
+</topic>
+
+<anchor id="r_afteruser" />
+
+</toc>
