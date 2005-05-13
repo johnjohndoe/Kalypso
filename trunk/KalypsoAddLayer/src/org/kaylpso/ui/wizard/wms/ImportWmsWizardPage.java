@@ -251,11 +251,7 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     java.util.List recent = new ArrayList();
     if( true )
     { // FIXME: store in preferences like WMSWizardPage
-      recent.add( "http://www.refractions.net:8080/geoserver/wfs" );
-      recent.add( "http://134.28.87.71:8080/deegreewms/wms" );
-      recent.add( "http://134.28.77.120/deegreewms/wms" );
-      recent.add( "http://134.28.77.120/wmsconnector/com.esri.wms.Esrimap" );
-      recent.add("http://134.28.77.120/xplanungwms/wms");
+      recent.add( "http://134.28.87.75:8000/deegreewms/wms" );
       recent.add("http://localhost:8080/deegreewms/wms");
     }
     GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -263,7 +259,7 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
 
     m_url = new Combo( fieldGroup, SWT.BORDER | SWT.READ_ONLY );
     m_url.addFocusListener(this);
-    m_url.addModifyListener( this );
+   // m_url.addModifyListener( this );
     m_url.setItems( (String[])recent.toArray( new String[recent.size()] ) );
     m_url.setVisibleItemCount( 15 );
     m_url.setLayoutData( gridData );

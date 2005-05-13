@@ -201,17 +201,8 @@ public class ImportWfsWizardPage extends WizardPage implements ModifyListener, S
 
     java.util.List recent = new ArrayList();
     if( true )
-    { // FIXME: store in preferences like WMSWizardPage
-      recent.add( "http://134.28.87.71:8080/deegreewms/wfs" );
-      recent.add( "http://www.refractions.net:8080/geoserver/wfs" );
-      // );
-      recent.add( "http://www2.dmsolutions.ca/cgi-bin/mswfs_gmap" );
-      // );
-      recent.add( "http://gws2.pcigeomatics.com/wfs1.0.0/wfs" );
-      recent.add( "http://134.28.77.120/flowswms/wfs" );
-      recent.add( "http://134.28.77.120/deegreewms/wfs" );
-      recent.add( "http://134.28.77.120/flowswms/wfs" );
-      recent.add( "http://134.28.77.120/xplanungwms/wfs" );
+    {
+      recent.add( "http://134.28.87.75:8000/deegreewms/wfs" );
       recent.add( "http://localhost:8080/deegreewms/wfs" );
     }
     GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
