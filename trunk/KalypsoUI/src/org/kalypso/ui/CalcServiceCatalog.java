@@ -64,7 +64,7 @@ public class CalcServiceCatalog extends AbstractUrlCatalog
       for( int i = 0; i < namespaces.length; i++ )
       {
         final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://host:0000/"
-            + namespaces );
+            + namespaces[i] );
         catalog.put( namespaces[i], url );
       }
     }
