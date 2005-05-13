@@ -41,7 +41,7 @@
 	<property name="dist.vorhersageconf" value="${dist.webdav}/vorhersageconf" />
 	
 	<property file="deploy.properties"/>
-	<property name="deploy.webdav" value="\\\\${tomcat.server.name}\\D\\Programme\\kalypso\\tomcat5.0\\webapps\\webdav"/>
+	<property name="deploy.webdav" value="${tomcat.server.cataling_home}\\webapps\\webdav"/>
 
 	<target name="prepare">
 		<echo message="Creating the required directories...." />
@@ -56,11 +56,7 @@
 	<target name="clean">
 		<echo message="Cleaning all subprojects..." />
 		<delete dir="${dist}" />
-		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />

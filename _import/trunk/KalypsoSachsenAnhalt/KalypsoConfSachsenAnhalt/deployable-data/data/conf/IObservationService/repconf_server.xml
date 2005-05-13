@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<repository
-		factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"
-		conf="rmi://193.23.163.115:10991/KiWWDataProvider#-#em#123abc#de"
-		name="wiski" />
-</repconf>
