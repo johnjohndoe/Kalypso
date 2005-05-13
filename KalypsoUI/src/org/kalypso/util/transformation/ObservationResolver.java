@@ -36,11 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -116,9 +117,9 @@ public class ObservationResolver extends AbstractTransformation
    *      java.io.BufferedWriter, java.io.BufferedWriter,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected void transformIntern( final Properties properties,
-      final BufferedWriter msgWriter, final BufferedWriter logWriter,
-      final IProgressMonitor monitor ) throws TransformationException
+  protected void transformIntern( final Properties properties, final BufferedWriter msgWriter,
+      final BufferedWriter logWriter, final IProgressMonitor monitor )
+      throws TransformationException
   {
     monitor.beginTask( "Zeitreihen auflösen", 3000 );
 
@@ -126,37 +127,27 @@ public class ObservationResolver extends AbstractTransformation
     final String gmlPath = properties.getProperty( PROP_GML, "" );
     final String featureName = properties.getProperty( PROP_FEATURE, "" );
     final String sourceObsName1 = properties.getProperty( PROP_SOURCEOBS1, "" );
-    final String sourceObsName2 = properties
-        .getProperty( PROP_SOURCEOBS2, null );
+    final String sourceObsName2 = properties.getProperty( PROP_SOURCEOBS2, null );
     final String targetObsName = properties.getProperty( PROP_TARGETOBS, "" );
-    final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER,
-        "" );
+    final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER, "" );
 
     final String startsimString = properties.getProperty( PROP_STARTSIM, "" );
     final String endsimString = properties.getProperty( PROP_ENDSIM, "" );
-    final String startforecastString = properties.getProperty(
-        PROP_STARTFORECAST, "" );
+    final String startforecastString = properties.getProperty( PROP_STARTFORECAST, "" );
 
-    final String rangeMode1 = properties.getProperty( PROP_RANGEMODE1,
-        "start-middle" );
-    final String rangeMode2 = properties.getProperty( PROP_RANGEMODE2,
-        "middle-stop" );
+    final String rangeMode1 = properties.getProperty( PROP_RANGEMODE1, "start-middle" );
+    final String rangeMode2 = properties.getProperty( PROP_RANGEMODE2, "middle-stop" );
 
     try
     {
-      final Date start = (Date) Mapper.mapXMLValueToJava( startsimString,
-          "java.util.Date" );
-      final Date middle = (Date) Mapper.mapXMLValueToJava( startforecastString,
-          "java.util.Date" );
-      final Date stop = (Date) Mapper.mapXMLValueToJava( endsimString,
-          "java.util.Date" );
+      final Date start = (Date)Mapper.mapXMLValueToJava( startsimString, "java.util.Date" );
+      final Date middle = (Date)Mapper.mapXMLValueToJava( startforecastString, "java.util.Date" );
+      final Date stop = (Date)Mapper.mapXMLValueToJava( endsimString, "java.util.Date" );
 
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFolder targetFolder = root
-          .getFolder( new Path( targetFolderName ) );
+      final IFolder targetFolder = root.getFolder( new Path( targetFolderName ) );
       if( !targetFolder.exists() )
-        targetFolder.create( false, true,
-            new SubProgressMonitor( monitor, 1000 ) );
+        targetFolder.create( false, true, new SubProgressMonitor( monitor, 1000 ) );
 
       final IProject project = targetFolder.getProject();
       final IFile gmlFile = root.getFile( new Path( gmlPath ) );
@@ -165,25 +156,22 @@ public class ObservationResolver extends AbstractTransformation
 
       final URL gmlURL = ResourceUtilities.createURL( gmlFile );
 
-      final UrlResolver resolver = createResolver( project, targetFolder,
-          startsimString, startforecastString, endsimString );
+      final UrlResolver resolver = createResolver( project, targetFolder, startsimString,
+          startforecastString, endsimString );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL,
-          resolver );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, resolver );
       final FeatureType ft = workspace.getFeatureType( featureName );
       if( ft == null )
-        throw new TransformationException( "Featurename unbekannt: "
-            + featureName );
+        throw new TransformationException( "Featurename unbekannt: " + featureName );
 
       final Feature[] features = workspace.getFeatures( ft );
 
       if( monitor.isCanceled() )
         throw new OperationCanceledException();
 
-      resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2,
-          targetObsName, targetFolder, start, middle, stop, rangeMode1,
-          rangeMode2, new SubProgressMonitor( monitor, 1000 ), msgWriter,
-          logWriter );
+      resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2, targetObsName,
+          targetFolder, start, middle, stop, rangeMode1, rangeMode2, new SubProgressMonitor(
+              monitor, 1000 ), msgWriter, logWriter );
 
       monitor.done();
     }
@@ -195,16 +183,14 @@ public class ObservationResolver extends AbstractTransformation
     }
   }
 
-  private UrlResolver createResolver( final IProject project,
-      final IFolder calcdir, final String startsim, final String startforecast,
-      final String endsim )
+  private UrlResolver createResolver( final IProject project, final IFolder calcdir,
+      final String startsim, final String startforecast, final String endsim )
   {
     final UrlResolver resolver = new UrlResolver();
 
-    resolver.addReplaceToken( "project", "platform:/resource/"
-        + project.getName() + "/" );
-    resolver.addReplaceToken( "calcdir", "platform:/resource/"
-        + calcdir.getFullPath().toString() + "/" );
+    resolver.addReplaceToken( "project", "platform:/resource/" + project.getName() + "/" );
+    resolver.addReplaceToken( "calcdir", "platform:/resource/" + calcdir.getFullPath().toString()
+        + "/" );
     resolver.addReplaceToken( "startsim", startsim );
     resolver.addReplaceToken( "startforecast", startforecast );
     resolver.addReplaceToken( "endsim", endsim );
@@ -216,32 +202,14 @@ public class ObservationResolver extends AbstractTransformation
    * funktioniert nur, wenn der TimeSeriesLink des Target eine relative URL hat
    * (== relativer Pfad)
    * 
-   * @param baseURL
-   * @param features
-   * @param sourceName1
-   * @param sourceName2
-   * @param targetName
-   * @param targetFolder
-   * @param start
-   * @param middle
-   * @param stop
-   * @param rangeMode1
-   * @param rangeMode2
-   * @param monitor
-   * @param msgWriter
-   * @param logWriter
-   * 
    * @throws TransformationException
-   * @throws SensorException
-   * @throws MalformedURLException
    */
   private void resolveTimeseries( final URL baseURL, final Feature[] features,
-      final String sourceName1, final String sourceName2,
-      final String targetName, final IFolder targetFolder, final Date start,
-      final Date middle, final Date stop, final String rangeMode1,
-      final String rangeMode2, final IProgressMonitor monitor,
+      final String sourceName1, final String sourceName2, final String targetName,
+      final IFolder targetFolder, final Date start, final Date middle, final Date stop,
+      final String rangeMode1, final String rangeMode2, final IProgressMonitor monitor,
       final BufferedWriter msgWriter, final BufferedWriter logWriter )
-      throws TransformationException, MalformedURLException, SensorException
+      throws TransformationException
   {
     if( features.length == 0 )
       return;
@@ -256,13 +224,11 @@ public class ObservationResolver extends AbstractTransformation
 
     // parse range modi
     // TODO: input validation should be done at the gui level
-    // since the user-range from-to for the vorhersage must have 
+    // since the user-range from-to for the vorhersage must have
     // valid time steps.
-    final Date from1 = parseRange( start, middle, stop, rangeMode1, false,
-        start );
+    final Date from1 = parseRange( start, middle, stop, rangeMode1, false, start );
     final Date to1 = parseRange( start, middle, stop, rangeMode1, true, middle );
-    final Date from2 = parseRange( start, middle, stop, rangeMode2, false,
-        middle );
+    final Date from2 = parseRange( start, middle, stop, rangeMode2, false, middle );
     final Date to2 = parseRange( start, middle, stop, rangeMode2, true, stop );
 
     for( int i = 0; i < features.length; i++ )
@@ -272,13 +238,27 @@ public class ObservationResolver extends AbstractTransformation
 
       final Feature feature = features[i];
 
-      final IObservation obs1 = getObservation( feature, sourceName1, from1,
-          to1, baseURL );
-      final IObservation obs2 = getObservation( feature, sourceName2, from2,
-          to2, baseURL );
+      IObservation obs1 = null;
+      IObservation obs2 = null;
+      String prop = null;
+      try
+      {
+        prop = sourceName1;
+        obs1 = getObservation( feature, sourceName1, from1, to1, baseURL );
+        prop = sourceName2;
+        obs2 = getObservation( feature, sourceName2, from2, to2, baseURL );
+      }
+      catch( final Exception e )
+      {
+        // migth occur when obs not defined on the server
+        write( "Zeitreihe möglicherweise unbekannt: "
+            + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref(), e.getLocalizedMessage(),
+            msgWriter, logWriter );
+        e.printStackTrace();
+        continue;
+      }
 
-      final TimeseriesLink targetlink = (TimeseriesLink) feature
-          .getProperty( targetName );
+      final TimeseriesLink targetlink = (TimeseriesLink)feature.getProperty( targetName );
       if( obs1 == null || targetlink == null )
         continue;
 
@@ -299,7 +279,10 @@ public class ObservationResolver extends AbstractTransformation
           // with 'i' the index in the observations array...
 
           final ForecastFilter fc = new ForecastFilter();
-          fc.initFilter( new IObservation[] { obs1, obs2 }, obs1 );
+          fc.initFilter( new IObservation[]
+          {
+              obs1,
+              obs2 }, obs1 );
           obs = fc;
         }
 
@@ -308,8 +291,7 @@ public class ObservationResolver extends AbstractTransformation
         TimeserieUtils.setForecast( obs, from2, to2 );
 
         // protocol the observations here and inform the user
-        KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ),
-            msgWriter, logWriter );
+        KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ), msgWriter, logWriter );
 
         // remove query part if present, href is also used as file name here!
         final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
@@ -325,8 +307,7 @@ public class ObservationResolver extends AbstractTransformation
             ZmlFactory.getMarshaller().marshal( type, w );
           }
         };
-        thread.setFileContents( targetfile, false, true,
-            new NullProgressMonitor() );
+        thread.setFileContents( targetfile, false, true, new NullProgressMonitor() );
 
         monitor.worked( 1 );
       }
@@ -338,9 +319,22 @@ public class ObservationResolver extends AbstractTransformation
     }
   }
 
-  private Date parseRange( final Date start, final Date middle,
-      final Date stop, String rangeMode1, boolean firstOrLast,
-      final Date standard )
+  private static void write( String msg, String desc, BufferedWriter msgWriter,
+      BufferedWriter logWriter )
+  {
+    try
+    {
+      msgWriter.write( msg + "\n" );
+      logWriter.write( desc + "\n" );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private Date parseRange( final Date start, final Date middle, final Date stop, String rangeMode1,
+      boolean firstOrLast, final Date standard )
   {
     final String[] strings = rangeMode1.split( "-" );
     if( strings == null || strings.length != 2 )
@@ -352,8 +346,8 @@ public class ObservationResolver extends AbstractTransformation
     return mapRange( strings[1], start, middle, stop, standard );
   }
 
-  private Date mapRange( final String string, final Date start,
-      final Date middle, final Date stop, final Date standard )
+  private Date mapRange( final String string, final Date start, final Date middle, final Date stop,
+      final Date standard )
   {
     if( "start".equals( string ) )
       return start;
@@ -367,19 +361,18 @@ public class ObservationResolver extends AbstractTransformation
     return standard;
   }
 
-  private IObservation getObservation( final Feature feature,
-      final String sourceProperty, final Date from, final Date to,
-      final URL baseURL ) throws MalformedURLException, SensorException
+  private IObservation getObservation( final Feature feature, final String sourceProperty,
+      final Date from, final Date to, final URL baseURL ) throws MalformedURLException,
+      SensorException
   {
     if( sourceProperty == null )
       return null;
-    final TimeseriesLink sourcelink = (TimeseriesLink) feature
-        .getProperty( sourceProperty );
+    final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceProperty );
     if( sourcelink == null ) // keine Zeitreihe verlink, z.B. kein Pegel am
       // Knoten in KalypsoNA
       return null;
-    final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(),
-        new DateRangeArgument( from, to ) );
+    final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(), new DateRangeArgument(
+        from, to ) );
 
     final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
 
@@ -393,8 +386,7 @@ public class ObservationResolver extends AbstractTransformation
 
     final FeatureTypeProperty sourceFTP = ft.getProperty( sourceName );
     if( sourceFTP == null || !sourceFTP.getType().equals( linkclassname ) )
-      throw new TransformationException(
-          "Spalte existiert nicht oder ist nicht vom Typ " + linkclassname
-              + ": " + sourceName );
+      throw new TransformationException( "Spalte existiert nicht oder ist nicht vom Typ "
+          + linkclassname + ": " + sourceName );
   }
 }
