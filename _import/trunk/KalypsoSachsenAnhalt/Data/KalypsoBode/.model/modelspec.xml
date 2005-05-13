@@ -8,7 +8,7 @@
 	<!-- Unterverzeichnisse Messung und Vorhersage! -->
 	<input id="QPegelDirIn" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
 	<input id="QSpeicherDirIn" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
-	<!-- Unterverzeichnisse Messung und Vorhersage! -->
+	<!-- haben keine Unterverzeichnisse -->
 	<input id="VSpeicherDirIn" path="Zeitreihen/Speicher" relativeToCalcCase="true"/>
 	<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
 	

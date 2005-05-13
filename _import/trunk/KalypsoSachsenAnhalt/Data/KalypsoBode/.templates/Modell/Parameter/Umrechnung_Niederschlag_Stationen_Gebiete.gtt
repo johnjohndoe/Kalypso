@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-    <layer featurePath="OmbrometerCollectionAssociation/OmbrometerMember[Ombrometer]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="../bodemodell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <layer featurePath="OmbrometerCollectionAssociation/OmbrometerMember[Ombrometer]" id="id" linktype="gml" ns1:href="../bodemodell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column editable="true" name="Name" width="100"/>
         <sort inverse="true" propertyName="Name"/>
     </layer>

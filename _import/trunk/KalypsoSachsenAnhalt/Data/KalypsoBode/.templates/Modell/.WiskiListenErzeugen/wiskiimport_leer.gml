@@ -12,14 +12,4 @@
 				</gml:coord>
 			</gml:Box>
 		</gml:boundedBy>
-		<WiskiMember>
-			<Wiski>
-				<wiski>
-					<obslink:TimeseriesLink xlink:href="blubb"/>
-				</wiski>
-				<wiski_simulation>
-					<obslink:TimeseriesLink xlink:href="blubb"/>
-				</wiski_simulation>
-			</Wiski>
-		</WiskiMember>
 	</WiskiCollection>

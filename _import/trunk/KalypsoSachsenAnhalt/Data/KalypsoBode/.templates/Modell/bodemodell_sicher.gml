@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- mit relativem Pfad: wird von XML-Spy verstanden
-<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell .model/schema/bodemodell.xsd">
-<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell C:\Programme_inst\eclipse\runtime-workspace\KalypsoBode\.model\schema\bodemodell.xsd">
--->
-<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/bodemodell.xsd">
-	<bodepegel:PegelCollectionAssociation>
+<BodeModell fid="root" xmlns="org.kalypso.bode.modell" xmlns:bodecommon="org.kalypso.bode.common" xmlns:bodeombrometer="org.kalypso.bode.ombrometer" xmlns:bodepegel="org.kalypso.bode.pegel" xmlns:bodespeicher="org.kalypso.bode.speicher" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.bode.modell project:/.model/schema/bodemodell.xsd">
+<bodepegel:PegelCollectionAssociation>
 		<bodepegel:PegelCollection fid="PegelCollection0">
 			<gml:boundedBy>
 				<gml:Box>
@@ -31,8 +27,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Staßfurt.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Staßfurt.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Staßfurt.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Hadmersleben -> Stassfurt]]></bodepegel:Kommentar>
 					<bodepegel:XAW>1.9599</bodepegel:XAW>
 					<bodepegel:XEW>36.4273</bodepegel:XEW>
@@ -46,6 +45,7 @@
 					<bodepegel:DM2>8.869</bodepegel:DM2>
 				</bodepegel:WasserlaufModell>
 			</bodepegel:PegelMember>
+			
 			<bodepegel:PegelMember>
 				<bodepegel:WasserlaufModell fid="WLM_Wegeleben">
 					<bodepegel:Name>Wegeleben</bodepegel:Name>
@@ -59,8 +59,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Wegeleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Wegeleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Wegeleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Ditfurt+Hausneindorf -> Wegeleben]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.7505</bodepegel:XAW>
 					<bodepegel:XEW>-0.3906</bodepegel:XEW>
@@ -87,8 +90,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Ditfurt.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Ditfurt.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Ditfurt.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Wendefurt->Ditfurt]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.5024</bodepegel:XAW>
 					<bodepegel:XEW>0.1037</bodepegel:XEW>
@@ -115,8 +121,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Nienhagen.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Nienhagen.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Nienhagen.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Mahndorf -> Nienhagen]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.794</bodepegel:XAW>
 					<bodepegel:XEW>-2.2129</bodepegel:XEW>
@@ -142,6 +151,9 @@
 					<bodepegel:Kurz_Name>neug</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Stassfurt -> Neugattersleben]]></bodepegel:Kommentar>
 					<bodepegel:XAW>2.3493</bodepegel:XAW>
 					<bodepegel:XEW>2.4818</bodepegel:XEW>
@@ -168,8 +180,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hadmersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Hadmersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Hadmersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Wegeleben+Nienhagen+Oschersleben -> Hadmersleben]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.8004</bodepegel:XAW>
 					<bodepegel:XEW>-0.1929</bodepegel:XEW>
@@ -196,8 +211,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hausneindorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Hausneindorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Kommentar><![CDATA[M_WLM-Parameter fuer Abschnitt Meisdorf->Hausneindorf]]></bodepegel:Kommentar>
 					<bodepegel:XAW>0.5884</bodepegel:XAW>
 					<bodepegel:XEW>-1.1278</bodepegel:XEW>
@@ -224,12 +242,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Meisdorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Meisdorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Meisdorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Meisdorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -245,12 +266,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Elend.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Elend.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Elend.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Elend.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -266,12 +290,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Hasselfelde.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Hasselfelde.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Hasselfelde.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Hasselfelde.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -287,12 +314,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Mahndorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Mahndorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Mahndorf.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Mahndorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -308,12 +338,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Silberhütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Silberhütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Silberhütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Silberhütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -329,12 +362,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Königshütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Königshütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Königshütte.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Königshütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -350,12 +386,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Steinerne_Renne.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Steinerne_Renne.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Steinerne_Renne.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Steinerne_Renne.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -371,12 +410,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Oschersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Oschersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Oschersleben.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Oschersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -392,12 +434,15 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Trautenstein.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Trautenstein.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 					<bodepegel:Gebiet/>
-					<bodepegel:Niederschlag_gesamt> 
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Gebietsniederschlag/Trautenstein.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-					</bodepegel:Niederschlag_gesamt> 
+					<bodepegel:Niederschlag>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Trautenstein.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Niederschlag>
 				</bodepegel:Niederschlagsgebiet>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -413,8 +458,11 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Thale.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Thale.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
+					<bodepegel:Ganglinie_gerechnet >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Thale.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gerechnet>
 				</bodepegel:Pegel>
 			</bodepegel:PegelMember>
 			<bodepegel:PegelMember>
@@ -430,7 +478,7 @@
 					<bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>false</bodepegel:istErgebnisPegel>
 					<bodepegel:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Pegel/Messung/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Wendefurth.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gemessen>
 				</bodepegel:Pegel>
 			</bodepegel:PegelMember>
@@ -460,6 +508,9 @@
 					</bodeombrometer:Ort>
 					<bodeombrometer:Messstellennummer>440010</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>wefe</bodeombrometer:Kurz_Name>
+					<bodeombrometer:Niederschlag_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Weferlingen.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodeombrometer:Niederschlag_gemessen>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
@@ -472,6 +523,9 @@
 					</bodeombrometer:Ort>
 					<bodeombrometer:Messstellennummer>579040</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>ditf</bodeombrometer:Kurz_Name>
+					<bodeombrometer:Niederschlag_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Ditfurt.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodeombrometer:Niederschlag_gemessen>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
@@ -484,6 +538,9 @@
 					</bodeombrometer:Ort>
 					<bodeombrometer:Messstellennummer>579305</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>elen</bodeombrometer:Kurz_Name>
+					<bodeombrometer:Niederschlag_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Elend.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodeombrometer:Niederschlag_gemessen>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
@@ -496,6 +553,9 @@
 					</bodeombrometer:Ort>
 					<bodeombrometer:Messstellennummer>579504</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>hass</bodeombrometer:Kurz_Name>
+					<bodeombrometer:Niederschlag_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Hasselfelde.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodeombrometer:Niederschlag_gemessen>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
@@ -508,6 +568,9 @@
 					</bodeombrometer:Ort>
 					<bodeombrometer:Messstellennummer>579605</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>silb</bodeombrometer:Kurz_Name>
+					<bodeombrometer:Niederschlag_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Silberhütte.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodeombrometer:Niederschlag_gemessen>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 			<bodeombrometer:OmbrometerMember>
@@ -520,6 +583,9 @@
 					</bodeombrometer:Ort>
 					<bodeombrometer:Messstellennummer>579712</bodeombrometer:Messstellennummer>
 					<bodeombrometer:Kurz_Name>mahn</bodeombrometer:Kurz_Name>
+					<bodeombrometer:Niederschlag_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Mahndorf.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodeombrometer:Niederschlag_gemessen>
 				</bodeombrometer:Ombrometer>
 			</bodeombrometer:OmbrometerMember>
 		</bodeombrometer:OmbrometerCollection>
@@ -549,14 +615,17 @@
 					<bodespeicher:Messstellennummer>579320</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>kabo</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Kalte_Bode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherabgabe/Kalte_Bode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Zufluss />
+					<bodespeicher:Zufluss_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherzufluss/Kalte_Bode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Zufluss_gerechnet>
 					<bodespeicher:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Kalte_Bode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicher/Messung/Kalte_Bode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Ganglinie_gemessen>
-					<bodespeicher:Ganglinie_gerechnet/>
-					<bodespeicher:Inhalt/>
+					<bodespeicher:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicher/Vorhersage/Kalte_Bode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Ganglinie_gerechnet>
 					<bodespeicher:StauraumParameter>
 						<bodespeicher:Stauraum fid="Stauraum_kabo">
 							<bodespeicher:Totraum>0.2</bodespeicher:Totraum>
@@ -1074,14 +1143,18 @@
 					<bodespeicher:Messstellennummer>579430</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>rapp</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherabgabe/Rappbode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Zufluss />
-<bodespeicher:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					<bodespeicher:Zufluss_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherzufluss/Rappbode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Zufluss_gerechnet>
+					<bodespeicher:Ganglinie_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicher/Messung/Rappbode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Ganglinie_gemessen>
-					<bodespeicher:Ganglinie_gerechnet/>
-<bodespeicher:Inhalt/>
+					<bodespeicher:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicher/Vorhersage/Rappbode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Ganglinie_gerechnet>
+
 					<bodespeicher:StauraumParameter>
 						<bodespeicher:Stauraum fid="Stauraum_rapp">
 							<bodespeicher:Totraum>0.34</bodespeicher:Totraum>
@@ -1590,14 +1663,17 @@
 					<bodespeicher:Messstellennummer>579005</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>wend</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherabgabe/Wendefurth.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Zufluss />
-<bodespeicher:Ganglinie_gemessen>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherinhalt/Messung/Wendefurth.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					<bodespeicher:Zufluss_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherzufluss/Wendefurth.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Zufluss_gerechnet>
+					<bodespeicher:Ganglinie_gemessen>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicher/Messung/Wendefurth.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Ganglinie_gemessen>
-					<bodespeicher:Ganglinie_gerechnet/>
-<bodespeicher:Inhalt/>
+					<bodespeicher:Ganglinie_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicher/Vorhersage/Wendefurth.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Ganglinie_gerechnet>
 					<bodespeicher:StauraumParameter>
 						<bodespeicher:Stauraum fid="Stauraum_wend">
 							<bodespeicher:Totraum>0.049</bodespeicher:Totraum>
@@ -2151,9 +2227,11 @@
 					<bodespeicher:Messstellennummer>579000</bodespeicher:Messstellennummer>
 					<bodespeicher:Kurz_Name>urapp</bodespeicher:Kurz_Name>
 					<bodespeicher:Abgabe>
-						<bodecommon:TimeseriesLink linktype="zml" ns1:actuate="onRequest" ns1:href="./Zeitreihen/Speicherabgabe/Überleitung_Rappbode.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherabgabe/Überleitung_Rappbode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodespeicher:Abgabe>
-					<bodespeicher:Zufluss />
+					<bodespeicher:Zufluss_gerechnet>
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Speicherzufluss/Überleitung_Rappbode.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodespeicher:Zufluss_gerechnet>
 				</bodespeicher:Überleitung>
 			</bodespeicher:SpeicherMember>
 		</bodespeicher:SpeicherCollection>

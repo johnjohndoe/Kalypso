@@ -1,0 +1,23 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiimport.gml"/>
+	<featuremapping>
+	<!-- automatisches Erzeugen der FeatureID ist konfigurierbar, die entstehenden sind dann eindeutig und besser verständlich -->
+	<!-- noch in zwei GMCs aufteilen: Messung und Gesamt -->
+	<!-- es gibt mittlerweile noch viele nette Features zum automatischen Generieren (auch Besucher :-)) -->
+		<gmlsource xlink:href="../bodemodell.gml"/>
+		<gmlsource xlink:href="wiskiimport_leer.gml"/>
+		<addFeaturesMapping fromPath="PegelCollectionAssociation/PegelMember[Pegel]" toPath="WiskiMember" overwriteExisting="true">
+			<map from="Ganglinie_gemessen" to="lokal"/>
+		</addFeaturesMapping>
+		<addFeaturesMapping fromPath="OmbrometerCollectionAssociation/OmbrometerMember[Ombrometer]" toPath="WiskiMember" overwriteExisting="true">
+			<map from="Niederschlag_gemessen" to="lokal"/>
+		</addFeaturesMapping>
+		<addFeaturesMapping fromPath="SpeicherCollectionAssociation/SpeicherMember[Speicher]" toPath="WiskiMember" overwriteExisting="true">
+			<map from="Ganglinie_gemessen" to="lokal"/>
+		</addFeaturesMapping>
+		<addFeaturesMapping fromPath="SpeicherCollectionAssociation/SpeicherMember[Speicher]" toPath="WiskiMember" overwriteExisting="true">
+			<map from="Abgabe" to="lokal"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>
