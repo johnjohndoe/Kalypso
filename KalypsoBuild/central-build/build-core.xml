@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="buildcore" default="build-core">
+
+	<!-- Description: 
+
+		Builds the most common projects to all Kalypso installations. This
+		build script currently has only one target, namely 'build-core'.
+		It is used from many other scripts such as:
+		- KalypsoConf***
+		- KalypsoUI (solve dependencies when generating service-proxies)
+		
+		TODO: extend the list of core projects as needed
+	-->
+	
+	<target name="build-core">
+		<echo message="Build most common projects to all installations" />
+		
+		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
+	</target>
+</project>

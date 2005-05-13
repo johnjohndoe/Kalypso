@@ -13,40 +13,44 @@
 		calls the corresponding target from this build file in order
 		to generate the proxy-jar needed to comminucate with the
 		web service (jaxrpc).
-		
-		@MARC TODO: Der classpath beruht auf den schon vorhandenen Kompilaten der
-		benötigten Projekte (z.B. KalypsoUtil/build/deploy); diese werden hier aber nicht kompiliert
-		Wo passiert das? Bzw. wie kann die Kimpilierung hier erzwungen werden?
-		Hatte das Problem zuhause, dort war noch nichts vorkompiliert...
-		Alternative: in diesem Fall doch einfach im classpath auf den eclipse-build verweisen, denn die
-		jars werden ja doch ins eclipse projekt kopiert?
+
+		Some of the service-proxies depend on core-projects such as
+		KalypsoUtil, KalypsoCore, etc. In order to take care of these
+		dependencies there's the target 'build-core' which builds
+		all of them.
 	-->
 	
 	<target name="fake" description="fake target, does nothing">
 	</target>
 	
-	<target name="proxy-UserService">
-		<echo message="Proxy the user service and copy the client jar to Kalypso-UI"/>
+	<target name="build-core">
+		<echo message="Builds the most common project (needed for dependency from services projects)"/>
 		
+		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
+	</target>
+	
+	<target name="proxy-UserService" depends="build-core">
+		<echo message="Proxy the user service and copy the client jar to Kalypso-UI"/>
+
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-client" inheritall="false"/>
  		<copy file="${workspace}/KalypsoUserService/build/deploy/kalypsoservice_user.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
 	</target>
 
-	<target name="proxy-ObsService">
+	<target name="proxy-ObsService" depends="build-core">
 		<echo message="Proxy the obs service and copy the client jar to Kalypso-UI"/>
 		
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-client" inheritAll="false"/>
  		<copy file="${workspace}/KalypsoObsService/build/deploy/kalypsoservice_observation.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
 	</target>
 
-	<target name="proxy-CalcService">
+	<target name="proxy-CalcService" depends="build-core">
 		<echo message="Proxy the calc service and copy the client jar to Kalypso-UI"/>
 		
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-client" inheritAll="false"/>
  		<copy file="${workspace}/KalypsoCalcService/build/deploy/kalypsoservice_calculation.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
 	</target>
 
-	<target name="proxy-MetaDocService">
+	<target name="proxy-MetaDocService" depends="build-core">
 		<echo message="Proxy the metadoc service and copy the client jar to Kalypso-UI"/>
 		
 		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build-client" inheritAll="false"/>
