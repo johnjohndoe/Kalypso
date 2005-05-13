@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<plugin name="Kalypso - Manual" id="org.kalypso.tuhhmanual" version="0.0.5" provider-name="kalypso.org">
+   <requires>
+      <import plugin="org.eclipse.help"/>
+   </requires>
+  <extension point="org.eclipse.help.toc">
+    <toc file="toc.xml" primary="true"/>
+  </extension>
+  <extension
+        point="org.eclipse.help.contexts">
+     <contexts file="contexts.xml"/>
+  </extension>
+</plugin>

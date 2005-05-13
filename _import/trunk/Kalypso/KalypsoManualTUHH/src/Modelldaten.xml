@@ -1,0 +1,1037 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+  <title>Modelldaten</title>
+
+  <section id="spree_modelldaten">
+    <title>Vorhersagemodell Spree</title>
+
+    <section id="spree_datenstruktur">
+      <title>Allgemeine Datenstruktur</title>
+
+      <para>Die Modelldaten für das Vorhersagemodell Spree werden in Tabellen
+      verwaltet. Neben dem <emphasis
+      role="bold">Tabellen</emphasis>-Verzeichnis ist ein Übersichtslageplan
+      im <emphasis role="bold">Karten</emphasis>-Verzeichnis enthalten. Die
+      zur Visualisierung benötigten Shape-Files befinden sich im <emphasis
+      role="bold">Grunddaten</emphasis>-Verzeichnis. Der Name des Ordners für
+      die Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner
+      <emphasis role="bold">Rechenvarianten</emphasis> im Projekt
+      vordefiniert.</para>
+
+      <figure id="pic_navigator_spree">
+        <title>Navigator-Ansicht Vorhersagemodell Spree</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/navigator_spree.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis>Verzeichnis Tabellen</emphasis></para>
+
+      <para>Die Eingabe bzw. Änderung von Parametern erfolgt in Tabellen. Die
+      Editierungsmöglichkeiten von Tabellen werden in <xref
+      linkend="ansichtssteuerung" /> beschrieben. Die in den Tabellen
+      enthaltenen Modellparameter werden in <xref
+      linkend="spree_modellparameter" /> erläutert. Folgende Tabellen sind im
+      Projekt enthalten:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Einzugsgebiete</para>
+
+          <para>Parameter für die Pegelgebiete, die als N-A-Modell berechnet
+          werden.</para>
+        </listitem>
+
+        <listitem>
+          <para>Flussmodelle</para>
+
+          <para>Parameter für die Gewässerabschnitte, die als Flusslaufmodell
+          berechnet werden.</para>
+        </listitem>
+
+        <listitem>
+          <para>Flutungen</para>
+
+          <para>Definition der Zeitreihen für Abzweigungen aus dem
+          Modell.</para>
+        </listitem>
+
+        <listitem>
+          <para>Talsperren</para>
+
+          <para>Parameter für die im Modell implentierten
+          Rückhaltebecken/Talsperren.</para>
+        </listitem>
+
+        <listitem>
+          <para>Zuflüsse</para>
+
+          <para>Definition von Zeitreihen für Einleitungen in das
+          Modell.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis>Verzeichnis Karten</emphasis></para>
+
+      <para>Im Vorhersagemodell Spree ist standardmäßig eine Karten-Vorlage
+      enthalten, die das Einzugsgebiet der Spree im Lageplan zeigt. Angezeigt
+      wird das Gewässersystem mit den Vorhersagepegeln für die N-A-Modelle und
+      die Flusslauflaufmodelle sowie die Eingabepegel für die
+      Talsperrenzufüsse und Überleitungen. Die Änderung der
+      Darstellungsoptionen oder Erstellen neuer Karten bleibt dem Benutzer
+      vorbehalten. Zum Bearbeiten von Kartenvorlagen wird auf die Technische
+      Dokumentation verwiesen.</para>
+
+      <para><emphasis>Verzeichnis Grunddaten</emphasis></para>
+
+      <para>Das Verzeichnis Grunddaten enthält Geoinformationen über das
+      Einzugsgebiet der Spree in Form von Shape-Files. Diese können genutzt
+      werden, um Lagepläne in Form von Kartenvorlagen zu erstellen (siehe
+      Technische Dokumentation). Folgende Themen sind im Projekt
+      enthalten:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Einzugsgebietsgrenzen</para>
+        </listitem>
+
+        <listitem>
+          <para>Gewässernetz</para>
+        </listitem>
+
+        <listitem>
+          <para>Pegel-, Talsperrenstandorte</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Zum Hinzufügen oder Entfernen von Shape-Dateien müssen die
+      Projektvorlagen vom Benutzer geändert werden (siehe Technische
+      Dokumentation).</para>
+    </section>
+
+    <section id="spree_rechenlaeufe">
+      <title>Rechenvarianten</title>
+
+      <para>Das Verzeichnis einer Rechenvariante enthält alle zur
+      Modellberechnung notwendigen Dateien. Diese werden beim Anlegen eines
+      neuen Rechenfalls automatisch vom Programm in das entsprechende
+      Verzeichnis kopiert. Der Name einer Rechenvariante ist vom Benutzer frei
+      wählbar.</para>
+
+      <figure>
+        <title>Verzeichnis Rechenvarianten (Spree)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/navigator_spree_rechnung.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Unterschieden wird zwischen Zeitreihen, die gemessene
+      Pegelganglinien beschreiben und Steuerdateien, die Parameter zur
+      Modellberechnung enthalten. Die Zeitreihen werden in das gleichnamige
+      Verzeichnis abgelegt. Für jeden Vorhersagepegel wird eine Zeitreihe mit
+      gemessenen Abflüssen aus PSICompact geladen und in das Verzeichnis
+      gespeichert. Folgende Tabellen/Steuerdateien sind im Verzeichnis der
+      Rechenvariante enthalten:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Anfangsvolumen</para>
+
+          <para>Eingabe der Anfgangsstauvolumina der Talsperren.</para>
+        </listitem>
+
+        <listitem>
+          <para>Bodenfeuchten</para>
+
+          <para>Anfangsbodenfeuchten für die N-A-Modelle (inkl.
+          Min-Max-Werte/Plausibilitätsintervalle).</para>
+        </listitem>
+
+        <listitem>
+          <para>Flusslaufparameter</para>
+
+          <para>Modellparameter der Flusslaufmodelle (Niveau- und
+          Laufzeitkorrektur).</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Nach erfolgreich durchgeführter Berechnung werden die
+      Ergebnisdateien im Unterverzeichnis <emphasis
+      role="bold">Ergebnisse</emphasis> gespeichert. Die Speicherung der
+      Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggfs. vom
+      Anwender auf dem Server gespeichert werden (siehe <xref
+      linkend="modellverwaltung" /> und <xref
+      linkend="spree_ergebnisbearbeitung" />).</para>
+    </section>
+
+    <section id="spree_modellparameter">
+      <title>Liste der Modellparameter</title>
+
+      <para>Im Folgenden werden alle verwendeten Modellparameter und Spalten
+      der Modelltabellen für das Vorhersagemodell Spree erläutert. Die Eingabe
+      der Parameter erfolgt entweder im KALYPSO Modeler (Expertenmodus) oder
+      im Vorhersage-Wizard.</para>
+
+      <table>
+        <title>Parameter N-A-Modelle</title>
+
+        <tgroup cols="3">
+          <tbody>
+            <row>
+              <entry>Parameter</entry>
+
+              <entry>Einheit</entry>
+
+              <entry>Bedeutung</entry>
+            </row>
+
+            <row>
+              <entry>BodenfeuchteMin</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Bodenfeuchte (Minimalwert)</entry>
+            </row>
+
+            <row>
+              <entry>Bodenfeuchte</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Anfangsbodenfeuchte</entry>
+            </row>
+
+            <row>
+              <entry>BodenfeuchteMax</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Bodenfeuchte (Maximalwert)</entry>
+            </row>
+
+            <row>
+              <entry>Niederschlag_gemessen</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf gemessene Niederschlagszeitreihe auf dem
+              Server</entry>
+            </row>
+
+            <row>
+              <entry>Niederschlag_prognose</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Niederschlagszeitreihe (Prognose) auf dem
+              Server</entry>
+            </row>
+
+            <row>
+              <entry>Niederschlag_rechnung</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Niederschlagszeitreihe im Modell</entry>
+            </row>
+
+            <row>
+              <entry>Wasserstand_gemessenEingang</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Wasserstandsganglinie auf dem Server</entry>
+            </row>
+
+            <row>
+              <entry>Wasserstand_gemessen</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der gemessenen Wasserstandsganlinie</entry>
+            </row>
+
+            <row>
+              <entry>Wasserstand_gerechnet</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der berechneten Wasserstandsganlinie</entry>
+            </row>
+
+            <row>
+              <entry>Korrektur_Faktor</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor zur Erhöhung des Abflusses
+              (multiplikativ)</entry>
+            </row>
+
+            <row>
+              <entry>Korrektur_Niveau</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfakor zur Erhöhung des Abflusses
+              (additiv)</entry>
+            </row>
+
+            <row>
+              <entry>Korrektur_Laufzeit</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Korrekturfaktor zur Änderung der Laufzeit
+              (additiv)</entry>
+            </row>
+
+            <row>
+              <entry>KorrekturEmpfehlungLaufzeit</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Vorgabe für Korrektur_Laufzeit</entry>
+            </row>
+
+            <row>
+              <entry>Anfangsstauvolumen</entry>
+
+              <entry>[hm3]</entry>
+
+              <entry>Stauinhalt der Talsperren zu Beginn der
+              Simulation</entry>
+            </row>
+
+            <row>
+              <entry>Abgabe_Eingang</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Abgabe-/Überleitungszeitreihe auf dem
+              Server</entry>
+            </row>
+
+            <row>
+              <entry>Abgabe</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der berechneten Zeitreihe der TS-Abgaben /
+              Flutungen</entry>
+            </row>
+
+            <row>
+              <entry>Stauinhalt</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der berechneten Zeitreihe der TS-Volumina</entry>
+            </row>
+
+            <row>
+              <entry>Zugabe_Eingang</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Zuflusszeitreihe auf dem Server</entry>
+            </row>
+
+            <row>
+              <entry>Zugabe</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Zuflusszeitreihe</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+  </section>
+
+  <section id="weisse_elster_modelldaten">
+    <title>Vorhersagemodell Weiße Elster</title>
+
+    <section id="weisse_elster_datenstruktur">
+      <title>Allgemeine Datenstruktur</title>
+
+      <para>Die Verwaltung der Modelldaten für das Vorhersagemodell Weiße
+      Elster erfolgt in Tabellen. Neben dem <emphasis
+      role="bold">Tabellen</emphasis>-Verzeichnis ist ein Übersichtslagepan im
+      <emphasis role="bold">Karten</emphasis>-Verzeichnis enthalten. Die zur
+      Visualisierung benötigten Shape-Files befinden sich im <emphasis
+      role="bold">Shape</emphasis>-Verzeichnis. Der Name des Ordners für die
+      Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner <emphasis
+      role="bold">Rechenvarianten</emphasis> im Projekt vordefiniert.</para>
+
+      <figure id="pic_we_navigator">
+        <title>Navigator Hochwasservorhersagemodell Weisse Elster</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/navigator_we.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis>Verzeichnis Modell_Tabellen</emphasis></para>
+
+      <para>Die Eingabe bzw. Änderung von Modellparametern erfolgt in
+      Tabellen. Die Editierungsmöglichkeiten von Tabellen wird in <xref
+      linkend="ansichtssteuerung" /> beschrieben. Die in den Tabellen
+      enthaltenen Modellparameter werden in <xref
+      linkend="weisse_elster_modellparameter" /> erläutert. Folgende Tabellen
+      sind im Projekt enthalten:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Teilgebiete</para>
+
+          <para>Parameter, die den einzelnen Teilgebieten zugeordnet
+          werden.</para>
+        </listitem>
+
+        <listitem>
+          <para>Gewässer</para>
+
+          <para>Parameter für die Gerinnestränge (hauptsächlich zur Berechnung
+          der Gerinneretention).</para>
+        </listitem>
+
+        <listitem>
+          <para>Knoten</para>
+
+          <para>Parameter für die Modellknoten (Pegel)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis>Verzeichnis Modell_Karten</emphasis></para>
+
+      <para>Im Vorhersagemodell Weiße Elster sind standardmäßig zwei
+      Kartenvorlagen enthalten: ein Lageplan des Einzugsgebiets der Weißen
+      Elster, der gleichzeitig alle Modellelemente (Teilgebiete, Knoten,
+      Gerinnestränge) enthält. Zum Anderen ist eine Übersichtskarte mit den
+      für das Niederschlagsmodell (Niederschlagsmessungen -&gt;
+      Gebietsniederschläge) verwendeten Ombrometern enthalten. Dargestellt
+      wird jeweils das gesamte Einzugsgebiet mit der Unterteilung in
+      Teilgebiete. In der Gebietsansicht werden neben den Gewässern auch die
+      Vorhersagepegel dargstellt. Alle Systemelemente sind mit der
+      Nummerierung versehen, die im Modell verwendet wird. Die Kartenansichten
+      und die dargestellten Elemente können beliebig geändert werden (siehe
+      <xref linkend="ansichtssteuerung" />).</para>
+    </section>
+
+    <section id="weisse_elster_rechenlaeufe">
+      <title>Rechenvarianten</title>
+
+      <para>Das Verzeichnis Rechenvarianten enthält alle zur Modellberechnung
+      notwendigen Dateien. Diese werden beim Anlegen einer neuen
+      Rechenvariante automatisch vom Programm in das entsprechende Verzeichnis
+      kopiert. Beim Vorhersagemodell Weiße Elster werden Zeitreihen und
+      Modellparameter in das Verzeichnis der Rechenvariante abgelegt.
+      Pegelganglinien, Niederschlagszeitreihen (Ombrometer und
+      Gebietsniederschläge) und Zuflussganglinien (TS-Abgaben) werden aus
+      PSICompact geladen und im jeweils gleichnamigen Verzeichnis
+      gespeichert.</para>
+
+      <figure id="pic_weisse_elster_rechenlauf">
+        <title>Verzeichnis Rechenvarianten (Weisse Elster)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/navigator_we_ergebnisse.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Um an einem Modellknoten bzw. Pegel Ergebnisse aus Berechnungen
+      auszugeben, muss in der <emphasis>TabelleKnoten.gtt</emphasis> ein
+      Häkchen in der Spalte <emphasis>berechnen</emphasis><emphasis> (generate
+      Result)</emphasis> gesetzt werden. Die Anzahl der gesetzten Häkchen ist
+      dabei beliebig. Für jeden gewählten Ausgabeknoten wird nach der
+      Berechnung eine Zeitreihe im Unterordner <guimenu>Ergebnisse</guimenu>
+      abgelegt.</para>
+
+      <para>Die Steuerdaten der Berechnung können in der Eingabemaske
+      <emphasis>expertControl.gft</emphasis> geändert werden. Neben den
+      Zeitpunkten für den Start der Berechnung und das Ende der Simulation
+      kann auch der Berechnungszeitschritt vorgegeben werden. Daneben folgen
+      die Ausgabeoptionen für die Berechnung. Es können Zeitreihen für den
+      Gesamtabfluss, die einzelnen Abflusskomponenten eines Teilgebietes, die
+      Eingangszeitreihen (Niederschlag, Temperatur, Verdunstung) für ein
+      Teilgebiet und weitere Rechenergebnisse ausgegeben werden. Die
+      Kalibrierungsfaktoren für den Vorhersagewizard können im Expertenmodus
+      ebenfalls verwendet werden. In der Eingabemaske befinden sich die
+      entsprechenden Felder. Nach Änderung der Steuerdaten werden die
+      Zeitreihen nicht automatisch aktualisiert. Dies muss vom Anwender über
+      <guimenu>Rechenvariante -&gt; Zeitreihen</guimenu> aktualisieren
+      vorgenommen werden.</para>
+
+      <para>Nach erfolgreich durchgeführter Berechnung werden die
+      Ergebnisdateien im Unterordner <emphasis
+      role="bold">Ergebnisse</emphasis> gespeichert. Die Speicherung der
+      Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggfs. vom
+      Anwender auf dem Server aktualisiert werden (siehe <xref
+      linkend="modellverwaltung" /> und <xref
+      linkend="weisse_elster_6" />).</para>
+    </section>
+
+    <section id="weisse_elster_modellparameter">
+      <title>Liste der Modellparameter</title>
+
+      <para>Im Folgenden werden alle verwendeten Modellparameter für das
+      Vorhersagemodell Weiße Elster erläutert. Die Eingabe der Parameter
+      erfolgt in den Modelltabellen und Eingabemasken im KALYPSO Modeler oder
+      eingeschränkt im Vorhersage-Wizard. Weitere Erläuterungen zu den
+      Modellparametern befinden sich im Erläuterungsbericht zum
+      Hochwasservorhersagemodell Weiße Elster (Teil 1: Theoretische Grundlagen
+      und Modellkonzept).</para>
+
+      <table id="dummy3">
+        <title>Modellparameter der Teilgebiete (Weiße Elster)</title>
+
+        <tgroup cols="3">
+          <tbody>
+            <row>
+              <entry>Parameter</entry>
+
+              <entry>Einheit</entry>
+
+              <entry>Bedeutung</entry>
+            </row>
+
+            <row>
+              <entry>inum</entry>
+
+              <entry></entry>
+
+              <entry>Teilgebiets-, Strang-, Knotennummer</entry>
+            </row>
+
+            <row>
+              <entry>ispk</entry>
+
+              <entry></entry>
+
+              <entry>Gebietsbearbeitungsfall (im HWVS-Modell Weiße Elster
+              immer 7)</entry>
+            </row>
+
+            <row>
+              <entry>flaech</entry>
+
+              <entry>[m2]</entry>
+
+              <entry>Teilgebietsfläche</entry>
+            </row>
+
+            <row>
+              <entry>pns</entry>
+
+              <entry>-</entry>
+
+              <entry>Art des Niederschlags (immer "n")</entry>
+            </row>
+
+            <row>
+              <entry>kurzzeit</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Niederschlagsdatei kurzzeit</entry>
+            </row>
+
+            <row>
+              <entry>langzeit</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Niederschlagsdatei langzeit</entry>
+            </row>
+
+            <row>
+              <entry>namfn</entry>
+
+              <entry>-</entry>
+
+              <entry>ohne Bedeutung</entry>
+            </row>
+
+            <row>
+              <entry>faktn</entry>
+
+              <entry>-</entry>
+
+              <entry>Niederschlagsfaktor (multipilkativ)</entry>
+            </row>
+
+            <row>
+              <entry>namft</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Temperaturdatei</entry>
+            </row>
+
+            <row>
+              <entry>namept</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Verdunstungsdatei</entry>
+            </row>
+
+            <row>
+              <entry>namfzf</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Zeitflächenfunktion</entry>
+            </row>
+
+            <row>
+              <entry>namhydro</entry>
+
+              <entry>-</entry>
+
+              <entry>Name der Hydrotopdatei</entry>
+            </row>
+
+            <row>
+              <entry>snowtype</entry>
+
+              <entry>-</entry>
+
+              <entry>Schneetyp</entry>
+            </row>
+
+            <row>
+              <entry>ftem</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor Temperatur (additiv)</entry>
+            </row>
+
+            <row>
+              <entry>fver</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor Verdunstung (multiplikativ)</entry>
+            </row>
+
+            <row>
+              <entry>vsg</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Versiegelungsgrad</entry>
+            </row>
+
+            <row>
+              <entry>anzlayy</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Anzahl der Bodenhorizonte</entry>
+            </row>
+
+            <row>
+              <entry>bimax</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor max. Inhalt Interzeptionsspeicher</entry>
+            </row>
+
+            <row>
+              <entry>bianf</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor Anfangsinhalt
+              Interzeptionsspeicher</entry>
+            </row>
+
+            <row>
+              <entry>faktorbianf</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor Anfangsbodenfeuchte (max: 1,0)</entry>
+            </row>
+
+            <row>
+              <entry>izkn_vers</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Zielknoten versiegelter Abfluss</entry>
+            </row>
+
+            <row>
+              <entry>tint</entry>
+
+              <entry>[mm/h]</entry>
+
+              <entry>Anstiegsrate Interflow</entry>
+            </row>
+
+            <row>
+              <entry>rintmx</entry>
+
+              <entry>[mm]</entry>
+
+              <entry>maximaler Interflow</entry>
+            </row>
+
+            <row>
+              <entry>bodenkorrekturmember</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Korrektur Infiltration und Perklation</entry>
+            </row>
+
+            <row>
+              <entry>f_eva</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Vegetationsabhängige Verdunstungkorrektur</entry>
+            </row>
+
+            <row>
+              <entry>aint</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Anfangsinhalt Interzeptionsspeicher</entry>
+            </row>
+
+            <row>
+              <entry>aigw</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Anfangsinhalt Grundwasserspeicher</entry>
+            </row>
+
+            <row>
+              <entry>faktorAigw</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Faktor Anfangsinhalt Grundwasserspeicher</entry>
+            </row>
+
+            <row>
+              <entry>fint</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Faktor Interzeptionsspeicher Winterhalbjahr</entry>
+            </row>
+
+            <row>
+              <entry>ftra</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Faktor Verdunstung Winterhalbjahr</entry>
+            </row>
+
+            <row>
+              <entry>retvs</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Retentionskonstante versiegelter Abfluss</entry>
+            </row>
+
+            <row>
+              <entry>retob</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Retentionskonstante Oberflächenabfluss</entry>
+            </row>
+
+            <row>
+              <entry>retint</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Retentionskonstante Interflow</entry>
+            </row>
+
+            <row>
+              <entry>faktorRetobRetint</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Faktor Retention Oberflächenabfluss und Interflow</entry>
+            </row>
+
+            <row>
+              <entry>retbas</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Retentionskonstante Basisabfluss</entry>
+            </row>
+
+            <row>
+              <entry>retgw</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Retentionskonstante Grundwasserabfluss</entry>
+            </row>
+
+            <row>
+              <entry>retklu</entry>
+
+              <entry>[h]</entry>
+
+              <entry>Retentionskonstante Tiefengrundwasser</entry>
+            </row>
+
+            <row>
+              <entry>igwzu</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Anzahl der Teilgebiete für GW-Abfluss</entry>
+            </row>
+
+            <row>
+              <entry>grundwasserabflussmember</entry>
+
+              <entry>-</entry>
+
+              <entry>Teilgebietsnummer für den GW-Abfluss</entry>
+            </row>
+
+            <row>
+              <entry>entwaesserung</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Wichtung der GW-Abflüsse</entry>
+            </row>
+
+            <row>
+              <entry>hgru</entry>
+
+              <entry>[m]</entry>
+
+              <entry>minimale Stauhöhe GW-Speicher</entry>
+            </row>
+
+            <row>
+              <entry>hgro</entry>
+
+              <entry>[m]</entry>
+
+              <entry>maximale Stauhöhe GW-Speicher</entry>
+            </row>
+
+            <row>
+              <entry>rtr</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Aufteilungsfaktor GW-Speicher und
+              Tiefengrundwasser</entry>
+            </row>
+
+            <row>
+              <entry>pors</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Porosität des GW-Leiters</entry>
+            </row>
+
+            <row>
+              <entry>gwsent</entry>
+
+              <entry>[m3/s]</entry>
+
+              <entry>Entnahme aus dem GW-Speicher</entry>
+            </row>
+
+            <row>
+              <entry>klupor</entry>
+
+              <entry>[%]</entry>
+
+              <entry>Zuflussrate Tiefengrundwasserleiter</entry>
+            </row>
+
+            <row>
+              <entry>izkn</entry>
+
+              <entry>-</entry>
+
+              <entry>Zielknoten des Tiefengrundwassers</entry>
+            </row>
+
+            <row>
+              <entry>temperaturZR</entry>
+
+              <entry>-</entry>
+
+              <entry>Link zu Temperaturzeitreihen auf dem Server</entry>
+            </row>
+
+            <row>
+              <entry>niederschlagZR</entry>
+
+              <entry>-</entry>
+
+              <entry>Link zu Verdunstungszeitreihen auf dem Server</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <table>
+        <title>Modellparameter der Gerinneelemente (Weiße Elster)</title>
+
+        <tgroup cols="3">
+          <tbody>
+            <row>
+              <entry>Parameter</entry>
+
+              <entry>Einheit</entry>
+
+              <entry>Bedeutung</entry>
+            </row>
+
+            <row>
+              <entry>qfmax</entry>
+
+              <entry>[m3/s]</entry>
+
+              <entry>bordvoller Abfluss eines Gerinneabschnittes</entry>
+            </row>
+
+            <row>
+              <entry>c</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Aufteilungsfakor Gerinne - Vorland</entry>
+            </row>
+
+            <row>
+              <entry>downstreamnodemember</entry>
+
+              <entry>-</entry>
+
+              <entry>Zielknoten des Abflusses</entry>
+            </row>
+
+            <row>
+              <entry>faktorRKf</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor Speicherkonstante</entry>
+            </row>
+
+            <row>
+              <entry>faktorRnf</entry>
+
+              <entry>[-]</entry>
+
+              <entry>Korrekturfaktor Anzahl der Speicher</entry>
+            </row>
+
+            <row>
+              <entry>KMParameterMember</entry>
+
+              <entry>-</entry>
+
+              <entry>Link zu Datensatz mit Gerinneparametern (n und K)</entry>
+            </row>
+
+            <row>
+              <entry>generate Result</entry>
+
+              <entry>-</entry>
+
+              <entry>Ergebnisausgabe</entry>
+            </row>
+
+            <row>
+              <entry>downstreamchannel</entry>
+
+              <entry>-</entry>
+
+              <entry>Nr. des Gerinnes, das auf den Knoten folgt</entry>
+            </row>
+
+            <row>
+              <entry>zuflussZR</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Zuflusszeitreihe</entry>
+            </row>
+
+            <row>
+              <entry>nzufPfad</entry>
+
+              <entry>-</entry>
+
+              <entry>Pfad der Zuflüsse (wird nicht berücksichtigt)</entry>
+            </row>
+
+            <row>
+              <entry>pegelZR</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Pegelzeitreihe</entry>
+            </row>
+
+            <row>
+              <entry>qberechnetZR</entry>
+
+              <entry>-</entry>
+
+              <entry>Link auf Ergebniszeitreihe</entry>
+            </row>
+
+            <row>
+              <entry>zproz</entry>
+
+              <entry>-</entry>
+
+              <entry>Aufteilungsfaktor</entry>
+            </row>
+
+            <row>
+              <entry>verzweigungNodeMember</entry>
+
+              <entry>-</entry>
+
+              <entry>Knoten, zu dem Aufteilung erfolgt</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+  </section>
+</chapter>

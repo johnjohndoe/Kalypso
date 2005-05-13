@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "" "manual.dtd"
+[
+	<!ENTITY file_bookinfo SYSTEM "bookinfo.xml">
+	<!ENTITY file_allgemeines SYSTEM "allgemeines.xml">
+	<!ENTITY file_programm_start SYSTEM "Programm-Start.xml">
+	<!ENTITY file_gui SYSTEM "gui.xml">
+	<!ENTITY file_repository SYSTEM "repository.xml">
+]>
+
+<book id="book" lang="de">
+
+	&file_bookinfo;	
+	
+	<toc></toc>
+
+	&file_allgemeines;
+	&file_programm_start;
+	&file_gui;
+	&file_repository;
+
+	<lot></lot>
+
+</book>

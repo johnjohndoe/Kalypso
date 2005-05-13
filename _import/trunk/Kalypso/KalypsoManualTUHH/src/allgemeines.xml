@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="einfuehrung">
+  <?dbhh topicname="Allgemeines" topicid="2"?>
+
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Einführung in KALYPSO</primary>
+      </indexterm></date>
+  </chapterinfo>
+
+  <title>Einführung</title>
+
+  <section id="allgemeines_zu_kalypso">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>KALYPSO-Konzept</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Allgemeines zu KALYPSO</title>
+
+    <para id="para1">Das Programm-System KALYPSO Enterprise ist eine Open
+    Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in
+    Kooperation mit dem Arbeitsbereich Wasserbau der Technischen Universität
+    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
+    numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
+    einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
+    Abstraktionsschicht dar mit folgenden Eigenschaften:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>einheitliche Verwaltung und Strukturierung
+        hydrologisch-hydraulischer Modelle</para>
+      </listitem>
+
+      <listitem>
+        <para>zentrale Datenspeicherung (ggf. mit Datenbankanbindung)</para>
+      </listitem>
+
+      <listitem>
+        <para>Integration von hydrologischen und hydraulischen
+        Berechnungsverfahren auf Basis unterschiedlicher Rechenkerne</para>
+      </listitem>
+    </itemizedlist>
+
+    <para></para>
+
+    <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
+    an:</para>
+
+    <para><itemizedlist>
+        <listitem>
+          <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
+          Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
+
+          <para><graphic fileref="img/wasserbau-logo.png" scale="" /></para>
+        </listitem>
+      </itemizedlist>oder</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
+        Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
+        info@bjoernsen.de</para>
+      </listitem>
+    </itemizedlist>
+
+    <graphic fileref="img/000_001_bce_sw_300.png" />
+
+    <para></para>
+
+    <para><emphasis role="bold">Die Nymphe Kalypso</emphasis></para>
+
+    <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
+    genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
+    Namen.</para>
+
+    <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem sein
+    Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel Ogygia
+    gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus Liebe dort
+    gefangen und wollte ihn zu Ihrem unsterblichen Ehemann nehmen. Doch selbst
+    nach Jahren des Umwerbens und Betörens von Kalypso's Seite sehnte sich
+    Odysseus immer noch nach seiner Frau und seinem Sohn.</para>
+
+    <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
+    entsandte, liess Kalypso Odysseus frei, sodass er seine Reise Richtung
+    Heimat fortsetzen konnte.</para>
+  </section>
+</chapter>
