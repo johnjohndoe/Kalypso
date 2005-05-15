@@ -84,7 +84,6 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
 
   private final String m_substitutionGroup;
 
-
   private final FeatureTypeProperty[] m_properties;
 
   private final int[] m_minOccurs;
@@ -100,8 +99,8 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
   public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
       int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
-    super(name,namespace,annotationMap);
-    
+    super( name, namespace, annotationMap );
+
     m_substitutionGroup = substitutionGroup;
     m_properties = properties;
     m_minOccurs = minOccurs;
@@ -158,7 +157,6 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     }
     return ret;
   }
-
 
   public int getMinOccurs( int pos )
   {
@@ -251,7 +249,7 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
   public int hashCode()
   {
     if( getNamespace() != null )
-      return ( getNamespace() + getName()).hashCode();
+      return ( getNamespace() + getName() ).hashCode();
     return getName().hashCode();
   }
 
@@ -284,4 +282,13 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     return m_minOccurs[getPropertyPosition( linkName )];
   }
 
+  /**
+   * 
+   * @see org.kalypsodeegree.model.feature.FeatureType#isListProperty(java.lang.String)
+   */
+  public boolean isListProperty( String propName )
+  {
+    final int maxOccurs = getMaxOccurs( propName );
+    return ( maxOccurs > 1 || maxOccurs == UNBOUND_OCCURENCY );
+  }
 }

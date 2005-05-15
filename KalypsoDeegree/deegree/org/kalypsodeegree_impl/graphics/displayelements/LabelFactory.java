@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
@@ -115,13 +115,21 @@ public class LabelFactory
     {
       return new HorizontalLabel( caption, font, color, metrics, feature, halo, x, y, w, h,
           new double[]
-          { anchorPointX, anchorPointY }, new double[]
-          { displacementX, displacementY } );
+          {
+              anchorPointX,
+              anchorPointY }, new double[]
+          {
+              displacementX,
+              displacementY } );
     }
     return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation,
         new double[]
-        { anchorPointX, anchorPointY }, new double[]
-        { displacementX, displacementY } );
+        {
+            anchorPointX,
+            anchorPointY }, new double[]
+        {
+            displacementX,
+            displacementY } );
   }
 
   public static Label createLabel( String caption, Font font, Color color, LineMetrics metrics,
@@ -145,8 +153,8 @@ public class LabelFactory
    * @param element
    * @param projection
    * @param g
-   * @return @throws
-   *         Exception
+   * @return
+   * @throws Exception
    */
   public static Label[] createLabels( LabelDisplayElement element, GeoTransform projection,
       Graphics2D g ) throws Exception
@@ -154,8 +162,16 @@ public class LabelFactory
 
     Label[] labels = new Label[0];
     Feature feature = element.getFeature();
-    String caption = element.getLabel().evaluate( feature );
-
+    String caption = null;
+    try
+    {
+      caption = element.getLabel().evaluate( feature );
+    }
+    catch( FilterEvaluationException e )
+    {
+      // if properties are unknown to features, this should be ignored!
+      return labels;
+    }
     // sanity check: empty labels are ignored
     if( caption == null || caption.trim().equals( "" ) )
     {
@@ -189,9 +205,13 @@ public class LabelFactory
       // default placement information
       double rotation = 0.0;
       double[] anchorPoint =
-      { 0.0, 0.5 };
+      {
+          0.0,
+          0.5 };
       double[] displacement =
-      { 0.0, 0.0 };
+      {
+          0.0,
+          0.0 };
 
       // use placement information from SLD
       LabelPlacement lPlacement = symbolizer.getLabelPlacement();
@@ -219,9 +239,13 @@ public class LabelFactory
       // default placement information
       double rotation = 0.0;
       double[] anchorPoint =
-      { 0.5, 0.5 };
+      {
+          0.5,
+          0.5 };
       double[] displacement =
-      { 0.0, 0.0 };
+      {
+          0.0,
+          0.0 };
 
       // use placement information from SLD
       LabelPlacement lPlacement = symbolizer.getLabelPlacement();
@@ -397,11 +421,17 @@ public class LabelFactory
       {
 
         int[] p0 = new int[]
-        { boxStartX, boxStartY };
+        {
+            boxStartX,
+            boxStartY };
         int[] p1 = new int[]
-        { lastX, lastY };
+        {
+            lastX,
+            lastY };
         int[] p2 = new int[]
-        { x, y };
+        {
+            x,
+            y };
 
         int[] p = findPointWithDistance( p0, p1, p2, w );
         x = p[0];
@@ -425,8 +455,12 @@ public class LabelFactory
 
         double rotation = getRotation( boxStartX, boxStartY, x, y );
         double[] deviation = calcDeviation( new int[]
-        { boxStartX, boxStartY }, new int[]
-        { boxEndX, boxEndY }, eCandidates );
+        {
+            boxStartX,
+            boxStartY }, new int[]
+        {
+            boxEndX,
+            boxEndY }, eCandidates );
 
         Label label = null;
 
@@ -471,7 +505,9 @@ public class LabelFactory
       else
       {
         eCandidates.add( new int[]
-        { x, y } );
+        {
+            x,
+            y } );
         lastX = x;
         lastY = y;
         i++;
@@ -538,7 +574,9 @@ public class LabelFactory
               / ( 1.0 + u * u );
           double y = ( x - start[0] ) * u + start[1];
           double d = getDistance( point, new int[]
-          { (int)( x + 0.5 ), (int)( y + 0.5 ) } );
+          {
+              (int)( x + 0.5 ),
+              (int)( y + 0.5 ) } );
           if( y >= point[1] )
           {
             // candidate for left extreme value
@@ -600,7 +638,9 @@ public class LabelFactory
       }
     }
     return new double[]
-    { d1, d2 };
+    {
+        d1,
+        d2 };
   }
 
   /**
@@ -680,7 +720,9 @@ public class LabelFactory
       }
     }
     return new int[]
-    { (int)( x + 0.5 ), (int)( y + 0.5 ) };
+    {
+        (int)( x + 0.5 ),
+        (int)( y + 0.5 ) };
   }
 
   public static double getRotation( double x1, double y1, double x2, double y2 )
@@ -718,7 +760,7 @@ public class LabelFactory
     }
     catch( GM_Exception e )
     {
-    //  
+      //  
     }
 
     int count = lineString.getNumberOfPoints();

@@ -100,39 +100,3 @@ public interface FeatureTypeProperty
 
   public Map getAnnotationMap();
 }
-/*
- * Changes to this class. What the people haven been up to:
- * 
- * $Log$
- * Revision 1.6  2005/03/08 11:01:10  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2005/01/18 12:50:43  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2004/10/09 18:41:20  belger
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:24  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:57:12  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 12:45:01 doemming
- * *** empty log message *** Revision 1.2 2004/02/09 07:57:01 poth no message
- * 
- * Revision 1.1.1.1 2002/09/25 16:01:47 poth no message
- * 
- * Revision 1.2 2002/08/15 10:02:25 ap no message
- * 
- * Revision 1.1 2002/04/04 16:17:15 ap no message
- * 
- * Revision 1.4 2002/03/04 10:20:31 ap no message
- * 
- * Revision 1.3 2001/10/23 13:41:52 ap no message
- * 
- * Revision 1.2 2001/10/15 14:48:19 ap no message
- * 
- * Revision 1.1 2001/10/05 15:19:43 ap no message
- *  
- */

@@ -106,6 +106,14 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
   {
+    if( srcFeature.getFeatureType().getMaxOccurs( linkPropertyName ) == 1 )
+    {
+      final Feature feature = resolveLink( srcFeature, linkPropertyName );
+      if( feature != null )
+        return new Feature[]
+        { feature };
+      return new Feature[] {};
+    }
     final List result = new ArrayList();
     final List linkList = (List)srcFeature.getProperty( linkPropertyName );
 
@@ -249,10 +257,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_context;
   }
-  
-  public void setContext(URL context)
+
+  public void setContext( URL context )
   {
-   m_context=context;  
+    m_context = context;
   }
 
   /**
@@ -341,8 +349,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       final String id = f.getId();
       // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
-//      if( m_indexMap.containsKey( id ) )
-//        System.out.println( "Workspace already contains a feature with id: " + id );
+      //      if( m_indexMap.containsKey( id ) )
+      //        System.out.println( "Workspace already contains a feature with id: " +
+      // id );
       m_indexMap.put( id, f );
       return true;
     }
@@ -412,22 +421,25 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           final String typename = path.getTypename();
           if( typename == null )
             return value;
-          
+
           final FeatureList fl = (FeatureList)value;
-          
+
           // Versuchsweise!!! nicht löschen
-          
+
           // ALT: eine neue FeatureList zurückgeben, die nur diesen Typ enthält
-          // Problem: änderungen in dieser Liste führen nicht zu änderungen im GML
-//          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename, true );
-//          fl.accept( visitor );
-//          final Collection results = visitor.getResults();
-//          final FeatureList newList = FeatureFactory.createFeatureList();
-//          newList.addAll( results );
-//          return newList;
+          // Problem: änderungen in dieser Liste führen nicht zu änderungen im
+          // GML
+          //          final FeatureTypeVisitor visitor = new FeatureTypeVisitor(
+          // typename, true );
+          //          fl.accept( visitor );
+          //          final Collection results = visitor.getResults();
+          //          final FeatureList newList = FeatureFactory.createFeatureList();
+          //          newList.addAll( results );
+          //          return newList;
 
           // NEU: eine gefiltere FeatureList (siehe FilteredFeatureList)
-          // Problem: ist langsamer und unterstützt nicht alle Operationen der Originalliste
+          // Problem: ist langsamer und unterstützt nicht alle Operationen der
+          // Originalliste
           return new FilteredFeatureList( fl, typename, true );
 
         }
@@ -526,11 +538,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return id + Integer.toString( no );
   }
 
-  /*
-   * @param parent null if rootFeature else parent @param propname @param pos if
-   * propvalue is list, else ignore
+  /**
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */
-  public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
+  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception
   {
     Object prop = parent.getProperty( propName );
@@ -552,65 +565,86 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     throw new Exception( "New Feature violates maxOccurs" );
   }
 
-  public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
+  /**
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int, java.lang.String)
+   */
+  public void addFeatureAsAggregation( Feature srcFE, String propName, int pos, String featureID )
       throws Exception
   {
-    Object prop = parent.getProperty( propName );
-    if( prop instanceof List )
+    if( srcFE.getFeatureType().isListProperty( propName ) )
     {
-      ( (List)prop ).add( pos, newFeature.getId() );
-      return;
+      int maxOccurs = srcFE.getFeatureType().getMaxOccurs( propName );
+      List list = (List)srcFE.getProperty( propName );
+      if( list.size() < maxOccurs )
+        list.add( pos, featureID );
+      else
+        throw new Exception( "New Feature violates maxOccurs" );
     }
-    else if( prop == null ) // element not set
+    else if( srcFE.getProperty( propName ) == null )
     {
-      int propPos = parent.getFeatureType().getPropertyPosition( propName );
-      if( propPos != -1 )
-      {
-        parent.getProperties()[propPos] = newFeature.getId();
-      }
-      return;
+      srcFE.setProperty( FeatureFactory.createFeatureProperty( propName, featureID ) );
     }
-    // TODO eigene exception entwerfen
-    throw new Exception( "New Feature violates maxOccurs" );
-  }
-
-/**
- * 
- * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
- */
-  public void removeLinkedFeature( Feature parentFeature, String propName, Feature childFeature )
-  {
-    final Object prop = parentFeature.getProperty( propName );
-    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propName);
-    switch(maxOccurs)
-    {
-      case 1:
-        parentFeature.setProperty(FeatureFactory.createFeatureProperty(propName, null));
-      break;  
-      default:
-      List list = (List)prop;
-      list.remove( childFeature.getId() );
-    }
+    else
+      throw new Exception( "New Feature as allready set" );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsAggregationFeature(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, java.lang.String)
    */
-  public void removeLinkedAsCompositionFeature( Feature parentFeature, String propName, Feature childFeature )
+  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName,
+      String childFeatureId )
   {
     final Object prop = parentFeature.getProperty( propName );
-    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propName);
-    switch(maxOccurs)
+    if( parentFeature.getFeatureType().isListProperty( propName ) )
     {
-      case 1:
-        parentFeature.setProperty(FeatureFactory.createFeatureProperty(propName, null));
-      break;  
-      default:
       List list = (List)prop;
-      list.remove( childFeature);
+      return list.remove( childFeatureId );
     }
+    if( childFeatureId.equals( parentFeature.getProperty( propName ) ) )
+    {
+      parentFeature.setProperty( FeatureFactory.createFeatureProperty( propName, null ) );
+      return true;
+    }
+    return false;
   }
-  
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
+   */
+  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
+      Feature childFeature )
+  {
+    boolean ok = false;
+    final Object prop = parentFeature.getProperty( propName );
+    int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propName );
+    switch( maxOccurs )
+    {
+    case 1:
+      if( parentFeature.getProperty( propName ) == childFeature )
+      {
+        parentFeature.setProperty( FeatureFactory.createFeatureProperty( propName, null ) );
+        ok = true;
+      }
+      break;
+    default:
+      List list = (List)prop;
+      ok = list.remove( childFeature );
+    }
+    if( ok )
+      unregisterFeature( childFeature );
+    return ok;
+  }
+
+  private void unregisterFeature( Feature childFeature )
+  {
+    m_indexMap.remove( childFeature.getId() );
+  }
+
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceMap()
    */
@@ -619,5 +653,19 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_nsMap;
   }
 
-  
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
+   */
+  public boolean isExistingRelation( Feature srcFE, Feature destFE, String relationPropName )
+  {
+    Feature[] features = resolveLinks( srcFE, relationPropName );
+    for( int i = 0; i < features.length; i++ )
+    {
+      if( features[i] == destFE )
+        return true;
+    }
+    return false;
+  }
+
 }

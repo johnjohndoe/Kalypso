@@ -249,7 +249,8 @@ class GM_Position_Impl implements GM_Position, Serializable
     final double[] otherPos = other.getAsArray();
     final double[] pos = getAsArray();
     double square = 0;
-    for( int j = 0; j < pos.length; j++ )
+    //    for( int j = 0; j < pos.length; j++ )
+    for( int j = 0; j < 2; j++ )
       square += Math.pow( pos[j] - otherPos[j], 2d );
     return Math.pow( square, 0.5d );
   }

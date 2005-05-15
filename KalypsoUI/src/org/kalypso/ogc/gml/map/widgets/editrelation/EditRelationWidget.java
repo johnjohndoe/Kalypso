@@ -48,10 +48,13 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
@@ -64,7 +67,9 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand;
-import org.kalypso.ui.editor.gmleditor.util.command.AddLinkCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.RemoveHeavyRelationCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -73,6 +78,7 @@ import org.kalypsodeegree.model.feature.CascadingFeatureList;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -89,9 +95,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private Feature m_srcFE = null;
+  final String[] m_modeItems = new String[]
+  {
+      "Relation erstellen",
+      "Relationen entfernen" };
 
-  private Feature m_targetFE = null;
+  Feature m_srcFE = null;
+
+  Feature m_targetFE = null;
 
   private FeatureList m_allowedFeatureList = null;
 
@@ -109,6 +120,14 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   final StringBuffer m_fitProblems = new StringBuffer();
 
+  private Combo m_modeCombo;
+
+  public static final int MODE_ADD = 0;
+
+  public static final int MODE_REMOVE = 1;
+
+  int m_modificationMode = MODE_ADD;
+
   /*
    * 
    * @author doemming
@@ -116,6 +135,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public EditRelationWidget( String name, String toolTip )
   {
     super( name, toolTip );
+    setLeftMFunction( "Quelle wählen" );
   }
 
   public void leftPressed( Point p )
@@ -155,27 +175,26 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#perform()
-   */
-  public void perform()
-  {
-    super.perform();
-  }
-
-  /**
    * @return list of
    * @see RelationType that fit to the selected features
    */
   private List getFitList( Feature fromFE, Feature toFE )
   {
     final List fitList = new ArrayList();
-    final RelationType[] relations = m_contentProvider.getCheckedRelations();
+    final IKalypsoTheme activeTheme = getActiveTheme();
+
+    if( fromFE == null || toFE == null || activeTheme == null
+        || !( activeTheme instanceof IKalypsoFeatureTheme ) )
+      return fitList;
+    final GMLWorkspace workspace = ( (IKalypsoFeatureTheme)activeTheme ).getWorkspace();
+    final IRelationType[] relations = m_contentProvider.getCheckedRelations();
     for( int i = 0; i < relations.length; i++ )
     {
-      final RelationType relation = relations[i];
-      if( relation.fitsTypes( fromFE, toFE ) )
+      final IRelationType relation = relations[i];
+      if( relation.fitsTypes( fromFE.getFeatureType(), toFE.getFeatureType() ) )
       {
-        final String fitProblems = relation.getFitProblems( fromFE );
+        final String fitProblems = relation.getFitProblems( workspace, fromFE, toFE,
+            getModificationMode() == MODE_ADD );
         if( fitProblems == null )
           fitList.add( relation );
         else
@@ -187,6 +206,11 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     if( fitList.isEmpty() && m_fitProblems.length() == 0 )
       m_fitProblems.append( "Ziel nicht erlaubt" );
     return fitList;
+  }
+
+  private int getModificationMode()
+  {
+    return m_modificationMode;
   }
 
   public void dragged( Point p )
@@ -307,29 +331,65 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
   }
 
-  /*
-   *  
+  /**
+   * 
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
    */
   protected final ICommand performIntern()
   {
     final List fitList = getFitList( m_srcFE, m_targetFE );
     for( Iterator iter = fitList.iterator(); iter.hasNext(); )
     {
-      RelationType element = (RelationType)iter.next();
+      IRelationType element = (IRelationType)iter.next();
       System.out.println( element.toString() );
     }
     // TODO handle fitList.size()>1 with dialog
     if( fitList.size() < 1 )
       return null;
-    final RelationType relation = (RelationType)fitList.get( 0 );
+    final IRelationType relation = (IRelationType)fitList.get( 0 );
     final GMLWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
-    if( relation instanceof HeavyRelationType )
+    final ICommand command;
+    switch( getModificationMode() )
     {
-      final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
-      return new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink(),
-          heavyRealtion.getDestLinkFTP(), m_targetFE );
+    case MODE_ADD:
+      if( relation instanceof HeavyRelationType )
+      {
+        final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
+        command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(),
+            heavyRealtion.getLink2(), m_targetFE );
+      }
+      else
+      {
+        final RelationType normalRelation = (RelationType)relation;
+        command = new AddRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), 0,
+            m_targetFE );
+      }
+      break;
+    case MODE_REMOVE:
+      if( relation instanceof HeavyRelationType )
+      {
+        final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
+
+        FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor(
+            workspace, heavyRealtion );
+        visitor.visit( m_srcFE );
+        Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( m_targetFE );
+        if( bodyFeatureFor.length > 0 )
+          command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(),bodyFeatureFor[0], heavyRealtion.getLink2().getName(), m_targetFE );
+        else
+          command = null;
+      }
+      else
+      {
+        final RelationType normalRelation = (RelationType)relation;
+        command = new RemoveRelationCommand( workspace, m_srcFE,
+            normalRelation.getLink().getName(), m_targetFE );
+      }
+      break;
+    default:
+      command = null;
     }
-    return new AddLinkCommand( workspace, m_srcFE, relation.getLink().getName(), 0, m_targetFE );
+    return command;
   }
 
   private void updateProblemsText()
@@ -355,7 +415,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   }
 
-  private void updateInfoText()
+  void updateInfoText()
   {
     final String lang = KalypsoGisPlugin.getDefault().getLang();
     final StringBuffer labelBuffer = new StringBuffer();
@@ -406,6 +466,23 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         }
       } );
     }
+    if( m_srcFE == null )
+    {
+      setLeftMFunction( "Quelle wählen" );
+      setRightMFunction( null );
+    }
+    // src != null && m_targetFE==null
+    else if( m_targetFE == null )
+    {
+      setLeftMFunction( "Ziel wählen" );
+      setRightMFunction( "Auswahl aufheben" );
+    }
+    // src != null && m_targetFE!=null
+    else
+    {
+      setLeftMFunction( "Relation anlegen" );
+      setRightMFunction( "Auswahl aufheben" );
+    }
   }
 
   /**
@@ -413,6 +490,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    */
   public void disposeControl()
   {
+    if( m_modeCombo != null && !m_modeCombo.isDisposed() )
+      m_modeCombo.dispose();
     if( m_topLevel != null && !m_topLevel.isDisposed() )
       m_topLevel.dispose();
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
@@ -429,8 +508,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   {
     m_topLevel = new Composite( parent, SWT.NONE );
     Layout gridLayout = new GridLayout( 1, false );
-    m_topLevel.setLayout( gridLayout );
 
+    m_topLevel.setLayout( gridLayout );
     GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.verticalAlignment = GridData.FILL;
@@ -438,13 +517,35 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     data.grabExcessVerticalSpace = true;
     m_topLevel.setLayoutData( data );
 
+    // combo, "add relation" or "remove relation"
+    final GridData data3 = new GridData();
+    data3.horizontalAlignment = GridData.FILL;
+    data3.verticalAlignment = GridData.FILL;
+    data3.grabExcessHorizontalSpace = true;
+    data3.grabExcessVerticalSpace = false;
+
+    m_modeCombo = new Combo( parent, SWT.READ_ONLY );
+    m_modeCombo.setItems( m_modeItems );
+    m_modeCombo.setText( m_modeItems[m_modificationMode] );
+    m_modeCombo.setLayoutData( data3 );
+    m_modeCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        m_modificationMode = ( (Combo)e.getSource() ).getSelectionIndex();
+        m_srcFE = null;
+        m_targetFE = null;
+        updateInfoText();
+      }
+    } );
     // tree
     final GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.FILL;
     data2.verticalAlignment = GridData.FILL;
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
-    //    m_viewer = new CheckboxTreeViewer( parent, SWT.FILL );
+
+    //  m_viewer = new CheckboxTreeViewer( parent, SWT.FILL );
     m_viewer = new TreeViewer( m_topLevel, SWT.FILL );
     m_viewer.getControl().setLayoutData( data2 );
     m_viewer.setContentProvider( m_contentProvider );

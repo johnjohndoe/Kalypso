@@ -196,12 +196,10 @@ public class DisplayElementFactory
             }
           }
         }
-
-        Debug.debugMethodEnd();
       }
       catch( IncompatibleGeometryTypeException e )
       {
-        System.out.println( e );
+        System.out.println("wrong style ?:"+ e.getLocalizedMessage() );
         e.printStackTrace();
       }
     }
@@ -418,7 +416,8 @@ public class DisplayElementFactory
       GM_Object geom, LineSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     LineStringDisplayElement displayElement = null;
-
+    if( geom == null )
+      return null;
     if( geom instanceof GM_Curve )
     {
       displayElement = new LineStringDisplayElement_Impl( feature, (GM_Curve)geom, sym );

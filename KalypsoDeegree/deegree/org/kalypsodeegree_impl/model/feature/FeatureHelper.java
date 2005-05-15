@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -30,8 +31,7 @@ public class FeatureHelper
     return defaultStatus;
   }
 
-  public static String getFormatedDate( Feature feature, String propName,
-      String simpleDateFormatPattern, String defaultValue )
+  public static String getFormatedDate( Feature feature, String propName, String simpleDateFormatPattern, String defaultValue )
   {
     Object property = feature.getProperty( propName );
     if( property != null && property instanceof Date )
@@ -64,7 +64,6 @@ public class FeatureHelper
       return (String)value;
     return value.toString();
   }
-
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
    * <p>Die Properties werden dabei anhand der übergebenen {@link Properties} zugeordnet. 
@@ -84,7 +83,7 @@ public class FeatureHelper
   {
     final FeatureType sourceType = sourceFeature.getFeatureType();
     final FeatureType targetType = targetFeature.getFeatureType();
-    
+
     for( final Iterator pIt = propertyMap.entrySet().iterator(); pIt.hasNext(); )
     {
       final Map.Entry entry = (Entry)pIt.next();
@@ -98,20 +97,20 @@ public class FeatureHelper
         throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
       if( targetFTP == null )
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
-        
       if( !sourceFTP.getType().equals( targetFTP.getType() ) )
         throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
 
       final Object object = sourceFeature.getProperty( sourceProp );
-      
+
       final Object newobject = cloneData( object, sourceFTP.getType() );
-      
+
       targetFeature.setProperty( FeatureFactory.createFeatureProperty( targetProp, newobject ) );
     }
   }
 
   /**
-   * @throws UnsupportedOperationException If type of object is not supported for clone
+   * @throws UnsupportedOperationException If type of object is not supported
+   *           for clone
    */
   private static Object cloneData( final Object object, final String type )
   {
@@ -120,10 +119,10 @@ public class FeatureHelper
 
     if( object instanceof String )
       return object;
-    
+
     if( object instanceof Number )
       return object;
-    
+
     if( object instanceof GM_Point )
     {
       final GM_Point point = (GM_Point)object;
@@ -139,6 +138,37 @@ public class FeatureHelper
       return object;
     }
 
-    throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type +  "' nicht kopieren." );
+    throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
+  }
+
+  public static boolean isCompositionLink( Feature srcFE, String linkPropName, Feature destFE )
+  {
+    final Object property = srcFE.getProperty( linkPropName );
+    if( property == null )
+      return false;
+    if( srcFE.getFeatureType().isListProperty( linkPropName ) )
+    {
+      // list:
+      final List list = (List)property;
+      return list.contains( destFE );
+    }
+    // no list:
+    return property == destFE;
+  }
+
+  /**
+   * @return position of link or -1 if relation does not exists
+   */
+  public static int getPositionOfAssoziation( Feature srcFE, String linkPropName, Feature destFE )
+  {
+    if( !srcFE.getFeatureType().isListProperty( linkPropName ) )
+      return 0;
+
+    final List list = (List)srcFE.getProperty( linkPropName );
+    int pos = -1;
+    pos = list.indexOf( destFE );
+    if( pos > -1 )
+      return pos;
+    return list.indexOf( destFE.getId() );
   }
 }

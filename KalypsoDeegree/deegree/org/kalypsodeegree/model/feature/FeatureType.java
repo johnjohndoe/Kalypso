@@ -108,12 +108,24 @@ public interface FeatureType
    */
   int getMaxOccurs( int pos );
 
+  /**
+   *  
+   */
   public int getMaxOccurs( String propName );
 
+  /**
+   * return true if max occures is > 1
+   */
+  public boolean isListProperty( String propName );
+
+  /**
+   *  
+   */
   public int getMinOccurs( String propName );
 
   /**
-   * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die FeatureTypeProperty selbst wissen
+   * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die
+   * FeatureTypeProperty selbst wissen
    * 
    * method has default modifier, other classes should use name-methodes not
    * positions
