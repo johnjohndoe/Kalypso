@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class AddLinkCommand implements ICommand
+public class AddRelationCommand implements ICommand
 {
 
   private final Feature m_parentFeature;
@@ -59,14 +59,14 @@ public class AddLinkCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public AddLinkCommand( final GMLWorkspace workspace, Feature parentFeature, String propertyName,
-      int pos, Feature linkFeature )
+  public AddRelationCommand( final GMLWorkspace workspace, Feature srcFE, String propertyName,
+      int pos, Feature destFE )
   {
     m_workspace = workspace;
-    m_parentFeature = parentFeature;
+    m_parentFeature = srcFE;
     m_propName = propertyName;
     m_pos = pos;
-    m_linkFeature = linkFeature;
+    m_linkFeature = destFE;
   }
 
   /**
@@ -82,7 +82,9 @@ public class AddLinkCommand implements ICommand
    */
   public void process() throws Exception
   {
-    addLink();
+    m_workspace.addFeatureAsAggregation( m_parentFeature, m_propName, m_pos, m_linkFeature.getId() );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
+        m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -90,7 +92,7 @@ public class AddLinkCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    addLink();
+    process();
   }
 
   /**
@@ -101,7 +103,7 @@ public class AddLinkCommand implements ICommand
     if( m_linkFeature == null )
       return;
 
-    m_workspace.removeLinkedFeature( m_parentFeature, m_propName, m_linkFeature );
+    m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_propName, m_linkFeature.getId() );
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
         m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
@@ -113,12 +115,5 @@ public class AddLinkCommand implements ICommand
   public String getDescription()
   {
     return null;
-  }
-
-  private void addLink() throws Exception
-  {
-    m_workspace.addLinkedFeature( m_parentFeature, m_propName, m_pos, m_linkFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
-        m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 }

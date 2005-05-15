@@ -43,11 +43,9 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
 
-import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -103,31 +101,9 @@ public class AddHeavyRelationshipCommand implements ICommand
     m_newFeature = m_workspace.createFeature( m_linkFT1.getAssociationFeatureType() );
     // create first link
     final String linkName1 = m_linkFT1.getName();
-    //    final Object value = m_srcFE.getProperty( linkName1 );
-    //    final int maxOccurs = m_srcFE.getFeatureType().getMaxOccurs( linkName1 );
-    m_workspace.addFeature( m_srcFE, linkName1, 0, m_newFeature ); // pos does
-                                                                   // not matter
-    //    switch( maxOccurs )
-    //    {
-    //    // NO LIST
-    //    case 1:
-    //      if( value == null )
-    //      break;
-    //    // LIST
-    //    case FeatureType.UNBOUND_OCCURENCY:
-    //        m_workspace.addFeature(m_srcFE, linkName1, 0,m_newFeature); // pos does
-    // not matter
-    //      break;
-    //    default:
-    //      final List list = (List)value;
-    //      if( list.size() < maxOccurs )
-    //        ( (List)value ).add( m_newFeature );
-    //      else
-    //        throw new Exception( "multiplicity not allowed" );
-    //      break;
-    //    }
+    m_workspace.addFeatureAsComposition( m_srcFE, linkName1, 0, m_newFeature );
     // create second link
-    m_workspace.addLinkedFeature( m_newFeature, m_linkFT2.getName(), 0, m_targetFE );
+    m_workspace.addFeatureAsAggregation( m_newFeature, m_linkFT2.getName(), 0, m_targetFE.getId() );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }

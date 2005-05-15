@@ -62,10 +62,10 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public Feature createFeature( FeatureType type );
 
-  public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
+  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception;
 
-  public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
+  public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID)
       throws Exception;
 
   /**
@@ -74,15 +74,20 @@ public interface GMLWorkspace extends ModellEventProvider
    * <i>and the relation is not a composition </i>
    * see also @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
-  public void removeLinkedFeature( Feature parentFeature, String propName, Feature childFeature );
+  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName, String childFeatureID );
 
   /**
    * removes a related feature from the parent. Works only if the child is a
    * composition <br>
    * <i>and the relation is not linked </i>
    */
-  public void removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
+  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
       Feature childFeature );
 
   public Map getNamespaceMap();
+
+  /**
+   * return true if these feature are related
+   */
+  public boolean isExistingRelation( Feature f1, Feature f2, String relationPropertyName );
 }

@@ -68,6 +68,10 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   private final String m_toolTip;
 
+  private String m_leftMFunction=null;
+
+  private String m_rightMFunction=null;
+
   /*
    * 
    * @author doemming
@@ -317,5 +321,19 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public String getToolTip()
   {
     return m_toolTip;
+  }
+  
+  protected void mouseFunctionChanged()
+  {
+    // TODO
+  }
+  
+  protected final void setLeftMFunction(String leftMFunction)
+  {
+    m_leftMFunction = leftMFunction;
+  }
+  protected final void setRightMFunction(String rightMFunction)
+  {
+    m_rightMFunction = rightMFunction;
   }
 }

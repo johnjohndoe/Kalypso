@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddLinkCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 
@@ -92,7 +92,7 @@ public class AddLinkAction extends Action
    */
   public void run()
   {
-    AddLinkCommand command = null;
+    AddRelationCommand command = null;
     Feature[] features = m_workspace.getFeatures( m_type );
     AddLinkDialog dialog = new AddLinkDialog( m_shell, features );
     int open = dialog.open();
@@ -106,7 +106,7 @@ public class AddLinkAction extends Action
           if( result.equals( features[i].getId() ) )
           {
             Feature linkFeature = features[i];
-            command = new AddLinkCommand( m_workspace, m_parentFeature, m_propertyName, pos,
+            command = new AddRelationCommand( m_workspace, m_parentFeature, m_propertyName, pos,
                 linkFeature );
             break;
           }

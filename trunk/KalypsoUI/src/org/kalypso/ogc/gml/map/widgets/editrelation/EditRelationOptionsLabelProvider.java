@@ -106,9 +106,9 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
       final HeavyRelationType relation = (HeavyRelationType)element;
       final StringBuffer buffer = new StringBuffer();
       buffer.append( getText( relation.getSrcFT() ) );
-      buffer.append( " > " + getText( relation.getLink() ) + " > " );
+      buffer.append( " > " + getText( relation.getLink1() ) + " > " );
       buffer.append( getText( relation.getBodyFT() ) );
-      buffer.append( " > " + getText( relation.getDestLinkFTP() ) + " > " );
+      buffer.append( " > " + getText( relation.getLink2() ) + " > " );
       buffer.append( getText( relation.getDestFT() ) );
       return buffer.toString();
     }

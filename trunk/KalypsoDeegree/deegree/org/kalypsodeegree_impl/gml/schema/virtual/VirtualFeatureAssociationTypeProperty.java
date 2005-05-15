@@ -105,7 +105,6 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType i
     try
     {
       final GM_Object srcGeo = feature.getDefaultGeometryProperty();
-//      GM_Position src = srcGeo.getCentroid().getPosition();
       if( srcGeo == null )
         return null;
       final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor(
@@ -114,14 +113,7 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType i
       final GM_Object[] destGeo = visitor.getGeometryDestinations();
       final List curves = new ArrayList();
       for( int i = 0; i < destGeo.length; i++ )
-      {
-//        final GM_Position[] pos = new GM_Position[]
-//        {
-//            src,
-//            destGeo[i].getCentroid().getPosition() };
-//        curves.add( GeometryFactory.createGM_Curve( pos, srcGeo.getCoordinateSystem() ) );        
         curves.add(GeometryUtilities.createArrowLineString(srcGeo.getCentroid(),destGeo[i].getCentroid(),0.8,0.01) );
-      }
       return GeometryFactory.createGM_MultiCurve( (GM_Curve[])curves.toArray( new GM_Curve[curves
           .size()] ) );
     }

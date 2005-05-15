@@ -108,17 +108,18 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     if( parentElement instanceof HeavyRelationType )
     {
       final HeavyRelationType relation = (HeavyRelationType)parentElement;
-      final FeatureType destFT = relation.getDestLinkFTP().getAssociationFeatureType();
-      final FeatureType destFT2 = relation.getDestFT();
-      final FeatureType[] associationFeatureTypes = relation.getDestLinkFTP()
+      final FeatureType destFT = relation.getLink2().getAssociationFeatureType();
+      final FeatureType destFT2 = relation.getDestFT(); // where is the
+                                                        // difference ?
+      final FeatureType[] associationFeatureTypes = relation.getLink2()
           .getAssociationFeatureTypes();
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
           FeatureType ft = associationFeatureTypes[i];
           if( !ft.equals( destFT ) )
-            result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink(), relation
-                .getBodyFT(), relation.getDestLinkFTP(), ft ) );
+            result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation
+                .getBodyFT(), relation.getLink2(), ft ) );
         }
     }
     else if( parentElement instanceof RelationType )
@@ -283,15 +284,15 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
     return m_checkedElements.toArray();
   }
 
-  public RelationType[] getCheckedRelations()
+  public IRelationType[] getCheckedRelations()
   {
     final List result = new ArrayList();
     for( Iterator iter = m_checkedElements.iterator(); iter.hasNext(); )
     {
       Object element = iter.next();
-      if( element instanceof RelationType )
+      if( element instanceof IRelationType )
         result.add( element );
     }
-    return (RelationType[])result.toArray( new RelationType[result.size()] );
+    return (IRelationType[])result.toArray( new IRelationType[result.size()] );
   }
 }

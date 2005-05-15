@@ -40,41 +40,46 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
-import java.util.List;
-
 import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author belger
+ * 
+ * class RemoveRelationCommand
+ * 
+ * Command to remove a normal relation
+ * 
+ * created by
+ * 
+ * @author doemming (13.05.2005)
  */
-public class AddFeatureCommand implements ICommand
+public class RemoveRelationCommand implements ICommand
 {
-  private final Feature m_parentFeature;
+  private final GMLWorkspace m_workspace;
 
+  private final Feature m_srcFE;
 
+  private final Feature m_destFE;
+
+  private final String m_linkPropName;
+
+  private final boolean m_isComposition;
 
   private final int m_pos;
 
-  private final String m_propName;
-
-  private final FeatureType m_type;
-
-  private Feature newFeature = null;
-
-  private final GMLWorkspace m_workspace;
-
-  public AddFeatureCommand( final GMLWorkspace workspace, FeatureType type,
-      Feature parentFeature, String propertyName, int pos )
+  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkPropName,
+      Feature destFE )
   {
     m_workspace = workspace;
-    m_parentFeature = parentFeature;
-    m_propName = propertyName;
-    m_pos = pos;
-    m_type = type;
+    m_srcFE = srcFE;
+    m_linkPropName = linkPropName;
+    m_destFE = destFE;
+    // is composition
+    m_isComposition = FeatureHelper.isCompositionLink( srcFE, linkPropName, destFE );
+    m_pos = FeatureHelper.getPositionOfAssoziation( srcFE, linkPropName, destFE );
   }
 
   /**
@@ -90,8 +95,12 @@ public class AddFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
-    newFeature = m_workspace.createFeature( m_type );
-    addFeature();
+    if( m_isComposition )
+      m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
+    else
+      m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
@@ -99,9 +108,7 @@ public class AddFeatureCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    if( newFeature == null )
-      return;
-    addFeature();
+    process();
   }
 
   /**
@@ -109,28 +116,12 @@ public class AddFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    if( newFeature == null )
-      return;
-
-    Object prop = m_parentFeature.getProperty( m_propName );
-    Object properties[] = m_parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
-
-    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
-
-    if( maxOccurs == 1 )
-    {
-      properties[propIndex] = null;
-    }
-    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
-    {
-      List list = (List)prop;
-      list.remove( newFeature );
-    }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE) );
+    if( m_isComposition )
+      m_workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
+    else
+      m_workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -138,12 +129,6 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Feature addieren";
-  }
-
-  private void addFeature() throws Exception
-  {
-    m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD) );
+    return "Relation aufheben";
   }
 }

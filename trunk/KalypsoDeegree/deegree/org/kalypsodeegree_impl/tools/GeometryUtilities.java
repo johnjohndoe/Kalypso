@@ -107,15 +107,34 @@ public class GeometryUtilities
       double distanceFromBasePoint )
   {
     final double[] p1 = basePoint.getAsArray();
-    double distance = basePoint.getDistance(directionPoint);
-    if(distance==0)
-      return GeometryFactory.createGM_Position(p1);
+    double distance = basePoint.getDistance( directionPoint );
+    if( distance == 0 )
+      return GeometryFactory.createGM_Position( p1 );
     final double[] p2 = directionPoint.getAsArray();
-    final double factor=distanceFromBasePoint/distance;
-    double newPos[]=new double[p1.length];
-    for( int i = 0; i < newPos.length; i++ )
-      newPos[i]=p1[i]+(p2[i]-p1[i])*factor;
-    return GeometryFactory.createGM_Position(newPos);
+    final double factor = distanceFromBasePoint / distance;
+    double newPos[] = new double[p1.length];
+    //    for( int i = 0; i < newPos.length; i++ )
+    for( int i = 0; i < 2; i++ )
+      newPos[i] = p1[i] + ( p2[i] - p1[i] ) * factor;
+    return GeometryFactory.createGM_Position( newPos );
   }
 
+  public static GM_Position getGM_PositionBetweenAtLevel( GM_Position p1, GM_Position p2, double iso )
+  {
+    final double dz1 = iso - p1.getZ();
+    final double dz2 = p2.getZ() - p1.getZ();
+    final double dx = p2.getX() - p1.getX();
+    final double c = dz1 / dz2;
+    // check between
+    if( c < -0.01d || c > 1.01d )
+      return null;
+    return GeometryFactory.createGM_Position( p1.getX() + c * dx, p1.getY() + c
+        * ( p2.getY() - p1.getY() ), iso );
+  }
+
+  public static GM_Position createGM_PositionAtCenter( GM_Position p1, GM_Position p2 )
+  {
+    return GeometryFactory.createGM_Position( ( p1.getX() + p2.getX() ) / 2d, ( p1.getY() + p2
+        .getY() ) / 2d, ( p1.getZ() + p2.getZ() ) / 2d );
+  }
 }

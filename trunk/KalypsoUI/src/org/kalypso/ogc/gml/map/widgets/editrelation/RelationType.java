@@ -6,6 +6,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -48,7 +49,7 @@ import org.kalypsodeegree.model.feature.FeatureType;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class RelationType
+public class RelationType implements IRelationType
 {
 
   protected final FeatureType m_srcFT;
@@ -68,16 +69,53 @@ public class RelationType
     m_link = link;
   }
 
-  public boolean fitsTypes( Feature f1, Feature f2 )
+  public boolean fitsTypes( FeatureType f1, FeatureType f2 )
   {
     if( f1 == null || f2 == null )
       return false;
-    if( !( f1.getFeatureType().equals( m_srcFT ) && f2.getFeatureType().equals( m_destFT ) ) )
-      return false;
-    return true;
+    return f1 == m_srcFT && f2 == m_destFT;
   }
 
-  public String getFitProblems( Feature f1 )
+  public String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode )
+  {
+    
+   boolean exists = workspace.isExistingRelation(f1,f2,m_link.getName());
+    
+    if( !isAddMode )
+      return exists ? null : "diese Relation existiert nicht";
+    // add mode:
+    else if( exists )
+    {
+      return "Relation ist bereits gesetzt.";
+    }
+    return getFitProblemsfromOccurency( f1, isAddMode );
+  }
+
+  //  private boolean isExistingRelation( Feature f1, Feature f2 )
+  //  {
+  //    if( f2.getFeatureType().getName().startsWith( "KMCh" ) )
+  //    {
+  //      System.out.println( "test" );
+  //    }
+  //    final Object property = f1.getProperty( m_link.getName() );
+  //    if( property == null )
+  //      return false;
+  //    if( property instanceof List )
+  //    {
+  //      if( ( (List)property ).contains( f2 ) )
+  //        return true;
+  //      if( ( (List)property ).contains( f2.getId() ) )
+  //        return true;
+  //      return false;
+  //    }
+  //    if( property == f2 )
+  //      return true;
+  //    if( f2.getId().equals( property ) )
+  //      return true;
+  //    return false;
+  //  }
+  //
+  public String getFitProblemsfromOccurency( Feature f1, boolean isAddMode )
   {
     final String propName = m_link.getName();
     final String lang = KalypsoGisPlugin.getDefault().getLang();
@@ -86,16 +124,28 @@ public class RelationType
 
     final Object property = f1.getProperty( propName );
     int max = m_srcFT.getMaxOccurs( propName );
+    //    int min = m_srcFT.getMinOccurs( propName );
+    if( isAddMode )
+    {
+      switch( max )
+      {
+      case FeatureType.UNBOUND_OCCURENCY:
+        return null;
+      case 1:
+        return property == null ? null : ftLabel + "." + linkLabel + " ist schon gesetzt";
+      default:
+        return ( (List)property ).size() + 1 < max ? null : ftLabel + "." + linkLabel
+            + " besitzt schon maximale relationen (" + max + ")";
+      }
+    }
+    // else remove mode:
     switch( max )
     {
-    case FeatureType.UNBOUND_OCCURENCY:
-      return null;
     case 1:
-      return property == null ? null : ftLabel + "." + linkLabel + " ist schon gesetzt";
-    // TODO check if schon vorhanden
-    default:
-      return ( (List)property ).size()+1 < max ? null : ftLabel + "." + linkLabel
-          + " besitzt schon maximale relationen (" + max + ")";
+      return property != null ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
+    default: // minOccurs should not be validated here.
+      return ( (List)property ).size() > 0 ? null : ftLabel + "." + linkLabel
+          + " ist nicht gesetzt";
     }
   }
 
@@ -119,17 +169,19 @@ public class RelationType
     return m_srcFT;
   }
 
-  public boolean equals( Object obj )
-  {
-    if( obj == null || !( obj instanceof RelationType ) )
-      return false;
-    final RelationType other = (RelationType)obj;
-    return ( other.getSrcFT().equals( m_srcFT ) && other.getDestFT().equals( m_destFT ) && other
-        .getLink().equals( m_link ) );
-  }
-
-  public int hashCode()
-  {
-    return ( m_srcFT.getName() + m_link.getName() + m_destFT.getName() ).hashCode();
-  }
+  //  public boolean equals( Object obj )
+  //  {
+  //    if( obj == null || !( obj instanceof RelationType ) )
+  //      return false;
+  //    final RelationType other = (RelationType)obj;
+  //    return ( other.getSrcFT().equals( m_srcFT ) && other.getDestFT().equals(
+  // m_destFT ) && other
+  //        .getLink().equals( m_link ) );
+  //  }
+  //
+  //  public int hashCode()
+  //  {
+  //    return ( m_srcFT.getName() + m_link.getName() + m_destFT.getName()
+  // ).hashCode();
+  //  }
 }

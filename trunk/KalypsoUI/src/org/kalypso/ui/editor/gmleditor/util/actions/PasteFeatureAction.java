@@ -55,16 +55,16 @@ public final class PasteFeatureAction extends Action
   private Feature m_parentFeature;
 
   private Clipboard m_clipboard = null;
-  
+
   public static final String NAME = "Paste Feature";
 
-  public PasteFeatureAction(CommandableWorkspace workspace, Feature parentFeature,
-      String propertyName, Clipboard clipboard)
+  public PasteFeatureAction( CommandableWorkspace workspace, Feature parentFeature,
+      String propertyName, Clipboard clipboard )
   {
-    super(NAME);
-    m_propertyName = propertyName;   
-    m_workspace = workspace;   
-    m_parentFeature = parentFeature;    
+    super( NAME );
+    m_propertyName = propertyName;
+    m_workspace = workspace;
+    m_parentFeature = parentFeature;
     m_clipboard = clipboard;
   }
 
@@ -72,19 +72,20 @@ public final class PasteFeatureAction extends Action
    * @see org.eclipse.jface.action.IAction#run()
    */
   public void run()
-  {    
+  {
     //m_clipboard.setClipboardFeature(null);
-    if(m_clipboard.getClipboardFeature() != null)
+    if( m_clipboard.getClipboardFeature() != null )
       try
       {
         // TODO use command !!
-        m_workspace.addLinkedFeature(m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature());
+        m_workspace.addFeatureAsAggregation( m_parentFeature, m_propertyName, 0, m_clipboard
+            .getClipboardFeature().getId() );
       }
       catch( Exception e )
       {
         e.printStackTrace();
       }
-      
-    m_workspace.fireModellEvent(new ModellEvent(m_workspace, ModellEvent.FULL_CHANGE));
+
+    m_workspace.fireModellEvent( new ModellEvent( m_workspace, ModellEvent.FULL_CHANGE ) );
   }
 }
