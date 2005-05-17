@@ -45,8 +45,9 @@
 					<element name="MaxInhalt"  type="double"> <annotation><documentation xml:lang="de"><label>MaxInhalt</label><tooltip>MaxInhalt</tooltip><description>MaxInhalt zur Berechnung des aktuellen Hochwasserschutzraumes</description></documentation></annotation></element>
 					<element name="PNR-Zufluss"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer Zufluss</label><tooltip>Messstellennummer des Zuflusspegels</tooltip><description>Messstellennummer des Zuflusspegels</description></documentation></annotation></element>
 					<element ref="gml:location"/>
-					<element name="Abgabe_eingang" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Zufluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Inhalt" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Inhalt_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Zufluß" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>

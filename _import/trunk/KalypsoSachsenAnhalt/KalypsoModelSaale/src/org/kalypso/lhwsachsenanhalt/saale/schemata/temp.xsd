@@ -43,7 +43,7 @@
 					<element name="Höhe"  type="string"> <annotation><documentation xml:lang="de"><label>Höhe</label><tooltip>Höhe der Messstelle</tooltip><description>Höhe der Messstelle</description></documentation></annotation></element>
 					<element name="Max"  type="int"> <annotation><documentation xml:lang="de"><label>Max</label><tooltip>Maximalwert</tooltip><description>Maximalwert</description></documentation></annotation></element>
 					<element ref="gml:location"/>
-					<element name="Durchfluss_eingabe" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Temperatur" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
