@@ -9,10 +9,14 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 - TODO: hier fehlt doch bestimmt ganz viel! :-(
 
+- Implementierung vom LDAP-Zugriff (KalypsoSachsenAnhalt)
+- Kalypso-Login Dialog:
+  * Neues Dialog, Scenario Auswahl, optimiertes Handling
+  * UserService abhängige Einstellungen (für Scenario, Password Eingabe, usw. )
 - Laden der GML Schemata: allgemeiner Caching und Server Mechanismus
 - Gis-Tabellenansicht: Performanceverbesserung bei Tabellen mit sehr vielen Spalten; hat beim Öffnen sehr lange gedauert
 - Kleine Layout Änderung im Feature-Bearbeiten-Dialog: jetzt mit beschriftetem Rand; Veschriftung = "Typname - FID"
-- Implementierung vom WISKI Adapter
+- Implementierung vom WISKI Adapter (KalypsoSachsenAnhalt)
 - KalypsoObservationService:
   * zusätzliche Konfigurationsdatei namens 'service.properties' beinhaltet z.Z. die 
   (optionale) Eigenschaft: TIMEZONE_NAME welche die Zeitzone definiert in welche 

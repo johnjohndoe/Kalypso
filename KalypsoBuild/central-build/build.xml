@@ -1,4 +1,17 @@
 <?xml version="1.0"?>
+
+<!-- 
+
+IMPORTANT: this is a temp file that isn't currently used and that *SHOULD* not be used 
+until the nightly build stuff is ready.
+
+TODO: update this script file for a nightly build. This should be the central place
+where all the stuff is produced.
+
+In the meantime developpers should use the build mechanims found in KalypsoConfXXX.
+
+-->
+	
 <project name="Kalypso" default="nightly-build">
   <description>
 		Builds KalypsoServices and Runs Junit-Tests

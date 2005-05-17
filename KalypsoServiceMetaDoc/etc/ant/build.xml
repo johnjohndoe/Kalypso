@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="KalypsoMetaDocService" default="build" basedir=".">
+<project name="KalypsoMetaDocService" default="fake" basedir=".">
 
 	<property name="project" value="${workspace}/KalypsoMetaDocService" />
 	<property name="project-name" value="KalypsoMetaDocService" />
@@ -17,4 +17,8 @@
 		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar" />
 	</path>
 	
+	<!-- Fake target just to allow a default target since ant requires it. Using
+         of the parent build target does not work...
+	-->
+	<target name="fake"/>
 </project>
