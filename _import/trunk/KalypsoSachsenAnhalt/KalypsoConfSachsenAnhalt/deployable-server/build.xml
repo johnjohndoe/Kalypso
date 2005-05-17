@@ -176,6 +176,10 @@
 	</target>
 
 	<target name="build-CalcService" depends="build-basic">
+		<!-- Build client in order to resolve dependencies to model plugins -->
+		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-client" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-war" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
