@@ -1,0 +1,21 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Stammdat/ts.std"  comment="*" delemiter="&#9;" lineskip="1">
+			<featureproperty name="PNR" type="java.lang.String" format=""><column>0</column></featureproperty>
+			<featureproperty name="Name" type="java.lang.String" format=""><column>1</column></featureproperty>
+			<featureproperty name="Gewaesser" type="java.lang.String" format=""><column>2</column></featureproperty>
+			<featureproperty name="MaxInhalt" type="java.lang.Double" format=""><column>3</column></featureproperty>
+			<featureproperty name="ZUFLUSS" type="java.lang.String" format=""><column>4</column></featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="../saalemodell.gml"/>
+		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="SpeicherCollectionAssociation/SpeicherMember" toID="PNR" fid="${fromID}" handleExisting="overwrite">
+ 			<map from="PNR" to="PNR"/>
+			<map from="Name" to="Name"/>
+			<map from="Gewaesser" to="Gewaesser"/>
+			<map from="MaxInhalt" to="MaxInhalt"/>
+			<map from="ZUFLUSS" to="PNR-Zufluss"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

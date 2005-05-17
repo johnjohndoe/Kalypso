@@ -2,7 +2,7 @@
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
 	<featuremapping>
-		<csvsource xlink:href="Stammdat/met_geb.std"  comment="*" delemiter="&#9;" lineskip="1">
+		<csvsource xlink:href="Stammdat/Met_Geb.std"  comment="*" delemiter="&#9;" lineskip="1">
 			<featureproperty name="PNR" type="java.lang.String" format=""><column>0</column></featureproperty>
 			<featureproperty name="Name" type="java.lang.String" format=""><column>1</column></featureproperty>
 			<featureproperty name="Gewaesser" type="java.lang.String" format=""><column>2</column></featureproperty>
@@ -25,7 +25,7 @@
 			<featureproperty name="LM3" type="java.lang.Integer" format=""><column>19</column></featureproperty>
 			<featureproperty name="LM4" type="java.lang.Integer" format=""><column>20</column></featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="../.saalemodell_leer.gml"/>
+		<gmlsource xlink:href=".saalemodell_leer.gml"/>
 		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR" fid="${fromID}">
  			<map from="PNR" to="PNR"/>
 			<map from="Name" to="Name"/>
