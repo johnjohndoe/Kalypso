@@ -13,15 +13,14 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="PegelCollection" type="pegel:PegelCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<element name="PegelCollection" type="pegel:PegelCollectionType" substitutionGroup="gml:_Feature"/>
 	<complexType name="PegelCollectionType">
 		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
+			<extension base="common:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="gml:boundedBy"/>
 					<element ref="pegel:PegelMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
-			</restriction>
+			</extension>
 		</complexContent>
 	</complexType>
 	<element name="PegelMember" type="pegel:PegelAssociationType" substitutionGroup="gml:featureMember"/>
@@ -79,7 +78,8 @@
 					<element name="MHQ"  type="int"> <annotation><documentation xml:lang="de"><label>MHQ</label><tooltip>MHQ</tooltip><description>MHQ</description></documentation></annotation></element>
 					<element name="HHQ"  type="int"> <annotation><documentation xml:lang="de"><label>HHQ</label><tooltip>HHQ</tooltip><description>HHQ</description></documentation></annotation></element>				
 					<element ref="gml:location"/>
-					<element name="Durchfluss_eingabe" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Durchfluß" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Durchfluß_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -97,6 +97,7 @@
 		<complexContent>
 			<extension base="pegel:PegelType">
 				<sequence>
+					<!-- Parameter aus Met_Geb.std -->
 					<element name="AE"  type="double"><annotation><documentation xml:lang="de"><label>AE</label><tooltip>AE</tooltip><description></description></documentation></annotation></element>
 					<element name="Stat1"  type="string"><annotation><documentation xml:lang="de"><label>Stat1</label><tooltip>Stat1</tooltip><description></description></documentation></annotation></element>
 					<element name="Fakt1"  type="double"><annotation><documentation xml:lang="de"><label>Fakt1</label><tooltip>Fakt1</tooltip><description></description></documentation></annotation></element>
@@ -115,51 +116,11 @@
 					<element name="LM2"  type="int"> <annotation><documentation xml:lang="de"><label>LM2</label><tooltip>LM2</tooltip><description></description></documentation></annotation></element>
 					<element name="LM3"  type="int"> <annotation><documentation xml:lang="de"><label>LM3</label><tooltip>LM3</tooltip><description></description></documentation></annotation></element>
 					<element name="LM4"  type="int"> <annotation><documentation xml:lang="de"><label>LM4</label><tooltip>LM4</tooltip><description></description></documentation></annotation></element>	
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-<!--	
-	<element name="EZG" type="pegel:EZGType" substitutionGroup="pegel:Pegel">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Einzugsgebiet</label>
-				<tooltip>Einzugsgebiet</tooltip>
-				<description>Einzugsgebiet</description>
-			</documentation>
-		</annotation>
-	</element>
-	<complexType name="EZGType">
-		<complexContent>
-			<extension base="pegel:PegelType">
-				<sequence>
-					<element name="L" type="int">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>L</label>
-								<tooltip>effektive Länge der Anstiegsfunktion h(t)</tooltip>
-								<description>effektive Länge der Anstiegsfunktion h(t)</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="N" type="int">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>N</label>
-								<tooltip>INDEX für den Direktabfluss - Rückgangsbeginn</tooltip>
-								<description>INDEX für den Direktabfluss - Rückgangsbeginn</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="M" type="int">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>M</label>
-								<tooltip>INDEX für den Direktabfluss - Rückgangsende</tooltip>
-								<description>INDEX für den Direktabfluss - Rückgangsende</description>
-							</documentation>
-						</annotation>
-					</element>
+
+					<!-- Parameter aus EGMPAR.HWP -->
+					<element name="L" type="int"><annotation><documentation xml:lang="de"><label>L</label><tooltip>effektive Länge der Anstiegsfunktion h(t)</tooltip><description>effektive Länge der Anstiegsfunktion h(t)</description></documentation></annotation></element>
+					<element name="N" type="int"><annotation><documentation xml:lang="de"><label>N</label><tooltip>INDEX für den Direktabfluss - Rückgangsbeginn</tooltip><description>INDEX für den Direktabfluss - Rückgangsbeginn</description></documentation></annotation></element>
+					<element name="M" type="int"><annotation><documentation xml:lang="de"><label>M</label><tooltip>INDEX für den Direktabfluss - Rückgangsende</tooltip><description>INDEX für den Direktabfluss - Rückgangsende</description></documentation></annotation></element>
 					<element name="IWE"  type="int"> <annotation><documentation xml:lang="de"><label>IWE</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element name="ISOA" type="int"> <annotation><documentation xml:lang="de"><label>ISOA</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element name="ISOE" type="int"> <annotation><documentation xml:lang="de"><label>ISOE</label><tooltip></tooltip><description></description></documentation></annotation></element>
@@ -234,271 +195,11 @@
 					<element name="H_34" type="double"> <annotation><documentation xml:lang="de"><label>H_34</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element name="H_35" type="double"> <annotation><documentation xml:lang="de"><label>H_35</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element name="H_36" type="double"> <annotation><documentation xml:lang="de"><label>H_36</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					
+   				    <element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Schnee" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
--->
-<!--	
-	<element name="WLM" type="pegel:WLMType" substitutionGroup="pegel:Pegel">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Wasserlaufmodell</label>
-				<tooltip>Wasserlaufmodell</tooltip>
-				<description>Wasserlaufmodell</description>
-			</documentation>
-		</annotation>
-	</element>
-	<complexType name="WLMType">
-		<complexContent>
-			<extension base="pegel:PegelType">
-				<sequence>
-					<element name="IP_1" type="int"> <annotation><documentation xml:lang="de"><label>IP_1</label><tooltip>effektive Länge der Impulsantworten</tooltip><description></description></documentation></annotation></element>
-					<element name="IP_2" type="int"> <annotation><documentation xml:lang="de"><label>IP_2</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="IP_3" type="int"> <annotation><documentation xml:lang="de"><label>IP_3</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="IP_4" type="int"> <annotation><documentation xml:lang="de"><label>IP_4</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="IP_5" type="int"> <annotation><documentation xml:lang="de"><label>IP_5</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					
-					
-					<element name="PAR_1" type="double"> <annotation><documentation xml:lang="de"><label>PAR_1</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="PAR_2" type="double"> <annotation><documentation xml:lang="de"><label>PAR_2</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="PAR_3" type="double"> <annotation><documentation xml:lang="de"><label>PAR_3</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="PAR_4" type="double"> <annotation><documentation xml:lang="de"><label>PAR_4</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="PAR_5" type="double"> <annotation><documentation xml:lang="de"><label>PAR_5</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="PAR_6" type="double"> <annotation><documentation xml:lang="de"><label>PAR_6</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="PAR_7" type="double"> <annotation><documentation xml:lang="de"><label>PAR_7</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					
-					<element name="STUF_1" type="double"> <annotation><documentation xml:lang="de"><label>STUF_1</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="STUF_2" type="double"> <annotation><documentation xml:lang="de"><label>STUF_2</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					<element name="STUF_3" type="double"> <annotation><documentation xml:lang="de"><label>STUF_3</label><tooltip></tooltip><description></description></documentation></annotation></element>
-					
-					<element name="H1_0" type="double"> <annotation><documentation xml:lang="de"><label>H1_0</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_1" type="double"> <annotation><documentation xml:lang="de"><label>H1_1</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_2" type="double"> <annotation><documentation xml:lang="de"><label>H1_2</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_3" type="double"> <annotation><documentation xml:lang="de"><label>H1_3</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_4" type="double"> <annotation><documentation xml:lang="de"><label>H1_4</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_5" type="double"> <annotation><documentation xml:lang="de"><label>H1_5</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_6" type="double"> <annotation><documentation xml:lang="de"><label>H1_6</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_7" type="double"> <annotation><documentation xml:lang="de"><label>H1_7</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_8" type="double"> <annotation><documentation xml:lang="de"><label>H1_8</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_9" type="double"> <annotation><documentation xml:lang="de"><label>H1_9</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_10" type="double"> <annotation><documentation xml:lang="de"><label>H1_10</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_11" type="double"> <annotation><documentation xml:lang="de"><label>H1_11</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_12" type="double"> <annotation><documentation xml:lang="de"><label>H1_12</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_13" type="double"> <annotation><documentation xml:lang="de"><label>H1_13</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_14" type="double"> <annotation><documentation xml:lang="de"><label>H1_14</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_15" type="double"> <annotation><documentation xml:lang="de"><label>H1_15</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_16" type="double"> <annotation><documentation xml:lang="de"><label>H1_16</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_17" type="double"> <annotation><documentation xml:lang="de"><label>H1_17</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_18" type="double"> <annotation><documentation xml:lang="de"><label>H1_18</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_19" type="double"> <annotation><documentation xml:lang="de"><label>H1_19</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_20" type="double"> <annotation><documentation xml:lang="de"><label>H1_20</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_21" type="double"> <annotation><documentation xml:lang="de"><label>H1_21</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_22" type="double"> <annotation><documentation xml:lang="de"><label>H1_22</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_23" type="double"> <annotation><documentation xml:lang="de"><label>H1_23</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_24" type="double"> <annotation><documentation xml:lang="de"><label>H1_24</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_25" type="double"> <annotation><documentation xml:lang="de"><label>H1_25</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_26" type="double"> <annotation><documentation xml:lang="de"><label>H1_26</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_27" type="double"> <annotation><documentation xml:lang="de"><label>H1_27</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_28" type="double"> <annotation><documentation xml:lang="de"><label>H1_28</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_29" type="double"> <annotation><documentation xml:lang="de"><label>H1_29</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_30" type="double"> <annotation><documentation xml:lang="de"><label>H1_30</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_31" type="double"> <annotation><documentation xml:lang="de"><label>H1_31</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_32" type="double"> <annotation><documentation xml:lang="de"><label>H1_32</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_33" type="double"> <annotation><documentation xml:lang="de"><label>H1_33</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_34" type="double"> <annotation><documentation xml:lang="de"><label>H1_34</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_35" type="double"> <annotation><documentation xml:lang="de"><label>H1_35</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_36" type="double"> <annotation><documentation xml:lang="de"><label>H1_36</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_37" type="double"> <annotation><documentation xml:lang="de"><label>H1_37</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_38" type="double"> <annotation><documentation xml:lang="de"><label>H1_38</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_39" type="double"> <annotation><documentation xml:lang="de"><label>H1_39</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_40" type="double"> <annotation><documentation xml:lang="de"><label>H1_40</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_41" type="double"> <annotation><documentation xml:lang="de"><label>H1_41</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_42" type="double"> <annotation><documentation xml:lang="de"><label>H1_42</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_43" type="double"> <annotation><documentation xml:lang="de"><label>H1_43</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_44" type="double"> <annotation><documentation xml:lang="de"><label>H1_44</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_45" type="double"> <annotation><documentation xml:lang="de"><label>H1_45</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_46" type="double"> <annotation><documentation xml:lang="de"><label>H1_46</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_47" type="double"> <annotation><documentation xml:lang="de"><label>H1_47</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_48" type="double"> <annotation><documentation xml:lang="de"><label>H1_48</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_49" type="double"> <annotation><documentation xml:lang="de"><label>H1_49</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_50" type="double"> <annotation><documentation xml:lang="de"><label>H1_50</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_51" type="double"> <annotation><documentation xml:lang="de"><label>H1_51</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_52" type="double"> <annotation><documentation xml:lang="de"><label>H1_52</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_53" type="double"> <annotation><documentation xml:lang="de"><label>H1_53</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_54" type="double"> <annotation><documentation xml:lang="de"><label>H1_54</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_55" type="double"> <annotation><documentation xml:lang="de"><label>H1_55</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_56" type="double"> <annotation><documentation xml:lang="de"><label>H1_56</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_57" type="double"> <annotation><documentation xml:lang="de"><label>H1_57</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_58" type="double"> <annotation><documentation xml:lang="de"><label>H1_58</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_59" type="double"> <annotation><documentation xml:lang="de"><label>H1_59</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_60" type="double"> <annotation><documentation xml:lang="de"><label>H1_60</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_61" type="double"> <annotation><documentation xml:lang="de"><label>H1_61</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_62" type="double"> <annotation><documentation xml:lang="de"><label>H1_62</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_63" type="double"> <annotation><documentation xml:lang="de"><label>H1_63</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_64" type="double"> <annotation><documentation xml:lang="de"><label>H1_64</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_65" type="double"> <annotation><documentation xml:lang="de"><label>H1_65</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_66" type="double"> <annotation><documentation xml:lang="de"><label>H1_66</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_67" type="double"> <annotation><documentation xml:lang="de"><label>H1_67</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_68" type="double"> <annotation><documentation xml:lang="de"><label>H1_68</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_69" type="double"> <annotation><documentation xml:lang="de"><label>H1_69</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_70" type="double"> <annotation><documentation xml:lang="de"><label>H1_70</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_71" type="double"> <annotation><documentation xml:lang="de"><label>H1_71</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_72" type="double"> <annotation><documentation xml:lang="de"><label>H1_72</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H1_73" type="double"> <annotation><documentation xml:lang="de"><label>H1_73</label><tooltip>Impulsantwort Niedrigwasser</tooltip><description></description></documentation></annotation></element>
-					
-					<element name="H2_0" type="double"> <annotation><documentation xml:lang="de"><label>H2_0</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_1" type="double"> <annotation><documentation xml:lang="de"><label>H2_1</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_2" type="double"> <annotation><documentation xml:lang="de"><label>H2_2</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_3" type="double"> <annotation><documentation xml:lang="de"><label>H2_3</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_4" type="double"> <annotation><documentation xml:lang="de"><label>H2_4</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_5" type="double"> <annotation><documentation xml:lang="de"><label>H2_5</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_6" type="double"> <annotation><documentation xml:lang="de"><label>H2_6</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_7" type="double"> <annotation><documentation xml:lang="de"><label>H2_7</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_8" type="double"> <annotation><documentation xml:lang="de"><label>H2_8</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_9" type="double"> <annotation><documentation xml:lang="de"><label>H2_9</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_10" type="double"> <annotation><documentation xml:lang="de"><label>H2_10</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_11" type="double"> <annotation><documentation xml:lang="de"><label>H2_11</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_12" type="double"> <annotation><documentation xml:lang="de"><label>H2_12</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_13" type="double"> <annotation><documentation xml:lang="de"><label>H2_13</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_14" type="double"> <annotation><documentation xml:lang="de"><label>H2_14</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_15" type="double"> <annotation><documentation xml:lang="de"><label>H2_15</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_16" type="double"> <annotation><documentation xml:lang="de"><label>H2_16</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_17" type="double"> <annotation><documentation xml:lang="de"><label>H2_17</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_18" type="double"> <annotation><documentation xml:lang="de"><label>H2_18</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_19" type="double"> <annotation><documentation xml:lang="de"><label>H2_19</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_20" type="double"> <annotation><documentation xml:lang="de"><label>H2_20</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_21" type="double"> <annotation><documentation xml:lang="de"><label>H2_21</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_22" type="double"> <annotation><documentation xml:lang="de"><label>H2_22</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_23" type="double"> <annotation><documentation xml:lang="de"><label>H2_23</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_24" type="double"> <annotation><documentation xml:lang="de"><label>H2_24</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_25" type="double"> <annotation><documentation xml:lang="de"><label>H2_25</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_26" type="double"> <annotation><documentation xml:lang="de"><label>H2_26</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_27" type="double"> <annotation><documentation xml:lang="de"><label>H2_27</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_28" type="double"> <annotation><documentation xml:lang="de"><label>H2_28</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_29" type="double"> <annotation><documentation xml:lang="de"><label>H2_29</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_30" type="double"> <annotation><documentation xml:lang="de"><label>H2_30</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_31" type="double"> <annotation><documentation xml:lang="de"><label>H2_31</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_32" type="double"> <annotation><documentation xml:lang="de"><label>H2_32</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_33" type="double"> <annotation><documentation xml:lang="de"><label>H2_33</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_34" type="double"> <annotation><documentation xml:lang="de"><label>H2_34</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_35" type="double"> <annotation><documentation xml:lang="de"><label>H2_35</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_36" type="double"> <annotation><documentation xml:lang="de"><label>H2_36</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_37" type="double"> <annotation><documentation xml:lang="de"><label>H2_37</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_38" type="double"> <annotation><documentation xml:lang="de"><label>H2_38</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_39" type="double"> <annotation><documentation xml:lang="de"><label>H2_39</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_40" type="double"> <annotation><documentation xml:lang="de"><label>H2_40</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_41" type="double"> <annotation><documentation xml:lang="de"><label>H2_41</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_42" type="double"> <annotation><documentation xml:lang="de"><label>H2_42</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_43" type="double"> <annotation><documentation xml:lang="de"><label>H2_43</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_44" type="double"> <annotation><documentation xml:lang="de"><label>H2_44</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_45" type="double"> <annotation><documentation xml:lang="de"><label>H2_45</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_46" type="double"> <annotation><documentation xml:lang="de"><label>H2_46</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_47" type="double"> <annotation><documentation xml:lang="de"><label>H2_47</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_48" type="double"> <annotation><documentation xml:lang="de"><label>H2_48</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_49" type="double"> <annotation><documentation xml:lang="de"><label>H2_49</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_50" type="double"> <annotation><documentation xml:lang="de"><label>H2_50</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_51" type="double"> <annotation><documentation xml:lang="de"><label>H2_51</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_52" type="double"> <annotation><documentation xml:lang="de"><label>H2_52</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_53" type="double"> <annotation><documentation xml:lang="de"><label>H2_53</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_54" type="double"> <annotation><documentation xml:lang="de"><label>H2_54</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_55" type="double"> <annotation><documentation xml:lang="de"><label>H2_55</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_56" type="double"> <annotation><documentation xml:lang="de"><label>H2_56</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_57" type="double"> <annotation><documentation xml:lang="de"><label>H2_57</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_58" type="double"> <annotation><documentation xml:lang="de"><label>H2_58</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_59" type="double"> <annotation><documentation xml:lang="de"><label>H2_59</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_60" type="double"> <annotation><documentation xml:lang="de"><label>H2_60</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_61" type="double"> <annotation><documentation xml:lang="de"><label>H2_61</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_62" type="double"> <annotation><documentation xml:lang="de"><label>H2_62</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_63" type="double"> <annotation><documentation xml:lang="de"><label>H2_63</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_64" type="double"> <annotation><documentation xml:lang="de"><label>H2_64</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_65" type="double"> <annotation><documentation xml:lang="de"><label>H2_65</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_66" type="double"> <annotation><documentation xml:lang="de"><label>H2_66</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_67" type="double"> <annotation><documentation xml:lang="de"><label>H2_67</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_68" type="double"> <annotation><documentation xml:lang="de"><label>H2_68</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_69" type="double"> <annotation><documentation xml:lang="de"><label>H2_69</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_70" type="double"> <annotation><documentation xml:lang="de"><label>H2_70</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_71" type="double"> <annotation><documentation xml:lang="de"><label>H2_71</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_72" type="double"> <annotation><documentation xml:lang="de"><label>H2_72</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H2_73" type="double"> <annotation><documentation xml:lang="de"><label>H2_73</label><tooltip>Impulsantwort Mittelwasser</tooltip><description></description></documentation></annotation></element>
-					
-					<element name="H3_0" type="double"> <annotation><documentation xml:lang="de"><label>H3_0</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_1" type="double"> <annotation><documentation xml:lang="de"><label>H3_1</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_2" type="double"> <annotation><documentation xml:lang="de"><label>H3_2</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_3" type="double"> <annotation><documentation xml:lang="de"><label>H3_3</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_4" type="double"> <annotation><documentation xml:lang="de"><label>H3_4</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_5" type="double"> <annotation><documentation xml:lang="de"><label>H3_5</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_6" type="double"> <annotation><documentation xml:lang="de"><label>H3_6</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_7" type="double"> <annotation><documentation xml:lang="de"><label>H3_7</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_8" type="double"> <annotation><documentation xml:lang="de"><label>H3_8</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_9" type="double"> <annotation><documentation xml:lang="de"><label>H3_9</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_10" type="double"> <annotation><documentation xml:lang="de"><label>H3_10</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_11" type="double"> <annotation><documentation xml:lang="de"><label>H3_11</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_12" type="double"> <annotation><documentation xml:lang="de"><label>H3_12</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_13" type="double"> <annotation><documentation xml:lang="de"><label>H3_13</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_14" type="double"> <annotation><documentation xml:lang="de"><label>H3_14</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_15" type="double"> <annotation><documentation xml:lang="de"><label>H3_15</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_16" type="double"> <annotation><documentation xml:lang="de"><label>H3_16</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_17" type="double"> <annotation><documentation xml:lang="de"><label>H3_17</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_18" type="double"> <annotation><documentation xml:lang="de"><label>H3_18</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_19" type="double"> <annotation><documentation xml:lang="de"><label>H3_19</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_20" type="double"> <annotation><documentation xml:lang="de"><label>H3_20</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_21" type="double"> <annotation><documentation xml:lang="de"><label>H3_21</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_22" type="double"> <annotation><documentation xml:lang="de"><label>H3_22</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_23" type="double"> <annotation><documentation xml:lang="de"><label>H3_23</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_24" type="double"> <annotation><documentation xml:lang="de"><label>H3_24</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_25" type="double"> <annotation><documentation xml:lang="de"><label>H3_25</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_26" type="double"> <annotation><documentation xml:lang="de"><label>H3_26</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_27" type="double"> <annotation><documentation xml:lang="de"><label>H3_27</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_28" type="double"> <annotation><documentation xml:lang="de"><label>H3_28</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_29" type="double"> <annotation><documentation xml:lang="de"><label>H3_29</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_30" type="double"> <annotation><documentation xml:lang="de"><label>H3_30</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_31" type="double"> <annotation><documentation xml:lang="de"><label>H3_31</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_32" type="double"> <annotation><documentation xml:lang="de"><label>H3_32</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_33" type="double"> <annotation><documentation xml:lang="de"><label>H3_33</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_34" type="double"> <annotation><documentation xml:lang="de"><label>H3_34</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_35" type="double"> <annotation><documentation xml:lang="de"><label>H3_35</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_36" type="double"> <annotation><documentation xml:lang="de"><label>H3_36</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_37" type="double"> <annotation><documentation xml:lang="de"><label>H3_37</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_38" type="double"> <annotation><documentation xml:lang="de"><label>H3_38</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_39" type="double"> <annotation><documentation xml:lang="de"><label>H3_39</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_40" type="double"> <annotation><documentation xml:lang="de"><label>H3_40</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_41" type="double"> <annotation><documentation xml:lang="de"><label>H3_41</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_42" type="double"> <annotation><documentation xml:lang="de"><label>H3_42</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_43" type="double"> <annotation><documentation xml:lang="de"><label>H3_43</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_44" type="double"> <annotation><documentation xml:lang="de"><label>H3_44</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_45" type="double"> <annotation><documentation xml:lang="de"><label>H3_45</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_46" type="double"> <annotation><documentation xml:lang="de"><label>H3_46</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_47" type="double"> <annotation><documentation xml:lang="de"><label>H3_47</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_48" type="double"> <annotation><documentation xml:lang="de"><label>H3_48</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_49" type="double"> <annotation><documentation xml:lang="de"><label>H3_49</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_50" type="double"> <annotation><documentation xml:lang="de"><label>H3_50</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_51" type="double"> <annotation><documentation xml:lang="de"><label>H3_51</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_52" type="double"> <annotation><documentation xml:lang="de"><label>H3_52</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_53" type="double"> <annotation><documentation xml:lang="de"><label>H3_53</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_54" type="double"> <annotation><documentation xml:lang="de"><label>H3_54</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_55" type="double"> <annotation><documentation xml:lang="de"><label>H3_55</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_56" type="double"> <annotation><documentation xml:lang="de"><label>H3_56</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_57" type="double"> <annotation><documentation xml:lang="de"><label>H3_57</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_58" type="double"> <annotation><documentation xml:lang="de"><label>H3_58</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_59" type="double"> <annotation><documentation xml:lang="de"><label>H3_59</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_60" type="double"> <annotation><documentation xml:lang="de"><label>H3_60</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_61" type="double"> <annotation><documentation xml:lang="de"><label>H3_61</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_62" type="double"> <annotation><documentation xml:lang="de"><label>H3_62</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_63" type="double"> <annotation><documentation xml:lang="de"><label>H3_63</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_64" type="double"> <annotation><documentation xml:lang="de"><label>H3_64</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_65" type="double"> <annotation><documentation xml:lang="de"><label>H3_65</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_66" type="double"> <annotation><documentation xml:lang="de"><label>H3_66</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_67" type="double"> <annotation><documentation xml:lang="de"><label>H3_67</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_68" type="double"> <annotation><documentation xml:lang="de"><label>H3_68</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_69" type="double"> <annotation><documentation xml:lang="de"><label>H3_69</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_70" type="double"> <annotation><documentation xml:lang="de"><label>H3_70</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_71" type="double"> <annotation><documentation xml:lang="de"><label>H3_71</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_72" type="double"> <annotation><documentation xml:lang="de"><label>H3_72</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-					<element name="H3_73" type="double"> <annotation><documentation xml:lang="de"><label>H3_73</label><tooltip>Impulsantwort Hochwasser</tooltip><description></description></documentation></annotation></element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
--->
 </schema>

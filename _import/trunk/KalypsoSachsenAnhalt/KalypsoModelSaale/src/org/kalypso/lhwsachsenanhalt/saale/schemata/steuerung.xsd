@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.steuerung" version="0.1" xmlns:obslink="obslink.zml.kalypso.org" xmlns:steuerung="org.kalypso.saale.steuerung" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="basis/obslink.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+	<element name="SteuerungCollectionAssociation" type="steuerung:SteuerungCollectionAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="SteuerungCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="steuerung:SteuerungCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SteuerungCollection" type="steuerung:SteuerungCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SteuerungCollectionType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="steuerung:SteuerungMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="SteuerungMember" type="steuerung:SteuerungAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="SteuerungAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="steuerung:Steuerung"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Steuerung" type="steuerung:SteuerungType" substitutionGroup="gml:_Feature"/>
+	<complexType abstract="true" name="SteuerungType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="PNR"  type="string"> <annotation><documentation xml:lang="de"><label>Pegelnummer</label><tooltip>Pegelnummer</tooltip><description>Pegelnummer des Ergebnispegels</description></documentation></annotation></element>
+					<element name="Modellart"  type="int"> <annotation><documentation xml:lang="de"><label>Modellart</label><tooltip>Modellart</tooltip><description>Modellart</description></documentation></annotation></element>
+					<element name="Zwischenspeicher"  type="int"> <annotation><documentation xml:lang="de"><label>Zwischenspeicher</label><tooltip>weitere Verwendung</tooltip><description>weitere Verwendung</description></documentation></annotation></element>
+					<element name="Verwendung"  type="int"> <annotation><documentation xml:lang="de"><label>Verwendung</label><tooltip>Steuerungnummer</tooltip><description>Steuerungnummer</description></documentation></annotation></element>
+					<element name="Beschreibung"  type="string"> <annotation><documentation xml:lang="de"><label>Beschreibung</label><tooltip>Beschreibung</tooltip><description>Beschreibung</description></documentation></annotation></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

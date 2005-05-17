@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.temp" version="0.1" xmlns:obslink="obslink.zml.kalypso.org" xmlns:temp="org.kalypso.saale.temp" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="basis/obslink.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+	<element name="TempCollectionAssociation" type="temp:TempCollectionAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="TempCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="temp:TempCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="TempCollection" type="temp:TempCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="TempCollectionType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="temp:TempMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="TempMember" type="temp:TempAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="TempAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="temp:Temp"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Temp" type="temp:TempType" substitutionGroup="gml:_Feature"/>
+	<complexType abstract="true" name="TempType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="PNR"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer</label><tooltip>Messstellennummer</tooltip><description>Messstellennummer</description></documentation></annotation></element>
+					<element name="Name"  type="string"> <annotation><documentation xml:lang="de"><label>Name</label><tooltip>Name</tooltip><description>Name</description></documentation></annotation></element>
+					<element name="Höhe"  type="string"> <annotation><documentation xml:lang="de"><label>Höhe</label><tooltip>Höhe der Messstelle</tooltip><description>Höhe der Messstelle</description></documentation></annotation></element>
+					<element name="Max"  type="int"> <annotation><documentation xml:lang="de"><label>Max</label><tooltip>Maximalwert</tooltip><description>Maximalwert</description></documentation></annotation></element>
+					<element ref="gml:location"/>
+					<element name="Durchfluss_eingabe" type="obslink:TimeseriesLinkFeatureProperty"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
