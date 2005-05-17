@@ -13,6 +13,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 - Kalypso-Login Dialog:
   * Neues Dialog, Scenario Auswahl, optimiertes Handling
   * UserService abhängige Einstellungen (für Scenario, Password Eingabe, usw. )
+- Bezeichnungen der Tabellenspalten (GIS Editor) jetzt ohne Element-Bezeichnung in Klammern.
+- Doppelklick auf .gml-Datei ('EditorLauncher') kann jetzt auch direkt die Baumansicht aufmachen (.gmv ist somit nicht mehr notwendig)
 - Laden der GML Schemata: allgemeiner Caching und Server Mechanismus
 - Gis-Tabellenansicht: Performanceverbesserung bei Tabellen mit sehr vielen Spalten; hat beim Öffnen sehr lange gedauert
 - Kleine Layout Änderung im Feature-Bearbeiten-Dialog: jetzt mit beschriftetem Rand; Veschriftung = "Typname - FID"

@@ -91,12 +91,11 @@ public class GMLFeature_Impl implements GMLFeature
 {
   protected Element element = null;
 
-  /**
-   * Creates a new GMLFeature_Impl object.
-   */
-  protected GMLFeature_Impl()
-  {}
-
+  public GMLFeature_Impl()
+  {
+    // default
+  }
+  
   /**
    * Creates a new GMLFeature_Impl object.
    * 
@@ -578,6 +577,9 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.10  2005/05/17 16:40:33  belger
+ * *** empty log message ***
+ *
  * Revision 1.9  2005/03/08 11:01:04  doemming
  * *** empty log message ***
  *
