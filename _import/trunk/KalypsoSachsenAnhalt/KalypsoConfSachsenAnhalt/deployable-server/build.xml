@@ -49,7 +49,7 @@
 		<mkdir dir="${dist.webdav}" />
 		<mkdir dir="${dist.data}" />
 		<mkdir dir="${dist.prognose}" />
-		<mkdir dir="${dist.conf}" />
+		<mkdir dir="${dist.srvconf}" />
 		<mkdir dir="${dist.vorhersageconf}" />
 	</target>
 
