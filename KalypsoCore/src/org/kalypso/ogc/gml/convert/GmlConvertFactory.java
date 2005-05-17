@@ -11,6 +11,7 @@ import javax.xml.bind.Unmarshaller;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.CsvSourceType;
 import org.kalypso.gml.util.CsvTargetType;
 import org.kalypso.gml.util.FeaturemappingSourceType;
@@ -22,6 +23,7 @@ import org.kalypso.gml.util.SourceType;
 import org.kalypso.gml.util.TargetType;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler;
 import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
 import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;
 import org.kalypso.ogc.gml.convert.source.GmlSourceHandler;
@@ -97,6 +99,8 @@ public class GmlConvertFactory
     final ISourceHandler handler;
     if( source instanceof FeaturemappingSourceType )
       handler = new FeaturemappingSourceHandler( resolver, context, (FeaturemappingSourceType)source );
+    else if( source instanceof ChangeSourceType )
+      handler = new ChangeSourceTypeHandler( resolver, context, (ChangeSourceType)source );
     else if( source instanceof CsvSourceType )
       handler = new CsvSourceHandler( resolver, context, (CsvSourceType)source );
     else if( source instanceof GmlSourceType )

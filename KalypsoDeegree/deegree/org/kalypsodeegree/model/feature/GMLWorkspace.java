@@ -47,6 +47,9 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /** Visit alle features in the given list */
   public void accept( final FeatureVisitor fv, final List features, final int depth );
+  
+  /** Visit alle features denoted by this path */
+  public void accept( final FeatureVisitor fv, final String featurePath, final int depth );
 
   public FeatureType getFeatureType( String featureName );
 

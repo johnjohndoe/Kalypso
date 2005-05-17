@@ -61,12 +61,8 @@ public final class GMLSchemaCatalog
   public synchronized static GMLSchema getSchema( final String namespace )
   {
     final URL schemaURL = THE_CATALOG.getURL( namespace );
-    if( schemaURL == null )
-    {
-      LOGGER.warning( "Kein Schema-Eintrag für: " + namespace );
-      return null;
-    }
-
+    // auch versuchen aus dem Cache zu laden, wenn die url null ist; 
+    // vielleicht ist der namespace ja noch im file-cache
     return getSchema( namespace, schemaURL );
   }
   

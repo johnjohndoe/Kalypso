@@ -170,8 +170,10 @@ public final class GmlSerializer
         schema.getNamespaceMap() );
   }
 
-  /** Liest einen GML-Workspace aus einer URL. Es wird kein Token-Replace durchgeführt, das Encoding wird anhand des XML-Headers ermittelt. 
-   * Sollte Client-Seitig nicht benutzt werden.
+  /**
+   * Liest einen GML-Workspace aus einer URL. Es wird kein Token-Replace
+   * durchgeführt, das Encoding wird anhand des XML-Headers ermittelt. Sollte
+   * Client-Seitig nicht benutzt werden.
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL ) throws Exception
   {
@@ -183,7 +185,7 @@ public final class GmlSerializer
       // der XML Mechanismus decodiert so schon richtig, zumindest, wenn das
       // richtige enconding im xml-header steht.
       stream = new BufferedInputStream( gmlURL.openStream() );
-      
+
       return createGMLWorkspace( new InputSource( stream ), gmlURL );
     }
     finally
@@ -207,7 +209,8 @@ public final class GmlSerializer
       if( isr.getEncoding() == null )
       {
         IOUtils.closeQuietly( isr );
-        throw new NullPointerException( "Es konnte kein Encoding für die GMLUrl ermittelt werden. Dies sollte auf Client-Seite eigentlich nie passieren. Serverseitig darf diese Methode nicht benutzt werden." );
+        throw new NullPointerException(
+            "Es konnte kein Encoding für die GMLUrl ermittelt werden. Dies sollte auf Client-Seite eigentlich nie passieren. Serverseitig darf diese Methode nicht benutzt werden." );
       }
 
       reader = new BufferedReader( isr );
@@ -234,7 +237,8 @@ public final class GmlSerializer
     }
   }
 
-  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context ) throws Exception, MalformedURLException, GmlSerializeException
+  private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context )
+      throws Exception, MalformedURLException, GmlSerializeException
   {
     final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource, true );
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
@@ -243,8 +247,9 @@ public final class GmlSerializer
 
     return createGMLWorkspace( gml, schema, context );
   }
-  
-  private static GMLWorkspace createGMLWorkspace( final GMLDocument_Impl gml, final GMLSchema schema, final URL context ) throws Exception
+
+  private static GMLWorkspace createGMLWorkspace( final GMLDocument_Impl gml,
+      final GMLSchema schema, final URL context ) throws Exception
   {
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
@@ -253,7 +258,6 @@ public final class GmlSerializer
     return new GMLWorkspace_Impl( types, feature, context, gml.getSchemaLocationName(), schema
         .getTargetNS(), schema.getNamespaceMap() );
   }
-  
 
   /**
    * Lädt ein schema anhand des gml-doc. Immer aus dem Cache. Zuerst per
@@ -283,13 +287,14 @@ public final class GmlSerializer
     return schema;
   }
 
-  public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final URL schemaURL ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final URL schemaURL )
+      throws Exception
   {
     final GMLSchema schema = new GMLSchema( schemaURL );
 
     final Document gmlAsDOM = XMLHelper.getAsDOM( new InputSource( inputStream ), true );
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
-    
+
     return createGMLWorkspace( gml, schema, schemaURL );
   }
 }

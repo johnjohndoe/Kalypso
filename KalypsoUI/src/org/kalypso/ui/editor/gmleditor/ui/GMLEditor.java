@@ -5,8 +5,8 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
@@ -24,9 +25,7 @@ import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author F.Lindemann
- *  
  */
-
 public class GMLEditor extends AbstractEditorPart implements ICommandTarget
 {
   protected GMLEditorTreeView m_viewer = null;
@@ -45,7 +44,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
 
     if( m_viewer != null )
       m_viewer.dispose();
-    
+
     super.dispose();
   }
 
@@ -62,23 +61,16 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
       throws Exception, CoreException
   {
+    monitor.beginTask( "Vorlage wird geladen" , 1000 );
     if( m_gmlReader != null )
     {
       m_gmlReader.dispose();
       m_gmlReader = null;
     }
-    
-    BufferedReader br = null;
+
     try
     {
-      final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
-      final URL context = ResourceUtilities.createURL( inputFile );
-
-      br = new BufferedReader( new InputStreamReader( inputFile.getContents() ) );
-      String gmlType = br.readLine();
-      String gmlSource = br.readLine();
-
-      m_gmlReader = new GMLReader( gmlType, gmlSource, context );
+      m_gmlReader = createReaderFromInput( input );
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
@@ -89,19 +81,50 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
         }
       } );
     }
-    catch( final MalformedURLException e )
+    finally
+    {
+      monitor.done();
+    }
+
+  }
+
+  private GMLReader createReaderFromInput( final IStorageEditorInput input ) throws CoreException
+  {
+    BufferedReader br = null;
+
+    try
+    {
+      final IFile inputFile = ( (IFileEditorInput)input ).getFile();
+      final URL context = ResourceUtilities.createURL( inputFile );
+
+      final String gmlType;
+      final String gmlSource;
+      if( input instanceof GmlEditorInput )
+      {
+        final GmlEditorInput gmlEditorInput = (GmlEditorInput)input;
+        gmlType = gmlEditorInput.getLinktype();
+        gmlSource = context.toString();
+      }
+      else
+      {
+        br = new BufferedReader( new InputStreamReader( inputFile.getContents() ) );
+        gmlType = br.readLine();
+        gmlSource = br.readLine();
+      }
+
+      return new GMLReader( gmlType, gmlSource, context );
+    }
+    catch( final IOException e )
     {
       e.printStackTrace();
 
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Parsen der Context-URL", e ) );
+          "Fehler beim Laden der Vorlagendatei.", e ) );
     }
     finally
     {
       IOUtils.closeQuietly( br );
-      monitor.done();
     }
-
   }
 
   public synchronized void createPartControl( final Composite parent )
@@ -109,5 +132,21 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     super.createPartControl( parent );
     m_viewer = new GMLEditorTreeView( parent );//, this );
     m_viewer.setGmlReader( m_gmlReader );
+  }
+
+  public final static class GmlEditorInput extends FileEditorInput
+  {
+    private final String m_linktype;
+
+    public GmlEditorInput( final String linktype, final IFile file )
+    {
+      super( file );
+      m_linktype = linktype;
+    }
+
+    public String getLinktype()
+    {
+      return m_linktype;
+    }
   }
 }

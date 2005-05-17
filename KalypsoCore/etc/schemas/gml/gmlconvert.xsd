@@ -279,4 +279,58 @@
 			<xs:enumeration value="nothing"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:element name="changesource" type="ChangeSourceType" substitutionGroup="source">
+		<xs:annotation>
+			<xs:documentation>Eine Datenquelle, die Daten aus einer Quelle liest und diese verändert.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ChangeSourceType">
+		<xs:complexContent>
+			<xs:extension base="SourceType">
+				<xs:sequence>
+					<xs:element ref="source" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Die Datenquelle, die gelesen und dann verändert wird.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="visitor" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Ändert Featueres anhand eines FeatureVisitors.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="argument" minOccurs="0" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Argumente für den FeatureVisitor Es wird davon ausgegangen, dass der FeatureVisitor einen Konsturktor hat, welcher ein Properties-Objekt als Parameter bekomment kann..</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:attribute name="name" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Key des Arguments.</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="value" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Wert des Arguments.</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="visitorclass" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Klassennamen des FeatureVisitors, der den Wert (Object) der Property erzeugt.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+								<xs:attribute name="featurePath" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>Auf diesen Feature-Path wird der Visitor angewendet.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 </xs:schema>
