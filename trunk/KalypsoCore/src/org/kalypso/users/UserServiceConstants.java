@@ -55,12 +55,12 @@ public final class UserServiceConstants
   public static final String[] NO_RIGHTS = {};
   
   // full list of rights
-  private static final String[] RIGHTS = { RIGHT_PROGNOSE, RIGHT_EXPERT, RIGHT_ADMIN };
+  public static final String[] FULL_RIGHTS = { RIGHT_PROGNOSE, RIGHT_EXPERT, RIGHT_ADMIN };
   
   // sort array because of call to binarySearch
   static
   {
-    Arrays.sort( RIGHTS );
+    Arrays.sort( FULL_RIGHTS );
   }
   
   /**
@@ -71,6 +71,6 @@ public final class UserServiceConstants
    */
   public static boolean isValidUserRight( final String right )
   {
-    return Arrays.binarySearch( RIGHTS, right ) >= 0;
+    return Arrays.binarySearch( FULL_RIGHTS, right ) >= 0;
   }
 }
