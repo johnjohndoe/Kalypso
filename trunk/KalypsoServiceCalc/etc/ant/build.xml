@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="KalypsoCalcservice" default="build" basedir=".">
+<project name="KalypsoCalcservice" default="fake" basedir=".">
 
 	<property name="project" value="${workspace}/KalypsoCalcService" />
 	<property name="project-name" value="KalypsoCalcService" />
@@ -18,5 +18,6 @@
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
 	</path>
-	
+  
+  	<target name="fake" description="Fake target to avoid error message."/>
 </project>

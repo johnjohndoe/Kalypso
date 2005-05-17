@@ -90,7 +90,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			faster!
 			-->
       <produces file="${project}/lib/${dest.file.name}" />
-
     </xjc>
   </target>
 
@@ -105,6 +104,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
            srcdir="${build.source}"
            classpathref="cpref"
     />
+    
+    <!-- danach immer die sourcen löschen, da 'removeoldoutput' nicht alles löscht -->
+    <echo message="Deleting generated source files" />
+    <delete includeemptydirs="true">
+         <fileset dir="${build.source}" includes="**/*" />
+    </delete>
   </target>
 
   <target name="deploy" depends="compile" description="package jar">

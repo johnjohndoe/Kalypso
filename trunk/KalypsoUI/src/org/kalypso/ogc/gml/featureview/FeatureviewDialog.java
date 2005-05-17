@@ -57,9 +57,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -97,7 +100,11 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   {
     getShell().setText( "Feature editieren" );
 
-    final Composite panel = new Composite( parent, SWT.BORDER );
+    final Feature feature = m_featureComposite.getFeature();
+    final FeatureType featureType = feature.getFeatureType();
+    
+    final Group panel = new Group( parent, SWT.NONE );
+    panel.setText( featureType.getName() + " - " + feature.getId() );
     panel.setLayout( new GridLayout( ) );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     

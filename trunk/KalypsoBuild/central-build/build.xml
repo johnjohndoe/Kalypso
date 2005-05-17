@@ -105,7 +105,7 @@
          inheritall="true"
          target="deploy"
     />
-    <copy file="${workspace}/KalypsoUtil/build/KalypsoUtil.jar"
+    <copy file="${workspace}/KalypsoUtil/build/deploy/KalypsoUtil.jar"
           todir="${dist.base}"
           overwrite="true"
     />
@@ -115,7 +115,7 @@
          inheritall="true"
          target="deploy"
     />
-    <copy file="${workspace}/KalypsoDeegree/build/KalypsoDeegree.jar"
+    <copy file="${workspace}/KalypsoDeegree/build/deploy/KalypsoDeegree.jar"
           todir="${dist.base}"
           overwrite="true"
     />
@@ -125,7 +125,7 @@
          inheritall="true"
          target="deploy"
     />
-    <copy file="${workspace}/KalypsoRepository/build/KalypsoRepository.jar"
+    <copy file="${workspace}/KalypsoRepository/build/deploy/KalypsoRepository.jar"
           todir="${dist.base}"
           overwrite="true"
     />
@@ -139,7 +139,7 @@
          inheritall="true"
          target="deploy"
     />
-    <copy file="${workspace}/KalypsoCore/build/KalypsoCore.jar"
+    <copy file="${workspace}/KalypsoCore/build/deploy/KalypsoCore.jar"
           todir="${dist.base}"
           overwrite="true"
     />

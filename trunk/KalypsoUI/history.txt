@@ -9,6 +9,9 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 - TODO: hier fehlt doch bestimmt ganz viel! :-(
 
+- Laden der GML Schemata: allgemeiner Caching und Server Mechanismus
+- Gis-Tabellenansicht: Performanceverbesserung bei Tabellen mit sehr vielen Spalten; hat beim Öffnen sehr lange gedauert
+- Kleine Layout Änderung im Feature-Bearbeiten-Dialog: jetzt mit beschriftetem Rand; Veschriftung = "Typname - FID"
 - Implementierung vom WISKI Adapter
 - KalypsoObservationService:
   * zusätzliche Konfigurationsdatei namens 'service.properties' beinhaltet z.Z. die 

@@ -65,7 +65,8 @@ public class GisTemplateLauncher implements IEditorLauncher
 //    final Object gmtDefault = "<Standard Kartenansicht>";
 //    final Object gttDefault = "<Standard Datenansicht>";
     final IDefaultTemplateLauncher featureDefault = new FeatureTemplateLauncher();
+    final IDefaultTemplateLauncher baumDefault = new GmlEditorTemplateLauncher();
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { featureDefault } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { featureDefault, baumDefault } );
   }
 }

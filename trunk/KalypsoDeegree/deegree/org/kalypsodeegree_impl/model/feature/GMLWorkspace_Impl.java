@@ -654,6 +654,19 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor, java.lang.String, int)
+   */
+  public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
+  {
+    final Object featureFromPath = getFeatureFromPath( featurePath );
+    if( featureFromPath instanceof Feature )
+      fv.visit( (Feature)featureFromPath );
+    else if( featureFromPath instanceof FeatureList )
+      accept( fv, (FeatureList)featureFromPath, depth );
+    else throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
+  }
+
+    /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
    */
@@ -667,5 +680,4 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     return false;
   }
-
 }

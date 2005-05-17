@@ -255,7 +255,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
    * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite,
    *      org.eclipse.ui.IEditorInput)
    */
-  public void init( IEditorSite site, IEditorInput input )
+  public void init( final IEditorSite site, final IEditorInput input )
   {
     setSite( site );
 
@@ -273,7 +273,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
   /**
    * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
    */
-  protected final void setInput( IEditorInput input )
+  protected final void setInput( final IEditorInput input )
   {
     super.setInput( input );
 
