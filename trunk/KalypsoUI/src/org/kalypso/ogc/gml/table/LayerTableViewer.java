@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import org.bce.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -88,6 +89,8 @@ import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
@@ -104,8 +107,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -375,6 +376,8 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     tc.setWidth( width );
 
     setColumnText( tc );
+    
+    TableColumnTooltipListener.hookControl( tc );
 
     tc.addSelectionListener( m_headerListener );
     tc.addControlListener( m_headerControlListener );
@@ -393,6 +396,7 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
     final String propertyName = (String)tc.getData( COLUMN_PROP_NAME );
     final String sortPropertyName = m_sorter.getPropertyName();
     String text;
+    String tooltip;
     try
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
@@ -404,17 +408,20 @@ public class LayerTableViewer extends TableViewer implements ISelectionProvider,
           IKalypsoPreferences.LANGUAGE );
       final Annotation annotation = property.getAnnotation( lang );
 
-      text = annotation.getLabel() + " (" + propertyName + ")";
+      text = annotation.getLabel();
+      tooltip = annotation.getTooltip();
     }
     catch( Exception e )
     {
       // if data is not loaded yet, we provide the propertyname
       text = propertyName;
+      tooltip = null;
     }
     if( propertyName.equals( sortPropertyName ) )
       text += " " + ( m_sorter.isInverse() ? "\u00ab" : "\u00bb" );
 
     tc.setText( text );
+    tc.setData( TableColumnTooltipListener.TOOLTIP_PROPERTY, tooltip );
   }
 
   public void removeColumn( final String name )

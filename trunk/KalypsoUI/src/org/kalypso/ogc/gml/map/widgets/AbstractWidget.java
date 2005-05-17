@@ -72,10 +72,6 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   private String m_rightMFunction=null;
 
-  /*
-   * 
-   * @author doemming
-   */
   public AbstractWidget( String name, String toolTip )
   {
     m_name = name;
