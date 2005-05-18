@@ -149,7 +149,7 @@
 	<target name="modelplugins-dependency" depends="build-plugins">
 		<echo message="Copying the libs relevant for using Bode-Plugin and Saale-Plugin"/>
 		
-		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib" overwrite="true">
 			<fileset dir="${workspace}/KalypsoBodePlugin/build/deploy" includes="**/*.jar" />
 		</copy>
 		<!--copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">

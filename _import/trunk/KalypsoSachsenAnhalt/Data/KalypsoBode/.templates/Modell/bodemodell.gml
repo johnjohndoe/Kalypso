@@ -151,6 +151,9 @@
 					<bodepegel:Kurz_Name>neug</bodepegel:Kurz_Name>
 					<bodepegel:istEingabePegel>false</bodepegel:istEingabePegel>
 					<bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
+					<bodepegel:Ganglinie_gemessen >
+						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Messung/Neugattersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+					</bodepegel:Ganglinie_gemessen>
 					<bodepegel:Ganglinie_gerechnet >
 						<obslink:TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
 					</bodepegel:Ganglinie_gerechnet>

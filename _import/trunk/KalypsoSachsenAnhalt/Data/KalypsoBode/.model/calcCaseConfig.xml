@@ -2,14 +2,10 @@
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org calcCaseConfig.xsd">
 	<!-- Rechenfall anlegen, ohne Zeitreihen -->
 	<createTransformations logFile="createCalcCase.log">
-		<!-- Bodemodell.gml  und *.gmv, Info_Rechenvariant,gft (= view auf .calculation) -->
+		<!-- Bodemodell.gml, Info_Rechenvariant,gft (= view auf .calculation) -->
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Modell/bodemodell.gml"/>
 			<argument name="output" value=":calcdir:bodemodell.gml"/>
-		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
-			<argument name="input" value=":project:.templates/Modell/bodemodell.gmv"/>
-			<argument name="output" value=":calcdir:bodemodell.gmv"/>
 		</transformation>
 		<transformation className="org.kalypso.util.transformation.CopyTransformation">
 			<argument name="input" value=":project:.templates/Modell/Info_Rechenvariante.gft"/>
