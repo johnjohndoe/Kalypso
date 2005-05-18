@@ -144,6 +144,13 @@
 									</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
+							<xs:attribute name="ignoreFormatExceptions" type="xs:boolean" use="optional" default="false">
+								<xs:annotation>
+									<xs:documentation>
+										<p>Falls true, werden Fehler beim Parsen dieser Spalten ignoriert..</p>
+									</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>

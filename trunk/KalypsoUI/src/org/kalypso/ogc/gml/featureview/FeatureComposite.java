@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -240,6 +241,7 @@ public class FeatureComposite implements IFeatureControl
   private Control createControlFromControlType( final Composite parent, final int style,
       final ControlType controlType )
   {
+    final Feature feature = getFeature();
     if( controlType instanceof CompositeType )
     {
       final CompositeType compositeType = (CompositeType)controlType;
@@ -259,39 +261,13 @@ public class FeatureComposite implements IFeatureControl
     }
 
     // control erzeugen!
-    final Feature feature = getFeature();
     if( controlType instanceof LabelType )
     {
       final LabelType labelType = (LabelType)controlType;
       final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType
           .getStyle() ) );
       label.setText( labelType.getText() );
-
-      // falls der evtl. angegebene propertyType eine annotation hat, diese
-      // verwenden
-      final String propertyName = labelType.getProperty();
-      if( propertyName != null && propertyName.length() > 0 )
-      {
-        final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-        try
-        {
-          //          final Annotation annotation = ftp.getAnnotation(
-          // Locale.getDefault().getLanguage() );
-          final Annotation annotation = ftp.getAnnotation( KalypsoGisPlugin.getDefault()
-              .getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE ) );
-
-          if( annotation != null )
-          {
-            label.setText( annotation.getLabel() );
-            label.setToolTipText( annotation.getTooltip() );
-          }
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-          // TODO: handle exception
-        }
-      }
+      applyAnnotation( label, labelType.getProperty(), feature );
 
       return label;
     }
@@ -560,5 +536,36 @@ public class FeatureComposite implements IFeatureControl
   public Control getControl()
   {
     return m_control;
+  }
+
+  private void applyAnnotation( final Control label, final String propertyName, final Feature feature )
+  {
+    if( propertyName != null && propertyName.length() > 0 )
+    {
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+      if( ftp != null )
+      {
+        final Annotation annotation = ftp.getAnnotation( KalypsoGisPlugin.getDefault()
+            .getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE ) );
+
+        if( annotation != null )
+        {
+          try
+          {
+            final Method method = label.getClass().getMethod( "setText", new Class[]
+            { String.class } );
+            if( method != null )
+              method.invoke( label, new String[]
+              { annotation.getLabel() } );
+          }
+          catch( final Exception e )
+          {
+            // ignore, this control has not text
+          }
+          
+          label.setToolTipText( annotation.getTooltip() );
+        }
+      }
+    }
   }
 }

@@ -43,10 +43,13 @@ public final class CsvFeatureReader
 
     public final String format;
 
-    public CSVInfo( final String format, final int[] columns )
+    public final boolean ignoreFormatExceptions;
+
+    public CSVInfo( final String format, final int[] columns, final boolean ignoreFormatExceptions )
     {
       this.format = format;
       this.columns = columns;
+      this.ignoreFormatExceptions = ignoreFormatExceptions;
     }
   }
 
@@ -115,9 +118,6 @@ public final class CsvFeatureReader
       final FeatureTypeProperty ftp = properties[i];
       final CSVInfo info = (CSVInfo)m_infos.get( ftp );
 
-      final String type = ftp.getType();
-      final String format = info.format;
-
       // check column numbers
       for( int j = 0; j < info.columns.length; j++ )
       {
@@ -128,31 +128,57 @@ public final class CsvFeatureReader
               + " Spalten gefunden." );
       }
 
-      final int col0 = info.columns[0];
-      if( String.class.getName().equals( type ) )
-        data[i] = tokens[col0];
-      else if( Integer.class.getName().equals( type ) )
-        data[i] = new Integer( tokens[col0] );
-      else if( Long.class.getName().equals( type ) )
-        data[i] = new Long( tokens[col0] );
-      else if( Float.class.getName().equals( type ) )
-        data[i] = new Float( tokens[col0] );
-      else if( Double.class.getName().equals( type ) )
-        data[i] = new Double( tokens[col0].replace( ',', '.' ) );
-      else if( GM_Point.class.getName().equals( type ) )
-      {
-        final int col1 = info.columns[1];
-        final double rw = Double.parseDouble( tokens[col0] );
-        final double hw = Double.parseDouble( tokens[col1] );
-
-        final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( format );
-        
-        data[i] = GeometryFactory.createGM_Point( rw, hw, crs );
-      }
-      else
-        throw new CsvException( "Datentyp nicht bekannt: " + type );
+      data[i] = parseColumns( ftp.getType(), info.format, info.columns, tokens, info.ignoreFormatExceptions );
     }
 
     return FeatureFactory.createFeature( index, featureType, data );
+  }
+  
+  private Object parseColumns( final String type, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException
+  {
+    try
+    {
+      final int col0 = columns[0];
+      if( String.class.getName().equals( type ) )
+        return tokens[col0];
+
+      if( Integer.class.getName().equals( type ) )
+        return new Integer( tokens[col0] );
+
+      if( Long.class.getName().equals( type ) )
+        return new Long( tokens[col0] );
+
+      if( Float.class.getName().equals( type ) )
+        return new Float( tokens[col0] );
+
+      if( Double.class.getName().equals( type ) )
+        return new Double( tokens[col0].replace( ',', '.' ) );
+
+      if( GM_Point.class.getName().equals( type ) )
+      {
+        final int col1 = columns[1];
+        final String rwString = tokens[col0].trim();
+        final String hwString = tokens[col1].trim();
+        if( rwString == null || rwString.length() == 0 || hwString == null
+            || hwString.length() == 0 )
+          return null;
+
+        final double rw = Double.parseDouble( rwString );
+        final double hw = Double.parseDouble( hwString );
+
+        final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( format );
+
+        return GeometryFactory.createGM_Point( rw, hw, crs );
+      }
+    }
+    catch( final NumberFormatException nfe )
+    {
+      if( ignoreFormatExceptions )
+        return null;
+      
+      throw new CsvException( "Formatfehler beim Lesen der Spalten: " + columns, nfe );
+    }
+    
+    throw new CsvException( "Unbekannter Datentyp: " + type );
   }
 }

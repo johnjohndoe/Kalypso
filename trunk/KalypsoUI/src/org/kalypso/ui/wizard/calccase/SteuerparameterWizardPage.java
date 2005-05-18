@@ -235,57 +235,72 @@ public class SteuerparameterWizardPage extends WizardPage
     if( project == null )
       return;
 
+    // gleich mal den Workspace auf das default setzen
     try
     {
-      // gleich mal den Workspace auf das default setzen
       final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
       m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
+    }
+    catch( final CoreException e )
+    {
+      // ignore, m_workspace stays null, this will be handle later
+      e.printStackTrace();
+      
+      setErrorMessage( e.getLocalizedMessage() );
+    }
 
-      // Vorlage auslesen
+    if( m_workspace != null )
+    {
+      final Feature f = m_workspace.getRootFeature();
+      m_featureComposite.setFeature( f );
+    }
+
+    try
+    {
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
           + ModelNature.CONTROL_VIEW_PATH );
-
-      final Feature f = m_workspace.getRootFeature();
-
-      m_featureComposite.setFeature( f );
       m_featureComposite.addView( viewURL );
-
-      final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
-      featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-      final Button checkUpdate = new Button( m_panel, SWT.CHECK );
-      checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-      checkUpdate.setText( "Zeitreihen aktualisieren" );
-      checkUpdate
-          .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
-      checkUpdate.setSelection( m_update );
-      m_checkUpdate = checkUpdate;
-
-      checkUpdate.addSelectionListener( new SelectionAdapter()
-      {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        public void widgetSelected( final SelectionEvent e )
-        {
-          setUpdate( checkUpdate.getSelection() );
-        }
-      } );
-      
-      final FeatureComposite featureComposite = m_featureComposite;
-      if( featureComposite != null )
-      {
-        featureComposite.setFeature( m_workspace.getRootFeature() );
-        featureComposite.updateControl();
-      }
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
+      
+      // ignore, its 'just' bad configured
     }
-    catch( final CoreException e )
+
+    if( m_workspace == null )
     {
-      e.printStackTrace();
+      setPageComplete( false );
+      return;
+    }
+    
+    final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
+    featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    final Button checkUpdate = new Button( m_panel, SWT.CHECK );
+    checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    checkUpdate.setText( "Zeitreihen aktualisieren" );
+    checkUpdate
+        .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
+    checkUpdate.setSelection( m_update );
+    m_checkUpdate = checkUpdate;
+
+    checkUpdate.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( final SelectionEvent e )
+      {
+        setUpdate( checkUpdate.getSelection() );
+      }
+    } );
+    
+    final FeatureComposite featureComposite = m_featureComposite;
+    if( featureComposite != null )
+    {
+      featureComposite.setFeature( m_workspace.getRootFeature() );
+      featureComposite.updateControl();
     }
   }
 
