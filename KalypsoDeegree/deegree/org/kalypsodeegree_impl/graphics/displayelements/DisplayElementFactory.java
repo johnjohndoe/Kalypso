@@ -97,6 +97,7 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.gc.GC_GridCoverage;
 
 /**
@@ -113,8 +114,7 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles,
-      GMLWorkspace workspace )
+  public static DisplayElement[] createDisplayElement( Object o, UserStyle[] styles, GMLWorkspace workspace )
   {
     Debug.debugMethodBegin( "DisplayElementFactory", "getDisplayElement" );
 
@@ -146,8 +146,7 @@ public class DisplayElementFactory
 
             for( int k = 0; k < fts.length; k++ )
             {
-              if( fts[k].getFeatureTypeName() == null
-                  || featureTypeName.equals( fts[k].getFeatureTypeName() ) )
+              if( fts[k].getFeatureTypeName() == null || featureTypeName.equals( fts[k].getFeatureTypeName() ) )
               {
                 Rule[] rules = fts[k].getRules();
 
@@ -183,8 +182,7 @@ public class DisplayElementFactory
 
                   for( int u = 0; u < symbolizers.length; u++ )
                   {
-                    DisplayElement displayElement = DisplayElementFactory.buildDisplayElement(
-                        feature, symbolizers[u], workspace );
+                    DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u], workspace );
 
                     if( displayElement != null )
                     {
@@ -199,7 +197,7 @@ public class DisplayElementFactory
       }
       catch( IncompatibleGeometryTypeException e )
       {
-        System.out.println("wrong style ?:"+ e.getLocalizedMessage() );
+        System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
         e.printStackTrace();
       }
     }
@@ -213,18 +211,15 @@ public class DisplayElementFactory
    * raster and <tt>Symbolizer</tt>.
    * <p>
    * 
-   * @param o
-   *          contains the geometry or raster information (Feature or raster)
-   * @param symbolizer
-   *          contains the drawing (style) information and selects the geometry
-   *          property of the <tt>Feature</tt> to be drawn
-   * @throws IncompatibleGeometryTypeException
-   *           if the selected geometry of the <tt>Feature</tt> is not
-   *           compatible with the <tt>Symbolizer</tt>
+   * @param o contains the geometry or raster information (Feature or raster)
+   * @param symbolizer contains the drawing (style) information and selects the
+   *          geometry property of the <tt>Feature</tt> to be drawn
+   * @throws IncompatibleGeometryTypeException if the selected geometry of the
+   *           <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer,
-      GMLWorkspace workspace ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer, GMLWorkspace workspace )
+      throws IncompatibleGeometryTypeException
   {
     DisplayElement displayElement = null;
 
@@ -240,8 +235,7 @@ public class DisplayElementFactory
       {
         // check if virtual property
         if( feature.getFeatureType().isVirtuelProperty( geometry.getPropertyName() ) )
-          geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(),
-              workspace );
+          geoProperty = (GM_Object)feature.getVirtuelProperty( geometry.getPropertyName(), workspace );
         else
           geoProperty = (GM_Object)feature.getProperty( geometry.getPropertyName() );
       }
@@ -260,18 +254,15 @@ public class DisplayElementFactory
       // PointSymbolizer
       if( symbolizer instanceof PointSymbolizer )
       {
-        displayElement = buildPointDisplayElement( feature, geoProperty,
-            (PointSymbolizer)symbolizer );
+        displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer)symbolizer );
       } // LineSymbolizer
       else if( symbolizer instanceof LineSymbolizer )
       {
-        displayElement = buildLineStringDisplayElement( feature, geoProperty,
-            (LineSymbolizer)symbolizer );
+        displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer)symbolizer );
       } // PolygonSymbolizer
       else if( symbolizer instanceof PolygonSymbolizer )
       {
-        displayElement = buildPolygonDisplayElement( feature, geoProperty,
-            (PolygonSymbolizer)symbolizer );
+        displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer)symbolizer );
       }
       else if( symbolizer instanceof TextSymbolizer )
       {
@@ -295,15 +286,12 @@ public class DisplayElementFactory
    * Raster and a default <tt>Symbolizer</tt>.
    * <p>
    * 
-   * @param o
-   *          contains the geometry or raster information (Feature or raster)
-   * @throws IncompatibleGeometryTypeException
-   *           if the selected geometry of the <tt>Feature</tt> is not
-   *           compatible with the <tt>Symbolizer</tt>
+   * @param o contains the geometry or raster information (Feature or raster)
+   * @throws IncompatibleGeometryTypeException if the selected geometry of the
+   *           <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( Object o )
-      throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( Object o ) throws IncompatibleGeometryTypeException
   {
     Debug.debugMethodBegin( "DisplayElementFactory", "buildDisplayElement(Object)" );
 
@@ -358,14 +346,12 @@ public class DisplayElementFactory
    * information.
    * <p>
    * 
-   * @param feature
-   *          associated <tt>Feature<tt>
+   * @param feature associated <tt>Feature<tt>
    * @param geom geometry information
    * @param sym style information
    * @return constructed <tt>PointDisplayElement</tt>
    */
-  public static PointDisplayElement buildPointDisplayElement( Feature feature, GM_Object geom,
-      PointSymbolizer sym )
+  public static PointDisplayElement buildPointDisplayElement( Feature feature, GM_Object geom, PointSymbolizer sym )
   {
 
     // if the geometry is not a point geometry, the centroid(s) of the
@@ -388,15 +374,24 @@ public class DisplayElementFactory
       for( int i = 0; i < primitives.length; i++ )
         centroids[i] = primitives[i].getCentroid();
 
-      displayElement = new PointDisplayElement_Impl( feature, GeometryFactory
-          .createGM_MultiPoint( centroids ), sym );
+      displayElement = new PointDisplayElement_Impl( feature, GeometryFactory.createGM_MultiPoint( centroids ), sym );
     }
     else
     {
-      displayElement = new PointDisplayElement_Impl( feature, geom.getCentroid(), sym );
+      GM_Point centeroid = createCenteroidOnElement( geom );
+      displayElement = new PointDisplayElement_Impl( feature, centeroid, sym );
     }
 
     return displayElement;
+  }
+
+  private static GM_Point createCenteroidOnElement( GM_Object geom )
+  {
+    if( geom == null )
+      return null;
+    if( geom instanceof GM_Point )
+      return (GM_Point)geom;
+	  return geom.getCentroid();
   }
 
   /**
@@ -404,16 +399,15 @@ public class DisplayElementFactory
    * style information.
    * <p>
    * 
-   * @param feature
-   *          associated <tt>Feature<tt>
+   * @param feature associated <tt>Feature<tt>
    * @param geom geometry information
    * @param sym style information
    * @throws IncompatibleGeometryTypeException if the geometry property is not
    *         a <tt>GM_Curve</tt> or a <tt>GM_MultiCurve</tt>
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( Feature feature,
-      GM_Object geom, LineSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LineStringDisplayElement buildLineStringDisplayElement( Feature feature, GM_Object geom, LineSymbolizer sym )
+      throws IncompatibleGeometryTypeException
   {
     LineStringDisplayElement displayElement = null;
     if( geom == null )
@@ -428,9 +422,8 @@ public class DisplayElementFactory
     }
     else
     {
-      throw new IncompatibleGeometryTypeException(
-          "Tried to create a LineStringDisplayElement from a geometry with "
-              + "an incompatible / unsupported type: '" + geom.getClass().getName() + "'!" );
+      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with "
+          + "an incompatible / unsupported type: '" + geom.getClass().getName() + "'!" );
     }
 
     return displayElement;
@@ -441,16 +434,15 @@ public class DisplayElementFactory
    * style information.
    * <p>
    * 
-   * @param feature
-   *          associated <tt>Feature<tt>
+   * @param feature associated <tt>Feature<tt>
    * @param gmObject geometry information
    * @param sym style information
    * @throws IncompatibleGeometryTypeException if the geometry property is not
    *         a <tt>GM_Surface</tt> or a <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static PolygonDisplayElement buildPolygonDisplayElement( Feature feature,
-      GM_Object gmObject, PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static PolygonDisplayElement buildPolygonDisplayElement( Feature feature, GM_Object gmObject, PolygonSymbolizer sym )
+      throws IncompatibleGeometryTypeException
   {
     PolygonDisplayElement displayElement = null;
 
@@ -464,9 +456,8 @@ public class DisplayElementFactory
     }
     else
     {
-      throw new IncompatibleGeometryTypeException(
-          "Tried to create a LineStringDisplayElement from a geometry with "
-              + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
+      throw new IncompatibleGeometryTypeException( "Tried to create a LineStringDisplayElement from a geometry with "
+          + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
     }
 
     return displayElement;
@@ -477,35 +468,30 @@ public class DisplayElementFactory
    * information.
    * <p>
    * 
-   * @param feature
-   *          <tt>Feature</tt> to be used (necessary for evaluation of the
-   *          label expression)
-   * @param gmObject
-   *          geometry information
-   * @param sym
-   *          style information
-   * @throws IncompatibleGeometryTypeException
-   *           if the geometry property is not a <tt>GM_Point</tt>, a
-   *           <tt>GM_Surface</tt> or <tt>GM_MultiSurface</tt>
+   * @param feature <tt>Feature</tt> to be used (necessary for evaluation of
+   *          the label expression)
+   * @param gmObject geometry information
+   * @param sym style information
+   * @throws IncompatibleGeometryTypeException if the geometry property is not a
+   *           <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or
+   *           <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static LabelDisplayElement buildLabelDisplayElement( Feature feature, GM_Object gmObject,
-      TextSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LabelDisplayElement buildLabelDisplayElement( Feature feature, GM_Object gmObject, TextSymbolizer sym )
+      throws IncompatibleGeometryTypeException
   {
 
     LabelDisplayElement displayElement = null;
 
-    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface
-        || gmObject instanceof GM_MultiSurface || gmObject instanceof GM_Curve
+    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface || gmObject instanceof GM_Curve
         || gmObject instanceof GM_MultiCurve )
     {
       displayElement = new LabelDisplayElement_Impl( feature, gmObject, sym );
     }
     else
     {
-      throw new IncompatibleGeometryTypeException(
-          "Tried to create a LabelDisplayElement from a geometry with "
-              + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
+      throw new IncompatibleGeometryTypeException( "Tried to create a LabelDisplayElement from a geometry with "
+          + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
     }
 
     return displayElement;
@@ -516,15 +502,12 @@ public class DisplayElementFactory
    * submitted <tt>GM_Envelope</tt> holds the bounding box of the imgae/raster
    * data.
    * 
-   * @param feature
-   *          grid coverage as feature
-   * @param sym
-   *          raster symbolizer
+   * @param feature grid coverage as feature
+   * @param sym raster symbolizer
    * 
    * @return RasterDisplayElement
    */
-  public static RasterDisplayElement buildRasterDisplayElement( Feature feature,
-      RasterSymbolizer sym )
+  public static RasterDisplayElement buildRasterDisplayElement( Feature feature, RasterSymbolizer sym )
   {
     return new RasterDisplayElement_Impl( feature, null, sym );
   }
