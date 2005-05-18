@@ -1,4 +1,10 @@
-10. märz 2005
+18.05.2005 Falls der centerpoint für polygone nicht im polygon selbst liegt (contain), 
+	wird nun versucht einen centerpoint zu finden, der im Polygon liegt.
+	Dies ist für alle Text und Pointsymbolizer schöner, da die visualisierung sonst blöd ist.
+	// TODO: hier sollte man zukünftig nochmal unterscheiden zwischen centoid und labelPoint.
+
+
+10.03.2005
 
 GMLSchema:
 1.

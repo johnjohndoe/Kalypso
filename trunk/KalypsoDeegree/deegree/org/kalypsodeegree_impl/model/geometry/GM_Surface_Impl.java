@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -71,6 +71,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -91,8 +92,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, GM_GenericSurface,
-    Serializable
+class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, GM_GenericSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
@@ -105,8 +105,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface with default orientation submitting one surface
    * patch.
    * 
-   * @param surfacePatch
-   *          patches of the surface.
+   * @param surfacePatch patches of the surface.
    */
   public GM_Surface_Impl( GM_SurfacePatch surfacePatch ) throws GM_Exception
   {
@@ -116,8 +115,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * initializes the surface submitting the orientation and one surface patch.
    * 
-   * @param surfacePatch
-   *          patches of the surface.
+   * @param surfacePatch patches of the surface.
    */
   public GM_Surface_Impl( char orientation, GM_SurfacePatch surfacePatch ) throws GM_Exception
   {
@@ -132,8 +130,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface with default orientation submitting the surfaces
    * boundary
    * 
-   * @param boundary
-   *          boundary of the surface
+   * @param boundary boundary of the surface
    */
   public GM_Surface_Impl( GM_SurfaceBoundary boundary ) throws GM_Exception
   {
@@ -144,8 +141,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    * initializes the surface submitting the orientation and the surfaces
    * boundary.
    * 
-   * @param boundary
-   *          boundary of the surface
+   * @param boundary boundary of the surface
    */
   public GM_Surface_Impl( char orientation, GM_SurfaceBoundary boundary ) throws GM_Exception
   {
@@ -203,6 +199,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     calculateEnvelope();
     calculateBoundary();
     setValid( true );
+    // TODO ???
+    centroid = GeometryUtilities.guessPointOnSurface( this, centroid, 3 );
   }
 
   /**
@@ -308,25 +306,22 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   public void addSurfacePatch( GM_SurfacePatch patch )
   {
-    throw new NoSuchMethodError( "Surfaces made of more then one surface patch "
-        + "are not supported at the moment." );
+    throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment." );
   }
 
   /**
    * deletes the surface patch at the submitted index
    */
-  public void deleteSurfacePatchAt( int index ) throws GM_Exception
+  public void deleteSurfacePatchAt( int index )
   {
-    throw new NoSuchMethodError( "Surfaces made of more then one surface patch "
-        + "are not supported at the moment. Because "
+    throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment. Because "
         + "empty surface are not allowed you can't delete " + "the only existing patch." );
   }
 
   /**
    * checks if this surface is completly equal to the submitted geometry
    * 
-   * @param other
-   *          object to compare to
+   * @param other object to compare to
    */
   public boolean equals( Object other )
   {
@@ -398,7 +393,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
       s = new GM_Surface_Impl( getOrientation(), patch );
     }
     catch( Exception ex )
-    {}
+    {
+      //   
+    }
 
     return s;
   }
@@ -476,7 +473,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
 
   /**
    * 
-   * 
+   *  
    */
   public String toString()
   {
@@ -484,7 +481,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     ret += ( "envelope = " + envelope + "\n" );
     try
     {
-      ret += " CRS: "+getCoordinateSystem().getName()+"\n";
+      ret += " CRS: " + getCoordinateSystem().getName() + "\n";
     }
     catch( RemoteException e )
     {
