@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<repository
+		factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"
+		name="psicompact" />
+	<repository
+		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
+		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/WeisseElsterVorhersage#*.zml"
+		readOnly="true"
+		name="Vorhersage" />
+	<repository
+		factory="org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory"
+		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/Gebietsniederschlag/gebietsNiederschlagRep.xml"
+		readOnly="true"
+		name="GebietsNiederschlaege" />
+	<repository
+		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
+		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/Spree#*.zml"
+		name="Spree" /> 
+</repconf>

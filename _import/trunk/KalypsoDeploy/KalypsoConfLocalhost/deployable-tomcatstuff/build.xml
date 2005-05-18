@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="KalypsoConfLocalhost: tomcatStuff" default="deploy-tomcat-conf">
+
+	<!-- Project full path -->
+	<property name="project.path" value="${workspace}/KalypsoConfLocalhost" />
+	<property file="${project.path}/deployable-server/deploy.properties" />
+
+	<!-- deploy-tomcat-conf-tuhh -->
+	<target name="deploy-tomcat-conf" description="Copy the tomcat data files into the tomcat configuration" >
+	    <copy todir="${tomcat.server.cataling_home}" overwrite="true">
+			<fileset dir="${project.path}/deployable-tomcatstuff" excludes="**/CVS/**,build.xml,TomcatService.reg" />
+		</copy>
+	</target>
+</project>
