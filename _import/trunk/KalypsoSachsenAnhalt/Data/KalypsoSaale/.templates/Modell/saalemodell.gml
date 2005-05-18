@@ -566,9 +566,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570210.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570210.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1013.0</pegel:AE>
           <pegel:Stat1>210685</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -661,8 +663,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570210.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570210.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -712,9 +718,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID572010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572010.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572010.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>363.0</pegel:AE>
           <pegel:Stat1>110421</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -807,8 +815,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572010.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572010.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -858,9 +870,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570000.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570000.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>652.0</pegel:AE>
           <pegel:Stat1>100816</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -953,8 +967,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570000.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570000.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1004,9 +1022,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID572115.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572115.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572115.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>360.0</pegel:AE>
           <pegel:Stat1>110421</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1099,8 +1119,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572115.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572115.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1150,9 +1174,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570270.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570270.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570270.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>290.0</pegel:AE>
           <pegel:Stat1>43184</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1245,8 +1271,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570270.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570270.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1296,9 +1326,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570330.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570330.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1299.0</pegel:AE>
           <pegel:Stat1>43184</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1391,8 +1423,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570330.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570330.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1442,9 +1478,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID572890.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572890.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572890.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>155.0</pegel:AE>
           <pegel:Stat1>110814</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1537,8 +1575,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572890.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572890.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1588,9 +1630,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID572920.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572920.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572920.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>739.0</pegel:AE>
           <pegel:Stat1>93200</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1683,8 +1727,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572920.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572920.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1734,9 +1782,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID574210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID574210.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID574210.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>843.0</pegel:AE>
           <pegel:Stat1>93200</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1829,8 +1879,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID574210.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID574210.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -1880,9 +1934,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID573010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573010.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573010.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>716.0</pegel:AE>
           <pegel:Stat1>90838</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -1975,8 +2031,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573010.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573010.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2026,9 +2086,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID573090.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573090.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573090.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>490.0</pegel:AE>
           <pegel:Stat1>43811</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2121,8 +2183,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573090.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573090.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2172,9 +2238,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575110.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575110.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>374.0</pegel:AE>
           <pegel:Stat1>90838</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2267,8 +2335,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575110.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575110.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2318,9 +2390,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575240.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575240.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575240.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>524.0</pegel:AE>
           <pegel:Stat1>43935</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2413,8 +2487,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575240.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575240.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2464,9 +2542,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID573110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573110.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573110.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1239.0</pegel:AE>
           <pegel:Stat1>43811</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2559,8 +2639,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573110.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573110.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2610,9 +2694,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575660.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575660.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575660.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>62.3</pegel:AE>
           <pegel:Stat1>44499</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2705,8 +2791,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575660.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575660.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2756,9 +2846,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575500.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575500.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>241.7</pegel:AE>
           <pegel:Stat1>44186</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2851,8 +2943,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575500.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575500.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -2902,9 +2998,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575400.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575400.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575400.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>201.0</pegel:AE>
           <pegel:Stat1>90838</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -2997,8 +3095,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575400.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575400.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3044,13 +3146,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4427829.0,5714940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575700.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575700.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575700.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>31.0</pegel:AE>
           <pegel:Stat1>44157</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -3143,8 +3247,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575700.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575700.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3190,13 +3298,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4430911.0,5702078.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575710.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575710.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575710.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>126.0</pegel:AE>
           <pegel:Stat1>44157</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -3289,8 +3399,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575710.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575710.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3336,13 +3450,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4478080.0,5676890.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID573360.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573360.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573360.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>668.0</pegel:AE>
           <pegel:Stat1>43872</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -3435,8 +3551,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573360.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573360.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3482,13 +3602,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4488330.0,5669090.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570500.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570500.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1254.0</pegel:AE>
           <pegel:Stat1>82023</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -3581,8 +3703,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570500.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570500.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3632,9 +3758,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID576470.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576470.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576470.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>143300</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -3727,8 +3855,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576470.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576470.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3778,9 +3910,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID576520.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576520.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576520.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>103100</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -3873,8 +4007,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576520.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576520.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -3920,13 +4058,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4510230.0,5658010.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID576610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576610.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576610.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>318.0</pegel:AE>
           <pegel:Stat1>82023</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4019,8 +4159,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576610.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576610.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4070,9 +4214,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID577570.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID577570.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID577570.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1359.0</pegel:AE>
           <pegel:Stat1>43436</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4165,8 +4311,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID577570.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID577570.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4212,13 +4362,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4510300.0,5694580.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID576900.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576900.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576900.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1076.0</pegel:AE>
           <pegel:Stat1>130849</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4311,8 +4463,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576900.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576900.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4358,13 +4514,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4496950.0,5709575.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570810.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570810.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570810.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>1591.0</pegel:AE>
           <pegel:Stat1>130849</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4457,8 +4615,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570810.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570810.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4504,13 +4666,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4450100.0,5715940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID578410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID578410.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578410.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>136.0</pegel:AE>
           <pegel:Stat1>44337</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4603,8 +4767,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID578410.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID578410.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4650,13 +4818,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4463690.0,5719145.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID578420.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID578420.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578420.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>74.0</pegel:AE>
           <pegel:Stat1>44337</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4749,8 +4919,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID578420.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID578420.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4796,13 +4970,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4467540.0,5735500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID578430.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID578430.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578430.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>334.0</pegel:AE>
           <pegel:Stat1>44337</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -4895,8 +5071,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID578430.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID578430.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -4942,13 +5122,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4481900.0,5741000.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570910.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570910.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570910.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44414</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5041,8 +5223,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570910.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570910.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5088,13 +5274,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4409180.0,5735160.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579305.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579305.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579305.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>26.0</pegel:AE>
           <pegel:Stat1>72023</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5187,8 +5375,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579305.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579305.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5234,13 +5426,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4412230.0,5730240.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579205.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579205.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579205.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>71.5</pegel:AE>
           <pegel:Stat1>44403</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5333,8 +5527,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579205.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579205.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5380,13 +5578,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4416480.0,5729450.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579405.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579405.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579405.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>39.1</pegel:AE>
           <pegel:Stat1>44499</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5479,8 +5679,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579405.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579405.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5530,9 +5734,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579011.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579011.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579011.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44499</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5625,8 +5831,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579011.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579011.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5676,9 +5886,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579015.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579015.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579015.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44407</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5771,8 +5983,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579015.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579015.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5818,13 +6034,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4450580.0,5728800.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579610.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579610.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>81309</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -5917,8 +6135,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579610.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579610.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -5964,13 +6186,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4449660.0,5745250.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579620.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579620.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579620.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44414</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6063,8 +6287,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579620.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579620.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6114,9 +6342,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579045.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579045.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579045.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44414</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6209,8 +6439,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579045.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579045.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6256,13 +6490,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4428700.0,5750600.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579712.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579712.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579712.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>72094</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6355,8 +6591,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579712.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579712.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6402,13 +6642,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4453380.0,5763720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579070.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579070.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579070.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44414</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6501,8 +6743,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579070.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579070.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6548,13 +6794,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4471760.0,5746740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579085.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579085.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579085.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44414</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6647,8 +6895,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579085.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579085.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6692,15 +6944,13 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <gml:location>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
-            </gml:Point>
-          </gml:location>
+          <gml:location/>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570930.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570930.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570930.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>44414</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6793,8 +7043,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570930.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570930.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6844,9 +7098,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID553050.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID553050.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID553050.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>81936</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -6939,8 +7195,12 @@
           <pegel:H_34>0.0010</pegel:H_34>
           <pegel:H_35>0.0010</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID553050.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID553050.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -6990,9 +7250,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID553061.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID553061.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID553061.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>-1.0</pegel:AE>
           <pegel:Stat1>81936</pegel:Stat1>
           <pegel:Fakt1>1.0</pegel:Fakt1>
@@ -7085,8 +7347,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID553061.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID553061.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7136,9 +7402,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570250.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570250.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570250.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7184,13 +7452,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4478940.0,5664025.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID570340.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570340.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570340.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7240,9 +7510,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID573100.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573100.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573100.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7292,9 +7564,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575245.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575245.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575245.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7344,9 +7618,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID573200.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573200.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573200.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7392,13 +7668,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4426820.0,5702050.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575402.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575402.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575402.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7448,9 +7726,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575406.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575406.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575406.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7496,13 +7776,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4438870.0,5702720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575410.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575410.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7552,9 +7834,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID575450.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575450.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575450.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7604,9 +7888,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID576631.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576631.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576631.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7656,9 +7942,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID576950.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576950.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576950.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7708,9 +7996,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579306.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579306.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579306.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7756,13 +8046,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4413680.0,5735760.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579330.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579330.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7808,13 +8100,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579000.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579000.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7864,9 +8158,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579999.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579999.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579999.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7916,9 +8212,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579012.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579012.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579012.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -7968,9 +8266,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579013.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579013.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579013.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8016,13 +8316,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4417500.0,5734180.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579001.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579001.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579001.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8072,9 +8374,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579014.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579014.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579014.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8120,13 +8424,15 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4425440.0,5734720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579006.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579006.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579006.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8176,9 +8482,11 @@
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579084.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579084.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579084.zml"/>
+          </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8224,9 +8532,11 @@
           <pegel:HHQ>0</pegel:HHQ>
           <gml:location/>
           <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Abfluß/ID579014.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579014.zml"/>
           </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet/>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579014.zml"/>
+          </pegel:Durchfluß_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Stat1/>
           <pegel:Fakt1>0.0</pegel:Fakt1>
@@ -8319,8 +8629,12 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:Niederschlag/>
-          <pegel:Schnee/>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579014.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579014.zml"/>
+          </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
     </pegel:PegelCollection>
@@ -17421,8 +17735,13 @@
           <speicher:MaxInhalt>411.4</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>570000</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID570250.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID570250.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -17433,8 +17752,13 @@
           <speicher:MaxInhalt>18.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>573090</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID573100.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID573100.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -17445,8 +17769,13 @@
           <speicher:MaxInhalt>35.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>575402</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID575406.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID575406.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -17457,8 +17786,13 @@
           <speicher:MaxInhalt>4.47</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579306</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579330.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579330.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -17469,8 +17803,13 @@
           <speicher:MaxInhalt>1.2</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579000</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579001.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579001.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -17481,8 +17820,13 @@
           <speicher:MaxInhalt>109.08</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579011</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579012.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579012.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -17493,8 +17837,13 @@
           <speicher:MaxInhalt>9.22</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579015</speicher:PNR-Zufluss>
           <gml:location/>
-          <speicher:Abgabe_eingang/>
-          <speicher:Zufluss_gerechnet/>
+          <speicher:Inhalt>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579006.zml"/>
+          </speicher:Inhalt>
+          <speicher:Inhalt_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579006.zml"/>
+          </speicher:Inhalt_gerechnet>
+          <speicher:Zufluß/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
     </speicher:SpeicherCollection>
@@ -17508,7 +17857,9 @@
           <temp:Höhe>0 m NN</temp:Höhe>
           <temp:Max>40</temp:Max>
           <gml:location/>
-          <temp:Durchfluss_eingabe/>
+          <temp:Temperatur>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Temperatur/ID1.zml"/>
+          </temp:Temperatur>
         </temp:Temp>
       </temp:TempMember>
       <temp:TempMember>
@@ -17518,7 +17869,9 @@
           <temp:Höhe>1000 m NN</temp:Höhe>
           <temp:Max>40</temp:Max>
           <gml:location/>
-          <temp:Durchfluss_eingabe/>
+          <temp:Temperatur>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Temperatur/ID1000.zml"/>
+          </temp:Temperatur>
         </temp:Temp>
       </temp:TempMember>
     </temp:TempCollection>

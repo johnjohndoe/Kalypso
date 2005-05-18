@@ -14,7 +14,7 @@
           <MaxScaleDenominator>9.0E99</MaxScaleDenominator>
           <PointSymbolizer>
             <Geometry>
-              <ogc:PropertyName>GEOM</ogc:PropertyName>
+              <ogc:PropertyName>location</ogc:PropertyName>
             </Geometry>
             <Graphic>
               <Mark>
@@ -32,10 +32,10 @@
           </PointSymbolizer>
           <TextSymbolizer>
             <Geometry>
-              <ogc:PropertyName>GEOM</ogc:PropertyName>
+              <ogc:PropertyName>location</ogc:PropertyName>
             </Geometry>
             <Label>
-              <ogc:PropertyName>PEGELNAME</ogc:PropertyName>
+              <ogc:PropertyName>Name</ogc:PropertyName>
             </Label>
             <Font>
               <CssParameter name="font-family"/>

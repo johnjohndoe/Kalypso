@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5651820.935545029" left="5216426.908626928" right="5364699.69008875" top="5764439.139261266"/>
+    <extent bottom="5650977.57960839" left="5177116.544234076" right="5331366.585445731" top="5783908.509433068"/>
     <layers active="ID_1">
-        <layer name="Pegel-Modell" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="saalemodell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-        </layer>
-        <layer name="Pegel" visible="true" featurePath="featureMember" id="ID_1" linktype="shape" ns1:actuate="onRequest" ns1:href="project:/.shape/aktivpeg#EPSG:31468" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="saalemodell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/.shape/Gewässerflächen#EPSG:31468" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
