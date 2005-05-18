@@ -490,7 +490,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
    */
-  public DataHandler getSchema( final String namespace )  throws CalcJobServiceException
+  public DataHandler getSchema( final String namespace ) 
   {
     final URL url = m_catalog.getURL( namespace );
     if( url == null )
@@ -524,7 +524,7 @@ public class CalcJobService_impl_Queued implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
    */
-  public String[] getSupportedSchemata() throws CalcJobServiceException
+  public String[] getSupportedSchemata()
   {
     final Map catalog = m_catalog.getCatalog();
     final String[] namespaces = new String[catalog.size()];

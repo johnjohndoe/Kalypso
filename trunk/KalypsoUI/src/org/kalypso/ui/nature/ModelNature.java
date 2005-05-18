@@ -71,6 +71,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -702,11 +703,22 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ModeldataType modelspec = getModelspec( modelSpec );
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-      cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
+      final IStatus runStatus = cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
+      if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
+        return runStatus;
       
-      return doCalcTransformation( "Rechenvariante aktualisieren",
+      final IStatus transStatus = doCalcTransformation( "Rechenvariante aktualisieren",
           ModelNature.TRANS_TYPE_AFTERCALC, calcCaseFolder, new SubProgressMonitor( monitor,
               1000 ) );
+      
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[] { runStatus, transStatus }, "Berechnung abgeschlossen.", null );
+//      if( !transStatus.isOK() )
+//        return transStatus;
+//      
+//      if( transStatus.isOK() && finishText != null )
+//        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, finishText, null );
+//
+//      return transStatus;
     }
     catch( final ServiceException e )
     {

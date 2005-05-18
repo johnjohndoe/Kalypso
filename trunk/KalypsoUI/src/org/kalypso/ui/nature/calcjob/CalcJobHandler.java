@@ -94,7 +94,7 @@ public class CalcJobHandler
     m_calcService = calcService;
   }
 
-  public void runJob( final IFolder calcCaseFolder, final IProgressMonitor monitor )
+  public IStatus runJob( final IFolder calcCaseFolder, final IProgressMonitor monitor )
       throws CoreException
   {
     monitor.beginTask( "Berechnung wird durchgeführt für Variante: " + calcCaseFolder.getName(),
@@ -181,10 +181,12 @@ public class CalcJobHandler
         }
 
         project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
-        return;
+        final String finishText = jobBean.getFinishText();
+        final String message = finishText == null ? "" : finishText;
+        return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
 
       case ICalcServiceConstants.CANCELED:
-        throw m_cancelException;
+        throw m_cancelException; 
 
       case ICalcServiceConstants.ERROR:
         throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
