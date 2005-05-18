@@ -69,7 +69,7 @@ final class CalcJobThread extends Thread
   {
     m_job = job;
     
-    m_jobBean = new CalcJobInfoBean( "" + id, description, typeID, ICalcServiceConstants.WAITING, -1 );
+    m_jobBean = new CalcJobInfoBean( "" + id, description, typeID, ICalcServiceConstants.WAITING, -1, "" );
     m_inputData = new JarCalcDataProvider( zipHandler, input );
     m_resultPacker = new DefaultCalcResultEater( modelspec, output );
 
