@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:rgc="http://elbe.wb.tu-harburg.de/rectifiedGridCoverage" xmlns:hws="http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData" targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- =========================================================== -->
+	<!-- WaterlevelDataModel=========================================================== -->
+	<element name="WaterlevelData" type="hws:WaterlevelDataType"/>
+	<complexType name="WaterlevelDataType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="WaterlevelMember" type="hws:WaterlevelMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- WaterlevelMember=========================================================== -->
+	<complexType name="WaterlevelMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hws:Waterlevel"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Waterlevel" type="hws:WaterlevelFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="WaterlevelFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="Annuality" type="double"/>
+					<element name="WaterlevelRasterData" type="anyURI"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
