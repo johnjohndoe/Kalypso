@@ -370,12 +370,12 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         Feature landuseFeature = contextModel.createFeature( ftLanduse );
         landuseFeature.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
             propertyValue ) );
-        contextModel.addFeature( parentFeature, featurePropertyName, 0, landuseFeature );
+        contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
         //riskContextModel
         Feature landuseFeature_risk = riskContextModel.createFeature( ftLanduse_risk );
         landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
             propertyValue ) );
-        riskContextModel.addFeature( parentFeature_risk, featurePropertyName, 0,
+        riskContextModel.addFeatureAsComposition( parentFeature_risk, featurePropertyName, 0,
             landuseFeature_risk );
       }
     }

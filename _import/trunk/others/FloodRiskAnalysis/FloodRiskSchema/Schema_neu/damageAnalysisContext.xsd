@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dA="http://elbe.wb.tu-harburg.de/floodrisk" targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<element name="DamageAnalysis" type="dA:damageAnalysisType"/>
+	<complexType name="damageAnalysisType">
+		<sequence>
+			<element name="contextModelFile" type="anyURI"/>
+			<element name="landuseDataFile" type="anyURI"/>
+			<element name="administrationUnitDataFile" type="anyURI" minOccurs="0"/>
+			<element name="waterlevelData" type="dA:waterlevelDataType"/>
+		</sequence>
+	</complexType>
+	<complexType name="waterlevelDataType">
+		<sequence>
+			<element name="waterlevelDataFile" type="dA:waterlevelDataFileType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="waterlevelDataFileType">
+		<simpleContent>
+			<extension base="anyURI">
+				<attribute name="annuality" type="double" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+</schema>

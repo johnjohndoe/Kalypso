@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:rA="http://elbe.wb.tu-harburg.de/floodrisk" targetNamespace="http://elbe.wb.tu-harburg.de/floodrisk" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<element name="FloodriskAnalysis" type="rA:floodRiskAnalysisType"/>
+	<complexType name="floodRiskAnalysisType">
+		<sequence>
+			<element name="riskContextModelFile" type="anyURI"/>
+			<element name="landuseDataFile" type="anyURI"/>
+			<element name="annualDamageDataFile" type="anyURI"/>
+		</sequence>
+	</complexType>
+</schema>
