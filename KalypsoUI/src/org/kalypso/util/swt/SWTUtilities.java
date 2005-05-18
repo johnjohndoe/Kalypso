@@ -1,3 +1,43 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+*
+*  This file is part of kalypso.
+*  Copyright (C) 2004 by:
+* 
+*  Technical University Hamburg-Harburg (TUHH)
+*  Institute of River and coastal engineering
+*  Denickestraﬂe 22
+*  21073 Hamburg, Germany
+*  http://www.tuhh.de/wb
+* 
+*  and
+*  
+*  Bjoernsen Consulting Engineers (BCE)
+*  Maria Trost 3
+*  56070 Koblenz, Germany
+*  http://www.bjoernsen.de
+* 
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+* 
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+* 
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+* 
+*  Contact:
+* 
+*  E-Mail:
+*  belger@bjoernsen.de
+*  schlienger@bjoernsen.de
+*  v.doemming@tuhh.de
+*   
+*  ---------------------------------------------------------------------------*/
 package org.kalypso.util.swt;
 
 import java.util.HashMap;
@@ -5,54 +45,12 @@ import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 
-/*----------------    FILE HEADER KALYPSO ------------------------------------------
- *
- *  This file is part of kalypso.
- *  Copyright (C) 2004 by:
+/**
  * 
- *  Technical University Hamburg-Harburg (TUHH)
- *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
- *  21073 Hamburg, Germany
- *  http://www.tuhh.de/wb
- * 
- *  and
- *  
- *  Bjoernsen Consulting Engineers (BCE)
- *  Maria Trost 3
- *  56070 Koblenz, Germany
- *  http://www.bjoernsen.de
- * 
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- * 
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- * 
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- *  Contact:
- * 
- *  E-Mail:
- *  belger@bjoernsen.de
- *  schlienger@bjoernsen.de
- *  v.doemming@tuhh.de
- *   
- *  ---------------------------------------------------------------------------*/
-
+ * @author doemming
+ */
 public class SWTUtilities
 {
-
-  /*
-   * 
-   * @author doemming
-   */
   static final HashMap m_gridDataMap = new HashMap();
   static
   {
@@ -96,15 +94,16 @@ public class SWTUtilities
     putSWT( "SWT.PUSH", SWT.PUSH );
     putSWT( "SWT.CHECK", SWT.CHECK );
     putSWT( "SWT.CHECK", SWT.CHECK );
+    putSWT( "SWT.MULTI", SWT.MULTI );
     // TODO really a lot to complete SWT keys
   }
 
-  private static void putSWT( String key, int value )
+  private static void putSWT( final String key, final int value )
   {
     m_swtMap.put( key, new Integer( value ) );
   }
 
-  private static void putGridData( String key, int value )
+  private static void putGridData( final String key, final int value )
   {
     m_gridDataMap.put( key, new Integer( value ) );
   }
@@ -119,7 +118,7 @@ public class SWTUtilities
     return createStyleFromString( m_gridDataMap, key );
   }
 
-  private static int createStyleFromString( HashMap map, String style )
+  private static int createStyleFromString( final HashMap map, final String style )
   {
     try
     {
@@ -129,11 +128,12 @@ public class SWTUtilities
       final String[] keys = style.split( "\\|" );
       for( int i = 0; i < keys.length; i++ )
       {
-        final Integer value = (Integer)map.get( keys[i] );
+        final String key = keys[i].trim();
+        final Integer value = (Integer)map.get( key );
         if( value != null )
           result |= value.intValue();
         else
-          System.out.println( "// TODO: implement " + keys[i] );
+          System.out.println( "// TODO: implement " + key );
       }
       return result;
     }

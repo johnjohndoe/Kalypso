@@ -59,7 +59,7 @@ public class CsvSourceHandler implements ISourceHandler
       }
       
       final FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( element.getName(), "namespace", element.getType(), false, null );
-      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns );
+      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
       reader.addInfo( ftp, info );
     }
     
