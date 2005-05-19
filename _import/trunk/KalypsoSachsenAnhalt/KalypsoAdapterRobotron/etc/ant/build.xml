@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="RobotronAdapter" default="deploy">
+
+	<property name="project" value="${workspace}/KalypsoRobotronAdapter" />
+
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+	<property name="project-name" value="KalypsoRobotronAdapter" />
+
+	<path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
+	</path>
+	
+	<!-- overriden to also copy non-java files -->
+	<!--target name="compile" depends="prepare">
+		<antcall target="commonbuild.compile" />
+	
+		<copy todir="${project.bin}">
+			<fileset dir="${project.src}" excludes="**/*.java"/>
+		</copy>
+	</target-->
+	
+</project>

@@ -28,6 +28,9 @@
       <library name="lib/hb15.jar">
          <export name="*"/>
       </library>
+      <library name="lib/commons-codec-1.3.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
 </plugin>

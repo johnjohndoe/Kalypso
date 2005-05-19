@@ -151,6 +151,7 @@ grant {
 	
 	// Wiski LDAP
 	permission java.net.SocketPermission "193.23.163.115:389", "connect,resolve";
+	permission java.net.SocketPermission "ibpm", "connect,resolve"; // TODO löschen wenn Tests fertig sind
 	// Wiski Java-RMI
 	permission java.net.SocketPermission "193.23.163.115:1024-", "connect,resolve";
 };

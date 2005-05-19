@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
 import java.util.List;
@@ -52,26 +52,21 @@ public final class Arrays
 {
   /**
    * Return a list containing the elements of the array.
-   * 
-   * @param array
    */
   public static List asList( final Object[] array )
   {
     final Vector v = new Vector( array.length );
     for( int i = 0; i < array.length; i++ )
       v.add( array[i] );
-    
+
     return v;
   }
-  
+
   /**
    * creates an array of raw ints with a given array of Integer Objects by
    * copying the int values.
    * 
-   * @param objDs
-   * 
-   * @return @throws
-   *         IllegalArgumentException if argument is null
+   * @throws IllegalArgumentException if argument is null
    */
   public static int[] rawIntegers( Integer[] objDs )
   {
@@ -90,10 +85,7 @@ public final class Arrays
    * creates an array of raw doubles with a given array of Double Objects by
    * copying the double values
    * 
-   * @param objDs
-   * 
-   * @return @throws
-   *         IllegalArgumentException if argument is null
+   * @throws IllegalArgumentException if argument is null
    */
   public static double[] rawDoubles( Double[] objDs )
   {
@@ -112,10 +104,7 @@ public final class Arrays
    * creates an array of object doubles with a given array of doubles by copying
    * the double values
    * 
-   * @param rawDs
-   * 
-   * @return @throws
-   *         IllegalArgumentException if argument is null
+   * @throws IllegalArgumentException if argument is null
    */
   public static Double[] objectDoubles( double[] rawDs )
   {
@@ -142,16 +131,12 @@ public final class Arrays
    * NOTE: the type of the elements in someArray must be the same as the type of
    * the elements of the desired array.
    * </p>
-   * 
-   * @param array
-   * @param type
-   * 
    */
   public static Object[] castArray( Object[] array, Object[] type )
   {
     if( type.length < array.length )
-      type = (Object[])java.lang.reflect.Array.newInstance( type.getClass().getComponentType(),
-          array.length );
+      type = (Object[])java.lang.reflect.Array.newInstance( type.getClass()
+          .getComponentType(), array.length );
 
     System.arraycopy( array, 0, type, 0, array.length );
 
@@ -164,9 +149,6 @@ public final class Arrays
   /**
    * returns the index of the first minimum value found in ds. If ds is empty,
    * returns -1.
-   * 
-   * @param ds
-   * 
    */
   public static int indexOfMin( double[] ds )
   {
@@ -191,9 +173,6 @@ public final class Arrays
   /**
    * returns the index of the first minimum value found in is. If is is empty,
    * returns -1.
-   * 
-   * @param is
-   * 
    */
   public static int indexOfMin( int[] is )
   {
@@ -218,9 +197,6 @@ public final class Arrays
   /**
    * returns the index of the first maximum value found in is. If is is empty,
    * returns -1.
-   * 
-   * @param is
-   * 
    */
   public static int indexOfMax( int[] is )
   {
@@ -242,13 +218,6 @@ public final class Arrays
     return pos;
   }
 
-  /**
-   * -
-   * 
-   * @param ds -
-   * 
-   * @return -
-   */
   public static String dump( double[] ds )
   {
     StringBuffer buf = new StringBuffer();
@@ -262,13 +231,6 @@ public final class Arrays
     return buf.toString();
   }
 
-  /**
-   * -
-   * 
-   * @param is -
-   * 
-   * @return -
-   */
   public static String dump( int[] is )
   {
     StringBuffer buf = new StringBuffer();
@@ -282,13 +244,6 @@ public final class Arrays
     return buf.toString();
   }
 
-  /**
-   * -
-   * 
-   * @param os -
-   * 
-   * @return -
-   */
   public static String dump( Object[] os )
   {
     StringBuffer buf = new StringBuffer();
@@ -307,13 +262,11 @@ public final class Arrays
    * value. The value itself is inserted into the array if it is not already
    * contained.
    * 
-   * @param arr
-   *          array to be truncated, must be sorted. Unpredictable results if
+   * @param arr array to be truncated, must be sorted. Unpredictable results if
    *          not sorted
-   * @param value
-   *          the value that will serve as upper bound when truncating. It will
-   *          be added into the resulting array if it is not already inside
-   * 
+   * @param value the value that will serve as upper bound when truncating. It
+   *          will be added into the resulting array if it is not already inside
+   *  
    */
   public static double[] truncSmaller( double[] arr, double value )
   {
@@ -349,13 +302,11 @@ public final class Arrays
    * value. The value itself is inserted into the array if it is not already
    * contained.
    * 
-   * @param arr
-   *          array to be truncated, must be sorted. Unpredictable results if
+   * @param arr array to be truncated, must be sorted. Unpredictable results if
    *          not sorted
-   * @param value
-   *          the value that will serve as lower bound when truncating. It will
-   *          be added into the resulting array if it is not already inside
-   * 
+   * @param value the value that will serve as lower bound when truncating. It
+   *          will be added into the resulting array if it is not already inside
+   *  
    */
   public static double[] truncBigger( double[] arr, double value )
   {
@@ -367,8 +318,7 @@ public final class Arrays
 
       if( pos > arr.length )
       {
-        return new double[]
-        { value };
+        return new double[] { value };
       }
       double[] newArr = new double[arr.length - pos + 1];
       System.arraycopy( arr, pos, newArr, 1, arr.length - pos );
@@ -388,9 +338,10 @@ public final class Arrays
    * Merges the contents of the given array into one String, separating the
    * elements with separator. You can restrict the elements to fetch from the
    * array by setting from and to.
-   * 
+   *  
    */
-  public static String implode( String[] array, String separator, int from, int to )
+  public static String implode( String[] array, String separator, int from,
+      int to )
   {
     StringBuffer buf = new StringBuffer();
 
@@ -401,14 +352,14 @@ public final class Arrays
 
     return buf.toString();
   }
-  
+
   /**
    * Removes a new array same as da but without duplicates, given the array da
    * is sorted! This method looks sequentially, checking if the elements at
    * position i and i+1 are equal. <br>
    * If you call this method on a potentially unsorted array, it might not
    * change anything.
-   * 
+   *  
    */
   public static double[] removeDupicates( double[] da, double delta )
   {
@@ -421,7 +372,8 @@ public final class Arrays
 
     while( i < da.length )
     {
-      while( ( i < ( da.length - 1 ) ) && ( dc.compare( da[i], da[i + 1] ) == 0 ) )
+      while( ( i < ( da.length - 1 ) )
+          && ( dc.compare( da[i], da[i + 1] ) == 0 ) )
         i++;
 
       dtmp[itmp] = da[i];
@@ -436,19 +388,26 @@ public final class Arrays
 
     return dres;
   }
-  
+
   /**
    * Creates a new Long-array and uses Long.valueOf() for each string in
    * strArray.
-   * 
-   * @param strArray
    */
   public static Long[] toLong( final String[] strArray )
   {
     final Long[] longs = new Long[strArray.length];
     for( int i = 0; i < strArray.length; i++ )
       longs[i] = Long.valueOf( strArray[i] );
-      
+
     return longs;
+  }
+  
+  public static char[] tochar( final byte[] byteArray )
+  {
+    final char[] chars = new char[byteArray.length];
+    for( int i = 0; i < byteArray.length; i++ )
+      chars[i] = (char)byteArray[i];
+
+    return chars;
   }
 }

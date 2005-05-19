@@ -1,6 +1,7 @@
 package org.kalypso.psiadapter.users;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.users.IUserRightsProvider;
@@ -27,6 +28,14 @@ public class PSICompactRightsProvider implements IUserRightsProvider
     if( m_psicompact == null )
       throw new IllegalStateException(
           "PSI-Compact Schnittstelle konnte nicht initialisiert werden" );
+  }
+  
+  /**
+   * @see org.kalypso.users.IUserRightsProvider#init(java.util.Properties)
+   */
+  public void init( Properties props ) throws UserRightsException
+  {
+    // empty, not interesting for us
   }
   
   /**

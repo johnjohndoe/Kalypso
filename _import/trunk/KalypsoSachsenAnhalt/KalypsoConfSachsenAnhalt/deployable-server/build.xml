@@ -61,7 +61,7 @@
 		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<!--ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" /-->
-		<!--ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" /-->
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<!--ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="clean" inheritAll="false" /-->
@@ -158,21 +158,26 @@
 	</target>
 
 	<target name="build-UserService" depends="build-basic">
-		<!--ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false">
+		<ant antfile="${workspace}/KalypsoRobotronAdapter/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<copy todir="${workspace}/KalypsoUserService/build/build-war/WEB-INF/lib">
+			<fileset dir="${workspace}/KalypsoRobotronAdapter/build/deploy" includes="**/*.jar" />
+		</copy>
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant-->
+		</ant>
 	</target>
 
 	<target name="build-ObsService" depends="build-basic">
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-war" inheritAll="false">
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
-		
 		<ant antfile="${workspace}/KalypsoWiskiAdapter/etc/ant/build.xml" target="deploy" inheritAll="false" />
-
 		<copy todir="${workspace}/KalypsoObsService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoWiskiAdapter/build/deploy" includes="**/*.jar" />
 		</copy>
+		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-war" inheritAll="false">
+			<property file="deploy.properties" />
+		</ant>	
 	</target>
 
 	<target name="build-CalcService" depends="build-basic">
@@ -237,16 +242,16 @@
 		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
-		<!--ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
+		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant-->
+		</ant>
 	</target>
 
 	<target name="redeploy-UserService" depends="build-UserService,deploy-allconf" description="Redeploy service and configuration">
-		<!--echo message="Redeploying User Service" />
+		<echo message="Redeploying User Service" />
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant-->
+		</ant>
 	</target>
 
 	<target name="redeploy-ObsService" depends="build-ObsService,deploy-allconf" description="Redeploy service and configuration">

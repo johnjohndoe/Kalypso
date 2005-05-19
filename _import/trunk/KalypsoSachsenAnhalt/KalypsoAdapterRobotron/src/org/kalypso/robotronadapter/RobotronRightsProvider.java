@@ -33,7 +33,9 @@
  */
 package org.kalypso.robotronadapter;
 
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.naming.Context;
@@ -59,23 +61,32 @@ public class RobotronRightsProvider implements IUserRightsProvider
 {
   private DirContext m_dirCtxt;
 
-  /** "ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de" */
-  private final String m_url;
+  /** Example "ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de" */
+  private String m_url;
 
-  /** "cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de" */
-  private final String m_principal;
+  /** Example "cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de" */
+  private String m_principal;
 
-  /** "geheim" */
-  private final String m_crendentials;
+  /** Example "geheim" */
+  private String m_crendentials;
 
-  public RobotronRightsProvider( final String url, final String principal,
-      final String crendentials )
+  /**
+   * The properties should contain following information:
+   * <p>
+   * <ul>
+   * <li>LDAP_URL: the url of the ldap service. Example: "LDAP_URL=ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
+   * <li>LDAP_PRINCIPAL: the principal of the ldap. Example: "LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
+   * <li>LDAP_CRENDENTIALS: the password to use along the principal. Example: "LDAP_CREDENTIALS=geheim"
+   * 
+   * @see org.kalypso.users.IUserRightsProvider#init(java.util.Properties)
+   */
+  public void init( Properties props ) throws UserRightsException
   {
-    m_url = url;
-    m_principal = principal;
-    m_crendentials = crendentials;
+    m_url = props.getProperty( "LDAP_URL" );
+    m_principal = props.getProperty( "LDAP_PRINCIPAL" );
+    m_crendentials = props.getProperty( "LDAP_CREDENTIALS" );
   }
-
+  
   private DirContext getDirContext()
   {
     if( m_dirCtxt != null )
@@ -135,7 +146,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
    * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String,
    *      java.lang.String)
    */
-  public String[] getRights( String username, String password )
+  public String[] getRights( final String username, final String password )
       throws UserRightsException
   {
     try
@@ -147,10 +158,17 @@ public class RobotronRightsProvider implements IUserRightsProvider
 
       final Logger logger = Logger.getLogger( getClass().getName() );
 
-      // read the retrieved attribute values
-      final String groupName = (String)userAtts.get( "gruppe" ).get();
+      // TODO: check if decoding in base64 is required...
+      final byte[] pw1 = (byte[])userAtts.get( "userPassword").get();
+      final byte[] pw2 = password.getBytes();
+      if( !Arrays.equals( pw1, pw2 ) )
+      {
+        logger.info( "Passwords do not match for user: " + username );
+        return UserServiceConstants.NO_RIGHTS;
+      }
 
-      logger.info( "User [" + username + "] exists in group: " + groupName );
+      final String groupName = (String)userAtts.get( "gruppe" ).get();
+      logger.info( "User " + username + " exists in group: " + groupName );
 
       final Attributes rightsAtt = m_dirCtxt.getAttributes( "cn=" + groupName
           + ",ou=gruppen" );
@@ -162,7 +180,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
 
         // in Kalypso Sachsen-Anhalt the "Modellierung"-Right specifies whether
         // a user is allowed to use Kalypso or not
-        if( "Modellierung".equals( right ) )
+        if( "Modellierung".equalsIgnoreCase( right ) )
           return UserServiceConstants.FULL_RIGHTS;
       }
 
