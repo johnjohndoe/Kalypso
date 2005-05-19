@@ -173,7 +173,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     String line = br.readLine();
     do
     {
-      if( line.startsWith( KalypsoServiceConstants.WFS_LINK_TYPE ) )
+      if( line.startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
         catalog.add( ( line.split( "=" ) )[1] );
 
       line = br.readLine();
