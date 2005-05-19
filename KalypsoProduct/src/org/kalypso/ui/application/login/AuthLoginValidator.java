@@ -67,7 +67,7 @@ public class AuthLoginValidator implements ILoginValidator
     {
       final String[] rights = m_srv.getRights2( username, password );
 
-      if( rights != null )
+      if( rights != null && rights.length > 0 )
         return new User( username, rights );
     }
     catch( final RemoteException e )

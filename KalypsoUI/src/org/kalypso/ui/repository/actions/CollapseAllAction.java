@@ -41,14 +41,14 @@
 package org.kalypso.ui.repository.actions;
 
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * @author schlienger
  */
 public class CollapseAllAction extends AbstractRepositoryExplorerAction
 {
-  public CollapseAllAction( final RepositoryExplorerPart explorer )
+  public CollapseAllAction( final ObservationChooser explorer )
   {
     super( explorer, "Alles reduzieren",
         ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE,
@@ -60,6 +60,6 @@ public class CollapseAllAction extends AbstractRepositoryExplorerAction
    */
   public void run( )
   {
-    getExplorer().getViewer().collapseAll();
+    getViewer().collapseAll();
   }
 }

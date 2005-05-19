@@ -48,10 +48,10 @@ import javax.activation.DataHandler;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.beans.DateRangeBean;
-import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypso.services.sensor.DateRangeBean;
+import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 

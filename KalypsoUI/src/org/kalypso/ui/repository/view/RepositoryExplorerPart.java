@@ -45,69 +45,34 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.eclipse.compare.Splitter;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.kalypso.eclipse.ui.MementoUtils;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.repository.container.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.actions.AddRepositoryAction;
-import org.kalypso.ui.repository.actions.CollapseAllAction;
-import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
-import org.kalypso.ui.repository.actions.CopyLinkAction;
-import org.kalypso.ui.repository.actions.ExpandAllAction;
-import org.kalypso.ui.repository.actions.ExportAsFileAction;
-import org.kalypso.ui.repository.actions.ReloadAction;
-import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
-import org.kalypso.util.adapter.IAdaptable;
 
 /**
  * Wird als ZeitreihenBrowser benutzt.
  * 
  * @author schlienger
  */
-public class RepositoryExplorerPart extends ViewPart implements IRepositoryContainerListener,
-    ISelectionProvider, ISelectionChangedListener
+public class RepositoryExplorerPart extends ViewPart implements ISelectionProvider, ISelectionChangedListener
 {
-  private TreeViewer m_repViewer = null;
-
-  private final IRepositoryContainer m_repContainer;
-
-  private RemoveRepositoryAction m_removeAction = null;
-
-  private ConfigurePreviewAction m_confAction = null;
-
-  private ReloadAction m_reloadAction = null;
-
   private PropertySheetPage m_propsPage = null;
-
-  private CopyLinkAction m_copyLinkAction = null;
 
   private IMemento m_memento = null;
 
@@ -124,7 +89,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
   private static final String TAG_REPOSITORIES = "repositories"; //$NON-NLS-1$
 
-  private ExportAsFileAction m_exportAsFileAction;
+  private ObservationChooser m_chooser;
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
@@ -159,41 +124,14 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
     return null;
   }
 
-  public RepositoryExplorerPart()
-  {
-    m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
-
-    m_repContainer.addRepositoryContainerListener( this );
-  }
-
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
   public void dispose()
   {
-    m_repContainer.removeRepositoryContainerListener( this );
-
-    if( m_removeAction != null )
-      m_removeAction.dispose();
-
-    if( m_confAction != null )
-      m_confAction.dispose();
-
-    if( m_reloadAction != null )
-      m_reloadAction.dispose();
-    
-    if( m_exportAsFileAction != null )
-      m_exportAsFileAction.dispose();
-
-    if( m_repViewer != null )
-      removeSelectionChangedListener( this );
+    removeSelectionChangedListener( this );
 
     super.dispose();
-  }
-
-  public TreeViewer getViewer()
-  {
-    return m_repViewer;
   }
 
   /**
@@ -201,42 +139,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void createPartControl( final Composite parent )
   {
-    final Splitter split = new Splitter( parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL );
-
-    m_repViewer = new TreeViewer( split, SWT.H_SCROLL | SWT.V_SCROLL );
-    m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
-    m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
-    m_repViewer.setInput( m_repContainer );
-
-    initContextMenu();
-
-    final IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
-
-    toolBarManager.add( new AddRepositoryAction( this ) );
-
-    m_removeAction = new RemoveRepositoryAction( this );
-    toolBarManager.add( m_removeAction );
-
-    toolBarManager.add( new Separator() );
-    
-    m_confAction = new ConfigurePreviewAction( this );
-    toolBarManager.add( m_confAction );
-
-    m_reloadAction = new ReloadAction( this );
-    toolBarManager.add( m_reloadAction );
-
-    toolBarManager.add( new Separator() );
-
-    toolBarManager.add( new CollapseAllAction( this ) );
-    toolBarManager.add( new ExpandAllAction( this ) );
-    
-    toolBarManager.add( new Separator() );
-    
-    m_exportAsFileAction = new ExportAsFileAction( this );
-    toolBarManager.add( m_exportAsFileAction );
-
-    getViewSite().getActionBars().updateActionBars();
-
+    m_chooser = new ObservationChooser( parent, null, getViewSite() );
     addSelectionChangedListener( this );
 
     if( m_memento != null )
@@ -255,145 +158,11 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
   }
   
   /**
-   * Initializes and registers the context menu.
-   */
-  private void initContextMenu()
-  {
-    final MenuManager menuMgr = new MenuManager( );
-    menuMgr.setRemoveAllWhenShown( true );
-    menuMgr.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-        fillContextMenu( manager );
-      }
-    } );
-
-    final Menu menu = menuMgr.createContextMenu( m_repViewer.getTree() );
-    m_repViewer.getTree().setMenu( menu );
-    getSite().registerContextMenu( menuMgr, m_repViewer );
-
-    m_copyLinkAction = new CopyLinkAction( this );
-  }
-  
-  /**
-   * Called when the context menu is about to open.
-   * @param menu
-   */
-  protected void fillContextMenu( final IMenuManager menu )
-  {
-    if( isObservationSelected( getViewer().getSelection() ) != null )
-    {
-      menu.add( m_copyLinkAction );
-      menu.add( new Separator() );
-    }
-    
-    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-  }
-
-  /**
-   * @param selection
-   * @return checks if given selection is a <code>IRepository</code>. Returns a repository or null if no repository is selected.
-   */
-  public IRepository isRepository( final ISelection selection )
-  {
-    final IStructuredSelection sel = (IStructuredSelection)selection;
-    if( sel.isEmpty() )
-      return null;
-
-    final Object element = sel.getFirstElement();
-    if( !( element instanceof IRepository ) )
-      return null;
-
-    return (IRepository)element;
-  }
-
-  /**
-   * @param selection
-   * @return the IObservation object when the selection is an IAdaptable object
-   * that get deliver an IObservation.
-   */
-  public IObservation isObservationSelected( final ISelection selection )
-  {
-    final IStructuredSelection sel = (IStructuredSelection)selection;
-    if( sel.isEmpty() )
-      return null;
-
-    final Object element = sel.getFirstElement();
-    if( element instanceof IAdaptable )
-    {
-      final IObservation obs = (IObservation)( (IAdaptable)element )
-          .getAdapter( IObservation.class );
-
-      return obs;
-    }
-
-    return null;
-  }
-
-  /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
   public void setFocus()
   {
   // noch nix
-  }
-
-  /**
-   * @see org.kalypso.repository.container.IRepositoryContainerListener#onRepositoryContainerChanged()
-   */
-  public void onRepositoryContainerChanged()
-  {
-    final Runnable r = new Runnable()
-    {
-      public void run()
-      {
-        getViewer().refresh();
-      }
-    };
-
-    getSite().getShell().getDisplay().asyncExec( r );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
-  {
-    m_repViewer.addSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  public ISelection getSelection()
-  {
-    return m_repViewer.getSelection();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
-  {
-    m_repViewer.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  public void setSelection( final ISelection selection )
-  {
-    m_repViewer.setSelection( selection );
-  }
-
-  /**
-   * Returns 
-   * @return the repository container
-   */
-  public IRepositoryContainer getRepositoryContainer()
-  {
-    return m_repContainer;
   }
 
   /**
@@ -410,7 +179,10 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   public void saveState( final IMemento memento )
   {
-    final TreeViewer viewer = getViewer();
+    if( m_chooser == null )
+      return;
+    
+    final TreeViewer viewer = m_chooser.getViewer();
     if( viewer == null )
     {
       if( m_memento != null ) //Keep the old state;
@@ -421,7 +193,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 
     // save list of repositories
     final IMemento repsMem = memento.createChild( TAG_REPOSITORIES );
-    for( final Iterator it = m_repContainer.getRepositories().iterator(); it.hasNext(); )
+    for( final Iterator it = m_chooser.getRepositoryContainer().getRepositories().iterator(); it.hasNext(); )
     {
       final IRepository rep = (IRepository)it.next();
 
@@ -467,7 +239,10 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
    */
   private void restoreState( final IMemento memento )
   {
-    final TreeViewer viewer = getViewer();
+    if( m_chooser == null )
+      return;
+    
+    final TreeViewer viewer = m_chooser.getViewer();
 
     final IMemento repsMem = memento.getChild( TAG_REPOSITORIES );
     if( repsMem != null )
@@ -491,7 +266,7 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
 	          else
 	            MementoUtils.loadProperties( propsMem, rep.getProperties() );
 	          
-	          m_repContainer.addRepository( rep );
+	          m_chooser.getRepositoryContainer().addRepository( rep );
           }
         }
         catch( Exception e ) // generic exception caught for simplicity
@@ -534,5 +309,39 @@ public class RepositoryExplorerPart extends ViewPart implements IRepositoryConta
       
       viewer.setExpandedElements( elements.toArray() );
     }
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    return m_chooser.getSelection();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( ISelection selection )
+  {
+    m_chooser.setSelection( selection );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    if( m_chooser != null )
+      m_chooser.addSelectionChangedListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    if( m_chooser != null )
+      m_chooser.removeSelectionChangedListener( listener );
   }
 }

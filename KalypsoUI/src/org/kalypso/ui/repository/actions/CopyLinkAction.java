@@ -45,14 +45,14 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * @author schlienger
  */
 public class CopyLinkAction extends AbstractRepositoryExplorerAction
 {
-  public CopyLinkAction( final RepositoryExplorerPart explorer )
+  public CopyLinkAction( final ObservationChooser explorer )
   {
     super( explorer, "Link kopieren", ImageProvider.IMAGE_OBSERVATION_LINK, "Kopiert den Link in der Zwischenablage für die ausgewählte Zeitreihe" );
   }
@@ -66,7 +66,7 @@ public class CopyLinkAction extends AbstractRepositoryExplorerAction
     if( obs == null )
       return;
 
-    final Clipboard clipboard = new Clipboard( getExplorer().getSite().getShell().getDisplay() );
+    final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
     clipboard.setContents(new Object[]{ obs.getIdentifier() }, new Transfer[]{TextTransfer.getInstance() });
     clipboard.dispose();
   }

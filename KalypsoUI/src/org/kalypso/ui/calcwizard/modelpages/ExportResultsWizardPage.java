@@ -106,6 +106,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
@@ -757,7 +758,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
           else
           {
             // save observation if it is a server side one
-            if( ServiceRepositoryObservation.isServerSide( lnkPG.href ) )
+            if( ObservationServiceUtils.isServerSide( lnkPG.href ) )
             {
               ServiceRepositoryObservation.setValuesFor( values, lnkPG.href );
               LOG.info( "Observation saved on server: " + lnkPG.href );

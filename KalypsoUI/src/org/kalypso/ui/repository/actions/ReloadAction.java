@@ -51,7 +51,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * @author schlienger
@@ -59,7 +59,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 public class ReloadAction extends AbstractRepositoryExplorerAction implements
     ISelectionChangedListener
 {
-  public ReloadAction( final RepositoryExplorerPart explorer )
+  public ReloadAction( final ObservationChooser explorer )
   {
     super( explorer, "Aktualisieren",
         ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD,

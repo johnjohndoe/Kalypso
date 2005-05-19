@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/* --------------- Kalypso-Header --------------------------------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -37,51 +37,20 @@
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
   
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.beans;
-
-import java.io.Serializable;
-import java.util.Date;
+--------------------------------------------------------------------------------------------------- */
+package org.kalypso.ogc.sensor.ocs;
 
 /**
- * Simple DateRange Bean. 
+ * Contains constants used within the observation service framework
+ * of Kalypso.
  * 
- * @author schlienger
+ * created by @author schlienger (18.05.2005)
  */
-public class DateRangeBean implements Serializable
+public interface ObservationServiceConstants
 {
-  private long m_from;
+  /** URL-Scheme that identifies the observation service */
+  public final static String SCHEME_OCS = "kalypso-ocs";
 
-  private long m_to;
-
-  public DateRangeBean()
-  {
-    this( new Date(), new Date() );
-  }
-
-  public DateRangeBean( final Date from, final Date to )
-  {
-    m_from = from.getTime();
-    m_to = to.getTime();
-  }
-
-  public long getFrom()
-  {
-    return m_from;
-  }
-
-  public void setFrom( long from )
-  {
-    m_from = from;
-  }
-
-  public long getTo()
-  {
-    return m_to;
-  }
-
-  public void setTo( long to )
-  {
-    m_to = to;
-  }
+  /** Metadata Property-Name for the OCS-identifier */
+  public final static String MD_OCS_ID = "OCS-ID";
 }

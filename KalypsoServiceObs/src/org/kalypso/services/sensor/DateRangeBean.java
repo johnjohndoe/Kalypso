@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,67 +36,52 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
+  
+---------------------------------------------------------------------------------------------------*/
+package org.kalypso.services.sensor;
 
- ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.application.login;
-
-import java.rmi.RemoteException;
-
-import org.kalypso.services.proxy.IUserService;
-import org.kalypso.users.User;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
- * SingleLoginValidator: login used for single-sign-on with no possibility to
- * change the user name. Password is not necessary since the user is already
- * logged onto the OS. It will just check if the user has the right to use
- * Kalypso.
+ * Simple DateRange Bean. 
  * 
  * @author schlienger
  */
-public class SingleLoginValidator implements ILoginValidator
+public class DateRangeBean implements Serializable
 {
-  private final IUserService m_srv;
+  private long m_from;
 
-  public SingleLoginValidator( final IUserService srv )
+  private long m_to;
+
+  public DateRangeBean()
   {
-    m_srv = srv;
+    this( new Date(), new Date() );
   }
 
-  public User validate( final String username, final String password )
-      throws Exception
+  public DateRangeBean( final Date from, final Date to )
   {
-    try
-    {
-      final String[] rights = m_srv.getRights( username );
-
-      if( rights != null && rights.length > 0 )
-        return new User( username, rights );
-    }
-    catch( final RemoteException e )
-    {
-      throw e;
-    }
-
-    return null;
+    m_from = from.getTime();
+    m_to = to.getTime();
   }
 
-  public boolean userNameChangeable( )
+  public long getFrom()
   {
-    return false;
+    return m_from;
   }
 
-  public boolean passwordEnabled( )
+  public void setFrom( long from )
   {
-    return false;
+    m_from = from;
   }
 
-  public String getDefaultUserName( )
+  public long getTo()
   {
-    return System.getProperty( "user.name" );
+    return m_to;
   }
 
-  public String getMessage( )
+  public void setTo( long to )
   {
-    return "Melden Sie sich bitte an.";
+    m_to = to;
   }
 }

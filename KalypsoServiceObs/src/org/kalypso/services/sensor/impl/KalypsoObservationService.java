@@ -63,9 +63,10 @@ import javax.activation.FileDataSource;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.beans.DateRangeBean;
-import org.kalypso.ogc.sensor.beans.ObservationBean;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceConstants;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -75,7 +76,9 @@ import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypso.services.sensor.DateRangeBean;
 import org.kalypso.services.sensor.IObservationService;
+import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
@@ -108,7 +111,7 @@ public class KalypsoObservationService implements IObservationService
    * 
    * @throws RemoteException
    */
-  public KalypsoObservationService( ) throws RemoteException
+  public KalypsoObservationService() throws RemoteException
   {
     m_repositories = new Vector();
     m_mapBean2Item = new Hashtable( 512 );
@@ -136,10 +139,10 @@ public class KalypsoObservationService implements IObservationService
     init();
   }
 
-  private final void clearRepositories( )
+  private final void clearRepositories()
   {
     for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
-      ((IRepository) it.next()).dispose();
+      ( (IRepository)it.next() ).dispose();
 
     m_repositories.clear();
   }
@@ -149,7 +152,7 @@ public class KalypsoObservationService implements IObservationService
    * 
    * @throws RemoteException
    */
-  private final void init( ) throws RemoteException
+  private final void init() throws RemoteException
   {
     m_mapBean2Item.clear();
     m_mapItem2Beans.clear();
@@ -169,8 +172,7 @@ public class KalypsoObservationService implements IObservationService
 
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
-        final RepositoryFactoryConfig item = (RepositoryFactoryConfig) it
-            .next();
+        final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
         final IRepositoryFactory fact = item.createFactory( getClass()
             .getClassLoader() );
 
@@ -232,7 +234,7 @@ public class KalypsoObservationService implements IObservationService
    * 
    * @see java.lang.Object#finalize()
    */
-  protected void finalize( ) throws Throwable
+  protected void finalize() throws Throwable
   {
     clearRepositories();
     m_repositoryBeans = null;
@@ -246,10 +248,6 @@ public class KalypsoObservationService implements IObservationService
     m_tmpDir.delete();
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#readData(org.kalypso.ogc.sensor.beans.ObservationBean,
-   *      org.kalypso.ogc.sensor.beans.DateRangeBean)
-   */
   public DataHandler readData( final ObservationBean obean,
       final DateRangeBean drb ) throws RemoteException
   {
@@ -259,7 +257,7 @@ public class KalypsoObservationService implements IObservationService
     {
       final IRepositoryItem item = itemFromBean( obean );
 
-      final IObservation obs = (IObservation) item
+      final IObservation obs = (IObservation)item
           .getAdapter( IObservation.class );
 
       if( obs == null )
@@ -276,6 +274,8 @@ public class KalypsoObservationService implements IObservationService
 
       m_logger.info( "Reading data for observation: " + obs.getName()
           + " Arguments: " + args );
+
+      updateMetadata( obs, obean.getId() );
 
       final ObservationType obsType = ZmlFactory.createXML( obs, args,
           m_timezone );
@@ -324,7 +324,7 @@ public class KalypsoObservationService implements IObservationService
     final DataSource ds = data.getDataSource();
     if( ds instanceof FileDataSource )
     {
-      final File file = ((FileDataSource) ds).getFile();
+      final File file = ( (FileDataSource)ds ).getFile();
       file.delete();
     }
     else
@@ -342,7 +342,7 @@ public class KalypsoObservationService implements IObservationService
     {
       final IRepositoryItem item = itemFromBean( obean );
 
-      final IObservation obs = (IObservation) item
+      final IObservation obs = (IObservation)item
           .getAdapter( IObservation.class );
 
       if( obs == null )
@@ -387,12 +387,12 @@ public class KalypsoObservationService implements IObservationService
 
     // maybe bean already in map?
     if( m_mapBean2Item.containsKey( obean.getId() ) )
-      return (IRepositoryItem) m_mapBean2Item.get( obean.getId() );
+      return (IRepositoryItem)m_mapBean2Item.get( obean.getId() );
 
     // try with repository id
     if( m_mapId2Rep.containsKey( obean.getRepId() ) )
     {
-      final IRepository rep = (IRepository) m_mapId2Rep.get( obean.getRepId() );
+      final IRepository rep = (IRepository)m_mapId2Rep.get( obean.getRepId() );
 
       final IRepositoryItem item = rep.findItem( obean.getId() );
 
@@ -406,7 +406,7 @@ public class KalypsoObservationService implements IObservationService
     // last chance: go through repositories and use findItem()
     for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
     {
-      final IRepository rep = (IRepository) it.next();
+      final IRepository rep = (IRepository)it.next();
 
       final IRepositoryItem item = rep.findItem( obean.getId() );
 
@@ -457,7 +457,7 @@ public class KalypsoObservationService implements IObservationService
 
         for( int i = 0; i < m_repositoryBeans.length; i++ )
         {
-          final IRepository rep = (IRepository) m_repositories.get( i );
+          final IRepository rep = (IRepository)m_repositories.get( i );
 
           m_repositoryBeans[i] = new ItemBean( rep.getIdentifier(), rep
               .getName(), rep.getIdentifier() );
@@ -476,7 +476,7 @@ public class KalypsoObservationService implements IObservationService
 
       // already in cache?
       if( m_mapItem2Beans.containsKey( item ) )
-        return (ItemBean[]) m_mapItem2Beans.get( item );
+        return (ItemBean[])m_mapItem2Beans.get( item );
 
       final IRepositoryItem[] children = item.getChildren();
 
@@ -523,22 +523,34 @@ public class KalypsoObservationService implements IObservationService
     if( item == null )
       return null;
 
-    final IObservation obs = (IObservation) item
-        .getAdapter( IObservation.class );
+    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
 
     if( obs != null )
     {
+      final MetadataList md = updateMetadata( obs, ib.getId() );
+
       return new ObservationBean( ib.getId(), obs.getName(), item
-          .getRepository().getIdentifier(), obs.getMetadataList() );
+          .getRepository().getIdentifier(), md );
     }
 
     return null;
   }
 
+  private MetadataList updateMetadata( final IObservation obs, final String id )
+  {
+    // always update the observation metadata with the ocs-id
+    // this is is used for instance in the export wizard
+    // to automatically know where the obs came from
+    final MetadataList md = obs.getMetadataList();
+    md.setProperty( ObservationServiceConstants.MD_OCS_ID,
+        ObservationServiceUtils.addServerSideId( id ) );
+    return md;
+  }
+
   /**
    * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
    */
-  public int getServiceVersion( )
+  public int getServiceVersion()
   {
     return 0;
   }
@@ -546,7 +558,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * @see org.kalypso.services.sensor.IObservationService#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return "Kalypso Zeitreihendienst";
   }
@@ -554,7 +566,7 @@ public class KalypsoObservationService implements IObservationService
   /**
    * @see org.kalypso.repository.service.IRepositoryService#reload()
    */
-  public void reload( ) throws RemoteException
+  public void reload() throws RemoteException
   {
     init();
   }
@@ -566,7 +578,7 @@ public class KalypsoObservationService implements IObservationService
   {
     for( Iterator it = m_repositories.iterator(); it.hasNext(); )
     {
-      final IRepository rep = (IRepository) it.next();
+      final IRepository rep = (IRepository)it.next();
 
       final IRepositoryItem item;
 

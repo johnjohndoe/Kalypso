@@ -41,19 +41,19 @@
 package org.kalypso.ui.repository.actions;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
- * Superclass of all actions provided by the RepositoryExplorer.
+ * Superclass of all actions provided by the ObservationChooser
  * 
  * @author schlienger
  */
 public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclipse.jface.action.FullAction
 {
-  private RepositoryExplorerPart m_explorer;
+  private final ObservationChooser m_explorer;
 
   /**
    * Creates a new instance of the class.
@@ -62,7 +62,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
    * @param image
    * @param tooltipText
    */
-  public AbstractRepositoryExplorerAction( final RepositoryExplorerPart explorer, final String text,
+  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
       final ImageDescriptor image, final String tooltipText )
   {
     super( text, image, tooltipText );
@@ -73,7 +73,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   /**
    * @return repository explorer
    */
-  public RepositoryExplorerPart getExplorer()
+  public ObservationChooser getExplorer()
   {
     return m_explorer;
   }
@@ -81,9 +81,9 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   /**
    * @return the resource viewer
    */
-  protected Viewer getViewer()
+  protected TreeViewer getViewer()
   {
-    return getExplorer().getViewer();
+    return m_explorer.getViewer();
   }
 
   /**
@@ -91,7 +91,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
    */
   protected Shell getShell()
   {
-    return m_explorer.getSite().getShell();
+    return m_explorer.getShell();
   }
   
   /**

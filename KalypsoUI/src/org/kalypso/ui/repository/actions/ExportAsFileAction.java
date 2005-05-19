@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 import org.kalypso.ui.repository.wizard.ExportAsFileWizard;
 
 
@@ -54,7 +54,7 @@ import org.kalypso.ui.repository.wizard.ExportAsFileWizard;
  */
 public class ExportAsFileAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
-  public ExportAsFileAction( final RepositoryExplorerPart explorer )
+  public ExportAsFileAction( final ObservationChooser explorer )
   {
     super( explorer, "Datei herunterladen", ImageProvider.IMAGE_ZML_DOWNLOAD, "Lädt die selektierte Zeitreihe als lokale Datei herunter");
     

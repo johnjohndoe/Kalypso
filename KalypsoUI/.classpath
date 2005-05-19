@@ -6,7 +6,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_calculation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_metadoc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jcommon-0.9.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/kalypsoservice_user.jar"/>
+	<classpathentry exported="true" sourcepath="/KalypsoUserService" kind="lib" path="lib/kalypsoservice_user.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/swtcalendar.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

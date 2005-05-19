@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * Ein Repository hinzufügen.
@@ -54,7 +54,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public class RemoveRepositoryAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
-  public RemoveRepositoryAction( final RepositoryExplorerPart explorer )
+  public RemoveRepositoryAction( final ObservationChooser explorer )
   {
     super( explorer, "Repository entfernen", ImageProvider.IMAGE_ZML_REPOSITORY_REMOVE, "Entfernt ein Repository..." );
 
