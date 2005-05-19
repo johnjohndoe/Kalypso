@@ -31,7 +31,7 @@ public class Profil implements IProfil
 
   private String m_comment = "";
 
-  private IProfil.RAUHEITEN_TYP m_rauheit;
+  private final EventListenerList m_listeners = new EventListenerList();
 
   // private final HashMap<IProfilPointProperty, Object> m_extendedPointData;
 
@@ -42,11 +42,11 @@ public class Profil implements IProfil
    * @see com.bce.eind.core.profilinterface.IProfil#addCommentLine(java.lang.String)
    */
 
-  private final EventListenerList m_listeners = new EventListenerList();
-
   private final ProfilPoints m_points;
 
   private final HashMap<METADATA, Object> m_profilMetaData;
+
+  private IProfil.RAUHEITEN_TYP m_rauheit;
 
   private final List m_unknownData;
 
@@ -296,9 +296,15 @@ public class Profil implements IProfil
    */
   public List<IProfilPoint> getPoints( IProfilPoint startPoint )
   {
-    final int lastIndex = m_points.indexOf( m_points.getLast() );
+     return getPoints(startPoint,m_points.getLast());
+
+  }
+
+  public List<IProfilPoint> getPoints( IProfilPoint startPoint, IProfilPoint endPoint )
+  {
+    final int lastIndex = m_points.indexOf(endPoint );
     final int firstIndex = m_points.indexOf( startPoint );
-    if( firstIndex < 0 )
+    if(( firstIndex < 0 )|(lastIndex < 0))
       return null;
     return m_points.unmodifiable().subList( firstIndex, lastIndex );
 
@@ -462,6 +468,18 @@ public class Profil implements IProfil
     point.setValueFor( ProfilPointProperty.BREITE, breite );
     // KIM fireTableChanged( new ProfilTableEvent( null, point ) );
     return point;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.bce.eind.core.profil.IProfil#insertPoint(com.bce.eind.core.profil.IProfilPoint,
+   *      com.bce.eind.core.profil.IProfilPoint)
+   */
+  public boolean insertPoint( IProfilPoint thePointBefore, IProfilPoint point )
+      throws ProfilDataException
+  {
+    return m_points.insertPoint( thePointBefore, point );
   }
 
   /*
@@ -694,6 +712,14 @@ public class Profil implements IProfil
     return false;
   }
 
+  public void setValuesFor( List<IProfilPoint> pointList, ProfilPointProperty pointProperty, double value ) throws ProfilDataException
+  {
+    for( final Iterator<IProfilPoint> ptIt = pointList.iterator(); ptIt.hasNext(); )
+    {
+      setValueFor(ptIt.next(), pointProperty, value );
+    }
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -708,18 +734,6 @@ public class Profil implements IProfil
       ((ProfilPoint)ptIt.next()).setValueFor( pointProperty, value );
     }
     // KIM fireTableChanged( new ProfilTableEvent( columnKey, null ) );
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.bce.eind.core.profil.IProfil#insertPoint(com.bce.eind.core.profil.IProfilPoint,
-   *      com.bce.eind.core.profil.IProfilPoint)
-   */
-  public boolean insertPoint( IProfilPoint thePointBefore, IProfilPoint point )
-      throws ProfilDataException
-  {
-    return m_points.insertPoint( thePointBefore, point );
   }
 
 }

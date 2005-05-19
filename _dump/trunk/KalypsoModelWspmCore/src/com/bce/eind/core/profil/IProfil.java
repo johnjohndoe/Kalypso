@@ -70,6 +70,8 @@ public interface IProfil
   public List<IProfilPoint> getPoints( );
 
   public List<IProfilPoint> getPoints( final IProfilPoint startPoint );
+  
+  public List<IProfilPoint> getPoints( final IProfilPoint startPoint, final IProfilPoint endPoint );
 
   public LinkedList<IProfilPoint> getPointsAtPos( final double breite );
 
@@ -129,5 +131,8 @@ public interface IProfil
 
   public boolean setValueFor( IProfilPoint point, ProfilPointProperty pointProperty, double value )
       throws ProfilDataException;
+  
+  public void  setValuesFor(List<IProfilPoint> pointList, ProfilPointProperty pointProperty, double value )
+  throws ProfilDataException;
 
 }
