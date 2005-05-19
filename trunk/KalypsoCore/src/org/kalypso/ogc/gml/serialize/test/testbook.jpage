@@ -1,0 +1,29 @@
+String testString = "http://134.28.84.71:8080/deegreewms/wfs#ueberschwemmung10";
+String[] result = org.deegree_impl.tools.StringExtend.toArray(testString, "#", true);
+//java.net.URL url = null;
+String url = null;
+String featureType = null;
+for( int i = 0; i < result.length; i++ )
+{
+  String str = result[i];
+  System.out.println(str);
+}
+if (result[0].length() > 0 && result[0].startsWith("http://"))
+{
+    //url = new URL(result[0]);
+    url = result[0];
+}
+if (result[1].length() > 0)
+    featureType = result[1];
+System.out.println("ft: " + featureType + "\turl: " + url);
+
+java.net.URL test = new java.net.URL("http://134.28.87.71:8080/deegreewms/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS=hamburg:umriss&format=image/png&bbox=3549000,5932000,3568000,5944000&styles=default&VERSION=1.1.1&Height=300&Width=400&SRS=EPSG:31467");
+System.out.println("Host: " + test.getHost());
+System.out.println("Authority: " + test.getAuthority());
+System.out.println("File: " + test.getFile());
+System.out.println("Protocol: " + test.getProtocol());
+System.out.println("UserInfo: " + test.getUserInfo());
+System.out.println("Query: " + test.getQuery());
+System.out.println("Ref: " + test.getRef());
+System.out.println("Path: " + test.getPath());
+
