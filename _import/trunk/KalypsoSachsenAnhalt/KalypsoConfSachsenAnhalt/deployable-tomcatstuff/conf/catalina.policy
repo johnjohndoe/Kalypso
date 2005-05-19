@@ -145,8 +145,9 @@ grant {
 	
 	permission java.util.logging.LoggingPermission "control";
 
-	// BodeModell (eigentlich nur: bodesteu.exe)
+	// BodeModell (eigentlich nur: bodesteu.exe ist eine 16 BIT-Applikation)
 	//permission java.io.FilePermission "C:\\WINNT\\system32\\cmd.exe", "execute";
+	//permission java.io.FilePermission "C:\\WINNT\\system32\\ntvdm.exe", "execute"; 
 	permission java.io.FilePermission "<<ALL FILES>>", "execute";
 	
 	// Wiski LDAP

@@ -1,0 +1,3 @@
+Start der Simulation 10.12.2004 07:00:00
+Start der Vorhersage 15.12.2004 08:00:00
+Ende der Vorhersage 17.12.2004 08:00:00

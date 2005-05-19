@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="IlseV1.0">
+	<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+	<input id="MODELL_GML" path="modell.gml" relativeToCalcCase="true"/>
+	<input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
+	
+	<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
+	<!-- Unterverzeichnisse Messung und Vorhersage! -->
+	<input id="QPegelDirIn" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
+	<input id="QSpeicherDirIn" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true"/>
+	<!-- haben keine Unterverzeichnisse -->
+	<input id="VSpeicherDirIn" path="Zeitreihen/Speicher" relativeToCalcCase="true"/>
+	<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
+	
+
+	<output id="Logs" path="Log-Dateien" relativeToCalcCase="true"/>
+	<output id="Ergebnisse" path="" relativeToCalcCase="true"/>
+
+	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
+	<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true"/>
+	
+</modeldata>

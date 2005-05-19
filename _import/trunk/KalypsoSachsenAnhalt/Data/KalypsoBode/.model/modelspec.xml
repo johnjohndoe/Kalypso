@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
 	<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
-	<input id="MODELL_GML" path="bodemodell.gml" relativeToCalcCase="true"/>
+	<input id="MODELL_GML" path="modell.gml" relativeToCalcCase="true"/>
 	<input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
 	
 	<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
