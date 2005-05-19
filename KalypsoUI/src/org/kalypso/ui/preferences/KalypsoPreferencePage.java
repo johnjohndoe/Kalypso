@@ -107,9 +107,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
         "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
-    addField( new StringFieldEditor( IKalypsoPreferences.DEFAULT_STYLE_DIRECTORY,
-        "Default SLD&Ordner:", getFieldEditorParent() ) );
-
     addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS,
         "Globales &Koordinatensystem:", getFieldEditorParent() ) );
     addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1,

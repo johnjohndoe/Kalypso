@@ -101,7 +101,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
       //get DefaultStyle
       styleName = shapeBaseFile.getName();
-      URL styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
+      URL styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
           shapeWS.getFeatureType( shapeBaseFile.toString() ), styleName );
       stylePath = styleHref.toString();
       }else{

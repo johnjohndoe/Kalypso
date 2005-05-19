@@ -1,5 +1,12 @@
 package org.kaylpso.ui.wizard.wms;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -8,6 +15,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kaylpso.ui.KalypsoServiceConstants;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -53,8 +61,8 @@ import org.kaylpso.ui.action.AddThemeCommand;
 /**
  * 
  * @author Kuepferle
- * 
- * */
+ *  
+ */
 public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ImportWmsWizardPage m_page = null;
@@ -62,6 +70,10 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   private String[] m_layers;
 
   private GisMapOutlineViewer m_outlineviewer;
+
+  private ArrayList m_catalog;
+
+  private static final String LINK_TYPE = "wms";
 
   public ImportWmsSourceWizard()
   {
@@ -94,7 +106,8 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             layername = "Multi Layer:" + layername;
           layers = layers + layer;
           //          System.out.println( url + "#" + layers );
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layername, "wms", "", url + "#" + layers + "#" + authentification, null, null,
+          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell,
+              layername, "wms", null, url + "#" + layers + "#" + authentification, null, null,
               null, "simple" );
           m_outlineviewer.postCommand( command, null );
 
@@ -115,13 +128,27 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    // no initialization necessary
+    // read service catalog file
+    InputStream is = getClass().getResourceAsStream( "../resources/services/kalypsoOWS.catalog" );
+    try
+    {
+      readCatalog( is );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+      m_catalog = new ArrayList();
+    }
+    finally
+    {
+      IOUtils.closeQuietly(is);
+    }
   }
 
   public void addPages()
   {
     m_page = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden",
-        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ  );
+        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     addPage( m_page );
   }
 
@@ -132,5 +159,27 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   public void setOutlineViewer( GisMapOutlineViewer outlineviewer )
   {
     m_outlineviewer = outlineviewer;
+  }
+
+  public ArrayList getCatalog()
+  {
+    return m_catalog;
+  }
+
+  public void readCatalog( InputStream is ) throws IOException
+  {
+    ArrayList catalog = new ArrayList();
+    BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+    String line = br.readLine();
+    do
+    {
+      if( line.startsWith( KalypsoServiceConstants.WFS_LINK_TYPE ) )
+        catalog.add( ( line.split( "=" ) )[1] );
+
+      line = br.readLine();
+    }
+    while( line != null );
+    
+    m_catalog = catalog;
   }
 }

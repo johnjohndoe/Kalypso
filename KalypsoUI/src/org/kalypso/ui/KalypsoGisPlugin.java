@@ -61,10 +61,6 @@ import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -161,9 +157,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   //    private static final String DEFAULT_CRS = "EPSG:4326";
   private static final String DEFAULT_CRS = "EPSG:31469";
 
-  private DefaultStyleFactory m_defaultStyleFactory;
-
-  private IProject m_defaultStyleProject;
+  private static DefaultStyleFactory m_defaultStyleFactory;
 
   /**
    * The current user that has successfully logged into kalypso. Usually an
@@ -365,9 +359,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   {
     final Hashtable properties = new Hashtable( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
-    { scheme } );
-    context.registerService( URLStreamHandlerService.class.getName(), handler,
-        properties );
+    {
+      scheme
+    } );
+    context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }
 
   /**
@@ -428,44 +423,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     return m_loaderFactory;
   }
 
-  public DefaultStyleFactory getDefaultStyleFactory()
+  public static DefaultStyleFactory getDefaultStyleFactory()
   {
-
-    if( m_defaultStyleFactory == null )
-    {
-      try
-      {
-        String dir = getPluginPreferences().getString(
-            IKalypsoPreferences.DEFAULT_STYLE_DIRECTORY );
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceRoot root = workspace.getRoot();
-        if( root.getLocation().isValidPath( dir ) )
-        {
-          m_defaultStyleProject = root.getProject( dir );
-          if( !m_defaultStyleProject.exists() )
-            m_defaultStyleProject.create( null );
-          m_defaultStyleProject.open( null );
-        }
-        String string = m_defaultStyleProject.getLocation().toFile().toString();
-        m_defaultStyleFactory = DefaultStyleFactory.getFactory( string );
-      }
-      catch( Exception e )
-      {
-        MessageDialog
-            .openError(
-                null,
-                "Default Style Factory",
-                "Default style folder was not created, DefaultStyleFactory is not available.\nCheck your Kalypso preferences" );
-        return null;
-      }
-    }
     return m_defaultStyleFactory;
   }
 
-  public IProject getDefaultStyleFactoryWorkspaceLocation()
-  {
-    return m_defaultStyleProject;
-  }
 
   public ResourcePool getPool()
   {
@@ -490,6 +452,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
       m_mainConf.clear();
 
       configure( m_mainConf );
+      configureSchemaCatalog();
+      configureDefaultStyleFactory();
       configureProxy();
       configurePool();
       configureServiceProxyFactory( m_mainConf );
@@ -503,6 +467,26 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     {
       e.printStackTrace();
     }
+  }
+
+  private void configureDefaultStyleFactory()
+  {
+
+    final IPath stateLocation = getStateLocation();
+    final File defaultStyleDir = new File( stateLocation.toFile(), "defaultStyles" );
+    if( !defaultStyleDir.exists() )
+      defaultStyleDir.mkdir();
+    try
+    {
+      m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      LOGGER
+          .warning( "Default style location was not created, DefaultStyleFactory is not available." );
+    }
+
   }
 
   private void configureSchemaCatalog()
@@ -540,7 +524,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
       {
           serverUrlCatalog,
-          calcCatalog } );
+          calcCatalog
+      } );
 
       final IPath stateLocation = getStateLocation();
       final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );

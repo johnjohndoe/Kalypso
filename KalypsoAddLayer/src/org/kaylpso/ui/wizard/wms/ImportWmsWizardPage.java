@@ -82,9 +82,10 @@ import sun.misc.BASE64Encoder;
 /**
  * 
  * @author Kuepferle
- * 
- * */
-public class ImportWmsWizardPage extends WizardPage implements ModifyListener, SelectionListener, FocusListener
+ *  
+ */
+public class ImportWmsWizardPage extends WizardPage implements ModifyListener, SelectionListener,
+    FocusListener
 {
 
   private Combo m_url = null;
@@ -98,12 +99,12 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
   private List m_listLeftSide;
 
   private List m_listRightSide;
-  
-  private static final int MIN_DIALOG_WIDTH = 400;
-  
-  private static final int MIN_LIST_WITH = 150;  
 
-//  private Button advancedTag = null;
+  private static final int MIN_DIALOG_WIDTH = 400;
+
+  private static final int MIN_LIST_WITH = 150;
+
+  //  private Button advancedTag = null;
 
   // private Composite advanced = null;
 
@@ -115,9 +116,9 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
 
   //protected Text timeoutText;
 
-//  protected static final String timeoutDefault = "3";
-//
-//  protected static final String bufferDefault = "10";
+  //  protected static final String timeoutDefault = "3";
+  //
+  //  protected static final String bufferDefault = "10";
 
   private Composite m_layerSelection;
 
@@ -195,21 +196,22 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     gridLayout.horizontalSpacing = 10;
     gridLayout.verticalSpacing = 10;
     m_layerGroup.setLayout( gridLayout );
-    m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ));
+    m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     m_layerSelection = new Composite( m_layerGroup, SWT.NULL );
     m_layerSelection.setLayout( new GridLayout( 3, false ) );
-    m_layerSelection.setLayoutData(new GridData(MIN_DIALOG_WIDTH, SWT.DEFAULT));
+    m_layerSelection.setLayoutData( new GridData( MIN_DIALOG_WIDTH, SWT.DEFAULT ) );
 
-    m_listLeftSide = new List( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-    m_listLeftSide.setLayoutData(new GridData(MIN_LIST_WITH ,MIN_LIST_HIGHT));
+    m_listLeftSide = new List( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL
+        | SWT.H_SCROLL );
+    m_listLeftSide.setLayoutData( new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ) );
     m_listLeftSide.setItems( getNamesFeatureType() );
-//    m_listLeftSide.addSelectionListener( this );
+    //    m_listLeftSide.addSelectionListener( this );
 
     m_buttonComposite = new Composite( m_layerSelection, SWT.NULL );
     m_buttonComposite.setLayout( new GridLayout() );
-    m_buttonComposite.setLayoutData(new GridData( 50, SWT.DEFAULT));
-    
+    m_buttonComposite.setLayoutData( new GridData( 50, SWT.DEFAULT ) );
+
     m_addLayer = new Button( m_buttonComposite, SWT.PUSH );
     m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     m_addLayer.setToolTipText( "Hinzufügen eines Themas zu der Kartenansicht" );
@@ -220,13 +222,12 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     m_removeLayer.addSelectionListener( this );
 
     m_listRightSide = new List( m_layerSelection, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
-    m_listRightSide.setLayoutData(new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ));
-//    m_listRightSide.addSelectionListener( this );
+    m_listRightSide.setLayoutData( new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ) );
+    //    m_listRightSide.addSelectionListener( this );
 
     m_multiLayers = new Button( m_layerSelection, SWT.CHECK );
     m_multiLayers.setText( "Themen zusammenfassen" );
-    m_multiLayers
-        .setToolTipText( "Alle ausgewählte Themen als Gruppe in Karte einfügen" );
+    m_multiLayers.setToolTipText( "Alle ausgewählte Themen als Gruppe in Karte einfügen" );
     m_multiLayers.setSelection( false );
     m_multiLayers.setEnabled( false );
     m_layerGroup.setVisible( false );
@@ -248,19 +249,26 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     m_labelUrl.setToolTipText( "URL des Web Map Servers (WMS)" );
     m_labelUrl.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
 
-    java.util.List recent = new ArrayList();
-    if( true )
-    { // FIXME: store in preferences like WMSWizardPage
-      recent.add( "http://134.28.87.75:8000/deegreewms/wms" );
-      recent.add("http://localhost:8080/deegreewms/wms");
-    }
+    //    java.util.List recent = new ArrayList();
+    //    if( true )
+    //    { // FIXME: store in preferences like WMSWizardPage
+    //      recent.add( "http://www.refractions.net:8080/geoserver/wfs" );
+    //      recent.add( "http://134.28.87.71:8080/deegreewms/wms" );
+    //      recent.add( "http://134.28.77.120/deegreewms/wms" );
+    //      recent.add( "http://134.28.77.120/wmsconnector/com.esri.wms.Esrimap" );
+    //      recent.add( "http://134.28.77.120/xplanungwms/wms" );
+    //      recent.add( "http://localhost:8080/deegreewms/wms" );
+    //    }
     GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
     gridData.widthHint = 400;
-
+    ArrayList catalog = ( (ImportWmsSourceWizard)getWizard() ).getCatalog();
+    if( catalog == null )
+      catalog = new ArrayList();
+    String[] a = (String[])catalog.toArray( new String[catalog.size()] );
     m_url = new Combo( fieldGroup, SWT.BORDER | SWT.READ_ONLY );
-    m_url.addFocusListener(this);
-   // m_url.addModifyListener( this );
-    m_url.setItems( (String[])recent.toArray( new String[recent.size()] ) );
+    m_url.setItems( a );
+//    m_url.addModifyListener( this );
+    m_url.addFocusListener( this );
     m_url.setVisibleItemCount( 15 );
     m_url.setLayoutData( gridData );
     m_url.select( 0 );
@@ -289,7 +297,6 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     m_pass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_pass.addModifyListener( this );
 
-
   }
 
   /**
@@ -310,7 +317,8 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
         m_wmsLayers = getCapabilites( m_url.getText() );
         if( ( m_wmsLayers != null || m_wmsLayers.length > 0 ) || m_url.getText().length() < 1 )
           m_layerSelection.setVisible( true );
-        else m_layerSelection.setVisible(false);
+        else
+          m_layerSelection.setVisible( false );
         updateLayerSelection();
         setErrorMessage( null );
       }
@@ -431,7 +439,7 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
       m_removeLayer.setEnabled( true );
     if( m_listRightSide.getSelectionCount() > 1 || m_wmsLayers != null )
     {
-      m_layerGroup.setVisible(true);
+      m_layerGroup.setVisible( true );
       m_listLeftSide.setItems( getNamesFeatureType() );
       m_layerGroup.redraw();
       m_layerGroup.pack();
@@ -479,16 +487,17 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
 
         URL urlService = new URL( service + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
         final URLConnection c = urlService.openConnection();
-        //checks authentification if needed adds the password and login to the stream
-        if( NetWorker.requiresAuthentification(c) )
+        //checks authentification if needed adds the password and login to the
+        // stream
+        if( NetWorker.requiresAuthentification( c ) )
         {
           final String pw = m_user.getText() + ":" + m_pass.getText();
           final String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
 
-          c.addRequestProperty( "Proxy-Authorization", epw ); 
+          c.addRequestProperty( "Proxy-Authorization", epw );
         }
         NetWorker.configureProxy( c );
-        
+
         c.addRequestProperty( "SERVICE", "WMS" );
         c.addRequestProperty( "VERSION", "1.1.1" );
         c.addRequestProperty( "REQUEST", "GetCapabilities" );
@@ -624,7 +633,10 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
       else
         result = result + layer;
     }
-    return new String[]{result};
+    return new String[]
+    {
+      result
+    };
 
   }
 
@@ -663,7 +675,7 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
       }
       else
       {
-//        System.out.println( layerTree[i].getName() );
+        //        System.out.println( layerTree[i].getName() );
         layers.add( layerTree[i] );
         continue;
       }
@@ -685,6 +697,7 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
     return res;
 
   }
+
   public String getPassWord()
   {
     return m_pass.getText();
@@ -694,16 +707,18 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
   {
     return m_user.getText();
   }
-  protected void removeListners(){
+
+  protected void removeListners()
+  {
     m_checkAuthentification.removeSelectionListener( this );
-    m_multiLayers.removeSelectionListener(this);
-    m_listRightSide.removeSelectionListener(this);
-    m_listLeftSide.removeSelectionListener(this);
-    m_user.removeModifyListener(this);
-    m_pass.removeModifyListener(this);
-    m_url.removeSelectionListener(this);
-    m_addLayer.removeSelectionListener(this);
-    m_removeLayer.removeSelectionListener(this);
+    m_multiLayers.removeSelectionListener( this );
+    m_listRightSide.removeSelectionListener( this );
+    m_listLeftSide.removeSelectionListener( this );
+    m_user.removeModifyListener( this );
+    m_pass.removeModifyListener( this );
+    m_url.removeSelectionListener( this );
+    m_addLayer.removeSelectionListener( this );
+    m_removeLayer.removeSelectionListener( this );
   }
 
   /**
@@ -719,14 +734,16 @@ public class ImportWmsWizardPage extends WizardPage implements ModifyListener, S
    */
   public void focusLost( FocusEvent e )
   {
-    if( e.widget == m_url ){
+    if( e.widget == m_url )
+    {
       m_listRightSide.removeAll();
       if( validateURLField() )
       {
         m_wmsLayers = getCapabilites( m_url.getText() );
         if( ( m_wmsLayers != null || m_wmsLayers.length > 0 ) || m_url.getText().length() < 1 )
           m_layerSelection.setVisible( true );
-        else m_layerSelection.setVisible(false);
+        else
+          m_layerSelection.setVisible( false );
         updateLayerSelection();
         setErrorMessage( null );
       }

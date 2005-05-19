@@ -78,6 +78,5 @@ public interface IKalypsoPreferences
   public static final String GLOBAL_CRS = "kalypso.global.crs";
   
   public static final String LANGUAGE = "kalypso.language";
-
-  public static final String DEFAULT_STYLE_DIRECTORY = "kalypso.default.sld";
+  
 }
