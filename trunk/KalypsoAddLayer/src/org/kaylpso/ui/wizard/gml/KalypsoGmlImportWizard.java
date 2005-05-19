@@ -106,13 +106,13 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       {
         featureName = m_page.getFeature().getFeatureType().getName();
         featurePath += "[" + featureName + "]";
-        styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
+        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
             m_page.getFeature().getFeatureType(), null);
       }
       else if( selection instanceof PropertyElement )
       {
         featureName = m_page.getFatp().getName();
-        styleHref = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle(
+        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
             (FeatureType)m_page.getFatp(), null);
       }
 
@@ -123,10 +123,12 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     }
     catch( StyleNotDefinedException e )
     {
+      e.printStackTrace();
       // TODO: handle exception
     }
     catch( Exception e )
     {
+      e.printStackTrace();
       // TODO: handle exception
     }
     m_page.removerListeners();

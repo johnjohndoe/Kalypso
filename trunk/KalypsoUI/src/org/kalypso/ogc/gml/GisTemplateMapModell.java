@@ -129,7 +129,7 @@ public class GisTemplateMapModell implements IMapModell
   {
     if( "wms".equals( layerType.getLinktype() ) )
     {
-      String layerName = "[" + layerType.getLinktype()+ "] " + layerType.getName();
+      String layerName = layerType.getName();
       String source = layerType.getHref();
       CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
       return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs);

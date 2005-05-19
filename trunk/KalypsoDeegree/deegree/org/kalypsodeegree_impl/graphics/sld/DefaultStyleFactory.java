@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.deegree.services.wms.StyleNotDefinedException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -17,6 +18,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.graphics.sld.cache.SLDCache;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -78,10 +80,15 @@ public class DefaultStyleFactory
   private static FeatureTypeProperty m_GeomProperty;
 
   private HashMap m_defalultStyles = new HashMap();
+  
+  private SLDCache THE_CACHE = null;
+
+  private static final Logger LOGGER = Logger.getLogger( DefaultStyleFactory.class.getName() );
 
   private DefaultStyleFactory( String dir )
   {
     DEFAULT_STYLE_DRECTORY = dir;
+    LOGGER.info( "SLD-Default-Katalog initialisiert mit DIR=" + dir );
   }
 
   public static DefaultStyleFactory getFactory( String defaultStyleDirectory ) throws IOException
@@ -128,7 +135,7 @@ public class DefaultStyleFactory
       //check if style already exists
       if( m_defalultStyles.containsKey( generateKey( featureType ) ) )
         return new URL( (String)m_defalultStyles.get( generateKey( featureType ) ) );
-      //write style to default style
+      //write style to default style location
       File tempFile = null;
       tempFile = new File( DEFAULT_STYLE_DRECTORY, myStyleName + ".sld.default" );
       FileWriter writer = new FileWriter( tempFile );
@@ -179,7 +186,9 @@ public class DefaultStyleFactory
           featureTypeStyle )
     };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    {
+      SLDFactory.createNamedLayer( "deegree style definition", null, styles )
+    };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
 
     return sld;
@@ -193,10 +202,14 @@ public class DefaultStyleFactory
     StyledLayerDescriptor sld = null;
 
     Style[] styles = new Style[]
-    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
-        featureTypeStyle ) };
+    {
+      (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
+          featureTypeStyle )
+    };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    {
+      SLDFactory.createNamedLayer( "deegree style definition", null, styles )
+    };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
 
     return sld;

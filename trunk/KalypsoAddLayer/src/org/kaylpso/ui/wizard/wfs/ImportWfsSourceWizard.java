@@ -1,9 +1,15 @@
 package org.kaylpso.ui.wizard.wfs;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -12,6 +18,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kaylpso.ui.KalypsoServiceConstants;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -58,13 +65,15 @@ import org.kaylpso.ui.action.AddThemeCommand;
 /**
  * 
  * @author Kuepferle
- * 
- * */
+ *  
+ */
 public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ImportWfsWizardPage m_page;
 
   private GisMapOutlineViewer m_outlineviewer;
+
+  private ArrayList m_catalog;
 
   public ImportWfsSourceWizard()
   {
@@ -88,7 +97,6 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
           //Write the defaultStyle to the system-default temporary directory
           URL style = m_page.setDefautltStyle( layer );
 
-
           // TODO here the featurePath is set to featureMember because this is
           // the top feature of the GMLWorkspace
           // it must be implemented to only set the name of the feature
@@ -100,7 +108,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
           AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer,
               "wfs", featurePath, "URL=" + m_page.getUrl() + "#" + "FEATURE=" + layer, "sld",
-              layer , style.toString(), "simple" );
+              layer, style.toString(), "simple" );
           m_outlineviewer.postCommand( command, null );
 
         }
@@ -111,7 +119,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
         e.printStackTrace();
         return false;
       }
-      m_page.removeListeners();
+    m_page.removeListeners();
     return true;
   }
 
@@ -121,7 +129,22 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    // nothing
+    InputStream is = getClass().getResourceAsStream( "../resources/services/kalypsoOWS.catalog" );
+    try
+    {
+      // read service catalog file
+      readCatalog( is );
+      is.close();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+      m_catalog = new ArrayList();
+    }
+    finally
+    {
+      IOUtils.closeQuietly(is);
+    }
   }
 
   public void addPages()
@@ -148,4 +171,25 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_outlineviewer = outlineviewer;
   }
 
+  public ArrayList getCatalog()
+  {
+    return m_catalog;
+  }
+
+  public void readCatalog( InputStream is ) throws IOException
+  {
+    ArrayList catalog = new ArrayList();
+    BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+    String line = br.readLine();
+    do
+    {
+      if( line.startsWith( KalypsoServiceConstants.WFS_LINK_TYPE ) )
+        catalog.add( ( line.split( "=" ) )[1] );
+
+      line = br.readLine();
+    }
+    while( line != null );
+
+    m_catalog = catalog;
+  }
 }
