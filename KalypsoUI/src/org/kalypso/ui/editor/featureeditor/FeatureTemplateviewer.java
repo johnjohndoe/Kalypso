@@ -50,16 +50,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.bce.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
@@ -116,6 +117,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   };
 
   private final JobExclusiveCommandTarget m_commandtarget;
+
+  private ScrolledCompositeCreator m_creator;
 
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
@@ -256,22 +259,33 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       setWorkspace( null );
   }
 
-  public void createControls( final Composite parent, final int style )
+  public Composite createControls( final Composite parent, final int style )
   {
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
-        | SWT.V_SCROLL | style );
-    m_panel = new Composite( scrolledComposite, SWT.NONE );
-    m_panel.setLayout( new GridLayout() );
+    m_creator = new ScrolledCompositeCreator(  )
+    {
+      protected Control createContents( final Composite scrollParent, final int contentStyle )
+      {
+        final Composite panel = new Composite( scrollParent, contentStyle );
+        panel.setLayout( new GridLayout() );
+        panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+        return panel;
+      }
+    };
+    m_creator.createControl( parent, style, SWT.NONE );
+
+    m_panel = (Composite)m_creator.getContentControl();
 
     try
     {
       updateControls();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-    scrolledComposite.setContent( m_panel );
+
+    return m_creator.getScrolledComposite();
   }
 
   protected void updateControls()
@@ -304,7 +318,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         final Feature feature = (Feature)featureFromPath;
 
         m_featureComposite.setFeature( feature );
-        m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
+        final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature
+            .getFeatureType() );
+        control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         m_featureComposite.setFeature( feature );
         m_featureComposite.updateControl();
 
@@ -319,18 +335,24 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         // todo Fehlermeldung anzeigen
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
     finally
     {
-      if( m_panel != null && !m_panel.isDisposed() )
+      final ScrolledCompositeCreator creator = m_creator;
+      final ScrolledComposite scrolledComposite = m_creator.getScrolledComposite();
+      if( scrolledComposite != null && !scrolledComposite.isDisposed() )
       {
-        final Point computeSize = m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-        m_panel.setSize( computeSize );
+        scrolledComposite.getDisplay().asyncExec( new Runnable()
+        {
+          public void run()
+          {
+            creator.updateControlSize();
+          }
+        } );
       }
-
     }
   }
 

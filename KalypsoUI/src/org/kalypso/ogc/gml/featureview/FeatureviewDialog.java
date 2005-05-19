@@ -43,16 +43,12 @@ package org.kalypso.ogc.gml.featureview;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.bce.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -108,43 +104,18 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     panel.setLayout( new GridLayout( ) );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( panel, SWT.H_SCROLL
-        | SWT.V_SCROLL );
-
-    // don't forget that line!
-    scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    final Composite control = (Composite)m_featureComposite.createControl( scrolledComposite,
-        SWT.NONE );
-    scrolledComposite.setContent( control );
-
-   // updateControlSize( scrolledComposite, control );
-
-    panel.addControlListener( new ControlAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
-      public void controlResized( final ControlEvent e )
+    final FeatureComposite featureComposite = m_featureComposite;
+    final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( ) {
+      protected Control createContents( final Composite scrollParent, int style )
       {
-        updateControlSize( scrolledComposite, control );
-      }
-    } );
+        return (Composite)featureComposite.createControl( scrollParent,
+            style );
+      }};
+     creator.createControl( panel, SWT.NONE, SWT.NONE );
 
-    m_featureComposite.addModifyListener( this );
+    featureComposite.addModifyListener( this );
 
-    return scrolledComposite;
-  }
-
-  protected void updateControlSize( final ScrolledComposite scrolledComposite, final Composite control )
-  {
-    final Point controlSize = control.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    final Rectangle clientArea = scrolledComposite.getClientArea();
-    final int psizex = clientArea.width;
-    final int psizey = clientArea.height;
-    
-    final Point newSize = new Point( Math.max( controlSize.x, psizex ), Math.max( controlSize.y, psizey ) );
-    control.setSize( newSize );
+    return creator.getScrolledComposite();
   }
 
   /**

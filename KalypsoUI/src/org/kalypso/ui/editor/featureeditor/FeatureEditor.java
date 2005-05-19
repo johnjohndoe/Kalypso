@@ -57,6 +57,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
@@ -201,7 +203,10 @@ public class FeatureEditor extends EditorPart
    */
   public void createPartControl( final Composite parent )
   {
-    m_viewer.createControls( parent, SWT.NONE );
+    parent.setLayout( new GridLayout() );
+    parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    final Composite composite = m_viewer.createControls( parent, SWT.NONE );
+    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final IActionBars actionBars = getEditorSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
