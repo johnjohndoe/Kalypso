@@ -54,7 +54,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.ui.repository.dialogs.DateRangeInputDialog;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * Configure preview daterange for current <code>IRepository</code>.
@@ -72,7 +72,7 @@ public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction
 
   private int m_nDays;
 
-  public ConfigurePreviewAction( final RepositoryExplorerPart explorer )
+  public ConfigurePreviewAction( final ObservationChooser explorer )
   {
     super( explorer, "Einstellungen", ImageProvider.IMAGE_ZML_REPOSITORY_CONF,
         "Einstellungen der Zeitreihen-Vorschau setzen" );

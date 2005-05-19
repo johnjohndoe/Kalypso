@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.users;
 
+import java.util.Properties;
+
 /**
  * IUserRightsProvider common interface for user rights providers. This
  * interface is used by the KalypsoUserService.
@@ -48,6 +50,12 @@ package org.kalypso.users;
  */
 public interface IUserRightsProvider
 {
+  /**
+   * Initialise the rights provider with the given properties. Properties
+   * are implementation dependent and might not be relevant in some cases.
+   */
+  public void init( final Properties props ) throws UserRightsException;
+  
   /**
    * This method is called when the rights consumer (possibly the
    * KalypsoUserService) shuts down and implementers should clean hold resources

@@ -41,14 +41,14 @@
 package org.kalypso.ui.repository.actions;
 
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * @author schlienger
  */
 public class ExpandAllAction extends AbstractRepositoryExplorerAction
 {
-  public ExpandAllAction( final RepositoryExplorerPart explorer )
+  public ExpandAllAction( final ObservationChooser explorer )
   {
     super( explorer, "Alles erweitern",
         ImageProvider.IMAGE_ZML_REPOSITORY_EXPAND,
@@ -60,6 +60,6 @@ public class ExpandAllAction extends AbstractRepositoryExplorerAction
    */
   public void run( )
   {
-    getExplorer().getViewer().expandAll();
+    getViewer().expandAll();
   }
 }

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
   
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.beans;
+package org.kalypso.services.sensor;
 
 import java.util.Map;
 

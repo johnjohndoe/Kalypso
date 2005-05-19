@@ -78,12 +78,12 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceConstants;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
-import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.IUserService;
@@ -348,7 +348,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   private void configureURLStreamHandler( final BundleContext context )
   {
     // register the observation webservice url stream handler
-    registerUrlStreamHandler( context, ServiceRepositoryObservation.SCHEME_OCS,
+    registerUrlStreamHandler( context, ObservationServiceConstants.SCHEME_OCS,
         new OcsURLStreamHandler() );
     registerUrlStreamHandler( context, CalculationSchemaStreamHandler.PROTOCOL,
         new CalculationSchemaStreamHandler() );
@@ -451,15 +451,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     {
       m_mainConf.clear();
 
-      configure( m_mainConf );
-      configureSchemaCatalog();
-      configureDefaultStyleFactory();
+      configure( m_mainConf ); 
       configureProxy();
       configurePool();
       configureServiceProxyFactory( m_mainConf );
       configureURLStreamHandler( context );
+
       // muss NACH dem proxy und dem streamHandler konfiguriert werden!
       configureSchemaCatalog();
+      configureDefaultStyleFactory();
 
       getPreferenceStore().addPropertyChangeListener( this );
     }

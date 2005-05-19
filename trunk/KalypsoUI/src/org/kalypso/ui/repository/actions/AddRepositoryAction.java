@@ -58,7 +58,7 @@ import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * Ein Repository hinzufügen.
@@ -67,7 +67,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public class AddRepositoryAction extends AbstractRepositoryExplorerAction
 {
-  public AddRepositoryAction( final RepositoryExplorerPart explorer )
+  public AddRepositoryAction( final ObservationChooser explorer )
   {
     super( explorer, "Repository hinzufügen",
         ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );

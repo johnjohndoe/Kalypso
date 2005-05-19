@@ -44,8 +44,6 @@ import java.rmi.RemoteException;
 
 import javax.activation.DataHandler;
 
-import org.kalypso.ogc.sensor.beans.DateRangeBean;
-import org.kalypso.ogc.sensor.beans.ObservationBean;
 import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.repository.service.IRepositoryService;
 import org.kalypso.services.IKalypsoService;

@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ---------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.ocs;
 
 import java.util.List;
@@ -60,25 +60,27 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class OcsExportWizard extends Wizard implements IExportWizard
 {
   private IStructuredSelection m_selection;
+
   private OcsExportWizardResourcesPage m_resPage;
+
   private OcsExportWizardIdentifiersPage m_idPage;
 
-  public OcsExportWizard( )
+  public OcsExportWizard()
   {
     final IDialogSettings settings = KalypsoGisPlugin.getDefault()
         .getDialogSettings();
-    
+
     IDialogSettings section = settings.getSection( "OcsExportWizard" ); //$NON-NLS-1$
     if( section == null )
       section = settings.addNewSection( "OcsExportWizard" ); //$NON-NLS-1$
-    
+
     setDialogSettings( section );
   }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     // TODO Auto-generated method stub
     return false;
@@ -87,17 +89,15 @@ public class OcsExportWizard extends Wizard implements IExportWizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
-  public void addPages( )
+  public void addPages()
   {
-    super.addPages();
-
     m_resPage = new OcsExportWizardResourcesPage( m_selection );
-    m_idPage = new OcsExportWizardIdentifiersPage(  );
-    
+    m_idPage = new OcsExportWizardIdentifiersPage();
+
     addPage( m_resPage );
     addPage( m_idPage );
   }
-  
+
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
@@ -105,15 +105,16 @@ public class OcsExportWizard extends Wizard implements IExportWizard
   public void init( IWorkbench workbench, IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
-	List selectedResources = IDE.computeSelectedResources(currentSelection);
-	if (!selectedResources.isEmpty()) {
-		m_selection = new StructuredSelection(selectedResources);
-	}
-	
-	setWindowTitle( "Zeitreihenexport Wizard" );
-	setNeedsProgressMonitor( true );
+    List selectedResources = IDE.computeSelectedResources( currentSelection );
+    if( !selectedResources.isEmpty() )
+    {
+      m_selection = new StructuredSelection( selectedResources );
+    }
+
+    setWindowTitle( "Zeitreihenexport Wizard" );
+    setNeedsProgressMonitor( true );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
    */
@@ -121,7 +122,7 @@ public class OcsExportWizard extends Wizard implements IExportWizard
   {
     if( page == m_resPage )
       m_idPage.setResourcesToExport( m_resPage.getSelectedResources() );
-    
+
     return super.getNextPage( page );
   }
 }

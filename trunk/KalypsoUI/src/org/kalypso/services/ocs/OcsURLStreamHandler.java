@@ -48,8 +48,8 @@ import java.net.URLConnection;
 import javax.activation.DataHandler;
 
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
@@ -74,7 +74,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   public URLConnection openConnection( final URL u ) throws IOException
   {
     // is that an observation id of a server side observation?
-    if( !ServiceRepositoryObservation.isServerSide( u.toExternalForm() ) )
+    if( !ObservationServiceUtils.isServerSide( u.toExternalForm() ) )
       return u.openConnection();
 
     try
@@ -90,8 +90,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
         dra = ZmlURL.checkDateRange( query );
 
       final String obsId = ZmlURL.getIdentifierPart( u );
-      final ObservationBean ob = ServiceRepositoryObservation
-          .getObservationBean( obsId );
+      final ObservationBean ob = ObservationBeanFactory.createBean( obsId );
 
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();

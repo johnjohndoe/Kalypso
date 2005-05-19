@@ -58,9 +58,11 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.ProxyFactory;
+import org.kalypso.services.ocs.ObservationBeanFactory;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
@@ -72,16 +74,12 @@ import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 
 /**
+ * An IObservation that comes from the Kalypso OCS.
+ * 
  * @author schlienger
  */
 public class ServiceRepositoryObservation implements IObservation
 {
-  /** the protocol that identifies the observation service */
-  public final static String SCHEME_OCS = "kalypso-ocs";
-
-  /** Metadata name for the id of the OCS Service Observation */
-  public final static String MD_OCS_ID = "KZ Zeitreihendienst";
-
   private final IObservationService m_srv;
 
   private final ObservationBean m_ob;
@@ -91,12 +89,8 @@ public class ServiceRepositoryObservation implements IObservation
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
       this );
 
-  /**
-   * Constructor
-   * 
-   * @param srv
-   * @param ob
-   */
+  private MetadataList m_metadata;
+
   public ServiceRepositoryObservation( final IObservationService srv,
       final ObservationBean ob )
   {
@@ -137,19 +131,16 @@ public class ServiceRepositoryObservation implements IObservation
     DateRangeBean drb = null;
 
     if( args instanceof DateRangeArgument )
-      drb = ProxyFactory.createDateRangeBean( (DateRangeArgument) args );
+      drb = ProxyFactory.createDateRangeBean( (DateRangeArgument)args );
 
     try
     {
-      //      final OCSDataBean db = m_srv.readData( m_ob, drb );
       final DataHandler db = m_srv.readData( m_ob, drb );
 
-      //      final IObservation obs = ZmlFactory.parseXML(
-      //          new URL( db.getLocation() ), db.getObsId() );
       final IObservation obs = ZmlFactory.parseXML( new InputSource( db
           .getInputStream() ), "", null );
 
-      //      m_srv.clearTempData( db );
+      m_srv.clearTempData( db );
 
       return obs;
     }
@@ -159,29 +150,17 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  /**
-   * Identifier is build using service protocol + id of observation on the
-   * server.
-   * 
-   * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
-   */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
-    return SCHEME_OCS + ":" + m_ob.getId();
+    return ObservationServiceUtils.addServerSideId( m_ob.getId() );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getName()
-   */
-  public String getName( )
+  public String getName()
   {
     return m_ob.getName();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#isEditable()
-   */
-  public boolean isEditable( )
+  public boolean isEditable()
   {
     try
     {
@@ -194,40 +173,37 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getTarget()
-   */
-  public IXlink getTarget( )
+  public IXlink getTarget()
   {
     try
     {
       return getRemote( null ).getTarget();
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
-      return null;
+      throw new IllegalStateException( e.getLocalizedMessage() );
     }
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public MetadataList getMetadataList( )
+  public MetadataList getMetadataList()
   {
-    final MetadataList ml = new MetadataList();
-    ml.putAll( m_ob.getMetadataList() );
+    if( m_metadata == null )
+    {
+      m_metadata = new MetadataList();
+      m_metadata.putAll( m_ob.getMetadataList() );
+    }
 
-    // also put the id of this observation in the metadata list
-    ml.put( MD_OCS_ID, getIdentifier() );
-
-    return ml;
+    return m_metadata;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     try
     {
@@ -236,7 +212,7 @@ public class ServiceRepositoryObservation implements IObservation
     catch( SensorException e )
     {
       e.printStackTrace();
-      return null;
+      throw new IllegalStateException( e.getLocalizedMessage() );
     }
   }
 
@@ -246,9 +222,6 @@ public class ServiceRepositoryObservation implements IObservation
   public synchronized ITuppleModel getValues( final IVariableArguments args )
       throws SensorException
   {
-    //    synchronized( this )
-    //    {
-    // tricky: uses the cache
     ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
     if( values == null )
@@ -259,7 +232,6 @@ public class ServiceRepositoryObservation implements IObservation
     }
 
     return values;
-    //    }
   }
 
   /**
@@ -275,16 +247,12 @@ public class ServiceRepositoryObservation implements IObservation
 
     try
     {
-      //      OCSDataBean db = m_srv.prepareForWrite( m_ob );
-
       // save zml
       final ObservationType obst = ZmlFactory.createXML( obs, null );
-      //      final String path = db.getLocation().replaceAll( "file:", "" );
 
       final File tmpFile = File.createTempFile( "towards-server", "zml" );
       tmpFile.deleteOnExit();
-      //      final FileOutputStream stream = new FileOutputStream( new File( path )
-      // );
+
       final FileOutputStream stream = new FileOutputStream( tmpFile );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
       final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING )
@@ -295,11 +263,10 @@ public class ServiceRepositoryObservation implements IObservation
       fw.close();
 
       // let server read file and save on its own
-      //      m_srv.writeData( m_ob, db );
       m_srv.writeData( m_ob, new DataHandler( new FileDataSource( tmpFile ) ) );
 
       // and clean temp stuff
-      //      m_srv.clearTempData( db );
+      tmpFile.delete();
 
       m_evtPrv.fireChangedEvent();
     }
@@ -330,7 +297,7 @@ public class ServiceRepositoryObservation implements IObservation
           .getObservationServiceProxy();
 
       final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation(
-          srv, getObservationBean( href ) );
+          srv, ObservationBeanFactory.createBean( href ) );
 
       srvObs.setValues( values );
     }
@@ -341,60 +308,23 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  /**
-   * Returns true if the given id represents a server side observation
-   * 
-   * @param href
-   * @return true if server side
-   */
-  public static boolean isServerSide( final String href )
-  {
-    return href.startsWith( SCHEME_OCS );
-  }
-
-  /**
-   * Creates an Observation bean for the given observation id.
-   * 
-   * @param href
-   * @return corresponding observation bean
-   */
-  public static ObservationBean getObservationBean( final String href )
-  {
-    // removes the service scheme part, the rest is our id!
-    final String id = href.replaceFirst( SCHEME_OCS + ":", "" );
-
-    return new ObservationBean( id, "", "", null );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   public void addListener( IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   public void removeListener( IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
-   */
-  public void clearListeners( )
+  public void clearListeners()
   {
     m_evtPrv.clearListeners();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getHref()
-   */
-  public String getHref( )
+  public String getHref()
   {
-    return null;
+    return getIdentifier();
   }
 }

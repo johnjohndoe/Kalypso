@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.ocs.idtable;
 
 import java.net.URL;
@@ -46,8 +46,8 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ocs.ObservationServiceConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 
 /**
  * Structure containing an observation file and its server side Identifier.
@@ -57,6 +57,7 @@ import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 public class IdStruct
 {
   private final IFile m_file;
+
   private final String m_id;
 
   public IdStruct( final IFile file, final String id )
@@ -64,23 +65,23 @@ public class IdStruct
     m_file = file;
     m_id = id;
   }
-  
+
   /**
    * @return Returns the file.
    */
-  public IFile getFile( )
+  public IFile getFile()
   {
     return m_file;
   }
-  
+
   /**
    * @return Returns the id.
    */
-  public String getId( )
+  public String getId()
   {
     return m_id;
   }
-  
+
   /**
    * Creates using the metadata found in the file
    * 
@@ -95,8 +96,9 @@ public class IdStruct
       {
         final URL url = ResourceUtilities.createURL( file );
         final IObservation obs = ZmlFactory.parseXML( url, url.toString() );
-        
-        final String id = obs.getMetadataList().getProperty( ServiceRepositoryObservation.MD_OCS_ID, "<kein KZ>" );
+
+        final String id = obs.getMetadataList().getProperty(
+            ObservationServiceConstants.MD_OCS_ID, "<kein KZ>" );
 
         return new IdStruct( file, id );
       }
@@ -105,7 +107,7 @@ public class IdStruct
         e.printStackTrace();
       }
     }
-    
+
     return null;
   }
 }

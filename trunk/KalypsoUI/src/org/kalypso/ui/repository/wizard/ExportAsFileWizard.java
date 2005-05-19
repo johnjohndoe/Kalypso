@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.wizard;
 
 import java.io.File;
@@ -62,24 +62,26 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
 
 /**
- * ExportAsFileWizard
+ * Wizard for exporting a Repository ZML as a file in the local filesystem
  * 
  * @author schlienger
  */
 public class ExportAsFileWizard extends Wizard
 {
   private DateRangeInputWizardPage m_page1;
+
   private FileSelectWizardPage m_page2;
-  
+
   private static String DEFAULT_FILE = "";
-  
+
   private final IObservation m_obs;
+
   protected IProject m_project = null;
 
   public ExportAsFileWizard( final IObservation obs )
   {
     m_obs = obs;
-    
+
     final IDialogSettings settings = KalypsoGisPlugin.getDefault()
         .getDialogSettings();
 
@@ -93,24 +95,25 @@ public class ExportAsFileWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
-  public void addPages( )
+  public void addPages()
   {
     super.addPages();
-    
+
     final IProject[] projects = ResourceUtilities.getSelectedProjects();
     final String fileName;
-    
+
     if( projects.length > 0 )
     {
       m_project = projects[0];
-      fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() ).getAbsolutePath();
+      fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() )
+          .getAbsolutePath();
     }
     else
       fileName = DEFAULT_FILE;
-    
+
     m_page1 = new DateRangeInputWizardPage();
     m_page2 = new FileSelectWizardPage( "fileselect", fileName );
-    
+
     addPage( m_page1 );
     addPage( m_page2 );
   }
@@ -121,30 +124,31 @@ public class ExportAsFileWizard extends Wizard
   public void createPageControls( Composite pageContainer )
   {
     //super.createPageControls( pageContainer );
-    
+
     setWindowTitle( "Als Datei exportieren" );
-	setNeedsProgressMonitor( true );
+    setNeedsProgressMonitor( true );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     final DateRangeArgument dateRange = m_page1.getDateRange();
     final String filePath = m_page2.getFilePath();
-    
+
     DEFAULT_FILE = filePath;
-    
+
     FileOutputStream outs = null;
     try
     {
       final ObservationType ot = ZmlFactory.createXML( m_obs, dateRange );
-      
-      outs = new FileOutputStream( new File( filePath) );
+
+      outs = new FileOutputStream( new File( filePath ) );
       ZmlFactory.getMarshaller().marshal( ot, outs );
+      outs.close();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return false;
@@ -156,7 +160,8 @@ public class ExportAsFileWizard extends Wizard
 
     if( m_project != null )
     {
-      final Job refreshJob = new Job( "Projekt " + m_project.getName() + " aktualisieren" )
+      final Job refreshJob = new Job( "Projekt " + m_project.getName()
+          + " aktualisieren" )
       {
         protected IStatus run( IProgressMonitor monitor )
         {
@@ -167,17 +172,17 @@ public class ExportAsFileWizard extends Wizard
           catch( CoreException e )
           {
             e.printStackTrace();
-            
+
             return KalypsoGisPlugin.createErrorStatus( "", e );
           }
-          
+
           return Status.OK_STATUS;
         }
       };
-      
+
       refreshJob.schedule();
     }
-    
+
     return true;
   }
 }

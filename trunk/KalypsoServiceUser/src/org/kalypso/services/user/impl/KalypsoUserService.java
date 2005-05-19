@@ -135,6 +135,7 @@ public class KalypsoUserService implements IUserService
       final String className = props.getProperty( PROP_PROVIDER );
       m_rightsProvider = (IUserRightsProvider) ClassUtilities.newInstance(
           className, IUserRightsProvider.class, getClass().getClassLoader() );
+      m_rightsProvider.init( props );
       
       final String iu = props.getProperty( PROP_IMPERSONATE_USER, "false" );
       m_impersonateUser = Boolean.valueOf( iu ).booleanValue();
