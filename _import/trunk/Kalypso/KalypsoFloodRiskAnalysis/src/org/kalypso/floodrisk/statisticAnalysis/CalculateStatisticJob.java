@@ -133,6 +133,9 @@ public class CalculateStatisticJob implements ICalcJob
       CalcJobClientBean statisticDataOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( StatisticDataID );
       File statisticDataFile = new File( statisticDataOutputBean.getPath() );
+      if(!statisticDataFile.exists()){
+        statisticDataFile.createNewFile();
+      }
       StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(),
           statisticDataFile.toURL(), statisticData_schemaURL );
       resultEater.addResult( statisticDataOutputBean.getId(), null );

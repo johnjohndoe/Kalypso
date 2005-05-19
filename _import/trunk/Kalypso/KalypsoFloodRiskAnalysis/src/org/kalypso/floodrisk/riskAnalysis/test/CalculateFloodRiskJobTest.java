@@ -118,7 +118,7 @@ public class CalculateFloodRiskJobTest extends TestCase
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
     CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateFloodRiskJob",
-        ICalcServiceConstants.RUNNING, -1 );
+        ICalcServiceConstants.RUNNING, -1, "" );
 
     try
     {

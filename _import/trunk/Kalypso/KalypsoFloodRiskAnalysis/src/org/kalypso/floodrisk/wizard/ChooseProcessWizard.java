@@ -87,15 +87,23 @@ public class ChooseProcessWizard extends Wizard
 
   public boolean performFinish()
   {
-    ProcessExtension[] processes = m_page1.getProcesses();
+    final ProcessExtension[] processes = m_page1.getProcesses();
     //for( int i = 0; i < processes.length; i++ )
     //{
     //  ProcessExtension pe = processes[i];
-    //  System.out.println( "Process " + i + ": " + pe.getName() + " = " + pe.getState() );
+    //  System.out.println( "Process " + i + ": " + pe.getName() + " = " +
+    // pe.getState() );
     //}
-    ProcessInputWizard processInputWizard = new ProcessInputWizard( m_project, processes );
-    final WizardDialog dialog = new WizardDialog( getShell(), processInputWizard);
-    dialog.open();
+    this.getShell().getDisplay().asyncExec( new Runnable()
+    {
+      public void run()
+      {
+        ProcessInputWizard processInputWizard = new ProcessInputWizard( m_project, processes );
+        final WizardDialog dialog = new WizardDialog( getShell(), processInputWizard );
+        dialog.open();
+      }
+    } );
+
     return true;
   }
 

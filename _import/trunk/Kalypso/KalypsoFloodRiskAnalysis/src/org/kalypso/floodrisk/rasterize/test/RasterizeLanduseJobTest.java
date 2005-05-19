@@ -97,7 +97,7 @@ public class RasterizeLanduseJobTest extends TestCase
     int numInputBeans = 5;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
     CalcJobClientBean input1 = new CalcJobClientBean( RasterizeLanduseJob.LanduseVectorDataID, base
-        + "Landuse//landuse" );
+        + "Landuse//landuse.shp" );
     input[0] = input1;
     CalcJobClientBean input2 = new CalcJobClientBean(
         RasterizeLanduseJob.VectorDataCoordinateSystemID, "EPSG:31467" );
@@ -121,7 +121,7 @@ public class RasterizeLanduseJobTest extends TestCase
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
     CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "RasterizeLanduseJob",
-        ICalcServiceConstants.RUNNING, -1 );
+        ICalcServiceConstants.RUNNING, -1, "" );
 
     try
     {

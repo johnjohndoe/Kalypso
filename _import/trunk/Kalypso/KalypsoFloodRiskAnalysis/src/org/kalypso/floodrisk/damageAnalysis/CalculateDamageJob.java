@@ -128,19 +128,23 @@ public class CalculateDamageJob implements ICalcJob
       RectifiedGridCoverage annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
 
       //Generate Output
-      // annualDamage
-      CalcJobClientBean annualDamageOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( AnnualDamageRasterDataID );
-      File annualDamageResultFile = new File( annualDamageOutputBean.getPath() );
-      rasterDataModel.toFile( annualDamageResultFile, annualDamageGrid );
-      resultEater.addResult( annualDamageOutputBean.getId(), null );
-
       // damage directory
       CalcJobClientBean damageDirOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( DamageDirectoryID );
       File damageResultDir = new File( damageDirOutputBean.getPath() );
+      if( !damageResultDir.exists() )
+        damageResultDir.mkdir();
       generateDamageResultDir( damageGrids, tempGrids, damageResultDir );
       resultEater.addResult( damageDirOutputBean.getId(), null );
+
+      // annualDamage
+      CalcJobClientBean annualDamageOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
+          .getOutputMap().get( AnnualDamageRasterDataID );
+      File annualDamageResultFile = new File( annualDamageOutputBean.getPath() );
+      if(!annualDamageResultFile.exists())
+        annualDamageResultFile.createNewFile();
+      rasterDataModel.toFile( annualDamageResultFile, annualDamageGrid );
+      resultEater.addResult( annualDamageOutputBean.getId(), null );
 
       // TODO: generate styles for damage grids
 

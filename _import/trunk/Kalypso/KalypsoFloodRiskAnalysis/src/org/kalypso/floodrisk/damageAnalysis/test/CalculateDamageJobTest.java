@@ -118,7 +118,7 @@ public class CalculateDamageJobTest extends TestCase
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
     CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateDamageJob",
-        ICalcServiceConstants.RUNNING, -1 );
+        ICalcServiceConstants.RUNNING, -1, "" );
 
     try
     {

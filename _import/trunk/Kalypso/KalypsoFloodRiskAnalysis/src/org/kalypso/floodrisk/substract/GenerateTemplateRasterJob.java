@@ -102,6 +102,8 @@ public class GenerateTemplateRasterJob implements ICalcJob
       CalcJobClientBean templateRasterOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( TemplateRasterID );
       File templateRasterFile = new File( templateRasterOutputBean.getPath() );
+      if( !templateRasterFile.exists() )
+        templateRasterFile.createNewFile();
       rasterDataModel.toFile( templateRasterFile, templateRaster );
       resultEater.addResult( templateRasterOutputBean.getId(), null );
     }

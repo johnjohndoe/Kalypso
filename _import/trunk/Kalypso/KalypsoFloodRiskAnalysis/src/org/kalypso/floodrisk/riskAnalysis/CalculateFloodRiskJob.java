@@ -140,6 +140,9 @@ public class CalculateFloodRiskJob implements ICalcJob
       CalcJobClientBean floodRiskOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( FloodRiskRasterDataID );
       File floodRiskResultFile = new File( floodRiskOutputBean.getPath() );
+      if(!floodRiskResultFile.exists()){
+        floodRiskResultFile.createNewFile();
+      }
       rasterDataModel.toFile( floodRiskResultFile, floodRiskRaster );
       resultEater.addResult( floodRiskOutputBean.getId(), null );
 
@@ -175,6 +178,8 @@ public class CalculateFloodRiskJob implements ICalcJob
       CalcJobClientBean floodRiskStyleOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( FloodRiskRasterStyleID );
       File floodRiskStyleFile = new File( floodRiskStyleOutputBean.getPath() );
+      if(!floodRiskStyleFile.exists())
+        floodRiskStyleFile.createNewFile();
       writeSLDtoFile( floodRiskStyleFile, defaultRasterStyle );
       resultEater.addResult( floodRiskStyleOutputBean.getId(), null );
     }

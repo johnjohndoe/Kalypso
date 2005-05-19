@@ -10,6 +10,7 @@ import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessDataProvider;
 import org.kalypso.floodrisk.process.IProcessResultEater;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -101,9 +102,9 @@ public class RasterizeLanduseJob implements ICalcJob
     String csName = (String)( (IProcessDataProvider)inputProvider )
         .getObjectForID( VectorDataCoordinateSystemID );
     CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( csName );
-    String shapeBase = (String)( (IProcessDataProvider)inputProvider )
+    String shapeBaseFile = (String)( (IProcessDataProvider)inputProvider )
         .getObjectForID( LanduseVectorDataID );
-    List featureList = getFeatureList( shapeBase, cs );
+    List featureList = getFeatureList( FileUtilities.nameWithoutExtension( shapeBaseFile ), cs );
     String propertyName = (String)( (IProcessDataProvider)inputProvider )
         .getObjectForID( LandusePropertyNameID );
     File contextModelGML = new File( (String)( (IProcessDataProvider)inputProvider )
@@ -132,6 +133,8 @@ public class RasterizeLanduseJob implements ICalcJob
       CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( LanduseRasterDataID );
       File resultFile = new File( outputBean.getPath() );
+      if( !resultFile.exists() )
+        resultFile.createNewFile();
       monitor.setMessage( "Generate result" );
       rasterDataModel.toFile( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );

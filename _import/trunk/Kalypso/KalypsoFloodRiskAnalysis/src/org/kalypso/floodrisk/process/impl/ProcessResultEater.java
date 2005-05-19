@@ -2,9 +2,11 @@ package org.kalypso.floodrisk.process.impl;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.kalypso.floodrisk.process.IProcessResultEater;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
@@ -102,6 +104,15 @@ public class ProcessResultEater implements IProcessResultEater
     }
 
     return results;
+  }
+
+  public void disposeResults()
+  {
+    for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
+    {
+      final CalcJobClientBean resultBean = (CalcJobClientBean)iter.next();
+      FileUtilities.deleteRecursive( new File( resultBean.getPath() ) );
+    }
   }
 
 }

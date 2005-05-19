@@ -41,12 +41,17 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.internal.progress.ProgressManager;
 import org.kalypso.floodrisk.process.ProcessExtension;
+import org.kalypso.floodrisk.process.impl.ProcessJob;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ObjectFactory;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -94,15 +99,38 @@ public class ProcessInputWizard extends Wizard
 
   public boolean performFinish()
   {
+    //final RunnableContextHelper op = new RunnableContextHelper(
+    // getContainer() )
+    //{
+    //  public void run( IProgressMonitor monitor ) throws
+    // InvocationTargetException
+    //  {
     try
     {
+      //monitor.beginTask( "Run calculation(s)...", 1000 );
+
       for( int i = 0; i < m_processes.length; i++ )
       {
         if( m_processes[i].getState() )
         {
+          //read ModelData
           ModeldataType modelData = readModelData( m_processes[i].getModelDataPath() );
-          List inputList = modelData.getInput();
-          List outputList = modelData.getOutput();
+          //check if typeID in modelData equals typeID of process
+          if( !m_processes[i].getId().equals( modelData.getTypeID() ) )
+          {
+            throw new CoreException( KalypsoGisPlugin.createErrorStatus( "TypeId of modelData ("
+                + modelData.getTypeID() + ") does not fit to typeID of process ("
+                + m_processes[i].getId() + ")! Check modelData!", null ) );
+          }
+          //final LocalCalcJobHandler cjHandler = new LocalCalcJobHandler(
+          // modelData,
+          //    m_processes[i].getCalcJob() );
+          //final IStatus runStatus = cjHandler.runJob( m_project, new
+          // SubProgressMonitor(
+          //    monitor, 1000 ) );
+          ProgressManager progressManager = ProgressManager.getInstance();
+          IProgressMonitor monitor = progressManager.createMonitor(new ProcessJob( modelData, m_processes[i].getCalcJob(), m_project ));
+          new ProcessJob( modelData, m_processes[i].getCalcJob(), m_project ).run(monitor);
         }
       }
     }
@@ -110,7 +138,59 @@ public class ProcessInputWizard extends Wizard
     {
       e.printStackTrace();
     }
+    // }
+    //};
+    //op.runAndHandleOperation( getShell(), true, true, "FloodRiskAnalysis",
+    // "Berechnung" );
+
     return true;
+  }
+
+  private CalcJobClientBean[] getInput( ModeldataType modelData ) throws CoreException
+  {
+    List inputList = modelData.getInput();
+    CalcJobClientBean[] input = new CalcJobClientBean[inputList.size()];
+    for( int i = 0; i < inputList.size(); i++ )
+    {
+      ModeldataType.InputType inputItem = (ModeldataType.InputType)inputList.get( i );
+
+      String inputPath = inputItem.getPath();
+      if( !inputItem.isRelativeToCalcCase() )
+      {
+        IResource inputResource = m_project.findMember( inputPath );
+        if( inputResource == null )
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+              "Konnte Input-Resource nicht finden: " + inputPath
+                  + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+        IPath projectRelativePath = inputResource.getLocation();
+        inputPath = projectRelativePath.toString();
+      }
+
+      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( inputItem.getId(), inputPath );
+      input[i] = calcJobDataBean;
+    }
+    return input;
+  }
+
+  private CalcJobClientBean[] getOutput( ModeldataType modelData ) throws CoreException
+  {
+    List outputList = modelData.getOutput();
+    CalcJobClientBean[] output = new CalcJobClientBean[outputList.size()];
+    for( int i = 0; i < outputList.size(); i++ )
+    {
+      ModeldataType.OutputType outputItem = (ModeldataType.OutputType)outputList.get( i );
+
+      String outputPath = outputItem.getPath();
+      String resultPath = outputPath;
+      if( !outputItem.isRelativeToCalcCase() )
+      {
+        resultPath = m_project.getLocation() + "/" + outputPath;
+      }
+
+      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( outputItem.getId(), resultPath );
+      output[i] = calcJobDataBean;
+    }
+    return output;
   }
 
   private ModeldataType readModelData( IPath modelDataPath ) throws CoreException
