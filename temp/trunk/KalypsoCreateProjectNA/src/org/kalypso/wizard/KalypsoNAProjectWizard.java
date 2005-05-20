@@ -279,10 +279,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     }
     //copy all the resources to the workspace into the new created project
     copyResourcesToProject( workspacePath.append( projectHandel.getFullPath() ) );
-
-    //open modell.gml and hydrotop.gml file to write imported feature
     try
     {
+    ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+    //open modell.gml and hydrotop.gml file to write imported feature
       m_modelPath = new Path( projectHandel.getFullPath().append( "/modell.gml" ).toString() );
       URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
       modelWS = GmlSerializer.createGMLWorkspace( modelURL, new UrlResolver() );
