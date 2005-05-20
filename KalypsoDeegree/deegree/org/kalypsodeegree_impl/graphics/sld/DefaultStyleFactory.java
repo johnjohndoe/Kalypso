@@ -80,10 +80,11 @@ public class DefaultStyleFactory
   private static FeatureTypeProperty m_GeomProperty;
 
   private HashMap m_defalultStyles = new HashMap();
-  
+
   private SLDCache THE_CACHE = null;
 
-  private static final Logger LOGGER = Logger.getLogger( DefaultStyleFactory.class.getName() );
+  private static final Logger LOGGER = Logger
+      .getLogger( DefaultStyleFactory.class.getName() );
 
   private DefaultStyleFactory( String dir )
   {
@@ -91,7 +92,8 @@ public class DefaultStyleFactory
     LOGGER.info( "SLD-Default-Katalog initialisiert mit DIR=" + dir );
   }
 
-  public static DefaultStyleFactory getFactory( String defaultStyleDirectory ) throws IOException
+  public static DefaultStyleFactory getFactory( String defaultStyleDirectory )
+      throws IOException
   {
     if( defaultStyleDirectory != null || !defaultStyleDirectory.equals( "" ) )
     {
@@ -101,7 +103,8 @@ public class DefaultStyleFactory
       }
       return m_factory;
     }
-    throw new IOException( "The name for the default style directory is not a valid path." );
+    throw new IOException(
+        "The name for the default style directory is not a valid path." );
   }
 
   private String getStyle( FeatureType featureType, String styleName )
@@ -116,8 +119,8 @@ public class DefaultStyleFactory
    * default style directory ( defined when the factory is created). At this
    * time only symbolizers for geometries are supported.
    * 
-   * @param featureType
-   *          the featureType for which a default style needs to be genearted
+   * @param featureType the featureType for which a default style needs to be
+   *          genearted
    * @return returns the location (absolute path to local file system ) where
    *         the style is saved in a file
    *  
@@ -134,14 +137,16 @@ public class DefaultStyleFactory
     {
       //check if style already exists
       if( m_defalultStyles.containsKey( generateKey( featureType ) ) )
-        return new URL( (String)m_defalultStyles.get( generateKey( featureType ) ) );
+        return new URL( (String)m_defalultStyles
+            .get( generateKey( featureType ) ) );
       //write style to default style location
       File tempFile = null;
       tempFile = new File( DEFAULT_STYLE_DRECTORY, myStyleName + ".sld.default" );
       FileWriter writer = new FileWriter( tempFile );
       writer.write( getStyle( featureType, myStyleName ) );
       writer.close();
-      m_defalultStyles.put( generateKey( featureType ), tempFile.toURL().toString() );
+      m_defalultStyles.put( generateKey( featureType ), tempFile.toURL()
+          .toString() );
       return tempFile.toURL();
     }
     catch( IOException e )
@@ -151,8 +156,8 @@ public class DefaultStyleFactory
     }
   }
 
-  private StyledLayerDescriptor createDefaultStyle( FeatureType featureType, String styleName )
-      throws StyleNotDefinedException
+  private StyledLayerDescriptor createDefaultStyle( FeatureType featureType,
+      String styleName ) throws StyleNotDefinedException
   {
     ArrayList symbolizer = new ArrayList();
     if( featureType.getName().equals( "RectifiedGridCoverage" ) )
@@ -168,48 +173,53 @@ public class DefaultStyleFactory
         m_GeomProperty = property;
         symbolizer.add( createGeometrySymbolizer( property ) );
       }
-      //      else if( property.getType().equals( String.class.getName() ) &&
-      // m_GeomProperty != null)
+      //      if( m_GeomProperty == null )
       //      {
-      //        symbolizer.add( createTextSymbolizer( property ) );
+      //        FeatureTypeProperty[] vProperty = featureType
+      //            .getVirtuelFeatureTypeProperty();
+      //        //check virtual properties
+      //        if( vProperty != null )
+      //        {
+      //          for( int j = 0; j < vProperty.length; j++ )
+      //          {
+      //            FeatureTypeProperty vp = vProperty[i];
+      //            if( vp.isGeometryProperty() )
+      //              symbolizer.add( createGeometrySymbolizer( vp ) );
+      //          }
+      //        }
       //      }
     }
 
-    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName,
-        (Symbolizer[])symbolizer.toArray( new Symbolizer[symbolizer.size()] ) );
+    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle(
+        styleName, (Symbolizer[])symbolizer.toArray( new Symbolizer[symbolizer
+            .size()] ) );
 
     StyledLayerDescriptor sld = null;
 
     Style[] styles = new Style[]
-    {
-      (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "empty Abstract",
-          featureTypeStyle )
-    };
+    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName,
+        "empty Abstract", featureTypeStyle ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    {
-      SLDFactory.createNamedLayer( "deegree style definition", null, styles )
-    };
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
 
     return sld;
 
   }
 
-  public static StyledLayerDescriptor createDefaultStyle( String styleName, Symbolizer[] symbolizer )
+  public static StyledLayerDescriptor createDefaultStyle( String styleName,
+      Symbolizer[] symbolizer )
   {
-    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
+    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle(
+        styleName, symbolizer );
 
     StyledLayerDescriptor sld = null;
 
     Style[] styles = new Style[]
-    {
-      (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract",
-          featureTypeStyle )
-    };
+    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName,
+        "no Abstract", featureTypeStyle ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    {
-      SLDFactory.createNamedLayer( "deegree style definition", null, styles )
-    };
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
     sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
 
     return sld;
@@ -221,8 +231,9 @@ public class DefaultStyleFactory
     String type = property.getType();
     if( type.equals( String.class.getName() ) )
     {
-      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(), property.getName(),
-          StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() ) );
+      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(),
+          property.getName(), StyleFactory.createLabelPlacement( StyleFactory
+              .createPointPlacement() ) );
     }
     throw new StyleNotDefinedException(
         "Error while creating TextSymbolizer from string type. Property name: "
@@ -254,6 +265,28 @@ public class DefaultStyleFactory
 
     String key = ft.getNamespace() + " " + ft.getName();
     return new Integer( key.hashCode() );
+  }
+
+  /**
+   * 
+   * This Method clears the default style directory
+   * 
+   * */
+
+  public void clear()
+  {
+    File dir = new File( DEFAULT_STYLE_DRECTORY );
+    if( dir.exists() )
+    {
+      String[] files = dir.list();
+      for( int i = 0; i < files.length; i++ )
+      {
+        File file = new File( DEFAULT_STYLE_DRECTORY, files[i] );
+        if( file.exists() )
+          file.delete();
+      }
+    }
+
   }
 
 }
