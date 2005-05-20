@@ -36,19 +36,21 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.wizard;
 
 import java.text.DateFormat;
 
-import org.eclipse.core.runtime.Preferences;
+import org.bce.eclipse.swt.widgets.DateRangeInputControl;
+import org.bce.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypso.ui.repository.dialogs.DateRangeInputControl;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
@@ -58,34 +60,26 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  */
 public class DateRangeInputWizardPage extends WizardPage
 {
-  private DateRangeInputControl m_ctrl;
+  private final IDialogSettings m_settings;
 
-  public DateRangeInputWizardPage( )
+  private DateRangeInputControl m_control;
+
+  public DateRangeInputWizardPage()
   {
     super( "DateRangeInputWizardPage" );
 
-    setTitle( "Datum-Eingabe" );
+    m_settings = KalypsoGisPlugin.getDefault().getDialogSettings();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   public void createControl( Composite parent )
   {
-    final Preferences prefs = KalypsoGisPlugin.getDefault()
-        .getPluginPreferences();
-
-    final DateFormat df = DateFormat.getDateTimeInstance();
-
     try
     {
-      m_ctrl = new DateRangeInputControl( getShell(), prefs
-          .getDefaultBoolean( IKalypsoPreferences.USE_RANGE ), df.parse( prefs
-          .getDefaultString( IKalypsoPreferences.DATE_FROM ) ), df.parse( prefs
-          .getDefaultString( IKalypsoPreferences.DATE_TO ) ), prefs
-          .getDefaultInt( IKalypsoPreferences.NUMBER_OF_DAYS ), df, null );
+      final DateRangeInputControlStuct struct = DateRangeInputControlStuct.create( m_settings, DateFormat
+          .getDateTimeInstance() );
+      m_control = new DateRangeInputControl( parent, SWT.NONE, struct );
 
-      setControl( m_ctrl.createControl( parent ) );
+      setControl( m_control );
     }
     catch( Exception e )
     {
@@ -93,31 +87,43 @@ public class DateRangeInputWizardPage extends WizardPage
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
 
-    setDescription( DateRangeInputControl.DESCRIPTION );
+    setTitle( "Zeitraum-Eingabe" );
+    setDescription( "Geben Sie bitte die Zeitraum-Information ein für welche die Zeitreihe exportiert werden soll." );
   }
 
-  public DateRangeArgument getDateRange( )
+  public DateRangeArgument getDateRange()
   {
-    if( m_ctrl != null )
+    if( m_control != null )
     {
-      if( m_ctrl.isUseRange() )
-        return new DateRangeArgument( m_ctrl.getDateFrom(), m_ctrl.getDateTo() );
+      if( m_control.isUseRange() )
+        return new DateRangeArgument( m_control.getDateFrom(), m_control
+            .getDateTo() );
 
-      return DateRangeArgument.createFromPastDays( m_ctrl.getNumberOfDays() );
+      return DateRangeArgument.createFromPastDays( m_control.getNumberOfDays() );
     }
 
     return null;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
    */
-  public IWizardPage getNextPage( )
+  public IWizardPage getNextPage()
   {
     // go to next page only when input is valid
-    if( m_ctrl.okPressed() )    
+    final String err = m_control.validateInput();
+    if( err == null )
+    {
+      // save dialog settings for next dialog
+      m_control.getStruct().save( m_settings );
+
       return super.getNextPage();
-    
+    }
+
+    // else inform user about invalid input
+    MessageDialog.openInformation( getShell(), "Fehlerhafte Eingabe",
+        "Prüfen Sie bitte Ihre Eingabe. " + err );
+
     return null;
   }
 }

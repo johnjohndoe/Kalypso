@@ -79,15 +79,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
     addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
         "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
-    addField( new BooleanFieldEditor( IKalypsoPreferences.USE_RANGE, "&Datum (Von-Bis) benutzen",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.DATE_FROM, "Von-Datum:",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.DATE_TO, "Bis-Datum:",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.NUMBER_OF_DAYS,
-        "&Tagesanzahl (Zeitreihenbrowser):", getFieldEditorParent() ) );
-
     addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH,
         "Breite des Exportbildes (Diagramm):", getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT,

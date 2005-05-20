@@ -57,7 +57,6 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
@@ -113,9 +112,6 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
               rep = f.createRepository();
 
               monitor.worked( 1 );
-
-              rep.setProperties( KalypsoGisPlugin.getDefault()
-                  .getDefaultRepositoryProperties() );
 
               getRepositoryContainer().addRepository( rep );
 

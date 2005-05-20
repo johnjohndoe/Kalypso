@@ -44,8 +44,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.bce.eclipse.jface.wizard.FileSelectWizardPage;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -71,8 +73,6 @@ public class ExportAsFileWizard extends Wizard
   private DateRangeInputWizardPage m_page1;
 
   private FileSelectWizardPage m_page2;
-
-  private static String DEFAULT_FILE = "";
 
   private final IObservation m_obs;
 
@@ -100,7 +100,7 @@ public class ExportAsFileWizard extends Wizard
     super.addPages();
 
     final IProject[] projects = ResourceUtilities.getSelectedProjects();
-    final String fileName;
+    String fileName = "";
 
     if( projects.length > 0 )
     {
@@ -109,10 +109,10 @@ public class ExportAsFileWizard extends Wizard
           .getAbsolutePath();
     }
     else
-      fileName = DEFAULT_FILE;
+      fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + ".";
 
     m_page1 = new DateRangeInputWizardPage();
-    m_page2 = new FileSelectWizardPage( "fileselect", fileName );
+    m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] { "*.zml", "*.xml" } );
 
     addPage( m_page1 );
     addPage( m_page2 );
@@ -136,8 +136,6 @@ public class ExportAsFileWizard extends Wizard
   {
     final DateRangeArgument dateRange = m_page1.getDateRange();
     final String filePath = m_page2.getFilePath();
-
-    DEFAULT_FILE = filePath;
 
     FileOutputStream outs = null;
     try

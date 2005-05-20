@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.bce.eclipse.ui.MementoUtils;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -58,12 +59,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.kalypso.eclipse.ui.MementoUtils;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Wird als ZeitreihenBrowser benutzt.
@@ -261,9 +260,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 	          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
 	          
 	          final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
-	          if( propsMem == null )
-	            rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
-	          else
+	          if( propsMem != null )
 	            MementoUtils.loadProperties( propsMem, rep.getProperties() );
 	          
 	          m_chooser.getRepositoryContainer().addRepository( rep );
