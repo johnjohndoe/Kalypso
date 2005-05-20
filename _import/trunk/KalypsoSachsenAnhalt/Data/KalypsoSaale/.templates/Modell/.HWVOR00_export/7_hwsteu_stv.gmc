@@ -7,5 +7,5 @@
 		<column>Verwendung</column>
 		<column>Beschreibung</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

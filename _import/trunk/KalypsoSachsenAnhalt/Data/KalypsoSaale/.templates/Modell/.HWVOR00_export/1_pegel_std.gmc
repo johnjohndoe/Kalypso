@@ -44,5 +44,5 @@
 		<column>MHQ</column>
 		<column>HHQ</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

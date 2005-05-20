@@ -1,0 +1,21 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiimport_inhalt.gml"/>
+	<featuremapping>
+		<gmlsource xlink:href="../modell.gml"/>
+		<gmlsource xlink:href="wiskiimport_leer.gml"/>
+<!--
+		<addFeaturesMapping fromPath="OmbrometerCollectionAssociation/OmbrometerMember[Ombrometer]" fromID="PNR" toPath="WiskiMember">
+			<map from="Niederschlag_gemessen" to="lokal"/>
+		</addFeaturesMapping>
+-->		
+		<addFeaturesMapping fromPath="SpeicherCollectionAssociation/SpeicherMember[Speicher]" fromID="PNR" toPath="WiskiMember">
+			<map from="Inhalt" to="lokal"/>
+		</addFeaturesMapping>
+<!--
+		<addFeaturesMapping fromPath="SpeicherCollectionAssociation/SpeicherMember[Speicher]" fromID="PNR" toPath="WiskiMember">
+			<map from="Abgabe" to="lokal"/>
+		</addFeaturesMapping>
+-->		
+	</featuremapping>
+</gmlconvert>

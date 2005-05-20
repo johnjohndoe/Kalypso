@@ -77,5 +77,5 @@
 		<column>H_35</column>
 		<column>H_36</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

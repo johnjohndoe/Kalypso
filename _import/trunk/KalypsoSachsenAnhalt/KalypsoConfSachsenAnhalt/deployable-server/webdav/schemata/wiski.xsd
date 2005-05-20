@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.wiski" version="0.1" xmlns:wiski="org.kalypso.wiski" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<element name="WiskiCollection" type="wiski:WiskiCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="WiskiCollectionType">
+		<complexContent>
+			<extension base="wiski:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="wiski:WiskiMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="WiskiMember" type="wiski:WiskiAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="WiskiAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="wiski:Wiski"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	
+	<element name="Wiski" abstract="false" type="wiski:WiskiType" substitutionGroup="gml:_Feature"/>
+	<complexType name="WiskiType">
+		<complexContent>
+			<extension base="wiski:EmptyFeatureBaseType">
+				<sequence>
+					<element name="lokal" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1"/>
+					<element name="wiski_vergangenheit" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1"/>
+					<element name="wiski_zukunft" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="wiski_simulation_vergangenheit" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1"/>
+					<element name="wiski_simulation_zukunft" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

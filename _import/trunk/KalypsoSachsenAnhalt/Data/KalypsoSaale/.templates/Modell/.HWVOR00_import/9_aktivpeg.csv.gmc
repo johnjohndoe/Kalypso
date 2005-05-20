@@ -1,6 +1,6 @@
 <gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
 	<featuremapping>
 		<csvsource xlink:href="Sonstige_Daten/AKTIVPEG_gekürzt.csv" comment="*" delemiter=";" lineskip="1">
 			<featureproperty name="PNR" type="java.lang.String" format=""><column>17</column></featureproperty>
@@ -9,7 +9,7 @@
 				<column>7</column>
 			</featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="../saalemodell.gml"/>
+		<gmlsource xlink:href="../modell.gml"/>
 		<changeFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR">
 			<map from="PNR" to="PNR"/>
 			<map from="Ort" to="location"/>

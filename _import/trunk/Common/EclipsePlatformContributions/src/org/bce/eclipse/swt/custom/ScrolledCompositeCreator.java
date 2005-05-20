@@ -73,18 +73,20 @@ public abstract class ScrolledCompositeCreator
        */
       public void controlResized( final ControlEvent e )
       {
-        updateControlSize();
+        updateControlSize( true );
       }
     } );
+    
+    updateControlSize( false );
   }
 
-  public final void updateControlSize()
+  public final void updateControlSize( final boolean ignoreZeroClientSize )
   {
     final Point controlSize = m_contentControl.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     final Rectangle clientArea = m_scrolledComposite.getClientArea();
     final int psizex = clientArea.width;
     final int psizey = clientArea.height;
-    if( psizex == 0 || psizey == 0 )
+    if( ignoreZeroClientSize && ( psizex == 0 || psizey == 0  ) )
       return;
 
     final Point newSize = new Point( Math.max( controlSize.x, psizex ), Math.max( controlSize.y,

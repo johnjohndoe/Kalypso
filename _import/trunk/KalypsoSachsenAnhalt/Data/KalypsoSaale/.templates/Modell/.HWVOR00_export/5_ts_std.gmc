@@ -7,5 +7,5 @@
 		<column>MaxInhalt</column>
 		<column>PNR-Zufluss</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

@@ -1,6 +1,6 @@
 <gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
 	<featuremapping>
 		<csvsource xlink:href="Stammdat/TL.std"  comment="*" delemiter="&#9;" lineskip="1">
 			<featureproperty name="PNR" type="java.lang.String" format=""><column>0</column></featureproperty>
@@ -8,7 +8,7 @@
 			<featureproperty name="Höhe" type="java.lang.String" format=""><column>2</column></featureproperty>
 			<featureproperty name="Max" type="java.lang.Integer" format=""><column>3</column></featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="../saalemodell.gml"/>
+		<gmlsource xlink:href="../modell.gml"/>
 		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="TempCollectionAssociation/TempMember[Temp]" toID="PNR" fid="${fromID}">
  			<map from="PNR" to="PNR"/>
 			<map from="Name" to="Name"/>

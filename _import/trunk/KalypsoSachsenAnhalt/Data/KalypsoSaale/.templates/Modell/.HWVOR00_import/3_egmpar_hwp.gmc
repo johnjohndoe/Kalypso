@@ -1,6 +1,6 @@
 <gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
 	<featuremapping>
 		<csvsource xlink:href="Stammdat/EGMPAR.HWP"  comment="*" delemiter="&#9;">
 			<featureproperty name="PNR" type="java.lang.String" format="">   <column>0</column>  </featureproperty>
@@ -82,7 +82,7 @@
 			<featureproperty name="H_35" type="java.lang.Double" format=""> <column>73</column> </featureproperty>
 			<featureproperty name="H_36" type="java.lang.Double" format=""> <column>74</column> </featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="../saalemodell.gml"/>
+		<gmlsource xlink:href="../modell.gml"/>
 		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR" handleExisting="change">
 			<map from="L" to="L"/>
 			<map from="N" to="N"/>

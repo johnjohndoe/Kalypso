@@ -76,14 +76,8 @@
 
 	<target name="copy-allconf" depends="prepare">
 		<echo message="Copy the configuration for the server to deploy dir" />
-		<copy todir="${dist.srvconf}">
-			<fileset dir="${src.path}/srvconf" excludes="**/CVS/**" />
-		</copy>
-		<copy todir="${dist.vorhersageconf}">
-			<fileset dir="${src.path}/vorhersageconf" excludes="**/CVS/**" />
-		</copy>
 		<copy todir="${dist}">
-			<fileset file="${src.path}/kalypso-client.ini" />
+			<fileset dir="${src.path}" excludes="**/CVS/**"/>
 		</copy>
 	</target>
 
@@ -209,8 +203,11 @@
 		<copy todir="${deploy.webdav}\\vorhersageconf" overwrite="true">
 			<fileset dir="${dist.vorhersageconf}" excludes="**/CVS/**" />
 		</copy>
+		<copy todir="${deploy.webdav}\\schemata" overwrite="true">
+			<fileset dir="${dist}\\schemata" excludes="**/CVS/**" />
+		</copy>
 		<copy todir="${deploy.webdav}" overwrite="true">
-			<fileset file="${dist}/kalypso-client.ini" />
+			<fileset file="${dist}/*.ini" />
 		</copy>
 	</target>
 

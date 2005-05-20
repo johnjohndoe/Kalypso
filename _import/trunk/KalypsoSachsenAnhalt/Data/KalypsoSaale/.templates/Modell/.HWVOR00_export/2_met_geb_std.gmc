@@ -23,5 +23,5 @@
 		<column>LM3</column>
 		<column>LM4</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

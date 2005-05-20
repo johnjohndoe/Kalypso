@@ -6,5 +6,5 @@
 		<column>Höhe</column>
 		<column>Max</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

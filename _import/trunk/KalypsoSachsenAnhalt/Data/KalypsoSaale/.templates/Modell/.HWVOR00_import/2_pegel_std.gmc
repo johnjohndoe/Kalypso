@@ -1,6 +1,6 @@
 <gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
 	<featuremapping>
 		<csvsource xlink:href="Stammdat/pegel.std"  comment="*" delemiter="&#9;" lineskip="1">
 			<featureproperty name="PNR" type="java.lang.String" format="java.lang.Integer"><column>0</column></featureproperty>
@@ -47,7 +47,7 @@
 			<featureproperty name="MHQ" type="java.lang.Integer" format=""><column>40</column></featureproperty>
 			<featureproperty name="HHQ" type="java.lang.Integer" format=""><column>41</column></featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="../saalemodell.gml"/>
+		<gmlsource xlink:href="../modell.gml"/>
 		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="${fromID}" handleExisting="change">
 			<map from="PNR" to="PNR"/>
 			<map from="Name" to="Name"/>

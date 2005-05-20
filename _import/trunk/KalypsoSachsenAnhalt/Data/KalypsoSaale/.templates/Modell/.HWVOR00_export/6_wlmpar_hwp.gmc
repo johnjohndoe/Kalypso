@@ -239,5 +239,5 @@
 		<column>H3_71</column>
 		<column>H3_72</column>
 	</csvtarget>
-	<gmlsource xlink:href="../saalemodell.gml"/>
+	<gmlsource xlink:href="../modell.gml"/>
 </gmlconvert>

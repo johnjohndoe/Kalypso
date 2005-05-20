@@ -1,6 +1,6 @@
 <gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<gmltarget linktype="gml" xlink:href="../saalemodell.gml"/>
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
 	<featuremapping>
 		<csvsource xlink:href="Stammdat/WLMPAR.HWP"  comment="*" delemiter="&#9;">
 			<featureproperty name="PNR" type="java.lang.String" format="">   <column>0</column>  </featureproperty>
@@ -241,7 +241,7 @@
 			<featureproperty name="H3_71" type="java.lang.Double" format="">   <column>233</column>  </featureproperty>
 			<featureproperty name="H3_72" type="java.lang.Double" format="">   <column>234</column>  </featureproperty>
 		</csvsource>
-		<gmlsource xlink:href="../saalemodell.gml"/>
+		<gmlsource xlink:href="../modell.gml"/>
 		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="WLMCollectionAssociation/WLMMember" toID="PNR" handleExisting="change">
 			<map from="PNR"    to="PNR"/>
 			<map from="IP_1"   to="IP_1"/>
