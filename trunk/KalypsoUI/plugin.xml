@@ -47,6 +47,8 @@
       <import plugin="org.bce.eclipse.platform.contrib"/>
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ant.core"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
@@ -714,4 +716,12 @@
          <selection class="org.kalypso.ui.internal.wizard.IKalypsoImportWizard"/>
       </wizard>
    </extension>
-</plugin>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            eclipseRuntime="true"
+            class="org.kalypso.util.ant.CopyObservationTask"
+            library="lib/KalypsoUi_antTask.jar"
+            name="copyObservation"/>
+   </extension>
+ </plugin>
