@@ -158,7 +158,6 @@ public class RobotronRightsProvider implements IUserRightsProvider
 
       final Logger logger = Logger.getLogger( getClass().getName() );
 
-      // TODO: check if decoding in base64 is required...
       final byte[] pw1 = (byte[])userAtts.get( "userPassword").get();
       final byte[] pw2 = password.getBytes();
       if( !Arrays.equals( pw1, pw2 ) )
