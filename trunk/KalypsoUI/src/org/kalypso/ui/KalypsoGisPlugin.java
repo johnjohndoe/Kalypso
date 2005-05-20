@@ -109,9 +109,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     IPropertyChangeListener
 {
   private static final String SCHEMA_CATALOG = "SCHEMA_CATALOG_URL";
+
   private static final String PROGNOSE_MODELLIST = "PROGNOSE_MODELLIST_URL";
+
   private static final String MODELL_REPOSITORY = "MODELL_REPOSITORY";
-  
+
   private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class
       .getName() );
 
@@ -359,10 +361,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   {
     final Hashtable properties = new Hashtable( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
-    {
-      scheme
-    } );
-    context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
+    { scheme } );
+    context.registerService( URLStreamHandlerService.class.getName(), handler,
+        properties );
   }
 
   /**
@@ -381,9 +382,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   public ICalculationService getCalculationServiceProxy()
       throws ServiceException
   {
-    // TODO: maybe refator, so that m_proxyFactory is never null, if not, order of call to configure...() is importent
-    return (ICalculationService)m_proxyFactory.getProxy( "Kalypso_CalculationService",
-        ClassUtilities.getOnlyClassName( ICalculationService.class ) );
+    // TODO: maybe refator, so that m_proxyFactory is never null, if not, order
+    // of call to configure...() is importent
+    return (ICalculationService)m_proxyFactory.getProxy(
+        "Kalypso_CalculationService", ClassUtilities
+            .getOnlyClassName( ICalculationService.class ) );
   }
 
   /**
@@ -427,7 +430,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   {
     return m_defaultStyleFactory;
   }
-
 
   public ResourcePool getPool()
   {
@@ -473,12 +475,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   {
 
     final IPath stateLocation = getStateLocation();
-    final File defaultStyleDir = new File( stateLocation.toFile(), "defaultStyles" );
+    final File defaultStyleDir = new File( stateLocation.toFile(),
+        "defaultStyles" );
     if( !defaultStyleDir.exists() )
       defaultStyleDir.mkdir();
     try
     {
-      m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
+      m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir
+          .getAbsolutePath() );
     }
     catch( Exception e )
     {
@@ -511,7 +515,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     catch( final Exception e )
     {
       // exceptions ignorieren: nicht schlimm, Eintrag ist optional
-      LOGGER.info( SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
+      LOGGER
+          .info( SCHEMA_CATALOG
+              + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
     }
     finally
     {
@@ -524,8 +530,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
       {
           serverUrlCatalog,
-          calcCatalog
-      } );
+          calcCatalog } );
 
       final IPath stateLocation = getStateLocation();
       final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
@@ -549,6 +554,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
 
     // clear the observation cache
     ObservationCache.clearCache();
+    // clear the default styles 
+    m_defaultStyleFactory.clear();
 
     if( m_tsRepositoryContainer != null )
       m_tsRepositoryContainer.dispose();
@@ -729,6 +736,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
       configureServiceProxyFactory( m_mainConf );
       configureSchemaCatalog();
     }
+    if( event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_HOST )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PASS )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PORT )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USER )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USE ) )
+    {
+      configureProxy();
+    }
   }
 
   public IFeatureModifierFactory createFeatureTypeCellEditorFactory()
@@ -742,8 +757,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   {
     try
     {
-      final String location = m_mainConf.getProperty( PROGNOSE_MODELLIST,
-          null );
+      final String location = m_mainConf.getProperty( PROGNOSE_MODELLIST, null );
       if( location == null )
         return null;
 
