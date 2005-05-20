@@ -349,7 +349,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         {
           public void run()
           {
-            creator.updateControlSize();
+            creator.updateControlSize( true );
           }
         } );
       }

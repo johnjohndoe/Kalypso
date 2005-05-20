@@ -108,7 +108,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     final String oldFid = feature == null ? "<none>" : feature.getId();
     
     String fidhelp = m_fid; 
-    fidhelp = fidhelp.replaceAll( "\\Q${fromID}\\E" , fromID.toString() );
+    fidhelp = fidhelp.replaceAll( "\\Q${fromID}\\E" , fromID == null ? "<null>" : fromID.toString() );
 //    fidhelp = fidhelp.replaceAll( "\\Q${toID}\\E" , toID );
     fidhelp = fidhelp.replaceAll( "\\Q${fID}\\E", oldFid );
     if( fidhelp.indexOf( REPLACE_COUNT ) == -1 )
