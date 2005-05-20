@@ -18,7 +18,7 @@
         <bodepegel:Niederschlagsgebiet fid="NSGebiet_Ilsenburg">
           <bodepegel:Name>Ilsenburg</bodepegel:Name>
           <bodepegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">4407420,5746440</gml:coordinates>
             </gml:Point>
           </bodepegel:Ort>
@@ -42,19 +42,19 @@
         <bodepegel:Niederschlagsgebiet fid="NSGebiet_Bühne_Hoppenstedt">
           <bodepegel:Name>Bühne-Hoppenstedt</bodepegel:Name>
           <bodepegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">4407550,5763200</gml:coordinates>
             </gml:Point>
           </bodepegel:Ort>
           <bodepegel:Messstellennummer>444210</bodepegel:Messstellennummer>
-          <bodepegel:Kurz_Name>beuh</bodepegel:Kurz_Name>
+          <bodepegel:Kurz_Name>bueh</bodepegel:Kurz_Name>
           <bodepegel:istEingabePegel>true</bodepegel:istEingabePegel>
           <bodepegel:istErgebnisPegel>true</bodepegel:istErgebnisPegel>
           <bodepegel:Ganglinie_gemessen>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Messung/Bühne_Hoppenstedt.zml" linktype="zml"/>
           </bodepegel:Ganglinie_gemessen>
           <bodepegel:Ganglinie_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt" linktype="zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml" linktype="zml"/>
           </bodepegel:Ganglinie_gerechnet>
           <bodepegel:Gebiet/>
           <bodepegel:Niederschlag>
