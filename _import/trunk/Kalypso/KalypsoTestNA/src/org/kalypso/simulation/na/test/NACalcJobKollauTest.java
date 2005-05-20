@@ -330,6 +330,21 @@ public class NACalcJobKollauTest extends TestCase
       {
         System.out.println( message + "\n" );
       }
+
+	public void setFinishInfo(int status, String text) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getFinishText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getFinishStatus() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
     };
 
   }
