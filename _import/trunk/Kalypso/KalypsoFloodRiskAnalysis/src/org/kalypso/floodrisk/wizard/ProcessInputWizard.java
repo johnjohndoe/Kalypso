@@ -45,8 +45,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.internal.progress.ProgressManager;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.impl.ProcessJob;
 import org.kalypso.model.xml.ModeldataType;
@@ -68,6 +69,8 @@ public class ProcessInputWizard extends Wizard
   private IProject m_project;
 
   private ProcessExtension[] m_processes;
+
+  private IProgressMonitor monitor;
 
   public ProcessInputWizard( IProject project, ProcessExtension[] processes )
   {
@@ -99,16 +102,10 @@ public class ProcessInputWizard extends Wizard
 
   public boolean performFinish()
   {
-    //final RunnableContextHelper op = new RunnableContextHelper(
-    // getContainer() )
-    //{
-    //  public void run( IProgressMonitor monitor ) throws
-    // InvocationTargetException
-    //  {
+
     try
     {
-      //monitor.beginTask( "Run calculation(s)...", 1000 );
-
+      final ILock lock = Platform.getJobManager().newLock();
       for( int i = 0; i < m_processes.length; i++ )
       {
         if( m_processes[i].getState() )
@@ -122,15 +119,11 @@ public class ProcessInputWizard extends Wizard
                 + modelData.getTypeID() + ") does not fit to typeID of process ("
                 + m_processes[i].getId() + ")! Check modelData!", null ) );
           }
-          //final LocalCalcJobHandler cjHandler = new LocalCalcJobHandler(
-          // modelData,
-          //    m_processes[i].getCalcJob() );
-          //final IStatus runStatus = cjHandler.runJob( m_project, new
-          // SubProgressMonitor(
-          //    monitor, 1000 ) );
-          ProgressManager progressManager = ProgressManager.getInstance();
-          IProgressMonitor monitor = progressManager.createMonitor(new ProcessJob( modelData, m_processes[i].getCalcJob(), m_project ));
-          new ProcessJob( modelData, m_processes[i].getCalcJob(), m_project ).run(monitor);
+          //create job
+          ProcessJob processJob = new ProcessJob( modelData, m_processes[i].getCalcJob(),
+              m_project, lock );
+          //run job
+          processJob.schedule();
         }
       }
     }
@@ -138,10 +131,6 @@ public class ProcessInputWizard extends Wizard
     {
       e.printStackTrace();
     }
-    // }
-    //};
-    //op.runAndHandleOperation( getShell(), true, true, "FloodRiskAnalysis",
-    // "Berechnung" );
 
     return true;
   }

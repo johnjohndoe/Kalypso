@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -62,12 +63,16 @@ public class ProcessJob extends Job
 
   private IProject m_project;
 
-  public ProcessJob( final ModeldataType modelData, final ICalcJob calcJob, final IProject project )
+  private ILock m_lock;
+
+  public ProcessJob( final ModeldataType modelData, final ICalcJob calcJob, final IProject project,
+      final ILock lock )
   {
     super( "Berechne: " + modelData.getTypeID() );
     m_modelData = modelData;
     m_calcJob = calcJob;
     m_project = project;
+    m_lock = lock;
     setUser( true );
   }
 
@@ -76,12 +81,17 @@ public class ProcessJob extends Job
 
     try
     {
+      m_lock.acquire();
       return runCalculation( monitor );
     }
     catch( CoreException e )
     {
       e.printStackTrace();
       return e.getStatus();
+    }
+    finally
+    {
+      m_lock.release();
     }
   }
 
