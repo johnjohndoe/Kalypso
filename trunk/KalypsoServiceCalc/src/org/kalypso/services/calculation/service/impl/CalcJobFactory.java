@@ -77,7 +77,8 @@ public class CalcJobFactory
     try
     {
       final String className = m_jobTypes.getProperty( typeID );
-
+       
+      
       return (ICalcJob)Class.forName( className ).newInstance();
     }
     catch( final Exception e )

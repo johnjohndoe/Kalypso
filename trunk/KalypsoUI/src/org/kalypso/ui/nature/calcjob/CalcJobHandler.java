@@ -46,6 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -186,7 +187,7 @@ public class CalcJobHandler
         return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
 
       case ICalcServiceConstants.CANCELED:
-        throw m_cancelException; 
+        throw m_cancelException;
 
       case ICalcServiceConstants.ERROR:
         throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
@@ -279,6 +280,14 @@ public class CalcJobHandler
           jarHandler, input, output );
       return bean.getId();
     }
+    catch( final ServerException se )
+    {
+      throw new CoreException(
+          KalypsoGisPlugin
+              .createErrorStatus(
+                  "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechnendienstes.",
+                  se ) );
+    }
     catch( final IOException e )
     {
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
@@ -332,9 +341,14 @@ public class CalcJobHandler
             : (IContainer)project;
         final IResource inputResource = baseresource.findMember( inputPath );
         if( inputResource == null )
+        {
+          if( input.isOptional() )
+            continue;
+          
           throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Konnte Input-Resource nicht finden: " + inputPath
-                  + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+                "Konnte Input-Resource nicht finden: " + inputPath
+                    + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+        }
 
         final IPath projectRelativePath = inputResource.getProjectRelativePath();
         inputResource.accept( zipper );
