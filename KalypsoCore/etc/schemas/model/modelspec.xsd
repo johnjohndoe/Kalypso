@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
+<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Monika Thül (BCE GmbH) -->
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="xml.model.kalypso.org" targetNamespace="xml.model.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="modeldata">
@@ -23,11 +23,12 @@
 								<xs:documentation>Clientseitiger Pfad deser Eingangsdaten. Kann eine Datei oder ein Verzeichnis sein, kann relativ zum Projekt oder relativ zur Rechenvariante sein.</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
-   						<xs:attribute name="relativeToCalcCase" type="xs:boolean" use="required">
+						<xs:attribute name="relativeToCalcCase" type="xs:boolean" use="required">
 							<xs:annotation>
 								<xs:documentation>Falls true, wird der Pfad relativ zur Rechenvariante aufgelöst, sonst relativ zum Projekt.</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
+						<xs:attribute name="optional" type="xs:boolean" use="optional" default="false"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="output" minOccurs="0" maxOccurs="unbounded">
@@ -101,7 +102,7 @@
 			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
-    <xs:complexType name="DataType">
+	<xs:complexType name="DataType">
 		<xs:attribute name="id" type="xs:string" use="required">
 			<xs:annotation>
 				<xs:documentation>ID der Daten.</xs:documentation>
@@ -112,7 +113,7 @@
 				<xs:documentation>Beschreibung der Daten. TODO: könnte auch eine Spezifikation sein, z.B: eine URL auf das Schema.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-        <xs:attribute name="optional" type="xs:boolean" use="optional" default="false">
+		<xs:attribute name="optional" type="xs:boolean" use="optional" default="false">
 			<xs:annotation>
 				<xs:documentation>false or not set means input is required, true means input is not required</xs:documentation>
 			</xs:annotation>
