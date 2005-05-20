@@ -644,18 +644,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     return m_tsRepositoryContainer;
   }
 
-  public Properties getDefaultRepositoryProperties()
-  {
-    final Properties props = new Properties();
-
-    // set all known properties for repository
-    final String value = getPluginPreferences().getString(
-        IKalypsoPreferences.NUMBER_OF_DAYS );
-    props.setProperty( IKalypsoPreferences.NUMBER_OF_DAYS, value );
-
-    return props;
-  }
-
   public SelectionIdProvider getSelectionIdProvider()
   {
     return mySelectionIdProvider;

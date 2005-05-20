@@ -78,7 +78,7 @@ public class ExportAsFileAction extends AbstractRepositoryExplorerAction impleme
     
     final WizardDialog dialog = new WizardDialog( getShell(), new ExportAsFileWizard( obs ) );
     dialog.open();
-  }
+  }    
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
