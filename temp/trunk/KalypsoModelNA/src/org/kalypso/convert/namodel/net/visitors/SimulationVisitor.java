@@ -58,7 +58,7 @@ public class SimulationVisitor extends NetElementVisitor
    * @author doemming
    */
   public SimulationVisitor( NetElementVisitor innerVisitor )
-  {
+  {       
     m_innerVisitor = innerVisitor;
     m_simulated = new ArrayList();
   }
@@ -68,9 +68,10 @@ public class SimulationVisitor extends NetElementVisitor
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
   public boolean visit( NetElement netElement )
-  {
+  {    
     if( m_simulated.contains( netElement ) )
-      return false;
+      return false;    
+    System.out.println(" SimulationVisitor: "+netElement.getChannel().getId());
     // first calculate upstream
     if( !netElement.resultExists() )
     {

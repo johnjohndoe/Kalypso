@@ -82,8 +82,7 @@ public class RHBManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
-    // ) );
+        .getInputStream() ) );// TODO: Abfrage ob *.rhb vorhanden ist.
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
       result.add( fe );

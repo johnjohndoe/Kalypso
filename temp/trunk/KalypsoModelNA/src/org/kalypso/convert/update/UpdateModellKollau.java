@@ -51,6 +51,10 @@ import java.util.List;
 import org.kalypso.convert.WeisseElsterConstants;
 import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
+import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -63,6 +67,8 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -89,6 +95,11 @@ public class UpdateModellKollau
 
   public static void main( String[] args )
   {
+    final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
+    {
+        new DeegreeUrlCatalog(),
+        new UrlCatalogNA() } );
+    GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
     try
     {
       final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
@@ -116,18 +127,18 @@ public class UpdateModellKollau
 
   public void updateIt() throws Exception
   {
-    URL schemaURL = KalypsoNADefaultSchema.getDefaultNaModellSchemaURL();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, schemaURL );
+//    URL schemaURL = KalypsoNADefaultSchema.getDefaultNaModellSchemaURL();
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL);
     final Feature naModelFe = workspace.getRootFeature();
-    
+
     // Catchments...
     final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
     final Feature[] catchmentFEs = workspace.getFeatures( catchmentFT );
     //    updateCatchments( catchmentFEs );
     //    updateGebNiederschlagZR( catchmentFEs );
-//    updateLZNiederschlagZR( catchmentFEs );
+    //    updateLZNiederschlagZR( catchmentFEs );
     //    updateNiederschlagZR( catchmentFEs );
-    updateGeometries( naModelFe, "D:\\Kalypso_NA\\9-Programmtest\\ModellAckermann\\shapes");
+    updateGeometries( naModelFe, "D:\\Kalypso_NA\\9-Programmtest\\ModellAckermann\\ImportKalypso" );
     // Nodes
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
@@ -232,8 +243,18 @@ public class UpdateModellKollau
         csFac.getCSByName( "EPSG:31467" ) );
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir
-        + "\\TeilgebieteFlows23042005", cSystem, null );
+        + "\\Teileinzugsgebiete", cSystem, null );
     final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty(
+        ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+
+    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir
+        + "\\straenge", cSystem, null );
+    final List channelFeatures = (List)channelWorkspace.getRootFeature().getProperty(
+        ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+
+    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir
+        + "\\modellknotenflows", cSystem, null );
+    final List nodeFeatures = (List)nodeWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     // insertGeometries
@@ -241,11 +262,23 @@ public class UpdateModellKollau
     System.out.println( "inserting geometries: catchments" );
     Feature catchmentCollection = (Feature)modelFeature.getProperty( "CatchmentCollectionMember" );
     List catchmentList = (List)catchmentCollection.getProperty( "catchmentMember" );
-    copyProperties( catchmentFeatures, "GEOM", "NETZNR_", (Feature[])catchmentList
+    copyProperties( catchmentFeatures, "GEOM", "ALTETGNR", (Feature[])catchmentList
         .toArray( new Feature[catchmentList.size()] ), "Ort", "inum" );
 
+    System.out.println( "inserting geometries: channels" );
+    Feature channelCollection = (Feature)modelFeature.getProperty( "ChannelCollectionMember" );
+    List channelList = (List)channelCollection.getProperty( "channelMember" );
+    copyProperties( channelFeatures, "GEOM", "ID", (Feature[])channelList
+        .toArray( new Feature[channelList.size()] ), "Ort", "inum" );
+
+    System.out.println( "inserting geometries: nodes" );
+    Feature nodeCollection = (Feature)modelFeature.getProperty( "NodeCollectionMember" );
+    List nodeList = (List)nodeCollection.getProperty( "nodeMember" );
+    copyProperties( nodeFeatures, "GEOM", "KNOTENR", (Feature[])nodeList
+        .toArray( new Feature[nodeList.size()] ), "Ort", "num" );
+
   }
-  
+
   private static void copyProperties( final List catchmentFeatures, String orgGeomPropName,
       String orgIdPropName, Feature[] destFE, String destGeomPropName, String destIdPropName )
   {
@@ -261,10 +294,10 @@ public class UpdateModellKollau
       Feature destFeature = destFE[i];
       String id = destFeature.getProperty( destIdPropName ).toString();
       //            System.out.println("processing id=" + id);
-      Feature orgFeaure = (Feature)orgHash.get( id );
-      if( orgFeaure != null )
+      Feature orgFeature = (Feature)orgHash.get( id );
+      if( orgFeature != null )
       {
-        Object value = orgFeaure.getProperty( orgGeomPropName );
+        Object value = orgFeature.getProperty( orgGeomPropName );
         if( value == null )
           System.out.println( "copyvalue is null: id=" + id );
         FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
