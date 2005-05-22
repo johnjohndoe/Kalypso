@@ -78,8 +78,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   final FeatureList m_featureList;
 
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath,
-      final String name )
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name )
   {
     super( name );
 
@@ -98,16 +97,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_featureType = ( (Feature)featureFromPath ).getFeatureType();
     }
     else
-      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: "
-          + featurePath );
+      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
     m_workspace.addModellListener( this );
   }
 
   public void dispose()
   {
     final Set set = m_styleDisplayMap.keySet();
-    final KalypsoUserStyle[] styles = (KalypsoUserStyle[])set.toArray( new KalypsoUserStyle[set
-        .size()] );
+    final KalypsoUserStyle[] styles = (KalypsoUserStyle[])set.toArray( new KalypsoUserStyle[set.size()] );
     for( int i = 0; i < styles.length; i++ )
       removeStyle( styles[i] );
     m_workspace.removeModellListener( this );
@@ -132,8 +129,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureType;
   }
 
-  public void paintSelected( final Graphics graphics, final GeoTransform projection,
-      final double scale, final GM_Envelope bbox, final int selectionId )
+  public void paintSelected( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final int selectionId )
   {
     for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
@@ -166,37 +162,40 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public void onModellChange( ModellEvent modellEvent )
   {
-    if( modellEvent instanceof IGMLWorkspaceModellEvent
-        && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_workspace )
+    // my workspace ?
+    if( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_workspace )
     {
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
         final FeaturesChangedModellEvent featuresChangedModellEvent = ( (FeaturesChangedModellEvent)modellEvent );
-        if( featuresChangedModellEvent.getGMLWorkspace() == m_workspace )
+        final List features = featuresChangedModellEvent.getFeatures();
+        // optimize: i think it is faster to restyle all than to find and
+        // exchange so many display elements
+        if( features.size() > m_featureList.size() / 5 )
+          setDirty();
+        else
         {
-          final List features = featuresChangedModellEvent.getFeatures();
-          // optimize: i think it is faster to restyle all than to find and
-          // exchange so many display elements
-          if( features.size() > m_featureList.size() / 5 )
-            setDirty();
-          else
+          for( Iterator iterator = features.iterator(); iterator.hasNext(); )
           {
-            for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
-            {
-              StyleDisplayMap sdm = (StyleDisplayMap)iter.next();
-              for( Iterator iterator = features.iterator(); iterator.hasNext(); )
-                sdm.restyle( (Feature)iterator.next() );
-            }
+            Feature feature = (Feature)iterator.next();
+            // my feature ?
+            if( m_featureList.contains( feature ) )
+              for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
+              {
+                StyleDisplayMap sdm = (StyleDisplayMap)iter.next();
+                sdm.restyle( feature );
+              }
           }
         }
+
       }
       else
       {
         setDirty();
       }
     }
-      if( modellEvent.isType( ModellEvent.STYLE_CHANGE ) )
-        setDirty();
+    if( modellEvent.isType( ModellEvent.STYLE_CHANGE ) )
+      setDirty();
     fireModellEvent( modellEvent );
   }
 
@@ -313,8 +312,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return result;
     }
 
-    public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
-        int selectionId )
+    public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
     {
       restyle( bbox );
       final List selectedDE = getSelectedDisplayElements( null, selectionId, bbox );
@@ -359,8 +357,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     private void addDisplayElements( Feature feature )
     {
-      DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style,
-          m_workspace );
+      DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style, m_workspace );
       if( elements.length > 0 )
         m_dispayElements.add( elements );
       if( elements.length > m_maxDisplayArray )
