@@ -52,11 +52,11 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements
 
   private final Feature m_parentFeature;
 
-  public static int STRUCTURE_CHANGE_ADD = 1;
+  public static final int STRUCTURE_CHANGE_ADD = 1;
 
-  public static int STRUCTURE_CHANGE_DELETE = 2;
+  public static final int STRUCTURE_CHANGE_DELETE = 2;
 
-  public static int STRUCTURE_CHANGE_MOVE = 3;
+  public static final int STRUCTURE_CHANGE_MOVE = 3;
 
   private final int m_changeType;
 
