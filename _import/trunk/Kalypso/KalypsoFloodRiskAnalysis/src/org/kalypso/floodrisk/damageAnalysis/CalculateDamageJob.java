@@ -1,6 +1,8 @@
 package org.kalypso.floodrisk.damageAnalysis;
 
+import java.awt.Color;
 import java.io.File;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -10,11 +12,20 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessDataProvider;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.floodrisk.tools.Number;
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -22,9 +33,25 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
+import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
+import org.kalypsodeegree_impl.graphics.sld.RasterSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
+import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.w3c.dom.Document;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -113,11 +140,13 @@ public class CalculateDamageJob implements ICalcJob
       //WaterlevelData
       TreeMap waterlevelGrids = readWaterlevelData( new File(
           (String)( (IProcessDataProvider)inputProvider ).getObjectForID( WaterlevelDataID ) ) );
+      //monitor.setProgress(500);
 
       //start damageAnalysis
       // calculate damagePercentage
       TreeMap damagePercentageGrids = DamageAnalysis.calculateDamagePercentages( waterlevelGrids,
           landuseRaster, contextModel.getDamageFunctionList() );
+      //monitor.setProgress(1000);
 
       // calculate damage
       TreeMap damageGrids = DamageAnalysis.calculateDamages( damagePercentageGrids, landuseRaster,
@@ -141,12 +170,18 @@ public class CalculateDamageJob implements ICalcJob
       CalcJobClientBean annualDamageOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( AnnualDamageRasterDataID );
       File annualDamageResultFile = new File( annualDamageOutputBean.getPath() );
-      if(!annualDamageResultFile.exists())
+      if( !annualDamageResultFile.exists() )
         annualDamageResultFile.createNewFile();
       rasterDataModel.toFile( annualDamageResultFile, annualDamageGrid );
+      //style
+      File styleFile = new File( FileUtilities.nameWithoutExtension( annualDamageResultFile
+          .toString() )
+          + ".sld" );
+      Color lightRed = new Color( 255, 150, 150 );
+      int numOfCategories = 5;
+      String styleName = FileUtilities.nameWithoutExtension( annualDamageResultFile.getName() );
+      createRasterStyle( styleFile, styleName, annualDamageGrid, lightRed, numOfCategories );
       resultEater.addResult( annualDamageOutputBean.getId(), null );
-
-      // TODO: generate styles for damage grids
 
     }
     catch( MalformedURLException e )
@@ -196,7 +231,15 @@ public class CalculateDamageJob implements ICalcJob
       Double key = (Double)keys[i];
       double annuality = 1 / key.doubleValue();
       File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality + ".gml" );
-      rasterDataModel.toFile( damageFile, (RectifiedGridCoverage)damageGrids.get( key ) );
+      RectifiedGridCoverage damageGrid = (RectifiedGridCoverage)damageGrids.get( key );
+      rasterDataModel.toFile( damageFile, damageGrid );
+      //style
+      File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() )
+          + ".sld" );
+      Color lightRed = new Color( 255, 150, 150 );
+      int numOfCategories = 5;
+      String styleName = FileUtilities.nameWithoutExtension( damageFile.getName() );
+      createRasterStyle( damageStyleFile, styleName, damageGrid, lightRed, numOfCategories );
 
       if( i < keys.length - 1 )
       {
@@ -208,6 +251,52 @@ public class CalculateDamageJob implements ICalcJob
         rasterDataModel.toFile( tempGridFile, tempGrid );
       }
     }
+  }
+
+  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid,
+      Color color, int numOfCategories ) throws Exception
+  {
+    TreeMap colorMap = new TreeMap();
+    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999,
+        "Keine Daten" );
+    colorMap.put( new Double( -9999 ), colorMapEntry_noData );
+    double min = grid.getRangeSet().getMinValue();
+    double max = grid.getRangeSet().getMaxValue();
+    double intervalStep = ( max - min ) / numOfCategories;
+    for( int i = 0; i < numOfCategories; i++ )
+    {
+      double quantity = Number
+          .round( ( min + ( i * intervalStep ) ), 4, BigDecimal.ROUND_HALF_EVEN );
+      ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 1, quantity, "" );
+      color = color.darker();
+      colorMap.put( new Double( quantity ), colorMapEntry );
+    }
+    ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1, max, "" );
+    colorMap.put( new Double( max ), colorMapEntry_max );
+    RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
+    Symbolizer[] symbolizers = new Symbolizer[]
+    { rasterSymbolizer };
+    FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    double minScaleDenominator = 0;
+    double maxScaleDenominator = 1.8;
+    Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default",
+        minScaleDenominator, maxScaleDenominator );
+    featureTypeStyle.addRule( rule );
+    FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[]
+    { featureTypeStyle };
+    Style[] styles = new Style[]
+    { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
+    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" );
+    Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld )
+        .exportAsXML() ) );
+    final Source source = new DOMSource( doc );
+    Result result = new StreamResult( resultFile );
+    Transformer t = TransformerFactory.newInstance().newTransformer();
+    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
+    t.setOutputProperty( OutputKeys.INDENT, "yes" );
+    t.transform( source, result );
   }
 
   public URL getSpezifikation()

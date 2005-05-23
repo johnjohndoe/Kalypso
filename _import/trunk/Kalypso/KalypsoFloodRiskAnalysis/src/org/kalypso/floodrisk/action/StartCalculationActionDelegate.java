@@ -37,6 +37,7 @@ package org.kalypso.floodrisk.action;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -73,11 +74,19 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     System.out.println( "Run..." );
     try
     {
-      final IProject firstSelectedProject = ResourceUtilities.getSelectedProjects()[0];
-      final ProcessExtension[] processes = ProcessExtensions.retrieveExtensions();
-      ChooseProcessWizard processWizard = new ChooseProcessWizard( firstSelectedProject, processes );
-      final WizardDialog dialog = new WizardDialog( m_window.getShell(), processWizard);
-      dialog.open();
+      if( ResourceUtilities.getSelectedProjects().length > 0 )
+      {
+        final IProject firstSelectedProject = ResourceUtilities.getSelectedProjects()[0];
+        final ProcessExtension[] processes = ProcessExtensions.retrieveExtensions();
+        ChooseProcessWizard processWizard = new ChooseProcessWizard( firstSelectedProject,
+            processes );
+        final WizardDialog dialog = new WizardDialog( m_window.getShell(), processWizard );
+        dialog.open();
+      }
+      else
+      {
+        MessageDialog.openError( m_window.getShell(), "Error", "Bitte Projekt auswählen!" );
+      }
     }
     catch( CoreException e )
     {

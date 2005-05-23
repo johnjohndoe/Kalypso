@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="RasterizeLanduseJob">
+	<input id="LanduseVectorData" path="Landuse/landuse.shp" relativeToCalcCase="false"/>
+	<input id="VectorDataCoordinateSystem" path="EPSG:31467" relativeToCalcCase="true"/>
+	<input id="ContextModel" path="Control/contextModell.gml" relativeToCalcCase="false"/>
+	<input id="LandusePropertyName" path="NUTZUNG" relativeToCalcCase="true"/>
+	<input id="BaseRaster" path="Waterlevel/wsp_hq100.gml" relativeToCalcCase="false"/>
+	
+	<output id="LanduseRasterData" path="Landuse/landuseData.gml" relativeToCalcCase="false"/>
+</modeldata>

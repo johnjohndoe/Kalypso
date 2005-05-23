@@ -98,14 +98,14 @@ public class ProcessJob extends Job
   private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException
   {
 
-    monitor.beginTask( "Berechnung wird durchgeführt", 5000 );
+    monitor.beginTask( "Berechnung wird durchgeführt.", 5000 );
 
     final LocalCalcJobHandler cjHandler = new LocalCalcJobHandler( m_modelData, m_calcJob );
     final IStatus runStatus = cjHandler.runJob( m_project, new SubProgressMonitor( monitor, 5000 ) );
     if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
       return runStatus;
 
-    return new Status( Status.OK, KalypsoGisPlugin.getId(), 0, "Berechnung abgeschlossen.", null );
+    return new Status( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Berechnung abgeschlossen.", null );
   }
 
 }

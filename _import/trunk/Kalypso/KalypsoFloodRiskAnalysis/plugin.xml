@@ -73,5 +73,14 @@
             name="Get statistics"
             id="CalculateStatisticJob"/>
    </extension>
+   <extension
+         point="org.kalypso.ui.mapviewaction">
+      <MapviewAction
+            title="KalypsoFloodRiskAnalysis.MapviewAction1"
+            enabled="true"
+            icon="icons/sample.gif"
+            class="org.kalypso.floodrisk.action.ExportThemeAction"
+            tooltip="Export active theme as jpg"/>
+   </extension>
 
 </plugin>

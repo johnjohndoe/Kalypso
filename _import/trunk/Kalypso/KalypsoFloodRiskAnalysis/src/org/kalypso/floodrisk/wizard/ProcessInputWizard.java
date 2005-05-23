@@ -34,17 +34,13 @@
  */
 package org.kalypso.floodrisk.wizard;
 
-import java.util.List;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.jface.wizard.Wizard;
@@ -52,7 +48,6 @@ import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.impl.ProcessJob;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -69,8 +64,6 @@ public class ProcessInputWizard extends Wizard
   private IProject m_project;
 
   private ProcessExtension[] m_processes;
-
-  private IProgressMonitor monitor;
 
   public ProcessInputWizard( IProject project, ProcessExtension[] processes )
   {
@@ -133,53 +126,6 @@ public class ProcessInputWizard extends Wizard
     }
 
     return true;
-  }
-
-  private CalcJobClientBean[] getInput( ModeldataType modelData ) throws CoreException
-  {
-    List inputList = modelData.getInput();
-    CalcJobClientBean[] input = new CalcJobClientBean[inputList.size()];
-    for( int i = 0; i < inputList.size(); i++ )
-    {
-      ModeldataType.InputType inputItem = (ModeldataType.InputType)inputList.get( i );
-
-      String inputPath = inputItem.getPath();
-      if( !inputItem.isRelativeToCalcCase() )
-      {
-        IResource inputResource = m_project.findMember( inputPath );
-        if( inputResource == null )
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Konnte Input-Resource nicht finden: " + inputPath
-                  + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
-        IPath projectRelativePath = inputResource.getLocation();
-        inputPath = projectRelativePath.toString();
-      }
-
-      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( inputItem.getId(), inputPath );
-      input[i] = calcJobDataBean;
-    }
-    return input;
-  }
-
-  private CalcJobClientBean[] getOutput( ModeldataType modelData ) throws CoreException
-  {
-    List outputList = modelData.getOutput();
-    CalcJobClientBean[] output = new CalcJobClientBean[outputList.size()];
-    for( int i = 0; i < outputList.size(); i++ )
-    {
-      ModeldataType.OutputType outputItem = (ModeldataType.OutputType)outputList.get( i );
-
-      String outputPath = outputItem.getPath();
-      String resultPath = outputPath;
-      if( !outputItem.isRelativeToCalcCase() )
-      {
-        resultPath = m_project.getLocation() + "/" + outputPath;
-      }
-
-      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( outputItem.getId(), resultPath );
-      output[i] = calcJobDataBean;
-    }
-    return output;
   }
 
   private ModeldataType readModelData( IPath modelDataPath ) throws CoreException

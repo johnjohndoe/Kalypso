@@ -82,7 +82,9 @@ public class LocalCalcJobHandler
   public IStatus runJob( final IProject project, final IProgressMonitor monitor )
       throws CoreException
   {
-    monitor.beginTask( m_modelData.getTypeID() + "wird berechnet.", 5000 );
+    monitor.setTaskName( m_modelData.getTypeID() + " wird berechnet.");
+    //monitor.worked(5000);
+    //monitor.beginTask( m_modelData.getTypeID() + " wird berechnet.", 5000);
     try
     {
       m_jobID = startCalcJob( project, new SubProgressMonitor( monitor, 1000 ) );
@@ -181,8 +183,7 @@ public class LocalCalcJobHandler
   {
     try
     {
-      final List inputList = m_modelData.getInput();
-      monitor.beginTask( "Eingangsdaten für Berechnung vorbereiten", inputList.size() );
+      monitor.setTaskName( "Eingangsdaten für Berechnung vorbereiten" );
 
       //prepare input
       CalcJobClientBean[] input = getInput( project );
@@ -190,6 +191,7 @@ public class LocalCalcJobHandler
       //prepare output
       CalcJobClientBean[] output = getOutput( project );
 
+      monitor.setTaskName( "Berechne" );
       final CalcJobInfoBean bean = calcService.startLocalJob( m_modelData.getTypeID(), "Description",
           m_calcJob, input, output );
       return bean.getId();

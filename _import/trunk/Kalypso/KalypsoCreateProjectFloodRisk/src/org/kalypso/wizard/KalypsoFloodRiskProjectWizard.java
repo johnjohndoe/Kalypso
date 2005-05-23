@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
@@ -106,6 +107,8 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.RasterSymbolizer_Impl;
@@ -115,6 +118,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
@@ -250,7 +254,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         autogenerateLanduseCollection();
       }
 
-      createWaterlevelGrids();
+      Vector targetFiles = createWaterlevelGrids();
+      createWaterlevelData( targetFiles );
 
       gismapview.setExtent( extent );
       gismapview.setLayers( layers );
@@ -370,7 +375,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         Feature landuseFeature = contextModel.createFeature( ftLanduse );
         landuseFeature.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
             propertyValue ) );
-        contextModel.addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
+        contextModel
+            .addFeatureAsComposition( parentFeature, featurePropertyName, 0, landuseFeature );
         //riskContextModel
         Feature landuseFeature_risk = riskContextModel.createFeature( ftLanduse_risk );
         landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
@@ -390,8 +396,9 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     fw_risk.close();
   }
 
-  private void createWaterlevelGrids() throws Exception
+  private Vector createWaterlevelGrids() throws Exception
   {
+    Vector targetFiles = new Vector();
     Vector waterlevelGrids = selectWaterlevelWizardPage.getWaterlevelGrids();
     CS_CoordinateSystem cs = selectWaterlevelWizardPage.getSelectedCoordinateSystem();
     int workedPart = 50 / waterlevelGrids.size();
@@ -407,19 +414,23 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
       File targetFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) ) ).toFile();
       GridUtils.writeRasterData( targetFile, grid );
+      targetFiles.add( targetFile );
       File sldFile = ( workspacePath.append( projectHandel.getFullPath().append(
           "/.styles/" + sourceFileNameWithoutExtension + ".sld" ) ) ).toFile();
-      createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid );
+      Color lightBlue = new Color( 150, 150, 255 );
+      int numOfCategories = 5;
+      createRasterStyle( sldFile, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
       layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
       grid = null;
       monitor.worked( workedPart );
       if( monitor.isCanceled() )
         performCancle();
     }
+    return targetFiles;
   }
 
-  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid )
-      throws Exception
+  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid,
+      Color color, int numOfCategories ) throws Exception
   {
     TreeMap colorMap = new TreeMap();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999,
@@ -427,11 +438,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     double min = grid.getRangeSet().getMinValue();
     double max = grid.getRangeSet().getMaxValue();
-    int numberOfCategories = 5;
-    double intervalStep = ( max - min ) / numberOfCategories;
-    Color lightBlue = new Color( 150, 150, 255 );
-    Color color = lightBlue;
-    for( int i = 0; i < numberOfCategories; i++ )
+    double intervalStep = ( max - min ) / numOfCategories;
+    for( int i = 0; i < numOfCategories; i++ )
     {
       double quantity = GridUtils.round( ( min + ( i * intervalStep ) ), 4,
           BigDecimal.ROUND_HALF_EVEN );
@@ -465,6 +473,50 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
     t.setOutputProperty( OutputKeys.INDENT, "yes" );
     t.transform( source, result );
+  }
+
+  private void createWaterlevelData( Vector targetFiles ) throws IOException, GmlSerializeException
+  {
+    File waterlevelDataFile = workspacePath.append(
+        projectHandel.getFullPath() + "/Control/WaterlevelData.gml" ).toFile();
+
+    //load schema
+    String NS_WATERLEVELDATA = "http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData";
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( NS_WATERLEVELDATA );
+
+    final FeatureType[] types = schema.getFeatureTypes();
+
+    //create rootFeature
+    String rootFeatureName = "WaterlevelData";
+    FeatureType rootFeatureType = schema.getFeatureType( rootFeatureName );
+    Feature rootFeature = FeatureFactory.createFeature( "WaterlevelData0", rootFeatureType );
+
+    //create waterlevelFeature(s)
+    String waterlevelFeatureName = "Waterlevel";
+    String waterlevelMember = "WaterlevelMember";
+    String featureProperty = "WaterlevelRasterData";
+    FeatureType waterlevelFeatureType = schema.getFeatureType( waterlevelFeatureName );
+    int identifier = 0;
+    for( int i = 0; i < targetFiles.size(); i++ )
+    {
+      Feature waterlevelFeature = FeatureFactory.createFeature( waterlevelFeatureName + identifier,
+          waterlevelFeatureType );
+      URI propertyValue = ( (File)targetFiles.get( i ) ).toURI();
+      waterlevelFeature.setProperty( FeatureFactory.createFeatureProperty( featureProperty,
+          propertyValue ) );
+      rootFeature.addProperty( FeatureFactory.createFeatureProperty( waterlevelMember,
+          waterlevelFeature ) );
+      identifier = identifier + 1;
+    }
+    
+    //create workspace
+    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, waterlevelDataFile.toURL(),
+        "", schema.getTargetNS(), schema.getNamespaceMap() );
+
+    // serialize Workspace
+    FileWriter fw = new FileWriter( waterlevelDataFile );
+    GmlSerializer.serializeWorkspace( fw, workspace );
+    fw.close();
   }
 
   private org.kalypso.template.gismapview.GismapviewType.LayersType.Layer createLanduseLayer(
