@@ -5,7 +5,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/shiftone-cache.jar"/>
-	<classpathentry exported="true" sourcepath="J:/hyd5309/Gruppe07/Development/Java/ant/apache-ant-1.6.2-src.zip" kind="lib" path="lib/ant-1.6.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ant-1.6.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hb15.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
