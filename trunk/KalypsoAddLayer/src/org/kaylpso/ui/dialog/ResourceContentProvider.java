@@ -60,7 +60,7 @@ public class ResourceContentProvider implements ITreeContentProvider
 
   private String[] m_allowedResourceExtensions;
 
-  public ResourceContentProvider(String[] allowedResourceExtensions)
+  public ResourceContentProvider( String[] allowedResourceExtensions )
   {
     super();
     m_allowedResourceExtensions = allowedResourceExtensions;
@@ -123,6 +123,8 @@ public class ResourceContentProvider implements ITreeContentProvider
 
   private boolean checkExtension( String extension )
   {
+    if( extension == null )
+      return false;
     boolean returnValue = false;
     for( int i = 0; i < m_allowedResourceExtensions.length; i++ )
     {
@@ -165,7 +167,7 @@ public class ResourceContentProvider implements ITreeContentProvider
    */
   public void dispose()
   {
-  //do nothing  
+  //do nothing
   }
 
   /**
@@ -174,9 +176,8 @@ public class ResourceContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-  // do nothing  
+  // do nothing
   }
-  
 
   public void showClosedProjects( boolean show )
   {
