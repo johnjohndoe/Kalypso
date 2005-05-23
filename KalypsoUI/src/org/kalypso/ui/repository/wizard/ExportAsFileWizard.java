@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
@@ -109,7 +110,7 @@ public class ExportAsFileWizard extends Wizard
           .getAbsolutePath();
     }
     else
-      fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + ".";
+      fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "datei.zml";
 
     m_page1 = new DateRangeInputWizardPage();
     m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] { "*.zml", "*.xml" } );
@@ -149,6 +150,9 @@ public class ExportAsFileWizard extends Wizard
     catch( final Exception e )
     {
       e.printStackTrace();
+      
+      MessageDialog.openError( getShell(), "Datei kann nicht erzeugt werden", e.getLocalizedMessage() );
+      
       return false;
     }
     finally

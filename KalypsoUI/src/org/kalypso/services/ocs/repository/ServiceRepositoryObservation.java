@@ -42,15 +42,17 @@ package org.kalypso.services.ocs.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Calendar;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.bind.Marshaller;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -61,12 +63,10 @@ import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.ocs.ObservationBeanFactory;
 import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.xlink.IXlink;
@@ -131,7 +131,7 @@ public class ServiceRepositoryObservation implements IObservation
     DateRangeBean drb = null;
 
     if( args instanceof DateRangeArgument )
-      drb = ProxyFactory.createDateRangeBean( (DateRangeArgument)args );
+      drb = createDateRangeBean( (DateRangeArgument)args );
 
     try
     {
@@ -283,28 +283,43 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * Sets the given values to the server side observation defined by the given
    * href.
-   * 
-   * @param values
-   * @param href
-   * @throws SensorException
    */
-  public static void setValuesFor( final ITuppleModel values, final String href )
-      throws SensorException
+  public static void setValuesFor( final ITuppleModel values,
+      final String href, final IObservationService srv ) throws SensorException
   {
+    final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation(
+        srv, ObservationBeanFactory.createBean( href ) );
+
+    srvObs.setValues( values );
+  }
+
+  /**
+   * Reads the file as a ZML-File and sets the values of the parsed observation
+   * to the server one defined by the given href.
+   */
+  public static void setValuesFor( final IFile file, final String href,
+      final IObservationService srv ) throws SensorException
+  {
+    InputStreamReader in = null;
     try
     {
-      final IObservationService srv = KalypsoGisPlugin.getDefault()
-          .getObservationServiceProxy();
-
-      final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation(
-          srv, ObservationBeanFactory.createBean( href ) );
-
-      srvObs.setValues( values );
+      in = new InputStreamReader( file.getContents(), file.getCharset() );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "", null );
+      in.close();
+      
+      setValuesFor( obs.getValues(null), href, srv );
     }
-    catch( ServiceException e )
+    catch( final Exception e )
     {
+      if( e instanceof SensorException )
+        throw (SensorException)e;
+      
       e.printStackTrace();
       throw new SensorException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( in );
     }
   }
 
@@ -326,5 +341,18 @@ public class ServiceRepositoryObservation implements IObservation
   public String getHref()
   {
     return getIdentifier();
+  }
+  
+  /**
+   * Helper method that creates a DateRangeBean using a DateRangeArgument.
+   */
+  public static DateRangeBean createDateRangeBean( final DateRangeArgument dra )
+  {
+    final Calendar from = Calendar.getInstance();
+    from.setTime( dra.getFrom() );
+    
+    final Calendar to = Calendar.getInstance();
+    to.setTime( dra.getTo() );
+    return new DateRangeBean( from.getTimeInMillis() , to.getTimeInMillis() );
   }
 }

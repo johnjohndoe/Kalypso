@@ -58,7 +58,7 @@ public class IdStruct
 {
   private final IFile m_file;
 
-  private final String m_id;
+  private String m_id;
 
   public IdStruct( final IFile file, final String id )
   {
@@ -109,5 +109,10 @@ public class IdStruct
     }
 
     return null;
+  }
+
+  public void setId( final String id )
+  {
+    m_id = id;
   }
 }

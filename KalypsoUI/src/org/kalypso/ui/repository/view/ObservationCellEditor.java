@@ -36,41 +36,48 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.wizard.ocs;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.ui.repository.view;
 
 import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * OcsDialogCellEditor
+ * ObservationCellEditor
  * 
  * @author schlienger
  */
-public class OcsDialogCellEditor extends DialogCellEditor
+public class ObservationCellEditor extends DialogCellEditor
 {
-  public OcsDialogCellEditor( )
+  public ObservationCellEditor( final Composite parent )
   {
-    super();
+    this( parent, SWT.NONE, null );
   }
 
-  public OcsDialogCellEditor( Composite parent )
-  {
-    super( parent );
-  }
-
-  public OcsDialogCellEditor( Composite parent, int style )
+  public ObservationCellEditor( final Composite parent, final int style, final String id )
   {
     super( parent, style );
+    setValue( id );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.DialogCellEditor#openDialogBox(org.eclipse.swt.widgets.Control)
-   */
-  protected Object openDialogBox( Control cellEditorWindow )
+  protected Object openDialogBox( final Control cellEditorWindow )
   {
+    final ObservationChooserDialog dlg = new ObservationChooserDialog( cellEditorWindow.getShell() );
+    final String id = (String)getValue();
+    if( id != null )
+      dlg.setSelectedObservation( id );
+    
+    int ret = dlg.open();
+    if( ret == Window.OK )
+    {
+      setValue( dlg.getSelectedObservation() );
+      return getValue();
+    }
+    
     return null;
   }
 }
