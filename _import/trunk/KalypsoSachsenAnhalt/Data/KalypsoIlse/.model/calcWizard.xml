@@ -3,15 +3,141 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 <!-- KONTROLLE DER ZEITREIHEN -->
-<!-- Wasserstand / Abfluss -->
+	<!-- Niederschlag an Stationen (Messung) -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="4"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+         <arg name="maximizeMap" value="true"/>
+    </page>
+ 
+	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
+    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="8"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+    
+    <!-- Wasserstand / Abfluss (Messung) -->
     <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel.gmt"/>
-
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
-    </page>
+        <arg name="maximizeMap" value="true"/>
+   </page>
+    
+
+ <!-- BERECHNUNG -->
  
+    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Berechnung" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+<!--
+        <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
+        <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
+-->
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="01"/>
+        <arg name="selectionID" value="16"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+         
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+ <!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
+ 
+ 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
+	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
+	   imageLocation="icons/calcwizard/kalypso32.gif" >
+	   
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
+   		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+	
+       <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+		
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<!--Wiski-Id müsste hierhin -->
+		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
+
+	   	<arg name="mainSash" value="40"/>
+	   	<arg name="rightSash" value="25"/>
+	   	<arg name="selectionID" value="32"/>
+
+	   	<arg name="exporter2">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
+	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="nameproperty" value="Name"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_vorhersage"/>
+			</arg>
+	   	</arg>
+	   	<arg name="exporter3">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="nameproperty" value="Name"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
+	   	</arg>
+	   	
+	   	<arg name="exporter4">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Wasserstandsgrafik"/>
+	   		<arg name="nameproperty" value="Name"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
+	   	</arg>
+        
+   		<arg name="maximizeMap" value="true"/>
+	</page>
+	
 </calcwizard>

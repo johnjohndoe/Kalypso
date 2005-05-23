@@ -89,6 +89,11 @@
 			<param name="pName" value="Bode" />
 		</antcall>
 
+		<antcall target="co-model">
+			<param name="pPackage" value="KalypsoSachsenAnhalt/KalypsoIlse" />
+			<param name="pName" value="Ilse" />
+		</antcall>
+
 		<!--antcall target="co-model">
 			<param name="pPackage" value="KalypsoData/KalypsoSaale" />
 			<param name="pName" value="Saale" />

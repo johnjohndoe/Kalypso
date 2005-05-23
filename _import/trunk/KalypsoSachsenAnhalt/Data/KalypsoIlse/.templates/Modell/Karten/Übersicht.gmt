@@ -17,9 +17,6 @@
 		<layer name="Überleitung" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember[Überleitung]" id="ID_6" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
 			<ns2:style linktype="sld" style="Ueberleitung" ns1:href="project:/.styles/speicher.sld" xmlns:ns2="types.template.kalypso.org"/>
 		</layer>
-		<layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns1:href="project:/.shapes/Gewässerflächen#EPSG:31468" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="sld" style="seen" ns1:href="project:/.styles/styles.sld" xmlns:ns2="types.template.kalypso.org"/>
-		</layer>
 		<layer name="Gewässer" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns3:href="project:/.shapes/Gewässer#EPSG:31468" xmlns:ns3="http://www.w3.org/1999/xlink">
 			<ns4:style linktype="sld" style="sachsenrivers"  ns3:href="project:/.styles/styles.sld"  xmlns:ns4="types.template.kalypso.org"/>
 		</layer>

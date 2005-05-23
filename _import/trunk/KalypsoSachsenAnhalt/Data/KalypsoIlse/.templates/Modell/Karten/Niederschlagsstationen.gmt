@@ -5,9 +5,6 @@
         <layer name="Niederschlagsstationen" visible="true" featurePath="OmbrometerCollectionAssociation/OmbrometerMember[Ombrometer]" id="ID_1" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Niederschlagsstationen" ns1:href="project:/.styles/niederschlagsstationen.sld" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
-        <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:href="project:/.shapes/Gewässerflächen#EPSG:31468" xmlns:ns3="http://www.w3.org/1999/xlink">
-            <ns4:style linktype="sld" style="seen" ns3:href="project:/.styles/styles.sld" xmlns:ns4="types.template.kalypso.org"/>
-        </layer>
         <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:href="project:/.shapes/gewässer#EPSG:31468" xmlns:ns5="http://www.w3.org/1999/xlink">
             <ns6:style linktype="sld" style="sachsenrivers" ns5:href="project:/.styles/styles.sld" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
