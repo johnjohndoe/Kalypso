@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.ControlType;
@@ -63,6 +64,8 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 /**
  * @author belger
@@ -93,7 +96,7 @@ public class FeatureviewHelper
   private static void addDefaultFeatureControlTypeForProperty( final List controlList,
       final FeatureType featureType, final FeatureTypeProperty ftp ) throws JAXBException
   {
-    final ControlType type;
+    ControlType type = null;
     boolean addLabel = true;
     final GridDataType griddata = FACTORY.createGridData();
 
@@ -125,6 +128,22 @@ public class FeatureviewHelper
       checkbox.setLayoutData( griddata );
 
       type = checkbox;
+    }
+    else if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+    {
+      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      // TODO: TypeHandler should decide, what todo
+      if( handler instanceof ObservationLinkHandler )
+      {
+        final ButtonType button = FACTORY.createButton();
+        button.setStyle( "SWT.PUSH" );
+        button.setProperty( name );
+
+        griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+        button.setLayoutData( griddata );
+
+        type = button;
+      }
     }
     else if( "FeatureAssociationType".equals( typename ) )
     {
@@ -190,14 +209,14 @@ public class FeatureviewHelper
       addLabel = false;
 
     }
-    else
+    
+    if( type == null )
     {
       final ButtonType button = FACTORY.createButton();
       button.setStyle( "SWT.PUSH" );
       button.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-      //      griddata.setWidthHint( 100 );
       button.setLayoutData( griddata );
 
       type = button;

@@ -42,7 +42,12 @@ package org.kalypso.ui.wizard.ocs;
 
 import java.util.List;
 
+import javax.xml.rpc.ServiceException;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -50,7 +55,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.eclipse.core.runtime.MultiStatus;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
+import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.wizard.ocs.idtable.IdStruct;
 
 /**
  * OcsExportWizard
@@ -82,8 +92,45 @@ public class OcsExportWizard extends Wizard implements IExportWizard
    */
   public boolean performFinish()
   {
-    // TODO Auto-generated method stub
-    return false;
+    final IdStruct[] structs = m_idPage.getResourcesToExport();
+    IObservationService srv = null;
+    try
+    {
+      srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+    }
+    catch( final ServiceException e )
+    {
+      e.printStackTrace();
+      MessageDialog.openError( getShell(),
+          "Kalypso Server steht nicht zur Verfügung", e.getLocalizedMessage() );
+      return false;
+    }
+
+    final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin
+        .getId(), 0, "Fehler sind während der Export aufgetreten" );
+
+    for( int i = 0; i < structs.length; i++ )
+    {
+      try
+      {
+        ServiceRepositoryObservation.setValuesFor( structs[i].getFile(),
+            structs[i].getId(), srv );
+      }
+      catch( final SensorException e )
+      {
+        ms.addMessage( "Export von " + structs[i].getFile().getName()
+            + " fehlerhaft: " + e.getLocalizedMessage(), e );
+      }
+    }
+
+    if( !ms.isOK() )
+    {
+      ErrorDialog.openError( getShell(),
+          "Fehler sind während der Export aufgetreten", "Siehe Details", ms );
+      return false;
+    }
+
+    return true;
   }
 
   /**

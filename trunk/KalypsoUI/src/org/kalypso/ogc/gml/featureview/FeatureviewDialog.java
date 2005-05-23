@@ -86,7 +86,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     m_target = target;
     m_featureComposite = featureComposite;
     
-    setShellStyle( getShellStyle() | SWT.RESIZE );
+    setShellStyle( getShellStyle() | SWT.RESIZE | SWT.MAX );
   }
 
   /**

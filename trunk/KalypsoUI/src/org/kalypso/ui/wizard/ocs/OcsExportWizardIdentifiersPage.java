@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.ocs;
 
 import java.util.List;
@@ -45,7 +45,10 @@ import java.util.List;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.java.util.Arrays;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.wizard.ocs.idtable.IdStruct;
+import org.kalypso.ui.wizard.ocs.idtable.IdTableContentProvider;
 import org.kalypso.ui.wizard.ocs.idtable.IdTableViewer;
 
 /**
@@ -57,10 +60,11 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
 {
   private IdTableViewer m_tableViewer;
 
-  public OcsExportWizardIdentifiersPage( )
+  public OcsExportWizardIdentifiersPage()
   {
-    super( "Zeitreihen Zuordnung", "Zeitreihen Zuordnung", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    
+    super( "Zeitreihen Zuordnung", "Zeitreihen Zuordnung",
+        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+
     setTitle( "Zeitreihen Zuordnung" );
     setDescription( "Überprüfen Sie die Zuordnung der Zeitreihen mit dem Server" );
   }
@@ -70,18 +74,21 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
    */
   public void createControl( Composite parent )
   {
-    m_tableViewer = new IdTableViewer( parent, SWT.BORDER | SWT.SINGLE );
-    
+    m_tableViewer = new IdTableViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
+
     setControl( m_tableViewer.getControl() );
-    
+
     //m_tableViewer.setInput( m_selection );
   }
 
-  /**
-   * @param selectedResources
-   */
   public void setResourcesToExport( List selectedResources )
   {
     m_tableViewer.setInput( selectedResources );
+  }
+
+  public IdStruct[] getResourcesToExport()
+  {
+    return (IdStruct[])Arrays.castArray( ((IdTableContentProvider)m_tableViewer
+        .getContentProvider() ).getElements( m_tableViewer.getInput() ), new IdStruct[0] );
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.jface.viewers;
 
 import org.eclipse.jface.viewers.TableViewer;
@@ -47,38 +47,30 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * DefaultTableViewer handles common functionality that you wish you had when working
- * with a TableViewer.
+ * DefaultTableViewer handles common functionality that you wish you had when
+ * working with a TableViewer.
  * 
  * @author schlienger
  */
 public class DefaultTableViewer extends TableViewer
 {
   public static final String COLUMN_PROP_NAME = "columnName";
+
   public static final String COLUMN_PROP_EDITABLE = "columnEditable";
+
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
-  /**
-   * @param parent
-   */
-  public DefaultTableViewer( Composite parent )
+  public DefaultTableViewer( final Composite parent )
   {
     super( parent );
   }
 
-  /**
-   * @param parent
-   * @param style
-   */
-  public DefaultTableViewer( Composite parent, int style )
+  public DefaultTableViewer( final Composite parent, final int style )
   {
     super( parent, style );
   }
 
-  /**
-   * @param table
-   */
-  public DefaultTableViewer( Table table )
+  public DefaultTableViewer( final Table table )
   {
     super( table );
   }
@@ -92,10 +84,11 @@ public class DefaultTableViewer extends TableViewer
    * @param isEditable
    * @return the newly added column
    */
-  protected TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable )
+  protected TableColumn addColumn( final String name, final String title,
+      final int width, final boolean isEditable )
   {
     final Table table = getTable();
-    
+
     final TableColumn tc = new TableColumn( table, SWT.CENTER );
     tc.setData( COLUMN_PROP_NAME, name );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
@@ -103,10 +96,10 @@ public class DefaultTableViewer extends TableViewer
     tc.setWidth( width );
 
     tc.setText( title );
-    
+
     return tc;
   }
-  
+
   /**
    * Refreshes the column properties according to the current list of columns
    * 

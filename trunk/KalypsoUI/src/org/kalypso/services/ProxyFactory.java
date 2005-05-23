@@ -42,7 +42,6 @@ package org.kalypso.services;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -53,8 +52,6 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.services.proxy.DateRangeBean;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 
 /**
@@ -137,15 +134,6 @@ public class ProxyFactory
 
     if( !m_proxies.containsKey( key ) )
     {
-//      try
-//      {
-//        System.out.println( getClass().getClassLoader().loadClass( "javax.activation.DataSource" ) );
-//      }
-//      catch( ClassNotFoundException e1 )
-//      {
-//        e1.printStackTrace();
-//      }
-      
 //      // TODO TRICKY: we set the classloader because of a problem using jaxrpc at runtime
 //      // under Eclipse. It seems that the system class loader is explicitely used
 //      // by the jaxrpc jars and that's bad because it doesn't find the plugins runtime libs.
@@ -209,20 +197,5 @@ public class ProxyFactory
     }
 
     return proxy;
-  }
-  
-  /**
-   * Helper method that creates a DateRangeBean using a DateRangeArgument.
-   * @param dra
-   * @return bean
-   */
-  public static DateRangeBean createDateRangeBean( final DateRangeArgument dra )
-  {
-    final Calendar from = Calendar.getInstance();
-    from.setTime( dra.getFrom() );
-    
-    final Calendar to = Calendar.getInstance();
-    to.setTime( dra.getTo() );
-    return new DateRangeBean( from.getTimeInMillis() , to.getTimeInMillis() );
   }
 }

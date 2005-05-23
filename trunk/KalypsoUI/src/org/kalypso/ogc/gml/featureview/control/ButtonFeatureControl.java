@@ -61,10 +61,14 @@ import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
+import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
+import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -111,6 +115,15 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 //      return DATE_FORMATTER.parse( text );
     if( DateWithoutTime.class.getName().equals( typename ) )
       return new CalendarFeatureDialog( feature, ftp );
+    
+    if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+    {
+      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      // TODO: TypeHandler should decide, what todo
+      if( handler instanceof ObservationLinkHandler )
+        return new TimeserieLinkFeatureDialog( feature, ftp );
+    }
+    
     if( "FeatureAssociationType".equals(typename) )
       return new FeatureDialog( feature, ftp );
     
@@ -179,7 +192,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       final ModifyListener l = (ModifyListener)iter.next();
       final Event event = new Event(  );
       // TODO: create a real event?
-      
+      event.widget = m_button;
       l.modifyText( new ModifyEvent( event ) );
     }
   }

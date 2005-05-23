@@ -57,6 +57,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -110,6 +111,7 @@ import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
+import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
@@ -182,7 +184,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
   private static final String PROP_PEGEL_NAME = "pegelNameProperty";
 
-  public ExportResultsWizardPage( )
+  public ExportResultsWizardPage()
   {
     super( "<ViewResultsWizardPage>", SELECT_FROM_MAPVIEW );
   }
@@ -190,7 +192,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
   }
@@ -214,9 +216,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       final int rightWeight = Integer.parseInt( getArguments().getProperty(
           PROP_RIGHTSASH, "50" ) );
 
-      sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
+      sashForm.setWeights( new int[] {
+          mainWeight,
+          100 - mainWeight } );
 
-      rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
+      rightSash.setWeights( new int[] {
+          rightWeight,
+          100 - rightWeight } );
 
       rightSash.addControlListener( getControlAdapter() );
       sashForm.addControlListener( getControlAdapter() );
@@ -230,7 +236,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
           .getProperty( PROP_DIAGTEMPLATE );
       if( diagFileName != null )
       {
-        final IFile diagFile = (IFile) getProject().findMember( diagFileName );
+        final IFile diagFile = (IFile)getProject().findMember( diagFileName );
         try
         {
           m_obsdiagviewType = DiagViewUtils.loadDiagramTemplateXML( diagFile
@@ -341,13 +347,13 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     } );
 
     doItButton
-        .setEnabled( !(m_berichtExporters == null || m_berichtExporters.length == 0) );
+        .setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
   }
 
   /**
    * Exports for all selected document types
    */
-  protected void exportSelectedDocuments( )
+  protected void exportSelectedDocuments()
   {
     final IFolder selectedCalcCase = getSelectedCalcCase();
 
@@ -494,30 +500,30 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       return;
 
     throw new CoreException( new org.eclipse.core.runtime.MultiStatus(
-        KalypsoGisPlugin.getId(), 0, (IStatus[]) stati
+        KalypsoGisPlugin.getId(), 0, (IStatus[])stati
             .toArray( new IStatus[stati.size()] ),
         "Beim Export ein oder mehrerer Dokumente traten Fehler auf.", null ) );
   }
 
-  private IBerichtExporter[] createExporters( )
+  private IBerichtExporter[] createExporters()
   {
     final Collection exporters = new ArrayList();
 
     final Arguments arguments = getArguments();
     for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) aIt.next();
-      final String key = (String) entry.getKey();
+      final Map.Entry entry = (Entry)aIt.next();
+      final String key = (String)entry.getKey();
       if( key.startsWith( "exporter" ) )
       {
         try
         {
           // todo: maybe check if argument is ok?
-          final Arguments args = (Arguments) entry.getValue();
+          final Arguments args = (Arguments)entry.getValue();
           final String classname = args.getProperty( "class" );
           if( classname != null )
           {
-            final IBerichtExporter exporter = (IBerichtExporter) ClassUtilities
+            final IBerichtExporter exporter = (IBerichtExporter)ClassUtilities
                 .newInstance( classname, IBerichtExporter.class, this
                     .getClass().getClassLoader() );
             exporter.init( getContext(), args );
@@ -531,7 +537,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       }
     }
 
-    return (IBerichtExporter[]) exporters
+    return (IBerichtExporter[])exporters
         .toArray( new IBerichtExporter[exporters.size()] );
   }
 
@@ -559,8 +565,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
     // view it!
     final String nameProperty = getArguments().getProperty( PROP_PEGEL_NAME );
-    final FeatureType featureType = ((IKalypsoFeatureTheme) getMapModell()
-        .getActiveTheme()).getFeatureType();
+    final FeatureType featureType = ( (IKalypsoFeatureTheme)getMapModell()
+        .getActiveTheme() ).getFeatureType();
     final FeatureTypeProperty ftp = featureType.getProperty( nameProperty );
     if( ftp == null )
     {
@@ -585,8 +591,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * test for each feature of the given list, if the timeserieslink in the given
    * property is valid
    * 
-   * @param featureList
-   *          list of features
+   * @param featureList list of features
    * @param propertyNameTimeserieslink
    * @param context
    * @return List of features that have valid timeserieslinks
@@ -601,8 +606,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     URL resultURL;
     for( Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
-      Feature fe = (Feature) iter.next();
-      TimeseriesLink resultLink = (TimeseriesLink) fe
+      Feature fe = (Feature)iter.next();
+      TimeseriesLink resultLink = (TimeseriesLink)fe
           .getProperty( propertyNameTimeserieslink );
       if( resultLink == null )
         continue;
@@ -628,7 +633,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * Allows user to export selected timeseries into repository. Handles UI
    * selection and delegates call to performPrognoseExport.
    */
-  protected void exportPrognoseTimeseries( )
+  protected void exportPrognoseTimeseries()
   {
     final IFolder selectedCalcCase = getSelectedCalcCase();
 
@@ -656,13 +661,22 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
-      protected void execute( IProgressMonitor monitor ) throws CoreException
+      protected void execute( final IProgressMonitor monitor )
+          throws CoreException
       {
-        final IStatus status = performPrognoseExport( resultTss, prognoseTss,
-            selectedCalcCase, monitor );
+        try
+        {
+          final IStatus status = performPrognoseExport( resultTss, prognoseTss,
+              selectedCalcCase, monitor );
 
-        if( !status.isOK() )
-          throw new CoreException( status );
+          if( !status.isOK() )
+            throw new CoreException( status );
+        }
+        catch( final ServiceException e )
+        {
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+              "Zeitreihen konnten nicht exportiert werden", e ) );
+        }
       }
     };
 
@@ -676,7 +690,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
       IStatus status = null;
       if( e.getTargetException() instanceof CoreException )
-        status = ((CoreException) e.getTargetException()).getStatus();
+        status = ( (CoreException)e.getTargetException() ).getStatus();
       ErrorDialog.openError( shell, "Export Prognose Zeitreihen",
           "Fehler beim Export der Zeitreihen", status );
     }
@@ -688,15 +702,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
 
   /**
    * Performs the timeseries export
-   * 
-   * @param resultTss
-   * @param prognoseTss
-   * @param calcCase
-   * @param monitor
    */
   protected IStatus performPrognoseExport( final TSLinkWithName[] resultTss,
       final TSLinkWithName[] prognoseTss, final IFolder calcCase,
-      final IProgressMonitor monitor )
+      final IProgressMonitor monitor ) throws ServiceException
   {
     if( resultTss.length != prognoseTss.length )
       throw new IllegalArgumentException( "Timeseries links not same length" );
@@ -714,6 +723,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       final URL context = ResourceUtilities.createURL( calcCase );
 
       final UrlResolver resolver = new UrlResolver();
+
+      final IObservationService srv = KalypsoGisPlugin.getDefault()
+          .getObservationServiceProxy();
 
       for( int i = 0; i < prognoseTss.length; i++ )
       {
@@ -760,7 +772,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
             // save observation if it is a server side one
             if( ObservationServiceUtils.isServerSide( lnkPG.href ) )
             {
-              ServiceRepositoryObservation.setValuesFor( values, lnkPG.href );
+              ServiceRepositoryObservation.setValuesFor( values, lnkPG.href,
+                  srv );
               LOG.info( "Observation saved on server: " + lnkPG.href );
             }
             else
@@ -779,18 +792,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       }
 
       return multiStatus;
-      //      }
-      //      catch( final Exception e )
-      //      {
-      //        e.printStackTrace();
-      //
-      //        // TODO: bessere Fehlermeldung (z.B. die Datei existiert nicht)
-      //        // taucht sonst in WQTimeserieProxy.initFilter() als
-      //        // NoSuchElementException: No axis found with type: Q
-      //        //
-      //        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-      //            "Export Prognose Zeitreihen", e ) );
-      //      }
     }
     catch( MalformedURLException e )
     {
@@ -805,7 +806,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
   }
 
-  private IFolder getSelectedCalcCase( )
+  private IFolder getSelectedCalcCase()
   {
     if( m_checklist == null )
       return null;
@@ -830,7 +831,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     mapControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  protected void startGrafik( )
+  protected void startGrafik()
   {
     final IFolder calcFolder = getCalcFolder();
     final IFolder grafikFolder = calcFolder.getFolder( "grafik" );
@@ -879,7 +880,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
    * Überschrieben, da wir das gleiche für mehrere contexte = mehrere
    * Rechenfälle ausführen
    */
-  public void refreshDiagram( )
+  public void refreshDiagram()
   {
     // TODO: sollte nicht diese methode überschreiben sondern besser die methode
     // getObservationsToShow!
@@ -901,7 +902,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     {
       try
       {
-        final IFolder calcCase = (IFolder) checkedCalcCases[i];
+        final IFolder calcCase = (IFolder)checkedCalcCases[i];
         final URL context = ResourceUtilities.createURL( calcCase );
         refreshDiagramForContext( obs, context );
       }
@@ -912,7 +913,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     }
   }
 
-  private Object[] getCheckedCalcCases( )
+  private Object[] getCheckedCalcCases()
   {
     if( m_checklist == null )
       return new Object[] {};
@@ -948,7 +949,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
       {
         control.getDisplay().asyncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
             viewer.refresh();
           }
@@ -973,24 +974,24 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     /**
      * @return Returns the selected.
      */
-    public IFolder getSelected( )
+    public IFolder getSelected()
     {
       return m_selected;
     }
 
-    public Object[] getResults( )
+    public Object[] getResults()
     {
       return m_results;
     }
 
-    public void run( )
+    public void run()
     {
       m_results = m_cl.getCheckedElements();
-      final IStructuredSelection selection = (IStructuredSelection) m_cl
+      final IStructuredSelection selection = (IStructuredSelection)m_cl
           .getSelection();
 
-      m_selected = (IFolder) (selection.isEmpty() ? null : selection
-          .getFirstElement());
+      m_selected = (IFolder)( selection.isEmpty() ? null : selection
+          .getFirstElement() );
     }
   }
 }

@@ -36,37 +36,82 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.ocs.idtable;
 
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.eclipse.jface.viewers.DefaultTableViewer;
-
+import org.kalypso.ui.repository.view.ObservationCellEditor;
 
 /**
  * IdTableViewer
  * 
  * @author schlienger
  */
-public class IdTableViewer extends DefaultTableViewer
+public class IdTableViewer extends DefaultTableViewer implements ICellModifier
 {
+  private static final String COL_HREF = "COL_HREF";
+
+  private static final String COL_OBS = "COL_OBS";
+
   public IdTableViewer( Composite parent, int style )
   {
     super( parent, style );
-    
+
     setContentProvider( new IdTableContentProvider() );
     setLabelProvider( new IdTableLabelProvider() );
-    //setCellEditors(  );
-    
+    setCellEditors( new CellEditor[] {
+        null,
+        new ObservationCellEditor( parent ) } );
+    setCellModifier( this );
+
     final Table table = getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-    
-    addColumn( "Zeitreihen", "Zeitreihen", 250, true );
-    addColumn( "Server-KZ", "Server-KZ", 400, true );
+
+    addColumn( COL_OBS, "Zeitreihe", 250, true );
+    addColumn( COL_HREF, "Kennzeichen", 400, true );
 
     refreshColumnProperties();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object,
+   *      java.lang.String)
+   */
+  public boolean canModify( Object element, String property )
+  {
+    return property.equals( COL_HREF );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object,
+   *      java.lang.String)
+   */
+  public Object getValue( Object element, String property )
+  {
+    if( property.equals( COL_HREF ) )
+      return ( (IdStruct)element ).getId();
+
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object,
+   *      java.lang.String, java.lang.Object)
+   */
+  public void modify( Object element, String property, Object value )
+  {
+    if( property.equals( COL_HREF ) )
+    {
+      final Object data = ( (Item)element ).getData();
+      final IdStruct ids = (IdStruct)data;
+      ids.setId( (String)value );
+    }
   }
 }
