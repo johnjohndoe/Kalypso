@@ -36,38 +36,52 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
-import org.kalypsodeegree.model.feature.Feature;
+import java.util.List;
+
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Belger
  */
-public class LayerTableLabelProvider implements ITableLabelProvider
+public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvider
 {
   private final LayerTableViewer m_viewer;
 
+  private final Color m_selectionColor;
+
+  private final Color m_noSelectionColor;
+
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
-    m_viewer = layerTable;    
+    m_viewer = layerTable;
+    m_selectionColor = m_viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_LIST_SELECTION );
+    m_noSelectionColor = m_viewer.getControl().getBackground();
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
   public void dispose()
   {
-    // nix zu disposen  
+    // nix zu disposen
   }
-  
+
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
+   *      int)
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
@@ -78,39 +92,43 @@ public class LayerTableLabelProvider implements ITableLabelProvider
     final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
-    
+
     return modifier.getImage( feature );
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
+   *      int)
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
     if( m_viewer.getColumnCount() == 0 )
       return "";
-    
+
     final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
       return "";
-    
+
     final String label = modifier.getLabel( feature );
     return label == null ? "" : label;
   }
 
   /**
+   * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?    
+    // TODO Listener informieren, wenn sich der Wert eines Features geändert
+    // hat?
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
+   *      java.lang.String)
    */
   public boolean isLabelProperty( final Object element, final String property )
   {
@@ -123,5 +141,31 @@ public class LayerTableLabelProvider implements ITableLabelProvider
   public void removeListener( final ILabelProviderListener listener )
   {
     //  TODO
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+   */
+  public Color getForeground( Object element )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+   */
+  public Color getBackground( Object element )
+  {
+    // TODO check highlight
+    final ISelection selection = m_viewer.getSelection();
+    if( selection instanceof IStructuredSelection )
+    {
+      final List list = ( (IStructuredSelection)selection ).toList();
+      if( list.contains( element ) )
+        return m_selectionColor;
+    }
+    else
+      return m_noSelectionColor;
+    return m_noSelectionColor;
   }
 }
