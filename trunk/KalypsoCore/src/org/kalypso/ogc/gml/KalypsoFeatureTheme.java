@@ -327,9 +327,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       if( result == null )
         result = new ArrayList();
-      for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
+      for(int i=0;i<m_dispayElements.size();i++)
       {
-        final DisplayElement[] de = (DisplayElement[])iter.next();
+        final DisplayElement[] de = (DisplayElement[])m_dispayElements.get(i);
         if( de.length > 0 )
         {
           final Feature feature = de[0].getFeature();
