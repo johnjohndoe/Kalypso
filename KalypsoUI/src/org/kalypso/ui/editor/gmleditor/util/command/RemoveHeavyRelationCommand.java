@@ -78,8 +78,7 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private boolean m_isComposition2;
 
-  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkName1,
-      Feature bodyFE, String linkName2, Feature destFE )
+  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkName1, Feature bodyFE, String linkName2, Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
@@ -113,8 +112,9 @@ public class RemoveHeavyRelationCommand implements ICommand
       m_workspace.removeLinkedAsAggregationFeature( m_bodyFE, m_linkName2, m_destFE.getId() );
 
     // TODO is this event needed ??
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    //    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
+    // m_workspace, m_bodyFE,
+    //        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
     // then remove 1. normal relation
     if( m_isComposition1 )
@@ -143,17 +143,17 @@ public class RemoveHeavyRelationCommand implements ICommand
       m_workspace.addFeatureAsComposition( m_srcFE, m_linkName1, m_pos1, m_bodyFE );
     else
       m_workspace.addFeatureAsAggregation( m_srcFE, m_linkName1, m_pos1, m_bodyFE.getId() );
-    // TODO is this event needed ??
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_isComposition2 )
       m_workspace.addFeatureAsComposition( m_bodyFE, m_linkName2, m_pos2, m_destFE );
     else
       m_workspace.addFeatureAsAggregation( m_bodyFE, m_linkName2, m_pos2, m_destFE.getId() );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
+    // TODO is this event needed ??
+    //    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
+    // m_workspace, m_bodyFE,
+    //        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace
+        .fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
