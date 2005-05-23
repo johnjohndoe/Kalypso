@@ -41,22 +41,17 @@
 package org.kalypso.eclipse.swt.custom;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -71,14 +66,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.kalypso.java.util.Arrays;
 
 /**
  * 
- * TODO Selection besser handeln <br>
  * TODO Popupmenu auf selection <br>
- * TODO Popupmenu auf celle TODO testen
+ * TODO Popupmenu auf celle
  * 
  * @author Belger
  */
@@ -95,6 +88,9 @@ public class ExcelLikeTableCursor extends TableCursor
 
   final Color m_canEditColor;
 
+  /**
+   * allow editing with interactive mouse (e.g. toggle checkbox)
+   */
   final MouseListener m_cellEditorMouseListener = new MouseAdapter()
   {
     /**
@@ -103,13 +99,15 @@ public class ExcelLikeTableCursor extends TableCursor
      */
     public void mouseDown( final MouseEvent e )
     {
+      // force default selection (e.g. checkbox gets toggled)
       if( e.button == 1 )
-      {
         m_tableCursorSelectionListener.widgetDefaultSelected( null );
-      }
     }
   };
 
+  /**
+   * handle background color and default editing
+   */
   final SelectionListener m_tableCursorSelectionListener = new SelectionListener()
   {
     /**
@@ -125,7 +123,6 @@ public class ExcelLikeTableCursor extends TableCursor
       // change background color when cell is not editable
       final boolean canModify = checkCanModify( row, widgetCol );
       setBackground( canModify ? m_canEditColor : m_cannotEditColor );
-      setVisible( false ); // wichtig
     }
 
     /**
@@ -138,36 +135,36 @@ public class ExcelLikeTableCursor extends TableCursor
     }
   };
 
+  /**
+   * handle stop editing to continue navigating with cursor on key events
+   */
   final ICellEditorListener m_cellEditorListener = new ICellEditorListener()
   {
     // after editing set tablecursor visible
     // and give it the focus to continue navigating (e.g. CR-Up, RC-Down)
     public void applyEditorValue()
     {
-      setVisible( true );
-      setFocus();
-      m_viewer.update( getRow().getData(), null );
-      m_viewer.refresh();
       // leaf cell
+      stopEditing();
     }
 
     public void cancelEditor()
     {
-      setVisible( true );
-      setFocus();
-      m_viewer.update( getRow().getData(), null );
-      m_viewer.refresh();
       // leaf cell
+      stopEditing();
     }
 
     public void editorValueChanged( boolean oldValidState, boolean newValidState )
     {
+      // nothing TODO change color of something ?
     }
   };
 
-  // keylistener while editing a cell
+  /**
+   * keylistener while editing a cell <br>
+   * handle cursor moving
+   */
   final KeyListener m_keyListenerOnCell = new KeyAdapter()
-  //  new KeyListener()
   {
     public void keyPressed( KeyEvent e )
     {
@@ -183,7 +180,10 @@ public class ExcelLikeTableCursor extends TableCursor
         dy = 1;
       else if( e.keyCode == SWT.ESC )
       {
-        //TODO handle esc
+        // handle ESCAPE
+        final CellEditor cellEditor = m_viewer.getCellEditors()[getColumn()];
+        cellEditor.performUndo();
+        //TODO implement performUndo() or similar
       }
       if( dx != 0 || dy != 0 )
       {
@@ -192,123 +192,68 @@ public class ExcelLikeTableCursor extends TableCursor
         TableItem row2 = getRow();
         final int row = table2.indexOf( row2 ) + dy;
 
-        if( col > 0 && col < table2.getColumnCount() && row > 0 && row < table2.getItemCount() )
+        if( col >= 0 && col < table2.getColumnCount() && row >= 0 && row < table2.getItemCount() )
         {
           setSelection( row, col );
+          setVisible( true );
+          setFocus();
+          // leaf cell
+          ( (Control)e.getSource() ).removeKeyListener( m_keyListenerOnCell );
         }
-        // TODO check this ???
-        setVisible( true );
-        setFocus();
-        // leaf cell
-        ( (Control)e.getSource() ).removeKeyListener( m_keyListenerOnCell );
       }
-      //      if( e.keyCode == SWT.CR && e.getSource() instanceof CheckboxCellEditor
-      // )
-      //      {
-      //        CheckboxCellEditor ce = (CheckboxCellEditor)e.getSource();
-      //        ce.setValue( new Boolean( !( (Boolean)ce.getValue() ).booleanValue() )
-      // );
-      //      }
+      if( e.keyCode != SWT.CR && e.getSource() instanceof CheckboxCellEditor )
+      {
+        // toggle checkbox
+        CheckboxCellEditor ce = (CheckboxCellEditor)e.getSource();
+        if( Boolean.TRUE.equals( ce.getValue() ) )
+          ce.setValue( Boolean.FALSE );
+        else
+          ce.setValue( Boolean.TRUE );
+      }
     }
   };
 
   /**
-   * @see org.eclipse.swt.widgets.Control#setLocation(int, int)
+   * keylistener on table <br>
+   * handle start editing on pressed key <br>
+   * handle CTRL and SHIFT keys
    */
-  public void setLocation( int x, int y )
-  {
-    //    TableItem row2 = getRow();
-    //    // int column2 = getColumn();
-    //    m_viewer.update( row2.getData(), null );
-    super.setLocation( x, y );
-  }
-
-  // keylistener on table
   final KeyListener m_keyListenerOnTableCursor = new KeyAdapter()
   {
 
     public void keyPressed( final KeyEvent e )
     {
-      //      clearSelection();
       if( e.keyCode == SWT.CTRL || ( e.stateMask & SWT.CONTROL ) != 0 )
       {
         toggleSelection( getRow() );
-        //        setVisible( false );
         return;
       }
       if( e.keyCode == SWT.SHIFT || ( e.stateMask & SWT.SHIFT ) != 0 )
       {
-        //        setVisible( false ); //
+        addToSelection( getRow() );
+        return;
+        // bug in eclipse ?
+        // shift-selection from table is
+        // not in synchronize with cursor, so do not release focus from
+        // cellcursor and hanle shift-selection here
+        //        setVisible( false );
         //        return;
       }
       // handle F2 to start editing
       if( e.keyCode == SWT.F2
-          || ( e.character == ' ' || ( e.character >= '0' && e.character <= 'z' ) || ( e.character >= 'A' && e.character <= 'Z' ) ) )
+          || ( " -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0 || ( e.character >= '0' && e.character <= 'z' ) || ( e.character >= 'A' && e.character <= 'Z' ) ) )
       {
         startEditing( e );
         return;
       }
-
-      //      if( ( e.stateMask & SWT.MOD1 ) != 0 )
-      //      {
-      //        if( DEBUG )
-      //          System.out.println( "MOD1 Alt GR" );
-      //      }
-      //
-      //      if( ( e.stateMask & SWT.MOD2 ) != 0 )
-      //      {
-      //        if( DEBUG )
-      //          System.out.println( "MOD2 Shift" );
-      //        if( e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.ARROW_UP ||
-      // e.keyCode == SWT.ARROW_LEFT || e.keyCode == SWT.ARROW_RIGHT )
-      //          setVisible( false );
-      //      }
-      //
-      //      if( ( e.stateMask & SWT.MOD3 ) != 0 )
-      //      {
-      //        if( DEBUG )
-      //          System.out.println( "MOD3 " );
-      //      }
-      //
-      //      if( ( e.stateMask & SWT.MOD4 ) != 0 )
-      //      {
-      //        if( DEBUG )
-      //          System.out.println( "MOD4 " );
-      //      }
-      //
-      //      if( e.keyCode == SWT.MOD1 )
-      //      {
-      //        if( DEBUG )
-      //          System.out.println( "MOD1==" );
-      //      }
-      //      if( e.keyCode == SWT.MOD2 )
-      //      {
-      //        if( DEBUG )
-      //          System.out.println( "MOD2==" );
-      //        int locX = m_viewer.getTable().indexOf( getRow() );
-      //        int locY = getColumn();
-      //        // setLocation( locX, locY );
-      //        // addToSelection( getRow() );
-      //        // setLocation( locX, locY );
-      //        // Event event = new Event();
-      //        // event.display = m_viewer.getControl().getDisplay();
-      //        // event.doit = true;
-      //        // event.item = getRow();
-      //        // event.x = locX;
-      //        // event.y = locY;
-      //        // event.type = SWT.Selection;
-      //        // notifyListeners( SWT.Selection, event );
-      //      }
-      //      // Hide the TableCursor when the user hits the "MOD1" or "MOD2" key.
-      //      // This alows the user to select multiple items in the table.
-      //      if( e.keyCode == SWT.MOD1 || e.keyCode == SWT.MOD2 || ( e.stateMask &
-      // SWT.MOD1 ) != 0 || ( e.stateMask & SWT.MOD2 ) != 0 )
-      //        setVisible( false );
       setVisible( true );
       setFocus();
     }
   };
 
+  /**
+   * handle activation of cursor after multiselection
+   */
   private final KeyListener m_tableKeyListener = new KeyAdapter()
   {
     public void keyReleased( KeyEvent e )
@@ -321,14 +266,8 @@ public class ExcelLikeTableCursor extends TableCursor
         return;
       if( e.keyCode != SWT.SHIFT && ( e.stateMask & SWT.SHIFT ) != 0 )
         return;
-      setVisible( true ); // wichtig
-      setFocus();// wichtig
-
-      //      final Table table = m_viewer.getTable();
-      //      TableItem[] selection = table.getSelection();
-      //      TableItem row = ( selection.length == 0 ) ? table.getItem(
-      // table.getTopIndex() ) : selection[0];
-      //      table.showItem( getRow() );
+      setVisible( true );
+      setFocus();
     }
   };
 
@@ -345,22 +284,6 @@ public class ExcelLikeTableCursor extends TableCursor
     // change background color when cell is not editable
     addSelectionListener( m_tableCursorSelectionListener );
 
-    addFocusListener( new FocusListener()
-    {
-      // cursor gets focus == editing stoped
-      public void focusGained( FocusEvent e )
-      {
-        //        System.out.println( "focusGained" );
-      }
-
-      // cursor loose focus == editing started
-      public void focusLost( FocusEvent e )
-      {
-        //        System.out.println( "focusLost" );
-      }
-    } );
-    // Show the TableCursor when the user releases the "MOD2" or "MOD1" key.
-    // This signals the end of the multiple selection task.
     final Table table = tableViewer.getTable();
     table.addKeyListener( m_tableKeyListener );
     addMouseListener( m_cellEditorMouseListener );
@@ -382,26 +305,21 @@ public class ExcelLikeTableCursor extends TableCursor
 
     // tablecursor should be invisible while editing the cell
     setVisible( false );
-
     // add the editorListener to the celleditor in order to refocus the
     // tablecursor
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
-
+    cellEditor.removeListener( m_cellEditorListener );
     cellEditor.addListener( m_cellEditorListener );
-    // TODO check remove listener
 
-    // control arrow and ESC keys
-    // TODO check how listener will be removed if no key gets pressed
     // remove potential old listener
     final Control control = cellEditor.getControl();
     if( control != null && !control.isDisposed() )
+    {
       control.removeKeyListener( m_keyListenerOnCell );
-    if( keyEvent != null && keyEvent.keyCode != SWT.F2 && cellEditor instanceof TextCellEditor )
-      control.addKeyListener( m_keyListenerOnCell );
-    if( keyEvent != null && keyEvent.keyCode != SWT.F2 && cellEditor instanceof CheckboxCellEditor )
-      control.addKeyListener( m_keyListenerOnCell );
+      if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
+        control.addKeyListener( m_keyListenerOnCell );
+    }
     m_viewer.editElement( element, column );
-    final Widget editorControl = control;
 
     // eigentlich würde ich gerne direkt den event weiterschicken, das klappt
     // aber nicht
@@ -413,19 +331,22 @@ public class ExcelLikeTableCursor extends TableCursor
     //    // wäre schön, jetzt ein KeyPressed abzusetzen
     //    editorControl.notifyListeners( SWT.KeyDown, event );
     // ??
+
     // do not loose pressed character
-    if( editorControl instanceof Button )
+    // 
+    if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
-      final Button button = (Button)editorControl;
-      if( keyEvent != null )
-        button.setSelection( !button.getSelection() );
+      Button button = (Button)control;
+      button.setSelection( !button.getSelection() );
     }
-    if( editorControl instanceof Text )
+    // 
+    if( control instanceof Text )
     {
-      final Text text = (Text)editorControl;
+      final Text text = (Text)control;
       if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
         text.insert( "" + keyEvent.character );
     }
+
   }
 
   boolean checkCanModify( final TableItem row, final int column )
@@ -458,23 +379,27 @@ public class ExcelLikeTableCursor extends TableCursor
     m_viewer.getTable().setSelection( newViewerSelection );
   }
 
-  void removeFromSelection( TableItem item )
-  {
-    if( DEBUG )
-      System.out.println( "remove selection" );
-    final IStructuredSelection tableSelection = (IStructuredSelection)m_viewer.getSelection();
-    final List featureList = tableSelection.toList();
-    featureList.remove( item.getData() );
-    final IStructuredSelection newSelection = new StructuredSelection( featureList );
-
-    final TableItem[] viewerSelection = m_viewer.getTable().getSelection();
-    final List itemList = Arrays.asList( viewerSelection );
-    itemList.remove( item );
-    final TableItem[] newViewerSelection = (TableItem[])itemList.toArray( new TableItem[itemList.size()] );
-    m_viewer.setSelection( newSelection, true );
-    m_viewer.getTable().setSelection( newViewerSelection );
-  }
-
+  //
+  //  void removeFromSelection( TableItem item )
+  //  {
+  //    if( DEBUG )
+  //      System.out.println( "remove selection" );
+  //    final IStructuredSelection tableSelection =
+  // (IStructuredSelection)m_viewer.getSelection();
+  //    final List featureList = tableSelection.toList();
+  //    featureList.remove( item.getData() );
+  //    final IStructuredSelection newSelection = new StructuredSelection(
+  // featureList );
+  //
+  //    final TableItem[] viewerSelection = m_viewer.getTable().getSelection();
+  //    final List itemList = Arrays.asList( viewerSelection );
+  //    itemList.remove( item );
+  //    final TableItem[] newViewerSelection = (TableItem[])itemList.toArray( new
+  // TableItem[itemList.size()] );
+  //    m_viewer.setSelection( newSelection, true );
+  //    m_viewer.getTable().setSelection( newViewerSelection );
+  //  }
+  //
   void toggleSelection( TableItem item )
   {
     if( DEBUG )
@@ -498,23 +423,24 @@ public class ExcelLikeTableCursor extends TableCursor
     m_viewer.getTable().setSelection( newViewerSelection );
   }
 
-  void clearSelection()
+  //  void clearSelection()
+  //  {
+  //    if( DEBUG )
+  //      System.out.println( "clear selection" );
+  //    final ISelection selection = m_viewer.getSelection();
+  //    if( !selection.isEmpty() && selection instanceof IStructuredSelection )
+  //    {
+  //      // clear selections
+  //      m_viewer.setSelection( null );
+  //      m_viewer.getTable().setSelection( new TableItem[0] );
+  //      // refresh view
+  //      m_viewer.refresh();
+  //    }
+  //  }
+
+  public void stopEditing()
   {
-    if( DEBUG )
-      System.out.println( "clear selection" );
-    final ISelection selection = m_viewer.getSelection();
-    if( !selection.isEmpty() && selection instanceof IStructuredSelection )
-    {
-      // clear selections
-      m_viewer.setSelection( null );
-      m_viewer.getTable().setSelection( new TableItem[0] );
-      // refresh view
-      final List list = ( (IStructuredSelection)selection ).toList();
-      for( Iterator iter = list.iterator(); iter.hasNext(); )
-      {
-        Object element = iter.next();
-        m_viewer.update( element, null );
-      }
-    }
+    setVisible( true );
+    setFocus();
   }
 }

@@ -213,8 +213,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
       final IFeatureModifierFactory featureControlFactory, final int selectionID, final boolean bCursorSelects )
   {
-    //    new Table(parent,style| SWT.MULTI | SWT.FULL_SELECTION );
-
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_featureControlFactory = featureControlFactory;
@@ -231,8 +229,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Table table = getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-
-    // ???
+    // disable capture to let selection of table and tableviewer in sync
+    table.setCapture( false );
 
     final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
     //    final TableCursor tc = new TableCursor(getTable(),SWT.NONE);
@@ -253,16 +251,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         // getTable().getSelection().length + " items" );
       }
     } );
-  }
-
-  /**
-   *  
-   */
-  private boolean isCursorSelects()
-  {
-    //     TODO ???
-    return false;
-    //    return m_bCursorSelects;
   }
 
   public void dispose()
@@ -555,10 +543,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         m_tableCursor.redraw();
       }
     }
-    //    final IStructuredSelection selection =
-    // (IStructuredSelection)getSelection();
-    //    if( !newSelection.equals( selection.toList() ) )
-    //      setSelection( new StructuredSelection( newSelection ), false );
   }
 
   public boolean isDisposed()
