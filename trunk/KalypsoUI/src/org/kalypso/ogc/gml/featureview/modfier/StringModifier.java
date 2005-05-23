@@ -60,9 +60,9 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class StringModifier implements IFeatureModifier
 {
   private final DateFormat DATE_FORMATTER = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
-  
+
   private final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
-  
+
   private final FeatureTypeProperty m_ftp;
 
   public StringModifier( final FeatureTypeProperty ftp )
@@ -75,7 +75,7 @@ public class StringModifier implements IFeatureModifier
    */
   public void dispose()
   {
-  // nix zu tun
+    // nix zu tun
   }
 
   /**
@@ -101,13 +101,14 @@ public class StringModifier implements IFeatureModifier
    */
   public Object parseInput( final Feature f, final Object value )
   {
+    Object result = null;
     final String text = value == null ? "" : value.toString();
     if( text.length() == 0 )
       return null;
 
     try
     {
-      return parseData( text );
+      result = parseData( text );
     }
     catch( final NumberFormatException e )
     {
@@ -117,29 +118,30 @@ public class StringModifier implements IFeatureModifier
     {
       e.printStackTrace();
     }
-
-    return null;
+    return result;
   }
 
   private Object parseData( final String text ) throws ParseException
   {
+    Object result = null;
+    // Exception
     final String typeName = m_ftp.getType();
     if( typeName.equals( "java.lang.String" ) )
-      return text;
-    if( typeName.equals( "java.lang.Double" ) )
-      return new Double( text.replace( ',', '.' ) );
-    if( typeName.equals( "java.lang.Integer" ) )
-      return new Integer( text );
-    if( typeName.equals( "java.lang.Float" ) )
-      return new Float( text.replace( ',', '.' ) );
-    if( typeName.equals( "java.lang.Long" ) )
-      return new Long( text );
-    if( typeName.equals( "java.lang.Boolean" ) )
-      return new Boolean( text );
-    if( typeName.equals( "java.util.Date" ) )
-      return DATE_FORMATTER.parse( text );
-
-    return null;
+      result = text;
+    else if( typeName.equals( "java.lang.Boolean" ) )
+      result = new Boolean( text );
+    else if( typeName.equals( "java.util.Date" ) )
+      result = DATE_FORMATTER.parse( text );
+    else if( typeName.equals( "java.lang.Double" ) )
+      result = new Double( NUMBER_FORMAT.parse( text ).doubleValue() );
+    else if( typeName.equals( "java.lang.Integer" ) )
+      result = new Integer( NUMBER_FORMAT.parse( text ).intValue() );
+    else if( typeName.equals( "java.lang.Float" ) )
+      result = new Float( NUMBER_FORMAT.parse( text ).floatValue() );
+    else if( typeName.equals( "java.lang.Long" ) )
+      result = new Long( NUMBER_FORMAT.parse( text ).longValue() );
+    // TODO any other types ??
+    return result;
   }
 
   /**
@@ -159,8 +161,9 @@ public class StringModifier implements IFeatureModifier
     {
       final String text = value.toString();
       if( text.length() == 0 )
+      {
         return null;
-
+      }
       parseData( text );
       return null;
     }
@@ -194,5 +197,4 @@ public class StringModifier implements IFeatureModifier
   {
     return null;
   }
-
 }

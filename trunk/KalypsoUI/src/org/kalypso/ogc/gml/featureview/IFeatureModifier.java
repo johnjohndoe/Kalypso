@@ -40,12 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author belger
@@ -67,7 +67,7 @@ public interface IFeatureModifier extends ICellEditorValidator
   public Object getValue( final Feature f );
 
   /**
-   * macht aus dem (editierten) Objekt ein Object, welches dem Feature wider als
+   * macht aus dem (editierten) Objekt ein Object, welches dem Feature wieder als
    * Property gesetzt werden kann
    * 
    * @param f
