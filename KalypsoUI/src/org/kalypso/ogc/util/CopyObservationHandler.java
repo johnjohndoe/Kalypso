@@ -40,7 +40,7 @@ v.doemming@tuhh.de
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
-import java.io.BufferedWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
 
@@ -58,15 +58,16 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class CopyObservationHandler
 {
-  public static void copyObserations( final IUrlResolver urlResolver, final URL gmlURL, final String featurePath, final String targetobservation, final URL context, final Source[] sources, final BufferedWriter summaryWriter, final BufferedWriter detailWriter ) throws Exception
+  public static void copyObserations( final IUrlResolver urlResolver, final URL gmlURL, final String featurePath, final String targetobservation, final URL context, final Source[] sources, final PrintWriter summaryWriter, final PrintWriter detailWriter ) throws Exception
   {
-      summaryWriter.write( "Kopieren von Zeitreihen" );
-      summaryWriter.write( "GML=" + gmlURL.toString() );
-      summaryWriter.write( "FeaturePath=" + featurePath );
-      summaryWriter.write( "Target=" + targetobservation );
+      summaryWriter.println( "Kopieren von Zeitreihen:" );
+      summaryWriter.println( "GML=" + gmlURL.toString() );
+      summaryWriter.println( "FeaturePath=" + featurePath );
+      summaryWriter.println( "Target=" + targetobservation );
+      summaryWriter.println(  );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
-      final FeatureType ft = workspace.getFeatureType( featurePath );
+      final FeatureType ft = workspace.getFeatureTypeFromPath( featurePath );
       if( ft == null )
         throw new TransformationException( "FeaturePath unbekannt: " + featurePath );
 
@@ -76,34 +77,30 @@ public final class CopyObservationHandler
 
   public final static class Source
   {
-    private String property;
+    private final String property;
     
-    private Date from;
+    private final Date from;
     
-    private Date to;
+    private final Date to;
+    
+    public Source( final String property, final Date from, final Date to )
+    {
+      this.property = property;
+      this.from = from;
+      this.to = to;
+    }
+    
     public final Date getFrom()
     {
       return from;
-    }
-    public final void setFrom( Date from )
-    {
-      this.from = from;
     }
     public final String getProperty()
     {
       return property;
     }
-    public final void setProperty( String property )
-    {
-      this.property = property;
-    }
     public final Date getTo()
     {
       return to;
-    }
-    public final void setTo( Date to )
-    {
-      this.to = to;
     }
   }
 }

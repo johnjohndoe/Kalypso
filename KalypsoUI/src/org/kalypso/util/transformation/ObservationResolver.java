@@ -41,8 +41,8 @@
 package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -171,7 +171,7 @@ public class ObservationResolver extends AbstractTransformation
 
       resolveTimeseries( gmlURL, features, sourceObsName1, sourceObsName2, targetObsName,
           targetFolder, start, middle, stop, rangeMode1, rangeMode2, new SubProgressMonitor(
-              monitor, 1000 ), msgWriter, logWriter );
+              monitor, 1000 ), new PrintWriter( msgWriter ), new PrintWriter( logWriter ) );
 
       monitor.done();
     }
@@ -208,7 +208,7 @@ public class ObservationResolver extends AbstractTransformation
       final String sourceName1, final String sourceName2, final String targetName,
       final IFolder targetFolder, final Date start, final Date middle, final Date stop,
       final String rangeMode1, final String rangeMode2, final IProgressMonitor monitor,
-      final BufferedWriter msgWriter, final BufferedWriter logWriter )
+      final PrintWriter msgWriter, final PrintWriter logWriter )
       throws TransformationException
   {
     if( features.length == 0 )
@@ -319,18 +319,11 @@ public class ObservationResolver extends AbstractTransformation
     }
   }
 
-  private static void write( String msg, String desc, BufferedWriter msgWriter,
-      BufferedWriter logWriter )
+  private static void write( String msg, String desc, PrintWriter msgWriter,
+      PrintWriter logWriter )
   {
-    try
-    {
-      msgWriter.write( msg + "\n" );
-      logWriter.write( desc + "\n" );
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
+    msgWriter.println( msg );
+    logWriter.println( desc );
   }
 
   private Date parseRange( final Date start, final Date middle, final Date stop, String rangeMode1,

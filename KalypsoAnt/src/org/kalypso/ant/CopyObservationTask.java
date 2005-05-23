@@ -38,18 +38,20 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.ant;
+package org.kalypso.ant;
 
 import java.io.BufferedWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.ogc.util.CopyObservationHandler;
-import org.kalypso.ogc.util.CopyObservationHandler.Source;
 import org.kalypso.util.url.UrlResolver;
 
 /**
@@ -94,21 +96,24 @@ public class CopyObservationTask extends Task
       final URL gmlURL = urlResolver.resolveURL( m_context, getGml() );
       
       final StringWriter detailWriter = new StringWriter( );
-      final BufferedWriter detailBW = new BufferedWriter( detailWriter );
+      final PrintWriter detailPW = new PrintWriter( new BufferedWriter( detailWriter ) );
       final StringWriter summaryWriter = new StringWriter( );
-      final BufferedWriter summaryBW = new BufferedWriter( summaryWriter );
+      final PrintWriter summaryPW = new PrintWriter( new BufferedWriter( summaryWriter ) );
 
-      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(), getContext(), (Source[])m_sources
-          .toArray( new CopyObservationHandler.Source[m_sources.size()] ), summaryBW, detailBW );
+      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(), getContext(), (CopyObservationHandler.Source[])m_sources
+          .toArray( new CopyObservationHandler.Source[m_sources.size()] ), summaryPW, detailPW );
 
-      summaryBW.close();
-      detailBW.close();
+      summaryPW.close();
+      detailPW.close();
 
-      log( "Zusammenfassung" );
+      log( "Zusammenfassung", Project.MSG_INFO );
       log( summaryWriter.toString() );
+      log( "\n" );
 
-      log( "\nDetails" );
+      // TODO: append details to log-file
+      log( "Details" );
       log( detailWriter.toString() );
+      log( "\n" );
     }
     catch( final Exception e )
     {
@@ -151,8 +156,52 @@ public class CopyObservationTask extends Task
     m_targetobservation = targetobservation;
   }
   
-  public void addSource( final CopyObservationHandler.Source source )
+  public void addConfiguredSource( final Source source )
   {
-    m_sources.add( source );
+    // validate source
+    final String property = source.getProperty();
+    final long from = source.getFrom();
+    final long to = source.getTo();
+
+    final Date fromDate = new Date( from );
+    final Date toDate = new Date( to );
+    
+    getProject().log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
+    
+    m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate ) );
   }
+  
+  public final static class Source
+  {
+    private String property;
+    
+    private long from;
+    
+    private long to;
+    public final String getProperty()
+    {
+      return property;
+    }
+    public final void setProperty( String property )
+    {
+      this.property = property;
+    }
+    public final long getFrom()
+    {
+      return from;
+    }
+    public final void setFrom( long from )
+    {
+      this.from = from;
+    }
+    public final long getTo()
+    {
+      return to;
+    }
+    public final void setTo( long to )
+    {
+      this.to = to;
+    }
+  }
+
 }

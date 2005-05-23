@@ -195,7 +195,7 @@ public class TransformationHelper
     }
 
     // now delete temp file
-    //tmpFile.delete(); TODO warum ist es auskommentiert?
+    tmpFile.delete();
 
     // now handle the case where operation was successfull, but some messages
     // were thrown for user.

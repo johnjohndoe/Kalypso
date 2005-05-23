@@ -720,8 +720,12 @@
          point="org.eclipse.ant.core.antTasks">
       <antTask
             eclipseRuntime="true"
-            class="org.kalypso.util.ant.CopyObservationTask"
-            library="lib/KalypsoUi_antTask.jar"
+            class="org.kalypso.ant.CopyObservationTask"
+            library="lib/kalypsoAnt.jar"
             name="copyObservation"/>
+      <antTask
+            class="org.kalypso.ant.GmlPropertyTask"
+            library="lib/kalypsoAnt.jar"
+            name="gmlProperty"/>
    </extension>
  </plugin>

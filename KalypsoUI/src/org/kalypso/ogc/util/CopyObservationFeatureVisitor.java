@@ -40,9 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -80,12 +80,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final IUrlResolver m_urlResolver;
 
-  private final BufferedWriter m_summaryWriter;
+  private final PrintWriter m_summaryWriter;
 
-  private final BufferedWriter m_detailWriter;
+  private final PrintWriter m_detailWriter;
 
   public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
-      final String targetobservation, final Source[] sources, final BufferedWriter summaryWriter, final BufferedWriter detailWriter )
+      final String targetobservation, final Source[] sources, final PrintWriter summaryWriter, final PrintWriter detailWriter )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -107,13 +107,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       final TimeseriesLink targetlink = (TimeseriesLink)f.getProperty( m_targetobservation );
       if( targetlink == null )
       {
-        m_summaryWriter.write( "Keine Ziel-Zeitreihe gefunden für Feature mit ID: " + f.getId() );
+        m_summaryWriter.println( "Keine Ziel-Zeitreihe gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
       
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_summaryWriter.write( "Keine Quell-Zeitreihe(n) gefunden für Feature mit ID: " + f.getId() );
+        m_summaryWriter.println( "Keine Quell-Zeitreihe(n) gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
 
@@ -165,16 +165,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
       
-      try
-      {
-        m_summaryWriter.write( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
-        m_summaryWriter.write( e.getLocalizedMessage() );
-      }
-      catch( IOException e1 )
-      {
-        // should never happen
-        e1.printStackTrace();
-      }
+      m_summaryWriter.println( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
+      m_summaryWriter.println( e.getLocalizedMessage() );
     }
 
     return true;

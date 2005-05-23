@@ -40,8 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -65,7 +64,7 @@ public class KalypsoProcolWriter
 
   /**
    * @see KalypsoProcolWriter#analyseValues(IObservation[], ITuppleModel[],
-   *      BufferedWriter, BufferedWriter)
+   *      PrintWriter, PrintWriter)
    * 
    * @param observation
    * @param model
@@ -74,8 +73,8 @@ public class KalypsoProcolWriter
    * @throws SensorException
    */
   public static void analyseValues( final IObservation observation,
-      final ITuppleModel model, final BufferedWriter summaryWriter,
-      final BufferedWriter detailsWriter ) throws SensorException
+      final ITuppleModel model, final PrintWriter summaryWriter,
+      final PrintWriter detailsWriter ) throws SensorException
   {
     analyseValues( new IObservation[] { observation },
         new ITuppleModel[] { model }, summaryWriter, detailsWriter );
@@ -92,83 +91,72 @@ public class KalypsoProcolWriter
    * @throws SensorException
    */
   public static void analyseValues( final IObservation[] observations,
-      final ITuppleModel[] models, final BufferedWriter summaryWriter,
-      final BufferedWriter detailsWriter ) throws SensorException
+      final ITuppleModel[] models, final PrintWriter summaryWriter,
+      final PrintWriter detailsWriter ) throws SensorException
   {
     if( observations.length != models.length )
       throw new IllegalArgumentException( "Arrays not same length" );
 
     final StringBuffer bf = new StringBuffer();
 
-    try
+    for( int i = 0; i < models.length; i++ )
     {
-      for( int i = 0; i < models.length; i++ )
+      boolean sumDone = false;
+
+      final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( models[i]
+          .getAxisList() );
+
+      if( statusAxes.length != 0 )
       {
-        boolean sumDone = false;
-
-        final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( models[i]
-            .getAxisList() );
-
-        if( statusAxes.length != 0 )
+        for( int ix = 0; ix < models[i].getCount(); ix++ )
         {
-          for( int ix = 0; ix < models[i].getCount(); ix++ )
+          // clear reporting buffer
+          boolean bError = false;
+          bf.delete( 0, bf.length() );
+
+          for( int iAxes = 0; iAxes < statusAxes.length; iAxes++ )
           {
-            // clear reporting buffer
-            boolean bError = false;
-            bf.delete( 0, bf.length() );
-
-            for( int iAxes = 0; iAxes < statusAxes.length; iAxes++ )
+            final Number nb = (Number) models[i].getElement( ix,
+                statusAxes[iAxes] );
+            final int nbValue = nb == null ? 0 : nb.intValue();
+            if( !KalypsoStatusUtils.checkMask( nbValue,
+                KalypsoStati.BIT_OK ) )
             {
-              final Number nb = (Number) models[i].getElement( ix,
-                  statusAxes[iAxes] );
-              final int nbValue = nb == null ? 0 : nb.intValue();
-              if( !KalypsoStatusUtils.checkMask( nbValue,
-                  KalypsoStati.BIT_OK ) )
-              {
-                bError = true;
+              bError = true;
 
-                bf.append( "["
-                    + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] )
-                    + " - " + KalypsoStatusUtils.getTooltipFor( nbValue )
-                    + "]\n" );
-              }
+              bf.append( "["
+                  + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] )
+                  + " - " + KalypsoStatusUtils.getTooltipFor( nbValue )
+                  + "]\n" );
+            }
+          }
+
+          // got error at least for one axis?
+          if( bError )
+          {
+            // did already summ up?
+            if( !sumDone )
+            {
+              sumDone = true;
+              
+              String header = "Warnung in Zeitreihe: "
+                  + observations[i].getName();
+              
+              final String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" );
+              if( desc.length() > 0 )
+                header += " (" + desc + ")";
+
+              summaryWriter.println( header + '\n');
+
+              detailsWriter.println( header );
+              detailsWriter.println( "Details:" );
             }
 
-            // got error at least for one axis?
-            if( bError )
-            {
-              // did already summ up?
-              if( !sumDone )
-              {
-                sumDone = true;
-                
-                String header = "Warnung in Zeitreihe: "
-                    + observations[i].getName();
-                
-                final String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" );
-                if( desc.length() > 0 )
-                  header += " (" + desc + ")";
-
-                summaryWriter.write( header + '\n');
-
-                detailsWriter.newLine();
-                detailsWriter.write( header );
-                detailsWriter.newLine();
-                detailsWriter.write( "Details:" );
-                detailsWriter.newLine();
-              }
-
-              detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true )
-                  + " Grund: " + bf.toString() );
-            }
+            detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true )
+                + " Grund: " + bf.toString() );
           }
         }
       }
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-      throw new SensorException( e );
     }
   }
 }
