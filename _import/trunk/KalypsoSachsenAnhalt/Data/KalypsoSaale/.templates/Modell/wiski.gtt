@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="WiskiMember" id="id" linktype="gml" ns1:href="wiskiimport_durchfluß.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+</gistableview>
+

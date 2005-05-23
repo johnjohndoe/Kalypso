@@ -8,6 +8,16 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="fake" />
 
+	<target name="init">
+		<gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+<!--
+			<property name="stopsim" featurepath=""/>
+-->			
+		</gmlProperty>
+	</target>
+	
 	<!-- ================================= 
           target: create              
          ================================= -->
@@ -31,7 +41,7 @@
 		</copy>
 	</target>
 
-	<target name="update" description="Aktualisiert eine Rechenvariante">
+	<target name="update" depends="init" description="Aktualisiert eine Rechenvariante">
 		<!-- TODO -->
 		<echo message="Rechenvariante aktualisieren: ${calc.dir}" />
 
@@ -40,9 +50,8 @@
 		<echo message="Projekt: ${project.url}"/>
 		<echo message="Rechenvariante: ${calc.url}"/>
 		
-		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="Wiski" context="${calc.url}" targetObservation="lokal">
-<!--			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}" /> -->
-			<source property="wiski_vergangenheit"/>
+		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
 		</copyObservation>
 
 	<!--		ALT
