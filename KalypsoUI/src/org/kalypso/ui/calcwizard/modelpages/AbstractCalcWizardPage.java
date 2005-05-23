@@ -156,8 +156,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
+
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
+
+  /** Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonten
+   * wie üblich auf die .gtt Kartei */
+  public final static String PROP_MAPTEMPLATEISCALC = "mapTemplateContextIsCalcCase";
 
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_SELECTIONID = "selectionID";
@@ -368,7 +373,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   protected Control initMap( final Composite parent, final String widgetID ) throws IOException,
       JAXBException, CoreException
   {
-    final String mapFileName = (String)getArguments().get( PROP_MAPTEMPLATE );
+    final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
+    final boolean mapContextIsCalcCase = Boolean.valueOf( getArguments().getProperty( PROP_MAPTEMPLATEISCALC, Boolean.TRUE.toString() ) ).booleanValue(); 
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
     if( mapFile == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
@@ -376,7 +382,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
     final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    m_mapModell = new GisTemplateMapModell( gisview, getContext(), crs , mapFile.getProject());
+    final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities.createURL( mapFile );
+    m_mapModell = new GisTemplateMapModell( gisview, context, crs , mapFile.getProject());
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, m_selectionID );
