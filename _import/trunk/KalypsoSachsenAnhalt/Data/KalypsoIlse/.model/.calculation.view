@@ -2,7 +2,7 @@
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
 C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview.xsd">
 	<layer xlink:href=".calculation.template.xml" featurePath="" linktype="gml" id="blubb"/>
-	<view typename="BodeControl" style="SWT.NONE">
+	<view typename="TubigControl" style="SWT.NONE">
 		<gridData grabExcessHorizontalSpace="false"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
 		<label text="Steuerparameter eingeben" style="0"/>

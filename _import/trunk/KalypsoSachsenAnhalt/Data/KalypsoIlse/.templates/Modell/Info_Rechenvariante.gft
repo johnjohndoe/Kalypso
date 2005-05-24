@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <layer xlink:href=".calculation" featurePath="" linktype="gml" id="blubb"/>
-<view typename="BodeControl"  style="SWT.NONE">
+<view typename="TubigControl"  style="SWT.NONE">
 
 	<gridData grabExcessHorizontalSpace="false"/>
 	<gridLayout numColumns="1" horizontalSpacing="10"/>

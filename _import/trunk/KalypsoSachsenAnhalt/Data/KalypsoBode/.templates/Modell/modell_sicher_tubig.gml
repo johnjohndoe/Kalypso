@@ -487,7 +487,7 @@
 			</tubigpegel:PegelMember>
 		</tubigpegel:PegelCollection>
 	</tubigpegel:PegelCollectionAssociation>
-	<tubigombrometer:OmbrometerCollectionAssociation>
+	<tubigombrometerombrometer:OmbrometerCollectionAssociation>
 		<tubigombrometer:OmbrometerCollection fid="OmbrometerCollection0">
 			<gml:boundedBy>
 				<gml:Box>
