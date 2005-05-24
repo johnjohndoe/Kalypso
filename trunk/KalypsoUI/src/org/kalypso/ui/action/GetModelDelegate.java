@@ -42,6 +42,7 @@ package org.kalypso.ui.action;
 
 import java.io.File;
 
+import org.bce.eclipse.jface.viewers.FileLabelProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -58,7 +59,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.kalypso.eclipse.jface.viewers.FileLabelProvider;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**

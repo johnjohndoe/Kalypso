@@ -42,8 +42,11 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ui.repository.view.ObservationChooserDialog;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ui.repository.view.ObservationViewerDialog;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
@@ -57,6 +60,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
   private final FeatureTypeProperty m_ftp;
+  private FeatureChange m_change;
 
   public TimeserieLinkFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
@@ -69,8 +73,19 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    final ObservationChooserDialog dlg = new ObservationChooserDialog(shell);
-    return dlg.open();
+    final ObservationViewerDialog dlg = new ObservationViewerDialog( shell );
+    final TimeseriesLink tslink = (TimeseriesLink)m_feature.getProperty( m_ftp.getName() );
+    dlg.setObservationHref( null, tslink.getHref() );
+    
+    final int open = dlg.open();
+    if( open == Window.OK )
+    {
+      m_change = new FeatureChange( m_feature, m_ftp.getName(), dlg.getObservationHref() );
+    }
+    else
+      m_change = null;
+    
+    return open;
   }
 
   /**
@@ -78,7 +93,8 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
    */
   public void collectChanges( final Collection c )
   {
-    // TODO Auto-generated method stub
+    if( m_change != null )
+      c.add( m_change );
   }
 
   /**

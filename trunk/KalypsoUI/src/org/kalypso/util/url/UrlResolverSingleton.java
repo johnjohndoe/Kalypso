@@ -1,5 +1,5 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
+/* --------------- Kalypso-Header --------------------------------------------
+ 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
 
@@ -37,29 +37,43 @@
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
   
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+------------------------------------------------------------------------------------ */
+package org.kalypso.util.url;
 
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- * @author schlienger
+ * UrlResolverSingleton
+ * <p>
+ * Helper class that simply holds a static reference to a UrlResolver. It
+ * additionally provides a static resolveUrl method that forwards the call
+ * to the singleton instance in addition to checking for null-argument. 
+ * 
+ * @author schlienger (24.05.2005)
  */
-public class ExpandAllAction extends AbstractRepositoryExplorerAction
+public class UrlResolverSingleton
 {
-  public ExpandAllAction( final ObservationChooser explorer )
+  private static UrlResolver m_ur = null;
+
+  private UrlResolverSingleton()
   {
-    super( explorer, "Alles erweitern",
-        ImageProvider.IMAGE_ZML_REPOSITORY_EXPAND,
-        "Erweitert alle Zweige des Baums" );
+    // no instanciation
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
-  public void run( )
+  public static UrlResolver getDefault()
   {
-    getViewer().expandAll();
+    if( m_ur == null )
+      m_ur = new UrlResolver();
+    
+    return m_ur;
+  }
+  
+  public static URL resolveUrl( final URL baseURL, final String relativeURL ) throws MalformedURLException
+  {
+    if( baseURL == null )
+      return new URL( relativeURL );
+    
+    return getDefault().resolveURL( baseURL, relativeURL );
   }
 }

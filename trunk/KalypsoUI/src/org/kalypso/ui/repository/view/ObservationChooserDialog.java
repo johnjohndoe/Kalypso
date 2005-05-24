@@ -42,6 +42,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.sensor.IObservation;
 
 /**
+ * A dialog for choosing an observation among the tree of repositories
+ * 
  * @author schlienger (23.05.2005)
  */
 public class ObservationChooserDialog extends ResizableDialog
@@ -53,16 +55,33 @@ public class ObservationChooserDialog extends ResizableDialog
     super( parent, null );
   }
 
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite)super.createDialogArea( parent );
 
     composite.setLayout( new FillLayout() );
-    m_chooser = new ObservationChooser( composite, getShell() );
+    m_chooser = new ObservationChooser( composite );
 
     return composite;
   }
-  
+
+  /**
+   * Check if an observation is selected before quitting the dialog with OK
+   * 
+   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+   */
+  protected void okPressed()
+  {
+    if( getSelectedObservation() == null )
+      return;
+
+    super.okPressed();
+  }
+
+  /**
+   * @return the idenfitier of the selected observation or null if no
+   *         observation is selected
+   */
   public String getSelectedObservation()
   {
     if( m_chooser != null )
@@ -76,11 +95,11 @@ public class ObservationChooserDialog extends ResizableDialog
         return obs.getIdentifier();
       }
     }
-    
+
     return null;
   }
 
-  public void setSelectedObservation( String id )
+  public void setSelectedObservation( final String id )
   {
     if( m_chooser != null )
     {
