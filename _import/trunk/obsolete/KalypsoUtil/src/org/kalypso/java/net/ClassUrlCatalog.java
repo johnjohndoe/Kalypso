@@ -79,6 +79,8 @@ public class ClassUrlCatalog implements IUrlCatalog
       // kein Error-Handling, dies ist ein Konfigurationsfehler des
       // Kalypso-Servers
       e.printStackTrace();
+
+      m_catalog = new MultiUrlCatalog( new IUrlCatalog[0] );
     }
   }
 
