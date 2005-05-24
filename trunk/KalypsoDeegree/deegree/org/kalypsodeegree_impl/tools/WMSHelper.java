@@ -22,12 +22,10 @@ import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -89,24 +87,20 @@ public class WMSHelper
    * crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordiante system
    * 
-   * @param localCRS
-   *          the local spatial reference system
-   * @param capabilities
-   *          the capabilites document of the web map service
-   * @param layerNames
-   *          the layers that have to be matched to the local srs
+   * @param localCRS the local spatial reference system
+   * @param capabilities the capabilites document of the web map service
+   * @param layerNames the layers that have to be matched to the local srs
    * @return result an array of possible coordiante systems
    */
-  public static CS_CoordinateSystem[] negotiateCRS( CS_CoordinateSystem localCRS,
-      WMSCapabilities capabilities, String[] layerNames ) throws Exception
+  public static CS_CoordinateSystem[] negotiateCRS(
+      CS_CoordinateSystem localCRS, WMSCapabilities capabilities,
+      String[] layerNames ) throws Exception
   {
     Layer topLayer = capabilities.getCapability().getLayer();
     CS_CoordinateSystem crs = matchCrs( topLayer, layerNames, localCRS );
     if( crs != null )
       return new CS_CoordinateSystem[]
-      {
-        localCRS
-      };
+      { localCRS };
     //get crs from top layer
     String[] topLayerSRS = topLayer.getSrs();
     List result = new ArrayList();
@@ -115,7 +109,8 @@ public class WMSHelper
     {
       for( int i = 0; i < topLayerSRS.length; i++ )
       {
-        result.add( ConvenienceCSFactory.getInstance().getOGCCSByName( topLayerSRS[i] ) );
+        result.add( ConvenienceCSFactory.getInstance().getOGCCSByName(
+            topLayerSRS[i] ) );
       }
     }
     catch( Exception e )
@@ -123,27 +118,25 @@ public class WMSHelper
       e.printStackTrace();
       return null;
     }
-    return (CS_CoordinateSystem[])result.toArray( new CS_CoordinateSystem[result.size()] );
+    return (CS_CoordinateSystem[])result
+        .toArray( new CS_CoordinateSystem[result.size()] );
   }
 
   /**
    * This method tries to match the local coordiante system to a given layer
    * selection.
    * 
-   * @param topLayer
-   *          the top layer of the layer structur of a web map service
-   * @param layerSelection
-   *          layers to be matched
-   * @param localCRS
-   *          the local coordinate system
+   * @param topLayer the top layer of the layer structur of a web map service
+   * @param layerSelection layers to be matched
+   * @param localCRS the local coordinate system
    * @return returns null if one element of the layers to be matched is not
    *         available in the local coordinate system, otherwise it returns the
    *         local crs
    *  
    */
 
-  private static CS_CoordinateSystem matchCrs( Layer topLayer, String[] layerSelection,
-      CS_CoordinateSystem localCRS ) throws Exception
+  private static CS_CoordinateSystem matchCrs( Layer topLayer,
+      String[] layerSelection, CS_CoordinateSystem localCRS ) throws Exception
   {
     HashSet collector = new HashSet();
 
@@ -163,10 +156,8 @@ public class WMSHelper
   /**
    * This method collects all layers from a capabilites document.
    * 
-   * @param capabilites
-   *          wms capabilites document
-   * @param set
-   *          the Set where the layers are collected in
+   * @param capabilites wms capabilites document
+   * @param set the Set where the layers are collected in
    */
   public static void getAllLayers( WMSCapabilities capabilites, Set set )
   {
@@ -187,14 +178,12 @@ public class WMSHelper
    * or null the method collects all layers, otherwise returns all layers with
    * the same name as in the layerSelection.
    * 
-   * @param collector
-   *          The set that collects the layers found.
-   * @param layer
-   *          the top layer of the wms capabilites document.
-   * @param layerSelection
-   *          an array of layer names to search for.
+   * @param collector The set that collects the layers found.
+   * @param layer the top layer of the wms capabilites document.
+   * @param layerSelection an array of layer names to search for.
    */
-  private static void collect( Set collector, Layer layer, String[] layerSelection )
+  private static void collect( Set collector, Layer layer,
+      String[] layerSelection )
   {
 
     Layer[] layerTree = layer.getLayer();
@@ -227,10 +216,8 @@ public class WMSHelper
   /**
    * This method checks an array of Strings for a given String to match.
    * 
-   * @param array
-   *          strings to check for a match.
-   * @param toMatch
-   *          the string to match
+   * @param array strings to check for a match.
+   * @param toMatch the string to match
    * @return boolean true if the String is the array, false otherwise
    */
 
@@ -247,12 +234,11 @@ public class WMSHelper
   /**
    * This method gets the max bounding box of a wms layer.
    * 
-   * @param layers
-   *          the layers in the map in an array
+   * @param layers the layers in the map in an array
    *  
    */
-  public static GM_Envelope getMaxExtend( String[] layers, WMSCapabilities capabilites,
-      CS_CoordinateSystem srs ) throws Exception
+  public static GM_Envelope getMaxExtend( String[] layers,
+      WMSCapabilities capabilites, CS_CoordinateSystem srs ) throws Exception
   {
     Layer topLayer = capabilites.getCapability().getLayer();
     HashSet collector = new HashSet();
@@ -269,8 +255,9 @@ public class WMSHelper
         if( env.getSRS().equals( srs.getName() ) )
         {
           //convert deegree Envelope to kalypsodeegree Envelope
-          GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env
-              .getMin().getY(), env.getMax().getX(), env.getMax().getY() );
+          GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env
+              .getMin().getX(), env.getMin().getY(), env.getMax().getX(), env
+              .getMax().getY() );
           if( counter < 1 )
             maxEnvelope = kalypsoEnv;
           else
@@ -287,27 +274,25 @@ public class WMSHelper
     }//for iter
     if( maxEnvelope != null )
       return maxEnvelope;
-    org.deegree.model.geometry.GM_Envelope topLayerEnv = topLayer.getLatLonBoundingBox();
-    return GeometryFactory.createGM_Envelope( topLayerEnv.getMin().getX(), topLayerEnv.getMin()
-        .getY(), topLayerEnv.getMax().getX(), topLayerEnv.getMax().getY() );
+    org.deegree.model.geometry.GM_Envelope topLayerEnv = topLayer
+        .getLatLonBoundingBox();
+    return GeometryFactory.createGM_Envelope( topLayerEnv.getMin().getX(),
+        topLayerEnv.getMin().getY(), topLayerEnv.getMax().getX(), topLayerEnv
+            .getMax().getY() );
   }
 
   /**
    * 
-   * @param g2
-   *          empty Graphics context
-   * @param projection
-   *          World to screen projection (passed from MapPanel)
-   * @param rasterImage
-   *          image from server
-   * @param gridDomain
-   *          image from server with geospatial ( real world ) context. CS from
-   *          server and Envelope from server (all layers)
-   * @param targetCS
-   *          target coodriate system (local CS from client)
+   * @param g2 empty Graphics context
+   * @param projection World to screen projection (passed from MapPanel)
+   * @param rasterImage image from server
+   * @param gridDomain image domain from server with geospatial ( real world )
+   *          context. CS from server and Envelope from server (all layers)
+   * @param targetCS target coodriate system (local CS from client)
    */
-  private static void internalTransformation( Graphics2D g2, GeoTransform projection,
-      TiledImage rasterImage, RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
+  private static void internalTransformation( Graphics2D g2,
+      GeoTransform projection, TiledImage rasterImage,
+      RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
       throws Exception
   {
 
@@ -315,19 +300,20 @@ public class WMSHelper
     GM_Envelope sourceScreenRect = projection.getSourceRect();
     // create a surface and transform it in the coordinate system of the
     GM_Surface destScreenSurface = null;
-    GM_Surface sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
+    GM_Surface sourceScreenSurface = GeometryFactory.createGM_Surface(
+        sourceScreenRect, targetCS );
 
     if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
     {
-      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null )
-          .getCoordinateSystem() );
+      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain
+          .getOrigin( null ).getCoordinateSystem() );
       destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
     }
     else
       destScreenSurface = sourceScreenSurface;
     // get the gridExtent for the envelope of the surface
-    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain
-        .getOrigin( null ).getCoordinateSystem() );
+    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface
+        .getEnvelope(), gridDomain.getOrigin( null ).getCoordinateSystem() );
     int lowX = gridExtent[0];
     int lowY = gridExtent[1];
     int highX = gridExtent[2];
@@ -338,14 +324,17 @@ public class WMSHelper
     int minY = rasterImage.getHeight() - highY;
     int width = highX - lowX;
     int height = highY - lowY;
-    // get the required subImage according to the gridExtent
+    // get the required subImage according to the gridExtent (size of the
+    // screen)
     PlanarImage image = rasterImage.getSubImage( minX, minY, width, height );
-    //this happens when the requested image is empty
-    if(image == null )
+    //if the requested sub image is not on the screen (map panel) nothing to
+    // display
+    if( image == null )
       return;
 
     // get the destinationSurface in target coordinates
-    GM_Surface destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
+    GM_Surface destSurface = gridDomain.getGM_Surface( lowX, lowY, highX,
+        highY, targetCS );
     GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
     GM_Position llCorner = destExtRing.getPositions()[0];
     GM_Position lrCorner = destExtRing.getPositions()[1];
@@ -367,13 +356,14 @@ public class WMSHelper
     double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
 
     GM_Surface orgDestSurface = gridDomain.getGM_Surface( targetCS );
-    GM_Position orgULCorner = orgDestSurface.getSurfaceBoundary().getExteriorRing().getPositions()[3];
+    GM_Position orgULCorner = orgDestSurface.getSurfaceBoundary()
+        .getExteriorRing().getPositions()[3];
     GM_Position pixel_orgULCorner = projection.getDestPoint( orgULCorner );
 
     AffineTransform trafo = new AffineTransform();
     // translate the image, so that the subImage is at the right position
-    trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY()
-        - pixel_ulCorner.getY() );
+    trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(),
+        pixel_orgULCorner.getY() - pixel_ulCorner.getY() );
     // scale the image
     trafo.scale( scaleX, scaleY );
     // translate the image to compensate the shearing
@@ -384,30 +374,30 @@ public class WMSHelper
 
     // calculate the required extent of the bufferedImage
     GM_Position scaledImage_min = pixel_ulCorner;
-    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(),
-        pixel_llCorner.getY() );
+    GM_Position scaledImage_max = GeometryFactory.createGM_Position(
+        pixel_urCorner.getX(), pixel_llCorner.getY() );
 
-    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX()
-        - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
-    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX()
-        + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
-    GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
-    System.out.println("Buffered Image Env: " + buffImageEnv );
-    BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv
-        .getHeight(), BufferedImage.TYPE_INT_ARGB );
+    GM_Position buffImage_min = GeometryFactory.createGM_Position(
+        scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY()
+            - Math.abs( shearY ) );
+    GM_Position buffImage_max = GeometryFactory.createGM_Position(
+        scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY()
+            + Math.abs( shearY ) );
+    GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope(
+        buffImage_min, buffImage_max );
+    BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(),
+        (int)buffImageEnv.getHeight(), BufferedImage.TYPE_INT_ARGB );
     Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
     //bufferGraphics.setColor(Color.GREEN);
     // draw a transparent backround on the bufferedImage
     bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-    bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
+    bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(),
+        (int)buffImageEnv.getHeight() );
     // draw the image with the given transformation
     bufferGraphics.drawRenderedImage( image, trafo );
     // draw bufferedImage on the screen
-    System.out.println("x: " + buffImageEnv.getMin().getX() + "\ty: " + buffImageEnv.getMin().getY());
-    g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
-     (int)buffImageEnv.getMin().getY(),
-            null );
-    //g2.drawImage( buffer, 0, 0, null );
+    g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv
+        .getMin().getY(), null );
   }
 
   public static GM_Envelope getTransformedEnvelope( GM_Envelope serverEnv,
@@ -429,65 +419,54 @@ public class WMSHelper
    * This method transformes an image from a source to a target coordiante
    * system and paints it on the submitted graphic context g.
    * 
-   * @param remoteMap
-   *          image to be transformed
-   * @param env
-   *          bounding box of the remoteMap
-   * @param localCSR
-   *          target coodrdiante system
-   * @param remoteCSR
-   *          source coordiante system
-   * @param worldToScreenTransformation
-   *          transformation from target coordiante system to pixel unites
-   * @param g
-   *          graphics context to draw the transformed image to
+   * @param remoteMap image to be transformed
+   * @param env bounding box of the remoteMap
+   * @param localCSR target coodrdiante system
+   * @param remoteCSR source coordiante system
+   * @param worldToScreenTransformation transformation from target coordiante
+   *          system to pixel unites
+   * @param g graphics context to draw the transformed image to
+   * @throws Exception
    */
 
   public static void transformImage( Image remoteMap, GM_Envelope env,
       CS_CoordinateSystem localCSR, CS_CoordinateSystem remoteCSR,
-      GeoTransform worldToScreenTransformation, Graphics g )
+      GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
   {
-    System.out.println("env: "+env);
+    System.out.println( "env: " + env );
     int height = remoteMap.getHeight( null );
     int width = remoteMap.getWidth( null );
 
     double[] offset = new double[]
     {
         ( env.getMax().getX() - env.getMin().getX() ) / width,
-        ( env.getMax().getY() - env.getMin().getY() ) / height
-    };
+        ( env.getMax().getY() - env.getMin().getY() ) / height };
 
     GridRange range = new GridRange_Impl( new double[]
     {
         0,
-        0
-    }, new double[]
+        0 }, new double[]
     {
         width,
-        height
-    } );
+        height } );
 
-    try
-    {
-      RectifiedGridDomain gridDomain = new RectifiedGridDomain( GeometryFactory.createGM_Point( env.getMin().getX(), env
-          .getMin().getY(), remoteCSR ), offset, range );
-      
-      TiledImage ti = new TiledImage( PlanarImage.wrapRenderedImage( (RenderedImage)remoteMap ), false );
-      
+   
+      RectifiedGridDomain gridDomain = new RectifiedGridDomain(
+          GeometryFactory.createGM_Point( env.getMin().getX(), env.getMin()
+              .getY(), remoteCSR ), offset, range );
+
+      TiledImage ti = new TiledImage( PlanarImage
+          .wrapRenderedImage( (RenderedImage)remoteMap ), false );
+
       internalTransformation( (Graphics2D)g, worldToScreenTransformation, ti,
           gridDomain, localCSR );
-      
-      
 
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
+   
   }
 
-  private static void internalTransformation2( Graphics2D g2, GeoTransform projection,
-      TiledImage rasterImage, RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
+  private static void internalTransformation2( Graphics2D g2,
+      GeoTransform projection, TiledImage rasterImage,
+      RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
   {
 
     try
@@ -515,26 +494,31 @@ public class WMSHelper
       double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
       AffineTransform trafo = new AffineTransform();
       trafo.scale( scaleX, scaleY );
-      trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY )
+      trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math
+          .abs( shearY )
           / Math.abs( scaleY ) );
       trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
 
       GM_Position scaledImage_min = pixel_ulCorner;
-      GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(),
-          pixel_llCorner.getY() );
+      GM_Position scaledImage_max = GeometryFactory.createGM_Position(
+          pixel_urCorner.getX(), pixel_llCorner.getY() );
 
-      GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX()
-          - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
-      GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX()
-          + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
-      GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
+      GM_Position buffImage_min = GeometryFactory.createGM_Position(
+          scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY()
+              - Math.abs( shearY ) );
+      GM_Position buffImage_max = GeometryFactory.createGM_Position(
+          scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY()
+              + Math.abs( shearY ) );
+      GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope(
+          buffImage_min, buffImage_max );
 
-      BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv
-          .getHeight(), BufferedImage.TYPE_INT_ARGB );
+      BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(),
+          (int)buffImageEnv.getHeight(), BufferedImage.TYPE_INT_ARGB );
       Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
       //bufferGraphics.setColor(Color.GREEN);
       bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-      bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
+      bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(),
+          (int)buffImageEnv.getHeight() );
       bufferGraphics.drawRenderedImage( image, trafo );
       //      g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
       // (int)buffImageEnv.getMin().getY(),

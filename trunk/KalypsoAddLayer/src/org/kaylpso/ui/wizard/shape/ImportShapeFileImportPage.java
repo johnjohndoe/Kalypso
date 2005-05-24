@@ -64,7 +64,6 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -92,8 +91,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author kuepfer
  *  
  */
-public class ImportShapeFileImportPage extends WizardPage implements SelectionListener,
-    ModifyListener, KeyListener
+public class ImportShapeFileImportPage extends WizardPage implements
+    SelectionListener, ModifyListener, KeyListener
 {
 
   //constants
@@ -152,7 +151,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
    * @param title
    * @param titleImage
    */
-  public ImportShapeFileImportPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportShapeFileImportPage( String pageName, String title,
+      ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     setDescription( "Dieser Dialog liest eine ESRI Shape-Datei in den Workspace ein." );
@@ -216,7 +216,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     availableCoordinateSystems( m_checkCRS );
     try
     {
-      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem()
+          .getName();
       m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
     }
     catch( RemoteException e1 )
@@ -268,14 +269,16 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     data5.horizontalAlignment = GridData.FILL;
     data5.grabExcessHorizontalSpace = true;
     styleNameCombo.setLayoutData( data5 );
-    styleNameCombo.addSelectionListener( new SelectionAdapter()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        styleName = styleNameCombo.getText();
-        validate();
-      }
-    } );
+    styleNameCombo.addSelectionListener( this );
+    
+    //        new SelectionAdapter()
+    //    {
+    //      public void widgetSelected( SelectionEvent e )
+    //      {
+    //        styleName = styleNameCombo.getText();
+    //        validate();
+    //      }
+    //    } );
 
     Label dummyLabel = new Label( styleGroup, SWT.NONE );
     dummyLabel.setText( "" );
@@ -313,7 +316,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
 
       //styleFile
-      if( styleTextField.getText() != null && styleTextField.getText().length() > 0 )
+      if( styleTextField.getText() != null
+          && styleTextField.getText().length() > 0 )
       {
         //ok
       }
@@ -336,7 +340,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     }
 
     // shapeFile
-    if( m_sourceFileText.getText() != null && m_sourceFileText.getText().length() > 0 )
+    if( m_sourceFileText.getText() != null
+        && m_sourceFileText.getText().length() > 0 )
     {
       //ok
     }
@@ -389,8 +394,10 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
             IPath basePath = m_project.getLocation();
             String styleUrl = basePath.toFile().toURL()
                 + stylePath.removeFirstSegments( 1 ).toString();
-            Reader reader = new InputStreamReader( ( new URL( styleUrl ) ).openStream() );
-            StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+            Reader reader = new InputStreamReader( ( new URL( styleUrl ) )
+                .openStream() );
+            StyledLayerDescriptor styledLayerDescriptor = SLDFactory
+                .createSLD( reader );
             reader.close();
             Layer[] layers = styledLayerDescriptor.getLayers();
             Vector styleNameVector = new Vector();
@@ -449,10 +456,17 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     }
     if( e.widget instanceof Combo )
     {
-      c = (Combo)e.widget;
-      if( c == m_checkCRS )
+      if( e.widget == m_checkCRS )
       {
-        setPageComplete( true );
+        c = (Combo)e.widget;
+        if( c == m_checkCRS )
+        {
+          setPageComplete( true );
+        }
+      }
+      if( e.widget == styleNameCombo )
+      {
+        styleName = styleNameCombo.getText();
       }
     }
 
@@ -464,7 +478,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
    */
   public void widgetDefaultSelected( SelectionEvent e )
   {
-  //no default selection
+    //no default selection
   }
 
   //ModifyListener
@@ -483,7 +497,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   public void keyPressed( KeyEvent e )
   {
     Widget w = e.widget;
-    if( w instanceof Combo && e.keyCode == SWT.Selection )
+    if( w instanceof Combo && e.character == SWT.CR )
     {
       validate();
     }
@@ -494,22 +508,22 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
    */
   public void keyReleased( KeyEvent e )
   {
-  //do nothing
+    //do nothing
   }
 
   public File getShapeBaseFile()
   {
     return new File( m_project.getLocation()
         + "/"
-        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 )
-            .toString() ) );
+        + FileUtilities.nameWithoutExtension( m_relativeSourcePath
+            .removeFirstSegments( 1 ).toString() ) );
   }
 
   public String getShapeBaseRelativePath()
   {
     return "project:/"
-        + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 )
-            .toString() );
+        + FileUtilities.nameWithoutExtension( m_relativeSourcePath
+            .removeFirstSegments( 1 ).toString() );
   }
 
   public IPath getShapePath()
@@ -517,15 +531,17 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     return m_relativeSourcePath;
   }
 
-  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  KalypsoResourceSelectionDialog createResourceDialog(
+      String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource",
-        fileResourceExtensions, m_project );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project,
+        "Select resource", fileResourceExtensions, m_project );
   }
 
   public CS_CoordinateSystem getCRS()
   {
-    return ConvenienceCSFactory.getInstance().getOGCCSByName( m_checkCRS.getText() );
+    return ConvenienceCSFactory.getInstance().getOGCCSByName(
+        m_checkCRS.getText() );
   }
 
   protected void setProjectSelection( IProject project )
@@ -536,7 +552,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   private boolean checkCRS( String customCRS )
   {
     boolean result = false;
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( customCRS );
+    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName(
+        customCRS );
     if( cs != null )
     {
       result = true;
@@ -565,4 +582,3 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     m_checkCRS.removeSelectionListener( this );
   }
 }
-

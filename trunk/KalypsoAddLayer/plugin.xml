@@ -37,17 +37,17 @@
          name="dataimport"
          point="org.kalypso.ui.dataimportwizard">
       <wizard
-            icon="icon/fileShp.gif"
+            icon="icon/file_shp.GIF"
             class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"
             name="ESRI (tm) Shape "
             id="org.kalypso.ui.wizard.shape"/>
       <wizard
-            icon="icon/repository_item.gif"
+            icon="icon/Datastore_WMS.gif"
             class="org.kaylpso.ui.wizard.wms.ImportWmsSourceWizard"
             name="Web Map Service"
             id="org.kalypso.ui.wizard.wms"/>
       <wizard
-            icon="icon/repository_item.gif"
+            icon="icon/Datastore_WFS.gif"
             class="org.kaylpso.ui.wizard.wfs.ImportWfsSourceWizard"
             name="Web Feature Service"
             id="org.kalypso.ui.wizard.wfs"/>
@@ -57,10 +57,15 @@
             name="GML "
             id="gml"/>
       <wizard
-            icon="icon/fileGml.gif"
+            icon="icon/raster.GIF"
             class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
             name="Raster"
             id="org.kalypso.ui.wizard.raster"/>
+      <wizard
+            icon="icon/file_image.gif"
+            class="org.kaylpso.ui.wizard.image.ImportImageSourceWizard"
+            name="Image (TIFF, JPG)"
+            id="org.kalypso.ui.wizard.image"/>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
