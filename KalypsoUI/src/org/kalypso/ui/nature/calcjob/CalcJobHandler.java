@@ -285,7 +285,7 @@ public class CalcJobHandler
       throw new CoreException(
           KalypsoGisPlugin
               .createErrorStatus(
-                  "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechnendienstes.",
+                  "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes.",
                   se ) );
     }
     catch( final IOException e )

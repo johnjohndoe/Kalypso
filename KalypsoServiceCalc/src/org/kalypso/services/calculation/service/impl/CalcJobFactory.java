@@ -77,7 +77,8 @@ public class CalcJobFactory
     try
     {
       final String className = m_jobTypes.getProperty( typeID );
-       
+      if( className == null )
+        throw new CalcJobServiceException( "Unbekannter Job-Typ: " + typeID, null );
       
       return (ICalcJob)Class.forName( className ).newInstance();
     }
