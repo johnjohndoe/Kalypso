@@ -546,7 +546,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature )
       throws Exception
   {
-    Object prop = parent.getProperty( propName );
+    final Object prop = parent.getProperty( propName );
 
     if( prop instanceof List )
     {
@@ -576,8 +576,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     if( srcFE.getFeatureType().isListProperty( propName ) )
     {
       int maxOccurs = srcFE.getFeatureType().getMaxOccurs( propName );
-      List list = (List)srcFE.getProperty( propName );
-      if( list.size() < maxOccurs )
+      final List list = (List)srcFE.getProperty( propName );
+      if( list.size() < maxOccurs || maxOccurs==FeatureType.UNBOUND_OCCURENCY )
         list.add( pos, featureID );
       else
         throw new Exception( "New Feature violates maxOccurs" );
