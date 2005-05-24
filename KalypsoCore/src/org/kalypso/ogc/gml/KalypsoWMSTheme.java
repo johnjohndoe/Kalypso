@@ -109,7 +109,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
       final CS_CoordinateSystem localCRS )
   {
-    super( themeName, linktype );
+    super( themeName, linktype.toUpperCase() );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
     m_layers = sourceProps.getProperty( "LAYERS", "" );
     final String service = sourceProps.getProperty( "URL", "" );
@@ -377,13 +377,40 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public GM_Envelope getBoundingBox()
   {
-    return m_maxEnv;
-    //    return m_requestedBBox;
+    GM_Envelope bbox = null;
+    try
+    {
+      GeoTransformer gt =new GeoTransformer( m_localCSR );
+      bbox = gt.transformEnvelope(m_maxEnv, m_remoteCSR );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    return bbox;
+    
   }
 
   public String getSource()
   {
     return m_source;
   }
+
+//  public void saveTheme( IProgressMonitor monitor )
+//  {
+//   
+    
+//    
+//    try
+//    {
+//      ImageOutputStream ios = ImageIO.createImageOutputStream( new File( "c:/temp" ) );
+//      ImageIO.write( (RenderedImage)m_remoteImage, m_layers, ios );
+//    }
+//    catch( IOException e )
+//    {
+//      // TODO: handle exception
+//    }
+//    
+//  }
 
 }// class KalypsoWMSTheme

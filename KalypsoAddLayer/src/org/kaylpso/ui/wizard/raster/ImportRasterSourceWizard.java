@@ -111,7 +111,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
         FeatureType ft = workspace.getFeatureTypeFromPath("RectifiedGridCoverageMember");
         //FeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
         styleName = ft.getName();
-        stylePath = KalypsoGisPlugin.getDefault().getDefaultStyleFactory().getDefaultStyle( ft,
+        stylePath = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft,
             styleName ).toString();
       }
       catch( MalformedURLException e1 )

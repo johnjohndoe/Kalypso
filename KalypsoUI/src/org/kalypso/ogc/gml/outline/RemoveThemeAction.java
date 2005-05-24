@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.outline;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoPictureTheme;
 import org.kalypso.ogc.gml.KalypsoWMSTheme;
 import org.kalypso.util.list.IListManipulator;
 
@@ -64,13 +65,17 @@ public class RemoveThemeAction extends AbstractOutlineAction
   public void run()
   {
     getListManipulator().removeElement(
-        ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
+        ( (IStructuredSelection)getOutlineviewer().getSelection() )
+            .getFirstElement() );
   }
 
   protected void refresh()
   {
-    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer()
+        .getSelection();
     setEnabled( !s.isEmpty()
-        && ( ( s.getFirstElement() instanceof IKalypsoFeatureTheme ) || ( s.getFirstElement() instanceof KalypsoWMSTheme ) ) );
+        && ( ( s.getFirstElement() instanceof IKalypsoFeatureTheme )
+            || ( s.getFirstElement() instanceof KalypsoWMSTheme ) || ( s
+            .getFirstElement() instanceof KalypsoPictureTheme ) ) );
   }
 }

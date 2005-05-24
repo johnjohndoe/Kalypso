@@ -97,7 +97,6 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.gc.GC_GridCoverage;
 
 /**

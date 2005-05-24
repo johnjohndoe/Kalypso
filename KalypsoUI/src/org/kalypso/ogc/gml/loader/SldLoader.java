@@ -89,7 +89,8 @@ public class SldLoader extends AbstractLoader
       final URL url = m_urlResolver.resolveURL( context, source );
 
       final Reader reader = new InputStreamReader( url.openStream() );
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory
+          .createSLD( reader );
       reader.close();
 
       final IResource resource = ResourceUtilities.findFileFromURL( url );
@@ -102,5 +103,11 @@ public class SldLoader extends AbstractLoader
     {
       throw new LoaderException( e );
     }
+  }
+
+  public void save(final String source, final URL context, final IProgressMonitor monitor,
+      final Object data )
+  {
+    System.out.print("SLD-Loader Save method");
   }
 }
