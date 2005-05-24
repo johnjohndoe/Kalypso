@@ -1,0 +1,62 @@
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fake                      nur damit das Projekt nicht schreit
+         - - - - - - - - - - - - - - - - - -->
+	<target name="fake" />
+
+	<!-- 
+		 ================================= 
+          target: create			Rechenvariante erzeugen
+         ================================= 
+    -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+
+		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml"/>
+		<copy file="${project.dir}/.templates/Steuerparameter.gft" tofile="${calc.dir}/Steuerparameter.gft"/>
+		<copy file="${project.dir}/.templates/Anfangsvolumen.gtt" tofile="${calc.dir}/Anfangsvolumen.gtt"/>
+		<copy file="${project.dir}/.templates/Bodenfeuchten.gtt" tofile="${calc.dir}/Bodenfeuchten.gtt"/>
+		<copy file="${project.dir}/.templates/Flusslaufparameter.gtt" tofile="${calc.dir}/Flusslaufparameter.gtt"/>
+		<copy file="${project.dir}/.templates/Gesamtansicht.gmt" tofile="${calc.dir}/Gesamtansicht.gmt"/>
+	</target>
+	
+	<!-- 
+		 ================================= 
+          target: update			Zeitreihen aktualisieren
+         ================================= 
+    -->
+	<target name="update" description="Aktualisiert eine Rechenvariante">
+		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
+
+		<gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+			<!-- stopsim = startforecast + 48h -->
+			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
+		</gmlProperty>
+
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" context="${calc.url}" targetObservation="Niederschlag_rechnung" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="Niederschlag_gemessen" from="${startsim}" to="${startforecast}"/>
+			<source property="Niederschlag_prognose" from="${startforecast}" to="${stopsim}"/>
+		</copyObservation>
+
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember" context="${calc.url}" targetObservation="Wasserstand_gemessen" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="Wasserstand_gemessenEingang" from="${startsim}" to="${startforecast}"/>
+		</copyObservation>
+
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="Abgabe_eingang" from="${startsim}" to="${stopsim}"/>
+		</copyObservation>
+		
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="VorgabeCollectionAssociation/VorgabeMember" context="${calc.url}" targetObservation="Abfluss" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="Abfluss_eingang" from="${startsim}" to="${stopsim}"/>
+		</copyObservation>
+	</target>
+	
+	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
+		<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true"/>
+	</target>
+</project>
