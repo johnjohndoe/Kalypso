@@ -6,10 +6,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -73,17 +71,12 @@ public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implem
    */
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
-    // TODO fetch cs get somewhere
-    String targetSrs = "EPSG:31469";
-    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-        csFac.getCSByName( targetSrs ) );
     RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
     if( rgDomain == null )
       return null;
     try
     {
-      return rgDomain.getGM_Surface( cs );
+      return rgDomain.getGM_Surface( null );
     }
     catch( Exception e )
     {

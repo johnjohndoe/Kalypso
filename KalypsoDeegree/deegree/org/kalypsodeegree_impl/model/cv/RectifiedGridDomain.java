@@ -206,8 +206,13 @@ public class RectifiedGridDomain //implements GM_Object
       m_rasterBoundaryAsSurface = GeometryFactory.createGM_Surface( orgEnvelope, origin
           .getCoordinateSystem() );
     }
-    GeoTransformer geoTrans = new GeoTransformer( cs );
-    return (GM_Surface)geoTrans.transform( m_rasterBoundaryAsSurface );
+    GM_Surface resultSurface = m_rasterBoundaryAsSurface;
+    if( cs != null && !cs.equals( origin.getCoordinateSystem() ) )
+    {
+      GeoTransformer geoTrans = new GeoTransformer( cs );
+      resultSurface = (GM_Surface)geoTrans.transform( m_rasterBoundaryAsSurface );
+    }
+    return resultSurface;
   }
 
   public GM_Surface getGM_Surface( int lowX, int lowY, int highX, int highY, CS_CoordinateSystem cs )
@@ -216,13 +221,14 @@ public class RectifiedGridDomain //implements GM_Object
     GM_Envelope orgEnvelope = getGM_Envelope( lowX, lowY, highX, highY, origin
         .getCoordinateSystem() );
     GM_Surface rasterBoundaryAsSurface = GeometryFactory.createGM_Surface( orgEnvelope, origin
-          .getCoordinateSystem() );
+        .getCoordinateSystem() );
     GeoTransformer geoTrans = new GeoTransformer( cs );
     return (GM_Surface)geoTrans.transform( rasterBoundaryAsSurface );
   }
-  
+
   /**
-   * get low and high (GridRange) of the RectifiedGridCoverage for the given envelope
+   * get low and high (GridRange) of the RectifiedGridCoverage for the given
+   * envelope
    */
   public int[] getGridExtent( GM_Envelope env, CS_CoordinateSystem cs ) throws Exception
   {
@@ -250,14 +256,14 @@ public class RectifiedGridDomain //implements GM_Object
     {
       highY = (int)getGridRange().getHigh()[1];
     }
-    
+
     int[] gridExtent = new int[]
     {
         lowX,
         lowY,
         highX,
         highY };
-    
+
     return gridExtent;
   }
 }
