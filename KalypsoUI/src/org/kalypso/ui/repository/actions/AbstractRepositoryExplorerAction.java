@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -51,19 +51,16 @@ import org.kalypso.ui.repository.view.ObservationChooser;
  * 
  * @author schlienger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclipse.jface.action.FullAction
+public abstract class AbstractRepositoryExplorerAction extends
+    org.kalypso.eclipse.jface.action.FullAction
 {
   private final ObservationChooser m_explorer;
 
   /**
    * Creates a new instance of the class.
-   * @param explorer
-   * @param text
-   * @param image
-   * @param tooltipText
    */
-  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
-      final ImageDescriptor image, final String tooltipText )
+  public AbstractRepositoryExplorerAction( final ObservationChooser explorer,
+      final String text, final ImageDescriptor image, final String tooltipText )
   {
     super( text, image, tooltipText );
 
@@ -93,7 +90,7 @@ public abstract class AbstractRepositoryExplorerAction extends org.kalypso.eclip
   {
     return m_explorer.getShell();
   }
-  
+
   /**
    * @return the repository container
    */

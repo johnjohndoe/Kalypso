@@ -138,7 +138,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    */
   public void createPartControl( final Composite parent )
   {
-    m_chooser = new ObservationChooser( parent, null, getViewSite() );
+    m_chooser = new ObservationChooser( parent, getViewSite() );
     addSelectionChangedListener( this );
 
     if( m_memento != null )

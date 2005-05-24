@@ -61,7 +61,6 @@ import org.kalypso.ui.repository.actions.AddRepositoryAction;
 import org.kalypso.ui.repository.actions.CollapseAllAction;
 import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
 import org.kalypso.ui.repository.actions.CopyLinkAction;
-import org.kalypso.ui.repository.actions.ExpandAllAction;
 import org.kalypso.ui.repository.actions.ExportAsFileAction;
 import org.kalypso.ui.repository.actions.ReloadAction;
 import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
@@ -84,8 +83,6 @@ public class ObservationChooser extends AbstractViewer implements
 
   private final IViewSite m_site;
 
-  private final Shell m_shell;
-
   private AddRepositoryAction m_addRepAction;
 
   private RemoveRepositoryAction m_removeAction;
@@ -96,21 +93,17 @@ public class ObservationChooser extends AbstractViewer implements
 
   private CollapseAllAction m_collapseAction;
 
-  private ExpandAllAction m_expandAction;
-
   private ExportAsFileAction m_exportAsFileAction;
 
   private CopyLinkAction m_copyLinkAction;
 
-  public ObservationChooser( final Composite parent, final Shell shell )
+  public ObservationChooser( final Composite parent )
   {
-    this( parent, shell, null );
+    this( parent, null );
   }
-
-  public ObservationChooser( final Composite parent, final Shell shell,
-      final IViewSite site )
+  
+  public ObservationChooser( final Composite parent, final IViewSite site )
   {
-    m_shell = site != null ? site.getShell() : shell;
     m_site = site;
 
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
@@ -130,7 +123,7 @@ public class ObservationChooser extends AbstractViewer implements
   public void dispose()
   {
     m_repContainer.removeRepositoryContainerListener( this );
-    
+
     if( m_removeAction != null )
       m_removeAction.dispose();
 
@@ -139,7 +132,7 @@ public class ObservationChooser extends AbstractViewer implements
 
     if( m_reloadAction != null )
       m_reloadAction.dispose();
-    
+
     if( m_exportAsFileAction != null )
       m_exportAsFileAction.dispose();
   }
@@ -151,7 +144,6 @@ public class ObservationChooser extends AbstractViewer implements
     m_confAction = new ConfigurePreviewAction( this );
     m_reloadAction = new ReloadAction( this );
     m_collapseAction = new CollapseAllAction( this );
-    m_expandAction = new ExpandAllAction( this );
     m_exportAsFileAction = new ExportAsFileAction( this );
     m_copyLinkAction = new CopyLinkAction( this );
   }
@@ -189,10 +181,9 @@ public class ObservationChooser extends AbstractViewer implements
     menu.add( m_reloadAction );
     menu.add( new Separator() );
     menu.add( m_collapseAction );
-    menu.add( m_expandAction );
     menu.add( new Separator() );
     menu.add( m_exportAsFileAction );
-    
+
     if( isObservationSelected( m_repViewer.getSelection() ) != null )
     {
       menu.add( m_copyLinkAction );
@@ -218,7 +209,6 @@ public class ObservationChooser extends AbstractViewer implements
     toolBarManager.add( m_reloadAction );
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_collapseAction );
-    toolBarManager.add( m_expandAction );
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_exportAsFileAction );
 
@@ -285,7 +275,7 @@ public class ObservationChooser extends AbstractViewer implements
   {
     return m_repViewer.getSelection();
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
@@ -293,7 +283,7 @@ public class ObservationChooser extends AbstractViewer implements
   {
     m_repViewer.setSelection( selection );
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
@@ -301,7 +291,7 @@ public class ObservationChooser extends AbstractViewer implements
   {
     m_repViewer.addSelectionChangedListener( listener );
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
@@ -309,7 +299,7 @@ public class ObservationChooser extends AbstractViewer implements
   {
     m_repViewer.removeSelectionChangedListener( listener );
   }
-  
+
   /**
    * @see org.kalypso.repository.container.IRepositoryContainerListener#onRepositoryContainerChanged()
    */
@@ -323,19 +313,17 @@ public class ObservationChooser extends AbstractViewer implements
       }
     };
 
-    if( m_site != null )
-      m_site.getShell().getDisplay().asyncExec( r );
-    else
-      r.run();
-  }
-
-  public Shell getShell()
-  {
-    return m_shell;
+    if( !getControl().isDisposed() )
+      getControl().getShell().getDisplay().asyncExec( r );
   }
 
   public IRepositoryContainer getRepositoryContainer()
   {
     return m_repContainer;
+  }
+
+  public Shell getShell()
+  {
+    return getControl().getShell();
   }
 }
