@@ -39,7 +39,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.model.xml.ModeldataType;
@@ -98,10 +97,10 @@ public class ProcessJob extends Job
   private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException
   {
 
-    monitor.beginTask( "Berechnung wird durchgeführt.", 5000 );
+    monitor.beginTask( "Berechnung wird durchgeführt.", IProgressMonitor.UNKNOWN );
 
     final LocalCalcJobHandler cjHandler = new LocalCalcJobHandler( m_modelData, m_calcJob );
-    final IStatus runStatus = cjHandler.runJob( m_project, new SubProgressMonitor( monitor, 5000 ) );
+    final IStatus runStatus = cjHandler.runJob( m_project, monitor );
     if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
       return runStatus;
 

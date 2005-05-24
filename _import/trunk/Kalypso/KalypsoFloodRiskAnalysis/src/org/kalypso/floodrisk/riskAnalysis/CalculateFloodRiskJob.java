@@ -115,6 +115,7 @@ public class CalculateFloodRiskJob implements ICalcJob
     {
       //Generate input
       //annualDamageRaster
+      monitor.setMessage("Generate input");
       File annualDamageRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
           .getObjectForID( AnnualDamageRasterDataID ) );
       RectifiedGridCoverage annualDamageRaster = rasterDataModel
@@ -130,13 +131,19 @@ public class CalculateFloodRiskJob implements ICalcJob
       File riskContextModelGML = new File( (String)( (IProcessDataProvider)inputProvider )
           .getObjectForID( RiskContextModelID ) );
       RiskContextModel riskContextModel = new RiskContextModel( riskContextModelGML.toURL() );
+      
+      monitor.setProgress(40);
 
       //start riskAnalysis
+      monitor.setMessage( "Start calculation" );
       RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster,
           landuseRaster, riskContextModel.getRiskClassLists() );
+      
+      monitor.setProgress(20);
 
       //Generate output
       //floodrisk raster
+      monitor.setMessage( "Generate Output" );
       CalcJobClientBean floodRiskOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( FloodRiskRasterDataID );
       File floodRiskResultFile = new File( floodRiskOutputBean.getPath() );
@@ -185,6 +192,8 @@ public class CalculateFloodRiskJob implements ICalcJob
         floodRiskStyleFile.createNewFile();
       writeSLDtoFile( floodRiskStyleFile, defaultRasterStyle );
       resultEater.addResult( floodRiskStyleOutputBean.getId(), null );
+      
+      monitor.setProgress( 30 );
     }
     catch( MalformedURLException e )
     {

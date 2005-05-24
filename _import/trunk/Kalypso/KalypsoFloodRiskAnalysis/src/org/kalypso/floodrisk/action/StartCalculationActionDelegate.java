@@ -39,13 +39,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.ProcessExtensions;
-import org.kalypso.floodrisk.wizard.ChooseProcessWizard;
+import org.kalypso.floodrisk.wizard.ChooseProcessDialog;
+import org.kalypso.floodrisk.wizard.ProcessInputWizard;
 
 /**
  * StartCalculationActionDelegate
@@ -71,17 +73,25 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
 
   public void run( IAction action )
   {
-    System.out.println( "Run..." );
+    //System.out.println( "Run..." );
     try
     {
       if( ResourceUtilities.getSelectedProjects().length > 0 )
       {
         final IProject firstSelectedProject = ResourceUtilities.getSelectedProjects()[0];
         final ProcessExtension[] processes = ProcessExtensions.retrieveExtensions();
-        ChooseProcessWizard processWizard = new ChooseProcessWizard( firstSelectedProject,
-            processes );
-        final WizardDialog dialog = new WizardDialog( m_window.getShell(), processWizard );
-        dialog.open();
+        //ChooseProcessWizard processWizard = new ChooseProcessWizard( firstSelectedProject,
+        //    processes );
+        //final WizardDialog dialog = new WizardDialog( m_window.getShell(), processWizard );
+        ChooseProcessDialog dialog = new ChooseProcessDialog(m_window.getShell(),processes);
+        int open = dialog.open();
+        if(open == Window.OK){
+          ProcessInputWizard processInputWizard = new ProcessInputWizard( firstSelectedProject, dialog.getProcesses() );
+          final WizardDialog wizardDialog = new WizardDialog( m_window.getShell(), processInputWizard );
+          wizardDialog.open();
+        }else{
+          //nothing
+        }
       }
       else
       {

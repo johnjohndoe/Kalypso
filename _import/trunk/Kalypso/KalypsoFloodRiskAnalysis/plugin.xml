@@ -22,7 +22,7 @@
       <import plugin="org.kalypso.ui.addlayer"/>
    </requires>
    <extension-point id="AddProcess" name="AddProcess" schema="extpSchema/schema/AddProcess.exsd"/>
-   <extension
+   <!--<extension
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.kalypso.floodrisk.perspective.FloodRiskPerspective"
@@ -30,7 +30,7 @@
             fixed="false"
             name="Kalypso FloodRisk"
             id="KalypsoFloodRiskAnalysis"/>
-   </extension>
+   </extension>-->
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet

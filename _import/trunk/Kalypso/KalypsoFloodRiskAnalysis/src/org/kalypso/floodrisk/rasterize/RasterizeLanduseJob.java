@@ -98,7 +98,7 @@ public class RasterizeLanduseJob implements ICalcJob
   public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
       ICalcMonitor monitor ) throws CalcJobServiceException
   {
-    monitor.setMessage( "Prepare input data" );
+    monitor.setMessage( "Generate input" );
     String csName = (String)( (IProcessDataProvider)inputProvider )
         .getObjectForID( VectorDataCoordinateSystemID );
     CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( csName );
@@ -126,16 +126,16 @@ public class RasterizeLanduseJob implements ICalcJob
       RasterDataModel rasterDataModel = new RasterDataModel();
       RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML
           .toURL() );
-      monitor.setMessage( "Start process" );
+      monitor.setMessage( "Start calculation" );
       RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, propertyName,
-          landuseTypeList, baseRaster );
+          landuseTypeList, baseRaster, monitor );
 
       CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( LanduseRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
-      monitor.setMessage( "Generate result" );
+      monitor.setMessage( "Generate output" );
       rasterDataModel.toFile( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }

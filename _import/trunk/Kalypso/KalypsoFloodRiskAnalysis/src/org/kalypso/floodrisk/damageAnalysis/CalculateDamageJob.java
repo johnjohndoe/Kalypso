@@ -127,6 +127,7 @@ public class CalculateDamageJob implements ICalcJob
     {
       //Generate input
       //landuseRaster
+      monitor.setMessage( "Generate input" );
       File landuseRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
           .getObjectForID( LanduseRasterDataID ) );
       RectifiedGridCoverage landuseRaster = rasterDataModel
@@ -140,13 +141,13 @@ public class CalculateDamageJob implements ICalcJob
       //WaterlevelData
       TreeMap waterlevelGrids = readWaterlevelData( new File(
           (String)( (IProcessDataProvider)inputProvider ).getObjectForID( WaterlevelDataID ) ) );
-      //monitor.setProgress(500);
+      monitor.setProgress( 40 );
 
       //start damageAnalysis
       // calculate damagePercentage
+      monitor.setMessage( "Start calculation" );
       TreeMap damagePercentageGrids = DamageAnalysis.calculateDamagePercentages( waterlevelGrids,
           landuseRaster, contextModel.getDamageFunctionList() );
-      //monitor.setProgress(1000);
 
       // calculate damage
       TreeMap damageGrids = DamageAnalysis.calculateDamages( damagePercentageGrids, landuseRaster,
@@ -156,8 +157,11 @@ public class CalculateDamageJob implements ICalcJob
       Vector tempGrids = DamageAnalysis.calculateTempGridsAnnualDamage( damageGrids );
       RectifiedGridCoverage annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
 
+      monitor.setProgress( 20 );
+
       //Generate Output
       // damage directory
+      monitor.setMessage( "Generate Output" );
       CalcJobClientBean damageDirOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( DamageDirectoryID );
       File damageResultDir = new File( damageDirOutputBean.getPath() );
@@ -177,11 +181,20 @@ public class CalculateDamageJob implements ICalcJob
       File styleFile = new File( FileUtilities.nameWithoutExtension( annualDamageResultFile
           .toString() )
           + ".sld" );
-      Color lightRed = new Color( 255, 150, 150 );
-      int numOfCategories = 5;
+      Color lightRed = new Color( 255, 100, 100 );
+      int numOfCategories = 4;
       String styleName = FileUtilities.nameWithoutExtension( annualDamageResultFile.getName() );
       createRasterStyle( styleFile, styleName, annualDamageGrid, lightRed, numOfCategories );
       resultEater.addResult( annualDamageOutputBean.getId(), null );
+
+      monitor.setProgress( 30 );
+
+      //clear resources
+      landuseRaster = null;
+      waterlevelGrids = null;
+      damagePercentageGrids = null;
+      damageGrids = null;
+      tempGrids = null;
 
     }
     catch( MalformedURLException e )
@@ -236,8 +249,8 @@ public class CalculateDamageJob implements ICalcJob
       //style
       File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() )
           + ".sld" );
-      Color lightRed = new Color( 255, 150, 150 );
-      int numOfCategories = 5;
+      Color lightRed = new Color( 255, 100, 100 );
+      int numOfCategories = 4;
       String styleName = FileUtilities.nameWithoutExtension( damageFile.getName() );
       createRasterStyle( damageStyleFile, styleName, damageGrid, lightRed, numOfCategories );
 

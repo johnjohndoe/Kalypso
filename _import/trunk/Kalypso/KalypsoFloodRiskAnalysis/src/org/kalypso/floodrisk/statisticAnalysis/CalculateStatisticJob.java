@@ -94,6 +94,7 @@ public class CalculateStatisticJob implements ICalcJob
     {
       //Generate input
       //damageRaster
+      monitor.setMessage("Generate input");
       File damageRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
           .getObjectForID( DamageRasterID ) );
       RectifiedGridCoverage damageRaster = rasterDataModel
@@ -109,9 +110,12 @@ public class CalculateStatisticJob implements ICalcJob
       File contextModelGML = new File( (String)( (IProcessDataProvider)inputProvider )
           .getObjectForID( ContextModelID ) );
       ContextModel contextModel = new ContextModel( contextModelGML.toURL() );
+      
+      monitor.setProgress(40);
 
       //Calculation
       //statisticAnalysis
+      monitor.setMessage( "Start calculation" );
       Hashtable statistics = null;
       if( ( (IProcessDataProvider)inputProvider ).getObjectForID( TemplateRasterID ) != null )
       {
@@ -127,9 +131,12 @@ public class CalculateStatisticJob implements ICalcJob
       {
         statistics = StatisticAnalysis.getStatistics( damageRaster, landuseRaster );
       }
+      
+      monitor.setProgress(20);
 
       //Generate output
       //statisticData
+      monitor.setMessage( "Generate Output" );
       CalcJobClientBean statisticDataOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( StatisticDataID );
       File statisticDataFile = new File( statisticDataOutputBean.getPath() );
@@ -139,6 +146,8 @@ public class CalculateStatisticJob implements ICalcJob
       StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(),
           statisticDataFile.toURL(), statisticData_schemaURL );
       resultEater.addResult( statisticDataOutputBean.getId(), null );
+      
+      monitor.setProgress( 30 );
     }
     catch( MalformedURLException e )
     {

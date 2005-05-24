@@ -4,6 +4,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -39,7 +40,8 @@ public class VectorToGridConverter
    * @throws Exception
    */
   public static RectifiedGridCoverage toGrid( List featureList, String propertyName,
-      Hashtable propertyTable, RectifiedGridCoverage baseGrid ) throws Exception
+      Hashtable propertyTable, RectifiedGridCoverage baseGrid, ICalcMonitor monitor )
+      throws Exception
   {
     RectifiedGridDomain newGridDomain = new RectifiedGridDomain( baseGrid.getGridDomain()
         .getOrigin( null ), baseGrid.getGridDomain().getOffset(), baseGrid.getGridDomain()
@@ -91,7 +93,8 @@ public class VectorToGridConverter
         }
       }
       newRangeSetData.addElement( newRowData );
-      System.out.println( i + 1 + " rows of " + rangeSetData.size() + " calculated" );
+      monitor.setMessage( i + 1 + " rows of " + rangeSetData.size() + " calculated" );
+      monitor.setProgress( 100 * i / rangeSetData.size() );
     }
     RangeSet newRangeSet = new RangeSet( newRangeSetData, null );
     RectifiedGridCoverage newGrid = new RectifiedGridCoverage( newGridDomain, newRangeSet );
