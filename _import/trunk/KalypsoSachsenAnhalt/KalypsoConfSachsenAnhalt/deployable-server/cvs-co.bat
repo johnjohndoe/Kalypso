@@ -5,5 +5,6 @@
 
 set CVS_RSH=ssh2
 cvs -d :ext:%1@ibpm:/usr/local/cvsroot co -P -d %2 %3
+pause
 exit
 

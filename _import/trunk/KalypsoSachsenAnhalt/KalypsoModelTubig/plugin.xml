@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.tubig"
+   name="KalypsoTubigPlugin"
+   version="1.0.0"
+   provider-name="kalypso.org">
+   <requires>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.util"/>
+      <import plugin="org.kalypso.deegree"/>
+      <import plugin="org.kalypso.jwsdp"/>
+   </requires>
+   <extension
+         point="org.kalypso.core.nativeObsAdapter">
+      <adapter
+            label="TUBIG-Import (Wasserstand)"
+            class="org.kalypso.lhwsachsenanhalt.tubig.NativeObservationTubigAdapter"
+            axisType="W"/>
+      <adapter
+            label="TUBIG-Import (Niederschlag)"
+            class="org.kalypso.lhwsachsenanhalt.tubig.NativeObservationTubigAdapter"
+            axisType="N"/>
+      <adapter
+            label="TUBIG-Import (Volumen)"
+            class="org.kalypso.lhwsachsenanhalt.tubig.NativeObservationTubigAdapter"
+            axisType="V"/>
+      <adapter
+            label="TUBIG-Import (Abfluss)"
+            class="org.kalypso.lhwsachsenanhalt.tubig.NativeObservationTubigAdapter"
+            axisType="Q"/>
+   </extension>
+
+</plugin>

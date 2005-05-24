@@ -43,6 +43,7 @@
 		<echo message="Creating the required directories...." />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${dist.webdav}" />
+		<mkdir dir="${dist.webdav}/prognose" />
 	</target>
 
 	<target name="clean">
@@ -55,7 +56,7 @@
 		<!--ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" /-->
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoTubigPlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<!--ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="clean" inheritAll="false" /-->
 	</target>
 
@@ -137,15 +138,15 @@
 
 	<target name="build-plugins" depends="build-basic, build-CalcService">
 		<echo message="Building specific plugins for Sachsen-Anhalt" />
-		<ant antfile="${workspace}/KalypsoBodePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoTubigPlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<!--ant antfile="${workspace}/KalypsoSaalePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" /-->
 	</target>
 
 	<target name="modelplugins-dependency" depends="build-plugins">
-		<echo message="Copying the libs relevant for using Bode-Plugin and Saale-Plugin"/>
+		<echo message="Copying the libs relevant for using Tubig-Plugin and Saale-Plugin"/>
 		
 		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib" overwrite="true">
-			<fileset dir="${workspace}/KalypsoBodePlugin/build/deploy" includes="**/*.jar" />
+			<fileset dir="${workspace}/KalypsoTubigPlugin/build/deploy" includes="**/*.jar" />
 		</copy>
 		<!--copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
 			<fileset dir="${workspace}/KalypsoSaalePlugin/build/deploy" includes="**/*.jar" />

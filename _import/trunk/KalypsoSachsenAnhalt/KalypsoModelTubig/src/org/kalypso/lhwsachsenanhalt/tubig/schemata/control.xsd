@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.tubig.control" version="0.1" xmlns:tubig="org.kalypso.tubig.control" xmlns:gml="http://www.opengis.net/gml" xmlns:tubigcommon="org.kalypso.tubig.common" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="org.kalypso.tubig.common" schemaLocation="common.xsd"/>
+	<element name="TubigControl" type="tubig:_TubigControlType"/>
+	<complexType name="_TubigControlBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="_TubigControlType">
+		<complexContent>
+			<extension base="tubig:_TubigControlBaseType">
+				<sequence>
+					<element ref="tubig:ControlAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steuerparameter</label>
+								<tooltip>Steuerparameter der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tubig:MetadataAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Metadaten</label>
+								<tooltip>Metadaten der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="ControlAssociation" type="tubig:ControlAssociationType">
+	</element>
+	<complexType name="ControlAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubig:Control"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Control" type="tubig:ControlType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ControlType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="startsimulation" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Simulation</label>
+								<tooltip>Startzeitpunkt der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="startforecast" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Start der Vorhersage</label>
+								<tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="tubig:BatchIDCollectionAssociation"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="BatchIDCollectionAssociation" type="tubig:BatchIDCollectionAssociationType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Liste der Batch IDs</label>
+				<tooltip>Liste der Batch IDs</tooltip>
+				<description/>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="BatchIDCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubig:BatchIDCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BatchIDCollection" type="tubig:BatchIDCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BatchIDCollectionType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="BatchIDAssociation" type="tubig:BatchIDAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="BatchIDAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubig:BatchID"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="BatchID" type="tubig:BatchIDType" substitutionGroup="gml:_Feature"/>
+	<complexType name="BatchIDType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="id" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>ID</label>
+								<tooltip>ID der Batch</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="MetadataAssociation" type="tubig:MetadataAssociationType"/>
+	<complexType name="MetadataAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubig:Metadata"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Metadata" type="tubig:MetadataType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MetadataType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="editor" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ersteller</label>
+								<tooltip>Name des Erstellers</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="description" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="comment" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kommentar</label>
+								<tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="calctime" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Erstellungszeitpunkt</label>
+								<tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
