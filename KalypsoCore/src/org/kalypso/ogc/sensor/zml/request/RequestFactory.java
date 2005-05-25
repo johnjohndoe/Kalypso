@@ -34,6 +34,9 @@
 package org.kalypso.ogc.sensor.zml.request;
 
 import java.io.StringReader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 import javax.xml.bind.JAXBException;
 
@@ -43,6 +46,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.zml.request.ObjectFactory;
@@ -79,8 +83,8 @@ public class RequestFactory
           "URL-fragment does not contain a valid request definition. URL: "
               + href );
 
-    final String strRequestXml = href.substring( i1
-        , i2 + ZmlURLConstants.TAG_REQUEST2.length() );
+    final String strRequestXml = href.substring( i1, i2
+        + ZmlURLConstants.TAG_REQUEST2.length() );
 
     StringReader sr = null;
     try
@@ -108,13 +112,31 @@ public class RequestFactory
    */
   public static IObservation createDefaultObservation( final RequestType xmlReq )
   {
-    final String[] splits = xmlReq.getAxes().split( "," );
-    final IAxis[] axes = new IAxis[splits.length];
-    for( int i = 0; i < splits.length; i++ )
-      axes[i] = TimeserieUtils.createDefaulAxis( splits[i] );
+    final String[] axesTypes;
+    if( xmlReq.getAxes() != null )
+      axesTypes = xmlReq.getAxes().split( "," );
+    else
+      axesTypes = new String[0];
+
+    final String[] statusAxes;
+    if( xmlReq.getStatusAxes() != null )
+      statusAxes = xmlReq.getStatusAxes().split( "," );
+    else
+      statusAxes = new String[0];
+
+    final List axes = new Vector();
+    for( int i = 0; i < axesTypes.length; i++ )
+    {
+      final IAxis axis = TimeserieUtils.createDefaulAxis( axesTypes[i] );
+      axes.add( axis );
+
+      if( Arrays.binarySearch( statusAxes, axesTypes[i] ) >= 0 )
+        axes.add( KalypsoStatusUtils.createStatusAxisFor( axis ) );
+    }
 
     final SimpleObservation obs = new SimpleObservation( "", "", xmlReq
-        .getName(), false, null, new MetadataList(), axes );
+        .getName(), false, null, new MetadataList(), (IAxis[])axes
+        .toArray( new IAxis[axes.size()] ) );
 
     return obs;
   }

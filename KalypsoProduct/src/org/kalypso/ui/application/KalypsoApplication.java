@@ -40,22 +40,19 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.application;
 
-import java.util.logging.Logger;
-
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.kalypso.users.User;
 
-
 /**
  * @author belger
  */
 public class KalypsoApplication implements IPlatformRunnable
 {
-  private Logger m_logger = Logger.getLogger( KalypsoApplication.class
-      .getName() );
+  //  private Logger m_logger = Logger.getLogger( KalypsoApplication.class
+  //      .getName() );
 
   /**
    * @see org.eclipse.core.runtime.IPlatformRunnable#run(java.lang.Object)
@@ -66,7 +63,7 @@ public class KalypsoApplication implements IPlatformRunnable
 
     if( user == null )
       return IPlatformRunnable.EXIT_OK;
-    
+
     return startWorkbench( new KalypsoWorkbenchAdvisor( user ) );
   }
 

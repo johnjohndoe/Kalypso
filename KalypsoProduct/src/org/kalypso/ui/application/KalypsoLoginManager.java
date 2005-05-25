@@ -58,7 +58,11 @@ import org.kalypso.ui.application.login.SingleLoginValidator;
 import org.kalypso.users.User;
 
 /**
- * KalypsoLoginManager
+ * Takes care of handling various login-possibilities. The various login
+ * possibilities are configured by the KalypsoUserService. If the
+ * KalypsoUserService is not available (either down or not used at all) the
+ * login manager uses the default AppLoginValidator which provides a static
+ * login facility.
  * 
  * @author schlienger
  */
@@ -66,9 +70,18 @@ public final class KalypsoLoginManager
 {
   private KalypsoLoginManager()
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
+  /**
+   * The login procedure follows this path:
+   * <ul>
+   * <li>it tries to access the UserService
+   * <li>if the UserService is up, then it asks it for its configuration (see
+   * UserService for more information)
+   * <li>if the UserService is down, then it uses the default AppLoginValidator
+   * </ul>
+   */
   public static User startLoginProcedure()
   {
     IUserService srv = null;
@@ -79,6 +92,7 @@ public final class KalypsoLoginManager
     }
     catch( final ServiceException e )
     {
+      // for information
       e.printStackTrace();
     }
 
@@ -91,6 +105,10 @@ public final class KalypsoLoginManager
 
     if( srv != null )
     {
+      // the UserService is up so ask for its configuration. We basically have
+      // two possibilities to log a user in Kalypso:
+      // 1. using full authentication (user can change name and password)
+      // 2. using pseudo-single-sign-on (user can only change password)
       try
       {
         useLogin = srv.isAskForLogin();
@@ -100,52 +118,57 @@ public final class KalypsoLoginManager
         else
           lv = new SingleLoginValidator( srv );
 
+        // scenarios make only sense when the user service is
+        // available, that's why these properties are only
+        // initialised here
         useScenario = srv.isAskForScenario();
         scenarios = srv.getScenarios();
         scenarioDescriptions = srv.getScenarioDescriptions();
       }
       catch( final RemoteException e )
       {
+        // shit happens, the user service seems to have difficulties
+        // with our request for its configuration, so let the user
+        // log in with the admin password
         e.printStackTrace();
+
+        useLogin = true;
         lv = new AppLoginValidator();
       }
     }
     else
     {
+      // there's no UserService so let the user log in with the
+      // admin password
       useLogin = true;
       lv = new AppLoginValidator();
     }
 
     Display display = null;
     Shell shell = null;
-    if( useLogin || useScenario )
-    {
-      display = new Display();
-      shell = new Shell( display, SWT.SYSTEM_MODAL );
-      shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
-    }
 
     String username = lv.getDefaultUserName();
     User user = null;
 
     int trials = 5;
+
     while( true )
     {
       String password = null;
 
       if( useLogin || useScenario )
       {
+        // make sure to have a display
         if( display == null )
         {
           display = new Display();
-          if( shell == null )
-          {
-            shell = new Shell( display, SWT.SYSTEM_MODAL );
-            shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
-          }
+          shell = new Shell( display, SWT.SYSTEM_MODAL );
+          shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
         }
-        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, "Kalypso - Login", lv
-            .getMessage(), username, lv.userNameChangeable(), lv.passwordEnabled(), useScenario,
+
+        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell,
+            "Kalypso - Login", lv.getMessage(), username, lv
+                .userNameChangeable(), lv.passwordEnabled(), useScenario,
             scenarios, scenarioDescriptions );
 
         if( dlg.open() == Window.OK )
@@ -157,6 +180,7 @@ public final class KalypsoLoginManager
         }
         else
         {
+          // cancelled by user, so stop
           user = null;
           break;
         }
@@ -168,17 +192,18 @@ public final class KalypsoLoginManager
         user = lv.validate( username, password );
 
         if( user != null )
-          break;
+          break; // user successfully authenticated
         if( trials == 0 )
           throw new IllegalStateException( "Benutzer " + username
-              + " kann sich nicht einlogger. Seine Berechtigung sollte " + "geprüft werden." );
+              + " kann sich nicht einlogger. Seine Berechtigung sollte "
+              + "geprüft werden." );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
 
-        // if was using the server, still give a chance to
-        // use kalypso app login
+        // if was using the server, still give a
+        // chance to log in with admin password
         lv = new AppLoginValidator();
         username = lv.getDefaultUserName();
         useLogin = true;
