@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Thül
  */
-public class Tubig2ZmlFileVisitor implements FileVisitor
+public class TubigFileVisitorTubig2Zml implements FileVisitor
 {
   private final File m_dirOut;
 
@@ -77,7 +77,7 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
    * 
    * @throws TubigException
    */
-  public Tubig2ZmlFileVisitor( final File dirOut, final String sFeatTyp, final URL urlGml,
+  public TubigFileVisitorTubig2Zml( final File dirOut, final String sFeatTyp, final URL urlGml,
       final Map metaMap ) throws TubigException
   {
     m_dirOut = dirOut;
@@ -108,8 +108,8 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
   public static void writeZml( final File dirIn, final File dirOut, final String sFeatTyp,
       final URL urlGml, final Map metaMap ) throws TubigException
   {
-    final Tubig2ZmlFileVisitor fleVisitor;
-    fleVisitor = new Tubig2ZmlFileVisitor( dirOut, sFeatTyp, urlGml, metaMap );
+    final TubigFileVisitorTubig2Zml fleVisitor;
+    fleVisitor = new TubigFileVisitorTubig2Zml( dirOut, sFeatTyp, urlGml, metaMap );
 
     {
       try
@@ -126,9 +126,9 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
   /**
    * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
    */
-  public boolean visit( final File fleTubig )
+  public boolean visit( final File fleTubig ) 
   {
-    final IObservation obsZml;
+    IObservation obsZml;
     final FileOutputStream fleOutStream;
     final File fleZml;
     final ObservationType observationType;
@@ -168,7 +168,16 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
         name = info.getName();
       }
 
-      obsZml = TubigConverter.tubig2Zml( fleTubig, name );
+      obsZml = null;
+      try
+      { 
+        // TODO Monika Exceptions sammeln und gebündelt zurückgeben (obsZml = null weg und dann wieder final machen)
+        obsZml = TubigConverter.tubig2Zml( fleTubig, name );
+      }
+      catch( TubigException e1 )
+      {
+        e1.printStackTrace();
+      }
 
       // Metadaten in obs übertragen
       // ein bisserl tricky, damit die neuen Werte garantiert die alten
@@ -190,6 +199,7 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
         observationType = ZmlFactory.createXML( obsZml, null );
         ZmlFactory.getMarshaller().marshal( observationType, outStreamWrtr );
       }
+      // TODO siehe oben (Exceptions sammeln)
       catch( final Exception e )
       {
         e.printStackTrace();

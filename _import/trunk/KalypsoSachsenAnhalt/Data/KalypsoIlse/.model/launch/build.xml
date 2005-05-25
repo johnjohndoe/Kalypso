@@ -1,0 +1,70 @@
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fake                      nur damit das Projekt nicht schreit
+         - - - - - - - - - - - - - - - - - -->
+	<target name="fake" />
+
+	<!-- ================================= 
+          target: create              
+         ================================= -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<!-- TODO -->
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+
+		<echo message="Grunddaten und Vorlagen werden kopiert" />
+		<copy todir="${calc.dir}" >
+			<fileset dir="${modell.template.dir}">
+				<include name="modell.gml" />
+				<include name="**/*.gmt" />
+			</fileset>
+		</copy>
+		
+		<!-- modell.gml, Info_Rechenvariant,gft (= view auf .calculation) -->
+		<copy file="${project.dir}/.templates/Modell/modell.gml" tofile="${calc.dir}/modell.gml"/>
+		<copy file="${project.dir}/.templates/Modell/Info_Rechenvariante.gft" tofile="${calc.dir}/Info_Rechenvariante.gft"/>
+		<copy file="${project.dir}/.templates/Modell/wiskiimport_messung.gml" tofile="${calc.dir}/wiskiimport_messung.gml"/>
+		<copy file="${project.dir}/.templates/Modell/wiskiimport_gesamt.gml" tofile="${calc.dir}/wiskiimport_gesamt.gml"/>
+		<copy file="${project.dir}/.templates/Modell/wiskiimport_prognose.gml" tofile="${calc.dir}/wiskiimport_prognose.gml"/>
+		
+		<!-- Kartenansichten  -->
+		<copy toDir="${calc.dir}/Karten/">
+			<fileset dir="${project.dir}/.templates/Modell/Karten/"/>
+		</copy>
+
+		<!-- Parameteransichten -->
+		<copy toDir="${calc.dir}/Parameter/">
+			<fileset dir="${project.dir}/.templates/Modell/Parameter/"/>
+		</copy>
+	</target>
+
+	<target name="update" description="Holt die Zeitreihen vom Zeitreihendienst">
+		
+		<echo message="Rechenvariante aktualisieren: ${calc.dir}" />
+
+		<property name="HOURS_OF_DAY" value="11"/>
+		
+		<gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}"/>
+		</gmlProperty>
+
+		<echo message="Zeitreihen werden von WISKI geladen" />
+		
+		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}"/>
+		</copyObservation>
+
+		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+		</copyObservation>
+
+		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_prognose.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim}"/>
+		</copyObservation>
+	</target>
+</project>

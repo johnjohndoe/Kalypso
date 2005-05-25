@@ -65,7 +65,7 @@ import com.braju.format.Format;
 
 /**
  * Lesen und Schreiben der Speicher-Parameter <br>
- * Verwendung für die Tubig-Modelle 
+ * Verwendung für die Tubig-Modelle
  * 
  * @author Thül
  */
@@ -83,7 +83,8 @@ public class TubigExportParameter
    * @param dir
    * @throws TubigException
    */
-  public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir ) throws TubigException
+  public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir )
+      throws TubigException
   {
     //String sName;
     String sKurzName;
@@ -160,12 +161,13 @@ public class TubigExportParameter
       Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
       { dStauraum } );
       pWrtr.println();
-      pWrtr.close();
+      IOUtils.closeQuietly( pWrtr );
+
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException("Fehler beim Schreiben der Speicherparameter (Stauraum)", e);
+      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Stauraum)", e );
     }
     finally
     {
@@ -215,12 +217,13 @@ public class TubigExportParameter
         { featMonat.getProperty( "Wert" ) } );
         pWrtr.println();
       }
-      pWrtr.close();
+      IOUtils.closeQuietly( pWrtr );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException("Fehler beim Schreiben der Speicherparameter (Kommentar und Jahr)", e);
+      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Kommentar und Jahr)",
+          e );
     }
     finally
     {
@@ -299,12 +302,15 @@ public class TubigExportParameter
         sLeaZeile = Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
         { featEntlastung.getProperty( "Höhe" ) } );
         dHoehe = (Double)featEntlastung.getProperty( "Höhe" );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Inhalt" ) } );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Grundablass" ) } );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-        { featEntlastung.getProperty( "Überlauf" ) } );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
+            + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
+            { featEntlastung.getProperty( "Inhalt" ) } );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
+            + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
+            { featEntlastung.getProperty( "Grundablass" ) } );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
+            + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
+            { featEntlastung.getProperty( "Überlauf" ) } );
         dUeberlauf = (Double)featEntlastung.getProperty( "Überlauf" );
         if( dUeberlauf.doubleValue() <= 0.0 )
         {
@@ -312,8 +318,9 @@ public class TubigExportParameter
         }
         sBemerkung = (String)featEntlastung.getProperty( "Bemerkung" );
         if( sBemerkung != null )
-          sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_STRING_FORMAT, new Object[]
-          { TubigConst.TUBIG_SEP + sBemerkung } );
+          sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
+              + Format.sprintf( TubigConst.TUBIG_STRING_FORMAT, new Object[]
+              { TubigConst.TUBIG_SEP + sBemerkung } );
         leaMap.put( dHoehe, sLeaZeile );
       }
 
@@ -326,13 +333,13 @@ public class TubigExportParameter
         mapEntry = (Map.Entry)iter.next();
         pWrtr.println( mapEntry.getValue() );
       }
-
-      pWrtr.close();
+      IOUtils.closeQuietly( pWrtr );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException("Fehler beim Schreiben der Speicherparameter (Entlastungsanlagen)", e);
+      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Entlastungsanlagen)",
+          e );
     }
     finally
     {
@@ -350,7 +357,8 @@ public class TubigExportParameter
    * @param dir
    * @throws TubigException
    */
-  public static void writePegelPars( final GMLWorkspace workspace, final File dir ) throws TubigException
+  public static void writePegelPars( final GMLWorkspace workspace, final File dir )
+      throws TubigException
   {
     //String sName;
     String sKurzName;
@@ -441,20 +449,17 @@ public class TubigExportParameter
       Format.fprintf( pWrtr, TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
       { dWert } );
       pWrtr.println( TubigConst.TUBIG_SEP + "DM2" );
-
-      pWrtr.close();
-
+      IOUtils.closeQuietly( pWrtr );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException("Fehler beim Schreiben der Pegelparameter (WLM)", e);
+      throw new TubigException( "Fehler beim Schreiben der Pegelparameter (WLM)", e );
     }
     finally
     {
       IOUtils.closeQuietly( pWrtr );
     }
-
   }
 
   public static void main( final String[] args ) throws Exception

@@ -11,6 +11,7 @@ import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.text.ParseException;
@@ -190,8 +191,7 @@ public class TubigConverter
       }
 
       // Datum, Schrittweite und Werte
-      // TODO Monika wenn kein Zahlenwert vorhanden, bestünde die Datei die
-      // Prüfung durch m_fehler nicht...
+      // wenn kein Zahlenwert vorhanden, besteht die Datei die Prüfung durch m_fehler nicht...
       if( lstAusgDatum.size() > 0 )
       {
         dtDatum = (Date)lstAusgDatum.get( 0 );
@@ -248,11 +248,11 @@ public class TubigConverter
     wrtrTubig = new OutputStreamWriter( new FileOutputStream( fleTubig ), TubigConst.TUBIG_CODEPAGE );
     sValueType = TubigUtils.getObservationType( fleTubig );
     zml2Tubig( obsZml, wrtrTubig, step, sValueType, dtStartForecast );
-    wrtrTubig.close();
+    IOUtils.closeQuietly( wrtrTubig );
   }
 
   public static IObservation tubig2Zml( final Reader reader, final String sValueType,
-      final String name )
+      final String name ) throws TubigException
   {
     final LineNumberReader lneNumRdr;
     final Date dtDatum;
@@ -329,11 +329,15 @@ public class TubigConverter
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException(
+          "Fehler beim Lesen einer TUBIG-Datei (Schreiben von Zeitreihen - ZML", e );
     }
     catch( final ParseException e1 )
     {
       // lneNumRdr.getLineNumber() gibt die problematische Zeilennummer an
       e1.printStackTrace();
+      throw new TubigException( "Fehler beim Parsen eines Datums (Schreiben von Zeitreihen - ZML",
+          e1 );
     }
     finally
     {
@@ -343,30 +347,39 @@ public class TubigConverter
   }
 
   public static IObservation tubig2Zml( final File fleTubig, final String name )
+      throws TubigException
   {
-    final InputStreamReader rdrTubig;
+    InputStreamReader rdrTubig;
     final String sObsType;
 
     IObservation obsZml;
 
     obsZml = null;
+    rdrTubig = null;
+
     sObsType = TubigUtils.getObservationType( fleTubig );
     try
     {
       //rdrTubig = new FileReader( fleTubig );
       rdrTubig = new InputStreamReader( new FileInputStream( fleTubig ), TubigConst.TUBIG_CODEPAGE );
       obsZml = tubig2Zml( rdrTubig, sObsType, name );
-      rdrTubig.close();
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+      throw new TubigException( "Encoding " + TubigConst.TUBIG_CODEPAGE + " wird für "
+          + fleTubig.getName() + " nicht unterstützt. (Schreiben von Zeitreihen - ZML", e );
     }
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
+      throw new TubigException( "Datei " + fleTubig.getName()
+          + " kann nicht gefunden werden (Schreiben von Zeitreihen - ZML)", e );
     }
-    catch( final IOException e )
+    finally
     {
-      e.printStackTrace();
+      IOUtils.closeQuietly( rdrTubig );
     }
-
     return obsZml;
   }
 
@@ -385,6 +398,7 @@ public class TubigConverter
   }
 
   public static void createAktDtTxt( final File fleExeDir, final Date dtZeit )
+      throws TubigException
   {
     final String sSchritt = "1.00000000000000E-0004";
     final String sMin = "0";
@@ -394,18 +408,19 @@ public class TubigConverter
   }
 
   public static void createAktDtTxt( final File fleExeDir, final Date dtAktModellZeit,
-      final String sSchritt, final String sMin, final String sMax )
+      final String sSchritt, final String sMin, final String sMax ) throws TubigException
   {
     try
     {
       final FileWriter wrtrAktDtTxt = new FileWriter( new File( fleExeDir,
           TubigConst.AKTDT_FILE_NAME ) );
       createAktDtTxt( wrtrAktDtTxt, dtAktModellZeit, sSchritt, sMin, sMax );
-      wrtrAktDtTxt.close();
+      IOUtils.closeQuietly( wrtrAktDtTxt );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException( "Fehler beim Schreiben der Datei " + TubigConst.AKTDT_FILE_NAME, e );
     }
   }
 
@@ -422,7 +437,7 @@ public class TubigConverter
   }
 
   public static void main( final String[] args ) throws SensorException, IOException,
-      ParseException
+      ParseException, TubigException
   {
     //    String sDateiEndung;
 
@@ -436,7 +451,7 @@ public class TubigConverter
     final FileWriter writer = new FileWriter( new File( System.getProperty( "java.io.tmpdir" ),
         "elen_test.vw" ) );
     zml2Tubig( observation, writer, -1, TimeserieConstants.TYPE_WATERLEVEL );
-    writer.close();
+    IOUtils.closeQuietly( writer );
     Date dtZeit;
     dtZeit = TubigConst.TUBIG_DATE_FORMAT.parse( "15.12.2004 07:00" );
 
@@ -448,7 +463,7 @@ public class TubigConverter
     //final InputStreamReader reader = new FileReader( leseDatei );
     //sDateiEndung = TubigUtils.getObservationType( leseDatei );
     //tubig2Zml( reader, sDateiEndung );
-    //reader.close();
+    //IOUtils.closeQuietly( reader );
 
     IObservation obsTest;
     obsTest = tubig2Zml( leseDatei, "name" );

@@ -63,9 +63,11 @@ public class TubigInputWorker
    * PATH_RECHENKERN_ZIP enthält alle benötigten Batch-Dateien, Steuer-Dateien,
    * allg. Parameter-Dateien etc.
    * 
+   * @throws TubigException
+   * 
    * @author Thül
    */
-  public static void copyAndUnzipRechenkern( final File fleDir )
+  public static void copyAndUnzipRechenkern( final File fleDir ) throws TubigException
   {
     final URL urlRk;
     InputStream zipStream = null;
@@ -79,13 +81,10 @@ public class TubigInputWorker
       zipStream = urlRk.openStream();
       ZipUtilities.unzip( zipStream, fleDir );
     }
-    catch( final ZipException e )
-    {
-      e.printStackTrace();
-    }
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException( "Fehler beim Entpacken des Rechenkerns", e );
     }
     finally
     {
@@ -112,7 +111,8 @@ public class TubigInputWorker
    * @author Thül
    */
   public static TubigCalculationData createCalcInput( final File dirCalc,
-      final ICalcDataProvider inputData, final Map metaMap ) throws CalcJobServiceException, TubigException
+      final ICalcDataProvider inputData, final Map metaMap ) throws CalcJobServiceException,
+      TubigException
   {
     final TubigCalculationData calcData;
 
@@ -154,6 +154,7 @@ public class TubigInputWorker
     }
     catch( final Exception e1 )
     {
+      e1.printStackTrace();
       throw new TubigException( "Fehler beim Laden der Modelldaten-GML", e1 );
     }
 
@@ -161,43 +162,43 @@ public class TubigInputWorker
     TubigExportParameter.writePegelPars( gmlWrkSpce, dirCalc );
 
     // Speicherabgabe, Vergangenheit
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Abgabe", -1, "vsa", dtStartForecast, metaMap,
         TubigConst.SPEICHER );
 
     // Speicherabgabe, Prognose (auch Überleitung)
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_ALLE_SPEICHER_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_ALLE_SPEICHER_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Abgabe", 1, "psa", dtStartForecast, metaMap,
         TubigConst.SPEICHER );
 
     // Speicherinhalt, Vergangenheit
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vvs", dtStartForecast,
         metaMap, TubigConst.SPEICHER );
 
     // Abfluss am Pegel, Vergangenheit
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vq", dtStartForecast,
         metaMap, TubigConst.PEGEL );
 
     // Abfluss am Pegel, Prognose (wird für Batch 3-5 elen.pq und/oder wege.pq
     // benötigt)
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gerechnet", 1, "pq", dtStartForecast, null,
         TubigConst.PEGEL );
 
     // Gebietsniederschlag, Vergangenheit
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Niederschlag", -1, "vns", dtStartForecast, metaMap,
         TubigConst.PEGEL );
 
     // Gebietsniederschlag, Prognose
-    Zml2TubigFeatureVisitor.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml,
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml,
         dirCalc, TubigConst.GML_KURZ_NAME, "Niederschlag", 1, "pns", dtStartForecast, metaMap,
         TubigConst.PEGEL );
   }
 
-  public static void main( final String[] args )
+  public static void main( final String[] args ) throws TubigException
   {
     copyAndUnzipRechenkern( new File( System.getProperty( "java.io.tmpdir" ) + "/rkTest" ) );
   }

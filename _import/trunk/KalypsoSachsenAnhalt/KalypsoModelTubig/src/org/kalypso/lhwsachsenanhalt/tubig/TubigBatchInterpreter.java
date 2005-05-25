@@ -326,15 +326,13 @@ public class TubigBatchInterpreter
       pwErr.println( "Fehlergrund (IOException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      // TODO Monika oder ist es gar eine TubigException?
       throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
           TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final InterruptedException e )
     {
-      // TODO Monika wie schlimm ist es, dass der Thread nicht schlafen gehen
-      // kann? Text falsch...
-      pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
+      // kann aber eigentlich gar nicht passieren (wird geworfen von
+      // Thread.sleep( 100 ))
       e.printStackTrace();
     }
     finally
@@ -360,9 +358,9 @@ public class TubigBatchInterpreter
     //   runBatch( exeDir, reader, wrtrLog, wrtrErr, null );
     //runBatch( exeDir, leseDatei, logDatei, errDatei, null );
     runBatch( exeDir, leseDatei, null );
+    IOUtils.closeQuietly( reader );
+    IOUtils.closeQuietly( wrtrLog );
+    IOUtils.closeQuietly( wrtrErr );
 
-    reader.close();
-    wrtrLog.close();
-    wrtrErr.close();
   }
 }

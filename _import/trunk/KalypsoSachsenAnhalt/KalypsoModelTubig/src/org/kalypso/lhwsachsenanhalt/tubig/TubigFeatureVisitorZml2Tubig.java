@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Thül
  */
-public class Zml2TubigFeatureVisitor implements FeatureVisitor
+public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
 {
   public static void writeTimeseries( final GMLWorkspace workspace, final String featurePath,
       final URL context, final File outdir, final String tubigProperty, final String linkProperty,
@@ -62,7 +62,7 @@ public class Zml2TubigFeatureVisitor implements FeatureVisitor
       final String sFeatTyp ) throws TubigException
   {
     final FeatureList features = (FeatureList)workspace.getFeatureFromPath( featurePath );
-    final Zml2TubigFeatureVisitor speicherVisitor = new Zml2TubigFeatureVisitor( context, outdir,
+    final TubigFeatureVisitorZml2Tubig speicherVisitor = new TubigFeatureVisitorZml2Tubig( context, outdir,
         tubigProperty, linkProperty, step, ext, dtStartForecast, metaMap, sFeatTyp );
     features.accept( speicherVisitor );
 
@@ -101,7 +101,7 @@ public class Zml2TubigFeatureVisitor implements FeatureVisitor
    * @param metaMap
    * @param sFeatTyp
    */
-  public Zml2TubigFeatureVisitor( final URL context, final File outdir, final String tubigProperty,
+  public TubigFeatureVisitorZml2Tubig( final URL context, final File outdir, final String tubigProperty,
       final String linkProperty, final int step, final String ext, final Date dtStartForecast,
       final Map metaMap, final String sFeatTyp )
   {

@@ -186,13 +186,13 @@ public class TubigCalcJob implements ICalcJob
       dirHelp = new File( bodevorDir, TubigConst.PEGEL );
       if( dirHelp.isDirectory() )
       {
-        Tubig2ZmlFileVisitor.writeZml( dirHelp, ergDir, TubigConst.PEGEL, inputProvider
+        TubigFileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL, inputProvider
             .getURLForID( "MODELL_GML" ), metaMap );
       }
       dirHelp = new File( bodevorDir, TubigConst.SPEICHER );
       if( dirHelp.isDirectory() )
       {
-        Tubig2ZmlFileVisitor.writeZml( dirHelp, ergDir, TubigConst.SPEICHER, inputProvider
+        TubigFileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.SPEICHER, inputProvider
             .getURLForID( "MODELL_GML" ), metaMap );
       }
       // IDs für addResult sind in der ModelSpec.xml (Client) und
@@ -201,10 +201,6 @@ public class TubigCalcJob implements ICalcJob
       // übertragen werden (Kuddelmuddel-Gefahr zu hoch)
       resultEater.addResult( TubigConst.ERGEBNISSE, ergDir );
     }
-    // TODO Monika Fehlerbehandlung: im Fehlerfall immer eine
-    // CalcJobServiceException werfen, sonst bekommt der Benutzer nicht mit,
-    // dass
-    // was nicht in Ordnung ist
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
@@ -221,15 +217,12 @@ public class TubigCalcJob implements ICalcJob
       // Fehler bei Abarbeitung einer Batch. Batches werden nicht weiter
       // abgearbeitet: kontrollierter Abbruch
       e.printStackTrace();
-      // TODO text schreiben
-      pwCalcLog.println( "" );
+      pwCalcLog.println( "Bei der Abarbeitung einer Batch-Datei ist ein Fehler aufgetreten. Es werden keine Ergebnisse übertragen. Weitere Informationen finden sich in den Log-Dateien." );
     }
     catch( final TubigException e )
     {
-      // TODO Monika damit muss noch was geschehen...
-      // Insbesondere Log-Info (log geht nicht), dass keine Ergebnis-Dateien übertragen werden
       e.printStackTrace();
-      throw new CalcJobServiceException( "", e );
+      throw new CalcJobServiceException( e.getLocalizedMessage() , e );
     }
     finally
     {

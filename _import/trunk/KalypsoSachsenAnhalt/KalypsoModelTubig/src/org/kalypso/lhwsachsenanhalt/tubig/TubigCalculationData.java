@@ -59,7 +59,8 @@ public final class TubigCalculationData
 
   /**
    * 
-   * Liest .calculation (TubigControl) und schreibt die Infos in TubigCalculationData
+   * Liest .calculation (TubigControl) und schreibt die Infos in
+   * TubigCalculationData
    * 
    * @throws TubigException
    * 
@@ -106,6 +107,7 @@ public final class TubigCalculationData
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new TubigException( "Fehler beim Lesen der Steuerparameter", e );
     }
   }
