@@ -66,7 +66,7 @@ public final class KalypsoLoginManager
 {
   private KalypsoLoginManager()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   public static User startLoginProcedure()
@@ -135,9 +135,17 @@ public final class KalypsoLoginManager
 
       if( useLogin || useScenario )
       {
-        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell,
-            "Kalypso - Login", lv.getMessage(), username, lv
-                .userNameChangeable(), lv.passwordEnabled(), useScenario,
+        if( display == null )
+        {
+          display = new Display();
+          if( shell == null )
+          {
+            shell = new Shell( display, SWT.SYSTEM_MODAL );
+            shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
+          }
+        }
+        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, "Kalypso - Login", lv
+            .getMessage(), username, lv.userNameChangeable(), lv.passwordEnabled(), useScenario,
             scenarios, scenarioDescriptions );
 
         if( dlg.open() == Window.OK )
@@ -163,8 +171,7 @@ public final class KalypsoLoginManager
           break;
         if( trials == 0 )
           throw new IllegalStateException( "Benutzer " + username
-              + " kann sich nicht einlogger. Seine Berechtigung sollte "
-              + "geprüft werden." );
+              + " kann sich nicht einlogger. Seine Berechtigung sollte " + "geprüft werden." );
       }
       catch( final Exception e )
       {
@@ -174,6 +181,7 @@ public final class KalypsoLoginManager
         // use kalypso app login
         lv = new AppLoginValidator();
         username = lv.getDefaultUserName();
+        useLogin = true;
       }
     }
 
