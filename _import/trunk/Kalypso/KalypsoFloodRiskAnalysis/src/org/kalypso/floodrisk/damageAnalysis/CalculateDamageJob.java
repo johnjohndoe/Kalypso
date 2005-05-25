@@ -127,7 +127,7 @@ public class CalculateDamageJob implements ICalcJob
     {
       //Generate input
       //landuseRaster
-      monitor.setMessage( "Generate input" );
+      monitor.setMessage( "Lese Eingabedateien" );
       File landuseRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
           .getObjectForID( LanduseRasterDataID ) );
       RectifiedGridCoverage landuseRaster = rasterDataModel
@@ -145,7 +145,7 @@ public class CalculateDamageJob implements ICalcJob
 
       //start damageAnalysis
       // calculate damagePercentage
-      monitor.setMessage( "Start calculation" );
+      monitor.setMessage( "Berechne" );
       TreeMap damagePercentageGrids = DamageAnalysis.calculateDamagePercentages( waterlevelGrids,
           landuseRaster, contextModel.getDamageFunctionList() );
 
@@ -161,7 +161,7 @@ public class CalculateDamageJob implements ICalcJob
 
       //Generate Output
       // damage directory
-      monitor.setMessage( "Generate Output" );
+      monitor.setMessage( "Schreibe Ausgabedateien" );
       CalcJobClientBean damageDirOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( DamageDirectoryID );
       File damageResultDir = new File( damageDirOutputBean.getPath() );
@@ -187,8 +187,7 @@ public class CalculateDamageJob implements ICalcJob
       createRasterStyle( styleFile, styleName, annualDamageGrid, lightRed, numOfCategories );
       resultEater.addResult( annualDamageOutputBean.getId(), null );
 
-      monitor.setProgress( 30 );
-
+      monitor.setProgress( 40 );
       //clear resources
       landuseRaster = null;
       waterlevelGrids = null;
@@ -285,7 +284,8 @@ public class CalculateDamageJob implements ICalcJob
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
     ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1, max, "" );
-    colorMap.put( new Double( max ), colorMapEntry_max );
+    colorMap.put( new Double( Number.round( max, 4, BigDecimal.ROUND_HALF_EVEN ) ),
+        colorMapEntry_max );
     RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
     Symbolizer[] symbolizers = new Symbolizer[]
     { rasterSymbolizer };

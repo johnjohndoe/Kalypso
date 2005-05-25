@@ -95,6 +95,7 @@ public class VectorToGridConverter
       newRangeSetData.addElement( newRowData );
       monitor.setMessage( i + 1 + " rows of " + rangeSetData.size() + " calculated" );
       monitor.setProgress( 100 * i / rangeSetData.size() );
+      //System.out.println(i + 1 + " rows of " + rangeSetData.size() + " calculated"+ " Progress: "+100 * i / rangeSetData.size());
     }
     RangeSet newRangeSet = new RangeSet( newRangeSetData, null );
     RectifiedGridCoverage newGrid = new RectifiedGridCoverage( newGridDomain, newRangeSet );

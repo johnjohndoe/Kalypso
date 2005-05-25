@@ -97,7 +97,7 @@ public class ProcessJob extends Job
   private IStatus runCalculation( IProgressMonitor monitor ) throws CoreException
   {
 
-    monitor.beginTask( "Berechnung wird durchgeführt.", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( "Berechnung wird gestartet", 100 );
 
     final LocalCalcJobHandler cjHandler = new LocalCalcJobHandler( m_modelData, m_calcJob );
     final IStatus runStatus = cjHandler.runJob( m_project, monitor );

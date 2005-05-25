@@ -82,9 +82,7 @@ public class LocalCalcJobHandler
   public IStatus runJob( final IProject project, final IProgressMonitor monitor )
       throws CoreException
   {
-    //monitor.setTaskName( m_modelData.getTypeID() + " wird berechnet." );
-    //monitor.worked(5000);
-    //monitor.beginTask( m_modelData.getTypeID() + " wird berechnet.", 5000);
+
     try
     {
       m_jobID = startCalcJob( project, monitor );
@@ -92,9 +90,9 @@ public class LocalCalcJobHandler
       if( monitor.isCanceled() )
         throw m_cancelException;
 
-      //final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor,
-      // 5000 );
-      //calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
+      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 80,
+          SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK );
+      calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
       //int oldProgess = 0;
       while( true )
       {
@@ -129,8 +127,8 @@ public class LocalCalcJobHandler
 
         int progress = bean.getProgress();
         if( progress != -1 )
-          monitor.worked( progress );
-        monitor.setTaskName( bean.getMessage() );
+          calcMonitor.worked( progress );
+        calcMonitor.setTaskName( bean.getMessage() );
         //oldProgess = progress;
 
         // ab hier bei cancel nicht mehr zurückkehren, sondern
@@ -139,7 +137,7 @@ public class LocalCalcJobHandler
           calcService.cancelJob( m_jobID );
       }
 
-      //calcMonitor.done();
+      calcMonitor.done();
 
       final CalcJobInfoBean jobBean = calcService.getJob( m_jobID );
 
@@ -147,10 +145,9 @@ public class LocalCalcJobHandler
       switch( jobBean.getState() )
       {
       case ICalcServiceConstants.FINISHED:
-        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
         final String finishText = jobBean.getFinishText();
         final String message = finishText == null ? "" : finishText;
-        monitor.done();
         return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
 
       case ICalcServiceConstants.CANCELED:
@@ -187,22 +184,20 @@ public class LocalCalcJobHandler
   {
     try
     {
-      //monitor.setTaskName( "Eingangsdaten für Berechnung vorbereiten" );
-
       //prepare input
       CalcJobClientBean[] input = getInput( project );
 
       //prepare output
       CalcJobClientBean[] output = getOutput( project );
 
-      //monitor.setTaskName( "Berechne" );
+      monitor.worked( 10 );
       final CalcJobInfoBean bean = calcService.startLocalJob( m_modelData.getTypeID(),
           "Description", m_calcJob, input, output );
       return bean.getId();
     }
     finally
     {
-      monitor.done();
+      //monitor.done();
     }
   }
 

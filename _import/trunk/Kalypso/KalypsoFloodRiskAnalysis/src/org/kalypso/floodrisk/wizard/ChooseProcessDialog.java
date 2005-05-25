@@ -75,7 +75,7 @@ public class ChooseProcessDialog extends Dialog
   
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText("Choose processes...");
+    getShell().setText("Prozesse auswählen...");
     
     Composite m_topLevel = new Composite( parent, SWT.NONE );
 

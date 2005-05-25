@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import javax.imageio.ImageIO;
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RasterFactory;
@@ -41,6 +40,7 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
@@ -104,7 +104,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
         //System.out.println( "CreateImage" );
         String targetFileName = chooseFile( outlineviewer.getControl().getShell(), m_targetFile,
             new String[]
-            { "*.jpg" } );
+            { "*.jpg",".JPG",".JPEG",".jpeg" } );
         if( targetFileName != null )
         {
           if( targetFileName.indexOf( "." ) == -1 )
@@ -170,24 +170,27 @@ public class ExportThemeAction implements PluginMapOutlineAction
     {
       BufferedWriter bw = new BufferedWriter( new FileWriter( worldFile ) );
       //dx
-      bw.write( "" + rgDomain.getOffsetX( rgDomain.getOrigin( null ).getCoordinateSystem() ) );
+      double dx = rgDomain.getOffsetX(rgDomain.getOrigin(null).getCoordinateSystem());
+      bw.write( "" + dx );
       bw.newLine();
       //phi x
-      bw.write( "0" );
+      bw.write( "0.0" );
       bw.newLine();
       //phi y
-      bw.write( "0" );
+      bw.write( "0.0" );
       bw.newLine();
       //dy
-      double dy = rgDomain.getOffsetY( rgDomain.getOrigin( null ).getCoordinateSystem() );
-      bw.write( "" + dy );
+      double dY = rgDomain.getOffsetY(rgDomain.getOrigin(null).getCoordinateSystem());
+      bw.write( "-" + dY );
       bw.newLine();
       //origin x (upper left corner)
       double originX = rgDomain.getOrigin( null ).getX();
       bw.write( "" + originX );
       bw.newLine();
       //origin y (upper left corner)
-      double originY = rgDomain.getOrigin( null ).getY() - rgDomain.getNumRows() * dy;
+      GM_Envelope envelope = rgDomain.getGM_Envelope( rgDomain.getOrigin( null )
+          .getCoordinateSystem() );
+      double originY = envelope.getMax().getY();
       bw.write( "" + originY );
       bw.close();
     }
@@ -212,7 +215,7 @@ public class ExportThemeAction implements PluginMapOutlineAction
   {
     try
     {
-      ImageIO.write( surrogateImage, "JPG", outFile );
+      JAI.create( "filestore", surrogateImage, outFile.getAbsolutePath(), "jpeg" );
 
     }
     catch( Exception e )

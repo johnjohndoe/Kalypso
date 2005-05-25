@@ -55,22 +55,22 @@
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
-            name="Rasterize Landuse"
+            name="Rasterung (Landnutzung)"
             id="RasterizeLanduseJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
-            name="Calculate damage"
+            name="Schadensberechnung"
             id="CalculateDamageJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob"
-            name="Define floodrisk"
+            name="Ausweisung des Hochwasserrisikos"
             id="CalculateFloodRiskJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
-            name="Get statistics"
+            name="Statistische Auswertung"
             id="CalculateStatisticJob"/>
    </extension>
    <extension
