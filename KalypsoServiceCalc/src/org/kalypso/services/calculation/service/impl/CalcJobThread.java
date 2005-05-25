@@ -103,7 +103,7 @@ final class CalcJobThread extends Thread
     final String jobID = m_jobBean.getId();
     try
     {
-      CalcJobService_impl_Queued.LOGGER.info( "Calling run for ID: " + jobID );
+      QueuedCalcJobServiceWrapper.LOGGER.info( "Calling run for ID: " + jobID );
 
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig
           .getTempDir() );
@@ -111,19 +111,19 @@ final class CalcJobThread extends Thread
       
       m_job.run( tmpdir, m_inputData, m_resultPacker, m_jobBean );
 
-      CalcJobService_impl_Queued.LOGGER.info( "Run finished for ID: " + jobID );
+      QueuedCalcJobServiceWrapper.LOGGER.info( "Run finished for ID: " + jobID );
 
       if( m_jobBean.isCanceled() )
-        CalcJobService_impl_Queued.LOGGER.info( "JOB exited because it was canceled: " + jobID );
+        QueuedCalcJobServiceWrapper.LOGGER.info( "JOB exited because it was canceled: " + jobID );
       else
       {
         m_jobBean.setState( ICalcServiceConstants.FINISHED );
-        CalcJobService_impl_Queued.LOGGER.info( "JOB exited normaly: " + jobID );
+        QueuedCalcJobServiceWrapper.LOGGER.info( "JOB exited normaly: " + jobID );
       }
     }
     catch( final Throwable t )
     {
-      CalcJobService_impl_Queued.LOGGER.warning( "JOB exited with exception: " + jobID );
+      QueuedCalcJobServiceWrapper.LOGGER.warning( "JOB exited with exception: " + jobID );
       t.printStackTrace();
 
       m_jobBean.setMessage( t.getLocalizedMessage() );
