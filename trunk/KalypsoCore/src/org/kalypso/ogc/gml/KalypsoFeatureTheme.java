@@ -93,7 +93,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     else if( featureFromPath instanceof Feature )
     {
-      m_featureList = new SplitSort();
+      m_featureList = new SplitSort( null, null );
       m_featureList.add( featureFromPath );
       m_featureType = ( (Feature)featureFromPath ).getFeatureType();
     }
@@ -209,7 +209,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     else if( modellEvent.isType( ModellEvent.STYLE_CHANGE ) )
       setDirty();
-    else // unknown event, set dirty
+    else
+    // unknown event, set dirty
     { // TODO : if the eventhierarchy is implemented correctly the else-part can
       // be removed
       setDirty();
@@ -253,7 +254,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       StyleDisplayMap map = (StyleDisplayMap)iter.next();
       map.queryVisibleFeatures( env, result );
     }
-    final FeatureList list = FeatureFactory.createFeatureList();
+    final FeatureList list = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
     list.addAll( result );
     return list;
   }
@@ -316,7 +317,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_vaildEnvelope = null;
       m_dispayElements.clear();
       // TODO ??
-      m_maxDisplayArray=0;
+      m_maxDisplayArray = 0;
     }
 
     /**
@@ -327,9 +328,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       if( result == null )
         result = new ArrayList();
-      for(int i=0;i<m_dispayElements.size();i++)
+      for( int i = 0; i < m_dispayElements.size(); i++ )
       {
-        final DisplayElement[] de = (DisplayElement[])m_dispayElements.get(i);
+        final DisplayElement[] de = (DisplayElement[])m_dispayElements.get( i );
         if( de.length > 0 )
         {
           final Feature feature = de[0].getFeature();
@@ -368,7 +369,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       if( m_vaildEnvelope == null || !m_vaildEnvelope.contains( env ) )
       { // restyle
         if( m_vaildEnvelope == null )
-            m_vaildEnvelope = env;
+          m_vaildEnvelope = env;
         else
           m_vaildEnvelope = m_vaildEnvelope.getMerged( env );
         m_dispayElements.clear();
@@ -398,7 +399,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         DisplayElement[] elements = (DisplayElement[])iter.next();
         if( elements[0].getFeature().equals( feature ) )
         {
-          m_dispayElements.remove(elements );
+          m_dispayElements.remove( elements );
           break;
         }
       }

@@ -688,7 +688,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     case SELECT_FROM_MAPVIEW:
       final IMapModell mapModell = getMapModell();
       if( mapModell == null )
-        return FeatureFactory.createFeatureList();
+        return FeatureFactory.createFeatureList(null,null);
       activeTheme = mapModell.getActiveTheme();
       break;
     case SELECT_FROM_TABLEVIEW:
@@ -701,13 +701,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       activeTheme = null;
     }
     if( activeTheme == null )
-      return FeatureFactory.createFeatureList();
+      return FeatureFactory.createFeatureList(null,null);
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = kft.getFeatureList();
     if( featureList == null )
-      return FeatureFactory.createFeatureList();
+      return FeatureFactory.createFeatureList(null,null);
     if( selected )
-      return FeatureFactory.createFeatureList( GetSelectionVisitor.getSelectedFeatures(
+      return FeatureFactory.createFeatureList(null, null,GetSelectionVisitor.getSelectedFeatures(
           featureList, m_selectionID ) );
     return featureList;
   }

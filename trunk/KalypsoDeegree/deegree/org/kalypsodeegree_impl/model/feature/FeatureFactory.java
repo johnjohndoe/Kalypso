@@ -491,21 +491,21 @@ public class FeatureFactory
     return type;
   }
 
-  public static FeatureList createFeatureList( final List list )
+  public static FeatureList createFeatureList( final Feature parentFeature ,final FeatureTypeProperty parentFTP,final List list)
   {
-    final SplitSort result = new SplitSort();
+    final SplitSort result = new SplitSort(parentFeature,parentFTP);
     result.addAll( list );
     return result;
   }
 
-  public static FeatureList createFeatureList()
+  public static FeatureList createFeatureList(final Feature parentFeature, final FeatureTypeProperty parentFTP)
   {
-    return new SplitSort();
+    return new SplitSort(parentFeature, parentFTP);
   }
 
-  public static FeatureList createFeatureList( final GM_Envelope env )
+  public static FeatureList createFeatureList( final Feature parentFeature,final FeatureTypeProperty parentFTP, final GM_Envelope env )
   {
-    return new SplitSort( env );
+    return new SplitSort(parentFeature, parentFTP,env );
   }
 
   public static FeatureTypeProperty[] createVirtualFeatureTypeProperties(

@@ -1,5 +1,7 @@
 package org.kalypso.ogc.gml.outline;
 
+import org.eclipse.jface.viewers.ISelection;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -41,7 +43,27 @@ package org.kalypso.ogc.gml.outline;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * PluginMapOutlineAction
+ * <p>
+ * interface to extention point for actions on Mapoutline
+ * 
+ * created by
+ * 
+ * @author doemming (25.05.2005)
+ */
 public interface PluginMapOutlineAction
 {
+  /**
+   * run action
+   */
   void run( GisMapOutlineViewer outlineviewer );
+
+  /**
+   * selection changed <br>
+   * implement here to disable or enable action, eventually remember your
+   * selection and use it in your action
+   */
+  public void selectionChanged( PluginMapOutlineActionDelegate action, ISelection selection );
 }

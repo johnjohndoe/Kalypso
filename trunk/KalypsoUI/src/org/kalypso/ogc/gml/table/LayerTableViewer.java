@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -80,6 +81,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
@@ -88,6 +90,7 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.actions.CommandableFeatureSelection;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommand;
@@ -99,6 +102,7 @@ import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -505,6 +509,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
+    if(getTheme()==null)
+      return;
     // TODO hanlde here the highlighting stuff
     // Feature-Selection auf Selection übertragen
     if( ( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == getTheme().getWorkspace() )
@@ -533,6 +539,14 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       refreshColumnProperties();
       refresh();
     }
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
+    if( theme == null )
+      return;
+    if( !( event instanceof IGMLWorkspaceModellEvent ) )
+      return;
+    if( ( (IGMLWorkspaceModellEvent)event ).getGMLWorkspace() != theme.getWorkspace() )
+      return;
+
     if( event instanceof FeaturesChangedModellEvent )
     {
       List features = ( (FeaturesChangedModellEvent)event ).getFeatures();
@@ -542,6 +556,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         m_tableCursor.update();
         m_tableCursor.redraw();
       }
+    }
+    if( event instanceof FeatureStructureChangeModellEvent )
+    {
+      if( ( (FeatureStructureChangeModellEvent)event ).getParentFeature() == theme.getFeatureList().getParentFeature() )
+        refresh();
     }
   }
 
@@ -808,5 +827,20 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       }
     }
     return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.StructuredViewer#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    final IStructuredSelection selection = (IStructuredSelection)super.getSelection();
+    final IKalypsoFeatureTheme theme = getTheme();
+    if( theme == null )
+      return selection;
+    final CommandableWorkspace workspace = theme.getWorkspace();
+    if( workspace == null )
+      return selection;
+    return new CommandableFeatureSelection( theme, selection );
   }
 }

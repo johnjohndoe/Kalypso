@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorActionBarContributor;
 
@@ -61,17 +61,21 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     if( targetEditor != null )
     {
       final IMenuManager menuManager = getActionBars().getMenuManager();
-      final IMenuManager tableMenu = menuManager
-          .findMenuUsingPath( "org.kalypso.ui.editors.tableeditor.menu" );
+      final IMenuManager tableMenu = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.tableeditor.menu" );
       if( tableMenu != null )
       {
         final IContributionItem oldItem = tableMenu.remove( M_SPALTEN );
         if( oldItem != null )
           oldItem.dispose();
-        
-        final IMenuManager spaltenMenu = ((GisTableEditor)targetEditor).createSpaltenMenu( M_SPALTEN );
-        spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das Menu überhaupt eingebaut wird */} );
-        tableMenu.appendToGroup( "spalten", spaltenMenu );
+
+        //        MenuManager manager = new MenuManager("spalten1");
+//        GisTableEditor gisTableEditor = ( (GisTableEditor)targetEditor );
+//
+//        final MenuManager menuMgr = new MenuManager( "Spalten", M_SPALTEN );
+//        gisTableEditor.createSpaltenMenu( menuMgr );
+        //        spaltenMenu.add( new Action( "Hallo" ) { /* dummy item, damit das
+        // Menu überhaupt eingebaut wird */} );
+        //        tableMenu.appendToGroup( "spalten", spaltenMenu );
       }
     }
   }

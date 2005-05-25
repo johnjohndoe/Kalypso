@@ -9,6 +9,7 @@ import java.util.ListIterator;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -363,5 +364,22 @@ public class FilteredFeatureList implements FeatureList
   {
     // zu gross!
     return m_original.getBoundingBox();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
+   */
+  public Feature getParentFeature()
+  {
+    return m_original.getParentFeature();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
+   */
+  public FeatureTypeProperty getParentFeatureTypeProperty()
+  {
+    
+    return m_original.getParentFeatureTypeProperty();
   }
 }

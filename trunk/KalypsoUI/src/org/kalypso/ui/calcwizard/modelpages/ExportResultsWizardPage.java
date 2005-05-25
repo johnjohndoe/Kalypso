@@ -375,7 +375,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements
     {
       context = ResourceUtilities.createURL( selectedCalcCase );
       features = FeatureFactory
-          .createFeatureList( filterForValidTimeseriesLinks( features,
+          .createFeatureList(null,null, filterForValidTimeseriesLinks( features,
               resultProperty, context ) );
       selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures,
           resultProperty, context );

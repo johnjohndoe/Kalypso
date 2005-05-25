@@ -91,11 +91,11 @@ public class CascadingFeatureList implements FeatureList
    */
   public void accept( FeatureVisitor visitor )
   {
-  //  TODO
-  //    for( int i = 0; i < m_lists.length; i++ )
-  //    {
-  //       m_lists[i];
-  //    }
+    //  TODO
+    //    for( int i = 0; i < m_lists.length; i++ )
+    //    {
+    //       m_lists[i];
+    //    }
   }
 
   /**
@@ -437,5 +437,23 @@ public class CascadingFeatureList implements FeatureList
         result = result.getMerged( boundingBox );
     }
     return result;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
+   * @return null, as this are mixed lists
+   */
+  public Feature getParentFeature()
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
+   * @return null, as this are mixed lists
+   */
+  public FeatureTypeProperty getParentFeatureTypeProperty()
+  {
+    return null;
   }
 }

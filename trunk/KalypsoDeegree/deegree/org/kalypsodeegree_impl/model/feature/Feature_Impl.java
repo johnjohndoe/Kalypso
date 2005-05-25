@@ -63,7 +63,7 @@ public class Feature_Impl implements Feature
       if( m_featureType.getMaxOccurs( i ) != 1 )
       {
         if( ftp[i] instanceof FeatureAssociationTypeProperty )
-          m_properties[i] = FeatureFactory.createFeatureList();
+          m_properties[i] = FeatureFactory.createFeatureList(this,ftp[i]);
         else
           m_properties[i] = new ArrayList();
       }

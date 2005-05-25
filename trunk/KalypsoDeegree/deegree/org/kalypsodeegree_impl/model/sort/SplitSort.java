@@ -11,6 +11,7 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -24,13 +25,21 @@ public class SplitSort implements FeatureList
 
   private List m_objects = new ArrayList();
 
-  public SplitSort()
+  private final Feature m_parentFeature;
+
+  private final FeatureTypeProperty m_parentFeatureTypeProperty;
+
+  public SplitSort( Feature parentFeature, FeatureTypeProperty parentFTP)
   {
-  //
+    m_parentFeature = parentFeature;
+    m_parentFeatureTypeProperty=parentFTP;
+    //
   }
 
-  public SplitSort( final GM_Envelope env )
+  public SplitSort( final Feature parentFeature, FeatureTypeProperty parentFTP,final GM_Envelope env )
   {
+    m_parentFeature = parentFeature;
+    m_parentFeatureTypeProperty=parentFTP;
     myRootContainer = new SplitSortContainer( null, env );
   }
 
@@ -64,9 +73,8 @@ public class SplitSort implements FeatureList
       double maxYroot = envRoot.getMax().getY();
       double minXroot = envRoot.getMin().getX();
       double minYroot = envRoot.getMin().getY();
-      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot,
-          minY < minYroot ? minY : minYroot, maxX > maxXroot ? maxX : maxXroot,
-          maxY > maxYroot ? maxY : maxYroot );
+      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY : minYroot,
+          maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY : maxYroot );
 
       SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv );
       myRootContainer.setParent( newRootContainer );
@@ -81,7 +89,7 @@ public class SplitSort implements FeatureList
     if( result == null )
       result = new ArrayList();
     if( myRootContainer != null )
-      result=myRootContainer.query( queryEnv, result );
+      result = myRootContainer.query( queryEnv, result );
     return result;
   }
 
@@ -394,5 +402,21 @@ public class SplitSort implements FeatureList
       if( object instanceof Feature )
         visitor.visit( (Feature)object );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
+   */
+  public Feature getParentFeature()
+  {
+    return m_parentFeature;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
+   */
+  public FeatureTypeProperty getParentFeatureTypeProperty()
+  {
+    return m_parentFeatureTypeProperty;
   }
 }
