@@ -58,20 +58,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class CopyObservationHandler
 {
-  public static void copyObserations( final IUrlResolver urlResolver, final URL gmlURL, final String featurePath, final String targetobservation, final URL context, final Source[] sources, final PrintWriter summaryWriter, final PrintWriter detailWriter ) throws Exception
+  public static void copyObserations( final IUrlResolver urlResolver, final URL gmlURL, final String featurePath, final String targetobservation, final URL context, final Source[] sources, final Date forecastFrom, final Date forecastTo, final PrintWriter logWriter ) throws Exception
   {
-      summaryWriter.println( "Kopieren von Zeitreihen:" );
-      summaryWriter.println( "GML=" + gmlURL.toString() );
-      summaryWriter.println( "FeaturePath=" + featurePath );
-      summaryWriter.println( "Target=" + targetobservation );
-      summaryWriter.println(  );
-
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
       final FeatureType ft = workspace.getFeatureTypeFromPath( featurePath );
       if( ft == null )
         throw new TransformationException( "FeaturePath unbekannt: " + featurePath );
 
-      final FeatureVisitor visitor = new CopyObservationFeatureVisitor( context, urlResolver, targetobservation, sources, summaryWriter, detailWriter );
+      final FeatureVisitor visitor = new CopyObservationFeatureVisitor( context, urlResolver, targetobservation, sources, forecastFrom, forecastTo, logWriter );
       workspace.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
   }
 

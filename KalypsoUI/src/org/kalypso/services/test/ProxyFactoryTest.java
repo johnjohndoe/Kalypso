@@ -74,7 +74,7 @@ public class ProxyFactoryTest extends TestCase
   {
     ProxyFactory pf = new ProxyFactory( m_conf );
     
-    final Stub proxy = pf.getProxy( "Kalypso_ObservationService", "IObservationService" );
+    final Stub proxy = pf.getAnyProxy( "Kalypso_ObservationService", "IObservationService" );
     assertTrue( proxy instanceof IObservationService );
     
     final IObservationService port = new Kalypso_ObservationService_Impl().getIObservationServicePort();

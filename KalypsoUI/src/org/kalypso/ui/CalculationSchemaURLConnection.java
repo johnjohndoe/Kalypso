@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.xml.rpc.ServiceException;
@@ -77,13 +78,15 @@ public class CalculationSchemaURLConnection extends URLConnection
       return;
 
     final URL myURL = getURL();
+    final String host = myURL.getHost(); // pseudo host -- equals key of proxy in proxy-map
     m_namespace = myURL.getPath();
     if( m_namespace.startsWith( "/" ) )
       m_namespace = m_namespace.substring( 1 );
 
     try
     {
-      m_calcService = KalypsoGisPlugin.getDefault().getCalculationServiceProxy();
+      final Map calculationServiceProxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
+      m_calcService = (ICalculationService)calculationServiceProxies.get( host );
       m_lastModified = m_calcService.getSchemaValidity( m_namespace );
     }
     catch( final ServiceException e )

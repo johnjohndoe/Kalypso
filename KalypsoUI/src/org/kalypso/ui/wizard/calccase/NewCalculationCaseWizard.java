@@ -135,10 +135,10 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
               .getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature(ModelNature.ID);
           nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
               monitor, 1000 ) );
-          controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           if( controlPage.isUpdate() )
             nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           else

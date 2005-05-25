@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.eclipse.core.resources.FolderUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
@@ -176,6 +177,8 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
 
+    FolderUtilities.mkdirs( calcCaseFolder );
+    
     nature.createCalculationCaseInFolder( calcCaseFolder, monitor );
 
     return calcCaseFolder;

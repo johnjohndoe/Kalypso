@@ -64,7 +64,20 @@ public class KalypsoProcolWriter
 
   /**
    * @see KalypsoProcolWriter#analyseValues(IObservation[], ITuppleModel[],
-   *      PrintWriter, PrintWriter)
+   *      PrintWriter, PrintWriter, String)
+   * 
+   */
+  public static void analyseValues( final IObservation observation,
+      final ITuppleModel model, final PrintWriter logWriter,
+      final String summInfo ) throws SensorException
+  {
+    analyseValues( new IObservation[] { observation },
+        new ITuppleModel[] { model }, null, logWriter, summInfo );
+  }
+
+  /**
+   * @see KalypsoProcolWriter#analyseValues(IObservation[], ITuppleModel[],
+   *      PrintWriter, PrintWriter, String)
    * 
    * @param observation
    * @param model
@@ -77,7 +90,7 @@ public class KalypsoProcolWriter
       final PrintWriter detailsWriter ) throws SensorException
   {
     analyseValues( new IObservation[] { observation },
-        new ITuppleModel[] { model }, summaryWriter, detailsWriter );
+        new ITuppleModel[] { model }, summaryWriter, detailsWriter, "" );
   }
 
   /**
@@ -92,7 +105,7 @@ public class KalypsoProcolWriter
    */
   public static void analyseValues( final IObservation[] observations,
       final ITuppleModel[] models, final PrintWriter summaryWriter,
-      final PrintWriter detailsWriter ) throws SensorException
+      final PrintWriter detailsWriter, final String summInfo ) throws SensorException
   {
     if( observations.length != models.length )
       throw new IllegalArgumentException( "Arrays not same length" );
@@ -146,9 +159,10 @@ public class KalypsoProcolWriter
               if( desc.length() > 0 )
                 header += " (" + desc + ")";
 
-              summaryWriter.println( header + '\n');
+              if( summaryWriter != null )
+                summaryWriter.println( header );
 
-              detailsWriter.println( header );
+              detailsWriter.println( summInfo + header );
               detailsWriter.println( "Details:" );
             }
 

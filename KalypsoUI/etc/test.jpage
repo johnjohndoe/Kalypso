@@ -1,0 +1,9 @@
+//			  startforecast = project.getProperty( "startforecast" );
+String startforecast = "100000000";
+long startforecastLong = Long.parseLong( startforecast );
+java.util.Date startforecastDate = new java.util.Date ( startforecastLong );
+java.util.Calendar cal = java.util.Calendar.getInstance();
+cal.setTime( startforecastDate );
+System.out.println( cal.getTime() );
+cal.add( java.util.Calendar.HOUR_OF_DAY, 48 );
+System.out.print( cal.getTime() );

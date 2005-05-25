@@ -41,6 +41,7 @@
 package org.kalypso.ant;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,6 +76,7 @@ public class GmlPropertyTask extends Task
 
   private final List m_properties = new LinkedList();
 
+  /** URL from where to read the gml */
   private URL m_gmlURL;
 
   public final URL getGmlURL()
@@ -87,9 +89,11 @@ public class GmlPropertyTask extends Task
     m_gmlURL = gmlURL;
   }
 
-  public void addProperty( final Property p )
+  public Property createProperty( )
   {
+    final Property p = new Property();
     m_properties.add( p );
+    return p;
   }
 
   /**
@@ -135,7 +139,7 @@ public class GmlPropertyTask extends Task
 
     final String featureID = property.getFeatureID();
     final String featurePath = property.getFeaturePath();
-    if( ( featureID == null || featureID.length() == 0 ) && ( featurePath == null || featurePath.length() == 0 ) )
+    if( ( featureID == null || featureID.length() == 0 ) && featurePath == null )
       throw new BuildException( "Neither 'featureID' nor 'featurePath' is set." );
     
     // find feature
@@ -160,7 +164,21 @@ public class GmlPropertyTask extends Task
     {
       // special handling for Date
       // just write time in millies since 1970
-      addProperty( name, "" + ((Date)value).getTime(), null );
+      final Date dateValue = (Date)value;
+      final Integer dateoffset = property.getDateoffset();
+      final Integer dateoffsetfield = property.getDateoffsetfield();
+      final Date date;
+      if( dateoffset != null && dateoffsetfield != null )
+      {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime( dateValue );
+        cal.add( dateoffsetfield.intValue(), dateoffset.intValue() );
+        date = cal.getTime();
+      }
+      else
+        date = dateValue;
+      
+      addProperty( name, "" + date.getTime(), null );
     }
     else if( value != null )
       addProperty( name, value.toString(), null );
@@ -221,6 +239,28 @@ public class GmlPropertyTask extends Task
     /** Name of Property in Feature. */
     private String m_featureProperty;
 
+    /** HACK: if the property is a date, add this offset */
+    private Integer m_dateoffset;
+
+    /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc.  */
+    private Integer m_dateoffsetfield;
+    
+    public final Integer getDateoffset()
+    {
+      return m_dateoffset;
+    }
+    public final void setDateoffset( Integer dateoffset )
+    {
+      m_dateoffset = dateoffset;
+    }
+    public final Integer getDateoffsetfield()
+    {
+      return m_dateoffsetfield;
+    }
+    public final void setDateoffsetfield( Integer dateoffsetfield )
+    {
+      m_dateoffsetfield = dateoffsetfield;
+    }
     public final String getFeatureID()
     {
       return m_featureID;

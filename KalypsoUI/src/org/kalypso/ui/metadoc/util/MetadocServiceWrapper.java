@@ -71,7 +71,7 @@ public class MetadocServiceWrapper
     {
       final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
           .getServiceProxyFactory();
-      m_service = (IMetaDocService) serviceProxyFactory.getProxy(
+      m_service = (IMetaDocService) serviceProxyFactory.getAnyProxy(
           "Kalypso_MetaDocService", ClassUtilities
               .getOnlyClassName( IMetaDocService.class ) );
     }
