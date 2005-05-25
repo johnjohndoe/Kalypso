@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Kalypso-Sachsen: server" default="deploy-lfug" basedir=".">
 
-	<!-- 
+    <!-- 
 		Description: central build file for the Sachsen Project.
 		
 		Targets which have a description element are so-called public-targets,
@@ -29,289 +29,289 @@
 		* redeploy-services
 		* redeploy-XXXService
 	-->
-		
-	<property name="project.path" value="${workspace}/KalypsoConfSachsen" />
-	<property name="src.path" value="${project.path}/deployable-server/webdav" />
 
-	<property name="dist" value="${project.path}/deploy/server" />
-	<property name="dist.webdav" value="${dist}/webdav" />
-	<property name="dist.data" value="${dist.webdav}/data" />
-	<property name="dist.prognose" value="${dist.webdav}/prognose" />
-	<property name="dist.srvconf" value="${dist.webdav}/srvconf" />
-	<property name="dist.vorhersageconf" value="${dist.webdav}/vorhersageconf" />
-	
-	<property file="deploy.properties"/>
-	<property name="deploy.webdav" value="${tomcat.server.cataling_home}\\webapps\\webdav"/>
+    <property name="project.path" value="${workspace}/KalypsoConfSachsen" />
+    <property name="src.path" value="${project.path}/deployable-server/webdav" />
 
-	<target name="prepare">
-		<echo message="Creating the required directories...." />
-		<mkdir dir="${dist}" />
-		<mkdir dir="${dist.webdav}" />
-		<mkdir dir="${dist.data}" />
-		<mkdir dir="${dist.prognose}" />
-		<mkdir dir="${dist.srvconf}" />
-		<mkdir dir="${dist.vorhersageconf}" />
-	</target>
+    <property name="dist" value="${project.path}/deploy/server" />
+    <property name="dist.webdav" value="${dist}/webdav" />
 
-	<target name="clean">
-		<echo message="Cleaning all subprojects..." />
-		<delete dir="${dist}" />
-		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="clean" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="clean" inheritall="false" />
-		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="clean" inheritall="false" />
-	</target>
+    <property file="deploy.properties" />
+    <property name="deploy.webdav" value="${tomcat.server.cataling_home}\\webapps\\webdav" />
 
-	<target name="copy-data" depends="prepare">
-		<echo message="Copy the data files to the local deploy dir" />
-		<copy todir="${dist.data}">
-			<fileset dir="${src.path}/data" excludes="**/CVS/**" />
-		</copy>
-	</target>
+    <target name="prepare">
+        <echo message="Creating the required directories...." />
+        <mkdir dir="${dist}" />
+        <mkdir dir="${dist.webdav}" />
+        <mkdir dir="${dist.webdav}/prognose" />
+    </target>
 
-	<target name="copy-allconf" depends="prepare">
-		<echo message="Copy the configuration for the server to deploy dir" />
-		<copy todir="${dist.srvconf}">
-			<fileset dir="${src.path}/srvconf" excludes="**/CVS/**" />
-		</copy>
-		<copy todir="${dist.vorhersageconf}">
-			<fileset dir="${src.path}/vorhersageconf" excludes="**/CVS/**" />
-		</copy>
-		<copy todir="${dist}">
-			<fileset file="${src.path}/kalypso-client.ini" />
-		</copy>
-	</target>
+    <target name="clean">
+        <echo message="Cleaning all subprojects..." />
+        <delete dir="${dist}" />
+        <ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="clean" inheritall="false" />
+        <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="clean" inheritall="false" />
+    </target>
 
-	<target name="co-sachsen-models" depends="prepare">
-		<echo message="Checkout the models for Sachsen" />
+    <target name="copy-data" depends="prepare">
+        <echo message="Copy the data files to the local deploy dir" />
+        <copy todir="${dist.webdav}/data">
+            <fileset dir="${src.path}/data" excludes="**/CVS/**" />
+        </copy>
+    </target>
 
-		<antcall target="co-model">
-			<param name="pPackage" value="KalypsoData/KalypsoSpree" />
-			<param name="pName" value="Spree" />
-		</antcall>
+    <target name="copy-allconf" depends="prepare">
+        <echo message="Copy the configuration for the server to deploy dir" />
+        <!-- This is ok because there are currently only conf files in src.path 
+	    TODO should some non-conf stuff come into this dir, then 
+	         please update this target
+	    -->
+        <copy todir="${dist.webdav}">
+            <fileset dir="${src.path}" excludes="**/CVS/**" />
+        </copy>
+    </target>
 
-		<antcall target="co-model">
-			<param name="pPackage" value="KalypsoData/KalypsoWeisseElster" />
-			<param name="pName" value="WeisseElster" />
-		</antcall>
+    <target name="co-sachsen-models" depends="prepare">
+        <echo message="Checkout the models for Sachsen" />
 
-	</target>
+        <antcall target="co-model">
+            <param name="pPackage" value="KalypsoData/KalypsoSpree" />
+            <param name="pName" value="Spree" />
+        </antcall>
 
-	<!-- Callable CVS checkout target 
+        <antcall target="co-model">
+            <param name="pPackage" value="KalypsoData/KalypsoWeisseElster" />
+            <param name="pName" value="WeisseElster" />
+        </antcall>
+
+    </target>
+
+    <!-- Callable CVS checkout target 
 		pPackage: the module to checkout
 		pName: name of the Directory that will be created
 	-->
-	<target name="co-model">
+    <target name="co-model">
 
-		<pathconvert targetos="windows" property="copath">
-			<path path="${dist.prognose}/${pName}" />
-		</pathconvert>
+        <pathconvert targetos="windows" property="copath">
+            <path path="${dist.webdav}/prognose/${pName}" />
+        </pathconvert>
 
-		<exec executable="cmd.exe" dir="${project.path}/deployable-server">
-			<arg line="/C start ${project.path}/deployable-server/cvs-co.bat ${user.name} ${copath} ${pPackage}" />
-		</exec>
+        <exec executable="cmd.exe" dir="${project.path}/deployable-server">
+            <arg line="/C start ${project.path}/deployable-server/cvs-co.bat ${user.name} ${copath} ${pPackage}" />
+        </exec>
 
-		<delete includeemptydirs="true">
-			<!-- empty '.prognose' and 'Rechenvariante' dirs -->
-			<fileset dir="${dist.prognose}/${pName}/.prognose" includes="**/*" />
-			<fileset dir="${dist.prognose}/${pName}/Rechenvarianten" includes="**/*" />
+        <delete includeemptydirs="true">
+            <!-- empty '.prognose' and 'Rechenvariante' dirs -->
+            <fileset dir="${dist.webdav}/prognose/${pName}/.prognose" includes="**/*" />
+            <fileset dir="${dist.webdav}/prognose/${pName}/Rechenvarianten" includes="**/*" />
 
-			<!-- remove all '.calculation' files -->
-			<fileset dir="${dist.prognose}/${pName}" includes="**/.calculation" />
+            <!-- remove all '.calculation' files -->
+            <fileset dir="${dist.webdav}/prognose/${pName}" includes="**/.calculation" />
 
-			<!-- remove all CVS files -->
-			<fileset dir="${dist.prognose}/${pName}" defaultexcludes="false">
-				<include name="**/CVS/*" />
-				<include name="**/CVS/**" />
-			</fileset>
+            <!-- remove all CVS files -->
+            <fileset dir="${dist.webdav}/prognose/${pName}" defaultexcludes="false">
+                <include name="**/CVS/*" />
+                <include name="**/CVS/**" />
+            </fileset>
 
-		</delete>
-	</target>
+        </delete>
+    </target>
 
-	<target name="build-basic" depends="prepare">
-		<echo message="Building basic projects" />
-		
-		<!-- use the central build-core script for the common projects -->
-		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
-		
-		<ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
-	</target>
+    <target name="build-basic" depends="prepare">
+        <echo message="Building basic projects" />
 
-	<target name="build-plugins" depends="build-basic, build-CalcService">
-		<echo message="Building specific plugins for Sachsen" />
-		<ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <!-- use the central build-core script for the common projects -->
+        <ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
 
-		<ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
+    </target>
 
-	</target>
+    <target name="psicompact-fake" depends="build-basic">
+        <echo message="Integrating the fake implementation of PSICompact" />
+        <delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
+        <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false" />
+        <ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="deploy" inheritall="false" />
+    </target>
 
-	<target name="modelplugins-dependency" depends="build-plugins">
-		<echo message="Copying the libs relevant for using Spree-Plugin and NA-Plugin" />
+    <target name="psicompact-echte" depends="build-basic">
+        <echo message="Integrating the real implementation of PSICompact" />
+        <copy file="${project.path}/deployable-server/echte-psicompact/PSICompact.jar"
+              tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar"
+              overwrite="true" />
+        <ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="deploy" inheritall="false" />
+    </target>
 
-		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoSpreePlugin/build/deploy" includes="**/*.jar" />
-		</copy>
+    <target name="build-UserService">
+        <copy todir="${workspace}/KalypsoUserService/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
+        </copy>
+        <ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false"/>
+    </target>
 
-		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoNA/build/deploy" includes="**/*.jar" />
-		</copy>
+    <target name="build-ObsService">
+        <copy todir="${workspace}/KalypsoObsService/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
+        </copy>
+        <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-war" inheritAll="false"/>
+    </target>
 
-		<copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
-		</copy>
-	</target>
+    <target name="build-CalcService" depends="build-basic">
+        <!-- Build calc-service client in order to resolve dependencies to model plugins -->
+        <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-client" inheritAll="false" />
 
-	<target name="psicompact-fake" depends="prepare, build-basic">
-		<echo message="Integrating the fake implementation of PSICompact" />
-		<delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
-		<ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false" />
-		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="deploy" inheritall="false" />
-	</target>
+        <!-- Build the plugins -->
+        <ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
 
-	<target name="psicompact-echte" depends="prepare, build-basic">
-		<echo message="Integrating the real implementation of PSICompact" />
-		<copy file="${project.path}/deployable-server/echte-psicompact/PSICompact.jar" tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" overwrite="true" />
-		<ant antfile="${workspace}/KalypsoPSICompactAdapter/etc/ant/build.xml" target="deploy" inheritall="false" />
-	</target>
+        <!-- Copy plugins in CalcService -->
+        <copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoSpreePlugin/build/deploy" includes="**/*.jar" />
+        </copy>
+        <copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoNA/build/deploy" includes="**/*.jar" />
+        </copy>
+        <copy todir="${workspace}/KalypsoCalcService/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
+        </copy>
 
-	<target name="build-UserService" depends="build-basic">
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<copy todir="${workspace}/KalypsoUserService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
-		</copy>
-	</target>
+        <!-- Finally build CalcService War -->
+        <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-war" inheritAll="false" />
+    </target>
 
-	<target name="build-ObsService" depends="build-basic">
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="build-war" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<copy todir="${workspace}/KalypsoObsService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
-		</copy>
-	</target>
+    <target name="build-MetaDocService">
+        <copy todir="${workspace}/KalypsoMetaDocService/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
+        </copy>
+        <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build-war" inheritAll="false" />
+    </target>
 
-	<target name="build-CalcService" depends="build-basic">
-		<!-- Build client in order to resolve dependencies to model plugins -->
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-client" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="build-war" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-	</target>
+    <target name="build-services-dev"
+            depends="psicompact-fake,build-CalcService,build-MetaDocService,build-ObsService,build-UserService">
+        <echo message="Building all services" />
+    </target>
 
-	<target name="build-MetaDocService" depends="build-basic">
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="build-war" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<copy todir="${workspace}/KalypsoMetaDocService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
-		</copy>
-	</target>
+    <target name="deploy-allconf" depends="copy-allconf">
+        <echo message="Deploying all conf stuff to ${tomcat.server}" />
 
-	<target name="build-services-dev" depends="psicompact-fake,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins,modelplugins-dependency">
-		<echo message="Building all services" />
-	</target>
+        <copy todir="${deploy.webdav}\\srvconf" overwrite="true">
+            <fileset dir="${dist.webdav}/srvconf" includes="**/*" excludes="**/CVS/**" />
+        </copy>
+        <copy todir="${deploy.webdav}\\vorhersageconf" overwrite="true">
+            <fileset dir="${dist.webdav}/vorhersageconf" includes="**/*" excludes="**/CVS/**" />
+        </copy>
+        <copy todir="${deploy.webdav}" overwrite="true">
+            <fileset file="${dist.webdav}/*.ini" includes="**/*" />
+        </copy>
+    </target>
 
-	<target name="deploy-allconf" depends="copy-allconf">
-		<echo message="Deploying all conf stuff to ${tomcat.server}" />
+    <target name="deploy-data" depends="copy-data" description="Deploy the data (Observation repositories)">
+        <echo message="Deploy the data files to ${tomcat.server}" />
 
-		<copy todir="${deploy.webdav}\\srvconf" overwrite="true">
-			<fileset dir="${dist.srvconf}" excludes="**/CVS/**" />
-		</copy>
-		<copy todir="${deploy.webdav}\\vorhersageconf" overwrite="true">
-			<fileset dir="${dist.vorhersageconf}" excludes="**/CVS/**" />
-		</copy>
-		<copy todir="${deploy.webdav}" overwrite="true">
-			<fileset file="${dist}/kalypso-client.ini" />
-		</copy>
-	</target>
+        <copy todir="${deploy.webdav}\\data" overwrite="true">
+            <fileset dir="${dist.webdav}/data" includes="**/*" excludes="**/CVS/**" />
+        </copy>
+    </target>
 
-	<target name="deploy-data" depends="copy-data"  description="Deploy the data (Observation repositories)">
-		<echo message="Deploy the data files to ${tomcat.server}" />
+    <target name="deploy-models" depends="co-sachsen-models" description="Deploy the models">
+        <echo message="Deploy the models on ${tomcat.server}" />
 
-		<copy todir="${deploy.webdav}\\data" overwrite="true">
-			<fileset dir="${dist.data}" excludes="**/CVS/**" />
-		</copy>
-	</target>
+        <copy todir="${deploy.webdav}\\prognose" overwrite="true">
+            <fileset dir="${dist.webdav}/prognose" includes="**/*"  excludes="**/CVS/**" />
+        </copy>
+    </target>
 
-	<target name="deploy-models" depends="co-sachsen-models" description="Deploy the models">
-		<echo message="Deploy the models on ${tomcat.server}" />
+    <target name="deploy-services"
+            depends="deploy-allconf,build-services-dev"
+            description="Deploy (first time) all services and configuration">
+        <echo message="Deploying all services to ${tomcat.server}" />
 
-		<copy todir="${deploy.webdav}\\prognose" overwrite="true">
-			<fileset dir="${dist.prognose}" excludes="**/CVS/**" />
-		</copy>
-	</target>
+        <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="deploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+        <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="deploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+        <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+        <ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+    </target>
 
-	<target name="deploy-services" depends="deploy-allconf,build-services-dev" description="Deploy (first time) all services and configuration">
-		<echo message="Deploying all services to ${tomcat.server}" />
+    <target name="redeploy-UserService"
+            depends="psicompact-fake,build-UserService,deploy-allconf"
+            description="Redeploy service and configuration">
+        <echo message="Redeploying User Service" />
+        <ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+    </target>
 
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="deploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="deploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="deploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="deploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-	</target>
+    <target name="redeploy-ObsService"
+            depends="psicompact-fake,build-ObsService,deploy-allconf"
+            description="Redeploy service and configuration">
+        <echo message="Redeploying Observation Service" />
+        <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+    </target>
 
-	<target name="redeploy-UserService" depends="psicompact-fake,build-UserService,deploy-allconf" description="Redeploy service and configuration">
-		<echo message="Redeploying User Service" />
-		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="redeploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-	</target>
+    <target name="redeploy-MetaDocService"
+            depends="psicompact-fake,build-MetaDocService,deploy-allconf"
+            description="Redeploy service and configuration">
+        <echo message="Redeploying MetaDoc Service" />
+        <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+    </target>
 
-	<target name="redeploy-ObsService" depends="psicompact-fake,build-ObsService,deploy-allconf" description="Redeploy service and configuration">
-		<echo message="Redeploying Observation Service" />
-		<ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml" target="redeploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-	</target>
+    <target name="redeploy-CalcService"
+            depends="psicompact-fake,build-CalcService,deploy-allconf"
+            description="Redeploy service and configuration">
+        <echo message="Redeploying Calculation Service" />
+        <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false">
+            <property file="deploy.properties" />
+        </ant>
+    </target>
 
-	<target name="redeploy-MetaDocService" depends="psicompact-fake,build-MetaDocService,deploy-allconf" description="Redeploy service and configuration">
-		<echo message="Redeploying MetaDoc Service" />
-		<ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml" target="redeploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-	</target>
+    <target name="redeploy-services"
+            depends="redeploy-UserService,redeploy-ObsService,redeploy-CalcService,redeploy-MetaDocService"
+            description="Redeploy services and their configuration">
+        <echo message="Redeploying all services" />
+    </target>
 
-	<target name="redeploy-CalcService" depends="psicompact-fake,modelplugins-dependency,deploy-allconf" description="Redeploy service and configuration">
-		<echo message="Redeploying Calculation Service" />
-		<ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml" target="redeploy" inheritAll="false">
-			<property file="deploy.properties" />
-		</ant>
-	</target>
+    <target name="build-services-lfug"
+            depends="psicompact-echte,build-CalcService,build-MetaDocService,build-ObsService,build-UserService">
+        <echo message="Build for LFUG (using real PSICompact)" />
+    </target>
 
-	<target name="redeploy-services" depends="redeploy-UserService,redeploy-ObsService,redeploy-CalcService,redeploy-MetaDocService" description="Redeploy services and their configuration">
-		<echo message="Redeploying all services" />
-	</target>
+    <target name="deploy-lfug"
+            depends="clean,prepare,build-services-lfug,copy-allconf,copy-data,co-sachsen-models"
+            description="Deploy as File in the ${dist} dir for LFUG">
+        <echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LFUG" />
 
-	<target name="build-services-lfug" depends="psicompact-echte,build-CalcService,build-MetaDocService,build-ObsService,build-UserService,build-plugins,modelplugins-dependency">
-		<echo message="Build for LFUG (using real PSICompact)" />
-	</target>
-
-	<target name="deploy-lfug" depends="clean,prepare,build-services-lfug,copy-allconf,copy-data,co-sachsen-models" description="Deploy as File in the ${dist} dir for LFUG">
-		<echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LFUG" />
-
-		<copy tofile="${dist}/Kalypso_CalculationService.war" file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip" overwrite="true" />
-		<copy tofile="${dist}/Kalypso_MetaDocService.war" file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip" overwrite="true" />
-		<copy tofile="${dist}/Kalypso_ObservationService.war" file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip" overwrite="true" />
-		<copy tofile="${dist}/Kalypso_UserService.war" file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip" overwrite="true" />
-	</target>
+        <copy tofile="${dist}/Kalypso_CalculationService.war"
+              file="${workspace}/KalypsoCalcService/build/deploy/jaxrpc-kalypsoservice_calculation.zip"
+              overwrite="true" />
+        <copy tofile="${dist}/Kalypso_MetaDocService.war"
+              file="${workspace}/KalypsoMetaDocService/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"
+              overwrite="true" />
+        <copy tofile="${dist}/Kalypso_ObservationService.war"
+              file="${workspace}/KalypsoObsService/build/deploy/jaxrpc-kalypsoservice_observation.zip"
+              overwrite="true" />
+        <copy tofile="${dist}/Kalypso_UserService.war"
+              file="${workspace}/KalypsoUserService/build/deploy/jaxrpc-kalypsoservice_user.zip"
+              overwrite="true" />
+    </target>
 
 </project>

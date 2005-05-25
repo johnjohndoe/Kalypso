@@ -45,7 +45,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.java.util.DateUtilities;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
@@ -65,7 +64,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
    */
   public DateRangeArgument( )
   {
-    this( new Date(), new Date() );
+    this( null, null );
   }
 
   /**
@@ -82,22 +81,20 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   /**
    * Constructor with Dates
    * 
-   * @param from
-   *          range from. If null minimum date is used (@see
-   *          DateUtilities#getMinimum())
-   * @param to
-   *          range to. If null, current date is used.
+   * @param from if null, current date is used
+   * @param to if null, current date is used.
    */
-  public DateRangeArgument( Date from, Date to )
+  public DateRangeArgument( final Date from, final Date to )
   {
     if( from == null )
-      from = DateUtilities.getMinimum();
+      m_from = new Date();
+    else
+      m_from = from;
 
     if( to == null )
-      to = new Date();
-
-    m_from = from;
-    m_to = to;
+      m_to = new Date();
+    else
+      m_to = to;
   }
 
   public Date getFrom( )
