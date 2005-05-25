@@ -47,7 +47,6 @@ import java.net.URLConnection;
 import java.util.Map;
 
 import javax.activation.DataHandler;
-import javax.xml.rpc.ServiceException;
 
 import org.kalypso.services.proxy.ICalculationService;
 
@@ -83,16 +82,9 @@ public class CalculationSchemaURLConnection extends URLConnection
     if( m_namespace.startsWith( "/" ) )
       m_namespace = m_namespace.substring( 1 );
 
-    try
-    {
-      final Map calculationServiceProxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
-      m_calcService = (ICalculationService)calculationServiceProxies.get( host );
-      m_lastModified = m_calcService.getSchemaValidity( m_namespace );
-    }
-    catch( final ServiceException e )
-    {
-      throw new IOException( "Verbindung zum Berechnungsdienst konnte nicht initialisiert werden." );
-    }
+    final Map calculationServiceProxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
+    m_calcService = (ICalculationService)calculationServiceProxies.get( host );
+    m_lastModified = m_calcService.getSchemaValidity( m_namespace );
   }
 
   /**
