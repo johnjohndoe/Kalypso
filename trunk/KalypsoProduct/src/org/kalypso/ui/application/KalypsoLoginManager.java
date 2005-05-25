@@ -64,12 +64,12 @@ import org.kalypso.users.User;
  */
 public final class KalypsoLoginManager
 {
-  private KalypsoLoginManager( )
+  private KalypsoLoginManager()
   {
     // not intended to be instanciated
   }
 
-  public static User startLoginProcedure( )
+  public static User startLoginProcedure()
   {
     IUserService srv = null;
 
@@ -128,6 +128,7 @@ public final class KalypsoLoginManager
     String username = lv.getDefaultUserName();
     User user = null;
 
+    int trials = 5;
     while( true )
     {
       String password = null;
@@ -155,10 +156,15 @@ public final class KalypsoLoginManager
 
       try
       {
+        trials--;
         user = lv.validate( username, password );
 
         if( user != null )
           break;
+        if( trials == 0 )
+          throw new IllegalStateException( "Benutzer " + username
+              + " kann sich nicht einlogger. Seine Berechtigung sollte "
+              + "geprüft werden." );
       }
       catch( final Exception e )
       {
