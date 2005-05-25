@@ -13,5 +13,14 @@
    <requires>
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.services.calculation.local"/>
+      <import plugin="org.kalypso.ui"/>
    </requires>
+   <extension
+         point="org.kalypso.services.calculation.local.calcJob">
+      <calcJob
+            typeID="Saale_SA_V1"
+            catalogClass="org.kalypso.lhwsachsenanhalt.saale.SaaleUrlCatalog"
+            jobClass="org.kalypso.lhwsachsenanhalt.saale.SaaleCalcJob"/>
+   </extension>
 </plugin>

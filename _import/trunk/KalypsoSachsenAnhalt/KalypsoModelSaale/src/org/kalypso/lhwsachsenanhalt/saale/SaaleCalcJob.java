@@ -31,6 +31,7 @@ public class SaaleCalcJob implements ICalcJob
 
   {
     // nix tun ist auch schön
+    System.out.println("SaaleCalcJob");
   }
 
   /**
