@@ -65,10 +65,10 @@ public abstract class ObsView implements IObsViewEventProvider
 
     public final boolean editable;
 
-    public ItemData( final boolean editable, final Color color )
+    public ItemData( final boolean bEditable, final Color c )
     {
-      this.color = color;
-      this.editable = editable;
+      this.color = c;
+      this.editable = bEditable;
     }
   }
 

@@ -49,6 +49,7 @@ import org.kalypso.ui.repository.view.ObservationViewerDialog;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * TimeserieLinkFeatureDialog
@@ -61,9 +62,11 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   private final Feature m_feature;
   private final FeatureTypeProperty m_ftp;
   private FeatureChange m_change;
+  private final GMLWorkspace m_workspace;
 
-  public TimeserieLinkFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
+  public TimeserieLinkFeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
+    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
@@ -75,7 +78,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   {
     final ObservationViewerDialog dlg = new ObservationViewerDialog( shell );
     final TimeseriesLink tslink = (TimeseriesLink)m_feature.getProperty( m_ftp.getName() );
-    dlg.setObservationHref( null, tslink.getHref() );
+    dlg.setObservationHref( m_workspace.getContext(), tslink.getHref() );
     
     final int open = dlg.open();
     if( open == Window.OK )

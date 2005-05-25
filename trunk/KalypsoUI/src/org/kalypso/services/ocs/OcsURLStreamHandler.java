@@ -48,14 +48,11 @@ import java.net.URLConnection;
 import javax.activation.DataHandler;
 
 import org.kalypso.java.io.FileUtilities;
-import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.services.proxy.DateRangeBean;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
+
 
 /**
  * Observation Collection Service URL Stream Handler.
@@ -73,34 +70,18 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
    */
   public URLConnection openConnection( final URL u ) throws IOException
   {
-    // is that an observation id of a server side observation?
-    if( !ObservationServiceUtils.isServerSide( u.toExternalForm() ) )
+    final String href = u.toExternalForm();
+
+    // use the default url connection if this is not a kalypso server-side one
+    if( !ZmlURL.isServerSide( href ) )
       return u.openConnection();
 
     try
     {
-      DateRangeArgument dra = null;
-
-      /*
-       * The query part of the URL (after the ?...) contains some additional
-       * specification: from-to, filter, etc.
-       */
-      final String query = u.getQuery();
-      if( query != null )
-        dra = ZmlURL.checkDateRange( query );
-
-      final String obsId = ZmlURL.getIdentifierPart( u );
-      final ObservationBean ob = ObservationBeanFactory.createBean( obsId );
-
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();
 
-      // set the date range if available
-      DateRangeBean drb = null;
-      if( dra != null )
-        drb = new DateRangeBean( dra.getFrom().getTime(), dra.getTo().getTime() );
-
-      final DataHandler data = srv.readData( ob, drb );
+      final DataHandler data = srv.readData( href );
 
       final File file = FileUtilities.makeFileFromStream( false, "local-zml",
           "zml", data.getInputStream(), false );

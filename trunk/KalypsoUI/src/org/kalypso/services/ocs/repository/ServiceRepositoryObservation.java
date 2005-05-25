@@ -45,7 +45,6 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Calendar;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -60,11 +59,9 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
-import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.ocs.ObservationBeanFactory;
-import org.kalypso.services.proxy.DateRangeBean;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.util.runtime.IVariableArguments;
@@ -120,22 +117,18 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * Uses the webservice to request the observation.
    * 
-   * @param args
    * @return IObservation loaded from the server
-   * 
-   * @throws SensorException
    */
   private IObservation loadFromServer( final IVariableArguments args )
       throws SensorException
   {
-    DateRangeBean drb = null;
-
+    String href = m_ob.getId();
     if( args instanceof DateRangeArgument )
-      drb = createDateRangeBean( (DateRangeArgument)args );
+      href = ZmlURL.insertDateRange( href, (DateRangeArgument)args );
 
     try
     {
-      final DataHandler db = m_srv.readData( m_ob, drb );
+      final DataHandler db = m_srv.readData( href );
 
       final IObservation obs = ZmlFactory.parseXML( new InputSource( db
           .getInputStream() ), "", null );
@@ -152,7 +145,7 @@ public class ServiceRepositoryObservation implements IObservation
 
   public String getIdentifier()
   {
-    return ObservationServiceUtils.addServerSideId( m_ob.getId() );
+    return ZmlURL.addServerSideId( m_ob.getId() );
   }
 
   public String getName()
@@ -288,7 +281,7 @@ public class ServiceRepositoryObservation implements IObservation
       final String href, final IObservationService srv ) throws SensorException
   {
     final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation(
-        srv, ObservationBeanFactory.createBean( href ) );
+        srv, new ObservationBean( href, "", null ) );
 
     srvObs.setValues( values );
   }
@@ -341,18 +334,5 @@ public class ServiceRepositoryObservation implements IObservation
   public String getHref()
   {
     return getIdentifier();
-  }
-  
-  /**
-   * Helper method that creates a DateRangeBean using a DateRangeArgument.
-   */
-  public static DateRangeBean createDateRangeBean( final DateRangeArgument dra )
-  {
-    final Calendar from = Calendar.getInstance();
-    from.setTime( dra.getFrom() );
-    
-    final Calendar to = Calendar.getInstance();
-    to.setTime( dra.getTo() );
-    return new DateRangeBean( from.getTimeInMillis() , to.getTimeInMillis() );
   }
 }

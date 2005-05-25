@@ -44,8 +44,8 @@ import java.rmi.RemoteException;
 
 import javax.activation.DataHandler;
 
-import org.kalypso.repository.beans.ItemBean;
 import org.kalypso.repository.service.IRepositoryService;
+import org.kalypso.repository.service.ItemBean;
 import org.kalypso.services.IKalypsoService;
 
 /**
@@ -57,42 +57,31 @@ public interface IObservationService extends IRepositoryService, IKalypsoService
 {
   /**
    * @return useful (short) description that will be displayed to the user in order to identify this service.
-   * @throws RemoteException
    */
   public String getDescription() throws RemoteException;
   
   /**
-   * @param ib
    * @return observation bean if itembean is adaptable to a IObservation. Returns null otherwise.
-   * @throws RemoteException
    */
   public ObservationBean adaptItem( final ItemBean ib ) throws RemoteException;
   
   /**
-   * Reads the data out. Does not return the data itself but a descriptor which
-   * describes where the data is to be found.
+   * Create a zml and return it to client
    * 
-   * @param observation
-   * @param drb
-   * @return data bean
-   * @throws RemoteException
+   * @return the DataHandler can be used to open a stream on the 
+   * underlying Zml-Observation.
    */
-  public DataHandler readData( final ObservationBean observation, final DateRangeBean drb ) throws RemoteException;
+  public DataHandler readData( final String href ) throws RemoteException;
 
   /**
    * Call this method once client is done with manipulation of the data. The service 
    * will then free dependent resources.
-   * @param data
-   * @throws RemoteException
    */
   public void clearTempData( final DataHandler data ) throws RemoteException;
   
   /**
-   * Writes the data to the given observation.
-   * 
-   * @param observation
-   * @param data
-   * @throws RemoteException
+   * The given zml will be used to update the values of the server-side
+   * observation.
    */
   public void writeData( final ObservationBean observation, final DataHandler data ) throws RemoteException;
 }

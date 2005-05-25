@@ -14,10 +14,8 @@ import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * @author belger
@@ -28,9 +26,11 @@ public class FeatureDialog implements IFeatureDialog
   private final Collection m_changes = new ArrayList();
   private final FeatureTypeProperty m_ftp;
   private ICommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+  private final GMLWorkspace m_workspace;
 
-  public FeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
+  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
+    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
@@ -41,10 +41,15 @@ public class FeatureDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     final FeatureviewType fvType = FeatureviewHelper.createFeatureviewFromFeatureTypeProperty( m_feature.getFeatureType(), m_ftp );
-    final FeatureComposite composite = new FeatureComposite( m_feature, new FeatureviewType[] { fvType } );
+
+//    final GMLWorkspace workspace = new GMLWorkspace_Impl( new FeatureType[] { m_feature.getFeatureType() }, m_feature, null, null, null, m_feature.getFeatureType().getAnnotationMap() );
+    final CommandableWorkspace commwork;
+    if( m_workspace instanceof CommandableWorkspace )
+      commwork = (CommandableWorkspace)m_workspace;
+    else
+      commwork = new CommandableWorkspace( m_workspace );
     
-    final GMLWorkspace workspace = new GMLWorkspace_Impl( new FeatureType[] { m_feature.getFeatureType() }, m_feature, null, null, null, m_feature.getFeatureType().getAnnotationMap() );
-    final CommandableWorkspace commwork = new CommandableWorkspace( workspace );
+    final FeatureComposite composite = new FeatureComposite( commwork, m_feature, new FeatureviewType[] { fvType } );
     
     final FeatureviewDialog dialog = new FeatureviewDialog( commwork, m_target, shell, composite );
     final int result = dialog.open();
@@ -75,5 +80,4 @@ public class FeatureDialog implements IFeatureDialog
     // TODO: use annotations
     return m_feature.getFeatureType().getName();
   }
-
 }

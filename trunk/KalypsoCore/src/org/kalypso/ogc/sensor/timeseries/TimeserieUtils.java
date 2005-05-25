@@ -55,8 +55,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.java.awt.ColorUtilities;
 import org.kalypso.java.util.StringUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
@@ -71,10 +73,10 @@ public class TimeserieUtils
   private static HashMap m_formatMap = null;
 
   private static NumberFormat m_defaultFormat = null;
-  
+
   private TimeserieUtils()
   {
-  // no instanciation
+    // no instanciation
   }
 
   /**
@@ -87,11 +89,12 @@ public class TimeserieUtils
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
+  public final static String[] findOutMDBeginningWith( final IObservation obs,
+      final String mdPrefix )
   {
     if( obs == null )
       return ArrayUtils.EMPTY_STRING_ARRAY;
-    
+
     final MetadataList mdl = obs.getMetadataList();
 
     final ArrayList mds = new ArrayList();
@@ -116,7 +119,7 @@ public class TimeserieUtils
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
   {
-      return findOutMDBeginningWith( obs, "Alarmstufe" );
+    return findOutMDBeginningWith( obs, "Alarmstufe" );
   }
 
   /**
@@ -145,7 +148,8 @@ public class TimeserieUtils
     {
       m_config = new Properties();
 
-      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
+      InputStream ins = TimeserieUtils.class
+          .getResourceAsStream( "resource/config.properties" );
 
       try
       {
@@ -171,7 +175,8 @@ public class TimeserieUtils
    * @param from
    * @param to
    */
-  public final static void setForecast( final IObservation obs, final Date from, final Date to )
+  public final static void setForecast( final IObservation obs,
+      final Date from, final Date to )
   {
     obs.getMetadataList().setProperty(
         TimeserieConstants.MD_VORHERSAGE,
@@ -192,7 +197,7 @@ public class TimeserieUtils
   {
     if( obs == null )
       return null;
-    
+
     final MetadataList mdl = obs.getMetadataList();
     final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
     if( range != null )
@@ -291,6 +296,25 @@ public class TimeserieUtils
   }
 
   /**
+   * @return true if the axis type is known to be a key axis
+   */
+  public static boolean isKey( final String type )
+  {
+    return Boolean.valueOf(
+        getProperties().getProperty( "IS_KEY_" + type, "false" ) )
+        .booleanValue();
+  }
+
+  /**
+   * Create a default axis for the given type.
+   */
+  public static IAxis createDefaulAxis( final String type )
+  {
+    return new DefaultAxis( getName( type ), type, getUnit( type ),
+        getDataClass( type ), isKey( type ) );
+  }
+
+  /**
    * Returns a NumberFormat instance according to the given timeserie type. If
    * there is no specific instance for the given type, then a default number
    * format is returned.
@@ -316,12 +340,16 @@ public class TimeserieUtils
 
       // for W
       final NumberFormat wf = NumberFormat.getInstance();
-      wf.setMinimumFractionDigits( Integer.valueOf( getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
+      wf.setMinimumFractionDigits( Integer.valueOf(
+          getProperties().getProperty(
+              "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
 
       // for N
       final NumberFormat nf = NumberFormat.getInstance();
-      wf.setMinimumFractionDigits( Integer.valueOf( getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
+      wf.setMinimumFractionDigits( Integer.valueOf(
+          getProperties().getProperty(
+              "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
     }
 
@@ -343,7 +371,8 @@ public class TimeserieUtils
   {
     try
     {
-      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type, "" ) );
+      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type,
+          "" ) );
     }
     catch( ClassNotFoundException e )
     {

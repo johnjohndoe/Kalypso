@@ -87,6 +87,7 @@ import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -104,21 +105,25 @@ public class FeatureComposite implements IFeatureControl
 
   private Feature m_feature;
 
-  public FeatureComposite( final Feature feature )
+  private GMLWorkspace m_workspace;
+
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature )
   {
-    this( feature, new URL[] {} );
+    this( workspace, feature, new URL[] {} );
   }
 
-  public FeatureComposite( final Feature feature, final URL[] templateURL )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final URL[] templateURL )
   {
+    m_workspace = workspace;
     m_feature = feature;
 
     for( int i = 0; i < templateURL.length; i++ )
       addView( templateURL[i] );
   }
 
-  public FeatureComposite( final Feature feature, final FeatureviewType[] views )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final FeatureviewType[] views )
   {
+    m_workspace = workspace;
     m_feature = feature;
 
     for( int i = 0; i < views.length; i++ )
@@ -242,6 +247,7 @@ public class FeatureComposite implements IFeatureControl
       final ControlType controlType )
   {
     final Feature feature = getFeature();
+    final GMLWorkspace workspace = getWorkspace();
     if( controlType instanceof CompositeType )
     {
       final CompositeType compositeType = (CompositeType)controlType;
@@ -278,7 +284,7 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = editorType.getProperty();
 
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      final TextFeatureControl tfc = new TextFeatureControl( feature, ftp );
+      final TextFeatureControl tfc = new TextFeatureControl( workspace, feature, ftp );
 
       final Control control = tfc.createControl( parent, SWTUtilities
           .createStyleFromString( editorType.getStyle() ) );
@@ -295,7 +301,7 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = checkboxType.getProperty();
 
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, ftp );
+      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( workspace, feature, ftp );
 
       final Control control = cfc.createControl( parent, SWTUtilities
           .createStyleFromString( checkboxType.getStyle() ) );
@@ -311,7 +317,7 @@ public class FeatureComposite implements IFeatureControl
 
       final String propertyName = buttonType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp );
 
       final Control control = bfc.createControl( parent, SWTUtilities
           .createStyleFromString( buttonType.getStyle() ) );
@@ -327,9 +333,9 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( ftp, (FeatureviewType[])m_viewMap.values()
+      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, (FeatureviewType[])m_viewMap.values()
           .toArray( new FeatureviewType[0] ) );
-      fc.setFeature( feature );
+      fc.setFeature( workspace, feature );
 
       final Control control = fc.createControl( parent, SWTUtilities
           .createStyleFromString( compoType.getStyle() ) );
@@ -346,9 +352,9 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( ftp, plugin
+      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin
           .createFeatureTypeCellEditorFactory(), plugin.getDefaultMapSelectionID() );
-      fc.setFeature( feature );
+      fc.setFeature( workspace, feature );
 
       final Control control = fc.createControl( parent, SWTUtilities
           .createStyleFromString( tableType.getStyle() ) );
@@ -452,14 +458,14 @@ public class FeatureComposite implements IFeatureControl
     }
   }
 
-  public void setFeature( final Feature feature )
+  public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     m_feature = feature;
 
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.setFeature( feature );
+      fc.setFeature( workspace, feature );
     }
   }
 
@@ -567,5 +573,13 @@ public class FeatureComposite implements IFeatureControl
         }
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getWorkspace()
+   */
+  public GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
   }
 }

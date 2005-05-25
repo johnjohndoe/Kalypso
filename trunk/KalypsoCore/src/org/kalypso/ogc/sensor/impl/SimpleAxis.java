@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 
 /**
- * SimpleAxis, compared to DefaultAxis, this class is not immutable.
+ * SimpleAxis, compared to DefaultAxis, this class mutable.
  * 
  * @author doemming
  */

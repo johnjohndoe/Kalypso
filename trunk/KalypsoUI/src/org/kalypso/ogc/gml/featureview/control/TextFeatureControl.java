@@ -42,10 +42,6 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.Collection;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -59,6 +55,11 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
@@ -73,14 +74,14 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   private final IFeatureModifier m_modifier;
 
-  public TextFeatureControl( final FeatureTypeProperty ftp )
-  {
-    this( null, ftp );
-  }
+//  public TextFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
+//  {
+//    this( workspace, null, ftp );
+//  }
 
-  public TextFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  public TextFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
-    super( feature, ftp );
+    super( workspace, feature, ftp );
 
     m_modifier = new StringModifier( ftp );
   }

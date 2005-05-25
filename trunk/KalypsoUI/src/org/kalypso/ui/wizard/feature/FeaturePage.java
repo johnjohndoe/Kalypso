@@ -43,7 +43,6 @@ package org.kalypso.ui.wizard.feature;
 import java.net.URL;
 import java.util.Collection;
 
-import org.kalypsodeegree.model.feature.Feature;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -53,6 +52,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -67,12 +68,15 @@ public class FeaturePage extends WizardPage
 
   private Feature m_feature;
 
+  private final GMLWorkspace m_workspace;
+
   public FeaturePage( final String pagename, final String title, final ImageDescriptor image,
-      final boolean overrideCanFlipToNextPage, final Feature feature )
+      final boolean overrideCanFlipToNextPage, final GMLWorkspace workspace, final Feature feature )
   {
     super( pagename, title, image );
 
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
+    m_workspace = workspace;
     m_feature = feature;
   }
 
@@ -86,20 +90,20 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    m_featureComposite = new FeatureComposite( null, new URL[] {} );
-    m_featureComposite.setFeature( m_feature );
+    m_featureComposite = new FeatureComposite( m_workspace, null, new URL[] {} );
+    m_featureComposite.setFeature( m_workspace, m_feature );
     final Control control = m_featureComposite.createControl( group, SWT.NONE );
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
     setControl( group );
   }
 
-  public void setFeature( final Feature feature )
-  {
-    m_feature = feature;
-    m_featureComposite.setFeature( feature );
-    m_featureComposite.updateControl();
-  }
+//  public void setFeature( final GMLWorkspace workspace, final Feature feature )
+//  {
+//    m_feature = feature;
+//    m_featureComposite.setFeature( workspace, feature );
+//    m_featureComposite.updateControl();
+//  }
   
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()

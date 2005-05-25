@@ -1,5 +1,5 @@
-/* --------------- Kalypso-Header --------------------------------------------------------------------
-
+/* --------------- Kalypso-Header --------------------------------------------
+ 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
 
@@ -37,20 +37,31 @@
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
   
---------------------------------------------------------------------------------------------------- */
-package org.kalypso.ogc.sensor.ocs;
+------------------------------------------------------------------------------------ */
+package org.kalypso.repository;
+
+import junit.framework.TestCase;
 
 /**
- * Contains constants used within the observation service framework
- * of Kalypso.
+ * RepositoryTest
+ * <p>
  * 
- * created by @author schlienger (18.05.2005)
+ * @author schlienger (24.05.2005)
  */
-public interface ObservationServiceConstants
+public class RepositoryTest extends TestCase
 {
-  /** URL-Scheme that identifies the observation service */
-  public final static String SCHEME_OCS = "kalypso-ocs";
-
-  /** Metadata Property-Name for the OCS-identifier */
-  public final static String MD_OCS_ID = "OCS-ID";
+  public void testRepositoryUtils()
+  {
+    assertEquals( RepositoryUtils.getRepositoryId( "test://foo.bar" ), "test://" );
+    
+    try
+    {
+      RepositoryUtils.getRepositoryId( "test:foo.bar" );
+      fail( "Exception should be thrown" ); 
+    }
+    catch( IllegalArgumentException e )
+    {
+      // ok
+    }
+  }
 }

@@ -43,7 +43,6 @@ package org.kalypso.repository.service;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import org.kalypso.repository.beans.ItemBean;
 
 
 /**
