@@ -170,7 +170,7 @@
 					<element name="NutzungParameterMember" type="par:NutzungParameterAssociationType" minOccurs="12" maxOccurs="12">
 						<annotation>
 							<documentation xml:lang="de">
-								<label/>
+								<label>Nutzungsparameter</label>
 								<tooltip/>
 								<description/>
 							</documentation>

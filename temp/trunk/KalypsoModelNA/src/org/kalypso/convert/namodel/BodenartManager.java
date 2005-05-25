@@ -1,6 +1,5 @@
 package org.kalypso.convert.namodel;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;

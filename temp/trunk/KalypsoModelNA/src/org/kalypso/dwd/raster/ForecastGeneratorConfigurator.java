@@ -166,7 +166,7 @@ public class ForecastGeneratorConfigurator
   public void createConf() throws Exception
   {
     createGeoRaster();
-    final SplitSort featureSort = new SplitSort();
+    final SplitSort featureSort = new SplitSort(null,null);
     final HashMap f2rasterPos = new HashMap();
     for( int i = 0; i < m_features.length; i++ )
     {
