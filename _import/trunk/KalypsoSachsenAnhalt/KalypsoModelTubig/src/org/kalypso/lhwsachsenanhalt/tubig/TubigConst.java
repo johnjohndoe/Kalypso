@@ -149,7 +149,7 @@ public class TubigConst
   public static final String ENDE = "**ende**";
 
   // Finish-Text
-  public static final String FINISH_ERROR = "Bei der Berechnung trat ein Fehler auf, weitere Informationen dazu finden sie in den Log-Dateien.";
+  public static final String FINISH_ERROR_TEXT = "Bei der Berechnung trat ein Fehler auf, weitere Informationen dazu finden sie in den Log-Dateien.";
 
   // ist betriebssystemabhängig...(z. B. für Windows 95/98
   // "command.com / c ") und wir für das Starten von BODESTEU.EXE

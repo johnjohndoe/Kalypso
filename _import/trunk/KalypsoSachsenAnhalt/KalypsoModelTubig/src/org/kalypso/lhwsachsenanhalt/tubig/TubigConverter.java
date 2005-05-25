@@ -124,7 +124,7 @@ public class TubigConverter
     final IAxis axDatum;
     final IAxis axWerte;
     final List lstAusgWerte;
-    final List lstAusgDatum;
+    final List lstAusgDatum; // Ist eigentlich überflüssig
     //final Iterator itDatum;
     Calendar calendar;
 
@@ -190,8 +190,8 @@ public class TubigConverter
       }
 
       // Datum, Schrittweite und Werte
-      // TODO Monika Achtung wenn Listen leer: ist das nicht ein Modell-Fehler
-      // eigentlich bräuchte man die lstAusgDatum nicht
+      // TODO Monika wenn kein Zahlenwert vorhanden, bestünde die Datei die
+      // Prüfung durch m_fehler nicht...
       if( lstAusgDatum.size() > 0 )
       {
         dtDatum = (Date)lstAusgDatum.get( 0 );
@@ -240,7 +240,7 @@ public class TubigConverter
   }
 
   public static void zml2Tubig( final IObservation obsZml, final File fleTubig, final int step,
-      Date dtStartForecast ) throws SensorException, IOException
+      final Date dtStartForecast ) throws SensorException, IOException
   {
     final Writer wrtrTubig;
     final String sValueType;
@@ -326,11 +326,11 @@ public class TubigConverter
             tplWerte );
       }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
-    catch( ParseException e1 )
+    catch( final ParseException e1 )
     {
       // lneNumRdr.getLineNumber() gibt die problematische Zeilennummer an
       e1.printStackTrace();
@@ -358,11 +358,11 @@ public class TubigConverter
       obsZml = tubig2Zml( rdrTubig, sObsType, name );
       rdrTubig.close();
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -384,7 +384,7 @@ public class TubigConverter
     return axis;
   }
 
-  public static void createAktDtTxt( File fleExeDir, Date dtZeit )
+  public static void createAktDtTxt( final File fleExeDir, final Date dtZeit )
   {
     final String sSchritt = "1.00000000000000E-0004";
     final String sMin = "0";
@@ -393,8 +393,8 @@ public class TubigConverter
     createAktDtTxt( fleExeDir, dtZeit, sSchritt, sMin, sMax );
   }
 
-  public static void createAktDtTxt( File fleExeDir, Date dtAktModellZeit, String sSchritt,
-      String sMin, String sMax )
+  public static void createAktDtTxt( final File fleExeDir, final Date dtAktModellZeit,
+      final String sSchritt, final String sMin, final String sMax )
   {
     try
     {
@@ -403,14 +403,14 @@ public class TubigConverter
       createAktDtTxt( wrtrAktDtTxt, dtAktModellZeit, sSchritt, sMin, sMax );
       wrtrAktDtTxt.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
   }
 
-  public static void createAktDtTxt( Writer wrtr, Date dtAktModellZeit, String sSchritt,
-      String sMin, String sMax )
+  public static void createAktDtTxt( final Writer wrtr, final Date dtAktModellZeit,
+      final String sSchritt, final String sMin, final String sMax )
   {
     final PrintWriter pWrtr = new PrintWriter( wrtr );
 

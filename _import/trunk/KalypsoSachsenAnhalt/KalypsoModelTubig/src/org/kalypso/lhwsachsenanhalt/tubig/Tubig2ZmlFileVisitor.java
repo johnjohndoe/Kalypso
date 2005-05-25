@@ -88,7 +88,7 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
     {
       m_gmlWrkSpce = GmlSerializer.createGMLWorkspace( urlGml );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new TubigException( "Fehler beim Laden der Modelldaten-GML", e );
     }
@@ -126,7 +126,7 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
   /**
    * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
    */
-  public boolean visit( File fleTubig )
+  public boolean visit( final File fleTubig )
   {
     final IObservation obsZml;
     final FileOutputStream fleOutStream;
@@ -190,7 +190,7 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
         observationType = ZmlFactory.createXML( obsZml, null );
         ZmlFactory.getMarshaller().marshal( observationType, outStreamWrtr );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -241,7 +241,7 @@ public class Tubig2ZmlFileVisitor implements FileVisitor
    *          aus der Tubig-Dateiendung wird abgeleitet, welcher TimeSeriesLink
    *          gesucht wird
    */
-  private File getZmlPath( String sKurzName, String sTubigExt )
+  private File getZmlPath( final String sKurzName, final String sTubigExt )
   {
     final FeatureList featList;
     File flePathZml;

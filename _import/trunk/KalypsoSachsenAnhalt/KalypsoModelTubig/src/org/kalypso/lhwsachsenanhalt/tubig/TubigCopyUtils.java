@@ -20,7 +20,7 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
  * </p>
  * 
  * <code>copy( new BufferedInputStream( in ), new BufferedOutputStream( out ) );</code>
- *
+ * 
  * @author Thül
  */
 public class TubigCopyUtils
@@ -53,8 +53,8 @@ public class TubigCopyUtils
    *           In case of an I/O problem
    * @throws TubigBatchException
    */
-  public static boolean copyAndAnalyzeStreams( final Reader input, PrintWriter pwLog,
-      PrintWriter pwErr, ICalcMonitor monitor ) throws IOException, TubigBatchException
+  public static boolean copyAndAnalyzeStreams( final Reader input, final PrintWriter pwLog,
+      final PrintWriter pwErr, final ICalcMonitor monitor ) throws IOException, TubigBatchException
   {
     char[] buffer = new char[DEFAULT_BUFFER_SIZE];
     int count = 0;
@@ -87,7 +87,8 @@ public class TubigCopyUtils
         // Fehler in m_xy: Abbruch der Rechnung
         pwErr.println( sMess );
         sLastWrtr = "pwErr";
-        throw new TubigBatchException(monitor, TubigBatchException.STATUS_ERROR,TubigConst.FINISH_ERROR);
+        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,
+            TubigConst.FINISH_ERROR_TEXT );
       }
       else
       {

@@ -59,25 +59,46 @@ public class TubigBatchException extends Exception
     monitor.setFinishInfo( iStatus, sFinishText );
   }
 
+  public TubigBatchException( final String message, final ICalcMonitor monitor, final int iStatus,
+      final String sFinishText )
+  {
+    super( message );
+    monitor.setFinishInfo( iStatus, sFinishText );
+  }
+
+  public TubigBatchException( final Throwable cause, final ICalcMonitor monitor, final int iStatus,
+      final String sFinishText )
+  {
+    super( cause );
+    monitor.setFinishInfo( iStatus, sFinishText );
+  }
+
+  public TubigBatchException( final String message, final Throwable cause,
+      final ICalcMonitor monitor, final int iStatus, final String sFinishText )
+  {
+    super( message, cause );
+    monitor.setFinishInfo( iStatus, sFinishText );
+  }
+
   public TubigBatchException()
   {
     super();
 
   }
 
-  public TubigBatchException( String message )
+  public TubigBatchException( final String message )
   {
     super( message );
 
   }
 
-  public TubigBatchException( Throwable cause )
+  public TubigBatchException( final Throwable cause )
   {
     super( cause );
 
   }
 
-  public TubigBatchException( String message, Throwable cause )
+  public TubigBatchException( final String message, final Throwable cause )
   {
     super( message, cause );
 

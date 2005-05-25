@@ -103,13 +103,17 @@ public class TubigBatchInterpreter
           TubigConst.TUBIG_CODEPAGE ) ) );
       runBatch( fleExeDir, fleBatch, pwLog, pwErr, cancelable );
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       e.printStackTrace();
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
+          TubigConst.FINISH_ERROR_TEXT );
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
+          TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -130,9 +134,11 @@ public class TubigBatchInterpreter
       rdrBatch = new FileReader( fleBatch );
       runBatch( fleExeDir, rdrBatch, pwLog, pwErr, cancelable );
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       e.printStackTrace();
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
+          TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -245,7 +251,7 @@ public class TubigBatchInterpreter
                         {
                           sCmd = absolutePath + File.separator + sZeile;
                         }
-                        else if(  sZeileUpper.startsWith( "BODESTEU" ) )
+                        else if( sZeileUpper.startsWith( "BODESTEU" ) )
                         {
                           sCmd = TubigConst.START_IN_CMD + absolutePath + File.separator + sZeile;
                         }
@@ -276,8 +282,8 @@ public class TubigBatchInterpreter
                             // gekommen ist
 
                             // hier wird ggf. TubigBatchException geworfen
-                            bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( inStream, pwLog, pwErr,
-                                cancelable );
+                            bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( inStream, pwLog,
+                                pwErr, cancelable );
 
                             try
                             {
@@ -315,16 +321,19 @@ public class TubigBatchInterpreter
       }
       pwLog.println( TubigConst.MESS_BERECHNUNG_BEENDET );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
-      // Wenn rename im Copy-Batch fehlschlägt, gibt es eine IOException (wird
-      // mittlerweile mit m_copy gemacht)
       pwErr.println( "Fehlergrund (IOException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
+      // TODO Monika oder ist es gar eine TubigException?
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
+          TubigConst.FINISH_ERROR_TEXT );
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
+      // TODO Monika wie schlimm ist es, dass der Thread nicht schlafen gehen
+      // kann? Text falsch...
       pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
       e.printStackTrace();
     }

@@ -81,8 +81,9 @@ public class TubigExportParameter
    * 
    * @param workspace
    * @param dir
+   * @throws TubigException
    */
-  public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir )
+  public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir ) throws TubigException
   {
     //String sName;
     String sKurzName;
@@ -108,7 +109,7 @@ public class TubigExportParameter
   }
 
   private static void writeSpeicherStauraum( final Feature speicher, final File dir,
-      final String kurzname )
+      final String kurzname ) throws TubigException
   {
     final Feature featStauraum;
     final Double dTotraum;
@@ -164,6 +165,7 @@ public class TubigExportParameter
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException("Fehler beim Schreiben der Speicherparameter (Stauraum)", e);
     }
     finally
     {
@@ -173,7 +175,7 @@ public class TubigExportParameter
 
   private static void writeSpeicherKommentarUndJahr( final Feature speicher, final File dir,
       final String dateiName, final String sFeatProp1, final String sFeatProp2,
-      final String sFeatLstProp1, final boolean bAddComment )
+      final String sFeatLstProp1, final boolean bAddComment ) throws TubigException
   {
     final Feature featMindestabgabe;
     final Feature featMindestabgabeJahr;
@@ -218,6 +220,7 @@ public class TubigExportParameter
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException("Fehler beim Schreiben der Speicherparameter (Kommentar und Jahr)", e);
     }
     finally
     {
@@ -226,7 +229,7 @@ public class TubigExportParameter
   }
 
   private static void writeSpeicherMindestabgabe( final Feature speicher, final File dir,
-      final String kurzname )
+      final String kurzname ) throws TubigException
   {
     // [m³/s]
     writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qmi", "MindestabgabeParameter",
@@ -234,7 +237,7 @@ public class TubigExportParameter
   }
 
   private static void writeSpeicherMaximalabgabe( final Feature speicher, final File dir,
-      final String kurzname )
+      final String kurzname ) throws TubigException
   {
     // [m³/s]
     writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qma", "MaximalabgabeParameter",
@@ -242,7 +245,7 @@ public class TubigExportParameter
   }
 
   private static void writeSpeicherTrinkwasser( final Feature speicher, final File dir,
-      final String kurzname )
+      final String kurzname ) throws TubigException
   {
     // [m³/s]
     writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".twa", "TrinkwasserParameter",
@@ -250,7 +253,7 @@ public class TubigExportParameter
   }
 
   private static void writeSpeicherEntlastungsanlagen( final Feature speicher, final File dir,
-      final String kurzname )
+      final String kurzname ) throws TubigException
   {
     final Feature featEntlastungsanlagen;
     final FeatureList featLstEntlastungen;
@@ -329,6 +332,7 @@ public class TubigExportParameter
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException("Fehler beim Schreiben der Speicherparameter (Entlastungsanlagen)", e);
     }
     finally
     {
@@ -344,8 +348,9 @@ public class TubigExportParameter
    * 
    * @param workspace
    * @param dir
+   * @throws TubigException
    */
-  public static void writePegelPars( final GMLWorkspace workspace, final File dir )
+  public static void writePegelPars( final GMLWorkspace workspace, final File dir ) throws TubigException
   {
     //String sName;
     String sKurzName;
@@ -367,7 +372,7 @@ public class TubigExportParameter
   }
 
   private static void writePegelWlmPars( final Feature featPegel, final File dir,
-      final String kurzname )
+      final String kurzname ) throws TubigException
   {
     final File outfile;
     final FileOutputStream stream;
@@ -443,6 +448,7 @@ public class TubigExportParameter
     catch( final IOException e )
     {
       e.printStackTrace();
+      throw new TubigException("Fehler beim Schreiben der Pegelparameter (WLM)", e);
     }
     finally
     {

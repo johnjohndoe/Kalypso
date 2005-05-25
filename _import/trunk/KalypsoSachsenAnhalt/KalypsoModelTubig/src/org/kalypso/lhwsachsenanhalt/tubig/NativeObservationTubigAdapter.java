@@ -43,7 +43,6 @@ package org.kalypso.lhwsachsenanhalt.tubig;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Date;
 
@@ -78,7 +77,7 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
     return m_title;
   }
 
-  public IObservation createObservationFromSource( File file ) throws Exception
+  public IObservation createObservationFromSource( final File file ) throws Exception
   {
     final InputStreamReader reader;
 

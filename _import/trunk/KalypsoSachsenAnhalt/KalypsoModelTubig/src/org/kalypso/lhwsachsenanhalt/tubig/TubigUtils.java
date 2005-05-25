@@ -57,7 +57,7 @@ public class TubigUtils
    * Gibt Datei-Extension zurück (z.B. png)
    *  
    */
-  public static String getExtension( File file )
+  public static String getExtension( final File file )
   {
     String ext;
     String s;
@@ -79,7 +79,7 @@ public class TubigUtils
    * wird verwendet, um den Kurznamen aus den Datei-Namen der TUBIG-Dateien zu
    * generieren
    */
-  public static String getFileNameWOExt( File file )
+  public static String getFileNameWOExt( final File file )
   {
     String sFleName;
     final String sExt;
@@ -98,7 +98,7 @@ public class TubigUtils
    * 
    * @author Thül
    */
-  public static String getObservationType( File fileTubig )
+  public static String getObservationType( final File fileTubig )
   {
     String sExt;
     String sObsType;
@@ -113,11 +113,11 @@ public class TubigUtils
     else if( "VVS".equals( sExt ) || "PV".equals( sExt ) || "VV".equals( sExt ) )
       sObsType = TimeserieConstants.TYPE_VOLUME;
     else if( "VSA".equals( sExt ) || "PSA".equals( sExt ) || "Q".equals( sExt )
-        || "PQ".equals( sExt ) || "VQ".equals( sExt )|| "ZFL".equals( sExt ) )
+        || "PQ".equals( sExt ) || "VQ".equals( sExt ) || "ZFL".equals( sExt ) )
       sObsType = TimeserieConstants.TYPE_RUNOFF;
     else
     {
-      // TODO Monika Fehler werfen?
+      // Fehler werfen?
     }
     return sObsType;
   }

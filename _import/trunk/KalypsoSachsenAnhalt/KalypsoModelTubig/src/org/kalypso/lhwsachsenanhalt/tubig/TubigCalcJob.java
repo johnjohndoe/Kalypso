@@ -91,8 +91,8 @@ public class TubigCalcJob implements ICalcJob
 
       // Schleife über die Batches (und jeweils starten)
       monitor.setMessage( TubigConst.MESS_RECHENKERN_AUFRUFEN );
-      pwCalcLog.println( TubigConst.MESS_RECHENKERN_AUFRUFEN + " (" + TubigUtils.getAktuelleUhrzeit()
-          + ")" );
+      pwCalcLog.println( TubigConst.MESS_RECHENKERN_AUFRUFEN + " ("
+          + TubigUtils.getAktuelleUhrzeit() + ")" );
       iCntBat = dataCrtl.getBatches().length;
       for( ii = 0; ii < iCntBat; ii++ )
       {
@@ -172,12 +172,12 @@ public class TubigCalcJob implements ICalcJob
 
       }
       monitor.setMessage( TubigConst.MESS_BERECHNUNG_BEENDET );
-      pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + TubigUtils.getAktuelleUhrzeit()
-          + ")" );
+      pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " ("
+          + TubigUtils.getAktuelleUhrzeit() + ")" );
 
       monitor.setMessage( TubigConst.MESS_ERGEBNISSE_ZURUECK );
-      pwCalcLog.println( TubigConst.MESS_ERGEBNISSE_ZURUECK + " (" + TubigUtils.getAktuelleUhrzeit()
-          + ")" );
+      pwCalcLog.println( TubigConst.MESS_ERGEBNISSE_ZURUECK + " ("
+          + TubigUtils.getAktuelleUhrzeit() + ")" );
       // Besucher, der aus jeder TUBIG-Datei, die er in den
       // Unterverzeichnissen von CALC (Pegel und Speicher) findet, eine ZML
       // macht
@@ -202,26 +202,34 @@ public class TubigCalcJob implements ICalcJob
       resultEater.addResult( TubigConst.ERGEBNISSE, ergDir );
     }
     // TODO Monika Fehlerbehandlung: im Fehlerfall immer eine
-    // CalcServiceException werfen, sonst bekommt der Benutzer nicht mit, dass
+    // CalcJobServiceException werfen, sonst bekommt der Benutzer nicht mit,
+    // dass
     // was nicht in Ordnung ist
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       e.printStackTrace();
+      throw new CalcJobServiceException( "Datei " + fleCalcLog.getName() + " nicht gefunden", e );
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
+      throw new CalcJobServiceException( "Encoding " + TubigConst.TUBIG_CODEPAGE
+          + " wird für Calc-Log nicht unterstützt.", e );
     }
-    catch( TubigException e )
+    catch( final TubigBatchException e )
+    {
+      // Fehler bei Abarbeitung einer Batch. Batches werden nicht weiter
+      // abgearbeitet: kontrollierter Abbruch
+      e.printStackTrace();
+      // TODO text schreiben
+      pwCalcLog.println( "" );
+    }
+    catch( final TubigException e )
     {
       // TODO Monika damit muss noch was geschehen...
-      // Insbesondere Log-Info, dass keine Ergebnis-Dateien übertragen werden
+      // Insbesondere Log-Info (log geht nicht), dass keine Ergebnis-Dateien übertragen werden
       e.printStackTrace();
-    }
-    catch( TubigBatchException e )
-    {
-      // Fehler bei Abarbeitung einer Batch. Abbrechen und Log-Dateien zurückschreiben
-      e.printStackTrace();
+      throw new CalcJobServiceException( "", e );
     }
     finally
     {
