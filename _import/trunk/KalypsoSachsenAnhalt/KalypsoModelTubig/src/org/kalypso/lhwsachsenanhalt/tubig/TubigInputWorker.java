@@ -46,7 +46,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
-import java.util.zip.ZipException;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.zip.ZipUtilities;
