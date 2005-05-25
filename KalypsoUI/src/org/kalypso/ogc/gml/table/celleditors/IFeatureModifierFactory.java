@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 
 /**
@@ -48,5 +49,5 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
  */
 public interface IFeatureModifierFactory
 {
-  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp, final String format );
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final String format );
 }

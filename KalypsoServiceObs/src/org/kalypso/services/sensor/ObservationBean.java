@@ -42,7 +42,7 @@ package org.kalypso.services.sensor;
 
 import java.util.Map;
 
-import org.kalypso.repository.beans.ItemBean;
+import org.kalypso.repository.service.ItemBean;
 
 /**
  * An Observation Bean. Specialisation of <code>ItemBean</code>. Can deliver the MetadataList
@@ -56,17 +56,17 @@ public class ObservationBean extends ItemBean
 
   public ObservationBean()
   {
-    this( "", "", "", null );
+    this( "", "", null );
   }
   
   public ObservationBean( final String id )
   {
-    this( id, "", "", null );
+    this( id, "", null );
   }
   
-  public ObservationBean( final String id, final String name, final String repId, final Map metadata )
+  public ObservationBean( final String id, final String name, final Map metadata )
   {
-    super( id, name, repId );
+    super( id, name );
     
     m_metadataList = metadata;
   }

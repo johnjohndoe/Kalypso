@@ -44,10 +44,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -58,6 +54,11 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
@@ -70,14 +71,14 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private Collection m_modlistener = new ArrayList();
 
-  public CheckboxFeatureControl( final FeatureTypeProperty ftp )
-  {
-    this( null, ftp );
-  }
+//  public CheckboxFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
+//  {
+//    this( workspace, null, ftp );
+//  }
 
-  public CheckboxFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  public CheckboxFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
-    super( feature, ftp );
+    super( workspace, feature, ftp );
 
     m_modifier = new BooleanModifier( ftp );
   }

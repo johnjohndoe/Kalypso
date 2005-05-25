@@ -43,13 +43,13 @@ package org.kalypso.ogc.sensor.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.util.factory.FactoryException;
 import org.kalypso.zml.filters.AbstractFilterType;
@@ -66,12 +66,6 @@ import org.xml.sax.InputSource;
  */
 public class FilterFactory
 {
-  /** start tag for filters */
-  private static final String TAG_FILTER1 = "<filter>";
-
-  /** stop tag for filters */
-  private static final String TAG_FILTER2 = "</filter>";
-
   private final ConfigurableCachableObjectFactory m_fact;
 
   private static FilterFactory m_instance = null;
@@ -120,9 +114,7 @@ public class FilterFactory
   /**
    * Returns a creator instance for the given filter type
    * 
-   * @param aft
    * @return creator instance
-   * @throws FactoryException
    */
   public static IFilterCreator getCreatorInstance( final AbstractFilterType aft )
       throws FactoryException
@@ -140,31 +132,26 @@ public class FilterFactory
    * specification for creating a filter. Otherwise directly returns the given
    * observation.
    * 
-   * @param u
-   * @param obs
    * @return IObservation
-   * @throws SensorException
    */
-  public static IObservation createFilterFrom( final URL u,
+  public static IObservation createFilterFrom( final String href,
       final IObservation obs ) throws SensorException
   {
-    if( u == null )
+    if( href == null || href.length() == 0 )
       return obs;
     
-    final String strUrl = u.toExternalForm();
-
-    final int i1 = strUrl.indexOf( TAG_FILTER1 );
+    final int i1 = href.indexOf( ZmlURLConstants.TAG_FILTER1 );
     if( i1 == -1 )
       return obs;
 
-    final int i2 = strUrl.indexOf( TAG_FILTER2, i1 );
+    final int i2 = href.indexOf( ZmlURLConstants.TAG_FILTER2, i1 );
     if( i2 == -1 )
       throw new SensorException(
           "URL-fragment does not contain a valid filter specification. URL: "
-              + strUrl );
+              + href );
 
-    final String strFilterXml = strUrl
-        .substring( i1 + TAG_FILTER1.length(), i2 );
+    final String strFilterXml = href
+        .substring( i1 + ZmlURLConstants.TAG_FILTER1.length(), i2 );
 
     final StringReader sr = new StringReader( strFilterXml );
 
@@ -172,11 +159,12 @@ public class FilterFactory
     try
     {
       final AbstractFilterType af = (AbstractFilterType) OF_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
-
+      sr.close();
+      
       final IFilterCreator creator = getCreatorInstance( af );
       obsFilter = creator.createFilter( af, obs );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       throw new SensorException( e );
     }

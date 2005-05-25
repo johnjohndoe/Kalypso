@@ -77,11 +77,11 @@ public final class CopyObservationHandler
     
     private final Date to;
     
-    public Source( final String property, final Date from, final Date to )
+    public Source( final String prop, final Date dfrom, final Date dto )
     {
-      this.property = property;
-      this.from = from;
-      this.to = to;
+      this.property = prop;
+      this.from = dfrom;
+      this.to = dto;
     }
     
     public final Date getFrom()

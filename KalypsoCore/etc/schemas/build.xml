@@ -11,6 +11,5 @@
 	  </patternset>
   
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
-	
 </project>
 

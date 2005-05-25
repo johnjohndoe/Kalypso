@@ -48,12 +48,10 @@ import javax.activation.DataHandler;
 
 import junit.framework.TestCase;
 
-import org.kalypso.repository.beans.ItemBean;
+import org.kalypso.repository.service.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypso.services.sensor.DateRangeBean;
 import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * @author schlienger
@@ -141,9 +139,6 @@ public class KalypsoObservationServiceTest extends TestCase
       System.out.println( space + "Metadata for " + ob.getName() + " are:"
           + map );
 
-      final DateRangeArgument dra = DateRangeArgument.createFromPastDays( 30 );
-      final DateRangeBean drb = new DateRangeBean( dra.getFrom(), dra.getTo() );
-
       //      final OCSDataBean oddb = m_srv.readData( ob, drb );
       //      final URL url = new URL( oddb.getLocation() );
       //
@@ -153,7 +148,7 @@ public class KalypsoObservationServiceTest extends TestCase
       //
       //      m_srv.clearTempData( oddb );
 
-      final DataHandler oddb = m_srv.readData( ob, drb );
+      final DataHandler oddb = m_srv.readData( ob.getId() );
       assertNotNull( oddb );
     }
     else

@@ -152,7 +152,7 @@ public class ExportBerichtWizard extends Wizard
     super.addPages();
 
     m_featurePage = new FeaturePage( "featurePage", "Metadaten editieren",
-        ImageProvider.IMAGE_UTIL_BERICHT_WIZ, true, m_feature );
+        ImageProvider.IMAGE_UTIL_BERICHT_WIZ, true, null, m_feature );
 
     addPage( m_featurePage );
   }

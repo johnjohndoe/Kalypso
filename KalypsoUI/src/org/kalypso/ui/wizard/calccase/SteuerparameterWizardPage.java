@@ -83,7 +83,7 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new URL[] {} );
 
   private boolean m_overrideCanFlipToNextPage;
 
@@ -252,7 +252,7 @@ public class SteuerparameterWizardPage extends WizardPage
     if( m_workspace != null )
     {
       final Feature f = m_workspace.getRootFeature();
-      m_featureComposite.setFeature( f );
+      m_featureComposite.setFeature( m_workspace, f );
     }
 
     try
@@ -299,7 +299,7 @@ public class SteuerparameterWizardPage extends WizardPage
     final FeatureComposite featureComposite = m_featureComposite;
     if( featureComposite != null )
     {
-      featureComposite.setFeature( m_workspace.getRootFeature() );
+      featureComposite.setFeature( m_workspace, m_workspace.getRootFeature() );
       featureComposite.updateControl();
     }
   }

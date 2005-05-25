@@ -104,7 +104,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private String m_featurePath;
 
-  private FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
+  private FeatureComposite m_featureComposite = new FeatureComposite( null, null, new URL[] {} );
 
   private Label m_label;
 
@@ -295,10 +295,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       if( m_label != null && !m_label.isDisposed() )
         m_label.dispose();
 
-      m_featureComposite.setFeature( null );
+      m_featureComposite.setFeature( null, null );
       m_featureComposite.disposeControl();
 
-      m_featureComposite.setFeature( null );
+      m_featureComposite.setFeature( null, null );
       m_featureComposite.updateControl();
 
       if( m_workspace == null )
@@ -317,11 +317,11 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       {
         final Feature feature = (Feature)featureFromPath;
 
-        m_featureComposite.setFeature( feature );
+        m_featureComposite.setFeature( m_workspace, feature );
         final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature
             .getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        m_featureComposite.setFeature( feature );
+        m_featureComposite.setFeature( m_workspace, feature );
         m_featureComposite.updateControl();
 
         m_panel.layout();

@@ -36,9 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.repository.beans;
+ 
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.repository.service;
 
 import java.io.Serializable;
 
@@ -50,29 +50,21 @@ import java.io.Serializable;
 public class ItemBean implements Serializable
 {
   private String m_id;
-
   private String m_name;
-
-  private String m_repId;
 
   public ItemBean()
   {
-    this( "", "", "" );
+    this( "", "" );
   }
 
   /**
-   * @param id
-   *          identifier of this item
-   * @param name
-   *          name of this item
-   * @param repId
-   *          identifier of the repository this item belongs to
+   * @param id identifier of this item
+   * @param name name of this item
    */
-  public ItemBean( final String id, final String name, final String repId )
+  public ItemBean( final String id, final String name )
   {
     m_id = id;
     m_name = name;
-    m_repId = repId;
   }
 
   public String getId()
@@ -95,26 +87,16 @@ public class ItemBean implements Serializable
     m_name = name;
   }
 
-  public String getRepId()
-  {
-    return m_repId;
-  }
-
-  public void setRepId( String repId )
-  {
-    m_repId = repId;
-  }
-  
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals( Object obj )
   {
-    if( obj == null || !(obj instanceof ItemBean) )
+    if( obj == null || !( obj instanceof ItemBean ) )
       return false;
-    
+
     final ItemBean other = (ItemBean)obj;
-    
+
     return m_id.equals( other.getId() );
   }
 }

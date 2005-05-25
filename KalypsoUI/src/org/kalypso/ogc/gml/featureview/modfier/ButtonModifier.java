@@ -51,6 +51,7 @@ import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -58,10 +59,13 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class ButtonModifier implements IFeatureModifier
 {
   private final FeatureTypeProperty m_ftp;
+  private final GMLWorkspace m_workspace;
+
   private Feature m_feature;
   
-  public ButtonModifier( final FeatureTypeProperty ftp )
+  public ButtonModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
   {
+    m_workspace = workspace;
     m_ftp = ftp;
   }
 
@@ -90,12 +94,17 @@ public class ButtonModifier implements IFeatureModifier
     return new DialogCellEditor( parent ) {
       protected boolean openDialog( final Control parentControl )
       {
-        final IFeatureDialog dialog = ButtonFeatureControl.chooseDialog( getFeature(), getFeatureTypeProperty() );
+        final IFeatureDialog dialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty() );
         return dialog.open( parentControl.getShell() ) == Window.OK;
       }
       };
   }
 
+  protected GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
+  
   protected Feature getFeature()
   {
     return m_feature;

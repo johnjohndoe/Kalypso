@@ -87,8 +87,8 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
-import org.kalypso.ogc.sensor.ocs.ObservationServiceConstants;
 import org.kalypso.ogc.sensor.view.ObservationCache;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
@@ -364,7 +364,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   private void configureURLStreamHandler( final BundleContext context )
   {
     // register the observation webservice url stream handler
-    registerUrlStreamHandler( context, ObservationServiceConstants.SCHEME_OCS,
+    registerUrlStreamHandler( context, ZmlURLConstants.SCHEME_OCS,
         new OcsURLStreamHandler() );
     registerUrlStreamHandler( context, CalculationSchemaStreamHandler.PROTOCOL,
         new CalculationSchemaStreamHandler() );

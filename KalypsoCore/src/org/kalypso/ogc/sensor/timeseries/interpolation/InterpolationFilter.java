@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.interpolation;
 
 import java.util.Calendar;
@@ -82,18 +82,14 @@ public class InterpolationFilter extends AbstractObservationFilter
   /**
    * Constructor.
    * 
-   * @param calendarField
-   *          which field of the date will be used for steping through the
-   *          timeserie
-   * @param amount
-   *          amount of time for the step
-   * @param forceFill
-   *          when true, fills the model with defaultValue when no base value
-   * @param defaultValue
-   *          default value to use when filling absent values
-   * @param defaultStatus
-   *          value of the default status when base status is absent or when
-   *          status-interpolation cannot be proceeded
+   * @param calendarField which field of the date will be used for steping
+   *          through the timeserie
+   * @param amount amount of time for the step
+   * @param forceFill when true, fills the model with defaultValue when no base
+   *          value
+   * @param defaultValue default value to use when filling absent values
+   * @param defaultStatus value of the default status when base status is absent
+   *          or when status-interpolation cannot be proceeded
    */
   public InterpolationFilter( final int calendarField, final int amount,
       final boolean forceFill, final double defaultValue,
@@ -116,7 +112,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
     DateRangeArgument dr = null;
     if( args instanceof DateRangeArgument )
-      dr = (DateRangeArgument) args;
+      dr = (DateRangeArgument)args;
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values
         .getAxisList(), Date.class );
@@ -146,109 +142,112 @@ public class InterpolationFilter extends AbstractObservationFilter
       }
     }
 
-    final Date begin = (Date) values.getElement( 0, dateAxis );
-
-    Date d1 = null;
-    Date d2 = null;
-    final double[] v1 = new double[valueAxes.length + 1];
-    final double[] v2 = new double[valueAxes.length + 1];
-
-    int startIx = 0;
-
-    // do we need to fill before the begining of the base model?
-    if( dr != null && m_fill )
+    if( values.getCount() != 0 )
     {
-      cal.setTime( dr.getFrom() );
-      d1 = cal.getTime();
+      final Date begin = (Date)values.getElement( 0, dateAxis );
 
-      for( int i = 0; i < valueAxes.length; i++ )
-      {
-        final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
-        v1[intModel.getPositionFor( valueAxes[i] )] = nb.doubleValue();
-      }
+      Date d1 = null;
+      Date d2 = null;
+      final double[] v1 = new double[valueAxes.length + 1];
+      final double[] v2 = new double[valueAxes.length + 1];
 
-      while( cal.getTime().compareTo( begin ) < 0 )
+      int startIx = 0;
+
+      // do we need to fill before the begining of the base model?
+      if( dr != null && m_fill )
       {
+        cal.setTime( dr.getFrom() );
         d1 = cal.getTime();
-        fillWithDefault( dateAxis, valueAxes, intModel, cal );
+
+        for( int i = 0; i < valueAxes.length; i++ )
+        {
+          final Number nb = (Number)values.getElement( startIx, valueAxes[i] );
+          v1[intModel.getPositionFor( valueAxes[i] )] = nb.doubleValue();
+        }
+
+        while( cal.getTime().compareTo( begin ) < 0 )
+        {
+          d1 = cal.getTime();
+          fillWithDefault( dateAxis, valueAxes, intModel, cal );
+        }
       }
-    }
-    else
-    {
-      cal.setTime( begin );
-
-      final Object[] tupple = new Object[valueAxes.length + 1];
-      tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
-
-      for( int i = 0; i < valueAxes.length; i++ )
+      else
       {
-        final Number nb = (Number) values.getElement( startIx, valueAxes[i] );
+        cal.setTime( begin );
 
-        final int pos = intModel.getPositionFor( valueAxes[i] );
-        tupple[pos] = nb;
-        v1[pos] = nb.doubleValue();
-      }
-
-      intModel.addTupple( tupple );
-
-      cal.add( m_calField, m_amount );
-
-      startIx++;
-
-      d1 = cal.getTime();
-    }
-
-    final LinearEquation eq = new LinearEquation();
-
-    for( int ix = startIx; ix < values.getCount(); ix++ )
-    {
-      d2 = (Date) values.getElement( ix, dateAxis );
-
-      for( int ia = 0; ia < valueAxes.length; ia++ )
-      {
-        final Number nb = (Number) values.getElement( ix, valueAxes[ia] );
-        v2[intModel.getPositionFor( valueAxes[ia] )] = nb.doubleValue();
-      }
-
-      while( cal.getTime().compareTo( d2 ) <= 0 )
-      {
-        long ms = cal.getTimeInMillis();
-
-        Object[] tupple = new Object[valueAxes.length + 1];
+        final Object[] tupple = new Object[valueAxes.length + 1];
         tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
-        for( int ia = 0; ia < valueAxes.length; ia++ )
+        for( int i = 0; i < valueAxes.length; i++ )
         {
-          final int pos = intModel.getPositionFor( valueAxes[ia] );
+          final Number nb = (Number)values.getElement( startIx, valueAxes[i] );
 
-          if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
-          {
-            // this is the status axis
-            // no interpolation but a bitwise OR
-            tupple[pos] = new Integer( (int) v1[pos] | (int) v2[pos] );
-          }
-          else
-          {
-            // normal case: perform the interpolation
-            try
-            {
-              eq.setPoints( d1.getTime(), v1[pos], d2.getTime(), v2[pos] );
-              tupple[pos] = new Double( eq.computeY( ms ) );
-            }
-            catch( SameXValuesException e )
-            {
-              tupple[pos] = new Double( v1[pos] );
-            }
-          }
+          final int pos = intModel.getPositionFor( valueAxes[i] );
+          tupple[pos] = nb;
+          v1[pos] = nb.doubleValue();
         }
 
         intModel.addTupple( tupple );
 
         cal.add( m_calField, m_amount );
+
+        startIx++;
+
+        d1 = cal.getTime();
       }
 
-      d1 = d2;
-      System.arraycopy( v2, 0, v1, 0, v2.length );
+      final LinearEquation eq = new LinearEquation();
+
+      for( int ix = startIx; ix < values.getCount(); ix++ )
+      {
+        d2 = (Date)values.getElement( ix, dateAxis );
+
+        for( int ia = 0; ia < valueAxes.length; ia++ )
+        {
+          final Number nb = (Number)values.getElement( ix, valueAxes[ia] );
+          v2[intModel.getPositionFor( valueAxes[ia] )] = nb.doubleValue();
+        }
+
+        while( cal.getTime().compareTo( d2 ) <= 0 )
+        {
+          long ms = cal.getTimeInMillis();
+
+          Object[] tupple = new Object[valueAxes.length + 1];
+          tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
+
+          for( int ia = 0; ia < valueAxes.length; ia++ )
+          {
+            final int pos = intModel.getPositionFor( valueAxes[ia] );
+
+            if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
+            {
+              // this is the status axis
+              // no interpolation but a bitwise OR
+              tupple[pos] = new Integer( (int)v1[pos] | (int)v2[pos] );
+            }
+            else
+            {
+              // normal case: perform the interpolation
+              try
+              {
+                eq.setPoints( d1.getTime(), v1[pos], d2.getTime(), v2[pos] );
+                tupple[pos] = new Double( eq.computeY( ms ) );
+              }
+              catch( SameXValuesException e )
+              {
+                tupple[pos] = new Double( v1[pos] );
+              }
+            }
+          }
+
+          intModel.addTupple( tupple );
+
+          cal.add( m_calField, m_amount );
+        }
+
+        d1 = d2;
+        System.arraycopy( v2, 0, v1, 0, v2.length );
+      }
     }
 
     // do we need to fill after the end of the base model?

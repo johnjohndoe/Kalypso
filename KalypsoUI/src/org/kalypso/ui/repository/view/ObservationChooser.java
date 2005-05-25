@@ -314,7 +314,7 @@ public class ObservationChooser extends AbstractViewer implements
     };
 
     if( !getControl().isDisposed() )
-      getControl().getShell().getDisplay().asyncExec( r );
+      getControl().getDisplay().asyncExec( r );
   }
 
   public IRepositoryContainer getRepositoryContainer()

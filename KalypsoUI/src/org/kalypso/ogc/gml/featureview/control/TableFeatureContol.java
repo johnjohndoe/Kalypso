@@ -19,11 +19,11 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * @author belger
@@ -42,10 +42,10 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private Collection m_listeners = new ArrayList();
 
-  public TableFeatureContol( final FeatureTypeProperty ftp, final IFeatureModifierFactory factory,
+  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureModifierFactory factory,
       final int selectionID )
   {
-    super( ftp );
+    super( workspace, ftp );
 
     m_factory = factory;
     m_selectionID = selectionID;
@@ -60,7 +60,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   {
     m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionID, false );
 
-    setFeature( getFeature() );
+    setFeature( getWorkspace(), getFeature() );
 
     return m_viewer.getControl();
   }
@@ -83,11 +83,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.Feature)
    */
-  public void setFeature( final Feature feature )
+  public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
-    super.setFeature( feature );
+    super.setFeature( workspace, feature );
 
     if( m_kft != null )
     {
@@ -99,9 +99,14 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     {
       final String ftpName = getFeatureTypeProperty().getName();
 
-      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( null, feature, null, null, null, null );
-      final CommandableWorkspace c_workspace = new CommandableWorkspace( workspace );
-
+//      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( null, feature, null, null, null, null );
+//      final CommandableWorkspace c_workspace = new CommandableWorkspace( workspace );
+      final CommandableWorkspace c_workspace;
+      if( workspace instanceof CommandableWorkspace )
+        c_workspace = (CommandableWorkspace)workspace;
+      else
+        c_workspace = new CommandableWorkspace( workspace );
+      
       m_kft = new KalypsoFeatureTheme( c_workspace, ftpName, ftpName );
       m_kft.addModellListener( this );
       m_viewer.setInput( m_kft );

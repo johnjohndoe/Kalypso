@@ -64,23 +64,27 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
-import org.kalypso.ogc.sensor.ocs.ObservationServiceConstants;
-import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
+import org.kalypso.ogc.sensor.zml.request.RequestFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.beans.ItemBean;
+import org.kalypso.repository.RepositoryUtils;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
+import org.kalypso.repository.service.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypso.services.sensor.DateRangeBean;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.request.RequestType;
 import org.xml.sax.InputSource;
 
 /**
@@ -248,36 +252,53 @@ public class KalypsoObservationService implements IObservationService
     m_tmpDir.delete();
   }
 
-  public DataHandler readData( final ObservationBean obean,
-      final DateRangeBean drb ) throws RemoteException
+  public DataHandler readData( String href ) throws RemoteException
   {
+    href = ZmlURL.removeServerSideId( href );
+    final String obsId = ZmlURL.getIdentifierPart( href );
+    final ObservationBean obean = new ObservationBean( obsId );
+
     FileOutputStream fos = null;
 
     try
     {
-      final IRepositoryItem item = itemFromBean( obean );
-
-      final IObservation obs = (IObservation)item
-          .getAdapter( IObservation.class );
-
-      if( obs == null )
+      IObservation obs = null;
+      try
       {
-        final RemoteException e = new RemoteException( "No observation for "
-            + obean.getId() );
-        m_logger.throwing( getClass().getName(), "readData", e );
-        throw e;
+        final IRepositoryItem item = itemFromBean( obean );
+
+        obs = (IObservation)item.getAdapter( IObservation.class );
+      }
+      catch( final Exception e )
+      {
+        m_logger.info( "No observation for " + obean.getId() + ". Reason: "
+            + e.getLocalizedMessage() );
+      }
+      finally
+      {
+        if( obs == null )
+        {
+          m_logger
+              .info( "Trying to create default observation based on request..." );
+          obs = createDefault( href );
+        }
       }
 
-      DateRangeArgument args = null;
-      if( drb != null )
-        args = new DateRangeArgument( drb.getFrom(), drb.getTo() );
+      /*
+       * The query part of the URL (after the ?...) contains some additional
+       * specification: from-to, filter, etc.
+       */
+      final DateRangeArgument dra = ZmlURL.checkDateRange( href );
 
       m_logger.info( "Reading data for observation: " + obs.getName()
-          + " Arguments: " + args );
+          + " Date-Range: " + dra );
 
       updateMetadata( obs, obean.getId() );
 
-      final ObservationType obsType = ZmlFactory.createXML( obs, args,
+      // tricky: maybe make a filtered observation out of this one
+      obs = FilterFactory.createFilterFrom( href, obs );
+
+      final ObservationType obsType = ZmlFactory.createXML( obs, dra,
           m_timezone );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml",
@@ -289,14 +310,14 @@ public class KalypsoObservationService implements IObservationService
       // temp files on shutdown in the case the client forgets it.
       f.deleteOnExit();
 
-      // will be closed in finally block
       fos = new FileOutputStream( f );
       ZmlFactory.getMarshaller().marshal( obsType, fos );
+      fos.close();
 
       final DataHandler data = new DataHandler( new FileDataSource( f ) );
       return data;
     }
-    catch( Exception e ) // generic exception used for simplicity
+    catch( final Exception e ) // generic exception used for simplicity
     {
       m_logger.throwing( getClass().getName(), "readData", e );
       throw new RemoteException( "", e );
@@ -314,6 +335,20 @@ public class KalypsoObservationService implements IObservationService
           throw new RemoteException( "Error closing the output stream", e );
         }
     }
+  }
+
+  /**
+   * Create a default observation based on the request definition found in the
+   * href.
+   * 
+   * @throws SensorException if no request definition is provided
+   */
+  private IObservation createDefault( final String href )
+      throws SensorException
+  {
+    final RequestType xmlReq = RequestFactory.parseRequest( href );
+
+    return RequestFactory.createDefaultObservation( xmlReq );
   }
 
   /**
@@ -390,9 +425,10 @@ public class KalypsoObservationService implements IObservationService
       return (IRepositoryItem)m_mapBean2Item.get( obean.getId() );
 
     // try with repository id
-    if( m_mapId2Rep.containsKey( obean.getRepId() ) )
+    final String repId = RepositoryUtils.getRepositoryId( obean.getId() );
+    if( m_mapId2Rep.containsKey( repId ) )
     {
-      final IRepository rep = (IRepository)m_mapId2Rep.get( obean.getRepId() );
+      final IRepository rep = (IRepository)m_mapId2Rep.get( repId );
 
       final IRepositoryItem item = rep.findItem( obean.getId() );
 
@@ -415,14 +451,14 @@ public class KalypsoObservationService implements IObservationService
     }
 
     final RemoteException e = new RemoteException(
-        "Unknonwn Repository or item. Repository: " + obean.getRepId()
-            + ", Item: " + obean.getId() );
+        "Unknonwn Repository or item. Repository: " + repId + ", Item: "
+            + obean.getId() );
     m_logger.throwing( getClass().getName(), "itemFromBean", e );
     throw e;
   }
 
   /**
-   * @see org.kalypso.repository.service.IRepositoryService#hasChildren(org.kalypso.repository.beans.ItemBean)
+   * @see org.kalypso.repository.service.IRepositoryService#hasChildren(org.kalypso.repository.service.ItemBean)
    */
   public boolean hasChildren( final ItemBean parent ) throws RemoteException
   {
@@ -444,7 +480,7 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.repository.service.IRepositoryService#getChildren(org.kalypso.repository.beans.ItemBean)
+   * @see org.kalypso.repository.service.IRepositoryService#getChildren(org.kalypso.repository.service.ItemBean)
    */
   public ItemBean[] getChildren( final ItemBean pbean ) throws RemoteException
   {
@@ -460,7 +496,7 @@ public class KalypsoObservationService implements IObservationService
           final IRepository rep = (IRepository)m_repositories.get( i );
 
           m_repositoryBeans[i] = new ItemBean( rep.getIdentifier(), rep
-              .getName(), rep.getIdentifier() );
+              .getName() );
           m_mapBean2Item.put( m_repositoryBeans[i].getId(), rep );
         }
       }
@@ -486,7 +522,7 @@ public class KalypsoObservationService implements IObservationService
       for( int i = 0; i < beans.length; i++ )
       {
         beans[i] = new ItemBean( children[i].getIdentifier(), children[i]
-            .getName(), item.getRepository().getIdentifier() );
+            .getName() );
 
         // store it for future referencing
         m_mapBean2Item.put( beans[i].getId(), children[i] );
@@ -505,7 +541,7 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#adaptItem(org.kalypso.repository.beans.ItemBean)
+   * @see org.kalypso.services.sensor.IObservationService#adaptItem(org.kalypso.repository.service.ItemBean)
    */
   public ObservationBean adaptItem( final ItemBean ib ) throws RemoteException
   {
@@ -529,8 +565,7 @@ public class KalypsoObservationService implements IObservationService
     {
       final MetadataList md = updateMetadata( obs, ib.getId() );
 
-      return new ObservationBean( ib.getId(), obs.getName(), item
-          .getRepository().getIdentifier(), md );
+      return new ObservationBean( ib.getId(), obs.getName(), md );
     }
 
     return null;
@@ -539,11 +574,8 @@ public class KalypsoObservationService implements IObservationService
   private MetadataList updateMetadata( final IObservation obs, final String id )
   {
     // always update the observation metadata with the ocs-id
-    // this is is used for instance in the export wizard
-    // to automatically know where the obs came from
     final MetadataList md = obs.getMetadataList();
-    md.setProperty( ObservationServiceConstants.MD_OCS_ID,
-        ObservationServiceUtils.addServerSideId( id ) );
+    md.setProperty( ZmlURLConstants.MD_OCS_ID, ZmlURL.addServerSideId( id ) );
     return md;
   }
 
@@ -601,8 +633,7 @@ public class KalypsoObservationService implements IObservationService
       if( item == null )
         continue;
 
-      ItemBean bean = new ItemBean( item.getIdentifier(), item.getName(), item
-          .getRepository().getIdentifier() );
+      final ItemBean bean = new ItemBean( item.getIdentifier(), item.getName() );
 
       // store it for future referencing
       m_mapBean2Item.put( bean.getId(), item );

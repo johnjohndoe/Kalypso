@@ -1,5 +1,5 @@
 /*
- * --------------- Kalypso-Header -------------------------------------------
+ * --------------- Kalypso-Header --------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
@@ -29,36 +29,42 @@
  * 
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
  * 
- * ---------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------
  */
-package org.kalypso.services.ocs;
-
-import org.kalypso.ogc.sensor.ocs.ObservationServiceUtils;
-import org.kalypso.services.proxy.ObservationBean;
+package org.kalypso.repository;
 
 /**
- * Utility class with static methods.
+ * RepositoryUtils provides some utility methods in a static way
  * 
- * created by
- * 
- * @author schlienger (18.05.2005)
+ * @author schlienger (24.05.2005)
  */
-public final class ObservationBeanFactory
+public class RepositoryUtils
 {
-  private ObservationBeanFactory()
+  private RepositoryUtils()
   {
-    // not intended to be instanciated
+    // no instanciation
   }
 
   /**
-   * Creates a simple observation bean based on an href (that should denote a
-   * server-side observation).
+   * Return the repository-id:// part of the itemId. If itemId is null, this
+   * method returns null.
    * 
-   * @return a new ObservationBean with only the id specified
+   * @return the id of the repository the given item belongs to. This is pretty
+   *         much straightforward since the convention (as defined in the
+   *         IRepositoryItem interface) specifies that an Item's identifier
+   *         should be build using the repository id + item specific id (follows
+   *         URL specification): repository-id://item-id-part
    */
-  public static ObservationBean createBean( final String href )
+  public static String getRepositoryId( final String itemId )
   {
-    final String id = ObservationServiceUtils.removeServerSideId( href );
-    return new ObservationBean( id, "", "", null );
+    if( itemId == null )
+      return null;
+
+    final int ix = itemId.indexOf( "://" );
+    if( ix == -1 )
+      throw new IllegalArgumentException(
+          "Identifier does not follow the URL-rule: " + itemId );
+
+    return itemId.substring( 0, ix + 3 );
   }
 }

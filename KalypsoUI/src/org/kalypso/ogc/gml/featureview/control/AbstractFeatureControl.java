@@ -46,6 +46,7 @@ import java.util.Iterator;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
@@ -60,19 +61,22 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   private final FeatureTypeProperty m_ftp;
   
   private Collection m_changelisteners = new ArrayList();
-  
-  public AbstractFeatureControl(  )
+
+  private GMLWorkspace m_workspace;
+
+//  public AbstractFeatureControl(  )
+//  {
+//    this( null, null, null );
+//  }
+
+  public AbstractFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
   {
-    this( null, null );
+    this( workspace, null, ftp );
   }
 
-  public AbstractFeatureControl( final FeatureTypeProperty ftp )
+  public AbstractFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
-    this( null, ftp );
-  }
-
-  public AbstractFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
-  {
+    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }
@@ -85,6 +89,12 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.clear();
   }
 
+  
+  public GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
@@ -93,8 +103,9 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     return m_feature;
   }
   
-  public void setFeature( final Feature feature )
+  public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
+    m_workspace = workspace;
     m_feature = feature;
   }
   

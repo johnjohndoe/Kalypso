@@ -12,6 +12,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureControl;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -21,9 +22,9 @@ public class SubFeatureControl extends AbstractFeatureControl
   private IFeatureControl m_fc;
   private final FeatureviewType[] m_views;
 
-  public SubFeatureControl( final FeatureTypeProperty ftp, final FeatureviewType[] views )
+  public SubFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final FeatureviewType[] views )
   {
-    super( ftp );
+    super( workspace, ftp );
     m_views = views;
   }
 
@@ -34,11 +35,12 @@ public class SubFeatureControl extends AbstractFeatureControl
   public Control createControl( final Composite parent, int style )
   { 
     final Feature feature = getFeature();
+    final GMLWorkspace workspace = getWorkspace();
     final Object property = feature.getProperty( getFeatureTypeProperty().getName() );
     if( property instanceof Feature )
-      m_fc = new FeatureComposite( (Feature)property, m_views );
+      m_fc = new FeatureComposite( workspace, (Feature)property, m_views );
     else
-      m_fc = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
+      m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty() );
 //    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
 //        | SWT.V_SCROLL );
 

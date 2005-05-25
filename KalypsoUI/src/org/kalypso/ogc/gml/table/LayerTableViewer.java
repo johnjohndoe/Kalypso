@@ -478,7 +478,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final FeatureTypeProperty ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp, format );
+        m_modifier[i] = m_featureControlFactory.createFeatureModifier( getTheme().getWorkspace(), ftp, format );
         editors[i] = m_modifier[i].createCellEditor( table );
         editors[i].setValidator( m_modifier[i] );
       }

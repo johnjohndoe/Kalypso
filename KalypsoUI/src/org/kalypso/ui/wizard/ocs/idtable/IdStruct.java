@@ -46,7 +46,7 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ocs.ObservationServiceConstants;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -98,7 +98,7 @@ public class IdStruct
         final IObservation obs = ZmlFactory.parseXML( url, url.toString() );
 
         final String id = obs.getMetadataList().getProperty(
-            ObservationServiceConstants.MD_OCS_ID, "<kein KZ>" );
+            ZmlURLConstants.MD_OCS_ID, "<kein KZ>" );
 
         return new IdStruct( file, id );
       }

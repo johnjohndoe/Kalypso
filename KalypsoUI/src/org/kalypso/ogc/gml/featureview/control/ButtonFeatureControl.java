@@ -65,6 +65,7 @@ import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
@@ -82,20 +83,19 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   private IFeatureDialog m_dialog;
   private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final FeatureTypeProperty ftp )
-  {
-    this( null, ftp );
-  }
+//  public ButtonFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
+//  {
+//    this( workspace, null, ftp );
+//  }
 
-
-  public ButtonFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
+  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
-    super( feature, ftp );
+    super( workspace, feature, ftp );
     
-    m_dialog = chooseDialog( feature, ftp );
+    m_dialog = chooseDialog( workspace, feature, ftp );
   }
 
-  public static IFeatureDialog chooseDialog( final Feature feature, final FeatureTypeProperty ftp )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
     final String typename = ftp.getType();
     // TODO make extensionpoint for this
@@ -121,11 +121,12 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
       // TODO: TypeHandler should decide, what todo
       if( handler instanceof ObservationLinkHandler )
-        return new TimeserieLinkFeatureDialog( feature, ftp );
+        return new TimeserieLinkFeatureDialog( workspace, feature, ftp );
     }
     
+    
     if( "FeatureAssociationType".equals(typename) )
-      return new FeatureDialog( feature, ftp );
+      return new FeatureDialog( workspace, feature, ftp );
     
     if(RectifiedGridDomain.class.getName().equals(typename)){
       return new RectifiedGridDomainFeatureDialog(feature,ftp);

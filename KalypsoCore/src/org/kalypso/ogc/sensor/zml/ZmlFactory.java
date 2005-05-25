@@ -240,14 +240,11 @@ public class ZmlFactory
   }
 
   /**
-   * Parses the XML and creates an IObservation object.
+   * Parse the XML and create an IObservation instance.
    * 
-   * @param source
-   * @param identifier
-   * @param context
-   * @return IObservation
-   * 
-   * @throws SensorException
+   * @param source contains the zml
+   * @param identifier [optional] the identifier of the resulting observation
+   * @param context [optional] the context of the source in order to resolve relative url
    */
   public static IObservation parseXML( final InputSource source,
       final String identifier, final URL context ) throws SensorException
@@ -260,7 +257,7 @@ public class ZmlFactory
 
       obs = (Observation) u.unmarshal( source );
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       throw new SensorException( e );
     }
@@ -320,7 +317,7 @@ public class ZmlFactory
 
         values = createValues( context, tmpAxis, parser, data );
       }
-      catch( Exception e ) // generic exception caught for simplicity
+      catch( final Exception e ) // generic exception caught for simplicity
       {
         throw new SensorException( e );
       }
@@ -338,16 +335,17 @@ public class ZmlFactory
       target = new JAXBXLink( obs.getTarget() );
 
     final String href = context != null ? context.toExternalForm() : "";
+    
     final SimpleObservation zmlObs = new SimpleObservation( href, identifier,
         obs.getName(), obs.isEditable(), target, metadata, model.getAxisList(),
         model );
 
     // tricky: maybe make a filtered observation out of this one
-    final IObservation filteredObs = FilterFactory.createFilterFrom( context,
+    final IObservation filteredObs = FilterFactory.createFilterFrom( href,
         zmlObs );
 
     // tricky: check if a proxy has been specified in the url
-    final IObservation proxyObs = createProxyFrom( context, filteredObs );
+    final IObservation proxyObs = createProxyFrom( href, filteredObs );
 
     // tricky: check if the observation is auto-proxyable using its own metadata
     // (for instance WQ)
@@ -358,25 +356,21 @@ public class ZmlFactory
   }
 
   /**
-   * Helper: mey create a proxy observation depending on the information coded
+   * Helper: may create a proxy observation depending on the information coded
    * in the url.
    * 
-   * @param context
-   * @param baseObs
    * @return proxy or original observation
    */
-  private static IObservation createProxyFrom( final URL context,
+  private static IObservation createProxyFrom( final String href,
       final IObservation baseObs )
   {
-    if( context == null )
+    if( href == null || href.length() == 0 )
       return baseObs;
-
-    final String str = context.toExternalForm();
 
     IVariableArguments args = null;
 
     // check if a DateRange proxy can be created
-    args = ZmlURL.checkDateRange( str );
+    args = ZmlURL.checkDateRange( href );
     if( args != null )
       return new ArgsObservationProxy( args, baseObs );
 
