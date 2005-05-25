@@ -51,11 +51,11 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 /**
  * @author belger
  */
-public class CalcJobFactory
+public class PropertyCalcJobFactory implements ICalcJobFactory
 {
   private static final Properties m_jobTypes = new Properties();
 
-  public CalcJobFactory( final File typeFile )
+  public PropertyCalcJobFactory( final File typeFile )
   {
     try
     {
@@ -65,6 +65,11 @@ public class CalcJobFactory
     {
       e.printStackTrace();
     }
+  }
+
+  public PropertyCalcJobFactory( final Properties typeProperties )
+  {
+    m_jobTypes.putAll( typeProperties );
   }
 
   public String[] getSupportedTypes()

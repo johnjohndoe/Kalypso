@@ -40,20 +40,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
@@ -61,14 +56,8 @@ import javax.activation.URLDataSource;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.net.AbstractUrlCatalog;
-import org.kalypso.java.net.ClassUrlCatalog;
 import org.kalypso.java.net.IUrlCatalog;
 import org.kalypso.model.xml.ObjectFactory;
-import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
@@ -76,65 +65,44 @@ import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
-import org.kalypso.services.common.ServiceConfig;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
+ * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation.
+ * All jobs go in one fifo-queue. Support parallel processing of jobs. 
+ * 
  * @author Belger
  */
-public class CalcJobService_impl_Queued implements ICalculationService
+public class QueuedCalcJobService implements ICalculationService
 {
-  protected static final Logger LOGGER = Logger.getLogger( CalcJobService_impl_Queued.class
+  private static final Logger LOGGER = Logger.getLogger( QueuedCalcJobService.class
       .getName() );
 
   /** Vector of {@link CalcJobThread}s */
   private final Vector m_threads = new Vector();
 
-  private final CalcJobFactory m_calcJobFactory;
+  private final ICalcJobFactory m_calcJobFactory;
 
   private Timer m_timer = null;
 
   /** maximale Anzahl von parallel laufenden Job */
-  private int m_maxThreads = 1;
+  private final int m_maxThreads;
 
   /** So oft (in ms) wird die queue nach wartenden Jobs durchsucht */
-  private long m_schedulingPeriod = 2000;
+  private final long m_schedulingPeriod;
 
   private final Unmarshaller m_unmarshaller;
 
-  private Map m_modelspecMap = new HashMap();
+  private final Map m_modelspecMap = new HashMap();
 
-  private IUrlCatalog m_catalog;
+  private final IUrlCatalog m_catalog;
 
-  public CalcJobService_impl_Queued() throws RemoteException
+  public QueuedCalcJobService( final ICalcJobFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod ) throws RemoteException
   {
-    // Logger initialisieren
-    try
-    {
-      LOGGER.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/"
-          + ClassUtilities.getOnlyClassName( ICalculationService.class ) + "%g.log", 10000000, 10,
-          true ) );
-    }
-    catch( final IOException e ) // generic Exception caught for simplicity
-    {
-      throw new RemoteException( "LOGGER des Rechdienst konnte nicht initialisiert werden", e );
-    }
-
-    LOGGER.info( "Rechendienst wird gestartet" );
-    LOGGER.info( "Lese Konfigurationsdateien" );
-
-    try
-    {
-      // TODO sollten dies nicht die einzelnen calservices selber tun?
-      TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
-      TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new DiagramTypeHandler() );
-    }
-    catch( final Exception e )
-    {
-      throw new RemoteException( "GML Typ-Handler konnten nicht registriert werden.", e );
-    }
-
+    m_calcJobFactory = factory;
+    m_catalog = catalog;
+    m_maxThreads = maxThreads;
+    m_schedulingPeriod = schedulingPeriod;
+    
     try
     {
       m_unmarshaller = new ObjectFactory().createUnmarshaller();
@@ -144,62 +112,6 @@ public class CalcJobService_impl_Queued implements ICalculationService
       throw new RemoteException(
           "Unmarshaller für Modellspezifikation konnte nicht erzeugt werden.", e );
     }
-
-    // die root aus dem Kalypso-Server-Properties lesen
-    final File confDir = ServiceConfig.getConfDir();
-    final File myConfDir = new File( confDir, ClassUtilities
-        .getOnlyClassName( ICalculationService.class ) );
-
-    // Konfiguration der Modelltypen
-    final File typeFile = new File( myConfDir, "modelltypen.properties" );
-    if( !typeFile.exists() )
-      throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
-    m_calcJobFactory = new CalcJobFactory( typeFile );
-
-    // Konfiguration dieser Service-Implementation
-    final Properties confProps = new Properties();
-    final File confFile = new File( myConfDir, "calculationService.properties" );
-    File classCatalogFile = null;
-    try
-    {
-      confProps.load( new FileInputStream( confFile ) );
-      m_maxThreads = Integer.parseInt( confProps.getProperty( "MAX_THREADS", "1" ) );
-      m_schedulingPeriod = Long.parseLong( confProps.getProperty( "SCHEDULING_PERIOD", "2000" ) );
-      final String classCatalogName = confProps.getProperty( "CLASS_CATALOG", null );
-      if( classCatalogName != null )
-        classCatalogFile = new File( myConfDir, classCatalogName );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-
-      LOGGER
-          .warning( "Could not load service configuration file.\nWill proceed with default values" );
-    }
-
-    {
-      if( classCatalogFile == null )
-        m_catalog = new AbstractUrlCatalog() {
-          protected void fillCatalog( Class myClass, Map catalog )
-          {
-            // nix, ist leer
-          }};
-          else
-      m_catalog = new ClassUrlCatalog( classCatalogFile );
-
-      // TODO: auch den catalog aus der schemaConf nehmen?
-      final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
-      cacheDir.mkdir();
-
-      GMLSchemaCatalog.init( m_catalog, cacheDir );
-    }
-    
-    LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + m_maxThreads
-        + "\nSCHEDULING_PERIOD = " + m_schedulingPeriod );
-    if( classCatalogFile == null )
-      LOGGER.warning( "Kein Klassen-URL-Katalog angegeben (CLASS_CATALOG). Rechendienst ist vermutlich nicht richtig initialisiert." );
-    else
-      LOGGER.info( "CLASS_CATALOG = " + classCatalogFile.getName() );
   }
 
   /**
@@ -276,8 +188,6 @@ public class CalcJobService_impl_Queued implements ICalculationService
   public void cancelJob( final String jobID ) throws CalcJobServiceException
   {
     findJobThread( jobID ).getJobBean().cancel();
-
-    LOGGER.info( "Job canceled: " + jobID );
   }
 
   /**
@@ -298,8 +208,6 @@ public class CalcJobService_impl_Queued implements ICalculationService
       if( m_threads.size() == 0 )
         stopScheduling();
     }
-
-    LOGGER.info( "Job disposed: " + jobID );
   }
 
   private CalcJobThread findJobThread( final String jobID ) throws CalcJobServiceException

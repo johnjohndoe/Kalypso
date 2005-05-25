@@ -51,6 +51,7 @@ import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -397,14 +398,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   public Map getCalculationServiceProxies()
       throws ServiceException
   {
-    final Map proxies = new HashMap();
+    final Map proxies = new LinkedHashMap();
     
+    // put lokal services first, so they will will be taken in preference
+    proxies.putAll( getLocalCalcServices() );
+
     final Map stubs = m_proxyFactory.getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities
         .getOnlyClassName( ICalculationService.class ));
     proxies.putAll( stubs );
 
-    // lokal service rules over remote
-    proxies.putAll( getLocalCalcServices() );
     return proxies;
   }
 
@@ -431,7 +433,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
           try
           {
             final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element.createExecutableExtension( "class" );
-            proxies.put( factory.toString(), factory.createService() );
+            proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory.createService() );
           }
           catch( final CoreException e )
           {

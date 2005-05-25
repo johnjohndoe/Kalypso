@@ -9,6 +9,7 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 - TODO: hier fehlt doch bestimmt ganz viel! :-(
 
+- die RechenPlugins können jetzt auch clientseitig (d.h. ohne server) benutzt werden
 - Implementierung vom LDAP-Zugriff (KalypsoSachsenAnhalt)
 - Kalypso-Login Dialog:
   * Neues Dialog, Scenario Auswahl, optimiertes Handling
