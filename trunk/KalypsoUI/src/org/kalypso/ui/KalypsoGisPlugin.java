@@ -392,20 +392,25 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
    * Convenience method that returns the calculation service proxies.
    * 
    * @return A map name (e.g. url) to {@link ICalculationService}
-   * 
-   * @throws ServiceException
    */
   public Map getCalculationServiceProxies()
-      throws ServiceException
   {
     final Map proxies = new LinkedHashMap();
     
     // put lokal services first, so they will will be taken in preference
     proxies.putAll( getLocalCalcServices() );
 
-    final Map stubs = m_proxyFactory.getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities
-        .getOnlyClassName( ICalculationService.class ));
-    proxies.putAll( stubs );
+    try
+    {
+      final Map stubs = m_proxyFactory.getAllProxiesAsMap( "Kalypso_CalculationService",
+          ClassUtilities.getOnlyClassName( ICalculationService.class ) );
+      proxies.putAll( stubs );
+    }
+    catch( final ServiceException e )
+    {
+      // server steht nicht zur Verfügung oder ist falsch konfiguriert
+      // exception wird gefangen, damit man immer noch lokal rechnen kann
+    }
 
     return proxies;
   }

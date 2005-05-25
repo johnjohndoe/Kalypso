@@ -32,6 +32,9 @@
       <library name="lib/swtcalendar.jar">
          <export name="*"/>
       </library>
+      <library name="lib/kalypsoCoreServices.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
