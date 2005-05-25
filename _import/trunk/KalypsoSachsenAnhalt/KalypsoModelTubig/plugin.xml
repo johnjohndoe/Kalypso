@@ -11,6 +11,8 @@
       <import plugin="org.kalypso.util"/>
       <import plugin="org.kalypso.deegree"/>
       <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.services.calculation.local"/>
+      <import plugin="org.kalypso.ui"/>
    </requires>
    <extension
          point="org.kalypso.core.nativeObsAdapter">
@@ -30,6 +32,13 @@
             label="TUBIG-Import (Abfluss)"
             class="org.kalypso.lhwsachsenanhalt.tubig.NativeObservationTubigAdapter"
             axisType="Q"/>
+   </extension>
+   <extension
+         point="org.kalypso.services.calculation.local.calcJob">
+      <calcJob
+            typeID="TubigV1.0"
+            catalogClass="org.kalypso.lhwsachsenanhalt.tubig.TubigUrlCatalog"
+            jobClass="org.kalypso.lhwsachsenanhalt.tubig.TubigCalcJob"/>
    </extension>
 
 </plugin>

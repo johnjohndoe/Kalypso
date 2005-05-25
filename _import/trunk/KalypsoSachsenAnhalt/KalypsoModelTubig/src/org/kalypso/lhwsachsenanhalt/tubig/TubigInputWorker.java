@@ -42,13 +42,13 @@ package org.kalypso.lhwsachsenanhalt.tubig;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
 import java.util.zip.ZipException;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
@@ -68,20 +68,16 @@ public class TubigInputWorker
   public static void copyAndUnzipRechenkern( File fleDir )
   {
     final URL urlRk;
-    final File fleRk;
+    InputStream zipStream = null;
 
     // rechenkern.zip aus den resourcen holen
     urlRk = TubigConverter.class.getResource( "resources/" + TubigConst.PATH_RECHENKERN_ZIP );
+
     try
     {
-      fleRk = new File( new URI( urlRk.toString() ) );
-
       // rechenkern.zip in fleDir entpacken
-      ZipUtilities.unzip( fleRk, fleDir );
-    }
-    catch( URISyntaxException e1 )
-    {
-      e1.printStackTrace();
+      zipStream = urlRk.openStream();
+      ZipUtilities.unzip( zipStream, fleDir );
     }
     catch( ZipException e )
     {
@@ -90,6 +86,10 @@ public class TubigInputWorker
     catch( IOException e )
     {
       e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zipStream );
     }
   }
 

@@ -36,6 +36,7 @@ package org.kalypso.java.net;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.Map;
@@ -52,17 +53,38 @@ public class ClassUrlCatalog implements IUrlCatalog
 {
   private IUrlCatalog m_catalog;
 
+  private static Properties loadProperties( final File propertyFile )
+  {
+    final Properties props = new Properties();
+    try
+    {
+      props.load( new FileInputStream( propertyFile ) );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    
+    return props;
+  }
+
   /**
    * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die
    * 'keys' werden ignoriert.
    */
   public ClassUrlCatalog( final File propertyFile )
   {
+    this( loadProperties( propertyFile ) );
+  }
+  
+  /**
+   * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die
+   * 'keys' werden ignoriert. Jede Klasse selbst muss ein IUrlCatalog sein.
+   */
+  public ClassUrlCatalog( final Properties props )
+  {
     try
     {
-      final Properties props = new Properties();
-      props.load( new FileInputStream( propertyFile ) );
-
       final String[] classNames = (String[])props.values().toArray( new String[0] );
       final IUrlCatalog[] catalogs = new IUrlCatalog[classNames.length];
       for( int i = 0; i < classNames.length; i++ )
