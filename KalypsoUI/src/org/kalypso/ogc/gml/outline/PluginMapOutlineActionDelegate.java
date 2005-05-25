@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.outline;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.util.list.IListManipulator;
 
 /**
@@ -55,14 +56,15 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
 
   private final IConfigurationElement m_configurationElement;
 
-  private PluginMapOutlineAction m_innerAction = null;
+  private final PluginMapOutlineAction m_innerAction;
 
-  public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image,
-      final String tooltipText, final GisMapOutlineViewer selectionProvider,
-      IConfigurationElement configurationElement, IListManipulator listManipulator )
+  public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image, final String tooltipText,
+      final GisMapOutlineViewer selectionProvider, IConfigurationElement configurationElement, IListManipulator listManipulator )
+      throws CoreException
   {
     super( text, image, tooltipText, selectionProvider, null );
     m_configurationElement = configurationElement;
+    m_innerAction = (PluginMapOutlineAction)m_configurationElement.createExecutableExtension( "class" );
   }
 
   /**
@@ -70,21 +72,15 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
    */
   public void run()
   {
-    if( m_innerAction == null )
-    {
-      //String clazz = m_configurationElement.getAttribute( "class" );
-      try
-      {
-        m_innerAction = (PluginMapOutlineAction)m_configurationElement
-            .createExecutableExtension( "class" );
-      }
-      catch( CoreException e )
-      {
-        e.printStackTrace();
-        return;
-      }
-    }
     m_innerAction.run( getOutlineviewer() );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.AbstractOutlineAction#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( SelectionChangedEvent event )
+  {
+    m_innerAction.selectionChanged( this, event.getSelection() );
   }
 
   /**
@@ -92,7 +88,7 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
    */
   protected void refresh()
   {
-  //
+    //
   }
 
 }

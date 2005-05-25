@@ -320,7 +320,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
    */
   protected FeatureList getFeatures()
   {
-    FeatureList result = FeatureFactory.createFeatureList();
+    FeatureList result = FeatureFactory.createFeatureList(null,null);
     Feature feature = m_templateviewer.getFeature();
     if( feature != null )
       result.add( feature );

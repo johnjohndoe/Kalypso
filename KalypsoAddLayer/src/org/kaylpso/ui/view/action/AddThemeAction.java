@@ -1,14 +1,14 @@
 package org.kaylpso.ui.view.action;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypso.ui.internal.dialogs.KalypsoImportWizard;
-//import org.kalypso.ui.action.wizard.ImportWmsSourceWizard;
 
+//import org.kalypso.ui.action.wizard.ImportWmsSourceWizard;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -61,20 +61,33 @@ public class AddThemeAction implements PluginMapOutlineAction
   public void run( GisMapOutlineViewer outlineviewer )
   {
     Shell shell = outlineviewer.getControl().getShell();
-    
-    KalypsoImportWizard wizard2 = new KalypsoImportWizard(outlineviewer);
-    
-    final WizardDialog dialog = new WizardDialog( shell, wizard2);
+
+    KalypsoImportWizard wizard2 = new KalypsoImportWizard( outlineviewer );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard2 );
     dialog.open();
-    
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   * @see org.kalypso.ogc.gml.outline.PluginMapOutlineAction#selectionChanged(org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( PluginMapOutlineActionDelegate delegate, ISelection selection )
   {
-    //TODO act on selection changes
+    // nothing
+
+    // some example stuff:
+    
+    //    if( selection instanceof IStructuredSelection && !selection.isEmpty() )
+    //    {
+    //      boolean enabled = ( ( (IStructuredSelection)selection ).getFirstElement()
+    // instanceof GisTemplateFeatureTheme );
+    //      delegate.setEnabled( enabled );
+    //    }
+    //    else
+    //      delegate.setEnabled( false );
+
+    //    delegate.setEnabled( !selection.isEmpty() );
   }
+
 }

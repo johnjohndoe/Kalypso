@@ -494,15 +494,33 @@
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
+       <objectContribution
+            objectClass="org.kalypsodeegree.model.feature.Feature"
+            adaptable="true"
+            id="org.kalypso.objectclass.feature">
+         <action
+               enablesFor="1"
+               label="Feature löschen"
+               tooltip="löscht ein feature"
+               class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate"
+               icon="icons/gistable/rem_row.gif"
+               style="push"
+               id="org.kalypso.objectclass.feature.action.remove">
+         </action>
+         <action
+               enablesFor="0"
+               label="Feature neu"
+               tooltip="erstellt neues feature"
+               class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
+               icon="icons/gistable/add_row.gif"
+               style="push"
+               id="org.kalypso.objectclass.feature.action.remove">
+         </action>
+      </objectContribution>
+ 
       <viewerContribution
             targetID="org.kalypso.ui.editors.tableeditor.contextMenu"
-            id="org.kalypso.ui.editors.tableeditor.popupMenu">
-         <menu
-               label="Menu"
-               path="org.kalypso.ui.editors.tableeditor.popMenu"
-               id="org.kalypso.ui.editors.tableeditor.popMenu.menu">
-         </menu>
-      </viewerContribution>
+            id="org.kalypso.ui.editors.tableeditor.popupMenu"/>
    </extension>
    <extension
          point="org.eclipse.ui.ide.resourceFilters">

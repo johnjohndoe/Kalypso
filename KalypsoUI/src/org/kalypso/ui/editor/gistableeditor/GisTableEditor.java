@@ -52,18 +52,21 @@ import javax.xml.bind.Marshaller;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.SubMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -89,8 +92,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart implements
-    ISelectionProvider
+public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider
 {
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
@@ -98,7 +100,7 @@ public class GisTableEditor extends AbstractEditorPart implements
 
   private LayerTableViewer m_layerTable = null;
 
-  public GisTableEditor( )
+  public GisTableEditor()
   {
     try
     {
@@ -117,7 +119,7 @@ public class GisTableEditor extends AbstractEditorPart implements
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     m_layerTable.dispose();
 
@@ -130,8 +132,7 @@ public class GisTableEditor extends AbstractEditorPart implements
    * @param monitor
    * @param input
    */
-  protected void doSaveInternal( final IProgressMonitor monitor,
-      final IFileEditorInput input )
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
     if( m_layerTable == null )
       return;
@@ -145,15 +146,13 @@ public class GisTableEditor extends AbstractEditorPart implements
       final IFile file = input.getFile();
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      final OutputStreamWriter osw = new OutputStreamWriter( bos, file
-          .getCharset() );
+      final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
       m_marshaller.marshal( tableTemplate, osw );
 
       // TODO close in finally block?
       bos.close();
 
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos
-          .toByteArray() );
+      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
       file.setContents( bis, false, true, monitor );
 
       // TODO close in finally block?
@@ -181,23 +180,48 @@ public class GisTableEditor extends AbstractEditorPart implements
     super.createPartControl( parent );
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    final IFeatureModifierFactory factory = plugin
-        .createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin
-        .getDefaultMapSelectionID(), false );
+    final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin.getDefaultMapSelectionID(), false );
 
-    final MenuManager menuMgr = createSpaltenMenu( "spalten" );
-    final Control viewerControl = m_layerTable.getControl();
-    final Menu menu = menuMgr.createContextMenu( viewerControl );
-    viewerControl.setMenu( menu );
+    MenuManager menuManager = new MenuManager();
+    menuManager.setRemoveAllWhenShown( true );
+    menuManager.addMenuListener( new IMenuListener()
+    {
+      public void menuAboutToShow( IMenuManager manager )
+      {
+        fillContextMenu( manager );
+        appendSpaltenActions(manager);
+      }
+    } );
+    //  Create menu.
+
+    
+    //    SubMenuManager subMenuManager = new SubMenuManager(menuManager);
+//    createSpaltenMenu( menuMsubMenuManager );
+
+    Menu menu = menuManager.createContextMenu( m_layerTable.getControl() );
+    m_layerTable.getControl().setMenu( menu );
+
+    // Register menu for extension.
+    //    final Control viewerControl = m_layerTable.getControl();
+    //    final Menu menu = menuMgr.createContextMenu( viewerControl );
+    getSite().registerContextMenu( menuManager, m_layerTable );
+    //    viewerControl.setMenu( menu );
 
     load();
   }
 
-  protected final void loadInternal( final IProgressMonitor monitor,
-      final IStorageEditorInput input ) throws Exception
+  void fillContextMenu( IMenuManager mgr )
   {
-    if( !(input instanceof IFileEditorInput) )
+    mgr.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+    mgr.add( new Separator() );
+    
+    //    mgr.add(selectAllAction);
+  }
+
+  protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
+  {
+    if( !( input instanceof IFileEditorInput ) )
       throw new IllegalArgumentException( "Kann nur Dateien laden" );
 
     if( m_layerTable == null )
@@ -205,16 +229,15 @@ public class GisTableEditor extends AbstractEditorPart implements
 
     monitor.beginTask( "Vorlage laden", 1000 );
 
-    final Gistableview tableTemplate = GisTemplateHelper
-        .loadGisTableview( ((IFileEditorInput) input).getFile() );
+    final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ( (IFileEditorInput)input ).getFile() );
 
-    final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
+    final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );
 
     final LayerTableViewer viewer = m_layerTable;
     getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
         viewer.applyTableTemplate( tableTemplate, context );
       }
@@ -223,7 +246,7 @@ public class GisTableEditor extends AbstractEditorPart implements
     monitor.worked( 1000 );
   }
 
-  public LayerTableViewer getLayerTable( )
+  public LayerTableViewer getLayerTable()
   {
     return m_layerTable;
   }
@@ -239,7 +262,7 @@ public class GisTableEditor extends AbstractEditorPart implements
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
     return m_layerTable.getSelection();
   }
@@ -267,28 +290,38 @@ public class GisTableEditor extends AbstractEditorPart implements
       return;
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
-//    final String lang = Locale.getDefault().getLanguage();
-    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(IKalypsoPreferences.LANGUAGE);
-    
+    //    final String lang = Locale.getDefault().getLanguage();
+    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
+
     for( int i = 0; i < ftps.length; i++ )
     {
-      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(),
-          ftps[i].getAnnotation( lang ) ) );
+      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), ftps[i].getAnnotation( lang ) ) );
     }
   }
 
-  public MenuManager createSpaltenMenu( final String id )
-  {
-    final MenuManager menuMgr = new MenuManager( "Spalten", id );
-    menuMgr.setRemoveAllWhenShown( true );
-    menuMgr.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-        appendSpaltenActions( manager );
-      }
-    } );
-
-    return menuMgr;
-  }
+//  public void createSpaltenMenu( IMenuManager menuManager )
+//  {
+//    //    menuManager.setRemoveAllWhenShown( true );
+//    menuManager.addMenuListener( new IMenuListener()
+//    {
+//      public void menuAboutToShow( final IMenuManager manager )
+//      {
+//        manager.removeAll();
+//        appendSpaltenActions( manager );
+//      }
+//    } );
+//    
+//    
+//    //    final MenuManager menuMgr = new MenuManager( "Spalten", id );
+//    //    menuMgr.setRemoveAllWhenShown( true );
+//    //    menuMgr.addMenuListener( new IMenuListener()
+//    //    {
+//    //      public void menuAboutToShow( final IMenuManager manager )
+//    //      {
+//    //        appendSpaltenActions( manager );
+//    //      }
+//    //    } );
+//    //
+//    //    return menuMgr;
+//  }
 }

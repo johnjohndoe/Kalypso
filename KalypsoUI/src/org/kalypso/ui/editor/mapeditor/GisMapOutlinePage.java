@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -97,8 +98,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  * 
  * @author gernot
  */
-public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener,
-    IMapModellView, IListManipulator, ISelectionChangedListener
+public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener, IMapModellView, IListManipulator, ISelectionChangedListener
 {
   protected MoveThemeDownAction m_moveOneDownAction = null;
 
@@ -140,28 +140,21 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
     m_modellView.addDoubleClickListener( this );
 
-    m_moveOneDownAction = new MoveThemeDownAction( "Thema nach unten verschieben",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_DOWN, "Thema eins nach unten verschieben",
-        m_modellView, this );
+    m_moveOneDownAction = new MoveThemeDownAction( "Thema nach unten verschieben", ImageProvider.IMAGE_MAPVIEW_OUTLINE_DOWN,
+        "Thema eins nach unten verschieben", m_modellView, this );
 
-    m_moveOneUpAction = new MoveThemeUpAction( "Thema nach oben verschieben",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP, "Thema eins nach oben verschieben", m_modellView,
-        this );
+    m_moveOneUpAction = new MoveThemeUpAction( "Thema nach oben verschieben", ImageProvider.IMAGE_MAPVIEW_OUTLINE_UP,
+        "Thema eins nach oben verschieben", m_modellView, this );
 
-    m_removeAction = new RemoveThemeAction( "Thema löschen",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema löschen", m_modellView, this );
+    m_removeAction = new RemoveThemeAction( "Thema löschen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Thema löschen", m_modellView, this );
 
-    m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern",
-        ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD, "Style ändern", m_modellView );
+    m_openStyleDialogAction = new OpenStyleDialogAction( "Style verändern", ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD, "Style ändern", m_modellView );
 
-    m_removeRuleAction = new RemoveRuleAction( "Regel löschen",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Regel löschen", m_modellView, this );
+    m_removeRuleAction = new RemoveRuleAction( "Regel löschen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Regel löschen", m_modellView, this );
 
-    m_saveStyleAction = new SaveStyleAction( "Style speichern",
-        ImageProvider.IMAGE_STYLEEDITOR_SAVE, "Style speichern", m_modellView );
+    m_saveStyleAction = new SaveStyleAction( "Style speichern", ImageProvider.IMAGE_STYLEEDITOR_SAVE, "Style speichern", m_modellView );
 
-    m_activateThemeAction = new ActivateThemeAction( "Thema aktivieren",
-        ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema aktivieren", m_modellView );
+    m_activateThemeAction = new ActivateThemeAction( "Thema aktivieren", ImageProvider.IMAGE_MAPVIEW_OUTLINE_ADD, "Thema aktivieren", m_modellView );
 
     createControlsFromPlugins();
 
@@ -173,8 +166,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     //get platform registry (all registered plugins at start up)
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-    IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui",
-        "mapviewaction" );
+    IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" );
     //check if extention point is registered on start up
     if( extensionPoint == null )
       return;
@@ -192,12 +184,22 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       //the icon is not available from the kalypso ui icon resources
       //get it from the running class and create it after the class has been
       // initiated.
-      ImageDescriptor icon = ImageProvider.id( resource );//try to get it from kalypso ui icon resources
+      ImageDescriptor icon = ImageProvider.id( resource );//try to get it from
+      // kalypso ui icon
+      // resources
       String tooltip = configurationElement.getAttribute( "tooltip" );
       //create action delegate
-      PluginMapOutlineActionDelegate actionDelegate = new PluginMapOutlineActionDelegate( title,
-          icon , tooltip, m_modellView, configurationElement, this );
-      m_actionDelegates.add( actionDelegate );
+      PluginMapOutlineActionDelegate actionDelegate;
+      try
+      {
+        actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, m_modellView, configurationElement, this );
+        m_actionDelegates.add( actionDelegate );
+      }
+      catch( CoreException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
   }
 
@@ -293,8 +295,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
     IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
-    StyleEditorViewPart part = (StyleEditorViewPart)window.getActivePage().findView(
-        "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+    StyleEditorViewPart part = (StyleEditorViewPart)window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 
     if( part != null )
       part.setSelectionChangedProvider( this );
@@ -367,10 +368,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementDown( final Object element )
   {
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(),
-        (IKalypsoTheme)element );
-    m_commandTarget
-        .postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
+    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( getMapModell(), (IKalypsoTheme)element );
+    m_commandTarget.postCommand( moveThemeUpCommand, new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
@@ -378,9 +377,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void moveElementUp( final Object element )
   {
-    m_commandTarget.postCommand(
-        new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme)element ), new SelectThemeRunner(
-            (IKalypsoTheme)element ) );
+    m_commandTarget.postCommand( new MoveThemeDownCommand( getMapModell(), (IKalypsoTheme)element ), new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
@@ -388,8 +385,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void removeElement( final Object element )
   {
-    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme)element ),
-        new SelectThemeRunner( (IKalypsoTheme)element ) );
+    m_commandTarget.postCommand( new RemoveThemeCommand( getMapModell(), (IKalypsoTheme)element ), new SelectThemeRunner( (IKalypsoTheme)element ) );
   }
 
   /**
