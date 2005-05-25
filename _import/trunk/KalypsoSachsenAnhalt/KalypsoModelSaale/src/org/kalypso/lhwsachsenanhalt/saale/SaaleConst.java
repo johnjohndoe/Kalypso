@@ -1,4 +1,4 @@
-/**----------------    FILE HEADER KALYPSO ------------------------------------------
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
 *
 *  This file is part of kalypso.
 *  Copyright (C) 2004 by:
@@ -33,32 +33,27 @@
 *  Contact:
 * 
 *  E-Mail:
-*  g.belger@bjoernsen.de
-*  m.schlienger@bjoernsen.de
+*  belger@bjoernsen.de
+*  schlienger@bjoernsen.de
 *  v.doemming@tuhh.de
 *   
 *  ---------------------------------------------------------------------------*/
 package org.kalypso.lhwsachsenanhalt.saale;
 
-import java.util.Map;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
-
-/**
- * @author belger
- */
-public final class SaaleUrlCatalog extends AbstractUrlCatalog
+  /**
+   * allgemeine Konstanten für das Saale-Plugin
+   * 
+   * @author belger
+   */
+public class SaaleConst
 {
-  protected final void fillCatalog( final Class myClass, final Map catalog )
+  public static final String ERGEBNISSE = "Ergebnisse";
+
+  public static final String CALCJOB_SPEC = "bodecalcjob_spec.xml";
+
+  private SaaleConst()
   {
-    catalog.put( "org.kalypso.saale.modell", myClass.getResource( "schemata/saalemodell.xsd" ) );
-    catalog.put( "org.kalypso.saale.pegel", myClass.getResource( "schemata/pegel.xsd" ) );
-    catalog.put( "org.kalypso.saale.wlm", myClass.getResource( "schemata/wlm.xsd" ) );
-//    catalog.put( "org.kalypso.bode.ombrometer", myClass.getResource( "schemata/ombrometer.xsd" ) );
-    catalog.put( "org.kalypso.saale.speicher", myClass.getResource( "schemata/speicher.xsd" ) );
-    catalog.put( "org.kalypso.saale.temp", myClass.getResource( "schemata/temp.xsd" ) );
-    catalog.put( "org.kalypso.saale.common", myClass.getResource( "schemata/common.xsd" ) );
-    catalog.put( "org.kalypso.saale.control", myClass.getResource( "schemata/control.xsd" ) );
-    catalog.put( "org.kalypso.saale.steuerung", myClass.getResource( "schemata/steuerung.xsd" ) );
+  // wird nicht instantiiert
   }
 }
