@@ -38,40 +38,17 @@ schlienger@bjoernsen.de
 v.doemming@tuhh.de
 
 ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui;
+package org.kalypso.services.calculation;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.osgi.service.url.AbstractURLStreamHandlerService;
+import org.kalypso.services.proxy.ICalculationService;
 
 /**
+ * Eine Factory, um Calculation-Services (den Stub!) zu erzeugen.
+ * Wird vom Extension Point benutzt.
+ * 
  * @author belger
  */
-public class CalculationSchemaStreamHandler extends AbstractURLStreamHandlerService
+public interface ICalculationServiceProxyFactory
 {
-  public final static String PROTOCOL = "kalypso-calculation-schema";
-  
-  /**
-   * @see java.net.URLStreamHandler#openConnection(java.net.URL)
-   */
-  public URLConnection openConnection( final URL u ) throws IOException
-  {
-    if( !PROTOCOL.equals( u.getProtocol() ) )
-        throw new IOException( "Protocol not supported by this handler: " + u.getProtocol() );
-    
-    return new CalculationSchemaURLConnection( u );
-  }
-  
-  /**
-   * Overwritten for performance reasons. The super-method does hostname-lookup,
-   * which results in a huge perfomance loss, becaue my 'hosts' are almost always not available.
-   * 
-   * @see org.osgi.service.url.AbstractURLStreamHandlerService#equals(java.net.URL, java.net.URL)
-   */
-  public boolean equals( final URL u1, final URL u2 )
-  {
-    return ( "" + u1 ).equals( "" + u2 );
-  }
+  public ICalculationService createService();
 }

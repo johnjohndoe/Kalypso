@@ -82,6 +82,12 @@ public class CopyObservationTask extends Task
   /** Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird. */
   private String m_targetobservation;
 
+  /** Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren */
+  private long m_forecastFrom;
+  
+  /** Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren */
+  private long m_forecastTo;
+  
   /** Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be written to 'targetobservation' */
   private List m_sources = new LinkedList( );
 
@@ -95,25 +101,15 @@ public class CopyObservationTask extends Task
       final UrlResolver urlResolver = new UrlResolver();
       final URL gmlURL = urlResolver.resolveURL( m_context, getGml() );
       
-      final StringWriter detailWriter = new StringWriter( );
-      final PrintWriter detailPW = new PrintWriter( new BufferedWriter( detailWriter ) );
-      final StringWriter summaryWriter = new StringWriter( );
-      final PrintWriter summaryPW = new PrintWriter( new BufferedWriter( summaryWriter ) );
+      final StringWriter logwriter = new StringWriter( );
+      final PrintWriter logPW = new PrintWriter( new BufferedWriter( logwriter ) );
 
       CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(), getContext(), (CopyObservationHandler.Source[])m_sources
-          .toArray( new CopyObservationHandler.Source[m_sources.size()] ), summaryPW, detailPW );
+          .toArray( new CopyObservationHandler.Source[m_sources.size()] ), new Date( m_forecastFrom ), new Date( m_forecastTo ), logPW );
 
-      summaryPW.close();
-      detailPW.close();
+      logPW.close();
 
-      log( "Zusammenfassung", Project.MSG_INFO );
-      log( summaryWriter.toString() );
-      log( "\n" );
-
-      // TODO: append details to log-file
-      log( "Details" );
-      log( detailWriter.toString() );
-      log( "\n" );
+      log( logwriter.toString() );
     }
     catch( final Exception e )
     {
@@ -204,4 +200,20 @@ public class CopyObservationTask extends Task
     }
   }
 
+  public final long getForecastFrom()
+  {
+    return m_forecastFrom;
+  }
+  public final void setForecastFrom( long forecastFrom )
+  {
+    m_forecastFrom = forecastFrom;
+  }
+  public final long getForecastTo()
+  {
+    return m_forecastTo;
+  }
+  public final void setForecastTo( long forecastTo )
+  {
+    m_forecastTo = forecastTo;
+  }
 }

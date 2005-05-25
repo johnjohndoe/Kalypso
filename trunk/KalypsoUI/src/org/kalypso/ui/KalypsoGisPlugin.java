@@ -48,8 +48,10 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -61,8 +63,14 @@ import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -83,6 +91,7 @@ import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.services.ProxyFactory;
+import org.kalypso.services.calculation.ICalculationServiceProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
@@ -168,8 +177,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
    */
   private User m_user;
 
+  /** The local CaluclationServices, e.g. the ones createt from the extension point */
+  private Map m_localCalcServices;
+
   // TODO put definition in preferences dialog
   // TODO add crs attribute in boundingbox of *.gmt files
+
   /**
    * The constructor. Manages the configuration of the kalypso client.
    */
@@ -375,18 +388,63 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   }
 
   /**
-   * Convenience method that returns the calculation service proxy
+   * Convenience method that returns the calculation service proxies.
+   * 
+   * @return A map name (e.g. url) to {@link ICalculationService}
    * 
    * @throws ServiceException
    */
-  public ICalculationService getCalculationServiceProxy()
+  public Map getCalculationServiceProxies()
       throws ServiceException
   {
-    // TODO: maybe refator, so that m_proxyFactory is never null, if not, order
-    // of call to configure...() is importent
-    return (ICalculationService)m_proxyFactory.getProxy(
-        "Kalypso_CalculationService", ClassUtilities
-            .getOnlyClassName( ICalculationService.class ) );
+    final Map proxies = new HashMap();
+    
+    final Map stubs = m_proxyFactory.getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities
+        .getOnlyClassName( ICalculationService.class ));
+    proxies.putAll( stubs );
+
+    // lokal service rules over remote
+    proxies.putAll( getLocalCalcServices() );
+    return proxies;
+  }
+
+  private Map getLocalCalcServices()
+  {
+    if( m_localCalcServices == null )
+    {
+      final Map proxies = new HashMap();
+
+      // alle proxy-factories holen und erzeugen
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IExtensionPoint point = registry.getExtensionPoint( getId(), IKalypsoUIConstants.PL_CALCULATION_SERVICE );
+      if( point == null )
+        return null;
+      
+      final IExtension[] extensions = point.getExtensions();
+      for ( int i = 0; i < extensions.length; i++)
+      {
+        final IExtension extension = extensions[i];
+        final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+        for( int j = 0; j < configurationElements.length; j++ )
+        {
+          final IConfigurationElement element = configurationElements[j];
+          try
+          {
+            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element.createExecutableExtension( "class" );
+            proxies.put( factory.toString(), factory.createService() );
+          }
+          catch( final CoreException e )
+          {
+            // just log
+            e.printStackTrace();
+          }
+        }
+      }
+      
+      m_localCalcServices = proxies;
+    }
+    
+    return m_localCalcServices;
   }
 
   /**
@@ -399,7 +457,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
   public IObservationService getObservationServiceProxy()
       throws ServiceException
   {
-    return (IObservationService)m_proxyFactory.getProxy(
+    return (IObservationService)m_proxyFactory.getAnyProxy(
         "Kalypso_ObservationService", ClassUtilities
             .getOnlyClassName( IObservationService.class ) );
   }
@@ -413,7 +471,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
    */
   public IUserService getUserServiceProxy() throws ServiceException
   {
-    return (IUserService)m_proxyFactory.getProxy( "Kalypso_UserService",
+    return (IUserService)m_proxyFactory.getAnyProxy( "Kalypso_UserService",
         ClassUtilities.getOnlyClassName( IUserService.class ) );
   }
 

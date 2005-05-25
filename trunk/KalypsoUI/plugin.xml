@@ -49,9 +49,12 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.eclipse.core.variables"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
+   <extension-point id="calculationService" name="calculationService" schema="schema/org.kalypso.services.calculation.exsd"/>
 
    <extension
          point="org.eclipse.core.runtime.preferences">

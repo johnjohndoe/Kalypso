@@ -40,9 +40,19 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.runtime;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -60,6 +70,56 @@ public class LogStatusWrapper
   private final String m_summary;
   private final IFile m_logFile;
 
+  public LogStatusWrapper( final String logFile )
+  {
+    final IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation( new Path( logFile ) );
+    if( files.length != 0 && files[0].exists() )
+    {
+      m_logFile = files[0];
+
+      final StringWriter sw = new StringWriter();
+      final PrintWriter pw = new PrintWriter( sw );
+      
+      LineNumberReader reader = null;
+      try
+      {
+        reader = new LineNumberReader( new InputStreamReader( m_logFile.getContents(), m_logFile.getCharset() ) );
+        while( reader.ready() )
+        {
+          final String line = reader.readLine();
+          if( line == null )
+            break;
+          
+          if( line.startsWith( "***" ) && line.length() > 3 )
+            pw.println( line.substring( 3 ) );
+        }
+        
+        pw.close();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( reader );
+      }
+      
+      pw.close();
+      m_summary = sw.toString();
+    }
+    else
+    {
+      m_summary = "";
+      m_logFile = null;
+    }
+    
+  }
+  
   public LogStatusWrapper( final String summary, final IFile logFile )
   {
     m_summary = summary;
@@ -95,7 +155,8 @@ public class LogStatusWrapper
     // the summary string here. If the user wants to see more, he can have
     // a look at the log file using the 'details' button in the ErrorDialog
     final String truncatedSummary = StringUtils.left( m_summary, 512 );
-    final String msg = truncatedSummary + "...\n" + "Siehe Details oder Logdatei: " + m_logFile.getFullPath().toOSString();
+    // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
+    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + "Siehe Details oder Logdatei: " + m_logFile.getFullPath().toOSString();
     
     return new LogStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, msg, null, m_logFile );
   }

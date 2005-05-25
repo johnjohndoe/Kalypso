@@ -56,6 +56,7 @@ import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoProcolWriter;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -80,19 +81,24 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final IUrlResolver m_urlResolver;
 
-  private final PrintWriter m_summaryWriter;
+  private final PrintWriter m_logWriter;
 
-  private final PrintWriter m_detailWriter;
+  private static final String SUMM_INFO = "*** ";
+
+  private final Date m_forecastFrom;
+
+  private final Date m_forecastTo;
 
   public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
-      final String targetobservation, final Source[] sources, final PrintWriter summaryWriter, final PrintWriter detailWriter )
+      final String targetobservation, final Source[] sources, final Date forecastFrom, final Date forecastTo, final PrintWriter logWriter )
   {
     m_context = context;
     m_urlResolver = urlResolver;
     m_targetobservation = targetobservation;
     m_sources = sources;
-    m_summaryWriter = summaryWriter;
-    m_detailWriter = detailWriter;
+    m_forecastFrom = forecastFrom;
+    m_forecastTo = forecastTo;
+    m_logWriter = logWriter;
   }
 
   /**
@@ -107,13 +113,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       final TimeseriesLink targetlink = (TimeseriesLink)f.getProperty( m_targetobservation );
       if( targetlink == null )
       {
-        m_summaryWriter.println( "Keine Ziel-Zeitreihe gefunden für Feature mit ID: " + f.getId() );
+        m_logWriter.println( SUMM_INFO + "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
       
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_summaryWriter.println( "Keine Quell-Zeitreihe(n) gefunden für Feature mit ID: " + f.getId() );
+        m_logWriter.println( SUMM_INFO + "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
 
@@ -121,7 +127,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       // only do ForeCastFilter if we have mor than one obs
       if( sourceObses.length < 2 || sourceObses[1] == null )
-        obs = sourceObses[1];
+        obs = sourceObses[0];
       else
       {
         // NOTE for ForecastFilter: the order is important:
@@ -137,11 +143,10 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       // set forecast metadata, might be used in diagram for instance
       // to mark the forecast range
-      // TODO: extra argumente?
-      //      TimeserieUtils.setForecast( obs, from2, to2 );
+      TimeserieUtils.setForecast( obs, m_forecastFrom, m_forecastTo );
 
       // protocol the observations here and inform the user
-      KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ),  m_summaryWriter, m_detailWriter );
+      KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ),  m_logWriter, SUMM_INFO );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
@@ -165,8 +170,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
       
-      m_summaryWriter.println( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
-      m_summaryWriter.println( e.getLocalizedMessage() );
+      m_logWriter.println( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
+      m_logWriter.println( e.getLocalizedMessage() );
     }
 
     return true;

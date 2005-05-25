@@ -47,12 +47,15 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -60,6 +63,7 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
+import org.eclipse.core.internal.variables.ValueVariable;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -79,10 +83,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.variables.IStringVariableManager;
+import org.eclipse.core.variables.IValueVariable;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.core.runtime.LogStatusWrapper;
 import org.kalypso.java.net.IUrlResolver;
@@ -318,31 +326,27 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     monitor.beginTask( "Führe Operation durch: " + launchName, 4000 );
 
+    final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
+    IValueVariable[] userVariables = null;
+
     try
     {
-      final IFile file = getLaunchFile( launchName );
+      final Properties userProperties = createVariablesForAntLaunch( folder );
 
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+      final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration(
+          getLaunchFile( launchName ) ).getWorkingCopy();
 
-      final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( file )
-          .getWorkingCopy();
+      // add user-variables to LaunchConfiguration
       final Map attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES",
           new HashMap() );
-      // TODO: add simulation range
-      attribute.put( "calc.dir", folder.getLocation().toString() );
-      attribute.put( "project.dir", folder.getProject().getLocation().toString() );
-      try
-      {
-        attribute.put( "calc.url", ResourceUtilities.createURL( folder ).toString() );
-        attribute.put( "project.url", ResourceUtilities.createURL( folder.getProject() ).toString() );
-      }
-      catch( final MalformedURLException e )
-      {
-        // should never happen
-        e.printStackTrace();
-      }
+      attribute.putAll( userProperties );
       lc.setAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", attribute );
 
+      // add user-variables to variable-manager (so they can also be used within
+      // the launch-file
+      userVariables = createValueVariablesFromProperties( userProperties );
+      svm.addVariables( userVariables );
       monitor.worked( 1000 );
 
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor,
@@ -351,7 +355,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       for( int i = 0; i < 60 * minutes; i++ )
       {
         if( launch.isTerminated() )
+        {
+          final String[] arguments = ExternalToolsUtil.getArguments( lc );
+          for( int j = 0; j < arguments.length; j++ )
+          {
+            if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" )
+                && j != arguments.length - 1 )
+            {
+              final String logfile = arguments[j + 1];
+              return new LogStatusWrapper( logfile ).toStatus();
+            }
+          }
+
           return Status.OK_STATUS;
+        }
 
         wait( 1000 );
       }
@@ -367,8 +384,52 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     finally
     {
+      // remove userVariables, to not pollute the Singleton
+      if( userVariables != null )
+        svm.removeVariables( userVariables );
+
       monitor.done();
     }
+  }
+
+  private static final IValueVariable[] createValueVariablesFromProperties(
+      final Properties properties )
+  {
+    final IValueVariable[] variables = new IValueVariable[properties.size()];
+    int count = 0;
+    for( final Iterator iter = properties.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)iter.next();
+      final String name = (String)entry.getKey();
+      final String value = (String)entry.getValue();
+
+      final ValueVariable valueVariable = new ValueVariable( name, value, null );
+      valueVariable.setValue( value );
+      variables[count++] = valueVariable;
+    }
+
+    return variables;
+  }
+
+  private Properties createVariablesForAntLaunch( final IFolder folder )
+  {
+    final Properties attributes = new Properties();
+
+    attributes.setProperty( "calc.dir", folder.getLocation().toString() );
+    attributes.setProperty( "project.dir", folder.getProject().getLocation().toString() );
+    try
+    {
+      attributes.setProperty( "calc.url", ResourceUtilities.createURL( folder ).toString() );
+      attributes.setProperty( "project.url", ResourceUtilities.createURL( folder.getProject() )
+          .toString() );
+    }
+    catch( final MalformedURLException e )
+    {
+      // should never happen
+      e.printStackTrace();
+    }
+
+    return attributes;
   }
 
   private IFile getLaunchFile( final String launchName ) throws CoreException
@@ -421,6 +482,21 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           monitor );
 
     return launchAnt( "updateCalcCase", folder, monitor );
+  }
+
+  /**
+   * Führt die Tranformation nach der Berechnung durch
+   * 
+   * @throws CoreException
+   */
+  public IStatus afterCalcTransform( final IFolder folder, final IProgressMonitor monitor )
+      throws CoreException
+  {
+    if( getTransformerConfigFile().exists() )
+      return doCalcTransformation( "Rechenvariante aktualisieren",
+          ModelNature.TRANS_TYPE_AFTERCALC, folder, monitor );
+
+    return launchAnt( "afterCalc", folder, monitor );
   }
 
   /**
@@ -779,10 +855,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      final ICalculationService calcService = KalypsoGisPlugin.getDefault()
-          .getCalculationServiceProxy();
-
       final ModeldataType modelspec = getModelspec( modelSpec );
+
+      final String typeID = modelspec.getTypeID();
+      final ICalculationService calcService = findCalulationServiceForType( typeID );
 
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       final IStatus runStatus = cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor,
@@ -790,8 +866,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( runStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
         return runStatus;
 
-      final IStatus transStatus = doCalcTransformation( "Rechenvariante aktualisieren",
-          ModelNature.TRANS_TYPE_AFTERCALC, calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
+      final IStatus transStatus = afterCalcTransform( calcCaseFolder, new SubProgressMonitor(
+          monitor, 1000 ) );
 
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, new IStatus[]
       {
@@ -812,5 +888,37 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Rechendienst konnte nicht initialisiert werden", e ) );
     }
+  }
+
+  /**
+   * Finds th first Calculation-Service, which can calculate the given type.
+   * 
+   */
+  private ICalculationService findCalulationServiceForType( final String typeID )
+      throws ServiceException
+  {
+    final Map proxies = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
+    for( final Iterator iter = proxies.values().iterator(); iter.hasNext(); )
+    {
+      final ICalculationService proxy = (ICalculationService)iter.next();
+      try
+      {
+        final String[] jobTypes = proxy.getJobTypes();
+        for( int i = 0; i < jobTypes.length; i++ )
+        {
+          if( typeID.equals( jobTypes[i] ) )
+            return proxy;
+        }
+      }
+      catch( final RemoteException e )
+      {
+        // ignore, this service is invalid
+        e.printStackTrace();
+      }
+    }
+
+    throw new ServiceException(
+        "Keiner der konfigurierten Berechnungsdienste kann den gewünschten Modelltyp rechnen: "
+            + typeID );
   }
 }
