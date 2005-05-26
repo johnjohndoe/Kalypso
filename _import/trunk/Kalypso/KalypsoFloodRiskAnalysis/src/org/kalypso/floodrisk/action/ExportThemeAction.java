@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -33,6 +34,7 @@ import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
+import org.kalypso.ogc.gml.outline.PluginMapOutlineActionDelegate;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Interval;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -353,6 +355,12 @@ public class ExportThemeAction implements PluginMapOutlineAction
     Point origin = new Point( 0, 0 );
     Raster surrogateRaster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, origin );
     return surrogateRaster;
+  }
+
+  public void selectionChanged( PluginMapOutlineActionDelegate action, ISelection selection )
+  {
+    // TODO Auto-generated method stub
+    
   }
 
 }
