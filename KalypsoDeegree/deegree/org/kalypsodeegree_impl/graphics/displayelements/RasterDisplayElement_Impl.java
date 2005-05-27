@@ -92,7 +92,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -155,11 +154,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     // get the geometry informations of the RectifiedGridCoverage
     RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
     // create the target Coordinate system
-    // TODO get target Coordinate system from projection
-    String targetSrs = "EPSG:31469";
-    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-        csFac.getCSByName( targetSrs ) );
+    GM_Object geom = (GM_Object)feature.getVirtuelProperty( "RasterBoundary_rectifiedGridDomain", null );
+    CS_CoordinateSystem cs = geom.getCoordinateSystem();
+    
     TiledImage rasterImage = getImage();
 
     try
@@ -233,9 +230,17 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     // create a surface and transform it in the coordinate system of the
     // RectifiedGridCoverage
     GM_Surface sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
-    GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null )
-        .getCoordinateSystem() );
-    GM_Surface destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
+    GM_Surface destScreenSurface = null;
+    if( !( targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) ) )
+    {
+      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null )
+          .getCoordinateSystem() );
+      destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
+    }
+    else
+    {
+      destScreenSurface = sourceScreenSurface;
+    }
     // get the gridExtent for the envelope of the surface
     int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain
         .getOrigin( null ).getCoordinateSystem() );

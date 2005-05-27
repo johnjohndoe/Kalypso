@@ -26,8 +26,6 @@ public class VirtualFeatureTypeRegistry
     {
       // na-modell:
       m_instance.register( new VirtualAssociationFeatureTypePropertyHandler() );
-      // risiko:
-      m_instance.register( new VirtualRasterFeatureTypePropertyHandler() );
       // 2d:
       m_instance.register( new VirtualVelocityFeatureTypePropertyHandler() );
       m_instance.register( new VirtualIsoFeatureTypePropertyHandler() );

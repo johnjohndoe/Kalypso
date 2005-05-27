@@ -1,7 +1,8 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
+package org.kalypso.ogc.gml.schema.virtual;
 
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------

@@ -1,11 +1,14 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
+package org.kalypso.ogc.gml.schema.virtual;
 
 import java.util.HashMap;
 
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 
@@ -50,10 +53,28 @@ import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implements
-    VirtualFeatureTypeProperty
+/**
+ * 
+ * VirtualRasterFeatureTypeProperty
+ * <p>
+ * 
+ * created by @author Nadja Peiler (27.05.2005)
+ * 
+ * Diese VirtualProperty sollte unter KalypsoDeegree liegen,
+ * sie benötigt aber das lokal eingestellte Koordinatensystem 
+ * und wurde deshalb in KalypsoUI abgelegt
+ * Bessere Lösung für das Raster wäre die Property RectifiedGridDomain
+ * des Rasters als GeometryProperty zu definieren, dies ist momentan nicht 
+ * möglich bzw. mit großen Veränderungen verbunden
+ * 
+ */
+
+public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType
+    implements VirtualFeatureTypeProperty
 {
   private final FeatureTypeProperty m_ftp;
+
+  private GM_Object m_value;
 
   /*
    * 
@@ -71,12 +92,17 @@ public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implem
    */
   public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
   {
-    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
+    if( m_value != null )
+      return m_value;
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature
+        .getProperty( "rectifiedGridDomain" );
     if( rgDomain == null )
       return null;
     try
     {
-      return rgDomain.getGM_Surface( null );
+      m_value = rgDomain.getGM_Surface( KalypsoGisPlugin.getDefault()
+          .getCoordinatesSystem() );
+      return m_value;
     }
     catch( Exception e )
     {
@@ -107,5 +133,11 @@ public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implem
   public boolean isGeometryProperty()
   {
     return true;
+  }
+
+  public void setVirtualValue( Object value )
+  {
+    if( value instanceof GM_Object )
+      m_value = (GM_Object)value;
   }
 }
