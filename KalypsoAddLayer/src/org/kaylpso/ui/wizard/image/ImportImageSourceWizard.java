@@ -57,8 +57,7 @@ import org.kaylpso.ui.action.AddThemeCommand;
  * 
  * @author kuepfer (21.05.2005)
  */
-public class ImportImageSourceWizard extends Wizard implements
-    IKalypsoDataImportWizard
+public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
 
   private GisMapOutlineViewer m_outlineviewer;
@@ -75,10 +74,10 @@ public class ImportImageSourceWizard extends Wizard implements
     {
       try
       {
-        AddThemeCommand command = new AddThemeCommand(
-            (GisTemplateMapModell)mapModell, m_page.getRelativeSourcePath()
-                .removeFileExtension().lastSegment(), m_page.getFileType(),
-            null, m_page.getURL().toString() + "#" + m_page.getCSName(), "sld", null, null, "simple" );
+        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, m_page
+            .getRelativeSourcePath().removeFileExtension().lastSegment(), m_page.getFileType(),
+            null, m_page.getURL().toString() + "#" + m_page.getCSName(), "sld", null, null,
+            "simple" );
         m_outlineviewer.postCommand( command, null );
       }
       catch( JAXBException e )
@@ -114,15 +113,15 @@ public class ImportImageSourceWizard extends Wizard implements
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    // TODO Auto-generated method stub
+  // TODO Auto-generated method stub
 
   }
 
   public void addPages()
   {
 
-    m_page = new ImportImageWizardPage( "imageimport",
-        "Bild importieren (tif, jpg)", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_page = new ImportImageWizardPage( "imageimport", "Bild importieren (tif, jpg, png)",
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     if( m_outlineviewer != null )
     {
       m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );

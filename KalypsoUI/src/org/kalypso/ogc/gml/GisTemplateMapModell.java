@@ -138,7 +138,9 @@ public class GisTemplateMapModell implements IMapModell
           cs );
     }
     if( layerType.getLinktype().equals( "tif" )
-        || layerType.getLinktype().equals( "jpg" ) )
+        || layerType.getLinktype().equals( "jpg" )
+        || layerType.getLinktype().equals( "png" )
+        || layerType.getLinktype().equals( "gif" ) )
     {
       String source = layerType.getHref();
       String layerName = layerType.getName();
@@ -194,6 +196,12 @@ public class GisTemplateMapModell implements IMapModell
         String name = kalypsoTheme.getName();
         GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell
             .isThemeEnabled( kalypsoTheme ), (KalypsoWMSTheme)kalypsoTheme );
+        layerList.add( layer );
+      }
+      else if( kalypsoTheme instanceof KalypsoPictureTheme )
+      {
+        ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i,
+            m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
 

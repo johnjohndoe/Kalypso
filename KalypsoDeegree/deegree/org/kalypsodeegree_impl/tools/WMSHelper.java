@@ -3,10 +3,8 @@ package org.kalypsodeegree_impl.tools;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -419,7 +417,7 @@ public class WMSHelper
    * This method transformes an image from a source to a target coordiante
    * system and paints it on the submitted graphic context g.
    * 
-   * @param remoteMap image to be transformed
+   * @param remoteImage image to be transformed
    * @param env bounding box of the remoteMap
    * @param localCSR target coodrdiante system
    * @param remoteCSR source coordiante system
@@ -429,13 +427,13 @@ public class WMSHelper
    * @throws Exception
    */
 
-  public static void transformImage( Image remoteMap, GM_Envelope env,
+  public static void transformImage( TiledImage remoteImage, GM_Envelope env,
       CS_CoordinateSystem localCSR, CS_CoordinateSystem remoteCSR,
       GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
   {
-    System.out.println( "env: " + env );
-    int height = remoteMap.getHeight( null );
-    int width = remoteMap.getWidth( null );
+    //System.out.println( "env: " + env );
+    int height = remoteImage.getHeight();
+    int width = remoteImage.getWidth();
 
     double[] offset = new double[]
     {
@@ -455,10 +453,9 @@ public class WMSHelper
           GeometryFactory.createGM_Point( env.getMin().getX(), env.getMin()
               .getY(), remoteCSR ), offset, range );
 
-      TiledImage ti = new TiledImage( PlanarImage
-          .wrapRenderedImage( (RenderedImage)remoteMap ), false );
+      //TiledImage ti = new TiledImage( remoteImage, true );
 
-      internalTransformation( (Graphics2D)g, worldToScreenTransformation, ti,
+      internalTransformation( (Graphics2D)g, worldToScreenTransformation, remoteImage,
           gridDomain, localCSR );
 
    

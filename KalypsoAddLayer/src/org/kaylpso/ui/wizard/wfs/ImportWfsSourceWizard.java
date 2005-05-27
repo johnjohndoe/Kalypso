@@ -129,7 +129,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    InputStream is = getClass().getResourceAsStream( "../resources/services/kalypsoOWS.catalog" );
+    InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" );
     try
     {
       // read service catalog file

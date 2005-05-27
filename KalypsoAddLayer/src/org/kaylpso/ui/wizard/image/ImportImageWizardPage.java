@@ -76,8 +76,7 @@ import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
  * 
  * @author kuepfer (21.05.2005)
  */
-public class ImportImageWizardPage extends WizardPage implements
-    SelectionListener, KeyListener
+public class ImportImageWizardPage extends WizardPage implements SelectionListener, KeyListener
 {
   //constants
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
@@ -116,8 +115,7 @@ public class ImportImageWizardPage extends WizardPage implements
 
   private Combo m_CS;
 
-  protected ImportImageWizardPage( String pageName, String title,
-      ImageDescriptor titleImage )
+  protected ImportImageWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
   }
@@ -164,8 +162,7 @@ public class ImportImageWizardPage extends WizardPage implements
     availableCoordinateSystems( m_CS );
     try
     {
-      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem()
-          .getName();
+      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
       m_CS.select( m_CS.indexOf( defaultCS ) );
     }
     catch( RemoteException e1 )
@@ -173,7 +170,7 @@ public class ImportImageWizardPage extends WizardPage implements
       e1.printStackTrace();
     }
 
-    m_CS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
+    m_CS.setToolTipText( "Koordinatensystem der World Datei" );
     createWorldFilePanel( m_topComposite );
     //    m_group.pack();
     setControl( m_topComposite );
@@ -256,7 +253,11 @@ public class ImportImageWizardPage extends WizardPage implements
             "jpg",
             "TIFF",
             "TIF",
-            "JPG" } );
+            "JPG",
+            "png",
+            "PNG",});
+            //"gif",
+            //"GIF"} );
         dialog.open();
         Object[] result = dialog.getResult();
         if( result != null )
@@ -279,16 +280,30 @@ public class ImportImageWizardPage extends WizardPage implements
     {
       m_fileType = "tif";
       m_wfType = "tfw";
-      path = m_relativeSourcePath.removeFileExtension().addFileExtension(
-          m_wfType ).removeFirstSegments( 1 );
+      path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType )
+          .removeFirstSegments( 1 );
     }
     if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "JPG" ) )
     {
       m_fileType = "jpg";
       m_wfType = "jgw";
-      path = m_relativeSourcePath.removeFileExtension().addFileExtension(
-          m_wfType ).removeFirstSegments( 1 );
+      path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType )
+          .removeFirstSegments( 1 );
     }
+    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "PNG" ) )
+    {
+      m_fileType = "png";
+      m_wfType = "pgw";
+      path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType )
+          .removeFirstSegments( 1 );
+    }
+    //if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "GIF" ) )
+    //{
+    //  m_fileType = "gif";
+    //  m_wfType = "gfw";
+    //  path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType )
+    //      .removeFirstSegments( 1 );
+    //}
     try
     {
       URL worldFile = m_project.getLocation().append( path ).toFile().toURL();
@@ -360,9 +375,8 @@ public class ImportImageWizardPage extends WizardPage implements
     if( !m_wfExists )
       try
       {
-        IFile worldfile = m_project.getFile( m_relativeSourcePath
-            .removeFirstSegments( 1 ).removeFileExtension().addFileExtension(
-                m_wfType ) );
+        IFile worldfile = m_project.getFile( m_relativeSourcePath.removeFirstSegments( 1 )
+            .removeFileExtension().addFileExtension( m_wfType ) );
 
         String str = "";
         Control[] array = m_worldFileGroup.getChildren();
@@ -400,15 +414,14 @@ public class ImportImageWizardPage extends WizardPage implements
    */
   public void widgetDefaultSelected( SelectionEvent e )
   {
-    // nothing to do
+  // nothing to do
 
   }
 
-  KalypsoResourceSelectionDialog createResourceDialog(
-      String[] fileResourceExtensions )
+  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project,
-        "Select resource", fileResourceExtensions, m_project );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource",
+        fileResourceExtensions, m_project );
   }
 
   public void setProjectSelection( IProject project )
@@ -422,7 +435,7 @@ public class ImportImageWizardPage extends WizardPage implements
    */
   public void keyPressed( KeyEvent e )
   {
-    // do nothing
+  // do nothing
 
   }
 
@@ -432,9 +445,8 @@ public class ImportImageWizardPage extends WizardPage implements
   public void keyReleased( KeyEvent e )
   {
 
-    if( ( e.widget == m_textDx || e.widget == m_textDy
-        || e.widget == m_textPhix || e.widget == m_textPhiy
-        || e.widget == m_textULCx || e.widget == m_textULCy )
+    if( ( e.widget == m_textDx || e.widget == m_textDy || e.widget == m_textPhix
+        || e.widget == m_textPhiy || e.widget == m_textULCx || e.widget == m_textULCy )
         && e.character == SWT.CR )
     {
       setPageComplete( validate() );
@@ -445,8 +457,8 @@ public class ImportImageWizardPage extends WizardPage implements
   public URL getURL() throws MalformedURLException
   {
 
-    return m_project.getLocation().append(
-        m_relativeSourcePath.removeFirstSegments( 1 ) ).toFile().toURL();
+    return m_project.getLocation().append( m_relativeSourcePath.removeFirstSegments( 1 ) ).toFile()
+        .toURL();
   }
 
   public String getFileType()
