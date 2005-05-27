@@ -1,5 +1,7 @@
 package org.kalypsodeegree.model.feature;
 
+import java.io.File;
+
 /**
  * @author belger
  */

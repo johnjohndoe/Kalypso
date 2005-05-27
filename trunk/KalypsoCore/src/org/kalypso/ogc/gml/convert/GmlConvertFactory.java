@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -19,15 +20,16 @@ import org.kalypso.gml.util.GmlSourceType;
 import org.kalypso.gml.util.GmlconvertType;
 import org.kalypso.gml.util.Gmltarget;
 import org.kalypso.gml.util.ObjectFactory;
+import org.kalypso.gml.util.RegisterSourceType;
 import org.kalypso.gml.util.SourceType;
 import org.kalypso.gml.util.TargetType;
 import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler;
 import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
 import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;
 import org.kalypso.ogc.gml.convert.source.GmlSourceHandler;
 import org.kalypso.ogc.gml.convert.source.ISourceHandler;
+import org.kalypso.ogc.gml.convert.source.RegisterSourceHandler;
 import org.kalypso.ogc.gml.convert.target.GmlTargetHandler;
 import org.kalypso.ogc.gml.convert.target.ITargetHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -46,13 +48,25 @@ public class GmlConvertFactory
   }
 
   /**
-   * Genau wie {@link #convertXml(InputSource, IUrlResolver, URL)}. Kümmert sich aber um die URL und Stream Details. 
+   * Genau wie {@link #convertXml(URL, IUrlResolver, URL, Map)}. Die URL wird selbst als Kontext gesetzt. 
    * @throws IOException
    * @throws GmlConvertException
    * @throws GmlConvertException
    * @throws JAXBException
    */
-  public static IStatus convertXml( final URL url, final UrlUtilities utilities ) throws IOException, JAXBException, GmlConvertException
+  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final Map externData ) throws IOException, JAXBException, GmlConvertException
+  {
+    return convertXml( url, resolver, url, externData );
+  }
+  
+  /**
+   * Genau wie {@link #convertXml(InputSource, IUrlResolver, URL, Map)}. Kümmert sich aber um die URL und Stream Details. 
+   * @throws IOException
+   * @throws GmlConvertException
+   * @throws GmlConvertException
+   * @throws JAXBException
+   */
+  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final URL context, final Map externData ) throws IOException, JAXBException, GmlConvertException
   {
     final URLConnection connection = url.openConnection();
     final String contentEncoding = connection.getContentEncoding();
@@ -62,7 +76,7 @@ public class GmlConvertFactory
     if( contentEncoding != null )
       source.setEncoding( contentEncoding );
     
-    return convertXml( source, utilities, url );
+    return convertXml( source, resolver, context, externData );
   }
   
   /**
@@ -73,12 +87,12 @@ public class GmlConvertFactory
    * @throws JAXBException
    * @throws GmlConvertException
    */
-  public static IStatus convertXml( final InputSource inputSource, final IUrlResolver resolver, URL context ) throws JAXBException, GmlConvertException
+  public static IStatus convertXml( final InputSource inputSource, final IUrlResolver resolver, final URL context, final Map externData ) throws JAXBException, GmlConvertException
   {
     final ObjectFactory jc = new ObjectFactory();
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final GmlconvertType convert = (GmlconvertType)unmarshaller.unmarshal( inputSource );
-    final GMLWorkspace gml = GmlConvertFactory.loadSource( resolver, context, convert.getSource() );
+    final GMLWorkspace gml = GmlConvertFactory.loadSource( resolver, context, convert.getSource(), externData );
     GmlConvertFactory.writeIntoTarget( resolver, context, gml, convert.getTarget() );
     
     final String message = "Ergebnis wurde nach " + convert.getTarget().getHref() + " geschrieben.";
@@ -92,19 +106,21 @@ public class GmlConvertFactory
    * 
    * @throws GmlConvertException
    */
-  public static final GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source )
+  public static final GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source, final Map externData )
       throws GmlConvertException
   {
     // switch over source-type
     final ISourceHandler handler;
     if( source instanceof FeaturemappingSourceType )
-      handler = new FeaturemappingSourceHandler( resolver, context, (FeaturemappingSourceType)source );
+      handler = new FeaturemappingSourceHandler( resolver, context, (FeaturemappingSourceType)source, externData );
     else if( source instanceof ChangeSourceType )
-      handler = new ChangeSourceTypeHandler( resolver, context, (ChangeSourceType)source );
+      handler = new ChangeSourceTypeHandler( resolver, context, (ChangeSourceType)source, externData );
     else if( source instanceof CsvSourceType )
       handler = new CsvSourceHandler( resolver, context, (CsvSourceType)source );
     else if( source instanceof GmlSourceType )
       handler = new GmlSourceHandler( resolver, context, (GmlSourceType)source );
+    else if( source instanceof RegisterSourceType )
+      handler = new RegisterSourceHandler( (RegisterSourceType)source, externData );
     else
       throw new GmlConvertException( "Unbekannter Source-Type: " + source.getClass().getName() );
 

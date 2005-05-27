@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.convert.source;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.gml.util.ChangeSourceType;
@@ -67,12 +68,15 @@ public class ChangeSourceTypeHandler implements ISourceHandler
 
   private final URL m_context;
 
+  private final Map m_externData;
+
   public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context,
-      final ChangeSourceType type )
+      final ChangeSourceType type, final Map externData )
   {
     m_resolver = resolver;
     m_context = context;
     m_type = type;
+    m_externData = externData;
   }
 
   /**
@@ -82,7 +86,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
   {
     try
     {
-      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource() );
+      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource(), m_externData );
       applyVisitors( inputGML, m_type.getVisitor() );
       return inputGML;
     }

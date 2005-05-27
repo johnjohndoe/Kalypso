@@ -334,8 +334,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final Properties userProperties = createVariablesForAntLaunch( folder );
 
       final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+      final IFile launchFile = getLaunchFile( launchName );
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration(
-          getLaunchFile( launchName ) ).getWorkingCopy();
+          launchFile ).getWorkingCopy();
 
       // add user-variables to LaunchConfiguration
       final Map attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES",
