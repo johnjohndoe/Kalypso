@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -53,6 +54,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
+import javax.media.jai.PlanarImage;
+import javax.media.jai.TiledImage;
 import javax.naming.OperationNotSupportedException;
 
 import org.deegree.services.OGCWebServiceClient;
@@ -84,7 +87,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 {
   private final String m_layers;
 
-  private Image m_remoteImage = null;
+  private TiledImage m_remoteImage = null;
 
   private String m_source = null;
 
@@ -342,7 +345,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
         if( map != null && map instanceof Image )
         {
-          m_remoteImage = (Image)map;
+          Image image = (Image)map;
+          PlanarImage remoteImage = PlanarImage.wrapRenderedImage( (RenderedImage)image );
+          m_remoteImage = new TiledImage( remoteImage, true );
 
           fireModellEvent( null );
         }
@@ -369,7 +374,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public void dispose()
   {
-    //do nothing (no graphics to dispose)
+  //do nothing (no graphics to dispose)
   }
 
   /**
@@ -380,15 +385,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     GM_Envelope bbox = null;
     try
     {
-      GeoTransformer gt =new GeoTransformer( m_localCSR );
-      bbox = gt.transformEnvelope(m_maxEnv, m_remoteCSR );
+      GeoTransformer gt = new GeoTransformer( m_localCSR );
+      bbox = gt.transformEnvelope( m_maxEnv, m_remoteCSR );
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
     return bbox;
-    
+
   }
 
   public String getSource()
@@ -396,21 +401,22 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     return m_source;
   }
 
-//  public void saveTheme( IProgressMonitor monitor )
-//  {
-//   
-    
-//    
-//    try
-//    {
-//      ImageOutputStream ios = ImageIO.createImageOutputStream( new File( "c:/temp" ) );
-//      ImageIO.write( (RenderedImage)m_remoteImage, m_layers, ios );
-//    }
-//    catch( IOException e )
-//    {
-//      // TODO: handle exception
-//    }
-//    
-//  }
+  //  public void saveTheme( IProgressMonitor monitor )
+  //  {
+  //   
+
+  //    
+  //    try
+  //    {
+  //      ImageOutputStream ios = ImageIO.createImageOutputStream( new File(
+  // "c:/temp" ) );
+  //      ImageIO.write( (RenderedImage)m_remoteImage, m_layers, ios );
+  //    }
+  //    catch( IOException e )
+  //    {
+  //      // TODO: handle exception
+  //    }
+  //    
+  //  }
 
 }// class KalypsoWMSTheme

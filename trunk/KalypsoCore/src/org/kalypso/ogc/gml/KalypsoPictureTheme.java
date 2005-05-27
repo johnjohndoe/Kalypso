@@ -35,7 +35,6 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,8 +45,10 @@ import java.net.URLConnection;
 import java.util.logging.Logger;
 
 import javax.media.jai.JAI;
-import javax.media.jai.PlanarImage;
+import javax.media.jai.RenderedOp;
+import javax.media.jai.TiledImage;
 
+import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -71,7 +72,11 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private final static String SUFFIX_JPG = "JGW";
 
-  private BufferedImage m_image;
+  private final static String SUFFIX_PNG = "PGW";
+
+  //private final static String SUFFIX_GIF = "GFW";
+
+  private TiledImage m_image;
 
   private GM_Envelope m_origBBox;
 
@@ -86,26 +91,43 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   private double m_dy = 0;
 
   private CS_CoordinateSystem m_imageCS;
-  
-  private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class
-      .getName() );
+
+  private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
+
+  private String m_themeName;
+
+  private String m_linkType;
+
+  private String m_source;
 
   public KalypsoPictureTheme( String themeName, String linktype, String source,
       CS_CoordinateSystem cs )
   {
     super( themeName, linktype.toUpperCase() );
+    m_themeName = themeName;
+    m_linkType = linktype;
+    m_source = source;
     m_localCS = cs;
     URL worldFileURL = null;
     String[] result = source.split( "#" );
     String wf = null;
     if( linktype.equals( "tif" ) )
     {
-      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) )
-          .concat( SUFFIX_TIFF );
+      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) ).concat( SUFFIX_TIFF );
     }
     if( linktype.equals( "jpg" ) )
-      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) )
-          .concat( SUFFIX_JPG );
+    {
+      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) ).concat( SUFFIX_JPG );
+    }
+    if( linktype.equals( "png" ) )
+    {
+      wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) ).concat( SUFFIX_PNG );
+    }
+    //if( linktype.equals( "gif" ) )
+    //{
+    //  wf = ( result[0].substring( 0, ( source.lastIndexOf( "." ) + 1 ) ) )
+    //      .concat( SUFFIX_GIF );
+    //}
 
     double ulcx = 0;
     double ulcy = 0;
@@ -145,10 +167,10 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
       e1.printStackTrace();
       System.out.println( "Ungültige URL der Datei: " + source );
     }
-    String imagePath = imageFileURL.getPath().substring( 1,
-        imageFileURL.getPath().length() );
-    PlanarImage image = JAI.create( "fileload", imagePath );
-    m_image = image.getAsBufferedImage();
+    String imagePath = imageFileURL.getPath().substring( 1, imageFileURL.getPath().length() );
+    RenderedOp image = JAI.create( "fileload", imagePath );
+    m_image = new TiledImage( image, true );
+    //BufferedImage image = m_image.getAsBufferedImage();
     //    m_image = image.getAsBufferedImage();
     int height = m_image.getHeight();
     int width = m_image.getWidth();
@@ -178,9 +200,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     //    
     //    m_image = bi;
 
-    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + ( height * m_dy ),
-        ulcx + ( width * m_dx ), ulcy );
-    
+    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + ( height * m_dy ), ulcx
+        + ( width * m_dx ), ulcy );
+
     m_imageCS = ConvenienceCSFactory.getInstance().getOGCCSByName( result[1] );
   }
 
@@ -189,8 +211,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
    */
   public void dispose()
   {
-    // nothing to dispose
-
+    //nothing
   }
 
   /**
@@ -198,14 +219,14 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
-  public void paintSelected( Graphics g, GeoTransform p, double scale,
-      GM_Envelope bbox, int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
+      int selectionId )
   {
     if( selectionId != 0 )
       return;
     try
     {
-      WMSHelper.transformImage( m_image , m_origBBox, m_localCS, m_imageCS, p, g );
+      WMSHelper.transformImage( m_image, m_origBBox, m_localCS, m_imageCS, p, g );
     }
     catch( Exception e )
     {
@@ -228,15 +249,28 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     catch( Exception e2 )
     {
       e2.printStackTrace();
-      LOGGER.warning("Transformation of bbox for full extend failed");
+      LOGGER.warning( "Transformation of bbox for full extend failed" );
     }
     return bbox;
   }
 
-//  public void saveTheme( IProgressMonitor monitor )
-//  {
-//    // TODO Auto-generated method stub
-//    
-//  }
+  public void fillLayerType( Layer layer, String id, boolean visible )
+  {
+    layer.setName( m_themeName );
+    layer.setFeaturePath( "" );
+
+    layer.setVisible( visible );
+    layer.setId( id );
+    layer.setHref( m_source );
+    layer.setLinktype( m_linkType );
+    layer.setActuate( "onRequest" );
+    layer.setType( "simple" );
+  }
+
+  //  public void saveTheme( IProgressMonitor monitor )
+  //  {
+  //    // TODO Auto-generated method stub
+  //    
+  //  }
 
 }

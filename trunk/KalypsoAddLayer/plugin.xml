@@ -64,7 +64,7 @@
       <wizard
             icon="icon/file_image.gif"
             class="org.kaylpso.ui.wizard.image.ImportImageSourceWizard"
-            name="Image (TIFF, JPG)"
+            name="Image (TIFF, JPG, PNG)"
             id="org.kalypso.ui.wizard.image"/>
    </extension>
    <extension
