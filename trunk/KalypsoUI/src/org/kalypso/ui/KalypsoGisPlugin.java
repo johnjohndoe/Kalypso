@@ -83,6 +83,7 @@ import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.java.net.PropertyUrlCatalog;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
@@ -103,6 +104,7 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
@@ -216,6 +218,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements
     }
 
     registerTypeHandler();
+    registerVirtualFeatureTypeHandler();
+  }
+  
+  private void registerVirtualFeatureTypeHandler(){
+    VirtualFeatureTypeRegistry instance = VirtualFeatureTypeRegistry.getInstance();
+    instance.register( new VirtualRasterFeatureTypePropertyHandler() );
   }
 
   /**
