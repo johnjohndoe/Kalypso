@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="Saale_SA_V1">
     <input id="CONTROL" path=".calculation" relativeToCalcCase="true"/>
-    <input id="GML" path="modell.gml" relativeToCalcCase="true"/>
+    <input id="MODELL" path="modell.gml" relativeToCalcCase="true"/>
 
 	<!--  implizit benötigte Daten (=Zeitreihen); id ist unwichtig -->
-<!--	
-    <input id="Durchfluß" path="Durchfluß" relativToCalcCase="true"/>
-    <input id="Ergebnisse" path="Ergebnisse" relativToCalcCase="true"/>
-    <input id="Niederschlag" path="Niederschlag" relativToCalcCase="true"/>
-    <input id="Schnee" path="Schnee" relativToCalcCase="true"/>
-    <input id="Speicherinhalt" path="Speicherinhalt" relativToCalcCase="true"/>
-    <input id="Temperatur" path="Temperatur" relativToCalcCase="true"/>
--->    
+    <input id="Durchfluß" path="Durchfluß" relativeToCalcCase="true"/>
+    <input id="Niederschlag" path="Niederschlag" relativeToCalcCase="true"/>
+    <input id="Schnee" path="Schnee" relativeToCalcCase="true"/>
+    <input id="Speicherinhalt" path="Speicherinhalt" relativeToCalcCase="true"/>
+    <input id="Temperatur" path="Temperatur" relativeToCalcCase="true"/>
+    
+    <output id="LOG" path="Ergebnisse/rechnung.log" relativeToCalcCase="true"/>
+    <output id="ZML_RESULT" path="Ergebnisse" relativeToCalcCase="true"/>
 </modeldata>

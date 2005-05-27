@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
+import java.util.logging.Logger;
 
 import javax.xml.bind.Marshaller;
 
@@ -57,55 +58,57 @@ import org.kalypso.zml.ObservationType;
 
 public class HWVORBatch
 {
-  public static void main( String[] args ) throws Throwable
+  private Logger m_logger = Logger.getLogger( HWVORBatch.class.getName() ); 
+
+  /** Syntax: HWVORBatch <inputdir> <outputdir>*/
+  public void convert( String[] args ) throws Exception
   {
-    String dir = "d:/daten";
-    File currDir = new File( dir );
-    File currWorkingDir = new File( dir );
-    File outputDir = new File( dir + "/out" );
-    
-    File wasserDir = new File( outputDir.getAbsolutePath() + "/Wasserstand" );
-    File durchDir = new File( outputDir.getAbsolutePath() + "/Durchfluss" );
-    File speicherDir = new File( outputDir.getAbsolutePath() + "/Speicherinhalt" );
-    File wqDir = new File( outputDir.getAbsolutePath() + "/WQ" );
-    File niederDir  = new File( outputDir.getAbsolutePath() + "/Niederschlag" );
-    File schneeDir = new File( outputDir.getAbsolutePath() + "/Schnee" );
+    if( args.length != 2 )
+    {
+      System.out.println( "Usage: HWVORBatch <inputdir> <outputdir>" );
+      return;
+    }
+
+    final File outputDir = new File( args[1] );
+
+    File currDir = new File( args[0] );
+    File wasserDir = new File( outputDir, "Wasserstand" );
+    File durchDir = new File( outputDir, "Durchfluss" );
+    File speicherDir = new File( outputDir, "Speicherinhalt" );
+    File temperaturDir = new File( outputDir, "Temperatur" );
+//    File wqDir = new File( outputDir, "WQ" );
+    File niederDir  = new File( outputDir, "Niederschlag" );
+    File schneeDir = new File( outputDir,  "Schnee" );
     
     File currFile;
     String files[] = currDir.list();
     String sValue;
     
+    final ObjectFactory zmlFac = new ObjectFactory();
+    final Marshaller marshaller = zmlFac.createMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
     IObservation[] obs;
-    ObjectFactory zmlFac;
-    Marshaller marshaller;
     ObservationType type;
     MetadataList metadata;
     
-    //Ordner erzeugen
-    outputDir.mkdirs();
-    wasserDir.mkdirs();
-    durchDir.mkdirs();
-    speicherDir.mkdirs();
-    wqDir.mkdirs();
-    niederDir.mkdirs();
-    schneeDir.mkdirs();
-    
     for( int i = 0; i < files.length; i++ )
     {
-      if( files[i].endsWith( ".vor" ) || files[i].endsWith( ".VOR" ) )
+      final String file = files[i].toUpperCase();
+      if( file.endsWith( ".VOR" ) )
       {
         
-        if( files[i].startsWith( "W_" ) )
+        if( file.startsWith( "W_" ) )
         {
           currDir = wasserDir;
           sValue = TimeserieConstants.TYPE_WATERLEVEL;
         }
-        else if( files[i].startsWith( "Q_" ) )
+        else if( file.startsWith( "Q_" ) )
         {
           currDir = durchDir;
           sValue = TimeserieConstants.TYPE_RUNOFF;
         }
-        else if( files[i].startsWith( "TS" ) )
+        else if( file.startsWith( "TS" ) )
         {
           currDir = speicherDir;
           sValue = TimeserieConstants.TYPE_VOLUME;
@@ -115,44 +118,45 @@ public class HWVORBatch
 //          currDir = wqDir;
 //          sValue = TimeserieConstants.MD_WQ;
 //        }
-        else if( files[i].startsWith( "P_" ) )
+        else if( file.startsWith( "P_" ) )
         {
           currDir = niederDir;
           sValue = TimeserieConstants.TYPE_RAINFALL;
         }
-        else if( files[i].startsWith( "SN" ) )
+        else if( file.startsWith( "SN" ) )
         {
           currDir = schneeDir;
           sValue = TimeserieConstants.TYPE_RAINFALL;
         }
+        else if( file.startsWith( "TL" ) )
+        {
+          currDir = temperaturDir;
+          sValue = TimeserieConstants.TYPE_TEMPERATURE;
+        }
         else
         {
           currDir = outputDir;
-          sValue = TimeserieConstants.TYPE_RAINFALL;
+          sValue = TimeserieConstants.TYPE_TEMPERATURE;
         }
 
         metadata = new MetadataList();
-        metadata.put("FILE_NAME", currWorkingDir.getAbsolutePath() + "\\" + files[i] );
+        metadata.put("FILE_NAME", args[0] + "\\" + files[i] );
         
+        m_logger.info( "Lese Zeitreihen: " + files[i] );
         obs = HWVOR00Converter.toZML( sValue, new FileReader(
-            currWorkingDir.getAbsolutePath() + "/" + files[i] ), metadata );
+            args[0] + "/" + files[i] ), metadata );
 
+        currDir.mkdirs();
         for( int l = 0; l < obs.length; l++ )
         {
           type = ZmlFactory.createXML( obs[l], null );
           
-          zmlFac = new ObjectFactory();
-
-          marshaller = zmlFac.createMarshaller();
           // use IResource
           
-          currFile = new File( currDir.getAbsolutePath() + "/" + obs[l].getName() + ".zml"  );
-          if( !currFile.exists() )
-            currFile.createNewFile();
-                    
-          FileOutputStream stream = new FileOutputStream( currFile );
-          OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
-          marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+          currFile = new File( currDir, "ID" + obs[l].getName() + ".zml"  );
+          
+          final FileOutputStream stream = new FileOutputStream( currFile );
+          final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
           marshaller.marshal( type, writer );
           writer.close();
         }

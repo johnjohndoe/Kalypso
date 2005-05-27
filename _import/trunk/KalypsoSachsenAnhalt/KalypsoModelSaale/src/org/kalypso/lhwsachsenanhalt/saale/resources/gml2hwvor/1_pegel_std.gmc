@@ -1,0 +1,48 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<csvtarget linktype="gml" xlink:href="Pegel.std" featurePath="PegelCollectionAssociation/PegelMember" delemiter="&#9;" writeHeader="true" >
+		<column>PNR</column>
+		<column>Name</column>
+		<column>Gewaesser</column>
+		<column default="0">X</column>
+		<column default="0">Y</column>
+		<column default="-1">AE</column>
+		<column default="-1">ZG</column>
+		<column>Land</column>
+		<column>WN1</column>
+		<column>WN2</column>
+		<column>WN3</column>
+		<column>WN4</column>
+		<column>WN5</column>
+		<column>W1</column>
+		<column>W2</column>
+		<column>W3</column>
+		<column>W4</column>
+		<column>W5</column>
+		<column>BezqGmin</column>
+		<column>QGMIN</column>
+		<column>BEZQGMAX</column>
+		<column>QGMAX</column>
+		<column>Vorsp</column>
+		<column>WDAT</column>
+		<column>QDAT</column>
+		<column>VORGP</column>
+		<column>KUM</column>
+		<column>WMIN</column>
+		<column>WMAX</column>
+		<column>QMAX</column>
+		<column>DWMAX</column>
+		<column>DQMAX</column>
+		<column>NNW</column>
+		<column>MNW</column>
+		<column>MW</column>
+		<column>MHW</column>
+		<column>HHW</column>
+		<column>NNQ</column>
+		<column>MNQ</column>
+		<column>MQ</column>
+		<column>MHQ</column>
+		<column>HHQ</column>
+	</csvtarget>
+	<registersource registeredID="INTERNE_GML"/>
+</gmlconvert>

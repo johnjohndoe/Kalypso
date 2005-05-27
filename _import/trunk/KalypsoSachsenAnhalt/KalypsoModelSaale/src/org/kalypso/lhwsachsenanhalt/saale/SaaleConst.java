@@ -50,7 +50,9 @@ public class SaaleConst
 {
   public static final String ERGEBNISSE = "Ergebnisse";
 
-  public static final String CALCJOB_SPEC = "bodecalcjob_spec.xml";
+  public static final String CALCJOB_SPEC = "saalecalcjob_spec.xml";
+
+  public static final String REGISTERED_ID = "INTERNE_GML";
 
   private SaaleConst()
   {

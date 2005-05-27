@@ -1,3 +1,43 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+*
+*  This file is part of kalypso.
+*  Copyright (C) 2004 by:
+* 
+*  Technical University Hamburg-Harburg (TUHH)
+*  Institute of River and coastal engineering
+*  Denickestraße 22
+*  21073 Hamburg, Germany
+*  http://www.tuhh.de/wb
+* 
+*  and
+*  
+*  Bjoernsen Consulting Engineers (BCE)
+*  Maria Trost 3
+*  56070 Koblenz, Germany
+*  http://www.bjoernsen.de
+* 
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+* 
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+* 
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+* 
+*  Contact:
+* 
+*  E-Mail:
+*  belger@bjoernsen.de
+*  schlienger@bjoernsen.de
+*  v.doemming@tuhh.de
+*   
+*  ---------------------------------------------------------------------------*/
 package org.kalypso.lhwsachsenanhalt.saale;
 
 import java.io.IOException;
@@ -26,64 +66,22 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
-/*----------------    FILE HEADER KALYPSO ------------------------------------------
- *
- *  This file is part of kalypso.
- *  Copyright (C) 2004 by:
- * 
- *  Technical University Hamburg-Harburg (TUHH)
- *  Institute of River and coastal engineering
- *  Denickestraße 22
- *  21073 Hamburg, Germany
- *  http://www.tuhh.de/wb
- * 
- *  and
- *  
- *  Bjoernsen Consulting Engineers (BCE)
- *  Maria Trost 3
- *  56070 Koblenz, Germany
- *  http://www.bjoernsen.de
- * 
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- * 
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- * 
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- *  Contact:
- * 
- *  E-Mail:
- *  belger@bjoernsen.de
- *  schlienger@bjoernsen.de
- *  v.doemming@tuhh.de
- *   
- *  ---------------------------------------------------------------------------*/
-
 public class HWVOR00Converter
 {
-  
-  private TreeMap obsMap;
-  private ArrayList obsNames; 
-  private int obsNum = 0;
+  private TreeMap m_obsMap;
+  private ArrayList m_obsNames; 
+  private int m_obsNum = 0;
   
   public static final SimpleDateFormat HWVOR00_DATE = new SimpleDateFormat( "dd.M.yyyy H:mm" );
   
   public HWVOR00Converter()
   {
-    obsMap = new TreeMap();
-    obsNames = new ArrayList();
-    obsNum = 0;
+    m_obsMap = new TreeMap();
+    m_obsNames = new ArrayList();
+    m_obsNum = 0;
   }
   
-  public void addObservation( IObservation inObs, String timeAxis, String dataAxis )
+  public void addObservation( final IObservation inObs, final String timeAxis, final String dataAxis )
   {
     IAxis axTime;
     IAxis axData;
@@ -91,7 +89,7 @@ public class HWVOR00Converter
     Number value;
     Date date;
 
-    obsNames.add( obsNum, inObs.getName() );
+    m_obsNames.add( m_obsNum, inObs.getName() );
     
     try
     {
@@ -104,14 +102,14 @@ public class HWVOR00Converter
         value = (Number)tplValues.getElement( i, axData );
         date = (Date)tplValues.getElement( i, axTime );
 
-        if( obsMap.containsKey( date ) )
+        if( m_obsMap.containsKey( date ) )
         {
-          ( (ArrayList)obsMap.get( date ) ).add( obsNum, value );
+          ( (ArrayList)m_obsMap.get( date ) ).add( m_obsNum, value );
         }
-        else if( obsNum == 0 )
+        else if( m_obsNum == 0 )
         {
-          obsMap.put( date, new ArrayList() );
-          ( (ArrayList)obsMap.get( date ) ).add( 0, value );
+          m_obsMap.put( date, new ArrayList() );
+          ( (ArrayList)m_obsMap.get( date ) ).add( 0, value );
         }
       }
     }
@@ -120,7 +118,7 @@ public class HWVOR00Converter
       // TODO Exception handling verbessern
       //exp;
     }
-    obsNum++;
+    m_obsNum++;
   }
   
   public void toHWVOR00( Writer file )
@@ -131,34 +129,27 @@ public class HWVOR00Converter
     String output;
     Date currDate;
 
-    try
+    //Die erste Zeile erzeugen
+    output = "Datum     ";
+    for( Iterator itr = m_obsNames.iterator(); itr.hasNext(); )
+      output += "\t" + (String)itr.next();
+
+    pWriter.println( output );
+
+    //Jede Zeile erzeugen, in der genügend Werte vorhanden sind
+    keys = m_obsMap.keySet();
+    for( Iterator itr = keys.iterator(); itr.hasNext(); )
     {
-      //Die erste Zeile erzeugen
-      output = "Datum     ";
-      for( Iterator itr = obsNames.iterator(); itr.hasNext(); )
-        output += "\t" + (String)itr.next();
-
-      pWriter.println( output );
-
-      //Jede Zeile erzeugen, in der genügend Werte vorhanden sind
-      keys = obsMap.keySet();
-      for( Iterator itr = keys.iterator(); itr.hasNext(); )
+      currDate = (Date)itr.next();
+      if( ( (ArrayList)m_obsMap.get( currDate ) ).size() >= m_obsNum )
       {
-        currDate = (Date)itr.next();
-        if( ( (ArrayList)obsMap.get( currDate ) ).size() >= obsNum )
-        {
-          output = HWVOR00_DATE.format( currDate );
-          currList = (ArrayList)obsMap.get( currDate );
-          for( Iterator i = currList.iterator(); i.hasNext(); )
-            output += "\t" + ( (Number)i.next() ).toString();
+        output = HWVOR00_DATE.format( currDate );
+        currList = (ArrayList)m_obsMap.get( currDate );
+        for( Iterator i = currList.iterator(); i.hasNext(); )
+          output += "\t" + ( (Number)i.next() ).toString();
 
-          pWriter.println( output );
-        }
+        pWriter.println( output );
       }
-    }
-    finally
-    {
-      pWriter.close();
     }
   }
   
