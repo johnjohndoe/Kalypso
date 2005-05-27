@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import javax.xml.bind.JAXBException;
 
@@ -86,7 +87,7 @@ public class GmlConvertFactoryTest extends TestCase
   {
     final File file = new File( dir, filename );
     final URL url = file.toURL();
-    assertTrue( "Return status must be ok", GmlConvertFactory.convertXml( url, m_urlUtilities ).isOK() );
+    assertTrue( "Return status must be ok", GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap() ).isOK() );
   }
 
 }

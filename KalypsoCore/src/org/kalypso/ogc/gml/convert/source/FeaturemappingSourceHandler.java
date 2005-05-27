@@ -3,6 +3,7 @@ package org.kalypso.ogc.gml.convert.source;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.gml.util.AddFeaturesMappingType;
@@ -31,11 +32,14 @@ public class FeaturemappingSourceHandler implements ISourceHandler
 
   private final IUrlResolver m_resolver;
 
-  public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context, final FeaturemappingSourceType source )
+  private final Map m_externData;
+
+  public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context, final FeaturemappingSourceType source, final Map externData )
   {
     m_resolver = resolver;
     m_context = context;
     m_source = source;
+    m_externData = externData;
   }
 
   /**
@@ -49,9 +53,9 @@ public class FeaturemappingSourceHandler implements ISourceHandler
 
     // XSD schreibt vor, dass es genau 2 sources gibt
     final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt
-        .next() );
+        .next(), m_externData );
     final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt
-        .next() );
+        .next(), m_externData );
 
     final List mappingList = m_source.getMapping();
     for( final Iterator mappingIt = mappingList.iterator(); mappingIt.hasNext(); )
