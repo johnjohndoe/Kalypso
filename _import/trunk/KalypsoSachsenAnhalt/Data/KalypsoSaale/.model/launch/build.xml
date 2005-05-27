@@ -2,35 +2,17 @@
 
 	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
 
-
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
 	<target name="fake" />
 
-	<target name="init">
-		<gmlProperty gmlURL="${calc.url}/.calculation">
-			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
-			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
-<!--
-			<property name="stopsim" featurepath=""/>
--->			
-		</gmlProperty>
-	</target>
-	
 	<!-- ================================= 
           target: create              
          ================================= -->
 	<target name="create" description="Erzeugt eine Rechenvariante">
 		<!-- TODO -->
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
-
-		<echo message="Verzeichnisse werden erstellt" />
-		<mkdir dir="${calc.dir}/Durchfluß" />
-		<mkdir dir="${calc.dir}/Niederschlag" />
-		<mkdir dir="${calc.dir}/Schnee" />
-		<mkdir dir="${calc.dir}/Speicherinhalt" />
-		<mkdir dir="${calc.dir}/Temperatur" />
 
 		<echo message="Grunddaten und Vorlagen werden kopiert" />
 		<copy todir="${calc.dir}">
@@ -41,32 +23,27 @@
 		</copy>
 	</target>
 
-	<target name="update" depends="init" description="Aktualisiert eine Rechenvariante">
-		<!-- TODO -->
-		<echo message="Rechenvariante aktualisieren: ${calc.dir}" />
+	<target name="update" description="Aktualisiert eine Rechenvariante">
+		<echo message="Zeitreihen von WISKI laden: ${calc.dir}" />
 
-		<echo message="Zeitreihen werden von WISKI geladen" />
+		<gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+			<!-- stopsim = startforecast + 48h -->
+			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
+		</gmlProperty>
+			
+		<echo message="Verzeichnisse werden erstellt" />
+		<mkdir dir="${calc.dir}/Durchfluß" />
+		<mkdir dir="${calc.dir}/Niederschlag" />
+		<mkdir dir="${calc.dir}/Schnee" />
+		<mkdir dir="${calc.dir}/Speicherinhalt" />
+		<mkdir dir="${calc.dir}/Temperatur" />
 
-		<echo message="Projekt: ${project.url}"/>
-		<echo message="Rechenvariante: ${calc.url}"/>
-		
-		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
 		</copyObservation>
 
-	<!--		ALT
-		<transformation className="org.kalypso.util.transformation.ObservationResolver">
-			<argument name="gml" value=":calcdir:wiskiimport_gesamt.gml"/>
-			<argument name="feature" value="Wiski"/>
-			<argument name="sourceObservation1" value="wiski_vergangenheit"/>
-			<argument name="rangeMode1" value="start-stop"/>
-			<argument name="targetObservation" value="lokal"/>
-			<argument name="targetFolder" value=":calcdir:"/>
-			<argument name="startsim" value=":startsim:"/>
-			<argument name="startforecast" value=":startforecast:"/>
-			<argument name="endsim" value=":endsim:"/>
-		</transformation>
-	-->
-
+		<!-- TODO: alle anderen auch holen -->
 	</target>
 </project>
