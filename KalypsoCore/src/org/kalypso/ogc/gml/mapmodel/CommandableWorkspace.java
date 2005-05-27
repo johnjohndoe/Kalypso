@@ -44,17 +44,18 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.util.command.DefaultCommandManager;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandManager;
+import org.kalypso.util.command.ICommandManagerListener;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandManager;
-import org.kalypso.util.command.ICommandManagerListener;
 
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
@@ -224,7 +225,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace;
   }
 
-  public String getFeaturepathForFeature( final Feature feature )
+  public FeaturePath getFeaturepathForFeature( final Feature feature )
   {
     return m_workspace.getFeaturepathForFeature( feature );
   }

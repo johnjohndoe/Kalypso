@@ -135,17 +135,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
 
-  private final int m_selectionID;
-
-  //  final Color m_selectColor;
-
-  //  final Color m_unselectColor;
-
   final TableCursor m_tableCursor;
 
   private IFeatureModifier[] m_modifier;
-
-  private final boolean m_bCursorSelects;
 
   private final LayerTableSorter m_sorter = new LayerTableSorter();
 
@@ -220,8 +212,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_featureControlFactory = featureControlFactory;
-    m_selectionID = selectionID;
-    m_bCursorSelects = bCursorSelects;
     m_templateTarget = templateTarget;
 
     setContentProvider( new LayerTableContentProvider() );

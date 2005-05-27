@@ -24,6 +24,7 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * @author belger
@@ -97,17 +98,17 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     if( m_viewer != null )
     {
+      final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );
       final String ftpName = getFeatureTypeProperty().getName();
+      final FeaturePath featurePath = new FeaturePath( parentFeaturePath , ftpName );
 
-//      final GMLWorkspace_Impl workspace = new GMLWorkspace_Impl( null, feature, null, null, null, null );
-//      final CommandableWorkspace c_workspace = new CommandableWorkspace( workspace );
       final CommandableWorkspace c_workspace;
       if( workspace instanceof CommandableWorkspace )
         c_workspace = (CommandableWorkspace)workspace;
       else
         c_workspace = new CommandableWorkspace( workspace );
       
-      m_kft = new KalypsoFeatureTheme( c_workspace, ftpName, ftpName );
+      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName );
       m_kft.addModellListener( this );
       m_viewer.setInput( m_kft );
 

@@ -20,7 +20,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
-import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 
 /**
  * @author doemming
@@ -373,81 +372,11 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * <p>
-   * Gibt das durch den FeaturPath gegebene Feature zurück.
-   * </p>
-   * <p>
-   * Syntax des FeaturePath:
-   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
-   * der featureTypeName optional ist
-   * </p>
-   * <p>
-   * Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende
-   * </p>
-   * <p>
-   * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue)
-   * FeatureList zurückgegeben, deren Elemente alle vom angegebenen Typ sind
-   * </p>
-   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeatureFromPath( final String featurePath )
   {
-    final FeaturePath path = new FeaturePath( featurePath );
-    if( path.isID() )
-      return getFeature( path.getID() );
-
-    Feature aktuFeature = getRootFeature();
-    for( int i = 0; i < path.getLength(); i++ )
-    {
-      final Object value = aktuFeature.getProperty( path.getSegment( i ) );
-      if( value instanceof Feature )
-      {
-        aktuFeature = (Feature)value;
-        continue;
-      }
-      else if( value instanceof String )
-      {
-        aktuFeature = getFeature( (String)value );
-        continue;
-      }
-      else if( value instanceof FeatureList )
-      {
-        // wir können nicht in listen absteigen
-        // deshalb: falls wir auf eine Liste stossen, muss es das ergebnios sein
-        // sonst fehler
-        if( i == path.getLength() - 1 )
-        {
-          final String typename = path.getTypename();
-          if( typename == null )
-            return value;
-
-          final FeatureList fl = (FeatureList)value;
-
-          // Versuchsweise!!! nicht löschen
-
-          // ALT: eine neue FeatureList zurückgeben, die nur diesen Typ enthält
-          // Problem: änderungen in dieser Liste führen nicht zu änderungen im
-          // GML
-          //          final FeatureTypeVisitor visitor = new FeatureTypeVisitor(
-          // typename, true );
-          //          fl.accept( visitor );
-          //          final Collection results = visitor.getResults();
-          //          final FeatureList newList = FeatureFactory.createFeatureList();
-          //          newList.addAll( results );
-          //          return newList;
-
-          // NEU: eine gefiltere FeatureList (siehe FilteredFeatureList)
-          // Problem: ist langsamer und unterstützt nicht alle Operationen der
-          // Originalliste
-          return new FilteredFeatureList( fl, typename, true );
-
-        }
-        return null;
-      }
-    }
-
-    return aktuFeature;
+    return new FeaturePath( featurePath ).getFeature( this );
   }
 
   /**
@@ -460,48 +389,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public FeatureType getFeatureTypeFromPath( final String featurePath )
   {
-    final FeaturePath path = new FeaturePath( featurePath );
-    if( path.isID() )
-    {
-      // todo: das feature muss es noch gar nicht geben -> problem?
-      final Feature feature = getFeature( path.getID() );
-      return feature == null ? null : feature.getFeatureType();
-    }
-
-    final String typename = path.getTypename();
-
-    FeatureType aktuType = getRootFeature().getFeatureType();
-    for( int i = 0; i < path.getLength(); i++ )
-    {
-      final FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)aktuType
-          .getProperty( path.getSegment( i ) );
-
-      if( i == path.getLength() - 1 && typename != null )
-      {
-        // falls ein typname vorgegeben ist, schaun, ob dieser hier vorkommt
-        final FeatureType[] associationFeatureTypes = property.getAssociationFeatureTypes();
-        for( int j = 0; j < associationFeatureTypes.length; j++ )
-        {
-          final FeatureType type = associationFeatureTypes[j];
-          if( type.getName().equals( typename ) )
-            return type;
-        }
-        
-        throw new IllegalArgumentException( "Unknown typename in featurepath: " + typename ); 
-      }
-
-      aktuType = property.getAssociationFeatureType();
-    }
-
-    return aktuType;
+    return new FeaturePath( featurePath ).getFeatureType( this );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.kalypsodeegree.model.feature.Feature)
    */
-  public String getFeaturepathForFeature( final Feature feature )
+  public FeaturePath getFeaturepathForFeature( final Feature feature )
   {
-    return "#fid#" + feature.getId();
+    return new FeaturePath( feature );
   }
 
   /**
