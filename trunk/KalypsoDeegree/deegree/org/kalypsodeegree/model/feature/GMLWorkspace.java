@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * @author doemming
@@ -57,7 +58,7 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public FeatureType getFeatureTypeFromPath( final String featurePath );
 
-  public String getFeaturepathForFeature( final Feature feature );
+  public FeaturePath getFeaturepathForFeature( final Feature feature );
 
   public String getSchemaLocation();
 
