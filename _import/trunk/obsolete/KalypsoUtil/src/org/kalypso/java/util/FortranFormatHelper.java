@@ -209,6 +209,12 @@ public class FortranFormatHelper
     return printf( decimalFormat.format( value.doubleValue() ), format );
   }
 
+  public static String printf( int value, String format )
+  {
+    // TODO remove this dirty hack with java 1.5 and use java printf instead
+    return printf( Integer.toString(value), format );
+  }
+
   /**
    * @param format
    *          fortran format
