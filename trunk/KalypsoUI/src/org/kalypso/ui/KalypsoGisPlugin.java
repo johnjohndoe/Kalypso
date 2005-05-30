@@ -104,7 +104,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.na.UrlCatalogNA;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -581,13 +580,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
       final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
       final IUrlCatalog calcCatalog = new CalcServiceCatalog();
-      final IUrlCatalog twoDCatalog = new org.kalypsodeegree_impl.gml.schema.schemata.twoD.UrlCatalog2d();
-      final IUrlCatalog naCatalog = new UrlCatalogNA();
+      //      final IUrlCatalog twoDCatalog = new
+      // org.kalypsodeegree_impl.gml.schema.schemata.twoD.UrlCatalog2d();
+      //      final IUrlCatalog naCatalog = new UrlCatalogNA();
 
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
       {
-          naCatalog,
-          twoDCatalog, // test
+          // test
+//          naCatalog,
+//          twoDCatalog,
           serverUrlCatalog,
           calcCatalog } );
 
