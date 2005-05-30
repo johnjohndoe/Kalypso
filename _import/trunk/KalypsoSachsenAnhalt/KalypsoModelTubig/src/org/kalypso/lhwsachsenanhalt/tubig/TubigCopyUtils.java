@@ -72,19 +72,22 @@ public class TubigCopyUtils
     {
       if( sMess.startsWith( TubigConst.STDOUT ) )
       {
+        sMess = sMess.substring( TubigConst.STDOUT.length() );
         pwLog.println( sMess );
         sLastWrtr = "pwLog";
       }
       else if( sMess.startsWith( TubigConst.ENDE ) )
       {
         // gerade ausgeführtes m_xy.exe wurde normal beendet
-        pwLog.println( sMess );
+        sMess = sMess.substring( TubigConst.ENDE.length() );
+        pwLog.println( sMess + " beendet");
         bExeEnde = true;
         sLastWrtr = "pwLog";
       }
       else if( sMess.startsWith( TubigConst.STDERR ) )
       {
         // Fehler in m_xy: Abbruch der Rechnung
+        sMess = sMess.substring( TubigConst.STDERR.length() );
         pwErr.println( sMess );
         sLastWrtr = "pwErr";
         throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,

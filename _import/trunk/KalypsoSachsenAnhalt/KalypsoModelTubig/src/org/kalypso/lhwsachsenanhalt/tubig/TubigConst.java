@@ -142,11 +142,11 @@ public class TubigConst
 
   public static final String UNBEKANNT = "unbekannt";
 
-  public static final String STDOUT = "StdOut";
+  public static final String STDOUT = "StdOut ";
 
-  public static final String STDERR = "StdErr";
+  public static final String STDERR = "StdErr ";
 
-  public static final String ENDE = "**ende**";
+  public static final String ENDE = "**ende** ";
 
   // Finish-Text
   public static final String FINISH_ERROR_TEXT = "Bei der Berechnung trat ein Fehler auf, weitere Informationen dazu finden Sie in den Log-Dateien. Es werden keine Ergebnis-Dateien übertragen.";
