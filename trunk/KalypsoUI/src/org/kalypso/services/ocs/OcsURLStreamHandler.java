@@ -48,7 +48,10 @@ import java.net.URLConnection;
 import javax.activation.DataHandler;
 
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.ogc.sensor.zml.request.RequestFactory;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
@@ -95,6 +98,26 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     {
       e.printStackTrace();
 
+      try
+      {
+        // we might be here because the server is down. If the href contains
+        // a request, let create a default observation according to it.
+        final IObservation obs = RequestFactory.createDefaultObservation( href );
+        final File file = File.createTempFile( "default-zml", "zml" );
+        file.deleteOnExit();
+       
+        ZmlFactory.writeToFile( obs, file );
+        
+        return file.toURL().openConnection();
+      }
+      catch( final Exception se )
+      {
+        se.printStackTrace();
+        
+        // tricky, re-assign exception in order to use the throw new call
+        e = se;
+      }
+      
       throw new IOException( "URL could not be resolved: "
           + e.getLocalizedMessage() );
     }

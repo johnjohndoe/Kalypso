@@ -67,6 +67,12 @@ public class RequestFactory
     // empty
   }
 
+  /**
+   * Parse an href (usually a Zml-Href) that might contain the request
+   * specification
+   * 
+   * @throws SensorException if the href does not contain a valid request
+   */
   public static RequestType parseRequest( final String href )
       throws SensorException
   {
@@ -108,7 +114,10 @@ public class RequestFactory
   }
 
   /**
-   * Create a default observation (best effort) according to the request.
+   * Create a default observation (best effort) according to the request
+   * 
+   * @return a new instance of SimpleObservation that will statisfy the request
+   *         specification
    */
   public static IObservation createDefaultObservation( final RequestType xmlReq )
   {
@@ -139,5 +148,16 @@ public class RequestFactory
         .toArray( new IAxis[axes.size()] ) );
 
     return obs;
+  }
+
+  /**
+   * Create a default observation using the href
+   */
+  public static IObservation createDefaultObservation( final String href )
+      throws SensorException
+  {
+    final RequestType xmlReq = parseRequest( href );
+
+    return createDefaultObservation( xmlReq );
   }
 }
