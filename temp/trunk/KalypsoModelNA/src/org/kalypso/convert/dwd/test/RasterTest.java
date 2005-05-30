@@ -50,15 +50,15 @@ import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypso.convert.dwd.KrigingReader;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.zml.repository.virtual.ObjectFactory;
 import org.kalypso.zml.repository.virtual.VirtualRepository;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 public class RasterTest extends TestCase
 {

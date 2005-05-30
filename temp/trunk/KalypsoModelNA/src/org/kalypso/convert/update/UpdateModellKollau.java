@@ -50,7 +50,6 @@ import java.util.List;
 
 import org.kalypso.convert.WeisseElsterConstants;
 import org.kalypso.convert.namodel.NAZMLGenerator;
-import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.net.IUrlCatalog;
