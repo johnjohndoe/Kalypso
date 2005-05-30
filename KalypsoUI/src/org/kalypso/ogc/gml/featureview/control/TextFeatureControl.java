@@ -69,32 +69,18 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   private final Color m_errorColor = Display.getCurrent().getSystemColor( SWT.COLOR_RED );
 
   private Text m_text = null;
+  
+  private String m_currentValue;
 
   private boolean m_isValid = false;
 
   private final IFeatureModifier m_modifier;
-
-//  public TextFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
-//  {
-//    this( workspace, null, ftp );
-//  }
 
   public TextFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
     super( workspace, feature, ftp );
 
     m_modifier = new StringModifier( ftp );
-  }
-
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  public void dispose()
-  {
-    super.dispose();
-
-    if( m_text != null )
-      m_text.dispose();
   }
 
   /**
@@ -109,7 +95,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     {
       public void modifyText( final ModifyEvent e )
       {
-        updateValid();
+        onTextModified();
       }
     } );
 
@@ -126,13 +112,20 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     return m_text;
   }
 
+  protected void onTextModified()
+  {
+    m_currentValue = m_text.getText();
+    updateValid();
+  }
+
   protected void setValid( final boolean valid )
   {
     if( m_isValid != valid )
     {
       m_isValid = valid;
 
-      m_text.setForeground( m_isValid ? null : m_errorColor );
+      if( m_text != null && !m_text.isDisposed() )
+        m_text.setForeground( m_isValid ? null : m_errorColor );
     }
   }
 
@@ -146,7 +139,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   public void setEnabled( final boolean enabled )
   {
-    m_text.setEnabled( enabled );
+    if( m_text != null && !m_text.isDisposed() )
+      m_text.setEnabled( enabled );
   }
 
   /**
@@ -196,7 +190,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     final Feature feature = getFeature();
 
-    final String text = m_text.getText();
+    final String text = m_currentValue;
 
     final Object newData = m_modifier.parseInput( getFeature(), text );
 
@@ -212,7 +206,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   protected void updateValid()
   {
-    setValid( m_modifier.isValid( m_text.getText() ) == null );
+    final String text = m_currentValue;
+    setValid( m_modifier.isValid( text ) == null );
   }
 
   /**

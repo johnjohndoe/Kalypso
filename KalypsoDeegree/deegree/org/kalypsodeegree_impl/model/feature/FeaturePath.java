@@ -9,6 +9,22 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 
 /**
+ * Der FeaturePath denotiert ein Feature, eine FeatureList oder einen FeatureType innerhalb eines GMLWorkspace.
+ * 
+ * Notation:
+ * <!CDATA[[
+ *    property  ::=  Der Name einer FeatureAssociationProperty
+ *    typename  ::=  Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden
+ *    emptypath ::=  Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ
+ * 
+ *    segment ::=  #fid#<id>  |
+ *                 <property> |
+ *                 <property>[<typename>]
+ *
+ *    featurePath ::=  <emptypath> |
+ *                      <segment>/<segment>                 
+ * ]]>
+ * 
  * @author belger
  */
 public class FeaturePath
@@ -16,35 +32,16 @@ public class FeaturePath
   /** Separates two segments in the feature-path */
   public final static char SEGMENT_SEPARATOR = '/';
   
-  /** Somethin gbetween two '/' */
+  /** Something between two '/' */
   private final Segment[] m_segments;
-  
-  /** Path may be filtered with type (Applies only to End of Path) */
-  private final String m_typename;
   
   public FeaturePath( final String path )
   {
     if( path.trim().length() == 0 )
-    {
       m_segments = new Segment[] {};
-      m_typename = null;
-    }
     else
     {
-      final String realPath;
-      if( path.endsWith( "]" ) )
-      {
-        final int start = path.lastIndexOf( '[' );
-        m_typename = path.substring( start + 1, path.length() - 1 );
-        realPath = path.substring( 0, start );
-      }
-      else
-      {
-        realPath = path;
-        m_typename = null;
-      }
-      
-      final String[] segments = realPath.split( "/" );
+      final String[] segments = path.split( "/" );
       m_segments = new Segment[segments.length];
       for( int i = 0; i < segments.length; i++ )
         m_segments[i] = new Segment( segments[i] );
@@ -54,7 +51,6 @@ public class FeaturePath
   public FeaturePath( final Feature feature )
   {
     m_segments = new Segment[] { new Segment( feature ) };
-    m_typename = null;
   }
   
   public FeaturePath( final FeaturePath parent, final String segment )
@@ -63,9 +59,6 @@ public class FeaturePath
     m_segments = new Segment[parentLength + 1];
     System.arraycopy( parent.m_segments, 0, m_segments, 0, parentLength );
     m_segments[parentLength] = new Segment( segment );
-
-    // wenn der Parent einen Typnamen hat, macht das ganze eigentlich keinen sinn
-    m_typename = parent.m_typename;
   }
 
   /**
@@ -89,18 +82,7 @@ public class FeaturePath
    */
   public Object getFeature( final GMLWorkspace workspace )
   {
-    final Object value = getFeatureForSegment( workspace, workspace.getRootFeature(), 0 );
-    // falls ein bestimmter typ gewünscht ist, jetzt filtern
-    // geht natürlich nur bei FeatureListen
-    if( m_typename != null )
-    {
-      if( value instanceof FeatureList )
-        return  new FilteredFeatureList( (FeatureList)value, m_typename, true );
-      
-      return null;
-    }
-    
-    return value;
+    return getFeatureForSegment( workspace, workspace.getRootFeature(), 0 );
   }
   
   public Object getFeatureForSegment( final GMLWorkspace workspace, final Feature feature, final int segmentIndex )
@@ -108,7 +90,7 @@ public class FeaturePath
     if( segmentIndex >= m_segments.length )
       return feature;
 
-    final Object value = m_segments[segmentIndex].getValueForSegment( workspace, feature );
+    final Object value = m_segments[segmentIndex].getValue( workspace, feature );
     if( value instanceof Feature )
       return getFeatureForSegment( workspace, (Feature)value, segmentIndex + 1 );
     else if( value instanceof String )
@@ -123,12 +105,8 @@ public class FeaturePath
   /** Voraussetzung, mindestens das Root-Feature muss existieren */
   public FeatureType getFeatureType( final GMLWorkspace workspace )
   {
-    if( m_typename != null )
-      return workspace.getFeatureType( m_typename );
-    
     final FeatureType rootType = workspace.getRootFeature().getFeatureType();
-    final FeatureType featureType = getFeatureTypeForSegment( workspace, rootType, 0 );
-    return featureType;
+    return getFeatureTypeForSegment( workspace, rootType, 0 );
   }
   
   private FeatureType getFeatureTypeForSegment( final GMLWorkspace workspace, final FeatureType featureType, final int segmentIndex )
@@ -137,7 +115,7 @@ public class FeaturePath
       return featureType;
 
     final Segment segment = m_segments[segmentIndex];
-    final FeatureType type = segment.getTypeForSegment( workspace, featureType );
+    final FeatureType type = segment.getType( workspace, featureType );
 
     return getFeatureTypeForSegment( workspace, type, segmentIndex + 1 );
   }
@@ -156,9 +134,6 @@ public class FeaturePath
         buffer.append( SEGMENT_SEPARATOR );
     }
     
-    if( m_typename != null )
-      buffer.append( '[' ).append( m_typename ).append( ']' );
-    
     return buffer.toString();
   }
   
@@ -168,6 +143,9 @@ public class FeaturePath
 
     private final String m_name;
     private final boolean m_isId;
+    
+    /** Path may be filtered with type (Applies only to End of Path) */
+    private final String m_typename;
 
     public Segment( final String segment )
     {
@@ -175,14 +153,30 @@ public class FeaturePath
       
       // FeatureID?: '#fid#pegel_123'
       if( m_isId )
+      {
         m_name = segment.substring( ID_MARKER.length() );
+        m_typename = null;
+      }
       else
-        m_name = segment;
+      {
+        if( segment.endsWith( "]" ) )
+        {
+          final int start = segment.lastIndexOf( '[' );
+          m_typename = segment.substring( start + 1, segment.length() - 1 );
+          m_name = segment.substring( 0, start );
+        }
+        else
+        {
+          m_typename = null;
+          m_name = segment;
+        }
+      }
     }
     
     public Segment( final Feature feature )
     {
       m_name = feature.getId();
+      m_typename = null;
       m_isId = true;
     }
 
@@ -196,22 +190,50 @@ public class FeaturePath
       return m_isId;
     }
     
-    public Object getValueForSegment( final GMLWorkspace workspace, final Feature feature )
+    public Object getValue( final GMLWorkspace workspace, final Feature feature )
     {
       if( isID() )
         return workspace.getFeature( getName() );
 
-      return feature.getProperty( getName() );
+      final Object value = feature.getProperty( getName() );
+
+      // falls ein bestimmter typ gewünscht ist, jetzt filtern
+      // geht natürlich nur bei FeatureListen
+      if( m_typename != null )
+      {
+        if( value instanceof FeatureList )
+          return  new FilteredFeatureList( (FeatureList)value, m_typename, true );
+        
+        return null;
+      }
+      
+      return value;
     }
 
-    public FeatureType getTypeForSegment( final GMLWorkspace workspace, final FeatureType featureType )
+    public FeatureType getType( final GMLWorkspace workspace, final FeatureType featureType )
     {
       if( isID() )
         return workspace.getFeature( getName() ).getFeatureType();
       
       final FeatureTypeProperty ftp = featureType.getProperty( getName() );
       if( ftp instanceof FeatureAssociationTypeProperty )
-        return ((FeatureAssociationTypeProperty)ftp).getAssociationFeatureType();
+      {
+        final FeatureAssociationTypeProperty assocFtp = (FeatureAssociationTypeProperty)ftp;
+        if( m_typename != null )
+        {
+          final FeatureType[] associationFeatureTypes = assocFtp.getAssociationFeatureTypes();
+          for( int i = 0; i < associationFeatureTypes.length; i++ )
+          {
+            final FeatureType type = associationFeatureTypes[i];
+            if( m_typename.equals( type.getName() ) )
+              return type;
+          }
+          
+          return null;
+        }
+
+        return assocFtp.getAssociationFeatureType();
+      }
       
       return null;
     }
@@ -221,10 +243,17 @@ public class FeaturePath
      */
     public String toString()
     {
-      if( isID() )
-        return ID_MARKER + m_name;
+      final StringBuffer buffer = new StringBuffer();
       
-      return m_name;
+      if( isID() )
+        buffer.append( ID_MARKER );
+      
+      buffer.append( m_name );
+      
+      if( m_typename != null )
+        buffer.append( '[' ).append( m_typename ).append( ']' );
+      
+      return buffer.toString();
     }
   }
 }

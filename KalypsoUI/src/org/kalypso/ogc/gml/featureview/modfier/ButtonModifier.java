@@ -52,6 +52,8 @@ import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 /**
  * @author belger
@@ -131,7 +133,14 @@ public class ButtonModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    return "<Press>";
+    // besser: abhängig von der FeatureTypeProperty etwas machen
+    final Object value = getValue( f );
+    final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( m_ftp.getType() );
+    if( handler != null && value != null )
+      // TODO: schön wäre es, wenn der Type-Handler dies tun würde
+      return value.toString();
+    
+    return "<Editieren...>";
   }
 
   /**

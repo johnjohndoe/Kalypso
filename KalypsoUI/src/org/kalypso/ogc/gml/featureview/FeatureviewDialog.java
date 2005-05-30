@@ -206,7 +206,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   /**
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
-  public void modifyText( ModifyEvent e )
+  public void modifyText( final ModifyEvent e )
   {
     final Collection changes = new ArrayList();
     m_featureComposite.collectChanges( changes );

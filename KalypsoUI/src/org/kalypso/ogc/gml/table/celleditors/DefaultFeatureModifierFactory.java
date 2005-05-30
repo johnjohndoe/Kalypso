@@ -46,6 +46,8 @@ import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 /**
  * @author Belger
@@ -76,6 +78,12 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
     if( "FeatureAssociationType".equals( type ) )
+      return new ButtonModifier( workspace, ftp );
+
+    // TODO: TypeHandler should decide, what todo
+    // jetzt: falls es ein externer handler ist, einfach immer nen button generieren
+    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( type );
+    if( typeHandler != null )
       return new ButtonModifier( workspace, ftp );
 
     return new StringModifier( ftp );
