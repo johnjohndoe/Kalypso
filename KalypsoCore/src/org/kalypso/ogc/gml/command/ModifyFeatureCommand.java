@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import java.util.HashMap;
@@ -45,34 +45,55 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author belger
  */
 public class ModifyFeatureCommand implements ICommand
 {
-  private final Feature m_feature;
+  private final Feature[] m_features;
+
   private final Map m_newMap;
-  private final Map m_oldMap = new HashMap();
+
+  private final Map[] m_oldMap;
+
   private final GMLWorkspace m_workspace;
-  
+
+  /**
+   * @param workspace
+   * @param features features to modify
+   * @param map propertyname/value map of properties to modify
+   */
+  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature features[], final Map map )
+  {
+    m_workspace = workspace;
+    m_features = features;
+    m_newMap = map;
+    m_oldMap = new HashMap[features.length];
+    for( int i = 0; i < features.length; i++ )
+    {
+      Feature feature = features[i];
+      m_oldMap[i] = new HashMap();
+      for( Iterator iter = map.keySet().iterator(); iter.hasNext(); )
+      {
+        final String propName = (String)iter.next();
+        m_oldMap[i].put( propName, feature.getProperty( propName ) );
+      }
+    }
+  }
 
   public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature feature, final Map map )
   {
-    m_workspace = workspace;
-    m_feature = feature;
-    m_newMap = map;
-    
-    for( Iterator iter = map.keySet().iterator(); iter.hasNext(); )
-    {
-      final String propName = (String)iter.next();
-      m_oldMap.put( propName, feature.getProperty(propName) );
-    }
+    this( workspace, new Feature[]
+    { feature }, map );
   }
 
   /**
@@ -88,7 +109,28 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
-    setFeatureProperty( m_newMap );
+    for( Iterator iter = m_newMap.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)iter.next();
+      final String propName = (String)entry.getKey();
+      final String propType = m_features[0].getFeatureType().getProperty( propName ).getType();
+      for( int i = 0; i < m_features.length; i++ )
+      {
+        try
+        {
+          final Object value = FeatureHelper.cloneData( entry.getValue(), propType );
+          final FeatureProperty property;
+          property = FeatureFactory.createFeatureProperty( propName, value );
+          m_features[i].setProperty( property );
+        }
+        catch( Exception e )
+        {
+          // ignore exception and copy next features property
+        }
+      }
+    }
+    FeatureList list = FeatureFactory.createFeatureList( null, null, m_features );
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, list ) );
   }
 
   /**
@@ -96,7 +138,7 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    setFeatureProperty( m_newMap );  
+    process();
   }
 
   /**
@@ -104,7 +146,17 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    setFeatureProperty( m_oldMap );  
+    for( int i = 0; i < m_features.length; i++ )
+    {
+      for( Iterator iter = m_oldMap[i].entrySet().iterator(); iter.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)iter.next();
+        final FeatureProperty property = FeatureFactory.createFeatureProperty( (String)entry.getKey(), entry.getValue() );
+        m_features[i].setProperty( property );
+      }
+    }
+    FeatureList list = FeatureFactory.createFeatureList( null, null, m_features );
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, list ) );
   }
 
   /**
@@ -112,19 +164,6 @@ public class ModifyFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Wert ?ndern";
-  }
-
-  private void setFeatureProperty( final Map map )
-  {
-    for( Iterator iter = map.entrySet().iterator(); iter.hasNext(); )
-    {
-      final Map.Entry entry = (Entry)iter.next();
-      
-      final FeatureProperty property = FeatureFactory.createFeatureProperty( (String)entry.getKey(), entry.getValue() );
-      m_feature.setProperty( property );
-    }
-
-    m_workspace.fireModellEvent( null );
+    return "Wert ändern";
   }
 }

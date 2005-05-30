@@ -112,7 +112,7 @@ public class FeatureHelper
    * @throws UnsupportedOperationException If type of object is not supported
    *           for clone
    */
-  private static Object cloneData( final Object object, final String type )
+  public static Object cloneData( final Object object, final String type )
   {
     if( object == null )
       return null;

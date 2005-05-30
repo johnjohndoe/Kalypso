@@ -55,10 +55,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
@@ -66,9 +64,12 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -198,6 +199,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
   };
 
+  private FeatureTypeProperty m_lastSelectedFTP = null;
+
+  private Feature m_lastSelectedFE;
+
   /**
    * @param parent
    * @param templateTarget
@@ -229,22 +234,33 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
     //    final TableCursor tc = new TableCursor(getTable(),SWT.NONE);
     m_tableCursor = tc;
-    addSelectionChangedListener( new ISelectionChangedListener()
+    getTable().addMouseListener( new MouseAdapter()
     {
-      public void selectionChanged( SelectionChangedEvent event )
+      public void mouseUp( MouseEvent e )
       {
-        // TODO what to do with the selection ?
-        //        IStructuredSelection selection =
-        // (IStructuredSelection)event.getSelection();
-        //        System.out.println( "LayerTableViewer.selectionChanged: " +
-        // selection.toList().size() + " elements have changed" );
-        //        System.out.println( " LayerTableViewer.getSelection() " + (
-        // (IStructuredSelection)getSelection() ).toList().size() + " features"
-        // );
-        //        System.out.println( " LayerTableViewer.getTable.getSelection() " +
-        // getTable().getSelection().length + " items" );
+        // to remember selected row,
+        rememberLastSelectedFTPAndRow( e.x, e.y );
       }
     } );
+  }
+
+  public void rememberLastSelectedFTPAndRow( int xPos, int yPos )
+  {
+    TableItem item = getTable().getItem( new Point( xPos, yPos ) );
+    m_lastSelectedFE = (Feature)item.getData();
+    TableColumn[] columns = getTable().getColumns();
+    int x = 0;
+    for( int i = 0; i < columns.length; i++ )
+    {
+      TableColumn column = columns[i];
+      x += column.getWidth();
+      if( x > xPos )
+      {
+        m_lastSelectedFTP = m_modifier[i].getFeatureTypeProperty();
+        return;
+      }
+    }
+    m_lastSelectedFTP = null;
   }
 
   public void dispose()
@@ -352,13 +368,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final int alignmentInt = SWTUtilities.createStyleFromString( alignment );
     final TableColumn tc = new TableColumn( table, alignmentInt );
     tc.setAlignment( alignmentInt );
+
     tc.setData( COLUMN_PROP_NAME, propertyName );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setData( COLUMN_PROP_FORMAT, format );
     tc.setWidth( width );
-
     setColumnText( tc );
 
     TableColumnTooltipListener.hookControl( tc );
@@ -499,7 +515,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if(getTheme()==null)
+    if( getTheme() == null )
       return;
     // TODO hanlde here the highlighting stuff
     // Feature-Selection auf Selection übertragen
@@ -831,6 +847,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final CommandableWorkspace workspace = theme.getWorkspace();
     if( workspace == null )
       return selection;
-    return new CommandableFeatureSelection( theme, selection );
+    return new CommandableFeatureSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE );
   }
 }

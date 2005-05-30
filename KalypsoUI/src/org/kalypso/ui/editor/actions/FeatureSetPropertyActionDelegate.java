@@ -34,16 +34,16 @@
  */
 package org.kalypso.ui.editor.actions;
 
-import java.util.List;
+import java.util.HashMap;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.DeleteFeatureCommand;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -54,10 +54,12 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * 
  * @author doemming (24.05.2005)
  */
-public class FeatureRemoveActionDelegate implements IActionDelegate
+public class FeatureSetPropertyActionDelegate implements IActionDelegate
 {
 
   private ICommandableFeatureSelection m_selection = null;
+
+  private FeatureTypeProperty m_ftp = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -65,28 +67,26 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
   public void run( IAction action )
   {
     System.out.println( "action remove Feature" );
-    if( action.isEnabled() && m_selection != null )
+    if( action.isEnabled() && m_selection != null && m_ftp != null )
     {
+
       final IKalypsoFeatureTheme theme = m_selection.getKalypsoFeatureTheme();
       final CommandableWorkspace workspace = theme.getWorkspace();
-      final FeatureList featureList = theme.getFeatureList();
-      final Feature parentFeature = featureList.getParentFeature();
-      final FeatureTypeProperty ftp = featureList.getParentFeatureTypeProperty();
-      final List list = m_selection.toList();
-      for( int i = 0; i < list.size(); i++ )
+      final FeatureTypeProperty ftp = m_selection.getSelectedFeatureTypeProperty();
+      final HashMap map = new HashMap();
+      final Object value = m_selection.getSelectedRow().getProperty( ftp.getName() );
+      map.put( m_ftp.getName(), value );
+      final Feature[] fes = (Feature[])m_selection.toList().toArray( new Feature[m_selection.size()] );
+      final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, fes, map );
+      try
       {
-        Feature f = (Feature)list.get( i );
-        DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, ftp.getName(), f );
-        try
-        {
-          workspace.postCommand( command );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        workspace.postCommand( command );
       }
-      System.out.println( "  do remove Feature" );
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
 
   }
@@ -100,12 +100,17 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
     if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
     {
       m_selection = (ICommandableFeatureSelection)selection;
-      action.setEnabled( true );
-      String text = action.getText();
-      String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
-      action.setText( newText );
+      m_ftp = m_selection.getSelectedFeatureTypeProperty();
+      if( m_ftp != null )
+      {
+        action.setEnabled( true );
+        String text = action.getText();
+        String lang = KalypsoGisPlugin.getDefault().getLang();
+        String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + m_ftp.getAnnotation( lang ).getLabel() + ")";
+        action.setText( newText );
+        return;
+      }
     }
-    else
-      action.setEnabled( false );
+    action.setEnabled( false );
   }
 }

@@ -57,7 +57,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.SubMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -189,34 +188,18 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     {
       public void menuAboutToShow( IMenuManager manager )
       {
-        fillContextMenu( manager );
-        appendSpaltenActions(manager);
+        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        manager.add( new Separator() );
+        //    mgr.add(selectAllAction);
+        appendSpaltenActions( manager );
       }
     } );
-    //  Create menu.
-
-    
-    //    SubMenuManager subMenuManager = new SubMenuManager(menuManager);
-//    createSpaltenMenu( menuMsubMenuManager );
 
     Menu menu = menuManager.createContextMenu( m_layerTable.getControl() );
     m_layerTable.getControl().setMenu( menu );
 
-    // Register menu for extension.
-    //    final Control viewerControl = m_layerTable.getControl();
-    //    final Menu menu = menuMgr.createContextMenu( viewerControl );
     getSite().registerContextMenu( menuManager, m_layerTable );
-    //    viewerControl.setMenu( menu );
-
     load();
-  }
-
-  void fillContextMenu( IMenuManager mgr )
-  {
-    mgr.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
-    mgr.add( new Separator() );
-    
-    //    mgr.add(selectAllAction);
   }
 
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
@@ -299,29 +282,29 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     }
   }
 
-//  public void createSpaltenMenu( IMenuManager menuManager )
-//  {
-//    //    menuManager.setRemoveAllWhenShown( true );
-//    menuManager.addMenuListener( new IMenuListener()
-//    {
-//      public void menuAboutToShow( final IMenuManager manager )
-//      {
-//        manager.removeAll();
-//        appendSpaltenActions( manager );
-//      }
-//    } );
-//    
-//    
-//    //    final MenuManager menuMgr = new MenuManager( "Spalten", id );
-//    //    menuMgr.setRemoveAllWhenShown( true );
-//    //    menuMgr.addMenuListener( new IMenuListener()
-//    //    {
-//    //      public void menuAboutToShow( final IMenuManager manager )
-//    //      {
-//    //        appendSpaltenActions( manager );
-//    //      }
-//    //    } );
-//    //
-//    //    return menuMgr;
-//  }
+  //  public void createSpaltenMenu( IMenuManager menuManager )
+  //  {
+  //    // menuManager.setRemoveAllWhenShown( true );
+  //    menuManager.addMenuListener( new IMenuListener()
+  //    {
+  //      public void menuAboutToShow( final IMenuManager manager )
+  //      {
+  //        manager.removeAll();
+  //        appendSpaltenActions( manager );
+  //      }
+  //    } );
+  //    
+  //    
+  //    // final MenuManager menuMgr = new MenuManager( "Spalten", id );
+  //    // menuMgr.setRemoveAllWhenShown( true );
+  //    // menuMgr.addMenuListener( new IMenuListener()
+  //    // {
+  //    // public void menuAboutToShow( final IMenuManager manager )
+  //    // {
+  //    // appendSpaltenActions( manager );
+  //    // }
+  //    // } );
+  //    //
+  //    // return menuMgr;
+  //  }
 }

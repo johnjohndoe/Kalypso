@@ -4,12 +4,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -20,7 +30,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -43,8 +52,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private Collection m_listeners = new ArrayList();
 
-  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureModifierFactory factory,
-      final int selectionID )
+  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureModifierFactory factory, final int selectionID )
   {
     super( workspace, ftp );
 
@@ -63,6 +71,26 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     setFeature( getWorkspace(), getFeature() );
 
+    /**/
+    MenuManager menuManager = new MenuManager();
+    menuManager.setRemoveAllWhenShown( true );
+    menuManager.addMenuListener( new IMenuListener()
+    {
+      public void menuAboutToShow( IMenuManager manager )
+      {
+        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        manager.add( new Separator() );
+        //    mgr.add(selectAllAction);
+      }
+    } );
+
+    final Menu menu = menuManager.createContextMenu( m_viewer.getControl() );
+    final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
+    final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    activePage.getActiveEditor().getSite().registerContextMenu( menuManager, m_viewer );
+    m_viewer.getControl().setMenu( menu );
+
+    /**/
     return m_viewer.getControl();
   }
 
@@ -84,7 +112,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.GMLWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature)
    */
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
@@ -100,14 +129,14 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     {
       final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );
       final String ftpName = getFeatureTypeProperty().getName();
-      final FeaturePath featurePath = new FeaturePath( parentFeaturePath , ftpName );
+      final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 
       final CommandableWorkspace c_workspace;
       if( workspace instanceof CommandableWorkspace )
         c_workspace = (CommandableWorkspace)workspace;
       else
         c_workspace = new CommandableWorkspace( workspace );
-      
+
       m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName );
       m_kft.addModellListener( this );
       m_viewer.setInput( m_kft );
@@ -138,7 +167,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public void collectChanges( final Collection c )
   {
-  // TODO!
+    // TODO!
   }
 
   /**
@@ -172,18 +201,13 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   {
     if( modellEvent != null )
     {
-      if( modellEvent instanceof IGMLWorkspaceModellEvent
-          && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
+      if( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
       {
-        final FeaturesChangedModellEvent feEvent = (FeaturesChangedModellEvent)modellEvent;
-        if( feEvent.getGMLWorkspace() == m_kft.getWorkspace() )
-        {
-          final Event event = new Event();
-          event.widget = m_viewer.getControl();
-          final ModifyEvent me = new ModifyEvent( event );
-          for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
-            ( (ModifyListener)mIt.next() ).modifyText( me );
-        }
+        final Event event = new Event();
+        event.widget = m_viewer.getControl();
+        final ModifyEvent me = new ModifyEvent( event );
+        for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
+          ( (ModifyListener)mIt.next() ).modifyText( me );
       }
     }
   }

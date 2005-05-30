@@ -63,8 +63,7 @@ public class DeleteFeatureCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public DeleteFeatureCommand( final GMLWorkspace workspace, Feature parentFeature,
-      String propName, Object deleteItem )
+  public DeleteFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, String propName, Object deleteItem )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -121,7 +120,8 @@ public class DeleteFeatureCommand implements ICommand
       list.add( index, m_deleteItem );
       index = -1;
     }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -154,6 +154,8 @@ public class DeleteFeatureCommand implements ICommand
       index = list.indexOf( m_deleteItem );
       list.remove( m_deleteItem );
     }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE) );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 }

@@ -16,7 +16,7 @@
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.ui" export="true"/>
       <import plugin="org.kalypso.jwsdp"/>
    </requires>
    <extension-point id="calcJob" name="calcJob" schema="schema/org.kalypso.services.calculation.local.calcJob.exsd"/>
