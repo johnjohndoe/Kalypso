@@ -1,10 +1,9 @@
-package org.kalypso.convert.namodel.net.visitors;
+package org.kalypso.convert.namodel.optimize;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.util.HashMap;
 
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
-import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.services.calculation.job.ICalcResultEater;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -47,53 +46,24 @@ import org.kalypso.convert.namodel.net.NetElement;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class WriteAsciiVisitor extends NetElementVisitor
+public class OptimizeCalcResultEater extends HashMap implements ICalcResultEater
 {
-  private final AsciiBuffer m_asciiBuffer;
-
-  private final List m_nodeCollector;
-
-  private final List m_visitedElements = new ArrayList();
 
   /*
    * 
-   * @author doemming
+   * @author huebsch
    */
-  public WriteAsciiVisitor( AsciiBuffer asciiBuffer )
+  public OptimizeCalcResultEater()
   {
-    m_asciiBuffer = asciiBuffer;
-    m_nodeCollector = new ArrayList();
+    super();
   }
 
   /**
-   * 
-   * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
+   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
+   *      java.io.File)
    */
-  public boolean visit( NetElement netElement )
+  public void addResult( String id, File file ) 
   {
-    System.out.println("WriteAsciiVisitor: "+netElement.getChannel().getId());
-    netElement.write( m_asciiBuffer, m_nodeCollector );
-    try
-    {
-      if( !netElement.resultExists() )
-        netElement.generateTimeSeries();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      log( e.getLocalizedMessage() );
-    }
-    m_visitedElements.add( netElement );
-    return true;
-  }
-
-  public List getVisitedElements()
-  {
-    return m_visitedElements;
-  }
-
-  public List getNodeCollector()
-  {
-    return m_nodeCollector;
+    put(id, file);
   }
 }

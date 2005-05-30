@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +91,6 @@ public class NaNodeResultProvider
     try
     {
       final URL resultURL = getResultURL( nodeFE );
-//      resultURL.openConnection();
       resultURL.openStream();
     }
     catch( Exception e )

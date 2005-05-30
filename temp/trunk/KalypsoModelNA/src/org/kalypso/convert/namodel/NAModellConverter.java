@@ -48,6 +48,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.convert.namodel.manager.AsciiBuffer;
+import org.kalypso.convert.namodel.manager.BodenartManager;
+import org.kalypso.convert.namodel.manager.BodentypManager;
+import org.kalypso.convert.namodel.manager.CatchmentManager;
+import org.kalypso.convert.namodel.manager.ChannelManager;
+import org.kalypso.convert.namodel.manager.HydrotopManager;
+import org.kalypso.convert.namodel.manager.NetFileManager;
+import org.kalypso.convert.namodel.manager.NutzungManager;
+import org.kalypso.convert.namodel.manager.ParseManager;
+import org.kalypso.convert.namodel.manager.RHBManager;
+import org.kalypso.convert.namodel.manager.SchneeManager;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.net.IUrlCatalog;

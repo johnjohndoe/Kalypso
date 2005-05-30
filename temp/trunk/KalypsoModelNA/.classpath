@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/KalypsoCore"/>
-	<classpathentry kind="src" path="/KalypsoCalcService"/>
-	<classpathentry kind="src" path="/KalypsoUtil"/>
-	<classpathentry kind="src" path="/KalypsoDWD"/>
-	<classpathentry kind="src" path="/KalypsoOptimizePlugin"/>
-	<classpathentry kind="src" path="/KalypsoDeegree"/>
-	<classpathentry kind="src" path="/JWSDPInstallation"/>
-	<classpathentry kind="lib" path="/KalypsoDWD/lib/dwdBinding.jar"/>
-	<classpathentry kind="lib" path="/KalypsoOptimizePlugin/lib/optimizerBinding.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

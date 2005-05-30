@@ -44,6 +44,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.optimize.IOptimizingJob;
 import org.kalypso.optimize.OptimizerCalJob;

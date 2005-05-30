@@ -70,8 +70,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.convert.namodel.optimize.CalibarationConfig;
+import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
-import org.kalypso.convert.namodel.varymodel.CalibarationConfig;
+import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.java.io.FileCopyVisitor;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
@@ -429,7 +431,17 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     loadTSResults( inputDir, modellWorkspace, logger, outputDir );
     loadLogs( inputDir, logger, resultEater );
-    resultEater.addResult( NaModelConstants.OUT_ZML, outputDir );
+    File[] files = outputDir.listFiles();
+    // TODO change for Ergebnis/Berechnungen
+    for( int i = 0; i < files.length; i++ )
+    {
+      if(files[i].isDirectory())
+      {
+        resultEater.addResult( NaModelConstants.OUT_ZML, files[i].listFiles()[0] );
+        return;
+      } 
+    }
+//    resultEater.addResult( NaModelConstants.OUT_ZML, outputDir );
   }
 
   private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger,
@@ -680,7 +692,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
       while( true )
-      {
+      {        
         CopyUtils.copy( inStream, outwriter );
         CopyUtils.copy( errStream, errwriter );
 

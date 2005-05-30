@@ -7,7 +7,7 @@
 	<input id="Hydrotop" description="Modelldaten" optional="true"/>
 	<input id="Parameter" description="Steuerdaten" optional="true"/>
 	<input id="Control" description="Modelldaten" />
-	<input id="Template" description="Steuerdaten"/>
+	<input id="Template" description="Steuerdaten" optional="true"/>
 	<input id="SceConf" description="Modelldaten" optional="true"/>
 
 

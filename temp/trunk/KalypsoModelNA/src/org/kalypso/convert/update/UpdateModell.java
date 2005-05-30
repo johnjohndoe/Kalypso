@@ -45,9 +45,8 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
-import org.kalypso.convert.WeisseElsterConstants;
-import org.kalypso.convert.namodel.NAZMLGenerator;
 import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
+import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.zml.obslink.TimeseriesLink;

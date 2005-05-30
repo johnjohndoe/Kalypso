@@ -1,10 +1,10 @@
-package org.kalypso.convert.namodel.net.visitors;
+package org.kalypso.convert.namodel.optimize;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URL;
+import java.util.HashMap;
 
-import org.kalypso.convert.namodel.manager.AsciiBuffer;
-import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -47,53 +47,40 @@ import org.kalypso.convert.namodel.net.NetElement;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class WriteAsciiVisitor extends NetElementVisitor
+public class OptimizeCalcDataProvider implements ICalcDataProvider
 {
-  private final AsciiBuffer m_asciiBuffer;
 
-  private final List m_nodeCollector;
+  private final ICalcDataProvider m_calcDataProvider;
 
-  private final List m_visitedElements = new ArrayList();
+  private final HashMap m_map = new HashMap();
 
   /*
    * 
-   * @author doemming
+   * @author huebsch
    */
-  public WriteAsciiVisitor( AsciiBuffer asciiBuffer )
+  public OptimizeCalcDataProvider( ICalcDataProvider calcDataProvider )
   {
-    m_asciiBuffer = asciiBuffer;
-    m_nodeCollector = new ArrayList();
+    m_calcDataProvider = calcDataProvider;
   }
 
-  /**
-   * 
-   * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
-   */
-  public boolean visit( NetElement netElement )
+  public void addURL( String id, URL url )
   {
-    System.out.println("WriteAsciiVisitor: "+netElement.getChannel().getId());
-    netElement.write( m_asciiBuffer, m_nodeCollector );
-    try
+    m_map.put( id, url );
+  }
+
+  public URL getURLForID( String id ) throws CalcJobServiceException
+  {
+    if( m_map.containsKey( id ) )
     {
-      if( !netElement.resultExists() )
-        netElement.generateTimeSeries();
+      return (URL)m_map.get( id );
     }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      log( e.getLocalizedMessage() );
-    }
-    m_visitedElements.add( netElement );
-    return true;
+    return m_calcDataProvider.getURLForID( id );
   }
 
-  public List getVisitedElements()
+  public boolean hasID( String id )
   {
-    return m_visitedElements;
-  }
-
-  public List getNodeCollector()
-  {
-    return m_nodeCollector;
+    if( m_map.containsKey( id ) )
+      return true;
+    return m_calcDataProvider.hasID( id );
   }
 }

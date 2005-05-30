@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypso.convert.namodel.AsciiBuffer;
+import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.net.NetElement;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------

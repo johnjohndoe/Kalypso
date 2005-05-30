@@ -181,7 +181,7 @@ public class NAConfiguration
     m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );
     m_nutzungDir = new File( asciiBaseDir, "hydro.top" );
-    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we_nat.hyd" );
+    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" );
     m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" );
     m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" );
     m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" );
