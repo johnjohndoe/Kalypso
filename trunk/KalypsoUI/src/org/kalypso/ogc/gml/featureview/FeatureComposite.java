@@ -202,8 +202,7 @@ public class FeatureComposite implements IFeatureControl
     if( view != null )
       return view;
 
-    final FeatureviewType newView = FeatureviewHelper
-        .createFeatureviewFromFeatureType( featureType );
+    final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
 
     m_viewMap.put( typename, newView );
 
@@ -223,8 +222,7 @@ public class FeatureComposite implements IFeatureControl
     return createControl( parent, style, getFeature().getFeatureType() );
   }
 
-  public Control createControl( final Composite parent, final int style,
-      final ControlType controlType )
+  public Control createControl( final Composite parent, final int style, final ControlType controlType )
   {
     final Control control = createControlFromControlType( parent, style, controlType );
 
@@ -243,8 +241,7 @@ public class FeatureComposite implements IFeatureControl
     return control;
   }
 
-  private Control createControlFromControlType( final Composite parent, final int style,
-      final ControlType controlType )
+  private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType )
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = getWorkspace();
@@ -270,8 +267,7 @@ public class FeatureComposite implements IFeatureControl
     if( controlType instanceof LabelType )
     {
       final LabelType labelType = (LabelType)controlType;
-      final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType
-          .getStyle() ) );
+      final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
       label.setText( labelType.getText() );
       applyAnnotation( label, labelType.getProperty(), feature );
 
@@ -286,8 +282,7 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       final TextFeatureControl tfc = new TextFeatureControl( workspace, feature, ftp );
 
-      final Control control = tfc.createControl( parent, SWTUtilities
-          .createStyleFromString( editorType.getStyle() ) );
+      final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
       tfc.setEnabled( editorType.isEditable() );
 
       addFeatureControl( tfc );
@@ -303,8 +298,7 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       final CheckboxFeatureControl cfc = new CheckboxFeatureControl( workspace, feature, ftp );
 
-      final Control control = cfc.createControl( parent, SWTUtilities
-          .createStyleFromString( checkboxType.getStyle() ) );
+      final Control control = cfc.createControl( parent, SWTUtilities.createStyleFromString( checkboxType.getStyle() ) );
       cfc.setEnabled( checkboxType.isEditable() );
 
       addFeatureControl( cfc );
@@ -319,8 +313,7 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp );
 
-      final Control control = bfc.createControl( parent, SWTUtilities
-          .createStyleFromString( buttonType.getStyle() ) );
+      final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
       addFeatureControl( bfc );
 
@@ -333,12 +326,10 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, (FeatureviewType[])m_viewMap.values()
-          .toArray( new FeatureviewType[0] ) );
+      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, (FeatureviewType[])m_viewMap.values().toArray( new FeatureviewType[0] ) );
       fc.setFeature( workspace, feature );
 
-      final Control control = fc.createControl( parent, SWTUtilities
-          .createStyleFromString( compoType.getStyle() ) );
+      final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
 
       addFeatureControl( fc );
 
@@ -352,12 +343,11 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin
-          .createFeatureTypeCellEditorFactory(), plugin.getDefaultMapSelectionID() );
+      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), plugin
+          .getDefaultMapSelectionID() );
       fc.setFeature( workspace, feature );
 
-      final Control control = fc.createControl( parent, SWTUtilities
-          .createStyleFromString( tableType.getStyle() ) );
+      final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( tableType.getStyle() ) );
 
       addFeatureControl( fc );
 
@@ -369,19 +359,16 @@ public class FeatureComposite implements IFeatureControl
     return label;
   }
 
-  private Composite createCompositeFromCompositeType( final Composite parent, final int style,
-      final CompositeType compositeType )
+  private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType )
   {
     if( compositeType instanceof GroupType )
     {
-      final Group group = new org.eclipse.swt.widgets.Group( parent, style
-          | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+      final Group group = new org.eclipse.swt.widgets.Group( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
       group.setText( ( (GroupType)compositeType ).getText() );
       return group;
     }
 
-    return new Composite( parent, style
-        | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+    return new Composite( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
   }
 
   private Layout createLayout( final LayoutType layoutType )
@@ -415,8 +402,7 @@ public class FeatureComposite implements IFeatureControl
 
       gridData.heightHint = gridDataType.getHeightHint();
       gridData.widthHint = gridDataType.getWidthHint();
-      gridData.horizontalAlignment = SWTUtilities.getGridData( gridDataType
-          .getHorizontalAlignment() );
+      gridData.horizontalAlignment = SWTUtilities.getGridData( gridDataType.getHorizontalAlignment() );
       gridData.verticalAlignment = SWTUtilities.getGridData( gridDataType.getVerticalAlignment() );
       gridData.horizontalIndent = gridDataType.getHorizontalIndent();
 
@@ -461,8 +447,8 @@ public class FeatureComposite implements IFeatureControl
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     m_feature = feature;
-    m_workspace = workspace;
-
+    m_workspace=workspace;
+    
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
@@ -485,8 +471,7 @@ public class FeatureComposite implements IFeatureControl
           addView( (FeatureviewType)vIt.next() );
       }
       else
-        System.out.println( getClass().getName() + ": Unsupported type: "
-            + unmarshal.getClass().getName() + " in " + url.toString() );
+        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
     }
     catch( final JAXBException e )
     {
@@ -552,8 +537,8 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
       if( ftp != null )
       {
-        final Annotation annotation = ftp.getAnnotation( KalypsoGisPlugin.getDefault()
-            .getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE ) );
+        final Annotation annotation = ftp.getAnnotation( KalypsoGisPlugin.getDefault().getPluginPreferences()
+            .getString( IKalypsoPreferences.LANGUAGE ) );
 
         if( annotation != null )
         {
@@ -569,7 +554,7 @@ public class FeatureComposite implements IFeatureControl
           {
             // ignore, this control has not text
           }
-          
+
           label.setToolTipText( annotation.getTooltip() );
         }
       }

@@ -68,14 +68,13 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
 {
   public AddRepositoryAction( final ObservationChooser explorer )
   {
-    super( explorer, "Repository hinzufügen",
-        ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );
+    super( explorer, "Repository hinzufügen", ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );
   }
 
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  public void run( )
+  public void run()
   {
     final ListDialog dlg = new ListDialog( getShell() );
     dlg.setLabelProvider( new LabelProvider() );
@@ -89,20 +88,16 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
       if( dlg.open() != Window.OK )
         return;
 
-      final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig) dlg
-          .getResult()[0];
+      final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig)dlg.getResult()[0];
 
-      final IRepositoryFactory f = cfg.createFactory( getClass()
-          .getClassLoader() );
+      final IRepositoryFactory f = cfg.createFactory( getClass().getClassLoader() );
 
       if( f.configureRepository() )
       {
-        final IProgressService progressService = PlatformUI.getWorkbench()
-            .getProgressService();
+        final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         progressService.busyCursorWhile( new IRunnableWithProgress()
         {
-          public void run( IProgressMonitor monitor )
-              throws InvocationTargetException
+          public void run( IProgressMonitor monitor ) throws InvocationTargetException
           {
             monitor.beginTask( "Repository hinzufügen", 2 );
 
@@ -131,15 +126,15 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
     }
     catch( final InvocationTargetException e )
     {
-      e.getCause().printStackTrace();
+   e.getCause().printStackTrace();
       
       MessageDialog.openError( getShell(), "Repository hinzufügen", e.getTargetException()
-          .getLocalizedMessage() );
+          .getLocalizedMessage() );     
     }
     catch( Exception e )
     {
-      MessageDialog.openError( getShell(), "Repository hinzufügen", e
-          .getLocalizedMessage() );
+      e.printStackTrace();
+      MessageDialog.openError( getShell(), "Repository hinzufügen", e.getLocalizedMessage() );
     }
   }
 }

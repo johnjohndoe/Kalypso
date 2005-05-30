@@ -39,6 +39,8 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * CommandableFeatureAction
@@ -57,18 +59,30 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
  */
 public class CommandableFeatureSelection implements ICommandableFeatureSelection
 {
+  /*
+   * things that should provided: - GMLWorkspace=Commandtarget - parentfeature -
+   * featureassociationpropertytype -...
+   */
 
   private final IStructuredSelection m_selection;
 
   private final IKalypsoFeatureTheme m_theme;
 
+  private final FeatureTypeProperty m_ftp;
+
+  private final Feature m_selectedRow;
+
   /**
+   * @param selectedFE
    *  
    */
-  public CommandableFeatureSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection )
+  public CommandableFeatureSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection, final FeatureTypeProperty ftp,
+      final Feature selectedRow )
   {
-    m_theme=theme;
+    m_theme = theme;
     m_selection = selection;
+    m_ftp = ftp;
+    m_selectedRow = selectedRow;
   }
 
   public Object getFirstElement()
@@ -112,5 +126,19 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   public IKalypsoFeatureTheme getKalypsoFeatureTheme()
   {
     return m_theme;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getSelectedFeatureTypeProperty()
+   */
+  public FeatureTypeProperty getSelectedFeatureTypeProperty()
+  {
+    // TODO Auto-generated method stub
+    return m_ftp;
+  }
+
+  public Feature getSelectedRow()
+  {
+    return m_selectedRow;
   }
 }

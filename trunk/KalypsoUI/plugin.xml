@@ -519,6 +519,14 @@
                style="push"
                id="org.kalypso.objectclass.feature.action.remove">
          </action>
+         <action
+               enablesFor="1"
+               label="Wert übertragen "
+               tooltip="überträgt Parameter auf Auswahl"
+               icon="icons/map/zoomin.gif"
+               class="org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate"
+               style="push"
+               id="org.kalypso.objectclass.feature.action.remove"/>
       </objectContribution>
  
       <viewerContribution
