@@ -1,5 +1,6 @@
 package org.kalypso.lhwsachsenanhalt.tubig;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -115,6 +116,10 @@ public class TubigConst
 
   // Verzeichnisbezeichnungen
   public static final String LOGS = "Logs";
+
+  public static final String LOGS_COPYIN = "Logs" + File.separator + "Eingangsdaten";
+
+  public static final String LOGS_COPYERG = "Logs" + File.separator + "Ergebnisdaten";
 
   public static final String ERGEBNISSE = "Ergebnisse";
 

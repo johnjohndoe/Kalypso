@@ -76,8 +76,6 @@ public class TubigBatchInterpreter
     final File fleLog;
     final File fleErr;
 
-    // Achtung, wenn mehrere Batches direkt nacheinander ausgeführt
-    // werden, dann werden die Dateien überschrieben
     fleLog = new File( fleExeDir, TubigConst.NAME_BAT + TubigConst.NAME_EXT_LOG );
     fleErr = new File( fleExeDir, TubigConst.NAME_BAT + TubigConst.NAME_EXT_ERR );
     runBatch( fleExeDir, fleBatch, fleLog, fleErr, cancelable );
@@ -266,6 +264,8 @@ public class TubigBatchInterpreter
                         pwLog.println( sCmd );
                         if( !"".equals( sCmd ) )
                         {
+                          // Funktion raus: Klasse, Kalypsoutil.ProcessHelper.startProcess - ähnlkich winin Klasse java.Process
+                          // hier auch Timeout behandeln
                           process = Runtime.getRuntime().exec( sCmd, null, fleExeDir );
                           inStream = new InputStreamReader( process.getInputStream() );
                           errStream = new InputStreamReader( process.getErrorStream() );
@@ -288,6 +288,8 @@ public class TubigBatchInterpreter
                             try
                             {
                               process.exitValue();
+                              
+                              
                               break;
                             }
                             catch( final IllegalThreadStateException e )

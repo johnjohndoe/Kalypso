@@ -45,6 +45,10 @@ public class TubigCalcJob implements ICalcJob
     // (Unterverzeichnis zu outputDir)
     final File logDir; // Verzeichnis, in dem Log-Dateien erzeugt werden
     // (Unterverzeichnis zu outputDir)
+    final File logCopyErgDir; // Verzeichnis, in dem Logs zu den bceCpyErg_xy -
+    // Batches stehen
+    final File logCopyInDir; // Verzeichnis, in dem Logs zu den bceCpyIn_xy -
+    // Batches stehen
     final File bodevorDir; // Verzeichnis, in dem gerechnet wird (BODEVOR bei
     // WinPro, calc hier auf Server)
     File dirHelp; // Hilfsverzeichnis
@@ -68,10 +72,14 @@ public class TubigCalcJob implements ICalcJob
     bodevorDir = new File( tmpdir, ICalcServiceConstants.CALC_DIR_NAME );
     ergDir = new File( outputDir, TubigConst.ERGEBNISSE );
     logDir = new File( outputDir, TubigConst.LOGS );
+    logCopyErgDir = new File( outputDir, TubigConst.LOGS_COPYERG );
+    logCopyInDir = new File( outputDir, TubigConst.LOGS_COPYIN );
 
     outputDir.mkdirs();
     bodevorDir.mkdirs();
-    logDir.mkdir();
+    logDir.mkdirs();
+    logCopyErgDir.mkdirs();
+    logCopyInDir.mkdirs();
 
     fleCalcLog = new File( logDir, TubigConst.NAME_CALC_LOG );
 
@@ -102,9 +110,9 @@ public class TubigCalcJob implements ICalcJob
             + TubigUtils.getAktuelleUhrzeit() + ")" );
 
         // Falls erforderlich, werden Eingangsdaten noch manipuliert (umbenannt)
-        fleBatLog = new File( logDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH
+        fleBatLog = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH
             + sBatNme + TubigConst.NAME_EXT_LOG );
-        fleBatErr = new File( logDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH
+        fleBatErr = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH
             + sBatNme + TubigConst.NAME_EXT_ERR );
         fleBat = new File( bodevorDir, TubigConst.PRE_COPY_IN_BATCH + sBatNme );
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
@@ -129,9 +137,9 @@ public class TubigCalcJob implements ICalcJob
 
         // Ergebnis-Dateien werden in Unterverzeichnisse Pegel, bzw. Speicher
         // kopiert
-        fleBatLog = new File( logDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH
+        fleBatLog = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH
             + sBatNme + TubigConst.NAME_EXT_LOG );
-        fleBatErr = new File( logDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH
+        fleBatErr = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH
             + sBatNme + TubigConst.NAME_EXT_ERR );
         fleBat = new File( bodevorDir, TubigConst.PRE_COPY_OUT_BATCH + sBatNme );
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
@@ -217,12 +225,13 @@ public class TubigCalcJob implements ICalcJob
       // Fehler bei Abarbeitung einer Batch. Batches werden nicht weiter
       // abgearbeitet: kontrollierter Abbruch
       e.printStackTrace();
-      pwCalcLog.println( "Bei der Abarbeitung einer Batch-Datei ist ein Fehler aufgetreten. Es werden keine Ergebnisse übertragen. Weitere Informationen finden sich in den Log-Dateien." );
+      pwCalcLog
+          .println( "Bei der Abarbeitung einer Batch-Datei ist ein Fehler aufgetreten. Es werden keine Ergebnisse übertragen. Weitere Informationen finden sich in den Log-Dateien." );
     }
     catch( final TubigException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( e.getLocalizedMessage() , e );
+      throw new CalcJobServiceException( e.getLocalizedMessage(), e );
     }
     finally
     {

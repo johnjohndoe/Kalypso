@@ -41,6 +41,10 @@
 		</copy>
 	</target>
 
+	<!-- ================================= 
+          target: update              
+         ================================= -->
+
 	<target name="update" description="Holt die Zeitreihen vom Zeitreihendienst">
 		
 		<echo message="Rechenvariante aktualisieren: ${calc.dir}" />
@@ -55,16 +59,23 @@
 
 		<echo message="Zeitreihen werden von WISKI geladen" />
 		
-		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+		<copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}"/>
 		</copyObservation>
 
-		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+		<copyObservation gml="${calc.url}/wiskiimport_messung.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
 		</copyObservation>
 
-		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_prognose.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+		<copyObservation gml="${calc.url}/wiskiimport_prognose.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
 			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim}"/>
 		</copyObservation>
 	</target>
+	
+	<!-- ================================= 
+          target: afterCalc              
+         ================================= -->
+	<target name="afterCalc" description="wird nach Beendigung der Berechnung ausgeführt">
+	</target>
+
 </project>
