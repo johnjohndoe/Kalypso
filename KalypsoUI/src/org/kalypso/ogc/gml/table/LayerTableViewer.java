@@ -384,7 +384,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     try
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
-      FeatureType featureType = theme.getFeatureType();
+      final FeatureType featureType = theme.getFeatureType();
       FeatureTypeProperty property = featureType.getProperty( propertyName );
 
       final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );

@@ -461,6 +461,7 @@ public class FeatureComposite implements IFeatureControl
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     m_feature = feature;
+    m_workspace = workspace;
 
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {

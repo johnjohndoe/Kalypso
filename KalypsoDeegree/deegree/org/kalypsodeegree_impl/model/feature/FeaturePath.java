@@ -124,10 +124,11 @@ public class FeaturePath
   public FeatureType getFeatureType( final GMLWorkspace workspace )
   {
     if( m_typename != null )
-      workspace.getFeatureType( m_typename );
+      return workspace.getFeatureType( m_typename );
     
-    final FeatureType featureType = workspace.getRootFeature().getFeatureType();
-    return getFeatureTypeForSegment( workspace, featureType, 0 );
+    final FeatureType rootType = workspace.getRootFeature().getFeatureType();
+    final FeatureType featureType = getFeatureTypeForSegment( workspace, rootType, 0 );
+    return featureType;
   }
   
   private FeatureType getFeatureTypeForSegment( final GMLWorkspace workspace, final FeatureType featureType, final int segmentIndex )
