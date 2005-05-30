@@ -64,11 +64,6 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 
   private GMLWorkspace m_workspace;
 
-//  public AbstractFeatureControl(  )
-//  {
-//    this( null, null, null );
-//  }
-
   public AbstractFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
   {
     this( workspace, null, ftp );

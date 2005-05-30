@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.table;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -56,15 +55,15 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
 {
   private final LayerTableViewer m_viewer;
 
-  private final Color m_selectionColor;
-
-  private final Color m_noSelectionColor;
+//  private final Color m_selectionColor;
+//
+//  private final Color m_noSelectionColor;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
     m_viewer = layerTable;
-    m_selectionColor = m_viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_LIST_SELECTION );
-    m_noSelectionColor = m_viewer.getControl().getBackground();
+//    m_selectionColor = m_viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_LIST_SELECTION );
+//    m_noSelectionColor = m_viewer.getControl().getBackground();
   }
 
   /**
@@ -89,7 +88,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
 
-    return modifier.getImage( feature );
+    return modifier == null ? null : modifier.getImage( feature );
   }
 
   /**
