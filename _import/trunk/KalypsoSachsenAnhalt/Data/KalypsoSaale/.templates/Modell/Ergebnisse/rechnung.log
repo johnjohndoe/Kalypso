@@ -1,0 +1,24 @@
+Erzeuge Eingabedateien für HWVOR00
+Schreibe: Stammdat/pegel.std
+Schreibe: Stammdat/met_geb.std
+Schreibe: Stammdat/egmpar.hwp
+Schreibe: Stammdat/tl.std
+Schreibe: Stammdat/ts.std
+Schreibe: Stammdat/wlmpar.hwp
+Schreibe: Stammdat/hwsteu.stv
+Schreibe Zeitreihen: Durchfluß
+Schreibe Zeitreihen: Niederschlag
+Zeitreihe konnte aus Modell nicht gelesen werden: Niederschlag/ID579014.zml
+Schreibe Zeitreihen: Schnee
+Zeitreihe konnte aus Modell nicht gelesen werden: Schnee/ID579014.zml
+Schreibe Zeitreihen: Temperatur
+Schreibe Zeitreihen: Inhalt
+Eingangsdaten für HWVOR00.exe wurden erzeugt.
+
+Berechnung wird durchgeführt
+Ergebnisdaten werden zurückgelesen.
+Lese Zeitreihen: P_dat.vor
+Lese Zeitreihen: Q_dat.vor
+Lese Zeitreihen: SNDAT.vor
+Lese Zeitreihen: TLDAT.vor
+Lese Zeitreihen: Tsdat.vor
