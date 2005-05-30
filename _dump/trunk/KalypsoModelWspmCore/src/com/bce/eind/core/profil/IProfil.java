@@ -131,7 +131,7 @@ public interface IProfil
 
   public boolean setValueFor( IProfilPoint point, ProfilPointProperty pointProperty, double value )
       throws ProfilDataException;
-  
+  public boolean editBuilding(final ProfilBuildingProperty buildingProperty,final double value) throws ProfilBuildingException;
   public void  setValuesFor(List<IProfilPoint> pointList, ProfilPointProperty pointProperty, double value )
   throws ProfilDataException;
 
