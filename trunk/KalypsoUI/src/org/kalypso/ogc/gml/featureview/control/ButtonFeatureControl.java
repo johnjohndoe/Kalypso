@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
@@ -80,72 +80,70 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
   private Button m_button;
+
   private IFeatureDialog m_dialog;
+
   private Collection m_modifyListener = new ArrayList();
 
-//  public ButtonFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
-//  {
-//    this( workspace, null, ftp );
-//  }
-
-  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature,
+      final FeatureTypeProperty ftp )
   {
     super( workspace, feature, ftp );
-    
+
     m_dialog = chooseDialog( workspace, feature, ftp );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature,
+      final FeatureTypeProperty ftp )
   {
     final String typename = ftp.getType();
     // TODO make extensionpoint for this
-//    if( typename.equals( "java.lang.String" ) )
-//      return text;
-//    if( typeName.equals( "java.lang.Double" ) )
-//      return new Double( text );
-//    if( typeName.equals( "java.lang.Integer" ) )
-//      return new Integer( text );
-//    if( typeName.equals( "java.lang.Float" ) )
-//      return new Float( text );
-//    if( typeName.equals( "java.lang.Long" ) )
-//      return new Long( text );
-//    if( typeName.equals( "java.lang.Boolean" ) )
-//      return new Boolean( text );
-//    if( typeName.equals( "java.util.Date" ) )
-//      return DATE_FORMATTER.parse( text );
+    //    if( typename.equals( "java.lang.String" ) )
+    //      return text;
+    //    if( typeName.equals( "java.lang.Double" ) )
+    //      return new Double( text );
+    //    if( typeName.equals( "java.lang.Integer" ) )
+    //      return new Integer( text );
+    //    if( typeName.equals( "java.lang.Float" ) )
+    //      return new Float( text );
+    //    if( typeName.equals( "java.lang.Long" ) )
+    //      return new Long( text );
+    //    if( typeName.equals( "java.lang.Boolean" ) )
+    //      return new Boolean( text );
+    //    if( typeName.equals( "java.util.Date" ) )
+    //      return DATE_FORMATTER.parse( text );
     if( DateWithoutTime.class.getName().equals( typename ) )
       return new CalendarFeatureDialog( feature, ftp );
-    
+
     if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
     {
-      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( typename );
+
       // TODO: TypeHandler should decide, what todo
       if( handler instanceof ObservationLinkHandler )
         return new TimeserieLinkFeatureDialog( workspace, feature, ftp );
     }
-    
-    
-    if( "FeatureAssociationType".equals(typename) )
+
+    if( "FeatureAssociationType".equals( typename ) )
       return new FeatureDialog( workspace, feature, ftp );
-    
-    if(RectifiedGridDomain.class.getName().equals(typename)){
-      return new RectifiedGridDomainFeatureDialog(feature,ftp);
-    }
-    
-    if(RangeSet.class.getName().equals(typename)){
-      return new RangeSetFeatureDialog(feature,ftp);
-    }
-    
+
+    if( RectifiedGridDomain.class.getName().equals( typename ) )
+      return new RectifiedGridDomainFeatureDialog( feature, ftp );
+
+    if( RangeSet.class.getName().equals( typename ) )
+      return new RangeSetFeatureDialog( feature, ftp );
+
     return new NotImplementedFeatureDialog();
   }
-  
+
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
   public void dispose()
   {
     if( !( m_button.isDisposed() ) )
-        m_button.dispose();
+      m_button.dispose();
   }
 
   /**
@@ -165,9 +163,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
         buttonPressed();
       }
     } );
-    
+
     updateControl();
-    
+
     return m_button;
   }
 
@@ -179,19 +177,19 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       m_dialog.collectChanges( c );
       for( final Iterator iter = c.iterator(); iter.hasNext(); )
         fireChange( (FeatureChange)iter.next() );
-      
+
       fireModfied();
-      
+
       updateControl();
     }
   }
-  
+
   private void fireModfied()
   {
     for( final Iterator iter = m_modifyListener.iterator(); iter.hasNext(); )
     {
       final ModifyListener l = (ModifyListener)iter.next();
-      final Event event = new Event(  );
+      final Event event = new Event();
       // TODO: create a real event?
       event.widget = m_button;
       l.modifyText( new ModifyEvent( event ) );

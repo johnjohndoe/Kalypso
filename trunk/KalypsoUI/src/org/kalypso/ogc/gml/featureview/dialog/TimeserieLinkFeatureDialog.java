@@ -78,11 +78,14 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   {
     final ObservationViewerDialog dlg = new ObservationViewerDialog( shell );
     final TimeseriesLink tslink = (TimeseriesLink)m_feature.getProperty( m_ftp.getName() );
-    dlg.setObservationHref( m_workspace.getContext(), tslink.getHref() );
+    dlg.setObservationHref( m_workspace.getContext(), tslink == null ? "" : tslink.getHref() );
     
     final int open = dlg.open();
     if( open == Window.OK )
     {
+      // TODO Marc: siehe Änderung oben (.getHref() nur wenn objekt != null )
+      // aber hier: der wert des features ist nicht die href sondern ein TimeseriesLink Objekt!
+      // also eventuell ein neues erzeugen, wenn vorher keins da war
       m_change = new FeatureChange( m_feature, m_ftp.getName(), dlg.getObservationHref() );
     }
     else
