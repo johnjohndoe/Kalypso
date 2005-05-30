@@ -64,7 +64,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -84,7 +83,6 @@ import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
-import org.kalypso.zml.request.RequestType;
 import org.xml.sax.InputSource;
 
 /**
@@ -280,7 +278,8 @@ public class KalypsoObservationService implements IObservationService
         {
           m_logger
               .info( "Trying to create default observation based on request..." );
-          obs = createDefault( href );
+
+          obs = RequestFactory.createDefaultObservation( href );
         }
       }
 
@@ -306,8 +305,7 @@ public class KalypsoObservationService implements IObservationService
 
       // we say delete on exit even if we allow the client to delete the file
       // explicitely in the clearTempData() service call. This allows us to
-      // clear
-      // temp files on shutdown in the case the client forgets it.
+      // clear temp files on shutdown in the case the client forgets it.
       f.deleteOnExit();
 
       fos = new FileOutputStream( f );
@@ -335,20 +333,6 @@ public class KalypsoObservationService implements IObservationService
           throw new RemoteException( "Error closing the output stream", e );
         }
     }
-  }
-
-  /**
-   * Create a default observation based on the request definition found in the
-   * href.
-   * 
-   * @throws SensorException if no request definition is provided
-   */
-  private IObservation createDefault( final String href )
-      throws SensorException
-  {
-    final RequestType xmlReq = RequestFactory.parseRequest( href );
-
-    return RequestFactory.createDefaultObservation( xmlReq );
   }
 
   /**

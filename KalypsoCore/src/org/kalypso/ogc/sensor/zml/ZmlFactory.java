@@ -41,8 +41,11 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -118,12 +121,12 @@ public class ZmlFactory
 
   private static Logger LOG = Logger.getLogger( ZmlFactory.class.getName() );
 
-  private ZmlFactory( )
+  private ZmlFactory()
   {
     // not to be instanciated
   }
 
-  private static Properties getProperties( )
+  private static Properties getProperties()
   {
     if( m_parserProps == null )
     {
@@ -158,7 +161,7 @@ public class ZmlFactory
    * 
    * @return parser factory
    */
-  public static synchronized ParserFactory getParserFactory( )
+  public static synchronized ParserFactory getParserFactory()
   {
     if( m_parserFactory == null )
       m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class
@@ -187,8 +190,7 @@ public class ZmlFactory
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * 
    * @param url
-   * @param identifier
-   *          ID für Repository
+   * @param identifier ID für Repository
    * @return IObservation object
    * 
    * @throws SensorException
@@ -244,7 +246,8 @@ public class ZmlFactory
    * 
    * @param source contains the zml
    * @param identifier [optional] the identifier of the resulting observation
-   * @param context [optional] the context of the source in order to resolve relative url
+   * @param context [optional] the context of the source in order to resolve
+   *          relative url
    */
   public static IObservation parseXML( final InputSource source,
       final String identifier, final URL context ) throws SensorException
@@ -255,7 +258,7 @@ public class ZmlFactory
     {
       final Unmarshaller u = getUnmarshaller();
 
-      obs = (Observation) u.unmarshal( source );
+      obs = (Observation)u.unmarshal( source );
     }
     catch( final JAXBException e )
     {
@@ -272,7 +275,7 @@ public class ZmlFactory
 
       for( final Iterator it = mdList.iterator(); it.hasNext(); )
       {
-        final MetadataType md = (MetadataType) it.next();
+        final MetadataType md = (MetadataType)it.next();
 
         final String value;
         if( md.getValue() != null )
@@ -295,7 +298,7 @@ public class ZmlFactory
 
     for( int i = 0; i < tmpList.size(); i++ )
     {
-      final AxisType tmpAxis = (AxisType) tmpList.get( i );
+      final AxisType tmpAxis = (AxisType)tmpList.get( i );
 
       final Properties props = PropertiesHelper.parseFromString( tmpAxis
           .getDatatype(), '#' );
@@ -335,7 +338,7 @@ public class ZmlFactory
       target = new JAXBXLink( obs.getTarget() );
 
     final String href = context != null ? context.toExternalForm() : "";
-    
+
     final SimpleObservation zmlObs = new SimpleObservation( href, identifier,
         obs.getName(), obs.isEditable(), target, metadata, model.getAxisList(),
         model );
@@ -380,15 +383,12 @@ public class ZmlFactory
   /**
    * Parses the values and create the corresponding objects.
    * 
-   * @param context
-   *          context into which the original file exists
-   * @param axisType
-   *          binding object for axis
-   * @param parser
-   *          configured parser enabled for parsing the values according to axis
-   *          spec
-   * @param data
-   *          [optional] contains the data-block if observation is block-inline
+   * @param context context into which the original file exists
+   * @param axisType binding object for axis
+   * @param parser configured parser enabled for parsing the values according to
+   *          axis spec
+   * @param data [optional] contains the data-block if observation is
+   *          block-inline
    * @return corresponding values depending on value axis type
    * 
    * @throws ParserException
@@ -415,11 +415,12 @@ public class ZmlFactory
   /**
    * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
    */
-  public static ObservationType createXML( final IObservation obs, final IVariableArguments args ) throws FactoryException
+  public static ObservationType createXML( final IObservation obs,
+      final IVariableArguments args ) throws FactoryException
   {
     return createXML( obs, args, null );
   }
-  
+
   /**
    * Creates an XML-Observation ready for marshalling.
    * 
@@ -427,7 +428,8 @@ public class ZmlFactory
    * 
    * @param obs
    * @param args
-   * @param timezone the timezone into which dates should be converted before serialized
+   * @param timezone the timezone into which dates should be converted before
+   *          serialized
    * @return an ObservationType object, ready for marshalling.
    * 
    * @throws FactoryException
@@ -448,10 +450,10 @@ public class ZmlFactory
       for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it
           .hasNext(); )
       {
-        final Map.Entry entry = (Entry) it.next();
+        final Map.Entry entry = (Entry)it.next();
 
-        final String mdKey = (String) entry.getKey();
-        final String mdValue = (String) entry.getValue();
+        final String mdKey = (String)entry.getKey();
+        final String mdValue = (String)entry.getValue();
 
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
@@ -465,14 +467,14 @@ public class ZmlFactory
 
         metadataList.add( mdType );
       }
-      
+
       // insert timezone in the metadata is specified
       if( timezone != null )
       {
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( TimeserieConstants.MD_TIMEZONE );
         mdType.setValue( timezone.getID() );
-        
+
         metadataList.add( mdType );
       }
 
@@ -499,7 +501,8 @@ public class ZmlFactory
               .createAxisTypeValueArrayType();
 
           valueArrayType.setSeparator( ";" );
-          valueArrayType.setValue( buildValueString( values, axes[i], timezone ) );
+          valueArrayType
+              .setValue( buildValueString( values, axes[i], timezone ) );
 
           axisType.setValueArray( valueArrayType );
 
@@ -549,10 +552,11 @@ public class ZmlFactory
   }
 
   private static void buildStringDateAxis( final ITuppleModel model,
-      final IAxis axis, final StringBuffer sb, final TimeZone timezone ) throws SensorException
+      final IAxis axis, final StringBuffer sb, final TimeZone timezone )
+      throws SensorException
   {
     XmlTypes.PDATE.setTimezone( timezone );
-    
+
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
       sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) )
@@ -591,7 +595,7 @@ public class ZmlFactory
     }
   }
 
-  public static Marshaller getMarshaller( ) throws JAXBException
+  public static Marshaller getMarshaller() throws JAXBException
   {
     final Marshaller marshaller = OF.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -599,7 +603,7 @@ public class ZmlFactory
     return marshaller;
   }
 
-  private static Unmarshaller getUnmarshaller( ) throws JAXBException
+  private static Unmarshaller getUnmarshaller() throws JAXBException
   {
     final Unmarshaller unmarshaller = OF.createUnmarshaller();
 
@@ -607,9 +611,7 @@ public class ZmlFactory
   }
 
   /**
-   * @param axis
    * @return valid parser for the given axis
-   * @throws FactoryException
    */
   public static IParser createParser( final IAxis axis )
       throws FactoryException
@@ -617,5 +619,37 @@ public class ZmlFactory
     final ParserFactory pf = getParserFactory();
 
     return pf.createParser( "JAVA_" + axis.getDataClass().getName(), null );
+  }
+
+  /**
+   * Helper method for simply writing the observation to a file
+   * 
+   * @throws SensorException if an IOException or a FactoryException is thrown
+   *           internally
+   */
+  public static void writeToFile( final IObservation obs, final File file )
+      throws SensorException
+  {
+    OutputStream outs = null;
+    try
+    {
+      final ObservationType xml = createXML( obs, null );
+
+      outs = new FileOutputStream( file );
+
+      getMarshaller().marshal( xml, outs );
+
+      outs.close();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      throw new SensorException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( outs );
+    }
   }
 }
