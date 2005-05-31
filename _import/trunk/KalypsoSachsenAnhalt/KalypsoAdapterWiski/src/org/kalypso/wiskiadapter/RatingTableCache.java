@@ -21,9 +21,12 @@ public class RatingTableCache
 
   private RatingTableCache()
   {
-    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(),
-        new File( System.getProperty( "java.io.tmpdir" ) + File.separator
-            + "wiskiRatingTables" ) );
+    final File dir = new File( System.getProperty( "java.io.tmpdir" )
+        + File.separator + "wiskiRatingTables" );
+    if( !dir.exists() )
+      dir.mkdir();
+    
+    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(), dir );
   }
 
   public static RatingTableCache getInstance()
@@ -41,7 +44,8 @@ public class RatingTableCache
    */
   public WQTableSet get( final String tsInfoName, final Date validity )
   {
-    return (WQTableSet)m_cache.get( new StringValidityKey( tsInfoName, validity ) );
+    return (WQTableSet)m_cache
+        .get( new StringValidityKey( tsInfoName, validity ) );
   }
 
   /**
