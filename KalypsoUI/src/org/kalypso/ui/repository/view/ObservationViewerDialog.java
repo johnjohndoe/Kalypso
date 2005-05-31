@@ -69,7 +69,7 @@ public class ObservationViewerDialog extends ResizableDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite)super.createDialogArea( parent );
     composite.setLayout( new FillLayout() );
@@ -77,6 +77,8 @@ public class ObservationViewerDialog extends ResizableDialog
     m_viewer = new ObservationViewer( composite, SWT.NONE );
     if( m_href != null )
       m_viewer.setHref( m_context, m_href );
+    
+    getShell().setText( "Zeitreihenlink-Editor" );
     
     return composite;
   }
