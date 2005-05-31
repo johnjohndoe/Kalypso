@@ -40,15 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.repository.RepositoryException;
 
 /**
@@ -79,6 +78,7 @@ public class RepositoryConfigUtils
       final Unmarshaller unmarshaller = factory.createUnmarshaller();
 
       final RepconfType repconf = (RepconfType) unmarshaller.unmarshal( ins );
+      ins.close();
 
       final List list = repconf.getRepository();
 
@@ -96,20 +96,13 @@ public class RepositoryConfigUtils
 
       return fConfs;
     }
-    catch( JAXBException e )
+    catch( final Exception e )
     {
       throw new RepositoryException( e );
     }
     finally
     {
-      try
-      {
-        ins.close();
-      }
-      catch( IOException e )
-      {
-        throw new RepositoryException( e );
-      }
+      IOUtils.closeQuietly( ins );
     }
   }
 }

@@ -62,10 +62,13 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
+import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -96,16 +99,23 @@ public class KalypsoObservationService implements IObservationService
 
   private ItemBean[] m_repositoryBeans = null;
 
-  private final Map m_mapBean2Item;
+  /** Bean-ID(String) --> IRepositoryItem */
+  private final Map m_mapBeanId2Item;
 
-  private final Map m_mapItem2Beans;
+  /** IRepositoryItem --> ItemBean */
+  private final Map m_mapItem2Bean;
 
-  private final Map m_mapId2Rep;
+  /** Repository-ID(String) --> IRepository */
+  private final Map m_mapRepId2Rep;
+  
+  /** Repository-ID(String) --> IObservationManipulator */
+  private final Map m_mapRepId2Manip;
 
   private final File m_tmpDir;
 
   private final Logger m_logger;
 
+  /** Timezone is used to convert dates between repositories and clients */
   private TimeZone m_timezone = null;
 
   /**
@@ -116,9 +126,10 @@ public class KalypsoObservationService implements IObservationService
   public KalypsoObservationService() throws RemoteException
   {
     m_repositories = new Vector();
-    m_mapBean2Item = new Hashtable( 512 );
-    m_mapItem2Beans = new Hashtable( 512 );
-    m_mapId2Rep = new Hashtable();
+    m_mapBeanId2Item = new Hashtable( 512 );
+    m_mapItem2Bean = new Hashtable( 512 );
+    m_mapRepId2Rep = new Hashtable();
+    m_mapRepId2Manip = new Hashtable();
 
     m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
 
@@ -156,9 +167,10 @@ public class KalypsoObservationService implements IObservationService
    */
   private final void init() throws RemoteException
   {
-    m_mapBean2Item.clear();
-    m_mapItem2Beans.clear();
-    m_mapId2Rep.clear();
+    m_mapBeanId2Item.clear();
+    m_mapItem2Bean.clear();
+    m_mapRepId2Rep.clear();
+    m_mapRepId2Manip.clear();
     m_repositoryBeans = null;
     clearRepositories();
 
@@ -166,28 +178,9 @@ public class KalypsoObservationService implements IObservationService
     {
       final File conf = new File( ServiceConfig.getConfDir(),
           "IObservationService/repconf_server.xml" );
-
       final InputStream stream = new FileInputStream( conf );
-
       // this call also closes the stream
       final List facConfs = RepositoryConfigUtils.loadConfig( stream );
-
-      for( final Iterator it = facConfs.iterator(); it.hasNext(); )
-      {
-        final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
-        final IRepositoryFactory fact = item.createFactory( getClass()
-            .getClassLoader() );
-
-        final IRepository rep = fact.createRepository();
-        m_repositories.add( rep );
-
-        m_mapId2Rep.put( rep.getIdentifier(), rep );
-      }
-
-      // tricky: set the list of repositories to the ZmlFilter so that
-      // it can directly fetch the observations without using the default
-      // URL resolving stuff
-      ZmlFilter.configureFor( m_repositories );
 
       // load the service properties
       final Properties props = new Properties();
@@ -198,6 +191,7 @@ public class KalypsoObservationService implements IObservationService
       {
         ins = new FileInputStream( fProps );
         props.load( ins );
+        ins.close();
       }
       catch( final IOException e )
       {
@@ -208,6 +202,33 @@ public class KalypsoObservationService implements IObservationService
       {
         IOUtils.closeQuietly( ins );
       }
+
+      for( final Iterator it = facConfs.iterator(); it.hasNext(); )
+      {
+        final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
+        final IRepositoryFactory fact = item.createFactory( getClass()
+            .getClassLoader() );
+
+        final IRepository rep = fact.createRepository();
+        m_repositories.add( rep );
+
+        m_mapRepId2Rep.put( rep.getIdentifier(), rep );
+
+        // look into properties if an IObservationManipulator should be
+        // configured for the current repository
+        final String pManip = "MANIPULATOR_" + rep.getIdentifier();
+        final String cnManip = props.getProperty( pManip );
+        if( cnManip != null )
+        {
+          final IObservationManipulator man = (IObservationManipulator)ClassUtilities.newInstance( cnManip, IObservationManipulator.class, getClass().getClassLoader() );
+          m_mapRepId2Manip.put( rep.getIdentifier(), man );
+        }
+      }
+
+      // tricky: set the list of repositories to the ZmlFilter so that
+      // it can directly fetch the observations without using the default
+      // URL resolving stuff
+      ZmlFilter.configureFor( m_repositories );
 
       // set the timezone according to the properties
       final String tzName = props.getProperty( "TIMEZONE_NAME" );
@@ -240,9 +261,9 @@ public class KalypsoObservationService implements IObservationService
   {
     clearRepositories();
     m_repositoryBeans = null;
-    m_mapBean2Item.clear();
-    m_mapItem2Beans.clear();
-    m_mapId2Rep.clear();
+    m_mapBeanId2Item.clear();
+    m_mapItem2Bean.clear();
+    m_mapRepId2Rep.clear();
 
     ZmlFilter.configureFor( null );
 
@@ -292,7 +313,7 @@ public class KalypsoObservationService implements IObservationService
       m_logger.info( "Reading data for observation: " + obs.getName()
           + " Date-Range: " + dra );
 
-      updateMetadata( obs, obean.getId() );
+      updateObservation( obs, obean.getId() );
 
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( href, obs );
@@ -384,15 +405,6 @@ public class KalypsoObservationService implements IObservationService
     }
   }
 
-  /**
-   * Helper
-   * 
-   * @param obean
-   * @return item
-   * 
-   * @throws RemoteException
-   * @throws RepositoryException
-   */
   private IRepositoryItem itemFromBean( final ItemBean obean )
       throws RemoteException, RepositoryException
   {
@@ -405,14 +417,14 @@ public class KalypsoObservationService implements IObservationService
     }
 
     // maybe bean already in map?
-    if( m_mapBean2Item.containsKey( obean.getId() ) )
-      return (IRepositoryItem)m_mapBean2Item.get( obean.getId() );
+    if( m_mapBeanId2Item.containsKey( obean.getId() ) )
+      return (IRepositoryItem)m_mapBeanId2Item.get( obean.getId() );
 
     // try with repository id
     final String repId = RepositoryUtils.getRepositoryId( obean.getId() );
-    if( m_mapId2Rep.containsKey( repId ) )
+    if( m_mapRepId2Rep.containsKey( repId ) )
     {
-      final IRepository rep = (IRepository)m_mapId2Rep.get( repId );
+      final IRepository rep = (IRepository)m_mapRepId2Rep.get( repId );
 
       final IRepositoryItem item = rep.findItem( obean.getId() );
 
@@ -481,7 +493,7 @@ public class KalypsoObservationService implements IObservationService
 
           m_repositoryBeans[i] = new ItemBean( rep.getIdentifier(), rep
               .getName() );
-          m_mapBean2Item.put( m_repositoryBeans[i].getId(), rep );
+          m_mapBeanId2Item.put( m_repositoryBeans[i].getId(), rep );
         }
       }
 
@@ -495,8 +507,8 @@ public class KalypsoObservationService implements IObservationService
       item = itemFromBean( pbean );
 
       // already in cache?
-      if( m_mapItem2Beans.containsKey( item ) )
-        return (ItemBean[])m_mapItem2Beans.get( item );
+      if( m_mapItem2Bean.containsKey( item ) )
+        return (ItemBean[])m_mapItem2Bean.get( item );
 
       final IRepositoryItem[] children = item.getChildren();
 
@@ -509,11 +521,11 @@ public class KalypsoObservationService implements IObservationService
             .getName() );
 
         // store it for future referencing
-        m_mapBean2Item.put( beans[i].getId(), children[i] );
+        m_mapBeanId2Item.put( beans[i].getId(), children[i] );
       }
 
       // cache it for next request
-      m_mapItem2Beans.put( item, beans );
+      m_mapItem2Bean.put( item, beans );
 
       return beans;
     }
@@ -547,7 +559,7 @@ public class KalypsoObservationService implements IObservationService
 
     if( obs != null )
     {
-      final MetadataList md = updateMetadata( obs, ib.getId() );
+      final MetadataList md = updateObservation( obs, ib.getId() );
 
       return new ObservationBean( ib.getId(), obs.getName(), md );
     }
@@ -555,11 +567,28 @@ public class KalypsoObservationService implements IObservationService
     return null;
   }
 
-  private MetadataList updateMetadata( final IObservation obs, final String id )
+  private MetadataList updateObservation( final IObservation obs, final String id )
   {
     // always update the observation metadata with the ocs-id
     final MetadataList md = obs.getMetadataList();
     md.setProperty( ZmlURLConstants.MD_OCS_ID, ZmlURL.addServerSideId( id ) );
+    
+    // look if there is a manipulator and let it update the observation
+    final String repId = RepositoryUtils.getRepositoryId( id );
+    final IObservationManipulator oman = (IObservationManipulator)m_mapRepId2Manip.get( repId );
+    if( oman != null )
+    {
+      try
+      {
+        oman.manipulate( obs, id );
+      }
+      catch( final SensorException e )
+      {
+        m_logger.throwing( getClass().getName(), "updateMetadata", e );
+        m_logger.info( "Could not manipulate observation with id: " + id + " due to previous errors" );
+      }
+    }
+    
     return md;
   }
 
@@ -620,7 +649,7 @@ public class KalypsoObservationService implements IObservationService
       final ItemBean bean = new ItemBean( item.getIdentifier(), item.getName() );
 
       // store it for future referencing
-      m_mapBean2Item.put( bean.getId(), item );
+      m_mapBeanId2Item.put( bean.getId(), item );
 
       return bean;
     }
