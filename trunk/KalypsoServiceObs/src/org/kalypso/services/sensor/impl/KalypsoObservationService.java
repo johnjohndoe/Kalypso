@@ -57,7 +57,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
@@ -82,6 +81,7 @@ import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.service.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypso.services.sensor.DataBean;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.util.runtime.args.DateRangeArgument;
@@ -107,16 +107,20 @@ public class KalypsoObservationService implements IObservationService
 
   /** Repository-ID(String) --> IRepository */
   private final Map m_mapRepId2Rep;
-  
+
   /** Repository-ID(String) --> IObservationManipulator */
   private final Map m_mapRepId2Manip;
 
+  /** Data-ID(String) --> File */
+  private final Map m_mapDataId2File;
+  
   private final File m_tmpDir;
 
   private final Logger m_logger;
 
   /** Timezone is used to convert dates between repositories and clients */
   private TimeZone m_timezone = null;
+
 
   /**
    * Constructs the service by reading the configuration.
@@ -130,6 +134,7 @@ public class KalypsoObservationService implements IObservationService
     m_mapItem2Bean = new Hashtable( 512 );
     m_mapRepId2Rep = new Hashtable();
     m_mapRepId2Manip = new Hashtable();
+    m_mapDataId2File = new Hashtable( 128 );
 
     m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
 
@@ -152,14 +157,35 @@ public class KalypsoObservationService implements IObservationService
     init();
   }
 
-  private final void clearRepositories()
+  protected void finalize() throws Throwable
   {
+    clearCache();
+    
+    // force delete, even if we called deleteOnExit()
+    m_tmpDir.delete();
+  }
+  
+  private void clearCache()
+  {
+    m_mapBeanId2Item.clear();
+    m_mapItem2Bean.clear();
+    m_mapRepId2Rep.clear();
+    m_mapRepId2Manip.clear();
+    m_repositoryBeans = null;
+
+    // dispose repositories
     for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
       ( (IRepository)it.next() ).dispose();
-
     m_repositories.clear();
-  }
 
+    // clear temp files
+    for( final Iterator it = m_mapDataId2File.values().iterator(); it.hasNext(); )
+      ((File)it.next()).delete();
+    m_mapDataId2File.clear();
+    
+    ZmlFilter.configureFor( null );
+  }
+  
   /**
    * Initialize the Service according to configuration.
    * 
@@ -167,12 +193,7 @@ public class KalypsoObservationService implements IObservationService
    */
   private final void init() throws RemoteException
   {
-    m_mapBeanId2Item.clear();
-    m_mapItem2Bean.clear();
-    m_mapRepId2Rep.clear();
-    m_mapRepId2Manip.clear();
-    m_repositoryBeans = null;
-    clearRepositories();
+    clearCache();
 
     try
     {
@@ -220,7 +241,9 @@ public class KalypsoObservationService implements IObservationService
         final String cnManip = props.getProperty( pManip );
         if( cnManip != null )
         {
-          final IObservationManipulator man = (IObservationManipulator)ClassUtilities.newInstance( cnManip, IObservationManipulator.class, getClass().getClassLoader() );
+          final IObservationManipulator man = (IObservationManipulator)ClassUtilities
+              .newInstance( cnManip, IObservationManipulator.class, getClass()
+                  .getClassLoader() );
           m_mapRepId2Manip.put( rep.getIdentifier(), man );
         }
       }
@@ -252,29 +275,10 @@ public class KalypsoObservationService implements IObservationService
     }
   }
 
-  /**
-   * Performs some clean up.
-   * 
-   * @see java.lang.Object#finalize()
-   */
-  protected void finalize() throws Throwable
+  public DataBean readData( final String href ) throws RemoteException
   {
-    clearRepositories();
-    m_repositoryBeans = null;
-    m_mapBeanId2Item.clear();
-    m_mapItem2Bean.clear();
-    m_mapRepId2Rep.clear();
-
-    ZmlFilter.configureFor( null );
-
-    // force delete, even if we called deleteOnExit()
-    m_tmpDir.delete();
-  }
-
-  public DataHandler readData( String href ) throws RemoteException
-  {
-    href = ZmlURL.removeServerSideId( href );
-    final String obsId = ZmlURL.getIdentifierPart( href );
+    final String hereHref = ZmlURL.removeServerSideId( href );
+    final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
 
     FileOutputStream fos = null;
@@ -300,7 +304,7 @@ public class KalypsoObservationService implements IObservationService
           m_logger
               .info( "Trying to create default observation based on request..." );
 
-          obs = RequestFactory.createDefaultObservation( href );
+          obs = RequestFactory.createDefaultObservation( hereHref );
         }
       }
 
@@ -308,7 +312,7 @@ public class KalypsoObservationService implements IObservationService
        * The query part of the URL (after the ?...) contains some additional
        * specification: from-to, filter, etc.
        */
-      final DateRangeArgument dra = ZmlURL.checkDateRange( href );
+      final DateRangeArgument dra = ZmlURL.checkDateRange( hereHref );
 
       m_logger.info( "Reading data for observation: " + obs.getName()
           + " Date-Range: " + dra );
@@ -316,7 +320,7 @@ public class KalypsoObservationService implements IObservationService
       updateObservation( obs, obean.getId() );
 
       // tricky: maybe make a filtered observation out of this one
-      obs = FilterFactory.createFilterFrom( href, obs );
+      obs = FilterFactory.createFilterFrom( hereHref, obs );
 
       final ObservationType obsType = ZmlFactory.createXML( obs, dra,
           m_timezone );
@@ -333,7 +337,9 @@ public class KalypsoObservationService implements IObservationService
       ZmlFactory.getMarshaller().marshal( obsType, fos );
       fos.close();
 
-      final DataHandler data = new DataHandler( new FileDataSource( f ) );
+      final DataBean data = new DataBean( f.toString(), new DataHandler( new FileDataSource( f ) ) );
+      m_mapDataId2File.put( data.getId(), f );
+      
       return data;
     }
     catch( final Exception e ) // generic exception used for simplicity
@@ -356,19 +362,19 @@ public class KalypsoObservationService implements IObservationService
     }
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#clearTempData(javax.activation.DataHandler)
-   */
-  public void clearTempData( final DataHandler data )
+  public void clearTempData( final String dataId )
   {
-    final DataSource ds = data.getDataSource();
-    if( ds instanceof FileDataSource )
+    final File file = (File)m_mapDataId2File.get( dataId );
+    if( file != null )
     {
-      final File file = ( (FileDataSource)ds ).getFile();
-      file.delete();
+      final boolean b = file.delete();
+
+      if( !b )
+        m_logger.warning( "Could not delete file " + file.toString()
+            + " associated to dataId " + dataId );
     }
     else
-      m_logger.warning( "Could not delete data associated to: " + data );
+      m_logger.warning( "Unknown dataId: " + dataId );
   }
 
   /**
@@ -567,15 +573,17 @@ public class KalypsoObservationService implements IObservationService
     return null;
   }
 
-  private MetadataList updateObservation( final IObservation obs, final String id )
+  private MetadataList updateObservation( final IObservation obs,
+      final String id )
   {
     // always update the observation metadata with the ocs-id
     final MetadataList md = obs.getMetadataList();
     md.setProperty( ZmlURLConstants.MD_OCS_ID, ZmlURL.addServerSideId( id ) );
-    
+
     // look if there is a manipulator and let it update the observation
     final String repId = RepositoryUtils.getRepositoryId( id );
-    final IObservationManipulator oman = (IObservationManipulator)m_mapRepId2Manip.get( repId );
+    final IObservationManipulator oman = (IObservationManipulator)m_mapRepId2Manip
+        .get( repId );
     if( oman != null )
     {
       try
@@ -585,10 +593,11 @@ public class KalypsoObservationService implements IObservationService
       catch( final SensorException e )
       {
         m_logger.throwing( getClass().getName(), "updateMetadata", e );
-        m_logger.info( "Could not manipulate observation with id: " + id + " due to previous errors" );
+        m_logger.info( "Could not manipulate observation with id: " + id
+            + " due to previous errors" );
       }
     }
-    
+
     return md;
   }
 

@@ -440,6 +440,9 @@ public class ZmlFactory
   {
     try
     {
+      // first of all fetch values
+      final ITuppleModel values = obs.getValues( args );
+      
       final ObservationType obsType = OF.createObservation();
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
@@ -477,8 +480,6 @@ public class ZmlFactory
 
         metadataList.add( mdType );
       }
-
-      final ITuppleModel values = obs.getValues( args );
 
       final List axisList = obsType.getAxis();
       final IAxis[] axes = obs.getAxisList();
