@@ -80,23 +80,23 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     m_listeners.clear();
     m_properties.clear();
   }
-  
-  public String getFactory( )
+
+  public String getFactory()
   {
     return m_factory;
   }
 
-  public String getConfiguration( )
+  public String getConfiguration()
   {
     return m_conf;
   }
-  
-  public boolean isReadOnly( )
+
+  public boolean isReadOnly()
   {
     return m_readOnly;
   }
@@ -109,11 +109,11 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return "";
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepository#addRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
@@ -125,11 +125,11 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#fireRepositoryStructureChanged()
    */
-  public void fireRepositoryStructureChanged( )
+  public void fireRepositoryStructureChanged()
   {
     for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
     {
-      IRepositoryListener element = (IRepositoryListener) iter.next();
+      IRepositoryListener element = (IRepositoryListener)iter.next();
 
       element.onRepositoryStructureChanged();
     }
@@ -146,7 +146,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -154,20 +154,45 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( )
+  public IRepositoryItem getParent()
   {
+    return null;
+  }
+
+  /**
+   * This default implementation uses recursion to find an item with the
+   * requested id. Subclasses may use this method if they want to implement
+   * findItem using recursion.
+   * 
+   * @return item if found, else null
+   */
+  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item,
+      final String id ) throws RepositoryException
+  {
+    if( item.getIdentifier().equalsIgnoreCase( id ) )
+      return item;
+
+    final IRepositoryItem[] items = item.getChildren();
+    for( int i = 0; i < items.length; i++ )
+    {
+      final IRepositoryItem item2 = findItemRecursive( items[i], id );
+
+      if( item2 != null )
+        return item2;
+    }
+
     return null;
   }
 
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     final String desc = getDescription();
     if( desc != null )
       return getName() + " (" + desc + ")";
-    
+
     return getName();
   }
 
@@ -184,7 +209,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return this;
   }
@@ -209,7 +234,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getProperties()
    */
-  public Properties getProperties( )
+  public Properties getProperties()
   {
     return m_properties;
   }
