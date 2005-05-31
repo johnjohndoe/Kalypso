@@ -57,6 +57,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
@@ -78,7 +79,6 @@ import org.kalypso.util.url.UrlResolverSingleton;
 
 /**
  * ObservationViewer
- * <p>
  * 
  * @author schlienger (23.05.2005)
  */
@@ -112,43 +112,50 @@ public class ObservationViewer extends Composite
   {
     super( parent, style );
 
+    m_dr = DateRangeArgument.createFromPastDays( 5 );
+
     createControl();
   }
 
   private final void createControl()
   {
-    final GridLayout gridLayout = new GridLayout( 3, false );
+    final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
     setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    createHeaderForm();
+    final SashForm main = new SashForm( this, SWT.VERTICAL );
+    main.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    
+    createHeaderForm( main );
 
-    final SashForm form = new SashForm( this, SWT.HORIZONTAL );
-    final GridData gd = new GridData( GridData.FILL_BOTH );
-    gd.horizontalSpan = 3;
-    gd.verticalSpan = 1;
-    form.setLayoutData( gd );
+    final SashForm bottom = new SashForm( main, SWT.HORIZONTAL );
+    bottom.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    createMetadataAndTableForm( form );
-    createDiagramForm( form );
+    createMetadataAndTableForm( bottom );
+    createDiagramForm( bottom );
 
-    form.setWeights( new int[] {
+    main.setWeights( new int[] {
+        1,
+        4 } );
+    bottom.setWeights( new int[] {
         1,
         3 } );
-    
-    m_dr = DateRangeArgument.createFromPastDays( 5 );
   }
 
-  private void createHeaderForm()
+  private void createHeaderForm( final Composite parent )
   {
-    // 1. HREF
-    m_lblObs = new Label( this, SWT.LEFT );
-    m_lblObs.setText( "Zeitreihe:" );
+    final Group header = new Group( parent, SWT.NONE );
+    header.setLayout( new GridLayout( 3, false ) );
 
-    m_txtHref = new Text( this, SWT.MULTI | SWT.WRAP );
+    // 1. HREF
+    m_lblObs = new Label( header, SWT.LEFT );
+    m_lblObs.setText( "Zeitreihe:" );
+    m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
+
+    m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
     m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL
-        | GridData.VERTICAL_ALIGN_FILL ) );
+        | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
     m_txtHref.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
@@ -157,8 +164,9 @@ public class ObservationViewer extends Composite
       }
     } );
 
-    m_btnSelectObs = new Button( this, SWT.NONE );
+    m_btnSelectObs = new Button( header, SWT.NONE );
     m_btnSelectObs.setText( "..." );
+    m_btnSelectObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObs.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( final SelectionEvent e )
@@ -181,13 +189,14 @@ public class ObservationViewer extends Composite
     } );
 
     // 2. FILTER
-    m_lblFilter = new Label( this, SWT.LEFT );
+    m_lblFilter = new Label( header, SWT.LEFT );
     m_lblFilter.setText( "Filter:" );
+    m_lblFilter.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
-    m_txtFilter = new Text( this, SWT.MULTI | SWT.WRAP );
+    m_txtFilter = new Text( header, SWT.MULTI | SWT.WRAP );
     m_txtFilter.setSize( 400, m_txtFilter.getSize().y );
     m_txtFilter.setLayoutData( new GridData( GridData.FILL_HORIZONTAL
-        | GridData.VERTICAL_ALIGN_FILL ) );
+        | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
     m_txtFilter.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
@@ -196,13 +205,15 @@ public class ObservationViewer extends Composite
       }
     } );
 
-    m_btnSelectFilter = new Button( this, SWT.NONE );
+    m_btnSelectFilter = new Button( header, SWT.NONE );
     m_btnSelectFilter.setText( "..." );
+    m_btnSelectFilter.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectFilter.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        final InputDialog dlg = new InputDialog(getShell(), "", "", m_txtFilter.getText(), null );
+        final InputDialog dlg = new InputDialog( getShell(), "", "",
+            m_txtFilter.getText(), null );
         if( dlg.open() == Window.OK )
           m_txtFilter.setText( dlg.getValue() );
       }
@@ -214,25 +225,33 @@ public class ObservationViewer extends Composite
     } );
 
     // 3. TIME-RANGE
-    m_lblRange = new Label( this, SWT.LEFT );
+    m_lblRange = new Label( header, SWT.LEFT );
     m_lblRange.setText( "Zeitraum:" );
+    m_lblRange.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
-    m_txtRange = new Text( this, SWT.RIGHT );
+    m_txtRange = new Text( header, SWT.LEFT );
     m_txtRange.setEditable( false );
+    m_txtRange.setLayoutData( new GridData( GridData.FILL_HORIZONTAL
+        | GridData.VERTICAL_ALIGN_FILL ) );
+    m_txtRange.setText( m_dr.toString() );
 
-    m_btnSelectRange = new Button( this, SWT.NONE );
+    m_btnSelectRange = new Button( header, SWT.NONE );
     m_btnSelectRange.setText( "..." );
+    m_btnSelectRange.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectRange.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        final DateRangeInputControlStuct drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, DateFormat.getDateTimeInstance() );
-        final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "", "", drs );
+        final DateRangeInputControlStuct drs = new DateRangeInputControlStuct(
+            true, m_dr.getFrom(), m_dr.getTo(), 0, DateFormat
+                .getDateTimeInstance() );
+        final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(),
+            "", "", drs );
         if( dlg.open() == Window.OK )
         {
           m_dr = createFrom( dlg.getStruct() );
           m_txtRange.setText( m_dr.toString() );
-          
+
           setHref( m_txtHref.getText(), m_txtFilter.getText() );
         }
       }
@@ -244,7 +263,7 @@ public class ObservationViewer extends Composite
     } );
   }
 
-  private void createDiagramForm( final SashForm form )
+  private void createDiagramForm( final Composite parent )
   {
     try
     {
@@ -259,26 +278,33 @@ public class ObservationViewer extends Composite
     final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false,
         false, false );
     chartPanel.setMouseZoomable( true, false );
-    final Composite chartComp = new Composite( form, SWT.RIGHT | SWT.EMBEDDED );
+    final Composite chartComp = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( chartComp );
     vFrame.setVisible( true );
     chartPanel.setVisible( true );
     vFrame.add( chartPanel );
   }
 
-  private void createMetadataAndTableForm( final SashForm form )
+  private void createMetadataAndTableForm( final Composite parent )
   {
-    final SashForm form2 = new SashForm( form, SWT.VERTICAL );
+    final SashForm form = new SashForm( parent, SWT.VERTICAL );
 
     // METADATA
-    m_mdViewer = new SimplePropertySheetViewer( form2 );
+    m_mdViewer = new SimplePropertySheetViewer( form );
 
     // TABLE
     m_table = new ObservationTable( m_tableView, false, false );
-    final Composite tableComp = new Composite( form2, SWT.RIGHT | SWT.EMBEDDED );
+    m_table.setBorder( null );
+    final Composite tableComp = new Composite( form, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( tableComp );
     vFrame.setVisible( true );
-    vFrame.add( new JScrollPane( m_table ) );
+    final JScrollPane scrollPane = new JScrollPane( m_table );
+    scrollPane.setBorder( null );
+    vFrame.add( scrollPane );
+
+    form.setWeights( new int[] {
+        2,
+        5 } );
   }
 
   /**
@@ -304,10 +330,10 @@ public class ObservationViewer extends Composite
 
     // 2. plus filter stuff
     hereHref = ZmlURL.insertFilter( hereHref, filter );
-    
+
     // 3. always insert date-range info
     hereHref = ZmlURL.insertDateRange( hereHref, m_dr );
-    
+
     final URL url;
     try
     {
@@ -362,8 +388,9 @@ public class ObservationViewer extends Composite
     m_tableView.removeAllItems();
     m_tableView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
   }
-  
-  protected static DateRangeArgument createFrom( final DateRangeInputControlStuct struct )
+
+  protected static DateRangeArgument createFrom(
+      final DateRangeInputControlStuct struct )
   {
     if( struct.useRange )
       return new DateRangeArgument( struct.from, struct.to );

@@ -270,6 +270,9 @@ public final class ZmlURL
    */
   public static String insertFilter( final String href, final String filter )
   {
+    if( filter == null || filter.length() == 0 )
+      return href;
+    
     // first replace the filter spec (does nothing if not present)
     String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1+ ".*"
         + ZmlURLConstants.TAG_FILTER2, "" );
