@@ -23,6 +23,8 @@ public class GroupItem implements IRepositoryItem
 
   private final WiskiRepository m_rep;
 
+  private IRepositoryItem[] m_children;
+
   public GroupItem( final SuperGroupItem parent, final String id,
       final String name )
   {
@@ -30,13 +32,13 @@ public class GroupItem implements IRepositoryItem
     m_id = id;
     m_name = name;
 
-    m_rep = (WiskiRepository) m_parent.getRepository();
+    m_rep = (WiskiRepository)m_parent.getRepository();
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -44,7 +46,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return getName();
   }
@@ -52,7 +54,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_rep.getIdentifier() + m_id;
   }
@@ -60,7 +62,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( ) throws RepositoryException
+  public IRepositoryItem getParent() throws RepositoryException
   {
     return m_rep;
   }
@@ -68,7 +70,7 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren() throws RepositoryException
   {
     return true;
   }
@@ -76,35 +78,37 @@ public class GroupItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
-    try
+    if( m_children == null )
     {
-      final GetTsInfoList call = new GetTsInfoList( m_id );
-      m_rep.executeWiskiCall( call );
-      final TsInfoItem[] tsitems = new TsInfoItem[call.getResultList().size()];
-
-      int i = 0;
-      for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
+      try
       {
-        final HashMap map = (HashMap) it.next();
+        final GetTsInfoList call = new GetTsInfoList( m_id );
+        m_rep.executeWiskiCall( call );
+        m_children = new TsInfoItem[call.getResultList().size()];
 
-        tsitems[i++] = new TsInfoItem( this, map );
+        int i = 0;
+        for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
+        {
+          final HashMap map = (HashMap)it.next();
+
+          m_children[i++] = new TsInfoItem( this, map );
+        }
       }
+      catch( final Exception e ) // KiWWException and RemoteException
+      {
+        throw new RepositoryException( e );
+      }
+    }
 
-      return tsitems;
-    }
-    catch( final Exception e ) // KiWWException and RemoteException
-    {
-      e.printStackTrace();
-      throw new RepositoryException( e );
-    }
+    return m_children;
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return m_rep;
   }

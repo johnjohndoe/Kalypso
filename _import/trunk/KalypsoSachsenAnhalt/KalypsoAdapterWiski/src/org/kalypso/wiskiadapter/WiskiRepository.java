@@ -1,7 +1,6 @@
 package org.kalypso.wiskiadapter;
 
 import java.rmi.Naming;
-import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -42,6 +41,8 @@ public class WiskiRepository extends AbstractRepository
   private final String m_logonName;
 
   private final String m_password;
+
+  private IRepositoryItem[] m_children;
 
   /**
    * @param conf
@@ -122,6 +123,8 @@ public class WiskiRepository extends AbstractRepository
   {
     super.dispose();
 
+    m_children = null;
+    
     wiskiLogout();
   }
 
@@ -176,18 +179,21 @@ public class WiskiRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    final String prop = WiskiUtils.getProperties().getProperty(
-        WiskiUtils.PROP_SUPERGROUPNAMES );
-    if( prop == null )
-      throw new RepositoryException(
-          "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
+    if( m_children == null )
+    {
+	    final String prop = WiskiUtils.getProperties().getProperty(
+	        WiskiUtils.PROP_SUPERGROUPNAMES );
+	    if( prop == null )
+	      throw new RepositoryException(
+	          "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
+	
+	    final String[] superGroupNames = prop.split( "," );
+	    m_children = new IRepositoryItem[superGroupNames.length];
+	    for( int i = 0; i < superGroupNames.length; i++ )
+	      m_children[i] = new SuperGroupItem( this, superGroupNames[i] );
+    }
 
-    final String[] superGroupNames = prop.split( "," );
-    final IRepositoryItem[] supergroups = new IRepositoryItem[superGroupNames.length];
-    for( int i = 0; i < superGroupNames.length; i++ )
-      supergroups[i] = new SuperGroupItem( this, superGroupNames[i] );
-
-    return supergroups;
+    return m_children;
   }
 
   public HashMap getUserData( )
@@ -210,7 +216,7 @@ public class WiskiRepository extends AbstractRepository
     {
       call.execute( m_wiski, m_userData );
     }
-    catch( final NoSuchObjectException e )
+    catch( final Exception e )
     {
       // normally, if we get this exception, that means wiski has logged us
       // out. So we try here to reconnect and to perform the call again.

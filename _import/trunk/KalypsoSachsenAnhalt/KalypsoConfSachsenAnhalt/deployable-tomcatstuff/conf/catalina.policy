@@ -142,7 +142,12 @@ grant {
 
 	permission java.util.PropertyPermission "kalypso.*", "read";
 	permission java.util.PropertyPermission "java.io.tmpdir", "read";
-	
+
+	// für locale-Sachen scheinbar...
+	permission java.util.PropertyPermission "file.*", "read";
+	permission java.util.PropertyPermission "java.*", "read";
+	permission java.util.PropertyPermission "user.*", "read";
+
 	permission java.util.logging.LoggingPermission "control";
 
 	// BodeModell (eigentlich nur: bodesteu.exe ist eine 16 BIT-Applikation)
