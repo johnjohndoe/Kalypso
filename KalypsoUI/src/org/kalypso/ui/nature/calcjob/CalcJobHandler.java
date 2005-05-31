@@ -184,6 +184,7 @@ public class CalcJobHandler
         project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
         final String finishText = jobBean.getFinishText();
         final String message = finishText == null ? "" : finishText;
+        // TODO finishText tokenizen (\n) und MultiStatus zurückgeben 
         return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
 
       case ICalcServiceConstants.CANCELED:

@@ -118,7 +118,7 @@ final class CalcJobThread extends Thread
       else
       {
         m_jobBean.setState( ICalcServiceConstants.FINISHED );
-        QueuedCalcJobServiceWrapper.LOGGER.info( "JOB exited normaly: " + jobID );
+        QueuedCalcJobServiceWrapper.LOGGER.info( "JOB exited normally: " + jobID );
       }
     }
     catch( final Throwable t )
