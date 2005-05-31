@@ -52,7 +52,9 @@ import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.CopyUtils;
@@ -150,19 +152,19 @@ public class TubigBatchInterpreter
   {
     final LineNumberReader lneNumRdrBatch;
     final String sRegExPath = "\\Q%1\\E";
+    final StringWriter swInStream;
 
     String sZeile;
     String sZeileUpper;
     String sCmd;
     StringTokenizer strTok;
     File newDir;
+    int iRetVal;
 
-    InputStreamReader inStream = null;
-    InputStreamReader errStream = null;
     boolean bExeEnde = false;
+    int iTimeout = TubigConst.BAT_TIMEOUT;
 
-    Process process;
-
+    swInStream = new StringWriter();
     lneNumRdrBatch = new LineNumberReader( rdrBatch );
 
     pwLog.println( TubigConst.MESS_BERECHNUNG_WIRD_GESTARTET );
@@ -264,47 +266,29 @@ public class TubigBatchInterpreter
                         pwLog.println( sCmd );
                         if( !"".equals( sCmd ) )
                         {
-                          // Funktion raus: Klasse, Kalypsoutil.ProcessHelper.startProcess - ähnlkich winin Klasse java.Process
-                          // hier auch Timeout behandeln
-                          process = Runtime.getRuntime().exec( sCmd, null, fleExeDir );
-                          inStream = new InputStreamReader( process.getInputStream() );
-                          errStream = new InputStreamReader( process.getErrorStream() );
                           bExeEnde = false;
-                          while( true )
+                          // **
+
+                          // Rückgabe-Infos:
+                          // nach TimeOut abgebrochen?
+                          // beendet (cancel)?
+                          // normal fertig?
+
+                          iRetVal = startProcess( sCmd, null, fleExeDir, cancelable, iTimeout,
+                              swInStream, pwErr );
+
+                          // **
+                          // TODO Monika Ende-Token **ende** noch
+                          // weiterverabeiten
+                          // hier wird ggf. TubigBatchException geworfen
+                          if( cancelable.isCanceled() )
                           {
-                            // falls doch noch 'normaler' Fehler kommt
-                            CopyUtils.copy( errStream, pwErr );
-
-                            // TODO Monika Ende-Token **ende** noch
-                            // weiterverabeiten
-                            // hier noch Zeit zählen und nach bestimter Zeit
-                            // Ausführung abbrechen auch wenn noch kein ENDE
-                            // gekommen ist
-
-                            // hier wird ggf. TubigBatchException geworfen
-                            bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( inStream, pwLog,
-                                pwErr, cancelable );
-
-                            try
-                            {
-                              process.exitValue();
-                              
-                              
-                              break;
-                            }
-                            catch( final IllegalThreadStateException e )
-                            {
-                              // Prozess noch nicht fertig
-                            }
-
-                            if( cancelable.isCanceled() )
-                            {
-                              process.destroy();
-                              pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
-                              return;
-                            }
-                            Thread.sleep( 100 );
+                            pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
                           }
+
+                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog,
+                              pwErr, cancelable );
+
                         }
                       }
                     }
@@ -331,16 +315,164 @@ public class TubigBatchInterpreter
       throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
           TubigConst.FINISH_ERROR_TEXT );
     }
-    catch( final InterruptedException e )
+    catch( final ProcessTimeoutException e )
     {
-      // kann aber eigentlich gar nicht passieren (wird geworfen von
-      // Thread.sleep( 100 ))
+      pwErr.println( "Fehlergrund (ProcessTimeoutException): " + e.getCause() );
+      pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
+          TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
       pwErr.flush();
       pwLog.flush();
+    }
+  }
+
+  static int startProcess( final String sCmd, final String[] envp, final File fleExeDir,
+      final ICalcMonitor cancelable, final int iTOut, final Writer wLog, final Writer wErr )
+      throws IOException, ProcessTimeoutException
+  {
+    final Process process;
+    int iRetVal = -1;
+    InputStreamReader inStreamRdr = null;
+    InputStreamReader errStreamRdr = null;
+    ProcessControlThread procCtrlThread = null;
+
+    try
+    {
+      process = Runtime.getRuntime().exec( sCmd, envp, fleExeDir );
+      if( iTOut > 0 )
+      {
+        procCtrlThread = new ProcessControlThread( process, iTOut );
+        procCtrlThread.start();
+      }
+
+      inStreamRdr = new InputStreamReader( process.getInputStream() );
+      errStreamRdr = new InputStreamReader( process.getErrorStream() );
+      while( true )
+      {
+        CopyUtils.copy( inStreamRdr, wLog );
+        CopyUtils.copy( errStreamRdr, wErr );
+
+        try
+        {
+          iRetVal = process.exitValue();
+          break;
+        }
+        catch( final IllegalThreadStateException e )
+        {
+          // Prozess noch nicht fertig, weiterlaufen lassen
+        }
+
+        if( cancelable.isCanceled() )
+        {
+          process.destroy();
+          if( procCtrlThread != null )
+          {
+            procCtrlThread.endProcessControl();
+          }
+          iRetVal = process.exitValue();
+          return iRetVal;
+        }
+        Thread.sleep( 100 );
+      }
+      if( procCtrlThread != null )
+      {
+        procCtrlThread.endProcessControl();
+      }
+    }
+    catch( final InterruptedException e )
+    {
+      // kann aber eigentlich gar nicht passieren
+      // (wird geworfen von Thread.sleep( 100 ))
+      e.printStackTrace();
+    }
+    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
+    {
+      throw new ProcessTimeoutException("Timeout bei der Abarbeitung von '" + sCmd + "'");
+    }
+    return iRetVal;
+  }
+
+  /**
+   * @author Thül
+   */
+  private static class ProcessControlThread extends Thread
+  {
+    private volatile boolean m_bProcCtrlActive = false;
+
+    private volatile boolean m_bProcDestroyed = false;
+
+    private final long m_lTimeout;
+
+    private final Process m_proc;
+
+    public ProcessControlThread( Process proc, long lTimeout )
+    {
+      m_lTimeout = lTimeout;
+      m_proc = proc;
+    }
+
+    public void run()
+    {
+      synchronized( this )
+      {
+        try
+        {
+          m_bProcCtrlActive = true;
+          wait( m_lTimeout );
+        }
+        catch( InterruptedException ex )
+        {
+          // sollte nicht passieren
+        }
+      }
+      if( m_bProcCtrlActive )
+      {
+        // Prozess läuft nach Ablauf von m_lTimeout ms immer noch: Abbruch
+        m_bProcDestroyed = true;
+        m_proc.destroy();
+      }
+    }
+
+    public synchronized void endProcessControl()
+    {
+      m_bProcCtrlActive = false;
+      notifyAll();
+    }
+
+    public boolean procDestroyed()
+    {
+      return m_bProcDestroyed;
+    }
+  }
+
+  private static class ProcessTimeoutException extends Exception
+  {
+    public ProcessTimeoutException()
+    {
+      super();
+
+    }
+
+    public ProcessTimeoutException( final String message )
+    {
+      super( message );
+
+    }
+
+    public ProcessTimeoutException( final Throwable cause )
+    {
+      super( cause );
+
+    }
+
+    public ProcessTimeoutException( final String message, final Throwable cause )
+    {
+      super( message, cause );
+
     }
   }
 

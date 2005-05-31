@@ -83,25 +83,21 @@ public class TubigBatchException extends Exception
   public TubigBatchException()
   {
     super();
-
   }
 
   public TubigBatchException( final String message )
   {
     super( message );
-
   }
 
   public TubigBatchException( final Throwable cause )
   {
     super( cause );
-
   }
 
   public TubigBatchException( final String message, final Throwable cause )
   {
     super( message, cause );
-
   }
 
 }

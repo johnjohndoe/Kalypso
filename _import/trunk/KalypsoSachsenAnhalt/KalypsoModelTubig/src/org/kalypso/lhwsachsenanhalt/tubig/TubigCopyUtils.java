@@ -2,7 +2,7 @@ package org.kalypso.lhwsachsenanhalt.tubig;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
+import java.io.StringWriter;
 
 import org.kalypso.services.calculation.job.ICalcMonitor;
 
@@ -53,7 +53,7 @@ public class TubigCopyUtils
    *           In case of an I/O problem
    * @throws TubigBatchException
    */
-  public static boolean copyAndAnalyzeStreams( final Reader input, final PrintWriter pwLog,
+  public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog,
       final PrintWriter pwErr, final ICalcMonitor monitor ) throws IOException, TubigBatchException
   {
     char[] buffer = new char[DEFAULT_BUFFER_SIZE];
@@ -63,49 +63,50 @@ public class TubigCopyUtils
     String sMess = "";
     String sLastWrtr = "";
 
-    while( -1 != ( n = input.read( buffer ) ) )
-    {
-      sMess = sMess + new String( buffer, 0, n );
-      count += n;
-    }
-    if( count > 0 )
-    {
-      if( sMess.startsWith( TubigConst.STDOUT ) )
-      {
-        sMess = sMess.replaceAll( TubigConst.STDOUT, "" );
-        pwLog.println( sMess );
-        sLastWrtr = "pwLog";
-      }
-      else if( sMess.startsWith( TubigConst.ENDE ) )
-      {
-        // gerade ausgeführtes m_xy.exe wurde normal beendet
-        pwLog.println( sMess );
-        bExeEnde = true;
-        sLastWrtr = "pwLog";
-      }
-      else if( sMess.startsWith( TubigConst.STDERR ) )
-      {
-        // Fehler in m_xy: Abbruch der Rechnung
-        sMess = sMess.replaceAll( TubigConst.STDERR, "" );
-        pwErr.println( sMess );
-        sLastWrtr = "pwErr";
-        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,
-            TubigConst.FINISH_ERROR_TEXT );
-      }
-      else
-      {
-        // ggf. Rest der vorherigen Message... (aber der Buffer ist
-        // wahrscheinlich mehr als ausreichend)
-        if( "pwLog".equals( sLastWrtr ) )
-        {
-          pwLog.println( sMess );
-        }
-        else
-        {
-          pwErr.println( sMess );
-        }
-      }
-    }
+//    // TODO Monika jede Zeile einzeln lesen
+//    while( -1 != ( n = input.read( buffer ) ) )
+//    {
+//      sMess = sMess + new String( buffer, 0, n );
+//      count += n;
+//    }
+//    if( count > 0 )
+//    {
+//      if( sMess.startsWith( TubigConst.STDOUT ) )
+//      {
+//        sMess = sMess.replaceAll( TubigConst.STDOUT, "" );
+//        pwLog.println( sMess );
+//        sLastWrtr = "pwLog";
+//      }
+//      else if( sMess.startsWith( TubigConst.ENDE ) )
+//      {
+//        // gerade ausgeführtes m_xy.exe wurde normal beendet
+//        pwLog.println( sMess );
+//        bExeEnde = true;
+//        sLastWrtr = "pwLog";
+//      }
+//      else if( sMess.startsWith( TubigConst.STDERR ) )
+//      {
+//        // Fehler in m_xy: Abbruch der Rechnung
+//        sMess = sMess.replaceAll( TubigConst.STDERR, "" );
+//        pwErr.println( sMess );
+//        sLastWrtr = "pwErr";
+//        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,
+//            TubigConst.FINISH_ERROR_TEXT );
+//      }
+//      else
+//      {
+//        // ggf. Rest der vorherigen Message... (aber der Buffer ist
+//        // wahrscheinlich mehr als ausreichend)
+//        if( "pwLog".equals( sLastWrtr ) )
+//        {
+//          pwLog.println( sMess );
+//        }
+//        else
+//        {
+//          pwErr.println( sMess );
+//        }
+//      }
+//    }
     return bExeEnde;
   }
 } // TubigCopyUtils
