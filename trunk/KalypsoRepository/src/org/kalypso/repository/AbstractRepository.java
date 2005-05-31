@@ -173,6 +173,9 @@ public abstract class AbstractRepository implements IRepository
       return item;
 
     final IRepositoryItem[] items = item.getChildren();
+    if( items == null )
+      return null;
+    
     for( int i = 0; i < items.length; i++ )
     {
       final IRepositoryItem item2 = findItemRecursive( items[i], id );
