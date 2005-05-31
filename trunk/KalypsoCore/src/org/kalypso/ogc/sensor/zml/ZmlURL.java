@@ -259,4 +259,31 @@ public final class ZmlURL
     // at least from, to or both found, return new arg
     return new DateRangeArgument( dFrom, dTo );
   }
+
+  /**
+   * Insert the filter spec into the zml url. Return the newly build url string.
+   * The filter string should not contain the %lt;filter/&gt; tags, this is
+   * automatically handled by this method.
+   * 
+   * @param href the zml url to update
+   * @param filter the xml oriented filter specification
+   */
+  public static String insertFilter( final String href, final String filter )
+  {
+    // first replace the filter spec (does nothing if not present)
+    String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1+ ".*"
+        + ZmlURLConstants.TAG_FILTER2, "" );
+
+    String[] strs = tmp.split( "\\?", 2 );
+
+    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
+      tmp = "?" + strs[0] + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2;
+    else
+      tmp = strs[0] + '?' + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2;
+
+    if( strs.length >= 2 )
+      tmp += strs[1];
+
+    return tmp;
+  }
 }

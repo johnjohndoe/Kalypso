@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
@@ -55,7 +56,6 @@ import org.kalypso.ogc.sensor.zml.request.RequestFactory;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
-
 
 /**
  * Observation Collection Service URL Stream Handler.
@@ -79,6 +79,11 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     if( !ZmlURL.isServerSide( href ) )
       return u.openConnection();
 
+    // create a local temp file for storing the zml
+    final File file = KalypsoGisPlugin.getDefault().createTempFile(
+        "zml-proxy", "zml", "zml" );
+    file.deleteOnExit();
+    
     try
     {
       final IObservationService srv = KalypsoGisPlugin.getDefault()
@@ -86,9 +91,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
       final DataHandler data = srv.readData( href );
 
-      final File file = FileUtilities.makeFileFromStream( false, "local-zml",
-          "zml", data.getInputStream(), false );
-      file.deleteOnExit();
+      FileUtilities.makeFileFromStream( false, file, data.getInputStream() );
 
       srv.clearTempData( data );
 
@@ -96,28 +99,28 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      e.printStackTrace();
+      final Logger log = Logger.getLogger( getClass().getName() );
+      log.info( "Href konnte nicht aufgelöst werden: " + href
+          + "\nZeitreihendienst steht möglicherweise nicht zur Verfügung." );
 
       try
       {
         // we might be here because the server is down. If the href contains
         // a request, let create a default observation according to it.
         final IObservation obs = RequestFactory.createDefaultObservation( href );
-        final File file = File.createTempFile( "default-zml", "zml" );
-        file.deleteOnExit();
-       
+
         ZmlFactory.writeToFile( obs, file );
-        
+
         return file.toURL().openConnection();
       }
       catch( final Exception se )
       {
         se.printStackTrace();
-        
+
         // tricky, re-assign exception in order to use the throw new call
         e = se;
       }
-      
+
       throw new IOException( "URL could not be resolved: "
           + e.getLocalizedMessage() );
     }

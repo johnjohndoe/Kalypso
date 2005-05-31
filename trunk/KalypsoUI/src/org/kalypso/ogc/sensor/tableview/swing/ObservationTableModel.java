@@ -453,6 +453,10 @@ public class ObservationTableModel extends AbstractTableModel
     if( aValue == null )
       return;
 
+    // date column is not editable!
+    if( columnIndex == 0 )
+      return;
+    
     final TableViewColumn col = (TableViewColumn) m_columns
         .get( columnIndex - 1 );
     col.setDirty( true );

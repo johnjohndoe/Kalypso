@@ -84,6 +84,13 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   private MaskedNumberTableCellRenderer m_nbRenderer;
 
+  /**
+   * when true, swing waits until model is updated, else swing
+   * continues normal processing
+   * 
+   * TODO: find out why this is usefull, I don't remember exactly, I believe
+   * it was due to an thread/update problem
+   */
   private final boolean m_waitForSwing;
 
   private final PopupMenu m_popup;
@@ -92,20 +99,17 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   /**
    * Constructs a table based on the given template
-   * 
-   * @param template
    */
   public ObservationTable( final TableView template )
   {
-    this( template, false );
+    this( template, false, true );
   }
 
   /**
    * Constructs a table based on the given template
-   * 
-   * @param template
    */
-  public ObservationTable( final TableView template, final boolean waitForSwing )
+  public ObservationTable( final TableView template,
+      final boolean waitForSwing, final boolean useContextMenu )
   {
     super( new ObservationTableModel() );
 
@@ -113,7 +117,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_waitForSwing = waitForSwing;
 
     // for convenience
-    m_model = (ObservationTableModel) getModel();
+    m_model = (ObservationTableModel)getModel();
     m_model.setTable( this );
     m_model.setRules( template.getRules() );
 
@@ -135,13 +139,21 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     getTableHeader().setReorderingAllowed( false );
 
-    m_popup = new PopupMenu( this );
-    m_excelCp = new ExcelClipboardAdapter( this, nf );
+    if( useContextMenu )
+    {
+	    m_popup = new PopupMenu( this );
+	    m_excelCp = new ExcelClipboardAdapter( this, nf );
+	
+	    m_popup.add( new JPopupMenu.Separator() );
+	    m_popup.add( m_excelCp.getCopyAction() );
+	    m_popup.add( m_excelCp.getPasteAction() );
+    }
+    else
+    {
+      m_popup = null;
+      m_excelCp = null;
+    }
 
-    m_popup.add( new JPopupMenu.Separator() );
-    m_popup.add( m_excelCp.getCopyAction() );
-    m_popup.add( m_excelCp.getPasteAction() );
-    
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
     //    for( final Iterator tIt = m_template.getThemes().iterator();
@@ -156,10 +168,11 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     //    }
   }
 
-  public void dispose( )
+  public void dispose()
   {
-    m_excelCp.dispose();
-    
+    if( m_excelCp != null )
+      m_excelCp.dispose();
+
     m_dateRenderer.clearMarkers();
     m_view.removeObsViewListener( this );
 
@@ -178,13 +191,13 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     final CatchRunnable runnable = new CatchRunnable()
     {
-      protected void runIntern( ) throws Throwable
+      protected void runIntern() throws Throwable
       {
         // REFRESH ONE COLUMN
         if( evt.getType() == ObsViewEvent.TYPE_REFRESH
             && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.refreshColumn( column );
 
           checkForecast( column.getObservation(), true );
@@ -194,7 +207,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         if( evt.getType() == ObsViewEvent.TYPE_ADD
             && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
           if( column.isShown() )
             model.addColumn( column );
 
@@ -205,7 +218,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         if( evt.getType() == ObsViewEvent.TYPE_REMOVE
             && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.removeColumn( column );
 
           checkForecast( column.getObservation(), false );
@@ -285,7 +298,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    */
   protected void processMouseEvent( MouseEvent e )
   {
-    if( e.isPopupTrigger() )
+    if( e.isPopupTrigger() && m_popup != null )
       m_popup.show( this, e.getX(), e.getY() );
     else
       super.processMouseEvent( e );

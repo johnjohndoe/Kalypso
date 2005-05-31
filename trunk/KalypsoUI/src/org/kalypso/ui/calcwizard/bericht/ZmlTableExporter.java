@@ -97,7 +97,7 @@ public class ZmlTableExporter extends AbstractBerichtExporter
 
       final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
       view = new TableView();
-      table = new ObservationTable( view, true );
+      table = new ObservationTable( view, true, false );
 
       final Object nameProp = feature.getProperty( featurename );
       final String name = nameProp == null ? "<unbekannt>" : nameProp.toString(); 

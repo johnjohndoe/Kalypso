@@ -79,7 +79,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void createPartControl( final Composite parent )
   {
-    m_table = new ObservationTable( m_tableView );
+    m_table = new ObservationTable( m_tableView, false, false );
 
     // SWT-AWT Brücke für die Darstellung von JTable
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
