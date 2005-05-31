@@ -230,7 +230,7 @@ public class ZmlFactory
       // url handling.
       return parseXML( new InputSource( inputStream ), identifier, url );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new SensorException( "Error while unmarshalling: "
           + url.toExternalForm(), e );

@@ -63,6 +63,7 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -373,9 +374,39 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private void registerUrlStreamHandler( final BundleContext context, final String scheme, final URLStreamHandler handler )
   {
     final Hashtable properties = new Hashtable( 1 );
-    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
-    { scheme } );
+    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { scheme } );
     context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
+  }
+
+  /**
+   * Delete a list of temp dirs found in the properties file
+   * 'deletetempdir.properties'. This method is called on plugin-startup to
+   * clean the specified directories.
+   */
+  private void deleteTempDirs()
+  {
+    final Properties props = new Properties();
+    InputStream ins = null;
+    try
+    {
+      ins = getClass().getResourceAsStream(
+          "resources/deletetempdir.properties" );
+      props.load( ins );
+      ins.close();
+
+      final String pDirs = props.getProperty( "DELETE_STARTUP", "" );
+      final String[] dirNames = pDirs.split( "," );
+      for( int i = 0; i < dirNames.length; i++ )
+        deleteTempDir( dirNames[i] );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
+    }
   }
 
   /**
@@ -400,8 +431,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      final Map stubs = m_proxyFactory
-          .getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities.getOnlyClassName( ICalculationService.class ) );
+      final Map stubs = m_proxyFactory.getAllProxiesAsMap(
+          "Kalypso_CalculationService", ClassUtilities
+              .getOnlyClassName( ICalculationService.class ) );
       proxies.putAll( stubs );
     }
     catch( final ServiceException e )
@@ -421,7 +453,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       // alle proxy-factories holen und erzeugen
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IExtensionPoint point = registry.getExtensionPoint( getId(), IKalypsoUIConstants.PL_CALCULATION_SERVICE );
+      final IExtensionPoint point = registry.getExtensionPoint( getId(),
+          IKalypsoUIConstants.PL_CALCULATION_SERVICE );
       if( point == null )
         return null;
 
@@ -429,14 +462,18 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       for( int i = 0; i < extensions.length; i++ )
       {
         final IExtension extension = extensions[i];
-        final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+        final IConfigurationElement[] configurationElements = extension
+            .getConfigurationElements();
         for( int j = 0; j < configurationElements.length; j++ )
         {
           final IConfigurationElement element = configurationElements[j];
           try
           {
-            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element.createExecutableExtension( "class" );
-            proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory.createService() );
+            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element
+                .createExecutableExtension( "class" );
+            proxies.put( "" + j + "_local_service_"
+                + ClassUtilities.getOnlyClassName( factory.getClass() ),
+                factory.createService() );
           }
           catch( final CoreException e )
           {
@@ -521,6 +558,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // muss NACH dem proxy und dem streamHandler konfiguriert werden!
       configureSchemaCatalog();
       configureDefaultStyleFactory();
+
+      deleteTempDirs();
 
       getPreferenceStore().addPropertyChangeListener( this );
     }
@@ -841,5 +880,36 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public void setUser( final User user )
   {
     m_user = user;
+  }
+
+  /**
+   * Create a temp file in the subDirName of the plugin's state location (where
+   * files can be created, deleted, etc.). Uses File.createTempFile() so as
+   * written in the File javadoc, you should call .deleteOnExit() on the
+   * returned file instance to make it a real 'temp' file.
+   */
+  public File createTempFile( final String subDirName, final String prefix,
+      final String suffix ) throws IOException
+  {
+    final IPath path = getStateLocation();
+    final File dir = new File( path.toFile(), subDirName );
+    if( !dir.exists() )
+      dir.mkdir();
+
+    final File file = File.createTempFile( prefix, suffix, dir );
+    return file;
+  }
+
+  /**
+   * Deletes the given subDir of this plugin's state location. This method can
+   * be called when the plugin starts for instance, in order to clear
+   * non-deleted temp files.
+   */
+  public void deleteTempDir( final String subDirName ) throws IOException
+  {
+    final IPath path = getStateLocation();
+    final File dir = new File( path.toFile(), subDirName );
+    if( dir.exists() )
+      FileUtils.cleanDirectory( dir );
   }
 }
