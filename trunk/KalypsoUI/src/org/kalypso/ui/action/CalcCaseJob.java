@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
+import org.bce.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -72,7 +73,7 @@ public class CalcCaseJob extends Job
     try
     {
       final ModelNature nature = (ModelNature)m_calcCaseFolder.getProject().getNature( ModelNature.ID );
-      nature.runCalculation( m_calcCaseFolder, monitor );
+      return nature.runCalculation( m_calcCaseFolder, monitor );
     }
     catch( final CoreException e )
     {
@@ -80,8 +81,6 @@ public class CalcCaseJob extends Job
 
       return e.getStatus();
     }
-
-    return Status.OK_STATUS;
   }
 
 }

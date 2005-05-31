@@ -40,7 +40,9 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
+import org.bce.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
@@ -82,7 +84,12 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
       return;
     
     for( int i = 0; i < calcCasesToCalc.length; i++ )
-      new CalcCaseJob( calcCasesToCalc[i] ).schedule();
+    {
+      final IFolder folder = calcCasesToCalc[i];
+      final Job calcJob = new CalcCaseJob( folder );
+      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Berechnung durchführen: " + folder.getName(), "Berechnung beendet: " ) );
+      calcJob.schedule();
+    }
   }
 
   /**
