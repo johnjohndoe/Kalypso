@@ -42,6 +42,7 @@ package org.kalypso.services.ocs.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -62,6 +63,7 @@ import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.services.proxy.DataBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
 import org.kalypso.util.runtime.IVariableArguments;
@@ -85,8 +87,6 @@ public class ServiceRepositoryObservation implements IObservation
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
       this );
-
-  private MetadataList m_metadata;
 
   public ServiceRepositoryObservation( final IObservationService srv,
       final ObservationBean ob )
@@ -126,20 +126,28 @@ public class ServiceRepositoryObservation implements IObservation
     if( args instanceof DateRangeArgument )
       href = ZmlURL.insertDateRange( href, (DateRangeArgument)args );
 
+    InputStream ins = null;
+
     try
     {
-      final DataHandler db = m_srv.readData( href );
+      final DataBean db = m_srv.readData( href );
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( db
-          .getInputStream() ), "", null );
+      ins = db.getDataHandler().getInputStream();
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "",
+          null );
+      ins.close();
 
-      m_srv.clearTempData( db );
+      m_srv.clearTempData( db.getId() );
 
       return obs;
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       throw new SensorException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
     }
   }
 
@@ -184,13 +192,12 @@ public class ServiceRepositoryObservation implements IObservation
    */
   public MetadataList getMetadataList()
   {
-    if( m_metadata == null )
-    {
-      m_metadata = new MetadataList();
-      m_metadata.putAll( m_ob.getMetadataList() );
-    }
+    if( m_obs != null )
+      return m_obs.getMetadataList();
 
-    return m_metadata;
+    final MetadataList md = new MetadataList();
+    md.putAll( m_ob.getMetadataList() );
+    return md;
   }
 
   /**
@@ -297,16 +304,17 @@ public class ServiceRepositoryObservation implements IObservation
     try
     {
       in = new InputStreamReader( file.getContents(), file.getCharset() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "",
+          null );
       in.close();
-      
-      setValuesFor( obs.getValues(null), href, srv );
+
+      setValuesFor( obs.getValues( null ), href, srv );
     }
     catch( final Exception e )
     {
       if( e instanceof SensorException )
         throw (SensorException)e;
-      
+
       e.printStackTrace();
       throw new SensorException( e );
     }

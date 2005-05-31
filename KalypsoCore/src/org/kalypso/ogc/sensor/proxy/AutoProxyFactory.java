@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
+import java.io.StringReader;
+
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -93,10 +95,13 @@ public class AutoProxyFactory implements IProxyFactory
 
     if( wq.length() > 0 )
     {
+      StringReader sr = new StringReader( wq );
       try
       {
         final RatingTableList tableList;
-        tableList = WQTableFactory.parseSimple( new InputSource( wq ) );
+        tableList = WQTableFactory.parseSimple( new InputSource( sr ) );
+        sr.close();
+        
         final String source = tableList.getFromType();
         final String dest = tableList.getToType();
 
@@ -125,6 +130,10 @@ public class AutoProxyFactory implements IProxyFactory
       {
         e.printStackTrace();
         return obs;
+      }
+      finally
+      {
+        sr.close();
       }
     }
 

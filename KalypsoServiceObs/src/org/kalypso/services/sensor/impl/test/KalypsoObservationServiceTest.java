@@ -44,12 +44,11 @@ import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-import javax.activation.DataHandler;
-
 import junit.framework.TestCase;
 
 import org.kalypso.repository.service.ItemBean;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypso.services.sensor.DataBean;
 import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.services.sensor.impl.KalypsoObservationService;
 
@@ -148,7 +147,7 @@ public class KalypsoObservationServiceTest extends TestCase
       //
       //      m_srv.clearTempData( oddb );
 
-      final DataHandler oddb = m_srv.readData( ob.getId() );
+      final DataBean oddb = m_srv.readData( ob.getId() );
       assertNotNull( oddb );
     }
     else

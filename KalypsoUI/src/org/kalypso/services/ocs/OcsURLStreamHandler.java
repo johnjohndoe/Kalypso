@@ -42,17 +42,18 @@ package org.kalypso.services.ocs;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
 
-import javax.activation.DataHandler;
-
+import org.apache.commons.io.IOUtils;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.request.RequestFactory;
+import org.kalypso.services.proxy.DataBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
@@ -83,17 +84,21 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     final File file = KalypsoGisPlugin.getDefault().createTempFile(
         "zml-proxy", "zml", "zml" );
     file.deleteOnExit();
-    
+
+    InputStream ins = null;
+
     try
     {
       final IObservationService srv = KalypsoGisPlugin.getDefault()
           .getObservationServiceProxy();
 
-      final DataHandler data = srv.readData( href );
+      final DataBean data = srv.readData( href );
 
-      FileUtilities.makeFileFromStream( false, file, data.getInputStream() );
+      ins = data.getDataHandler().getInputStream();
+      FileUtilities.makeFileFromStream( false, file, ins );
+      ins.close();
 
-      srv.clearTempData( data );
+      srv.clearTempData( data.getId() );
 
       return file.toURL().openConnection();
     }
@@ -123,6 +128,10 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
       throw new IOException( "URL could not be resolved: "
           + e.getLocalizedMessage() );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
     }
   }
 }
