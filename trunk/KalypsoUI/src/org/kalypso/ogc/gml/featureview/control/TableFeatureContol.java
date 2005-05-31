@@ -16,7 +16,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -81,17 +85,17 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       }
     } );
 
-    final Menu menu = menuManager.createContextMenu( m_viewer.getControl() );
-//    final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
-//    final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-    // TODO Andreas: das geht so nicht!
-    // die Tabelle wird in allen möglichen Kontexten eingesetzt, in denen
-    // nicht immer sichergestellt ist dass es einen activen-editor oder eine
-    // site gibt. Warum setzt Du das Menü nicht direkt auf die Control?
-    // Warum muss es den nüberhaupt registriert weden?
-    //activePage.getActiveEditor().getSite().registerContextMenu( menuManager, m_viewer );
-    m_viewer.getControl().setMenu( menu );
-
+    final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
+    final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    final IEditorPart activeEditor = activePage.getActiveEditor();
+    if( activeEditor != null )
+    {
+      final Menu menu = menuManager.createContextMenu( m_viewer.getControl() );
+      // TODO check if we can register the menu more global, even when we have
+      // no active editor
+      activeEditor.getSite().registerContextMenu( menuManager, m_viewer );
+      m_viewer.getControl().setMenu( menu );
+    }
     return m_viewer.getControl();
   }
 
