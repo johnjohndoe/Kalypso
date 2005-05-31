@@ -21,8 +21,9 @@ public class RatingTableCache
 
   private RatingTableCache()
   {
-    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(), new File( WiskiUtils
-        .getProperties().getProperty( "CACHE_DIRECTORY" ) ) );
+    m_cache = new StringValidityFileCache( WQTableFactory.getInstance(),
+        new File( System.getProperty( "java.io.tmpdir" ) + File.separator
+            + "wiskiRatingTables" ) );
   }
 
   public static RatingTableCache getInstance()
@@ -36,26 +37,21 @@ public class RatingTableCache
   /**
    * Tries to fetch it from the cache, if available
    * 
-   * @param wiskiId
-   * @param validity
    * @return null if not found in cache
    */
-  public WQTableSet get( final Long wiskiId, final Date validity )
+  public WQTableSet get( final String tsInfoName, final Date validity )
   {
-    return (WQTableSet)m_cache.get( new StringValidityKey( String.valueOf( wiskiId ), validity ) );
+    return (WQTableSet)m_cache.get( new StringValidityKey( tsInfoName, validity ) );
   }
 
   /**
    * Checks if this one is more recent than the one in the cache and eventually
    * stores it in the cache
-   * 
-   * @param wqTableSet
-   * @param wiskiId
-   * @param to
    */
-  public void check( final WQTableSet wqTableSet, final Long wiskiId, final Date to )
+  public void check( final WQTableSet wqTableSet, final String tsInfoName,
+      final Date to )
   {
-    final StringValidityKey key = new StringValidityKey( String.valueOf( wiskiId ), to );
+    final StringValidityKey key = new StringValidityKey( tsInfoName, to );
 
     final StringValidityKey cacheKey = m_cache.getRealKey( key );
 

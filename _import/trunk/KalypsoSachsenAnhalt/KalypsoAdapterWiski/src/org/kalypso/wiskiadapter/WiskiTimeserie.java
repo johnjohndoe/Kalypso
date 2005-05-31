@@ -416,12 +416,12 @@ public class WiskiTimeserie implements IObservation
       wqTableSet = new WQTableSet( new WQTable[]
       { wqt }, sourceType, destType );
 
-      RatingTableCache.getInstance().check( wqTableSet, m_tsinfo.getWiskiId(), to );
+      RatingTableCache.getInstance().check( wqTableSet, m_tsinfo.getIdentifier(), to );
     }
     else
     {
       // still no wqtable, try to load this WQ-Table from the cache
-      wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getWiskiId(), to );
+      wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getIdentifier(), to );
     }
 
     if( wqTableSet != null )
@@ -431,7 +431,7 @@ public class WiskiTimeserie implements IObservation
         final String xml = WQTableFactory.createXMLString( wqTableSet );
         metadata.setProperty( TimeserieConstants.MD_WQTABLE, xml );
       }
-      catch( WQException e )
+      catch( final WQException e )
       {
         e.printStackTrace();
       }
