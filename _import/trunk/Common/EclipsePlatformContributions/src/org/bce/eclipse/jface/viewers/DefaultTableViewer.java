@@ -99,7 +99,7 @@ public class DefaultTableViewer extends TableViewer
    * 
    * @see org.eclipse.jface.viewers.TableViewer#getColumnProperties()
    */
-  protected void refreshColumnProperties()
+  public void refreshColumnProperties()
   {
     final Table table = getTable();
     if( table.isDisposed() )

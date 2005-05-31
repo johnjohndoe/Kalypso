@@ -43,6 +43,7 @@ package org.bce.eclipse.ui.views.propertysheet;
 import org.bce.eclipse.jface.viewers.DefaultTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -55,17 +56,27 @@ import org.eclipse.swt.widgets.Control;
 public class SimplePropertySheetViewer extends Viewer
 {
   private DefaultTableViewer m_viewer;
+  private final int m_propColSize;
+  private final int m_valueColSize;
 
   public SimplePropertySheetViewer( final Composite parent )
   {
+    this( parent, 100, 300 );
+  }
+  
+  public SimplePropertySheetViewer( final Composite parent, final int propColSize, final int valueColSize )
+  {
+    m_propColSize = propColSize;
+    m_valueColSize = valueColSize;
     createControl( parent );
   }
 
   private final void createControl( final Composite parent )
   {
-    m_viewer = new DefaultTableViewer( parent );
-    m_viewer.addColumn( "property", "Eigenschaft", 100, false );
-    m_viewer.addColumn( "value", "Wert", 100, false );
+    m_viewer = new DefaultTableViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_viewer.addColumn( "property", "Eigenschaft", m_propColSize, false );
+    m_viewer.addColumn( "value", "Wert", m_valueColSize, false );
+    m_viewer.refreshColumnProperties();
     
     m_viewer.setLabelProvider( new PropertySheetTableLabelProvider( null ) );
     m_viewer.setContentProvider( new PropertySheetTableContentProvider() );
