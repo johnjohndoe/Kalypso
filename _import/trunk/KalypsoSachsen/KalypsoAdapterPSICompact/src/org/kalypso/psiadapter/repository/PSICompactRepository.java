@@ -2,6 +2,7 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import org.kalypso.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -69,7 +70,7 @@ public class PSICompactRepository extends AbstractRepository
           continue;
 
         if( nodes.containsKey( nodeID ) )
-          parent = (PSICompactItem) nodes.get( nodeID );
+          parent = (PSICompactItem)nodes.get( nodeID );
         else
         {
           final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID,
@@ -93,7 +94,7 @@ public class PSICompactRepository extends AbstractRepository
           "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
 
     while( parent.getParent() != null )
-      parent = (PSICompactItem) parent.getParent();
+      parent = (PSICompactItem)parent.getParent();
 
     return parent;
   }
@@ -101,7 +102,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return m_psiRoot.hasChildren();
   }
@@ -109,7 +110,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
     return m_psiRoot.getChildren();
   }
@@ -125,7 +126,7 @@ public class PSICompactRepository extends AbstractRepository
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return "psicompact://";
   }
@@ -133,7 +134,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public final void reload( ) throws RepositoryException
+  public final void reload() throws RepositoryException
   {
     try
     {
@@ -146,8 +147,10 @@ public class PSICompactRepository extends AbstractRepository
 
       if( nodeMeasurements != nodeForecasts )
       {
-        System.out
-            .println( "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
+        Logger
+            .getLogger( getClass().getName() )
+            .info(
+                "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
         m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
       }
@@ -165,37 +168,8 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( final String id ) throws RepositoryException
+  public IRepositoryItem findItem( String id ) throws RepositoryException
   {
-    final IRepositoryItem item = findItemRecursive( m_psiRoot, id );
-
-    return item;
-  }
-
-  /**
-   * Helper: finds using recursion. Returns null when not found
-   * 
-   * @param item
-   * @param id
-   * @return item or null if not found
-   * 
-   * @throws RepositoryException
-   */
-  private final IRepositoryItem findItemRecursive( final IRepositoryItem item,
-      final String id ) throws RepositoryException
-  {
-    if( item.getIdentifier().equalsIgnoreCase( id ) )
-      return item;
-
-    final IRepositoryItem[] items = item.getChildren();
-    for( int i = 0; i < items.length; i++ )
-    {
-      final IRepositoryItem item2 = findItemRecursive( items[i], id );
-
-      if( item2 != null )
-        return item2;
-    }
-
-    return null;
+    return findItemRecursive( m_psiRoot, id );
   }
 }

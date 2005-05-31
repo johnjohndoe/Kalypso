@@ -44,16 +44,9 @@ public class WiskiRepository extends AbstractRepository
   private final String m_password;
 
   /**
-   * Constructor
-   * 
-   * @param name
-   * @param factory
    * @param conf
    *          the configuration should be build the followin way: URL # DOMAIN #
    *          LOGIN-NAME # PASSWORD # LANGUAGE
-   * 
-   * @param readOnly
-   * @throws RepositoryException
    */
   public WiskiRepository( String name, String factory, String conf,
       boolean readOnly ) throws RepositoryException
@@ -149,10 +142,9 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( String id ) throws RepositoryException
+  public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return findItemRecursive( this, id );
   }
 
   /**
@@ -205,7 +197,7 @@ public class WiskiRepository extends AbstractRepository
 
   /**
    * Performs a call on the wiski remote object. This should be used in order to
-   * allow automatic reloging in if the session has timed out.
+   * allow automatic re-loging-in if the session has timed out.
    * 
    * @throws RemoteException
    * @throws KiWWException
