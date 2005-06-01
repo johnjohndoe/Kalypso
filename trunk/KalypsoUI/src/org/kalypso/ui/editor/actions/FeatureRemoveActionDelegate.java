@@ -88,7 +88,6 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
       }
       System.out.println( "  do remove Feature" );
     }
-
   }
 
   /**

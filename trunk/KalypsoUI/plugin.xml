@@ -529,9 +529,6 @@
                id="org.kalypso.objectclass.feature.action.remove"/>
       </objectContribution>
  
-      <viewerContribution
-            targetID="org.kalypso.ui.editors.tableeditor.contextMenu"
-            id="org.kalypso.ui.editors.tableeditor.popupMenu"/>
    </extension>
    <extension
          point="org.eclipse.ui.ide.resourceFilters">
