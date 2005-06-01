@@ -44,12 +44,12 @@ public final class HandleDoneJobChangeAdapter extends JobChangeAdapter
    */
   public void done( final IJobChangeEvent event )
   {
+    
     final Runnable runnable = new Runnable()
     {
       public void run()
       {
         final IStatus status = event.getResult();
-        // TODO: cancel wieder rausschmeissen
         // error wird schon immer vom framework angezeigt
         final ErrorDialog dialog = new ErrorDialog( m_shell, m_messageTitle, m_messageFirstline
             + "\n" + status.getMessage(), status, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING );

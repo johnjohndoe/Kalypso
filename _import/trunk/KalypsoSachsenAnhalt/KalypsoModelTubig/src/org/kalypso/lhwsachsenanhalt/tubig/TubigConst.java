@@ -154,7 +154,7 @@ public class TubigConst
   public static final String ENDE = "**ende** ";
 
   // Finish-Text
-  public static final String FINISH_ERROR_TEXT = "Bei der Berechnung trat ein Fehler auf,\nweitere Informationen dazu finden Sie in den Log-Dateien.\nEs werden keine Ergebnis-Dateien übertragen.";
+  public static final String FINISH_ERROR_TEXT = "Bei der Berechnung trat ein Fehler auf," + System.getProperty("line.separator")+ "weitere Informationen dazu finden Sie in den Log-Dateien." + System.getProperty("line.separator")+ "Es werden keine Ergebnis-Dateien übertragen.";
 
   // ist betriebssystemabhängig...(z. B. für Windows 95/98
   // "command.com / c ") und wir für das Starten von BODESTEU.EXE
@@ -165,7 +165,7 @@ public class TubigConst
   public static final String CALCJOB_SPEC = "tubigcalcjob_spec.xml";
 
   // Timeout bei Batch-Ausführung ([ms])
-  public static final int BAT_TIMEOUT = 1;
+  public static final int BAT_TIMEOUT = 10000;
 
   public TubigConst()
   {

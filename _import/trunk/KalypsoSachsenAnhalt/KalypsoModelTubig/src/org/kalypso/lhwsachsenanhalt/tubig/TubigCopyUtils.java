@@ -1,8 +1,8 @@
 package org.kalypso.lhwsachsenanhalt.tubig;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.StringTokenizer;
 
 import org.kalypso.services.calculation.job.ICalcMonitor;
 
@@ -26,11 +26,6 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 public class TubigCopyUtils
 {
 
-  /**
-   * The name says it all.
-   */
-  private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
-
   public TubigCopyUtils()
   {
   // wird nicht instantiiert.
@@ -49,64 +44,58 @@ public class TubigCopyUtils
    *          the <code>Writer</code> to write to
    * @param pwErr
    * @return the number of characters copied
-   * @throws IOException
-   *           In case of an I/O problem
    * @throws TubigBatchException
    */
   public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog,
-      final PrintWriter pwErr, final ICalcMonitor monitor ) throws IOException, TubigBatchException
+      final PrintWriter pwErr, final ICalcMonitor monitor ) throws TubigBatchException
   {
-    char[] buffer = new char[DEFAULT_BUFFER_SIZE];
-    int count = 0;
-    int n = 0;
     boolean bExeEnde = false;
     String sMess = "";
     String sLastWrtr = "";
+    String delim = System.getProperty( "line.separator" );
+    StringTokenizer strTok;
 
-//    // TODO Monika jede Zeile einzeln lesen
-//    while( -1 != ( n = input.read( buffer ) ) )
-//    {
-//      sMess = sMess + new String( buffer, 0, n );
-//      count += n;
-//    }
-//    if( count > 0 )
-//    {
-//      if( sMess.startsWith( TubigConst.STDOUT ) )
-//      {
-//        sMess = sMess.replaceAll( TubigConst.STDOUT, "" );
-//        pwLog.println( sMess );
-//        sLastWrtr = "pwLog";
-//      }
-//      else if( sMess.startsWith( TubigConst.ENDE ) )
-//      {
-//        // gerade ausgeführtes m_xy.exe wurde normal beendet
-//        pwLog.println( sMess );
-//        bExeEnde = true;
-//        sLastWrtr = "pwLog";
-//      }
-//      else if( sMess.startsWith( TubigConst.STDERR ) )
-//      {
-//        // Fehler in m_xy: Abbruch der Rechnung
-//        sMess = sMess.replaceAll( TubigConst.STDERR, "" );
-//        pwErr.println( sMess );
-//        sLastWrtr = "pwErr";
-//        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,
-//            TubigConst.FINISH_ERROR_TEXT );
-//      }
-//      else
-//      {
-//        // ggf. Rest der vorherigen Message... (aber der Buffer ist
-//        // wahrscheinlich mehr als ausreichend)
-//        if( "pwLog".equals( sLastWrtr ) )
-//        {
-//          pwLog.println( sMess );
-//        }
-//        else
-//        {
-//          pwErr.println( sMess );
-//        }
-//      }
-//    }
+    strTok = new StringTokenizer( input.toString(), delim );
+
+    while( strTok.hasMoreTokens() )
+    {
+      sMess = strTok.nextToken();
+      if( sMess.startsWith( TubigConst.STDOUT ) )
+      {
+        sMess = sMess.replaceAll( TubigConst.STDOUT, "" );
+        pwLog.println( sMess );
+        sLastWrtr = "pwLog";
+      }
+      else if( sMess.startsWith( TubigConst.ENDE ) )
+      {
+        // gerade ausgeführtes m_xy.exe wurde normal beendet
+        sMess = sMess.substring( TubigConst.ENDE.length() );
+        pwLog.println( sMess + " beendet" );
+        bExeEnde = true;
+        sLastWrtr = "pwLog";
+      }
+      else if( sMess.startsWith( TubigConst.STDERR ) )
+      {
+        // Fehler in m_xy: Abbruch der Rechnung
+        sMess = sMess.replaceAll( TubigConst.STDERR, "" );
+        pwErr.println( sMess );
+        sLastWrtr = "pwErr";
+        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,
+            TubigConst.FINISH_ERROR_TEXT );
+      }
+      else
+      {
+        // ggf. Rest der vorherigen Message...
+        if( "pwLog".equals( sLastWrtr ) )
+        {
+          pwLog.println( sMess );
+        }
+        else
+        {
+          pwErr.println( sMess );
+        }
+      }
+    }
     return bExeEnde;
   }
 } // TubigCopyUtils

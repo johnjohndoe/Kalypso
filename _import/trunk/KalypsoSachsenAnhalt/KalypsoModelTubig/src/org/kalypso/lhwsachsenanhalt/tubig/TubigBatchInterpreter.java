@@ -152,14 +152,13 @@ public class TubigBatchInterpreter
   {
     final LineNumberReader lneNumRdrBatch;
     final String sRegExPath = "\\Q%1\\E";
-    final StringWriter swInStream;
+    StringWriter swInStream;
 
     String sZeile;
     String sZeileUpper;
     String sCmd;
     StringTokenizer strTok;
     File newDir;
-    int iRetVal;
 
     boolean bExeEnde = false;
     int iTimeout = TubigConst.BAT_TIMEOUT;
@@ -267,25 +266,21 @@ public class TubigBatchInterpreter
                         if( !"".equals( sCmd ) )
                         {
                           bExeEnde = false;
-                          // **
-
-                          // Rückgabe-Infos:
-                          // nach TimeOut abgebrochen?
-                          // beendet (cancel)?
-                          // normal fertig?
-
-                          iRetVal = startProcess( sCmd, null, fleExeDir, cancelable, iTimeout,
+                          // das kann passieren:
+                          // TimeOut: wirft ProcessTimeoutException
+                          // cancel: wird durch cancelable.isCanceled()weiterverarbeitet
+                          // normal fertig: RückgabeWert = 0
+                          swInStream = new StringWriter();
+                          startProcess( sCmd, null, fleExeDir, cancelable, iTimeout,
                               swInStream, pwErr );
 
-                          // **
-                          // TODO Monika Ende-Token **ende** noch
-                          // weiterverabeiten
-                          // hier wird ggf. TubigBatchException geworfen
                           if( cancelable.isCanceled() )
                           {
                             pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
                           }
-
+                          
+                          // TODO Monika Ende-Token **ende** noch
+                          // weiterverabeiten
                           bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog,
                               pwErr, cancelable );
 
@@ -391,12 +386,13 @@ public class TubigBatchInterpreter
     }
     if( procCtrlThread != null && procCtrlThread.procDestroyed() )
     {
-      throw new ProcessTimeoutException("Timeout bei der Abarbeitung von '" + sCmd + "'");
+      throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
     }
     return iRetVal;
   }
 
   /**
+   * Thread, der die Ausführung des Prozesses proc nach lTimeout ms abbricht.
    * @author Thül
    */
   private static class ProcessControlThread extends Thread
@@ -409,10 +405,10 @@ public class TubigBatchInterpreter
 
     private final Process m_proc;
 
-    public ProcessControlThread( Process proc, long lTimeout )
+    public ProcessControlThread( final Process proc, final long lTimeout )
     {
-      m_lTimeout = lTimeout;
       m_proc = proc;
+      m_lTimeout = lTimeout;
     }
 
     public void run()
@@ -439,12 +435,14 @@ public class TubigBatchInterpreter
 
     public synchronized void endProcessControl()
     {
+      // stoppt die Überwachung des Prozesses
       m_bProcCtrlActive = false;
       notifyAll();
     }
 
     public boolean procDestroyed()
     {
+      // wurde der Prozess durch diesen Thread abbgebrochen?
       return m_bProcDestroyed;
     }
   }
