@@ -130,7 +130,7 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
   private CalcJobInfoBean wrapCalcJobInfoBean(
       org.kalypso.services.calculation.service.CalcJobInfoBean bean )
   {
-    CalcJobInfoBean newbean = new CalcJobInfoBean();
+    final CalcJobInfoBean newbean = new CalcJobInfoBean();
     newbean.setId( bean.getId() );
     newbean.setDescription( bean.getDescription() );
     newbean.setType( bean.getType() );
@@ -138,6 +138,8 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
     newbean.setProgress( bean.getProgress() );
     newbean.setFinishText( bean.getFinishText() );
     newbean.setFinishStatus( bean.getFinishStatus() );
+    newbean.setCurrentResults( bean.getCurrentResults() );
+    newbean.setMessage( bean.getMessage() );
     return newbean;
   }
 

@@ -56,6 +56,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.bce.eclipse.core.runtime.StatusUtilities;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -184,20 +185,24 @@ public class CalcJobHandler
         project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
         final String finishText = jobBean.getFinishText();
         final String message = finishText == null ? "" : finishText;
-        // TODO finishText tokenizen (\n) und MultiStatus zurückgeben 
-        return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
+        return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(),
+            0, message, System.getProperty("line.separator"), null );
 
       case ICalcServiceConstants.CANCELED:
         throw m_cancelException;
 
       case ICalcServiceConstants.ERROR:
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
-            + jobBean.getMessage(), null ) );
+      {
+        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null ); 
+        throw new CoreException( status );
+      }
 
       default:
+      {
         // darf eigentlich nie vorkommen
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
-            + jobBean.getMessage(), null ) );
+        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null ); 
+        throw new CoreException( status );
+      }
       }
     }
     catch( final RemoteException e )
@@ -345,10 +350,10 @@ public class CalcJobHandler
         {
           if( input.isOptional() )
             continue;
-          
+
           throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-                "Konnte Input-Resource nicht finden: " + inputPath
-                    + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+              "Konnte Input-Resource nicht finden: " + inputPath
+                  + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
         }
 
         final IPath projectRelativePath = inputResource.getProjectRelativePath();
