@@ -126,7 +126,7 @@ public class WiskiTimeserie implements IObservation
       try
       {
         // 1. check if this is a prognose
-        boolean prognosed = m_tsinfo.getWiskiName().indexOf( "Prognose" ) != -1;
+        boolean prognosed = m_tsinfo.getWiskiCustomId().indexOf( "Prognose" ) != -1;
 
         final IsTsWritable call = new IsTsWritable( m_tsinfo.getWiskiId() );
         final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
@@ -169,6 +169,7 @@ public class WiskiTimeserie implements IObservation
           .getWiskiName() );
       m_metadata.setProperty( ObservationConstants.MD_DESCRIPTION, m_tsinfo
           .getWiskiDescription() );
+      m_metadata.put( ObservationConstants.MD_ORIGIN, "Wiski" );
 
       try
       {

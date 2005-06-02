@@ -121,6 +121,10 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "parametertype_name" );
   }
 
+  /**
+   * @return the internal id which is used within wiski. This id should not
+   * be used "outside of the program code"
+   */
   Long getWiskiId()
   {
     return Long.valueOf( m_map.getProperty( "tsinfo_id" ) );
@@ -132,6 +136,16 @@ public class TsInfoItem implements IRepositoryItem
   }
 
   String getWiskiName()
+  {
+    return m_map.getProperty( "stationparameter_longname" );
+  }
+  
+  /**
+   * @return the id (string) which can be used outside of wiski in a persistent and
+   * viable manner. This id is actually defined by the administrator and is not
+   * likely to change for this timeserie.
+   */
+  String getWiskiCustomId()
   {
     return m_map.getProperty( "tsinfo_name" );
   }
@@ -159,7 +173,7 @@ public class TsInfoItem implements IRepositoryItem
    */
   TsInfoItem findSibling( final String otherType )
   {
-    final String name = getWiskiName();
+    final String name = getWiskiCustomId();
     final String[] splits = name.split( "\\." );
 
     if( splits.length < 2 )

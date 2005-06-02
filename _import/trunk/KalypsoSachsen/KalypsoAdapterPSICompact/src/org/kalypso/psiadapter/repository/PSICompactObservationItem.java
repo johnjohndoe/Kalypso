@@ -136,6 +136,7 @@ public class PSICompactObservationItem implements IObservation
     metadata.put( ObservationConstants.MD_NAME, getName() );
     metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo
         .getDescription() );
+    metadata.put( ObservationConstants.MD_ORIGIN, "PSICompact" );
 
     if( psiMD != null )
     {
