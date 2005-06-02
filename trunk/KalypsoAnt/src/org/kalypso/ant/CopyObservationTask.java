@@ -216,9 +216,9 @@ public class CopyObservationTask extends Task
       return property;
     }
 
-    public final void setProperty( String property )
+    public final void setProperty( String prop )
     {
-      this.property = property;
+      this.property = prop;
     }
 
     public final long getFrom()
@@ -226,9 +226,9 @@ public class CopyObservationTask extends Task
       return from;
     }
 
-    public final void setFrom( long from )
+    public final void setFrom( long lfrom )
     {
-      this.from = from;
+      this.from = lfrom;
     }
 
     public final long getTo()
@@ -236,9 +236,9 @@ public class CopyObservationTask extends Task
       return to;
     }
 
-    public final void setTo( long to )
+    public final void setTo( long lto )
     {
-      this.to = to;
+      this.to = lto;
     }
   }
 

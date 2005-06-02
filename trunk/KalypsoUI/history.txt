@@ -9,17 +9,27 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 - TODO: hier fehlt doch bestimmt ganz viel! :-(
 
-- die RechenPlugins können jetzt auch clientseitig (d.h. ohne server) benutzt werden
 - Implementierung vom LDAP-Zugriff (KalypsoSachsenAnhalt)
+- Implementierung vom WISKI Adapter (KalypsoSachsenAnhalt)
+
+- Neues allgemeines Caching-Mechanismus (FileCache)
+- Neues Buildsystem im Aufbau. Erste Schritte fertig. TODO: nightly build, standalone, usw.
+- die RechenPlugins können jetzt auch clientseitig (d.h. ohne server) benutzt werden
+- Testrechnen: es gibt jetzt einen Testrechnen-Knopf (Action-Set KalypsoDebug in Perspektiv-Einstellungen aktivieren),
+  welcher eine Rechenvariante berechnet und danach zwei/oder mehr vordefinierte Resourcen vergleicht.
+
 - Kalypso-Login Dialog:
   * Neues Dialog, Scenario Auswahl, optimiertes Handling
   * UserService abhängige Einstellungen (für Scenario, Password Eingabe, usw. )
+
 - Bezeichnungen der Tabellenspalten (GIS Editor) jetzt ohne Element-Bezeichnung in Klammern.
 - Doppelklick auf .gml-Datei ('EditorLauncher') kann jetzt auch direkt die Baumansicht aufmachen (.gmv ist somit nicht mehr notwendig)
 - Laden der GML Schemata: allgemeiner Caching und Server Mechanismus
 - Gis-Tabellenansicht: Performanceverbesserung bei Tabellen mit sehr vielen Spalten; hat beim Öffnen sehr lange gedauert
 - Kleine Layout Änderung im Feature-Bearbeiten-Dialog: jetzt mit beschriftetem Rand; Veschriftung = "Typname - FID"
-- Implementierung vom WISKI Adapter (KalypsoSachsenAnhalt)
+- GmlConverter zum rumwursteln mit gml-daten
+- selektierte MapAction gilt jetzt für alle karten
+
 - KalypsoObservationService:
   * zusätzliche Konfigurationsdatei namens 'service.properties' beinhaltet z.Z. die 
   (optionale) Eigenschaft: TIMEZONE_NAME welche die Zeitzone definiert in welche 
@@ -28,12 +38,18 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
   transport vollständig über HTTP / SOAP / Attachments (wird implizit vom
   DataHandler Mechanismus unterstützt).
 - ObservationTableEditor: die Actions für Zeile hinzufügen und entfernen entfallen
-- Neues Buildsystem im Aufbau. Erste Schritte fertig. TODO: nightly build, standalone, usw.
-- Testrechnen: es gibt jetzt einen Testrechnen-Knopf (Action-Set KalypsoDebug in Perspektiv-Einstellungen aktivieren),
-  welcher eine Rechenvariante berechnet und danach zwei/oder mehr vordefinierte Resourcen vergleicht.
-- GmlConverter zum rumwursteln mit gml-daten
+- ZML-Request: wenn der Server keine Daten vom Lieferant bekommt (z.B. PSICompact oder 
+  Wiski down), oder wenn der Kalypso Server gar nicht zur Verfügung steht, ist es 
+  anhand von Request möglich eine Default Observation zu erzeugen. Dient zu Konsistenz
+  und Ausfallsicherheit
+- IObservationManipulator: damit ist es möglich (z.Z. nur Serverseitig benutzt) bestimmte
+  Operationen (Manipulation) auf Observation durchzuführen. Z.B. WiskiObservationManipulator
+  ist in der Lage, gecachte WQ-Tabellen in der Observation zu setzen auch wenn der Wiski
+  Server nicht zur Verfügung steht. Andere Implementierungen sind möglich...
+- Neue Metadata-Eigenschaft für ZML: die Entstehung der Observation (z.B. PSICompact, Wiski, usw.)
+  Diese Information wird z.B. vom KalypsoProtocolWriter benutzt.
+
 - WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
-- selektierte MapAction gilt jetzt für alle karten
 
 -------------------------------------
 Version 1.0.0 (Deploy vom ??.03.2005)

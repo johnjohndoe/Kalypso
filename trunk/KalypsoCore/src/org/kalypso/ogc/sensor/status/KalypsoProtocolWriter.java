@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
 import java.io.PrintWriter;
@@ -55,17 +55,16 @@ import org.kalypso.ogc.sensor.SensorException;
  * 
  * @author schlienger
  */
-public class KalypsoProcolWriter
+public class KalypsoProtocolWriter
 {
-  private KalypsoProcolWriter( )
+  private KalypsoProtocolWriter()
   {
     // not to be instanciated
   }
 
   /**
-   * @see KalypsoProcolWriter#analyseValues(IObservation[], ITuppleModel[],
+   * @see KalypsoProtocolWriter#analyseValues(IObservation[], ITuppleModel[],
    *      PrintWriter, PrintWriter, String)
-   * 
    */
   public static void analyseValues( final IObservation observation,
       final ITuppleModel model, final PrintWriter logWriter,
@@ -76,14 +75,8 @@ public class KalypsoProcolWriter
   }
 
   /**
-   * @see KalypsoProcolWriter#analyseValues(IObservation[], ITuppleModel[],
+   * @see KalypsoProtocolWriter#analyseValues(IObservation[], ITuppleModel[],
    *      PrintWriter, PrintWriter, String)
-   * 
-   * @param observation
-   * @param model
-   * @param summaryWriter
-   * @param detailsWriter
-   * @throws SensorException
    */
   public static void analyseValues( final IObservation observation,
       final ITuppleModel model, final PrintWriter summaryWriter,
@@ -96,16 +89,11 @@ public class KalypsoProcolWriter
   /**
    * Analyses the given tupple models and reports possible errors (according to
    * status of tupples).
-   * 
-   * @param observations
-   * @param models
-   * @param summaryWriter
-   * @param detailsWriter
-   * @throws SensorException
    */
   public static void analyseValues( final IObservation[] observations,
       final ITuppleModel[] models, final PrintWriter summaryWriter,
-      final PrintWriter detailsWriter, final String summInfo ) throws SensorException
+      final PrintWriter detailsWriter, final String summInfo )
+      throws SensorException
   {
     if( observations.length != models.length )
       throw new IllegalArgumentException( "Arrays not same length" );
@@ -129,18 +117,18 @@ public class KalypsoProcolWriter
 
           for( int iAxes = 0; iAxes < statusAxes.length; iAxes++ )
           {
-            final Number nb = (Number) models[i].getElement( ix,
+            final Number nb = (Number)models[i].getElement( ix,
                 statusAxes[iAxes] );
             final int nbValue = nb == null ? 0 : nb.intValue();
-            if( !KalypsoStatusUtils.checkMask( nbValue,
-                KalypsoStati.BIT_OK ) )
+            if( !KalypsoStatusUtils.checkMask( nbValue, KalypsoStati.BIT_OK ) )
             {
               bError = true;
 
-              bf.append( "["
-                  + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] )
-                  + " - " + KalypsoStatusUtils.getTooltipFor( nbValue )
-                  + "]\n" );
+              bf
+                  .append( "["
+                      + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] )
+                      + " - " + KalypsoStatusUtils.getTooltipFor( nbValue )
+                      + "]\n" );
             }
           }
 
@@ -151,13 +139,19 @@ public class KalypsoProcolWriter
             if( !sumDone )
             {
               sumDone = true;
-              
+
               String header = "Warnung in Zeitreihe: "
                   + observations[i].getName();
-              
-              final String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" );
+
+              String desc = observations[i].getMetadataList()
+                  .getProperty( ObservationConstants.MD_DESCRIPTION, "" );
               if( desc.length() > 0 )
+              {
+                desc += " aus " + observations[i].getMetadataList()
+              		.getProperty( ObservationConstants.MD_ORIGIN, "<unbekannt>" );
+
                 header += " (" + desc + ")";
+              }
 
               if( summaryWriter != null )
                 summaryWriter.println( header );
@@ -166,7 +160,8 @@ public class KalypsoProcolWriter
               detailsWriter.println( "Details:" );
             }
 
-            detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true )
+            detailsWriter.write( ObservationUtilities.dump( models[i], "  ",
+                ix, true )
                 + " Grund: " + bf.toString() );
           }
         }

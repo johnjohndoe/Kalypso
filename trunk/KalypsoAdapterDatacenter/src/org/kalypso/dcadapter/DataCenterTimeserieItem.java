@@ -140,6 +140,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
       m_metadataList.put( ObservationConstants.MD_NAME, getName() );
       m_metadataList.put( ObservationConstants.MD_DESCRIPTION, 
           "Daten aus: " + m_ts.getDataTableName() );
+      m_metadataList.put( ObservationConstants.MD_ORIGIN, "DataCenter" );
       
       java.sql.Date begin = m_ts.getRealBegin();
       if( begin != null )

@@ -55,7 +55,7 @@ import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoProcolWriter;
+import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -146,7 +146,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       TimeserieUtils.setForecast( obs, m_forecastFrom, m_forecastTo );
 
       // protocol the observations here and inform the user
-      KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ),  m_logWriter, SUMM_INFO );
+      KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ),  m_logWriter, SUMM_INFO );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
