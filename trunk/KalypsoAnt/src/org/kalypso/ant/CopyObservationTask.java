@@ -72,24 +72,41 @@ public class CopyObservationTask extends Task
 {
   /** href auf das GML */
   private String m_gml;
-  
-  /** Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten Features werden behandelt. */
+
+  /**
+   * Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten
+   * Features werden behandelt.
+   */
   private String m_featurePath;
-  
+
   /** Kontext (=URL), gegen welche die Links innerhalb des GML aufgelöst werden. */
   private URL m_context;
-  
-  /** Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird. */
+
+  /**
+   * Name der Feature-Property, welche den Link enthält, an welche Stelle das
+   * Ergebnis geschrieben wird.
+   */
   private String m_targetobservation;
 
-  /** Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren */
-  private long m_forecastFrom;
-  
-  /** Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren */
-  private long m_forecastTo;
-  
-  /** Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be written to 'targetobservation' */
-  private List m_sources = new LinkedList( );
+  /**
+   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu
+   * generieren Default mit -1 damit getestet werden kann ob die Eigenschaft
+   * gesetzt wurde.
+   */
+  private long m_forecastFrom = -1;
+
+  /**
+   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu
+   * generieren Default mit -1 damit getestet werden kann ob die Eigenschaft
+   * gesetzt wurde.
+   */
+  private long m_forecastTo = -1;
+
+  /**
+   * Ordered List of 'Source' Elements. Each source will be read as Observation,
+   * the combination of all sources will be written to 'targetobservation'
+   */
+  private List m_sources = new LinkedList();
 
   /**
    * @see org.apache.tools.ant.Task#execute()
@@ -100,12 +117,22 @@ public class CopyObservationTask extends Task
     {
       final UrlResolver urlResolver = new UrlResolver();
       final URL gmlURL = urlResolver.resolveURL( m_context, getGml() );
-      
-      final StringWriter logwriter = new StringWriter( );
+
+      final StringWriter logwriter = new StringWriter();
       final PrintWriter logPW = new PrintWriter( new BufferedWriter( logwriter ) );
 
-      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(), getContext(), (CopyObservationHandler.Source[])m_sources
-          .toArray( new CopyObservationHandler.Source[m_sources.size()] ), new Date( m_forecastFrom ), new Date( m_forecastTo ), logPW );
+      Date forecastFrom = null;
+      if( m_forecastFrom != -1 )
+        forecastFrom = new Date( m_forecastFrom );
+
+      Date forecastTo = null;
+      if( m_forecastTo != -1 )
+        forecastTo = new Date( m_forecastTo );
+
+      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(),
+          getTargetobservation(), getContext(), (CopyObservationHandler.Source[])m_sources
+              .toArray( new CopyObservationHandler.Source[m_sources.size()] ), forecastFrom,
+          forecastTo, logPW );
 
       logPW.close();
 
@@ -118,40 +145,47 @@ public class CopyObservationTask extends Task
       throw new BuildException( e.getLocalizedMessage(), e );
     }
   }
-  
+
   public final URL getContext()
   {
     return m_context;
   }
+
   public final void setContext( final URL context )
   {
     m_context = context;
   }
+
   public final String getFeaturePath()
   {
     return m_featurePath;
   }
+
   public final void setFeaturePath( String featurePath )
   {
     m_featurePath = featurePath;
   }
+
   public final String getGml()
   {
     return m_gml;
   }
+
   public final void setGml( String gml )
   {
     m_gml = gml;
   }
+
   public final String getTargetobservation()
   {
     return m_targetobservation;
   }
+
   public final void setTargetobservation( final String targetobservation )
   {
     m_targetobservation = targetobservation;
   }
-  
+
   public void addConfiguredSource( final Source source )
   {
     // validate source
@@ -161,39 +195,47 @@ public class CopyObservationTask extends Task
 
     final Date fromDate = new Date( from );
     final Date toDate = new Date( to );
-    
-    getProject().log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
-    
+
+    getProject().log(
+        "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to="
+            + toDate.toString(), Project.MSG_DEBUG );
+
     m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate ) );
   }
-  
+
   public final static class Source
   {
     private String property;
-    
+
     private long from;
-    
+
     private long to;
+
     public final String getProperty()
     {
       return property;
     }
+
     public final void setProperty( String property )
     {
       this.property = property;
     }
+
     public final long getFrom()
     {
       return from;
     }
+
     public final void setFrom( long from )
     {
       this.from = from;
     }
+
     public final long getTo()
     {
       return to;
     }
+
     public final void setTo( long to )
     {
       this.to = to;
@@ -204,14 +246,17 @@ public class CopyObservationTask extends Task
   {
     return m_forecastFrom;
   }
+
   public final void setForecastFrom( long forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
+
   public final long getForecastTo()
   {
     return m_forecastTo;
   }
+
   public final void setForecastTo( long forecastTo )
   {
     m_forecastTo = forecastTo;

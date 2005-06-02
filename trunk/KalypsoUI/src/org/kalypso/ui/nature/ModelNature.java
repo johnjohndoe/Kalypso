@@ -418,6 +418,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     attributes.setProperty( "calc.dir", folder.getLocation().toString() );
     attributes.setProperty( "project.dir", folder.getProject().getLocation().toString() );
+
+    attributes.setProperty( "calc.path", folder.getFullPath().toString() );
+    attributes.setProperty( "project.path", folder.getProject().getFullPath().toString() );
     try
     {
       attributes.setProperty( "calc.url", ResourceUtilities.createURL( folder ).toString() );

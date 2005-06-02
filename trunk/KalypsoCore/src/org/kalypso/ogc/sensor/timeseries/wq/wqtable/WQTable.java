@@ -26,7 +26,7 @@ public class WQTable
 
   private final Date m_validity;
 
-  private final int m_offset;
+  private int m_offset;
 
   /**
    * Creates a WQTable with a default offset of 0
@@ -190,6 +190,11 @@ public class WQTable
   public int getOffset( )
   {
     return m_offset;
+  }
+  
+  public void setOffset( int offset )
+  {
+    m_offset = offset;
   }
 
   /**
