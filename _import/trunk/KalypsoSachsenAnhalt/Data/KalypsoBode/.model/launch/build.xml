@@ -2,7 +2,6 @@
 
 	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
 
-
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
@@ -26,9 +25,10 @@
 		<!-- modell.gml, Info_Rechenvariant,gft (= view auf .calculation) -->
 		<copy file="${project.dir}/.templates/Modell/modell.gml" tofile="${calc.dir}/modell.gml"/>
 		<copy file="${project.dir}/.templates/Modell/Info_Rechenvariante.gft" tofile="${calc.dir}/Info_Rechenvariante.gft"/>
-		<copy file="${project.dir}/.templates/Modell/wiskiimport_messung.gml" tofile="${calc.dir}/wiskiimport_messung.gml"/>
+		<copy file="${project.dir}/.templates/Modell/wiskiimport_messung_120_h_vorhersage.gml" tofile="${calc.dir}/wiskiimport_messung_120_h_vorhersage.gml"/>
+		<copy file="${project.dir}/.templates/Modell/wiskiimport_messung_48_h_vorhersage.gml" tofile="${calc.dir}/wiskiimport_messung_48_h_vorhersage.gml"/>
 		<copy file="${project.dir}/.templates/Modell/wiskiimport_gesamt.gml" tofile="${calc.dir}/wiskiimport_gesamt.gml"/>
-		<copy file="${project.dir}/.templates/Modell/wiskiimport_prognose.gml" tofile="${calc.dir}/wiskiimport_prognose.gml"/>
+		<copy file="${project.dir}/.templates/Modell/wiskiimport_vorhersage.gml" tofile="${calc.dir}/wiskiimport_vorhersage.gml"/>
 		
 		<!-- Kartenansichten  -->
 		<copy toDir="${calc.dir}/Karten/">
@@ -39,6 +39,8 @@
 		<copy toDir="${calc.dir}/Parameter/">
 			<fileset dir="${project.dir}/.templates/Modell/Parameter/"/>
 		</copy>
+		
+		<eclipse.refreshLocal resource="${calc.path}" depth="infinite"/>
 	</target>
 
 	<!-- ================================= 
@@ -54,28 +56,31 @@
 		<gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
 			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
-			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}"/>
+			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}"/>
+			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}"/>
 		</gmlProperty>
 
 		<echo message="Zeitreihen werden von WISKI geladen" />
 		
-		<copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}"/>
+		<copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim_48}"/>
 		</copyObservation>
 
-		<copyObservation gml="${calc.url}/wiskiimport_messung.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
+		<copyObservation gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
 		</copyObservation>
 
-		<copyObservation gml="${calc.url}/wiskiimport_prognose.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal">
-			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim}"/>
+		<copyObservation gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+		</copyObservation>
+
+		<copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim_48}"/>
 		</copyObservation>
 	</target>
 	
 	<!-- ================================= 
           target: afterCalc              
          ================================= -->
-	<target name="afterCalc" description="wird nach Beendigung der Berechnung ausgeführt">
-	</target>
-
+	<target name="afterCalc" description="wird nach Beendigung der Berechnung ausgeführt"/>
 </project>
