@@ -382,7 +382,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       for( int j = 0; j < rangeSetDataRow.size(); j++ )
       {
         Color actualColor = Color.DARK_GRAY;
-        double actualOpacity = 1;
+        int alphaValue = 255;
         if( rangeSetDataRow.get( j ) != null )
         {
           double actualValue = ( (Double)rangeSetDataRow.get( j ) ).doubleValue();
@@ -397,7 +397,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
               if( interval.contains( actualValue ) )
               {
                 actualColor = (Color)intervalMap.get( interval );
-                actualOpacity = actualColor.getAlpha();
+                alphaValue = actualColor.getAlpha();
                 break;
               }
             }
@@ -410,7 +410,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
             {
               ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( new Double( actualValue ) );
               actualColor = colorMapEntry.getColor();
-              actualOpacity = colorMapEntry.getOpacity();
+              double opacity = colorMapEntry.getOpacity();
+              alphaValue = (int)Math.round( opacity * 255 );
             }
             break;
           }
@@ -424,18 +425,18 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           {
             ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( new Double( nullValue ) );
             actualColor = colorMapEntry.getColor();
-            actualOpacity = colorMapEntry.getOpacity();
+            double opacity = colorMapEntry.getOpacity();
+            alphaValue = (int)Math.round( opacity * 255 );
           }
           else
           {
             actualColor = Color.WHITE;
-            actualOpacity = 0;
+            alphaValue = 0;
           }
         }
         int redValue = actualColor.getRed();
         int greenValue = actualColor.getGreen();
         int blueValue = actualColor.getBlue();
-        int alphaValue = (int)Math.round( actualOpacity * 255 );
         dataBuffer.setElem( 0, j + ( i * nCols ), redValue );
         dataBuffer.setElem( 1, j + ( i * nCols ), greenValue );
         dataBuffer.setElem( 2, j + ( i * nCols ), blueValue );
