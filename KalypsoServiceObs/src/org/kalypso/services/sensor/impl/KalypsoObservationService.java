@@ -266,7 +266,7 @@ public class KalypsoObservationService implements IObservationService
         m_logger.info( "Reset TimeZone. Name not found: " + tzName );
       }
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( getClass().getName(), "init", e );
 
@@ -404,7 +404,7 @@ public class KalypsoObservationService implements IObservationService
 
       obs.setValues( zml.getValues( null ) );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( getClass().getName(), "writeData", e );
       throw new RemoteException( "", e );
@@ -474,7 +474,7 @@ public class KalypsoObservationService implements IObservationService
 
       return item.hasChildren();
     }
-    catch( RepositoryException e )
+    catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "hasChildren", e );
       throw new RemoteException( "", e );
@@ -535,7 +535,7 @@ public class KalypsoObservationService implements IObservationService
 
       return beans;
     }
-    catch( RepositoryException e )
+    catch( final  RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "getChildren", e );
       throw new RemoteException( "", e );

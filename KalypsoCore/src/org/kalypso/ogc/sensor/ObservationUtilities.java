@@ -43,6 +43,8 @@ package org.kalypso.ogc.sensor;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -65,6 +67,7 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class ObservationUtilities
 {
   private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
+  private static final Comparator AXIS_SORT_COMPARATOR = new AxisSortComparator();
 
   private ObservationUtilities( )
   {
@@ -97,8 +100,6 @@ public class ObservationUtilities
   /**
    * returns null when no axis found instead of throwing an exception
    * 
-   * @param axes
-   * @param axisName
    * @return axis or null if not found
    * 
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
@@ -142,8 +143,6 @@ public class ObservationUtilities
   /**
    * Returns the axes that are compatible with the desired Dataclass
    * 
-   * @param axes
-   * @param desired
    * @return all axes which are compatible with desired Classtype
    */
   public static IAxis[] findAxesByClass( final IAxis[] axes, final Class desired )
@@ -194,7 +193,6 @@ public class ObservationUtilities
   }
 
   /**
-   * @param axes
    * @return the axes which are key-axes. Returns an empty array if no axis
    *         found.
    */
@@ -212,12 +210,9 @@ public class ObservationUtilities
   }
 
   /**
-   * @param model
    * @param sep
    *          string separator between elements
    * @return simple string representation of the given model
-   * 
-   * @throws SensorException
    */
   public static String dump( final ITuppleModel model, final String sep )
       throws SensorException
@@ -239,16 +234,14 @@ public class ObservationUtilities
   /**
    * Dumps the contents of the model into a writer. Caller must close the
    * writer.
-   * 
-   * @param model
-   * @param sep
-   * @param writer
-   * @throws SensorException
    */
   public static void dump( final ITuppleModel model, final String sep,
       final Writer writer ) throws SensorException
   {
     final IAxis[] axes = model.getAxisList();
+
+    // sort axes in order to have a better output
+    sortAxes( axes );
 
     // retrieve apropriate parsers for each axis
     final IParser[] parsers = new IParser[axes.length];
@@ -302,7 +295,7 @@ public class ObservationUtilities
         writer.write( '\n' );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new SensorException( e );
@@ -312,12 +305,7 @@ public class ObservationUtilities
   /**
    * Dumps the tupple at given index using sep as separator.
    * 
-   * @param model
-   * @param sep
-   * @param index
-   * @param excludeStatusAxes
    * @return string representation of the given line (tupple)
-   * @throws SensorException
    */
   public static String dump( final ITuppleModel model, final String sep,
       final int index, final boolean excludeStatusAxes ) throws SensorException
@@ -326,6 +314,9 @@ public class ObservationUtilities
 
     if( excludeStatusAxes )
       axes = KalypsoStatusUtils.withoutStatusAxes( axes );
+    
+    // sort axes in order to have a better output
+    sortAxes( axes );
 
     // retrieve apropriate parsers for each axis
     final IParser[] parsers = new IParser[axes.length];
@@ -450,7 +441,6 @@ public class ObservationUtilities
    * Returns the given row. Creates a new array containing the references to the
    * values in the tuppleModel for that row and these columns
    * 
-   * @param tuppleModel
    * @param row
    *          row index for which objects will be taken
    * @param axisList
@@ -466,4 +456,33 @@ public class ObservationUtilities
     return result;
   }
 
+  /**
+   * Sort an array of axes according to the Kalypso convention: axes are sorted
+   * based on their type information. Example:
+   * <p>
+   * date, Q, T, V, W, etc.
+   */
+  public static void sortAxes( final IAxis[] axes )
+  {
+    Arrays.sort( axes, AXIS_SORT_COMPARATOR );
+  }
+  
+  /**
+   * AxisSortComparator: sorts the axes according to their types
+   * 
+   * @author schlienger (02.06.2005)
+   */
+  public static class AxisSortComparator implements Comparator
+  {
+    /**
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
+    public int compare( final Object o1, final Object o2 )
+    {
+      final IAxis a1 = (IAxis)o1;
+      final IAxis a2 = (IAxis)o2;
+
+      return a1.getType().compareTo( a2.getType() );
+    }
+  }
 }

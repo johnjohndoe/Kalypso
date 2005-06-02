@@ -44,6 +44,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -143,10 +144,16 @@ public class RequestFactory
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis ) );
     }
 
+    // create observation instance
     final SimpleObservation obs = new SimpleObservation( "", "", xmlReq
         .getName(), false, null, new MetadataList(), (IAxis[])axes
         .toArray( new IAxis[axes.size()] ) );
 
+    // update metadata
+    final MetadataList mdl = obs.getMetadataList();
+    mdl.setProperty( ObservationConstants.MD_NAME, xmlReq.getName() );
+    mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
+    
     return obs;
   }
 

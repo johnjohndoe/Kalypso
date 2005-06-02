@@ -64,7 +64,7 @@ import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoProcolWriter;
+import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -291,7 +291,7 @@ public class ObservationResolver extends AbstractTransformation
         TimeserieUtils.setForecast( obs, from2, to2 );
 
         // protocol the observations here and inform the user
-        KalypsoProcolWriter.analyseValues( obs, obs.getValues( null ), msgWriter, logWriter );
+        KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ), msgWriter, logWriter );
 
         // remove query part if present, href is also used as file name here!
         final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );

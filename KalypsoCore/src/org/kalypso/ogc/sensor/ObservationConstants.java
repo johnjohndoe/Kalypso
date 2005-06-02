@@ -47,6 +47,12 @@ package org.kalypso.ogc.sensor;
  */
 public interface ObservationConstants
 {
+  /** Name of the observation */
   public final static String MD_NAME = "Name";
-  public static final String MD_DESCRIPTION = "Beschreibung";
+  
+  /** Description of the observation */
+  public final static String MD_DESCRIPTION = "Beschreibung";
+  
+  /** Some information about the Origin of the observation */
+  public final static String MD_ORIGIN = "Entstehung";
 }
