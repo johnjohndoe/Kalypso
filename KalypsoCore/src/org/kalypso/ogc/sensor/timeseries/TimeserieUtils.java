@@ -76,7 +76,7 @@ public class TimeserieUtils
 
   private TimeserieUtils()
   {
-    // no instanciation
+  // no instanciation
   }
 
   /**
@@ -89,8 +89,7 @@ public class TimeserieUtils
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public final static String[] findOutMDBeginningWith( final IObservation obs,
-      final String mdPrefix )
+  public final static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
     if( obs == null )
       return ArrayUtils.EMPTY_STRING_ARRAY;
@@ -148,8 +147,7 @@ public class TimeserieUtils
     {
       m_config = new Properties();
 
-      InputStream ins = TimeserieUtils.class
-          .getResourceAsStream( "resource/config.properties" );
+      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
 
       try
       {
@@ -169,19 +167,17 @@ public class TimeserieUtils
 
   /**
    * Sets the 'forecast' metadata of the given observation using the given date
-   * range.
-   * 
-   * @param obs
-   * @param from
-   * @param to
+   * range. If from or to are null, does nothing.
    */
-  public final static void setForecast( final IObservation obs,
-      final Date from, final Date to )
+  public final static void setForecast( final IObservation obs, final Date from, final Date to )
   {
-    obs.getMetadataList().setProperty(
-        TimeserieConstants.MD_VORHERSAGE,
-        TimeserieConstants.DEFAULT_DF.format( from ) + ";"
-            + TimeserieConstants.DEFAULT_DF.format( to ) );
+    if( from != null && to != null )
+    {
+      obs.getMetadataList().setProperty(
+          TimeserieConstants.MD_VORHERSAGE,
+          TimeserieConstants.DEFAULT_DF.format( from ) + ";"
+              + TimeserieConstants.DEFAULT_DF.format( to ) );
+    }
   }
 
   /**
@@ -300,8 +296,7 @@ public class TimeserieUtils
    */
   public static boolean isKey( final String type )
   {
-    return Boolean.valueOf(
-        getProperties().getProperty( "IS_KEY_" + type, "false" ) )
+    return Boolean.valueOf( getProperties().getProperty( "IS_KEY_" + type, "false" ) )
         .booleanValue();
   }
 
@@ -310,8 +305,8 @@ public class TimeserieUtils
    */
   public static IAxis createDefaulAxis( final String type )
   {
-    return new DefaultAxis( getName( type ), type, getUnit( type ),
-        getDataClass( type ), isKey( type ) );
+    return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ),
+        isKey( type ) );
   }
 
   /**
@@ -341,15 +336,13 @@ public class TimeserieUtils
       // for W
       final NumberFormat wf = NumberFormat.getInstance();
       wf.setMinimumFractionDigits( Integer.valueOf(
-          getProperties().getProperty(
-              "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
+          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
 
       // for N
       final NumberFormat nf = NumberFormat.getInstance();
       wf.setMinimumFractionDigits( Integer.valueOf(
-          getProperties().getProperty(
-              "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
+          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
     }
 
@@ -371,8 +364,7 @@ public class TimeserieUtils
   {
     try
     {
-      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type,
-          "" ) );
+      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type, "" ) );
     }
     catch( ClassNotFoundException e )
     {
