@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.job;
 
+import org.kalypso.java.lang.ICancelable;
+
 
 /**
  * Überwachungsmonitor für den
@@ -47,16 +49,8 @@ package org.kalypso.services.calculation.job;
  * 
  * @author belger
  */
-public interface ICalcMonitor
+public interface ICalcMonitor extends ICancelable
 {
-  /**
-   * Bricht den Job ab, er sollte so schnell wie möglich die <code>run</code>
-   * Methode verlassen
-   */
-  public void cancel();
-
-  public boolean isCanceled();
-
   public void setProgress( final int progress );
 
   /** Gibt den aktuellen Fortschritt des Jobs zurück, zwischen 0 und 100 */

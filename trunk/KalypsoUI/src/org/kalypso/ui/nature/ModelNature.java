@@ -324,7 +324,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus launchAnt( final String launchName, final IFolder folder,
       final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Führe Operation durch: " + launchName, 4000 );
+    monitor.beginTask( "Führe Operation durch: " + launchName, 5000 );
 
     final IStringVariableManager svm = VariablesPlugin.getDefault().getStringVariableManager();
     IValueVariable[] userVariables = null;
@@ -352,6 +352,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor,
           3000 ) );
+      
+      // todo: timeout konfigurierbar machen?
       final int minutes = 3;
       for( int i = 0; i < 60 * minutes; i++ )
       {
@@ -373,7 +375,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
         wait( 1000 );
       }
-
+      
       return KalypsoGisPlugin.createErrorStatus( "Operation hat über " + minutes
           + " Minuten gedauert und wird deshalb abgebrochen.", null );
     }
@@ -389,6 +391,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( userVariables != null )
         svm.removeVariables( userVariables );
 
+      // alle resourcen des CalcCase refreshen
+      folder.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
+      
       monitor.done();
     }
   }
