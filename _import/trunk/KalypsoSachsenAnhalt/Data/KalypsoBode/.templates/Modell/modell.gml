@@ -2228,10 +2228,10 @@
           <tubigspeicher:Messstellennummer>579000</tubigspeicher:Messstellennummer>
           <tubigspeicher:Kurz_Name>urapp</tubigspeicher:Kurz_Name>
           <tubigspeicher:Abgabe>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Speicherabgabe/Überleitung_Rappbode.zml" linktype="zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Speicherabgabe/Königshütte.zml" linktype="zml"/>
           </tubigspeicher:Abgabe>
           <tubigspeicher:Zufluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Speicherzufluss/Überleitung_Rappbode.zml" linktype="zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Speicherzufluss/Königshütte.zml" linktype="zml"/>
           </tubigspeicher:Zufluss_gerechnet>
         </tubigspeicher:Überleitung>
       </tubigspeicher:SpeicherMember>
