@@ -126,7 +126,7 @@ public class TubigFileVisitorTubig2Zml implements FileVisitor
   /**
    * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
    */
-  public boolean visit( final File fleTubig ) 
+  public boolean visit( final File fleTubig )
   {
     IObservation obsZml;
     final FileOutputStream fleOutStream;
@@ -170,8 +170,9 @@ public class TubigFileVisitorTubig2Zml implements FileVisitor
 
       obsZml = null;
       try
-      { 
-        // TODO Monika Exceptions sammeln und gebündelt zurückgeben (obsZml = null weg und dann wieder final machen)
+      {
+        // TODO Monika Exceptions sammeln und gebündelt zurückgeben (obsZml =
+        // null kann dann weg und dann wieder final machen)
         obsZml = TubigConverter.tubig2Zml( fleTubig, name );
       }
       catch( TubigException e1 )

@@ -2219,7 +2219,7 @@
       </tubigspeicher:SpeicherMember>
       <tubigspeicher:SpeicherMember>
         <tubigspeicher:Überleitung fid="Überleitung_Rappbode">
-          <tubigspeicher:Name>Überleitung Rappbode</tubigspeicher:Name>
+          <tubigspeicher:Name>TS Königshütte</tubigspeicher:Name>
           <tubigspeicher:Ort>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
               <gml:coordinates cs="," decimal="." ts=" ">5210386.315687956,5741854.463837401</gml:coordinates>
