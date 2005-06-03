@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,42 +36,68 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.tableview.rules;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+ ---------------------------------------------------------------------------------------------------*/
+package org.kalypso.ogc.sensor.commands;
 
+import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.util.command.ICommand;
 
 /**
- * Container for rendering-rules
+ * RemoveThemeCommand
  * 
  * @author schlienger
  */
-public interface ITableViewRules
+public class RemoveThemeCommand implements ICommand
 {
-  public void addRule( RenderingRule rule );
-  public void removeRule( RenderingRule rule );
-  
-  /**
-   * Finds a rule that contains the mask
-   * 
-   * @return list of rules that apply
-   * @throws NoSuchElementException
-   */
-  public RenderingRule[] findRules( int mask );
-  
-  /**
-   * Finds a rule that contains the mask
-   * 
-   * @return list of rules that apply
-   * @throws NoSuchElementException
-   */
-  public RenderingRule[] findRules( Number mask );
-  
-  public boolean isEmpty();
+  private final ObsView m_template;
+  private final ObsViewItem m_item;
 
-  public List getRules();
-  public void removeAllRules( );
+  public RemoveThemeCommand( ObsView template,
+      ObsViewItem item )
+  {
+    m_template = template;
+    m_item = item;
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#isUndoable()
+   */
+  public boolean isUndoable()
+  {
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#process()
+   */
+  public void process() throws Exception
+  {
+    m_template.removeItem( m_item );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#redo()
+   */
+  public void redo() throws Exception
+  {
+    process();
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#undo()
+   */
+  public void undo() throws Exception
+  {
+    m_template.addItem( m_item );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#getDescription()
+   */
+  public String getDescription()
+  {
+    return "Entfernt einen Thema";
+  }
 }

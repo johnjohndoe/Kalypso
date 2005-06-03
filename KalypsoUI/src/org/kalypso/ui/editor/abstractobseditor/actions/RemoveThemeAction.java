@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -38,60 +38,45 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.tableview.swing;
+package org.kalypso.ui.editor.abstractobseditor.actions;
 
-import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-
-import org.apache.commons.io.IOUtils;
-import org.kalypso.java.swing.table.TableUtils;
-import org.kalypso.ui.metadoc.IExportableTableDocument;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
 
 /**
- * ExportableObservationTable
+ * RemoveThemeAction
  * 
  * @author schlienger
  */
-public class ExportableObservationTable implements IExportableTableDocument
+public class RemoveThemeAction extends FullAction
 {
-  private final ObservationTable m_table;
+  private final ObservationEditorOutlinePage m_page;
 
-  public ExportableObservationTable( final ObservationTable table )
+  public RemoveThemeAction( final ObservationEditorOutlinePage page )
   {
-    m_table = table;
+    super( "Thema entfernen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE,
+        "Entfernt aktives Thema" );
+
+    m_page = page;
   }
 
   /**
-   * @see org.kalypso.ui.metadoc.IExportableTableDocument#setOnlySelectedRows(boolean)
+   * @see org.eclipse.jface.action.Action#run()
    */
-  public void setOnlySelectedRows( final boolean flag )
+  public void run()
   {
-    // ignored
-  }
+    final ObsViewItem item = m_page.getSelectedItem();
 
-  /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
-   */
-  public void exportDocument( final OutputStream outs ) throws Exception
-  {
-    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(
-        outs ) );
-    try
-    {
-      TableUtils.dump( m_table, "\t", writer );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
-  }
+    if( item != null
+        && MessageDialog.openConfirm( m_page.getSite().getShell(),
+            "Zeitreihe entfernen", "Wollen Sie wirklich die Zeitreihe "
+                + item.getName() + " entfernen" ) )
 
-  /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
-   */
-  public String getDocumentExtension()
-  {
-    return ".csv";
+      m_page.getEditor().postCommand(
+          new RemoveThemeCommand( m_page.getView(), item ), null );
   }
 }

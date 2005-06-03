@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
@@ -70,12 +71,12 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   private IAxis m_srcAxis;
 
   private IAxis m_destAxis;
-
-  private IWQConverter m_conv = null;
+  private IAxis m_destStatusAxis;
 
   private final String m_proxyAxisType;
-
   private final String m_realAxisType;
+
+  private IWQConverter m_conv = null;
 
   /**
    * Constructor
@@ -84,7 +85,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    *          type of the real axis that will be used to proxy another axis
    * @param proxyAxisType
    *          type of the axis that should be generated based on the real axis
-   * @param obs
+   * @param obs the underlying observation to proxy
    */
   public WQTimeserieProxy( final String realAxisType,
       final String proxyAxisType, final IObservation obs )
@@ -100,7 +101,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   private final void configure( final IObservation obs )
   {
     final IAxis[] axes = obs.getAxisList();
-    m_axes = new IAxis[axes.length + 1];
+    m_axes = new IAxis[axes.length + 2];
     for( int i = 0; i < axes.length; i++ )
       m_axes[i] = axes[i];
 
@@ -113,7 +114,10 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     m_srcAxis = ObservationUtilities.findAxisByType( axes, m_realAxisType );
     m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class,
         false, false );
-    m_axes[m_axes.length - 1] = m_destAxis;
+    m_axes[m_axes.length - 2] = m_destAxis;
+    
+    m_destStatusAxis = KalypsoStatusUtils.createStatusAxisFor( m_destAxis, false );
+    m_axes[m_axes.length - 1] = m_destStatusAxis;
 
     if( name.length() == 0 )
       throw new IllegalArgumentException(
@@ -136,7 +140,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
       throws SensorException
   {
     return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
-        m_srcAxis, m_destAxis, getWQConverter() );
+        m_srcAxis, m_destAxis, m_destStatusAxis, getWQConverter() );
   }
 
   /**

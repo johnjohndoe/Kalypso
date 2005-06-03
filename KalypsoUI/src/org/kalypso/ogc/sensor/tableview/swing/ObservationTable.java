@@ -118,7 +118,6 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     // for convenience
     m_model = (ObservationTableModel)getModel();
-    m_model.setTable( this );
     m_model.setRules( template.getRules() );
 
     m_dateRenderer = new DateTableCellRenderer();
@@ -177,7 +176,6 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_view.removeObsViewListener( this );
 
     m_model.clearColumns();
-    m_model.setTable( null );
   }
 
   /**

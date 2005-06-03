@@ -137,10 +137,9 @@ public class ObservationChart extends JFreeChart implements
         else if( evt.getObject() instanceof DiagViewCurve )
           view = (DiagView) ((DiagViewCurve) evt.getObject()).getView();
 
-        // REFRESH LIST OF THEMES
-        // REMOVE ALL THEMES
         if( evt.getType() == ObsViewEvent.TYPE_ADD
-            || evt.getType() == ObsViewEvent.TYPE_REFRESH )
+            || evt.getType() == ObsViewEvent.TYPE_REFRESH 
+            || evt.getType() == ObsViewEvent.TYPE_REMOVE )
         {
           final ObsViewItem[] items = view.getItems();
           for( int i = 0; i < items.length; i++ )

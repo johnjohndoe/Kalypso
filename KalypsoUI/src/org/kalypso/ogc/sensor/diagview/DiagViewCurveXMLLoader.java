@@ -142,12 +142,4 @@ public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs
       view.addItem( curve );
     }
   }
-
-  /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#dispose()
-   */
-  protected void dispose()
-  {
-  // nix
-  }
 }

@@ -124,8 +124,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Belger
  */
-public abstract class AbstractCalcWizardPage extends WizardPage implements IModelWizardPage,
-    ICommandTarget, ModellEventListener
+public abstract class AbstractCalcWizardPage extends WizardPage implements
+    IModelWizardPage, ICommandTarget, ModellEventListener
 {
   public static final int SELECT_FROM_MAPVIEW = 0;
 
@@ -156,12 +156,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /** Pfad auf Vorlage für die Gis-Tabell (.gtt Datei) */
   public final static String PROP_TABLETEMPLATE = "tableTemplate";
 
-
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
   private final static String PROP_MAPTEMPLATE = "mapTemplate";
 
-  /** Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonten
-   * wie üblich auf die .gtt Kartei */
+  /**
+   * Falls true, wird der Context der Karte stets auf den CalcCaseFolder
+   * gesetzt. Ansonten wie üblich auf die .gtt Kartei
+   */
   public final static String PROP_MAPTEMPLATEISCALC = "mapTemplateContextIsCalcCase";
 
   /** Pfad auf Vorlage für die Karte (.gmt Datei) */
@@ -307,7 +308,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    *      org.eclipse.core.resources.IFolder)
    */
   public void init( final IProject project, final String pagetitle,
-      final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder )
+      final ImageDescriptor imagedesc, final Arguments arguments,
+      final IFolder calcFolder )
   {
     setTitle( pagetitle );
     setImageDescriptor( imagedesc );
@@ -317,12 +319,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     m_calcFolder = calcFolder;
 
-    final String zmlTableSelected = m_arguments.getProperty( PROP_ZMLTABLE_SHOW, "selected" );
+    final String zmlTableSelected = m_arguments.getProperty(
+        PROP_ZMLTABLE_SHOW, "selected" );
     m_showZmlTableOnlySelected = "selected".equalsIgnoreCase( zmlTableSelected );
 
     try
     {
-      m_selectionID = Integer.parseInt( m_arguments.getProperty( PROP_SELECTIONID, "1" ) );
+      m_selectionID = Integer.parseInt( m_arguments.getProperty(
+          PROP_SELECTIONID, "1" ) );
     }
     catch( final NumberFormatException nfe )
     {
@@ -370,27 +374,34 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * @throws JAXBException
    * @throws CoreException
    */
-  protected Control initMap( final Composite parent, final String widgetID ) throws IOException,
-      JAXBException, CoreException
+  protected Control initMap( final Composite parent, final String widgetID )
+      throws IOException, JAXBException, CoreException
   {
     final String mapFileName = getArguments().getProperty( PROP_MAPTEMPLATE );
-    final boolean mapContextIsCalcCase = Boolean.valueOf( getArguments().getProperty( PROP_MAPTEMPLATEISCALC, Boolean.TRUE.toString() ) ).booleanValue(); 
+    final boolean mapContextIsCalcCase = Boolean.valueOf(
+        getArguments().getProperty( PROP_MAPTEMPLATEISCALC,
+            Boolean.TRUE.toString() ) ).booleanValue();
     final IFile mapFile = (IFile)getProject().findMember( mapFileName );
     if( mapFile == null )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Vorlagendatei existiert nicht: " + mapFileName, null ) );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile, getReplaceProperties() );
-    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-    final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities.createURL( mapFile );
-    m_mapModell = new GisTemplateMapModell( gisview, context, crs , mapFile.getProject());
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile,
+        getReplaceProperties() );
+    final CS_CoordinateSystem crs = KalypsoGisPlugin.getDefault()
+        .getCoordinatesSystem();
+    final URL context = mapContextIsCalcCase ? getContext() : ResourceUtilities
+        .createURL( mapFile );
+    m_mapModell = new GisTemplateMapModell( gisview, context, crs, mapFile
+        .getProject() );
     m_mapModell.addModellListener( this );
 
     m_mapPanel = new MapPanel( this, crs, m_selectionID );
     //   MapPanelHelper.createWidgetsForMapPanel( parent.getShell(), m_mapPanel );
 
     m_wishBoundingBox = GisTemplateHelper.getBoundingBox( gisview );
-    final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID, null );
+    final String panToFid = getArguments().getProperty( PROP_PAN_TO_FEATURE_ID,
+        null );
     if( panToFid != null )
     {
       final IMapModell mapModell = getMapModell();
@@ -400,7 +411,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final Feature feature = workspace.getFeature( panToFid );
       if( feature != null )
       {
-        GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+        GM_Object defaultGeometryProperty = feature
+            .getDefaultGeometryProperty();
         GM_Point centroid = defaultGeometryProperty.getCentroid();
         m_wishBoundingBox = m_wishBoundingBox.getPaned( centroid );
       }
@@ -408,7 +420,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( "true".equals( getArguments().getProperty( PROP_MAXIMIZEMAP, "false" ) ) )
       m_wishBoundingBox = null;
 
-    final Composite mapComposite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+    final Composite mapComposite = new Composite( parent, SWT.BORDER
+        | SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
 
     virtualFrame.setVisible( true );
@@ -416,11 +429,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     virtualFrame.add( m_mapPanel );
 
     m_mapPanel.setMapModell( m_mapModell );
-    m_mapPanel.onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
+    m_mapPanel
+        .onModellChange( new ModellEvent( null, ModellEvent.THEME_ADDED ) );
 
     // TODO: use widgetID from Konfiguration
 
-    m_mapPanel.getWidgetManager().setActualWidget( WidgetHelper.getWidget( widgetID ) );
+    m_mapPanel.getWidgetManager().setActualWidget(
+        WidgetHelper.getWidget( widgetID ) );
 
     m_mapPanel.setBoundingBox( m_wishBoundingBox );
 
@@ -440,8 +455,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
           .getFullExtentBoundingBox();
       if( fullExtentBoundingBox != null )
       {
-        final double buffer = Math.max( fullExtentBoundingBox.getWidth(), fullExtentBoundingBox
-            .getHeight() ) * 0.025;
+        final double buffer = Math.max( fullExtentBoundingBox.getWidth(),
+            fullExtentBoundingBox.getHeight() ) * 0.025;
         m_mapPanel.setBoundingBox( fullExtentBoundingBox.getBuffer( buffer ) );
       }
     }
@@ -456,17 +471,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       // actually creates the template
       m_diagView = new DiagView( true );
 
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
+      final String ignoreType = m_arguments
+          .getProperty( PROP_IGNORETYPE1, null );
       m_ignoreType = ignoreType;
 
-      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.BORDER | SWT.RIGHT
+          | SWT.EMBEDDED );
       m_diagFrame = SWT_AWT.new_Frame( composite );
       m_diagFrame.setVisible( true );
 
       m_obsChart = new ObservationChart( m_diagView );
 
       // chart panel without any popup menu
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false,
+          false, false, false );
       chartPanel.setMouseZoomable( true, false );
 
       m_diagFrame.setVisible( true );
@@ -503,31 +521,39 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     refreshZmlTableForContext( obs, getContext() );
   }
 
-  protected void refreshDiagramForContext( final TSLinkWithName[] obs, final URL context )
+  protected void refreshDiagramForContext( final TSLinkWithName[] obs,
+      final URL context )
   {
     if( m_diagView != null )
-      KalypsoWizardHelper.updateZMLView( m_diagView, obs, context, true, m_ignoreType );
+      KalypsoWizardHelper.updateZMLView( m_diagView, obs, context, true,
+          m_ignoreType );
   }
 
-  protected void refreshZmlTableForContext( final TSLinkWithName[] obs, final URL context )
+  protected void refreshZmlTableForContext( final TSLinkWithName[] obs,
+      final URL context )
   {
     if( m_tableTemplate != null )
-      KalypsoWizardHelper.updateZMLView( m_tableTemplate, obs, context, true, m_ignoreType );
+      KalypsoWizardHelper.updateZMLView( m_tableTemplate, obs, context, true,
+          m_ignoreType );
   }
 
-  protected abstract TSLinkWithName[] getObservationsToShow( final boolean onlySelected );
+  protected abstract TSLinkWithName[] getObservationsToShow(
+      final boolean onlySelected );
 
   protected void initFeatureTable( final Composite parent )
   {
     try
     {
-      final String templateFileName = (String)getArguments().get( PROP_TABLETEMPLATE );
-      final IFile templateFile = (IFile)getProject().findMember( templateFileName );
-      final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile,
-          getReplaceProperties() );
+      final String templateFileName = (String)getArguments().get(
+          PROP_TABLETEMPLATE );
+      final IFile templateFile = (IFile)getProject().findMember(
+          templateFileName );
+      final Gistableview template = GisTemplateHelper.loadGisTableview(
+          templateFile, getReplaceProperties() );
 
-      m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin
-          .getDefault().createFeatureTypeCellEditorFactory(), getSelectionID(), false );
+      m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this,
+          KalypsoGisPlugin.getDefault().createFeatureTypeCellEditorFactory(),
+          getSelectionID(), false );
       m_gisTableViewer.applyTableTemplate( template, getContext() );
 
     }
@@ -546,10 +572,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_tableTemplate = new TableView();
       m_table = new ObservationTable( m_tableTemplate );
 
-      final String ignoreType = m_arguments.getProperty( PROP_IGNORETYPE1, null );
+      final String ignoreType = m_arguments
+          .getProperty( PROP_IGNORETYPE1, null );
       m_ignoreType = ignoreType;
 
-      final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+      final Composite composite = new Composite( parent, SWT.RIGHT
+          | SWT.EMBEDDED );
       m_tableFrame = SWT_AWT.new_Frame( composite );
 
       m_table.setVisible( true );
@@ -576,7 +604,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   public TSLinkWithName[] getObservations( boolean onlySelected )
   {
-    final List selectedFeatures = onlySelected ? getSelectedFeatures() : getFeatures();
+    final List selectedFeatures = onlySelected ? getSelectedFeatures()
+        : getFeatures();
 
     final Collection foundObservations = new ArrayList( selectedFeatures.size() );
 
@@ -599,11 +628,13 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         else
           name = tsprop.getNameString();
 
-        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( tsprop.getLinkColumn() );
+        final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( tsprop
+            .getLinkColumn() );
         if( obsLink != null )
         {
-          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
-              obsLink.getHref(), tsprop.getFilter(), tsprop.getColor() );
+          final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
+              .getLinktype(), obsLink.getHref(), tsprop.getFilter(), tsprop
+              .getColor() );
           foundObservations.add( linkWithName );
         }
       }
@@ -613,8 +644,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         .toArray( new TSLinkWithName[foundObservations.size()] );
   }
 
-  protected TSLinkWithName[] getTimeseriesForProperty( final String name, final List features,
-      final String property, final String filter )
+  protected TSLinkWithName[] getTimeseriesForProperty( final String name,
+      final List features, final String property, final String filter )
   {
     final Collection foundObservations = new ArrayList( features.size() );
 
@@ -625,8 +656,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final TimeseriesLink obsLink = (TimeseriesLink)kf.getProperty( property );
       if( obsLink != null )
       {
-        final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink.getLinktype(),
-            obsLink.getHref(), filter, null );
+        final TSLinkWithName linkWithName = new TSLinkWithName( name, obsLink
+            .getLinktype(), obsLink.getHref(), filter, null );
         foundObservations.add( linkWithName );
       }
     }
@@ -650,7 +681,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public final void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent != null && modellEvent.isType( ModellEvent.SELECTION_CHANGED ) )
+    if( modellEvent != null
+        && modellEvent.isType( ModellEvent.SELECTION_CHANGED ) )
     {
       refreshDiagram();
 
@@ -658,7 +690,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       {
         // Save the observations before refreshing else
         // changes are lost
-        saveDirtyObservations( new NullProgressMonitor(), true );
+        saveDirtyObservations( new NullProgressMonitor() );
 
         refreshZMLTable();
       }
@@ -688,7 +720,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     case SELECT_FROM_MAPVIEW:
       final IMapModell mapModell = getMapModell();
       if( mapModell == null )
-        return FeatureFactory.createFeatureList(null,null);
+        return FeatureFactory.createFeatureList( null, null );
       activeTheme = mapModell.getActiveTheme();
       break;
     case SELECT_FROM_TABLEVIEW:
@@ -701,14 +733,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       activeTheme = null;
     }
     if( activeTheme == null )
-      return FeatureFactory.createFeatureList(null,null);
+      return FeatureFactory.createFeatureList( null, null );
     final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = kft.getFeatureList();
     if( featureList == null )
-      return FeatureFactory.createFeatureList(null,null);
+      return FeatureFactory.createFeatureList( null, null );
     if( selected )
-      return FeatureFactory.createFeatureList(null, null,GetSelectionVisitor.getSelectedFeatures(
-          featureList, m_selectionID ) );
+      return FeatureFactory.createFeatureList( null, null, GetSelectionVisitor
+          .getSelectedFeatures( featureList, m_selectionID ) );
     return featureList;
   }
 
@@ -725,9 +757,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void performHelp()
   {
-  // TODO
-  // get helpid
-  // show help
+    // TODO
+    // get helpid
+    // show help
   }
 
   protected Composite createIgnoreButtonPanel( final Composite parent )
@@ -739,8 +771,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final String ignoreType1 = m_arguments.getProperty( PROP_IGNORETYPE1, null );
     final String ignoreType2 = m_arguments.getProperty( PROP_IGNORETYPE2, null );
 
-    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1, ignoreType2 );
-    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2, ignoreType1 );
+    final String ignoreLabel1 = m_arguments.getProperty( PROP_IGNORELABEL1,
+        ignoreType2 );
+    final String ignoreLabel2 = m_arguments.getProperty( PROP_IGNORELABEL2,
+        ignoreType1 );
 
     if( ignoreType1 == null || ignoreType2 == null )
       return null;
@@ -789,21 +823,18 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Saves the dirty observations that were edited in the table.
-   * 
-   * @param monitor
-   * @param saveFiles
    */
-  protected void saveDirtyObservations( final IProgressMonitor monitor, final boolean saveFiles )
+  protected void saveDirtyObservations( final IProgressMonitor monitor )
   {
     if( m_table == null )
       return;
 
-    final ObservationTableModel model = (ObservationTableModel)m_table.getModel();
-    model.saveDirtyObservations( monitor, saveFiles );
+    final ObservationTableModel model = (ObservationTableModel)m_table
+        .getModel();
+    model.saveDirtyObservations( monitor );
   }
 
   /**
-   * @throws CoreException
    * @see org.kalypso.ui.calcwizard.modelpages.IModelWizardPage#saveData(org.eclipse.core.runtime.IProgressMonitor)
    */
   public void saveData( final IProgressMonitor monitor ) throws CoreException
@@ -812,7 +843,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     try
     {
-      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ), true );
+      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ) );
       if( m_gisTableViewer != null )
         m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
       else
@@ -829,36 +860,40 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     final IWizard wizard = getWizard();
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
-      public void run( IProgressMonitor monitor ) throws InvocationTargetException
+      public void run( IProgressMonitor monitor )
+          throws InvocationTargetException
       {
         try
         {
           final IWizardPage[] pages = wizard.getPages();
 
-          monitor.beginTask( "Berechnung wird durchgeführt", 1000 + pages.length * 100 );
+          monitor.beginTask( "Berechnung wird durchgeführt",
+              1000 + pages.length * 100 );
 
           for( int i = 0; i < pages.length; i++ )
           {
             final IWizardPage page = pages[i];
             if( page instanceof IModelWizardPage )
-              ( (IModelWizardPage)page ).saveData( new SubProgressMonitor( monitor, 100 ) );
+              ( (IModelWizardPage)page ).saveData( new SubProgressMonitor(
+                  monitor, 100 ) );
             else
               monitor.worked( 100 );
           }
 
-          final ModelNature nature = (ModelNature)getCalcFolder().getProject().getNature(
-              ModelNature.ID );
-          final String modelspec = getArguments().getProperty( PROP_MODELSPEC, null );
-          final IStatus status = nature.runCalculation( getCalcFolder(), new SubProgressMonitor(
-              monitor, 1000 ), modelspec );
+          final ModelNature nature = (ModelNature)getCalcFolder().getProject()
+              .getNature( ModelNature.ID );
+          final String modelspec = getArguments().getProperty( PROP_MODELSPEC,
+              null );
+          final IStatus status = nature.runCalculation( getCalcFolder(),
+              new SubProgressMonitor( monitor, 1000 ), modelspec );
 
           // alle Modellseiten refreshen
           for( int i = 0; i < pages.length; i++ )
           {
             final IWizardPage page = pages[i];
             if( page instanceof AbstractCalcWizardPage )
-              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent( null,
-                  ModellEvent.SELECTION_CHANGED ) );
+              ( (AbstractCalcWizardPage)page ).onModellChange( new ModellEvent(
+                  null, ModellEvent.SELECTION_CHANGED ) );
           }
 
           if( !status.isOK() )
@@ -875,7 +910,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     try
     {
       ( (CalcWizard)getWizard() ).setButtonsLocked( true );
-      op.runAndHandleOperation( getShell(), true, true, "Hochwasser Vorhersage", "Berechnung" );
+      op.runAndHandleOperation( getShell(), true, true,
+          "Hochwasser Vorhersage", "Berechnung" );
     }
     finally
     {
@@ -902,7 +938,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
             int selectionID = getSelectionID();
             featureList.accept( new UnselectFeatureVisitor( selectionID ) );
 
-            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
+            final String fid = getArguments().getProperty(
+                PROP_FEATURE_TO_SELECT_ID, null );
             final Feature feature;
             if( fid != null )
             {
@@ -929,7 +966,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   boolean selectFirstFeatureByDefault()
   {
-    return "true"
-        .equals( getArguments().getProperty( PROP_SELECT_FIRST_FEATURE_BY_DEFAULT, "true" ) );
+    return "true".equals( getArguments().getProperty(
+        PROP_SELECT_FIRST_FEATURE_BY_DEFAULT, "true" ) );
   }
 }

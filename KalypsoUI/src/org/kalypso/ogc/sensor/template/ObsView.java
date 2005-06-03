@@ -145,6 +145,7 @@ public abstract class ObsView implements IObsViewEventProvider
     synchronized( m_items )
     {
       m_items.remove( item );
+      item.dispose();
     }
 
     fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REMOVE ) );

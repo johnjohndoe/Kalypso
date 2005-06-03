@@ -10,6 +10,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,6 +25,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
@@ -31,6 +34,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
 
 /**
  * AbstractObsOutlinePage
@@ -44,7 +48,9 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
   private final AbstractObservationEditor m_editor;
 
-  public ObservationEditorOutlinePage( AbstractObservationEditor editor )
+  private IAction m_removeThemeAction;
+
+  public ObservationEditorOutlinePage( final AbstractObservationEditor editor )
   {
     m_editor = editor;
   }
@@ -59,15 +65,17 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
 
     // drop support for files
-    Transfer[] transfers = new Transfer[]
-    { FileTransfer.getInstance() };
-    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new DropAdapter( tv, m_editor ) );
+    Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
+    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
+        new DropAdapter( tv, m_editor ) );
 
     tv.setLabelProvider( new ObsTemplateLabelProvider() );
     tv.setContentProvider( new ObsTemplateContentProvider() );
     setView( m_view );
 
     tv.addCheckStateListener( this );
+    
+    m_removeThemeAction = new RemoveThemeAction( this );
   }
 
   /**
@@ -75,7 +83,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
    */
   protected TreeViewer createTreeViewer( final Composite parent )
   {
-    return new ContainerCheckedTreeViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
+    return new ContainerCheckedTreeViewer( parent, SWT.MULTI | SWT.H_SCROLL
+        | SWT.V_SCROLL );
   }
 
   /**
@@ -181,6 +190,26 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     }
   }
 
+  public AbstractObservationEditor getEditor()
+  {
+    return m_editor;
+  }
+
+  public ObsView getView()
+  {
+    return m_view;
+  }
+
+  /**
+   * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
+   */
+  public void setActionBars( IActionBars actionBars )
+  {
+    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    toolBarManager.add( m_removeThemeAction );
+    actionBars.updateActionBars();
+  }
+
   /**
    * DropAdapter
    * 
@@ -219,7 +248,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
           try
           {
-            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace().getRoot();
+            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace()
+                .getRoot();
 
             for( int i = 0; i < files.length; i++ )
             {
@@ -234,7 +264,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
           }
           catch( Exception e )
           {
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "", e );
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "",
+                e );
           }
           finally
           {
@@ -252,7 +283,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object,
      *      int, org.eclipse.swt.dnd.TransferData)
      */
-    public boolean validateDrop( Object target, int operation, TransferData transferType )
+    public boolean validateDrop( Object target, int operation,
+        TransferData transferType )
     {
       if( !FileTransfer.getInstance().isSupportedType( transferType ) )
         return false;

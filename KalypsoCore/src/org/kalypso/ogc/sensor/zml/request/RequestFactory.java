@@ -141,7 +141,7 @@ public class RequestFactory
       axes.add( axis );
 
       if( Arrays.binarySearch( statusAxes, axesTypes[i] ) >= 0 )
-        axes.add( KalypsoStatusUtils.createStatusAxisFor( axis ) );
+        axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
 
     // create observation instance
