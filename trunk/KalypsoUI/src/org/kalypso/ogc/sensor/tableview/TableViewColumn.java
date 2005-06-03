@@ -60,18 +60,6 @@ public class TableViewColumn extends ObsViewItem
 
   private final IAxis m_valueAxis;
 
-  /**
-   * flag specifying when the column needs to be saved. It comes along with the
-   * dirty flag. Once the dirty flag is set to true, the dirtySave flag becomes
-   * true as well. It will only be reset to false once setDirtySave( false ) is
-   * called. A call to setDirty( false ) only changes the dirty flag, not the
-   * dirtySave one.
-   * <p>
-   * This mechanism is used to know when the column has been persisted
-   * (dirtySave=false)in opposition to the model is in sync (dirty=false).
-   */
-  private boolean m_dirtySave = false;
-
   /** column has been modified, model is not in sync */
   private boolean m_dirty = false;
 
@@ -103,30 +91,9 @@ public class TableViewColumn extends ObsViewItem
     return m_dirty;
   }
 
-  /**
-   * As soon as dirty is true, dirtySave also gets true.
-   * 
-   * @param dirty
-   */
   public void setDirty( boolean dirty )
   {
     m_dirty = dirty;
-    
-    if( dirty )
-      m_dirtySave = true;
-  }
-  
-  public boolean isDirtySave( )
-  {
-    return m_dirtySave;
-  }
-  
-  /**
-   * This is the only means by which dirtySave can be set to false.
-   */
-  public void resetDirtySave( )
-  {
-    m_dirtySave = false;
   }
   
   public Class getColumnClass( )

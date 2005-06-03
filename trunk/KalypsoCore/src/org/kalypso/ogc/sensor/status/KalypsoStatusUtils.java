@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
+import java.awt.Color;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,7 +53,6 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
 /**
  * Utility class for the handling of status information within Kalypso
- * 
  * 
  * @author schlienger
  */
@@ -76,10 +76,15 @@ public class KalypsoStatusUtils
   //  private final static Icon ICON_ERROR = new ImageIcon(
   //      KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
+  private final static ImageIcon ICON_CONFLICT = new ImageIcon(
+      KalypsoStatusUtils.class.getResource( "resource/conflict.gif" ) );
+
   private final static ImageIcon ICON_WRITE = new ImageIcon(
       KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" );
 
-  private KalypsoStatusUtils( )
+  private final static Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192);
+  
+  private KalypsoStatusUtils()
   {
     // not to be instanciated
   }
@@ -87,8 +92,7 @@ public class KalypsoStatusUtils
   /**
    * Returns the status axis name for the given value axis.
    * 
-   * @param axis
-   *          the observation axis for which to return the status axis name
+   * @param axis the observation axis for which to return the status axis name
    * @return the name of the corresponding status axis
    */
   public static String getStatusAxisLabelFor( final IAxis axis )
@@ -102,7 +106,6 @@ public class KalypsoStatusUtils
   /**
    * Returns the axis label without the status marker
    * 
-   * @param axis
    * @return just axis label
    */
   public static String getAxisLabelFor( final IAxis axis )
@@ -113,26 +116,24 @@ public class KalypsoStatusUtils
   /**
    * Creates a status axis for the given 'normal' axis.
    * 
-   * @param axis
    * @return new status axis
-   * @throws IllegalArgumentException
-   *           if given axis is already a status axis
+   * @throws IllegalArgumentException if given axis is already a status axis
    */
-  public static IAxis createStatusAxisFor( final IAxis axis )
-      throws IllegalArgumentException
+  public static IAxis createStatusAxisFor( final IAxis axis,
+      final boolean persistable ) throws IllegalArgumentException
   {
     if( isStatusAxis( axis ) )
       throw new IllegalArgumentException( "Axis " + axis
           + " is already a status axis!" );
 
     return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(),
-        STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false );
+        STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false,
+        persistable );
   }
 
   /**
    * Returns true if the axis is a status-axis (speaking Kalypso intern)
    * 
-   * @param axis
    * @return true if status-axis
    */
   public static boolean isStatusAxis( final IAxis axis )
@@ -141,25 +142,38 @@ public class KalypsoStatusUtils
   }
 
   /**
-   * Returns true if the given statusCandidate is the status axis for the given axis
-   * 
-   * @param axis
-   * @param statusCandidate
+   * Returns true if the given statusCandidate is the status axis for the given
+   * axis
    */
-  public static boolean isStatusAxisFor( final IAxis axis, final IAxis statusCandidate )
+  public static boolean isStatusAxisFor( final IAxis axis,
+      final IAxis statusCandidate )
   {
     final String statusAxisLabel = getStatusAxisLabelFor( axis );
-    
+
     return statusCandidate.getName().equals( statusAxisLabel );
   }
-  
+
+  /**
+   * Return true if both axes are equal in the sense of IAxis.equals() plus:
+   * <ul>
+   * <li>both axes are status-axes
+   * <li>both axes have the same name
+   * </ul>
+   */
+  public static boolean equals( final IAxis axis1, final IAxis axis2 )
+  {
+    if( !axis1.equals( axis2 ) )
+      return false;
+
+    return isStatusAxis( axis1 ) && isStatusAxis( axis2 )
+        && axis1.getName().equals( axis2.getName() );
+  }
+
   /**
    * Finds the first status axis among the given list.
    * 
-   * @param axes
    * @return status axis
-   * @throws NoSuchElementException
-   *           if no status axis in the list
+   * @throws NoSuchElementException if no status axis in the list
    */
   public static IAxis findStatusAxis( final IAxis[] axes )
       throws NoSuchElementException
@@ -175,9 +189,7 @@ public class KalypsoStatusUtils
 
   /**
    * Returns the status axis for the given axis if found in the axes-list.
-   *  
-   * @param axes
-   * @param axis
+   * 
    * @throws NoSuchElementException if no corresponding status axis found
    */
   public static IAxis findStatusAxisFor( final IAxis[] axes, final IAxis axis )
@@ -195,7 +207,6 @@ public class KalypsoStatusUtils
   /**
    * Finds the list of status axis among the given axes
    * 
-   * @param axes
    * @return status axes
    */
   public static IAxis[] findStatusAxes( final IAxis[] axes )
@@ -208,13 +219,12 @@ public class KalypsoStatusUtils
         list.add( axes[i] );
     }
 
-    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
    * Returns the list of non-status axes
    * 
-   * @param axes
    * @return non-status axes
    */
   public static IAxis[] withoutStatusAxes( final IAxis[] axes )
@@ -227,9 +237,9 @@ public class KalypsoStatusUtils
         list.add( axes[i] );
     }
 
-    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
-  
+
   /**
    * Returns the axes that are compatible with the desired Dataclass. You can
    * specify if you want to exclude the status axes from the result list or not.
@@ -238,13 +248,14 @@ public class KalypsoStatusUtils
    * 
    * @param axes
    * @param desired
-   * @param excludeStatusAxes
-   *          if true, status axes will not be included in the returned array
+   * @param excludeStatusAxes if true, status axes will not be included in the
+   *          returned array
    * @return axes which are compatible with specified Class of data
    * @throws NoSuchElementException
    */
-  public static IAxis[] findAxesByClass( final IAxis[] axes, final Class desired,
-      final boolean excludeStatusAxes ) throws NoSuchElementException
+  public static IAxis[] findAxesByClass( final IAxis[] axes,
+      final Class desired, final boolean excludeStatusAxes )
+      throws NoSuchElementException
   {
     final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
 
@@ -252,7 +263,8 @@ public class KalypsoStatusUtils
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
       {
-        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+        if( !excludeStatusAxes || excludeStatusAxes
+            && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
           list.add( axes[i] );
       }
     }
@@ -262,17 +274,18 @@ public class KalypsoStatusUtils
 
     return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
-  
+
   /**
-   * Returns the first axis that is compatible with the desired Dataclass. You can
-   * specify if you want to exclude the status axes from the result list or not.
+   * Returns the first axis that is compatible with the desired Dataclass. You
+   * can specify if you want to exclude the status axes from the result list or
+   * not.
    * <p>
    * Please note that currently the status axis is of a Number type.
    * 
    * @param axes
    * @param desired
-   * @param excludeStatusAxes
-   *          if true, status axes will not be included in the returned array
+   * @param excludeStatusAxes if true, status axes will not be included in the
+   *          returned array
    * @return first axis found
    * @throws NoSuchElementException
    */
@@ -283,7 +296,8 @@ public class KalypsoStatusUtils
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
       {
-        if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+        if( !excludeStatusAxes || excludeStatusAxes
+            && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
           return axes[i];
       }
     }
@@ -294,17 +308,14 @@ public class KalypsoStatusUtils
   /**
    * Checks if bit is in the mask.
    * 
-   * @param mask
-   * @param bit
    * @return true if bit is set in the given mask
    */
   public static boolean checkMask( final int mask, final int bit )
   {
-    return (mask & bit) == bit;
+    return ( mask & bit ) == bit;
   }
 
   /**
-   * @param mask
    * @return the icon that best fits the mask, or null if no fit
    */
   public static ImageIcon getIconFor( final int mask )
@@ -318,6 +329,9 @@ public class KalypsoStatusUtils
     if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
       return ICON_WRITE;
 
+    if( checkMask( mask, KalypsoStati.BIT_DERIVATION_ERROR ) )
+      return ICON_CONFLICT;
+
     return null;
   }
 
@@ -328,16 +342,16 @@ public class KalypsoStatusUtils
    * <li>"question": the Question Icon
    * <li>"warning": the Warning Icon
    * <li>"write": the Write Icon
+   * <li>"conflict": the Conflict Icon
    * <li>any URL: an URL that will be used for finding the image (see
    * ImageIcon.ImageIcon( URL ) )
    * <li>null: returns null
    * </ol>
    * 
-   * @param iconDescription
-   * @return icon
    * @see KalypsoStatusUtils#ICON_QUESTION
    * @see KalypsoStatusUtils#ICON_WARNING
    * @see KalypsoStatusUtils#ICON_WRITE
+   * @see KalypsoStatusUtils#ICON_CONFLICT
    * @see ImageIcon#ImageIcon(java.net.URL)
    */
   public static ImageIcon getIconFor( final String iconDescription )
@@ -351,12 +365,14 @@ public class KalypsoStatusUtils
       return ICON_WARNING;
     if( "write".equalsIgnoreCase( iconDescription ) )
       return ICON_WRITE;
+    if( "conflict".equalsIgnoreCase( iconDescription ) )
+      return ICON_CONFLICT;
 
     try
     {
       return new ImageIcon( new URL( iconDescription ) );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
       return null;
@@ -364,7 +380,6 @@ public class KalypsoStatusUtils
   }
 
   /**
-   * @param mask
    * @return the tooltip that best fits the mask, or null if no fit
    */
   public static String getTooltipFor( final int mask )
@@ -378,6 +393,37 @@ public class KalypsoStatusUtils
     if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
       return "Vom Benutzer geändert";
 
+    if( checkMask( mask, KalypsoStati.BIT_DERIVATION_ERROR ) )
+      return "Wert konnte nicht abgeleitet werden";
+
+    if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
+      return "Wert wurde abgeleitet";
+
+    return null;
+  }
+  
+  /**
+   * @return mask dependent color to be used as foreground
+   */
+  public static Color getForegroundFor( final int mask )
+  {
+    // currently returns null, but can be customized in the near
+    // future
+    return null;
+  }
+  
+  /**
+   * @return mask dependent color to be used as background
+   */
+  public static Color getBackgroundFor( final int mask )
+  {
+    if( checkMask( mask, KalypsoStati.BIT_DERIVATION_ERROR ) )
+      return COLOR_LIGHTYELLOW;
+
+    if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
+      return COLOR_LIGHTYELLOW;
+
+    // customisation possible in the near future...
     return null;
   }
 }

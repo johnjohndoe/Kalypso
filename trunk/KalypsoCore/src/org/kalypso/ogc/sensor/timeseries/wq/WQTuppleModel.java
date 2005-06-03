@@ -49,26 +49,30 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
+ * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the
+ * underlying axis type. It also manages the status information for the
+ * generated axis, depending on the success of the computation.
+ * 
  * @author schlienger
  */
 public class WQTuppleModel extends AbstractTuppleModel
 {
-  private final static Double NaN = new Double( Double.NaN );
-
   private final static Double ZERO = new Double( 0 );
 
   private final ITuppleModel m_model;
 
-  private final IAxis m_srcAxis;
-
-  private final IAxis m_destAxis;
-
   private final IAxis m_dateAxis;
+  private final IAxis m_srcAxis;
+  private final IAxis m_destAxis;
+  private final IAxis m_destStatusAxis;
 
   private final Map m_values = new HashMap();
+  private final Map m_stati = new HashMap();
 
   private final IWQConverter m_converter;
 
@@ -80,37 +84,35 @@ public class WQTuppleModel extends AbstractTuppleModel
    * If it bases on a TimeserieConstants.TYPE_RUNOFF it can generate
    * TYPE_WATERLEVEL values and vice versa.
    * 
-   * @param model
-   *          base model delivering values of the given type
-   * @param axes
-   *          axes of this WQ-model, usually the same as model plus destAxis
+   * @param model base model delivering values of the given type
+   * @param axes axes of this WQ-model, usually the same as model plus destAxis
    * @param dateAxis
-   * @param srcAxis
-   *          source axis from which values are read
-   * @param destAxis
-   *          destination axis for which values are computed
+   * @param srcAxis source axis from which values are read
+   * @param destAxis destination axis for which values are computed
+   * @param destStatusAxis status axis for the destAxis (destination axis)
    */
   public WQTuppleModel( final ITuppleModel model, final IAxis[] axes,
       final IAxis dateAxis, final IAxis srcAxis, final IAxis destAxis,
-      final IWQConverter converter )
+      final IAxis destStatusAxis, final IWQConverter converter )
   {
     super( axes );
 
     if( converter == null )
-      throw new IllegalArgumentException("WQ-Converter darf nicht null sein");
-    
+      throw new IllegalArgumentException( "WQ-Converter darf nicht null sein" );
+
     m_model = model;
     m_converter = converter;
 
     m_dateAxis = dateAxis;
     m_srcAxis = srcAxis;
     m_destAxis = destAxis;
+    m_destStatusAxis = destStatusAxis;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( ) throws SensorException
+  public int getCount() throws SensorException
   {
     return m_model.getCount();
   }
@@ -122,63 +124,65 @@ public class WQTuppleModel extends AbstractTuppleModel
   public Object getElement( final int index, final IAxis axis )
       throws SensorException
   {
-    if( axis.equals( m_destAxis ) )
+    final boolean bDestAxis = axis.equals( m_destAxis );
+
+    if( bDestAxis || KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
     {
       final Integer objIndex = new Integer( index );
 
+      final Number number = (Number)m_model.getElement( objIndex.intValue(),
+          m_srcAxis );
+
       if( !m_values.containsKey( objIndex ) )
-      {
-        Double value = null;
+        read( objIndex, axis, number );
 
-        Date d = null;
-        try
-        {
-          d = (Date) m_model.getElement( index, m_dateAxis );
-        }
-        catch( ClassCastException e )
-        {
-          e.printStackTrace();
-        }
+      if( bDestAxis )
+        return m_values.get( objIndex );
 
-        final Number number = (Number) m_model.getElement( index, m_srcAxis );
-        if( number != null )
-        {
-          try
-          {
-            if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
-            {
-              final double w = number.doubleValue();
-
-              double q = m_converter.computeQ( d, w );
-              // just leave 3 decimals
-              // TODO Q only has 3 decimals, is this ok?
-              q = ((double) ((int) (q * 1000))) / 1000;
-              value = new Double( q );
-            }
-            else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-            {
-              final double q = number.doubleValue();
-              value = new Double( m_converter.computeW( d, q ) );
-            }
-          }
-          catch( WQException e )
-          {
-            value = NaN;
-          }
-        }
-        else
-          value = ZERO;
-
-        if( number != null )
-          m_values.put( objIndex, value );
-
-        return value;
-      }
-
-      return m_values.get( objIndex );
+      return m_stati.get( objIndex );
     }
 
     return m_model.getElement( index, axis );
+  }
+
+  private void read( final Integer objIndex, final IAxis axis, final Number number )
+      throws SensorException
+  {
+    Double value = null;
+    Integer status = null;
+
+    final Date d = (Date)m_model.getElement( objIndex.intValue(), m_dateAxis );
+
+    if( number != null )
+    {
+      try
+      {
+        if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        {
+          final double q = number.doubleValue();
+          value = new Double( m_converter.computeW( d, q ) );
+        }
+        else
+        {
+          final double w = number.doubleValue();
+          double q = m_converter.computeQ( d, w );
+
+          // just leave 3 decimals TODO Q only has 3 decimals, is this ok?
+          q = ( (double)( (int)( q * 1000 ) ) ) / 1000;
+          value = new Double( q );
+        }
+
+        status = KalypsoStati.STATUS_DERIVATED;
+      }
+      catch( final WQException e )
+      {
+        value = ZERO;
+        status = KalypsoStati.STATUS_DERIVATION_ERROR;
+      }
+    }
+
+    m_values.put( objIndex, value );
+    m_stati.put( objIndex, status );
   }
 
   /**
@@ -187,36 +191,39 @@ public class WQTuppleModel extends AbstractTuppleModel
    */
   public void setElement( final int index, final Object element,
       final IAxis axis ) throws SensorException
-
   {
     if( axis.equals( m_destAxis ) )
     {
-      final Date d = (Date) m_model.getElement( index, m_dateAxis );
+      final Date d = (Date)m_model.getElement( index, m_dateAxis );
 
       Double value = null;
+      Integer status = null;
       try
       {
-
-        if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
+        if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
         {
-          final double q = ((Number) element).doubleValue();
+          final double w = ( (Number)element ).doubleValue();
+          value = new Double( m_converter.computeQ( d, w ) );
+        }
+        else
+        {
+          final double q = ( (Number)element ).doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
         }
-        else if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-        {
-          final double w = ((Number) element).doubleValue();
-          value = new Double( m_converter.computeQ( d, w ) );
-
-        }
+        
+        status = KalypsoStati.STATUS_DERIVATED;
       }
-      catch( WQException e )
+      catch( final WQException e )
       {
-        value = NaN;
+        value = ZERO;
+        status = KalypsoStati.STATUS_DERIVATION_ERROR;
       }
 
+      final Integer objIndex = new Integer( index );
+      m_values.put( objIndex, element );
+      m_stati.put( objIndex, status );
+      
       m_model.setElement( index, value, m_srcAxis );
-
-      m_values.put( new Integer( index ), element );
     }
     else
       m_model.setElement( index, element, axis );
@@ -236,17 +243,22 @@ public class WQTuppleModel extends AbstractTuppleModel
     return m_model.indexOf( element, axis );
   }
 
-  public IAxis getDestAxis( )
+  public IAxis getDestStatusAxis()
+  {
+    return m_destStatusAxis;
+  }
+
+  public IAxis getDestAxis()
   {
     return m_destAxis;
   }
 
-  public IAxis getSrcAxis( )
+  public IAxis getSrcAxis()
   {
     return m_srcAxis;
   }
 
-  public IAxis getDateAxis( )
+  public IAxis getDateAxis()
   {
     return m_dateAxis;
   }
@@ -255,11 +267,9 @@ public class WQTuppleModel extends AbstractTuppleModel
    * Creates a TuppleModel from a potential WQTuppleModel for storing the values
    * back in the original observation.
    * 
-   * @param values
-   * @param axes
    * @throws SensorException
    */
-  public static ITuppleModel reverse( ITuppleModel values, IAxis[] axes )
+  public static ITuppleModel reverse( final ITuppleModel values, final IAxis[] axes )
       throws SensorException
   {
     final SimpleTuppleModel stm = new SimpleTuppleModel( axes );
@@ -279,7 +289,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     return stm;
   }
 
-  public IWQConverter getConverter( )
+  public IWQConverter getConverter()
   {
     return m_converter;
   }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor.actions;
 
 import java.util.Iterator;
@@ -50,14 +50,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.kalypso.eclipse.core.runtime.MultiStatus;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
@@ -75,88 +73,76 @@ public class SaveDataAction extends AbstractEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    boolean atLeastOneDirtySave = false;
-    
-    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
-    final TableView view = (TableView) editor.getView();
-    final ObservationTableModel model = editor.getModel();
+    boolean atLeastOneDirty = false;
 
-    final Map map = ObsView.mapItems( view.getItems() );
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin
+        .getId(), 0, "Zeitreihen speichern" );
 
+    final ObservationTableModel model = ( (ObservationTableEditor)getEditor() )
+        .getModel();
+
+    final Map map = model.getMappedColumns();
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
       final Map.Entry entry = (Entry)it.next();
       final IObservation obs = (IObservation)entry.getKey();
-      if( obs == null )
-        continue;
+      final List cols = (List)entry.getValue();
 
-      boolean dirtySave = false;
+      boolean obsSaved = false;
 
-      final List items = ((List)entry.getValue());
-      for( final Iterator itcol = items.iterator(); itcol.hasNext(); )
+      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
       {
-        final TableViewColumn col = (TableViewColumn) itcol.next();
-        dirtySave = col.isDirtySave();
+        final TableViewColumn col = (TableViewColumn)itCols.next();
 
-        // at least one col dirty-save?
-        if( dirtySave )
+        if( col.isDirty() && !obsSaved )
         {
-          atLeastOneDirtySave = true;
-          break;
-        }
-      }
+          atLeastOneDirty = true;
 
-      if( dirtySave )
-      {
-        final String msg = "Sie haben Änderungen in " + obs.getName()
-            + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
+          final String msg = "Sie haben Änderungen in " + obs.getName()
+              + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
 
-        final boolean b = MessageDialog.openQuestion( getShell(),
-            "Änderungen speichern", msg );
+          final boolean bConfirm = MessageDialog.openQuestion( getShell(),
+              "Änderungen speichern", msg );
 
-        if( b )
-        {
-          final ITuppleModel values;
-          try
-          {
-            values = model.getValues( items, null );
-          }
-          catch( SensorException e1 )
-          {
-            e1.printStackTrace();
-            return;
-          }
-          
+          if( !bConfirm )
+            break;
+
           final Job job = new Job( "ZML-Speichern: " + obs.getName() )
           {
             protected IStatus run( IProgressMonitor monitor )
             {
               try
               {
-                obs.setValues( values );
-
-                final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+                final ResourcePool pool = KalypsoGisPlugin.getDefault()
+                    .getPool();
                 pool.saveObject( obs, monitor );
-                
-                for( Iterator itcol = items.iterator(); itcol.hasNext(); )
-                  ((TableViewColumn) itcol.next()).resetDirtySave( );
               }
-              catch( Exception e )
+              catch( final Exception e )
               {
                 e.printStackTrace();
-                return KalypsoGisPlugin.createErrorStatus( "", e );
+                status.addMessage( "Fehler beim Speichern von " + obs, e );
               }
 
               return Status.OK_STATUS;
             }
           };
-          
+
           job.schedule();
+
+          // flag se to true so next time we don't save obs if already done
+          obsSaved = true;
         }
+
+        col.setDirty( false );
       }
     }
-    
-    if( !atLeastOneDirtySave )
-      MessageDialog.openInformation( getShell(), "Keine Änderung", "Keine geänderte Zeitreihe" );
+
+    if( !atLeastOneDirty )
+      MessageDialog.openInformation( getShell(), "Keine Änderung",
+          "Keine geänderte Zeitreihe" );
+
+    if( !status.isOK() )
+      ErrorDialog.openError( getShell(), "Zeitreihen speichern",
+          "Fehler sind aufgetreten. Siehe Details.", status );
   }
 }

@@ -101,12 +101,4 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
       m_view.addItem( column );
     }
   }
-
-  /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#dispose()
-   */
-  protected void dispose()
-  {
-    // nix
-  }
 }

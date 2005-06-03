@@ -48,6 +48,14 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
   Server nicht zur Verfügung steht. Andere Implementierungen sind möglich...
 - Neue Metadata-Eigenschaft für ZML: die Entstehung der Observation (z.B. PSICompact, Wiski, usw.)
   Diese Information wird z.B. vom KalypsoProtocolWriter benutzt.
+- ObservationTableEditor: der generierte Q oder W Achse einer WQ-Zeitreihe bekommt
+  auch automatisch einen Status-Achse welches benutzt wird um z.B. eventuelle
+  Umrechnungsprobleme darzustellen.
+- ObservationTableModel: Refaktorisierung um direkt auf die IObservation-Daten zu 
+  arbeiten. Die Reihenfolge der Spalten bleibt jetzt auch erhalten wenn z.B. die
+  grunliegende Daten gespeichert werden.
+- ObservationTable- und Diagram-Editor: es ist wieder möglich einen Thema aus der outline
+  zu entfernen (wurde vergessen im letzten großen Refactoring bzgl. ObsView Sachen).
 
 - WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
 

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
 import org.kalypso.java.util.StringUtilities;
@@ -54,7 +54,7 @@ public class RulesFactory
 {
   private static ITableViewRules DEFAULT_RULES = null;
 
-  private RulesFactory( )
+  private RulesFactory()
   {
     // not to be instanciated
   }
@@ -62,7 +62,6 @@ public class RulesFactory
   /**
    * Factory method for creating a RenderingRule object with a binding object.
    * 
-   * @param rr
    * @return RenderingRule
    */
   public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
@@ -83,20 +82,27 @@ public class RulesFactory
   /**
    * @return default rules for Kalypso
    */
-  public static ITableViewRules getDefaultRules( )
+  public static ITableViewRules getDefaultRules()
   {
     // lazy loading
     if( DEFAULT_RULES == null )
     {
       DEFAULT_RULES = new Rules();
 
-      final int[] bits = { KalypsoStati.BIT_CHECK, KalypsoStati.BIT_REQUIRED,
-          KalypsoStati.BIT_USER_MODIFIED };
+      final int[] bits = {
+          KalypsoStati.BIT_CHECK,
+          KalypsoStati.BIT_REQUIRED,
+          KalypsoStati.BIT_USER_MODIFIED,
+          KalypsoStati.BIT_DERIVATED,
+          KalypsoStati.BIT_DERIVATION_ERROR };
 
       for( int i = 0; i < bits.length; i++ )
       {
-        DEFAULT_RULES.addRule( new RenderingRule( bits[i], null, null, null,
-            KalypsoStatusUtils.getTooltipFor( bits[i] ), KalypsoStatusUtils
+        DEFAULT_RULES
+            .addRule( new RenderingRule( bits[i], KalypsoStatusUtils
+                .getForegroundFor( bits[i] ), KalypsoStatusUtils
+                .getBackgroundFor( bits[i] ), null, KalypsoStatusUtils
+                .getTooltipFor( bits[i] ), KalypsoStatusUtils
                 .getIconFor( bits[i] ) ) );
       }
     }
