@@ -83,19 +83,19 @@ public final class ExcelClipboardAdapter
       super( "Kopieren" );
     }
     
-    public void actionPerformed( ActionEvent e )
+    public void actionPerformed( final ActionEvent e )
     {
       // Check to ensure we have selected only a contiguous block of cells
-      int numcols = m_table.getSelectedColumnCount();
-      int numrows = m_table.getSelectedRowCount();
-      int[] rowsselected = m_table.getSelectedRows();
-      int[] colsselected = m_table.getSelectedColumns();
+      final int numcols = m_table.getSelectedColumnCount();
+      final int numrows = m_table.getSelectedRowCount();
+      final int[] rowsselected = m_table.getSelectedRows();
+      final int[] colsselected = m_table.getSelectedColumns();
       if( !((numrows - 1 == rowsselected[rowsselected.length - 1]
           - rowsselected[0] && numrows == rowsselected.length) && (numcols - 1 == colsselected[colsselected.length - 1]
           - colsselected[0] && numcols == colsselected.length)) )
       {
-        JOptionPane.showMessageDialog( null, "Invalid Copy Selection",
-            "Invalid Copy Selection", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, "Ungültige Copy Selektion",
+            "Ungültige Copy Selektion", JOptionPane.ERROR_MESSAGE );
         return;
       }
 
@@ -128,13 +128,13 @@ public final class ExcelClipboardAdapter
       super( "Einfügen" );
     }
 
-    public void actionPerformed( ActionEvent e )
+    public void actionPerformed( final ActionEvent e )
     {
-      int startRow = (m_table.getSelectedRows())[0];
-      int startCol = (m_table.getSelectedColumns())[0];
+      final int startRow = (m_table.getSelectedRows())[0];
+      final int startCol = (m_table.getSelectedColumns())[0];
       try
       {
-        String trstring = (String) (Toolkit.getDefaultToolkit()
+        final String trstring = (String) (Toolkit.getDefaultToolkit()
             .getSystemClipboard().getContents( this )
             .getTransferData( DataFlavor.stringFlavor ));
 
@@ -154,7 +154,7 @@ public final class ExcelClipboardAdapter
           }
         }
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         ex.printStackTrace();
       }

@@ -113,7 +113,7 @@ public class PSICompactObservationItem implements IObservation
     m_vc = PSICompactRepositoryFactory.getConverter( psiUnit, unit );
 
     // Status
-    axes[2] = KalypsoStatusUtils.createStatusAxisFor( axes[1] );
+    axes[2] = KalypsoStatusUtils.createStatusAxisFor( axes[1], true );
 
     return axes;
   }

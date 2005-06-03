@@ -89,7 +89,7 @@ public class WiskiTimeserie implements IObservation
     m_axes[1] = new DefaultAxis( TimeserieUtils.getName( kalypsoType ),
         kalypsoType, kalypsoUnit, Double.class, false );
 
-    m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1] );
+    m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1], true );
   }
 
   /**
