@@ -38,12 +38,12 @@
             visible="false"
             id="KalypsoFloodRiskAnalysis.Start">
          <menu
-               label="FloodRiskAnalysis"
+               label="Risikoanalyse"
                id="KalypsoFloodRiskAnalysis.startMenu">
             <groupMarker name="start"/>
          </menu>
          <action
-               label="Start Calculation(s)"
+               label="Berechnung(en) starten"
                class="org.kalypso.floodrisk.action.StartCalculationActionDelegate"
                style="push"
                menubarPath="KalypsoFloodRiskAnalysis.startMenu/start"
