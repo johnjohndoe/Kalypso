@@ -85,4 +85,6 @@ public interface NaModelConstants
 
   public static final String OUTPUT_DIR_NAME = "results";
 
+  public static final String LOG_INFO_ID = "LOG_INFO";
+
 }

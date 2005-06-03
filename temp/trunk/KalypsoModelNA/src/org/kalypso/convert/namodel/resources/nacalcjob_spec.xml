@@ -18,5 +18,6 @@
 	<output id="LOG_EXE_ERROUT" description="Speicherabgabe (Gesamtzeitraum)"/>
 	<output id="LOG_OUTRES" description="Speicherinhalt Vorhersage"/>
 	<output id="LOG_OUTERR" description="bisher noch nicht identifizierter Output"/>
+	<output id="LOG_INFO" description="bisher noch nicht identifizierter Output"/>
 	
 </modelspec>

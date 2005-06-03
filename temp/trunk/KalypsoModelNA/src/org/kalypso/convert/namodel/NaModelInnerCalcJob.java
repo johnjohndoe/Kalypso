@@ -135,16 +135,41 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   /**
+   * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
    *      org.kalypso.services.calculation.job.ICalcDataProvider,
    *      org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor ) throws CalcJobServiceException
   {
-    final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
     final Logger logger = Logger.getAnonymousLogger();
+    File infoFile = new File( tmpdir, "infolog.txt" );
+    FileWriter writer = null;
+    try
+    {
+      writer = new FileWriter( infoFile );
+      final Date date = new Date( Calendar.getInstance().getTimeInMillis() );
+      writer.write( "Zeitpunkt Start Berechnung: " + date.toString() + " (Serverzeit)\n" );
+
+    }
+    catch( IOException e1 )
+    {
+      logger.fine( e1.getLocalizedMessage() );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+    try
+    {
+      resultEater.addResult( NaModelConstants.LOG_INFO_ID, infoFile );
+    }
+    catch( CalcJobServiceException e )
+    {
+      e.printStackTrace();
+    }
+    final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
     try
     {
       monitor.setMessage( "richte Berechnungsverzeichnis ein" );
@@ -243,8 +268,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private GMLWorkspace generateASCII( File tmpDir, ICalcDataProvider dataProvider )
-      throws Exception
+  private GMLWorkspace generateASCII( File tmpDir, ICalcDataProvider dataProvider ) throws Exception
   {
     final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
 
@@ -252,35 +276,29 @@ public class NaModelInnerCalcJob implements ICalcJob
     final URL newModellURL = newModellFile.toURL();
     final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
 
-    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_META_ID ) );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_META_ID ) );
     final Feature metaFE = metaWorkspace.getRootFeature();
-    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ) );
 
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
-      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-          .getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
     else
       hydrotopWorkspace = null;
 
     //model Parameter
     final GMLWorkspace parameterWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
-      parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-          .getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_PARAMETER_ID ) );
     else
       parameterWorkspace = null;
 
     // initialize model with values of control file
-    initializeModell( controlWorkspace.getRootFeature(), dataProvider
-        .getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
+    initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL );
-    ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider
-        .getURLForID( NaModelConstants.IN_MODELL_ID ) );
+    ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
     conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
     conf.setSimulationForecasetStart( (Date)metaFE.getProperty( "startforecast" ) );
     // TODO add endsimulation [in hours after forecast start] in control.xsd and
@@ -310,8 +328,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     // create temperatur und verdunstung timeseries
     File tmpFile = new File( tmpDir, "klima.dat/std.tmp" );
     File verFile = new File( tmpDir, "klima.dat/std.ver" );
-    final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf
-        .getSimulationEnd() );
+    final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf.getSimulationEnd() );
 
     if( !tmpFile.exists() )
     {
@@ -324,8 +341,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     return modellWorkspace;
   }
 
-  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile )
-      throws IOException, Exception
+  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws IOException, Exception
   {
     CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
@@ -376,13 +392,11 @@ public class NaModelInnerCalcJob implements ICalcJob
   private void updateFactorParameter( GMLWorkspace modellWorkspace )
   {
     // Catchments
-    final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace
-        .getFeatureType( "Catchment" ) );
+    final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace.getFeatureType( "Catchment" ) );
     update( catchmentFEs, m_catchmentFactorParameterTarget, m_catchmentFactorsParameter );
 
     // KMChannels
-    final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace
-        .getFeatureType( "KMChannel" ) );
+    final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace.getFeatureType( "KMChannel" ) );
     for( int i = 0; i < kmChanneFEs.length; i++ )
     {
       Feature feature = kmChanneFEs[i];
@@ -419,33 +433,34 @@ public class NaModelInnerCalcJob implements ICalcJob
           value *= FeatureHelper.getAsDouble( feature, factors[_f], 1.0 );
         // set parameter
         final String targetPropName = targetPropNames[_p];
-        FeatureProperty valueProp = FeatureFactory.createFeatureProperty( targetPropName,
-            new Double( value ) );
+        FeatureProperty valueProp = FeatureFactory.createFeatureProperty( targetPropName, new Double( value ) );
         feature.setProperty( valueProp );
       }
     }
   }
 
-  private void loadResults( final File inputDir, final GMLWorkspace modellWorkspace,
-      final Logger logger, final File outputDir, ICalcResultEater resultEater ) throws Exception
+  private void loadResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir,
+      ICalcResultEater resultEater ) throws Exception
   {
     loadTSResults( inputDir, modellWorkspace, logger, outputDir );
     loadLogs( inputDir, logger, resultEater );
     File[] files = outputDir.listFiles();
     // TODO change for Ergebnis/Berechnungen
-    for( int i = 0; i < files.length; i++ )
+    if( files != null )
     {
-      if(files[i].isDirectory())
+      for( int i = 0; i < files.length; i++ )
       {
-        resultEater.addResult( NaModelConstants.OUT_ZML, files[i].listFiles()[0] );
-        return;
-      } 
+        if( files[i].isDirectory() )
+        {
+          resultEater.addResult( NaModelConstants.OUT_ZML, files[i].listFiles()[0] );
+          return;
+        }
+      }
     }
-//    resultEater.addResult( NaModelConstants.OUT_ZML, outputDir );
+    //    resultEater.addResult( NaModelConstants.OUT_ZML, outputDir );
   }
 
-  private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger,
-      File outputDir ) throws Exception
+  private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger, File outputDir ) throws Exception
   {
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
@@ -495,10 +510,8 @@ public class NaModelInnerCalcJob implements ICalcJob
           pos++;
         }
 
-        final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "",
-            Date.class, true );
-        final IAxis qAxis = new DefaultAxis( TimeserieConstants.TYPE_RUNOFF,
-            TimeserieConstants.TYPE_RUNOFF, "qm/s", Double.class, false );
+        final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+        final IAxis qAxis = new DefaultAxis( TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF, "qm/s", Double.class, false );
         IAxis[] axis = new IAxis[]
         {
             dateAxis,
@@ -511,8 +524,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( "pegelZR" );
         if( pegelLink != null )
         {
-          final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink
-              .getHref() );
+          final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink.getHref() );
           boolean itExists;
           // test if url exists
           try
@@ -551,9 +563,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         TimeseriesLink resultLink = (TimeseriesLink)feature.getProperty( "qberechnetZR" );
         if( resultLink == null )
         {
-          logger
-              .info( "ergebnis konnte nicht geschrieben werden, da ergebnislink nicht gesetzt ist FID=#"
-                  + feature.getId() + " ." );
+          logger.info( "ergebnis konnte nicht geschrieben werden, da ergebnislink nicht gesetzt ist FID=#" + feature.getId() + " ." );
           continue;
         }
         String resultPathRelative = resultLink.getHref();
@@ -562,8 +572,11 @@ public class NaModelInnerCalcJob implements ICalcJob
         resultFile.getParentFile().mkdirs();
 
         // create observation object
-        final IObservation resultObservation = new SimpleObservation( pegelLink.getHref(), "ID",
-            title, false, null, metadataList, axis, qTuppelModel );
+        //        final IObservation resultObservation = new SimpleObservation(
+        // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
+        // qTuppelModel );
+        final IObservation resultObservation = new SimpleObservation( resultLink.getHref(), "ID", title, false, null, metadataList, axis,
+            qTuppelModel );
 
         // write result
         final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
@@ -614,8 +627,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     final File logDir = new File( tmpDir, "start" );
     try
     {
-      resultEater
-          .addResult( NaModelConstants.LOG_OUTRES_ID, new File( tmpDir, "start/output.res" ) );
+      resultEater.addResult( NaModelConstants.LOG_OUTRES_ID, new File( tmpDir, "start/output.res" ) );
     }
     catch( CalcJobServiceException e )
     {
@@ -624,15 +636,13 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
     try
     {
-      resultEater
-          .addResult( NaModelConstants.LOG_OUTERR_ID, new File( logDir, "start/output.err" ) );
+      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( logDir, "start/output.err" ) );
     }
     catch( CalcJobServiceException e )
     {
       e.printStackTrace();
       logger.info( e.getMessage() );
     }
-
   }
 
   private void copyExecutable( File basedir ) throws Exception
@@ -670,8 +680,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private void startCalculation( final File basedir, final ICalcMonitor monitor )
-      throws CalcJobServiceException
+  private void startCalculation( final File basedir, final ICalcMonitor monitor ) throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -692,7 +701,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
       while( true )
-      {        
+      {
         CopyUtils.copy( inStream, outwriter );
         CopyUtils.copy( errStream, errwriter );
 
