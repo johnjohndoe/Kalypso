@@ -54,11 +54,11 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.StringTokenizer;
 
-import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.java.lang.ProcessHelper;
+import org.kalypso.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 
 public class TubigBatchInterpreter
@@ -271,7 +271,7 @@ public class TubigBatchInterpreter
                           // cancel: wird durch cancelable.isCanceled()weiterverarbeitet
                           // normal fertig: RückgabeWert = 0
                           swInStream = new StringWriter();
-                          startProcess( sCmd, null, fleExeDir, cancelable, iTimeout,
+                          ProcessHelper.startProcess( sCmd, null, fleExeDir, cancelable, iTimeout,
                               swInStream, pwErr );
 
                           if( cancelable.isCanceled() )
@@ -325,154 +325,8 @@ public class TubigBatchInterpreter
     }
   }
 
-  static int startProcess( final String sCmd, final String[] envp, final File fleExeDir,
-      final ICalcMonitor cancelable, final int iTOut, final Writer wLog, final Writer wErr )
-      throws IOException, ProcessTimeoutException
-  {
-    final Process process;
-    int iRetVal = -1;
-    InputStreamReader inStreamRdr = null;
-    InputStreamReader errStreamRdr = null;
-    ProcessControlThread procCtrlThread = null;
+ 
 
-    try
-    {
-      process = Runtime.getRuntime().exec( sCmd, envp, fleExeDir );
-      if( iTOut > 0 )
-      {
-        procCtrlThread = new ProcessControlThread( process, iTOut );
-        procCtrlThread.start();
-      }
-
-      inStreamRdr = new InputStreamReader( process.getInputStream() );
-      errStreamRdr = new InputStreamReader( process.getErrorStream() );
-      while( true )
-      {
-        CopyUtils.copy( inStreamRdr, wLog );
-        CopyUtils.copy( errStreamRdr, wErr );
-
-        try
-        {
-          iRetVal = process.exitValue();
-          break;
-        }
-        catch( final IllegalThreadStateException e )
-        {
-          // Prozess noch nicht fertig, weiterlaufen lassen
-        }
-
-        if( cancelable.isCanceled() )
-        {
-          process.destroy();
-          if( procCtrlThread != null )
-          {
-            procCtrlThread.endProcessControl();
-          }
-          iRetVal = process.exitValue();
-          return iRetVal;
-        }
-        Thread.sleep( 100 );
-      }
-      if( procCtrlThread != null )
-      {
-        procCtrlThread.endProcessControl();
-      }
-    }
-    catch( final InterruptedException e )
-    {
-      // kann aber eigentlich gar nicht passieren
-      // (wird geworfen von Thread.sleep( 100 ))
-      e.printStackTrace();
-    }
-    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
-    {
-      throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
-    }
-    return iRetVal;
-  }
-
-  /**
-   * Thread, der die Ausführung des Prozesses proc nach lTimeout ms abbricht.
-   * @author Thül
-   */
-  private static class ProcessControlThread extends Thread
-  {
-    private volatile boolean m_bProcCtrlActive = false;
-
-    private volatile boolean m_bProcDestroyed = false;
-
-    private final long m_lTimeout;
-
-    private final Process m_proc;
-
-    public ProcessControlThread( final Process proc, final long lTimeout )
-    {
-      m_proc = proc;
-      m_lTimeout = lTimeout;
-    }
-
-    public void run()
-    {
-      synchronized( this )
-      {
-        try
-        {
-          m_bProcCtrlActive = true;
-          wait( m_lTimeout );
-        }
-        catch( InterruptedException ex )
-        {
-          // sollte nicht passieren
-        }
-      }
-      if( m_bProcCtrlActive )
-      {
-        // Prozess läuft nach Ablauf von m_lTimeout ms immer noch: Abbruch
-        m_bProcDestroyed = true;
-        m_proc.destroy();
-      }
-    }
-
-    public synchronized void endProcessControl()
-    {
-      // stoppt die Überwachung des Prozesses
-      m_bProcCtrlActive = false;
-      notifyAll();
-    }
-
-    public boolean procDestroyed()
-    {
-      // wurde der Prozess durch diesen Thread abbgebrochen?
-      return m_bProcDestroyed;
-    }
-  }
-
-  private static class ProcessTimeoutException extends Exception
-  {
-    public ProcessTimeoutException()
-    {
-      super();
-
-    }
-
-    public ProcessTimeoutException( final String message )
-    {
-      super( message );
-
-    }
-
-    public ProcessTimeoutException( final Throwable cause )
-    {
-      super( cause );
-
-    }
-
-    public ProcessTimeoutException( final String message, final Throwable cause )
-    {
-      super( message, cause );
-
-    }
-  }
 
   public static void main( String[] args ) throws IOException, TubigBatchException
   {

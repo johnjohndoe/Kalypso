@@ -40,7 +40,9 @@
 			<fileset dir="${project.dir}/.templates/Modell/Parameter/"/>
 		</copy>
 		
+		<!--
 		<eclipse.refreshLocal resource="${calc.path}" depth="infinite"/>
+		-->
 	</target>
 
 	<!-- ================================= 

@@ -64,20 +64,20 @@ public class UpdateOffset
   {
     super();
 
-    Feature f;
-    IObservation obs;
-    
-    final String xmlWQ = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
-    StringReader sr = new StringReader( xmlWQ );
-    WQTableSet set = WQTableFactory.parse( new InputSource( sr ) );
-    WQTable[] tables = set.getTables();
-    for( int i = 0; i < tables.length; i++ )
-      tables[i].setOffset( VALUE );
-    
-    String xmlWQNew = WQTableFactory.createXMLString( set );
-    obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE , xmlWQNew );
-    
-    ZmlFactory.writeToFile( obs , new File() );
+//    Feature f;
+//    IObservation obs;
+//    
+//    final String xmlWQ = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+//    StringReader sr = new StringReader( xmlWQ );
+//    WQTableSet set = WQTableFactory.parse( new InputSource( sr ) );
+//    WQTable[] tables = set.getTables();
+//    for( int i = 0; i < tables.length; i++ )
+//      tables[i].setOffset( VALUE );
+//    
+//    String xmlWQNew = WQTableFactory.createXMLString( set );
+//    obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE , xmlWQNew );
+//    
+//    ZmlFactory.writeToFile( obs , new File() );
   }
 
 }
