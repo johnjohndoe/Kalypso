@@ -756,11 +756,7 @@
             class="org.kalypso.ant.GmlPropertyTask"
             library="lib/kalypsoAnt.jar"
             name="gmlProperty"/>
-      <antTask
-            class="org.kalypso.test.kriging.GenerateObservationMappingKrigingTest"
-            library="lib/kalypsoAnt.jar"
-            name="generateObservationMappingFromKriging"/>
-      <antTask
+     <antTask
             class="org.kalypso.ant.KrigingTask"
             library="lib/kalypsoAnt.jar"
             name="ktest"/>
