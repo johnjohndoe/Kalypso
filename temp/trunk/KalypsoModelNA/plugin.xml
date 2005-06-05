@@ -2,20 +2,25 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.kalypso.NACalcJob"
-   name="KalypsoNA"
-   version="1.0.0">
+   name="KalypsoNACalcJob"
+   version="1.0.1">
+   <runtime>
+      <library name="kalypsoNACalcJob.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
    <requires>
-      <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.kalypso.services.calculation.local"/>
-      <import plugin="org.kalypso.util"/>
-      <import plugin="org.kalypso.dwd"/>
-      <import plugin="org.kalypso.core"/>
-      <import plugin="org.kalypso.optimize"/>
+      <import plugin="org.kalypso.dwd" export="true"/>
+      <import plugin="org.kalypso.deegree" export="true"/>
+      <import plugin="org.kalypso.jwsdp" export="true"/>
+      <import plugin="org.kalypso.services.calculation.local" export="true"/>
+      <import plugin="org.kalypso.util" export="true"/>
+      <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.kalypso.optimize" export="true"/>
    </requires>
    <extension
-         id="org.kalypso.services.calculation.local.calcJob.na"
-         name="CalcJobs"
+         id="KalypsoNA"
+         name="KalypsoNA"
          point="org.kalypso.services.calculation.local.calcJob">
       <calcJob
             typeID="KalypsoNA"
