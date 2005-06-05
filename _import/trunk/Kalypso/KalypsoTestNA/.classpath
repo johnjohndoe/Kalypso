@@ -10,5 +10,6 @@
 	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
 	<classpathentry kind="src" path="/JWSDPInstallation"/>
+	<classpathentry kind="src" path="/KalypsoAnt"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
