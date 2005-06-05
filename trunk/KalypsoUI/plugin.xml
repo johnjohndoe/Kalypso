@@ -48,7 +48,7 @@
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.bce.eclipse.platform.contrib"/>
-      <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.jwsdp" export="true"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ant.core"/>
@@ -756,5 +756,13 @@
             class="org.kalypso.ant.GmlPropertyTask"
             library="lib/kalypsoAnt.jar"
             name="gmlProperty"/>
+      <antTask
+            class="org.kalypso.test.kriging.GenerateObservationMappingKrigingTest"
+            library="lib/kalypsoAnt.jar"
+            name="generateObservationMappingFromKriging"/>
+      <antTask
+            class="org.kalypso.ant.KrigingTask"
+            library="lib/kalypsoAnt.jar"
+            name="ktest"/>
    </extension>
  </plugin>
