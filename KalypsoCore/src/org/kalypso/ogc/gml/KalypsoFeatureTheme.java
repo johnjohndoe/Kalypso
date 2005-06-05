@@ -199,7 +199,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
           case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
           case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-            restyleFeature( parent );
+            setDirty();
+            restyleFeature( parent );           
             break;
           default:
             setDirty();
