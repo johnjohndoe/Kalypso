@@ -1,0 +1,88 @@
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fake                      nur damit das Projekt nicht schreit
+         - - - - - - - - - - - - - - - - - -->
+	<target name="fake" />
+
+	<!-- 
+		 ================================= 
+          target: create			Rechenvariante erzeugen
+         ================================= 
+    -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+		<!-- copy modell -->
+		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
+		<copy file="${project.dir}/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
+		<!-- copy others -->
+		<copy todir="${calc.dir}">
+			<fileset dir="${project.dir}/.templates/calcCase/copy" includes="*/**" excludes="**/CVS/**" />
+		</copy>
+	</target>
+
+	<!-- 
+		 ================================= 
+          target: update			Zeitreihen aktualisieren
+         ================================= 
+    -->
+	<target name="update" description="Aktualisiert eine Rechenvariante">
+		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
+
+
+		<gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="/" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="/" featureProperty="startforecast" />
+			<!-- stopsim = startforecast + 48h -->
+			<property name="stopsim" featurepath="/" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11" />
+		</gmlProperty>
+
+		<!-- ombrometer from repository -->
+		<copyObservation gml="${calc.url}/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetObservation="N" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="NRepository" from="${startsim}" to="${startforecast}" />
+		</copyObservation>
+		<!-- pegel -->
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="NodeCollectionMember/nodeMember" context="${calc.url}" targetObservation="pegelZR" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="pegelZRRepository" from="${startsim}" to="${startforecast}" />
+		</copyObservation>
+
+		<!-- zufluesse from repository -->
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="NodeCollectionMember/nodeMember" context="${calc.url}" targetObservation="zuflussZR" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="zuflussZRRepository" from="${startsim}" to="${startforecast}" />
+			<source property="zuflussZRRepositoryVorhersage" from="${startforecast}" to="${stopsim}" />
+		</copyObservation>
+
+		<!-- gebietsniederschlagsmodell -->
+		<copyObservation gml="${project.url}/.model/kriging/mapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+			<!--			<source property="zuflussZRRepositoryVorhersage" from="${startforecast}" to="${stopsim}" />-->
+		</copyObservation>
+
+
+		<!--        areal precipitation -->
+		<!-- dwdraster abhohlen -->
+		<!-- dwdraster zu teilgebite-->
+		<!--
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="Abgabe_eingang" from="${startsim}" to="${stopsim}" />
+		</copyObservation>
+
+		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="VorgabeCollectionAssociation/VorgabeMember" context="${calc.url}" targetObservation="Abfluss" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="Abfluss_eingang" from="${startsim}" to="${stopsim}" />
+		</copyObservation>
+	    -->
+	</target>
+
+	<!--<target name="kriging" description="convert">
+		<property name="project.dir" value="file:/E:\\runtime-workspace\\KalypsoWeisseElster\\" />
+		<property name="project.dir.file" value="E:\\runtime-workspace\\KalypsoWeisseElster\\" />
+		<ktest context="${project.dir}/" epsg="EPSG:31468" modellgml="${project.dir}/modell.gml" modellgmlfeaturepath="CatchmentCollectionMember/catchmentMember" modellgmlpolygonpropname="Ort" modellgmltargetobservationlinkpropname="niederschlagZR" hrefkrigingtxt="${project.dir}/.model/kriging/Kriging_GewichteWeisseElster.txt" sourcegml="${project.dir}/ombrometer.gml" sourcegmlfeaturepath="ombrometerMember" sourcegmlidlinkproperty="DWDID" sourcegmlobservationlinkproperty="N" hrefgeneratesgml="${project.dir.file}/.model/kriging/krigingMapping.gml" timestepminutes="15" />
+	</target>
+-->
+	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
+		<!--	<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true" />
+    -->
+	</target>
+</project>

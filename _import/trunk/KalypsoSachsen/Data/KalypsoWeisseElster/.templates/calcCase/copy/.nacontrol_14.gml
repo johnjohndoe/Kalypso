@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NAModellControl fid="ID000000" xmlns="org.kalypso.namodell.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/nacontrol.xsd">
   <description>Beschreibung</description>
-  <name>Greiz</name>
+  <name>Leipzig-Thekla</name>
   <editor>Editor</editor>
   <comment>Kommentar</comment>
   <calctime>2001-12-17T09:30:47</calctime>
@@ -36,20 +36,20 @@
   <spn>false</spn>
   <vep>false</vep>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//Catchment[@fid="Catchment4001" or @fid="Catchment4002" or @fid="Catchment4000" or @fid="Catchment1220" or @fid="Catchment1221"]]]></Catchments>
+  <Catchments><![CDATA[//:Catchment[@fid="Catchment3105" or @fid="Catchment3103" or @fid="Catchment3203" or @fid="Catchment3201" or @fid="Catchment3104" or @fid="Catchment3102" or @fid="Catchment3101" or @fid="Catchment3100" or @fid="Catchment3002" ]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//KMChannel[@fid="KMChannel1220" or @fid="KMChannel1221" or @fid="KMChannel4000" or @fid="KMChannel4001" or @fid="KMChannel4002" or @fid="KMChannel4099"]]]></KMChannels>
+  <KMChannels><![CDATA[//:KMChannel[@fid="KMChannel3100" or @fid="KMChannel3101" or @fid="KMChannel3102" or @fid="KMChannel3103" or @fid="KMChannel3104" or @fid="KMChannel3105"]]]></KMChannels>
   <KMChannelsFaktorRkf>1.0</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>1.0</KMChannelsFaktorRnf>
-  <rootNode>Node1220</rootNode>
+  <rootNode>Node3100</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node1220.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node3100.zml" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1220.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node3100.zml" ns1:type="simple"/>
   </qberechnetZR>
 </NAModellControl>

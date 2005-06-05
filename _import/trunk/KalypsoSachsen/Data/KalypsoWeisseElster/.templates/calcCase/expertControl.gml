@@ -38,13 +38,13 @@
 	<spn>false</spn>
 	<vep>false</vep>
 	<automaticCallibration>false</automaticCallibration>
-	<Catchments><![CDATA[//Catchment]]>
+	<Catchments><![CDATA[//:Catchment]]>
 		</Catchments>
 	<CatchmentsBianf></CatchmentsBianf>
 	<CatchmentsFaktorRetobTetint></CatchmentsFaktorRetobTetint>
 	<CatchmentsFaktn></CatchmentsFaktn>
 	<CatchmentsFaktorAigw></CatchmentsFaktorAigw>
-	<KMChannels><![CDATA[//KMChannel]]></KMChannels>
+	<KMChannels><![CDATA[//:KMChannel]]></KMChannels>
 	<KMChannelsFaktorRkf></KMChannelsFaktorRkf>
 	<KMChannelsFaktorRnf></KMChannelsFaktorRnf>
 	<rootNode/>

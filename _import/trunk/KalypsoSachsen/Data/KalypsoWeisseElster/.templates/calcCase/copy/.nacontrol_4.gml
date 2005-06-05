@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NAModellControl fid="ID000000" xmlns="org.kalypso.namodell.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/nacontrol.xsd">
   <description>Beschreibung</description>
-  <name>Weida</name>
+  <name>Strassberg</name>
   <editor>Editor</editor>
   <comment>Kommentar</comment>
   <calctime>2001-12-17T09:30:47</calctime>
@@ -36,20 +36,20 @@
   <spn>false</spn>
   <vep>false</vep>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//Catchment[@fid="Catchment2004" or @fid="Catchment2005" or @fid="Catchment2003" or @fid="Catchment2006" or @fid="Catchment2007" or @fid="Catchment2001"]]]></Catchments>
+  <Catchments><![CDATA[//:Catchment[@fid="Catchment6000" or @fid="Catchment1403" or @fid="Catchment1404" or @fid="Catchment1401" or @fid="Catchment1402"]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//KMChannel[@fid="KMChannel2001" or @fid="KMChannel2003" or @fid="KMChannel2004" or @fid="KMChannel2005" or @fid="KMChannel2006" or @fid="KMChannel2007"]]]></KMChannels>
+  <KMChannels><![CDATA[//:KMChannel[@fid="KMChannel1404" or @fid="KMChannel1403" or @fid="KMChannel6000" or @fid="KMChannel1500" or @fid="KMChannel6100" or @fid="KMChannel1401" or @fid="KMChannel1402"]]]></KMChannels>
   <KMChannelsFaktorRkf>1.0</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>1.0</KMChannelsFaktorRnf>
-  <rootNode>Node2002</rootNode>
+  <rootNode>Node1401</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node2002.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node1401.zml" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node2002.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1401.zml" ns1:type="simple"/>
   </qberechnetZR>
 </NAModellControl>
