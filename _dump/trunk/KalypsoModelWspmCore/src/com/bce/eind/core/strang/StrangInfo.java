@@ -33,11 +33,28 @@ public class StrangInfo
    */
   public void setIndex( int index )
   {
+    if( m_index == index )
+      return;
+    
+    if( !tryChangeIndex() )
+      return;
+    
     m_index = index;
     
     fireIndexChanged();
   }
   
+  private boolean tryChangeIndex( )
+  {
+    for( final IStranginfoListener l : m_listeners )
+    {
+      if( !l.onTryChangeIndex( this ) )
+        return false;
+    }
+
+    return true;
+  }
+
   public ProfilInfo getInfo()
   {
     return m_profiles[m_index];

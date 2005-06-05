@@ -95,7 +95,7 @@ public class PointUtilities
      *
      * @author schlienger
      */
-    public static class PointXComparator implements Comparator
+    public static class PointXComparator implements Comparator<Point2D>
     {
         /** makes the comparison on the x values */
         private final DoubleComparator m_dc;
@@ -113,11 +113,8 @@ public class PointUtilities
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
-        public int compare( Object o1, Object o2 )
+        public int compare( Point2D p1, Point2D p2 )
         {
-            Point2D p1 = (Point2D)o1;
-            Point2D p2 = (Point2D)o2;
-
             return m_dc.compare( p1.getX(  ), p2.getX(  ) );
         }
     }
@@ -127,7 +124,7 @@ public class PointUtilities
      *
      * @author schlienger
      */
-    public static class PointYComparator implements Comparator
+    public static class PointYComparator implements Comparator<Point2D>
     {
         /** makes the comparison on the x values */
         private final DoubleComparator m_dc;
@@ -145,11 +142,8 @@ public class PointUtilities
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
-        public int compare( Object o1, Object o2 )
+        public int compare( Point2D p1, Point2D p2 )
         {
-            Point2D p1 = (Point2D)o1;
-            Point2D p2 = (Point2D)o2;
-
             return m_dc.compare( p1.getY(  ), p2.getY(  ) );
         }
     }

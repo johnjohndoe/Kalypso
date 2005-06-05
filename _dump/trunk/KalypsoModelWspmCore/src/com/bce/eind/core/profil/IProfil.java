@@ -87,7 +87,7 @@ public interface IProfil
 
   public RAUHEITEN_TYP getRauheitTyp( );
 
-  public List getUnknownObjects( );
+  public List<Object> getUnknownObjects( );
 
   public double[] getValuesFor( final ProfilPointProperty pointProperty )
       throws ProfilDataException;

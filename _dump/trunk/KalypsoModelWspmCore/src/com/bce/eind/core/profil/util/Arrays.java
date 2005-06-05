@@ -57,7 +57,7 @@ public final class Arrays
    */
   public static List asList( final Object[] array )
   {
-    final Vector v = new Vector( array.length );
+    final Vector<Object> v = new Vector<Object>( array.length );
     for( int i = 0; i < array.length; i++ )
       v.add( array[i] );
     
