@@ -36,16 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * 
@@ -55,12 +54,12 @@ public class ZoomInWidget extends AbstractWidget
 {
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public ZoomInWidget( String name, String toolTip )
   {
     super( name, toolTip );
-    
+
   }
 
   private Point endPoint = null;
@@ -112,7 +111,7 @@ public class ZoomInWidget extends AbstractWidget
     }
   }
 
-  protected final ICommand performIntern()
+  public void perform()
   {
     if( startPoint != null && endPoint != null )
     {
@@ -133,11 +132,9 @@ public class ZoomInWidget extends AbstractWidget
 
       startPoint = null;
       endPoint = null;
-
-      return new ChangeExtentCommand( getMapPanel(), zoomBox );
+      ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), zoomBox );
+      postViewCommand( command, null );
     }
-
-    return null;
   }
 
 }

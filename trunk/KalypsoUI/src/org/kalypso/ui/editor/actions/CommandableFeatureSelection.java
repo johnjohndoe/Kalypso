@@ -73,8 +73,7 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   private final Feature m_selectedRow;
 
   /**
-   * @param selectedFE
-   *  
+   * 
    */
   public CommandableFeatureSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection, final FeatureTypeProperty ftp,
       final Feature selectedRow )

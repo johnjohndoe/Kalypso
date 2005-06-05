@@ -44,7 +44,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.util.command.ICommand;
 
 /**
  * This class performs a zoomin event. It will be performed by setting the map
@@ -58,12 +57,12 @@ public class ZoomInByRectWidget extends AbstractWidget
 
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public ZoomInByRectWidget( String name, String toolTip )
   {
     super( name, toolTip );
-    
+
   }
 
   private Point m_endPoint = null;
@@ -109,12 +108,7 @@ public class ZoomInByRectWidget extends AbstractWidget
     }
   }
 
-  /*
-   * performs the zoomin action.
-   * 
-   * @see org.kalypso.ogc.widgets.AbstractWidget#performIntern()
-   */
-  protected final ICommand performIntern()
+  public void perform()
   {
     if( m_startPoint != null && m_endPoint != null )
     {
@@ -126,9 +120,11 @@ public class ZoomInByRectWidget extends AbstractWidget
       m_startPoint = null;
       m_endPoint = null;
       if( Math.abs( x1 - x2 ) > MIN_PIXEL_ZOOM_BOX && Math.abs( y1 - y2 ) > MIN_PIXEL_ZOOM_BOX )
-        return new ChangeExtentCommand( getMapPanel(), getBox( x1, y1, x2, y2 ) );
+      {
+        ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), getBox( x1, y1, x2, y2 ) );
+        postViewCommand(command, null);
+      }
     }
-    return null;
   }
 
 }

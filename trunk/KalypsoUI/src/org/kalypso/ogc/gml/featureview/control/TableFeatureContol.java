@@ -51,7 +51,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final JobExclusiveCommandTarget m_target;
 
-  private Collection m_listeners = new ArrayList();
+  Collection m_listeners = new ArrayList();
 
   public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureModifierFactory factory, final int selectionID )
   {
@@ -209,10 +209,14 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       if( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
       {
         final Event event = new Event();
-        event.widget = m_viewer.getControl();
-        final ModifyEvent me = new ModifyEvent( event );
-        for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
-          ( (ModifyListener)mIt.next() ).modifyText( me );
+        Control control = m_viewer.getControl();
+        if( control != null && !control.isDisposed() )
+        {
+          event.widget = control;
+          final ModifyEvent me = new ModifyEvent( event );
+          for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
+            ( (ModifyListener)mIt.next() ).modifyText( me );
+        }
       }
     }
   }

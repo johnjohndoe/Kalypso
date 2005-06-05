@@ -246,10 +246,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public void rememberLastSelectedFTPAndRow( int xPos, int yPos )
   {
-    TableItem item = getTable().getItem( new Point( xPos, yPos ) );
+    final TableItem item = getTable().getItem( new Point( xPos, yPos ) );
     m_lastSelectedFE = (Feature)item.getData();
-    TableColumn[] columns = getTable().getColumns();
-    int x = 0;
+    final TableColumn[] columns = getTable().getColumns();
+
+    // calulcate position from viewable area
+    int x = getTable().getClientArea().x;
+
     for( int i = 0; i < columns.length; i++ )
     {
       TableColumn column = columns[i];

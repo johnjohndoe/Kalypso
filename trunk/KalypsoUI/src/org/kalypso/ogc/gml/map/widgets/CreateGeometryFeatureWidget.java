@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
@@ -45,14 +45,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * 
@@ -63,7 +62,8 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   private AbstractWidget myWidget = null;
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
@@ -188,9 +188,9 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
       myWidget.rightReleased( p );
   }
 
-  public CreateGeometryFeatureWidget(String name,String tooltip)
+  public CreateGeometryFeatureWidget( String name, String tooltip )
   {
-    super(name,tooltip);
+    super( name, tooltip );
     setup();
   }
 
@@ -222,32 +222,37 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   private void setGeometryWidget( final IKalypsoFeatureTheme theme, final FeatureTypeProperty ftp )
   {
     if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_Point" ) )
-      myWidget = new CreatePointFeatureWidget("Gemoetrie-editor","editieren von "+ftp.getName(), this, theme, ftp );
-    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_MultiPoint"
+      myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getName(), this, theme, ftp );
+    //    else if( ftp.getType().equals(
+    // "org.kalypsodeegree.model.geometry.GM_MultiPoint"
     // ) )
     //      myWidget = new CreateMultipointFeatureWidget();
-    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_Polygon" )
+    //    else if( ftp.getType().equals(
+    // "org.kalypsodeegree.model.geometry.GM_Polygon" )
     // )
     //      myWidget = new CreatePolygonFeatureWidget();
     //    else if( ftp.getType().equals(
     // "org.kalypsodeegree.model.geometry.GM_MultiSurface" ) )
     //      myWidget = new CreateMultipolygonFeatureWidget();
-    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_LineString"
+    //    else if( ftp.getType().equals(
+    // "org.kalypsodeegree.model.geometry.GM_LineString"
     // ) )
     //      myWidget = new CreateLinestringFeatureWidget();
-    //    else if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_MultiCurve"
+    //    else if( ftp.getType().equals(
+    // "org.kalypsodeegree.model.geometry.GM_MultiCurve"
     // ) )
     //      myWidget = new CreateMultilinestringFeatureWidget();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
+   * 
+   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  protected ICommand performIntern()
+  public void perform()
   {
-    if( myWidget != null )
-      return myWidget.performIntern();
-    return null;
+    //    if( myWidget != null )
+    //      return myWidget.performIntern();
+    //    return null;
   }
 
   /**
