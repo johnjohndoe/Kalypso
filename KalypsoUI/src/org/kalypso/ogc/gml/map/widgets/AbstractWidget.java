@@ -68,9 +68,9 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   private final String m_toolTip;
 
-  private String m_leftMFunction=null;
+  private String m_leftMFunction = null;
 
-  private String m_rightMFunction=null;
+  private String m_rightMFunction = null;
 
   public AbstractWidget( String name, String toolTip )
   {
@@ -98,17 +98,27 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     onModellChange( null );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
-   */
-  public void perform()
+  protected final void postViewCommand( final ICommand command, final Runnable runAfterCommand )
   {
-    final ICommand command = performIntern();
-    if( command != null )
-      m_commandPoster.postCommand( command, null );
+    m_commandPoster.postCommand( command, runAfterCommand );
   }
+//  public void postViewCommand( ICommand command )
+//  {
+//    if( command != null )
+//      m_commandPoster.postCommand( command, null );
+//  }
 
-  protected abstract ICommand performIntern();
+  //  /**
+  //   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
+  //   */
+  //  public void perform()
+  //  {
+  //    final ICommand command = performIntern();
+  //    if( command != null )
+  //      m_commandPoster.postCommand( command, null );
+  //  }
+
+//  protected abstract ICommand performIntern();
 
   protected final GM_Position getPosition( Point pixelPoint )
   {
@@ -157,8 +167,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
 
     final GeoTransform gt = m_mapPanel.getProjection();
-    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt
-        .getSourceX( x2 ), gt.getSourceY( y2 ) );
+    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt.getSourceY( y2 ) );
   }
 
   /**
@@ -166,7 +175,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void clickPopup( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -174,7 +183,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void dragged( Point p )
   {
-  // not implemented by default
+    // not implemented by default
 
   }
 
@@ -184,7 +193,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public void finish()
   {
 
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -192,7 +201,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void leftClicked( Point p )
   {
-  // not implemented by default
+    // not implemented by default
 
   }
 
@@ -202,7 +211,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public void leftPressed( Point p )
   {
 
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -210,7 +219,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void leftReleased( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -218,7 +227,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void middleClicked( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -226,7 +235,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void middlePressed( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -234,7 +243,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void middleReleased( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -242,7 +251,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void moved( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -250,7 +259,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void rightClicked( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -258,7 +267,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void rightPressed( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -266,7 +275,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void rightReleased( Point p )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   /**
@@ -274,7 +283,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void paint( Graphics g )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   protected final MapPanel getMapPanel()
@@ -282,10 +291,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
     return m_mapPanel;
   }
 
-  protected final void postCommand( final ICommand command, final Runnable runAfterCommand )
-  {
-    m_commandPoster.postCommand( command, runAfterCommand );
-  }
+  
 
   public ICommandTarget getCommandTarget()
   {
@@ -294,7 +300,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   public void onModellChange( final ModellEvent modellEvent )
   {
-  // not implemented by default
+    // not implemented by default
   }
 
   public IKalypsoTheme getActiveTheme()
@@ -318,17 +324,18 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
     return m_toolTip;
   }
-  
+
   protected void mouseFunctionChanged()
   {
     // TODO
   }
-  
-  protected final void setLeftMFunction(String leftMFunction)
+
+  protected final void setLeftMFunction( String leftMFunction )
   {
     m_leftMFunction = leftMFunction;
   }
-  protected final void setRightMFunction(String rightMFunction)
+
+  protected final void setRightMFunction( String rightMFunction )
   {
     m_rightMFunction = rightMFunction;
   }

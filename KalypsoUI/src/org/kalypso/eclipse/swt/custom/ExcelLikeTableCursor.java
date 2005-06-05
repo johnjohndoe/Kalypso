@@ -92,7 +92,7 @@ public class ExcelLikeTableCursor extends TableCursor
    * allow editing with interactive mouse (e.g. toggle checkbox)
    */
   final MouseListener m_cellEditorMouseListener = new MouseAdapter()
-  {
+  {    
     /**
      * 
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
@@ -379,27 +379,6 @@ public class ExcelLikeTableCursor extends TableCursor
     m_viewer.getTable().setSelection( newViewerSelection );
   }
 
-  //
-  //  void removeFromSelection( TableItem item )
-  //  {
-  //    if( DEBUG )
-  //      System.out.println( "remove selection" );
-  //    final IStructuredSelection tableSelection =
-  // (IStructuredSelection)m_viewer.getSelection();
-  //    final List featureList = tableSelection.toList();
-  //    featureList.remove( item.getData() );
-  //    final IStructuredSelection newSelection = new StructuredSelection(
-  // featureList );
-  //
-  //    final TableItem[] viewerSelection = m_viewer.getTable().getSelection();
-  //    final List itemList = Arrays.asList( viewerSelection );
-  //    itemList.remove( item );
-  //    final TableItem[] newViewerSelection = (TableItem[])itemList.toArray( new
-  // TableItem[itemList.size()] );
-  //    m_viewer.setSelection( newSelection, true );
-  //    m_viewer.getTable().setSelection( newViewerSelection );
-  //  }
-  //
   void toggleSelection( TableItem item )
   {
     if( DEBUG )

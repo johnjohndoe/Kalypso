@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand;
@@ -150,8 +151,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell()
-        .getCoordinatesSystem() );
+    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
 
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
@@ -183,8 +183,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final List fitList = new ArrayList();
     final IKalypsoTheme activeTheme = getActiveTheme();
 
-    if( fromFE == null || toFE == null || activeTheme == null
-        || !( activeTheme instanceof IKalypsoFeatureTheme ) )
+    if( fromFE == null || toFE == null || activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
       return fitList;
     final GMLWorkspace workspace = ( (IKalypsoFeatureTheme)activeTheme ).getWorkspace();
     final IRelationType[] relations = m_contentProvider.getCheckedRelations();
@@ -193,8 +192,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       final IRelationType relation = relations[i];
       if( relation.fitsTypes( fromFE.getFeatureType(), toFE.getFeatureType() ) )
       {
-        final String fitProblems = relation.getFitProblems( workspace, fromFE, toFE,
-            getModificationMode() == MODE_ADD );
+        final String fitProblems = relation.getFitProblems( workspace, fromFE, toFE, getModificationMode() == MODE_ADD );
         if( fitProblems == null )
           fitList.add( relation );
         else
@@ -229,8 +227,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell()
-        .getCoordinatesSystem() );
+    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
     m_fitProblems.setLength( 0 );
@@ -285,8 +282,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null || activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
-      return new CascadingFeatureList( (FeatureList[])result
-          .toArray( new FeatureList[result.size()] ) );
+      return new CascadingFeatureList( (FeatureList[])result.toArray( new FeatureList[result.size()] ) );
 
     final IKalypsoFeatureTheme activeFeatureTheme = (IKalypsoFeatureTheme)activeTheme;
     final GMLWorkspace workspace = activeFeatureTheme.getWorkspace();
@@ -333,9 +329,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   /**
    * 
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
+   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  protected final ICommand performIntern()
+  public void perform()
   {
     final List fitList = getFitList( m_srcFE, m_targetFE );
     for( Iterator iter = fitList.iterator(); iter.hasNext(); )
@@ -345,9 +341,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
     // TODO handle fitList.size()>1 with dialog
     if( fitList.size() < 1 )
-      return null;
+      return;
     final IRelationType relation = (IRelationType)fitList.get( 0 );
-    final GMLWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
+    CommandableWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
     final ICommand command;
     switch( getModificationMode() )
     {
@@ -355,14 +351,12 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       if( relation instanceof HeavyRelationType )
       {
         final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
-        command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(),
-            heavyRealtion.getLink2(), m_targetFE );
+        command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(), heavyRealtion.getLink2(), m_targetFE );
       }
       else
       {
         final RelationType normalRelation = (RelationType)relation;
-        command = new AddRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), 0,
-            m_targetFE );
+        command = new AddRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), 0, m_targetFE );
       }
       break;
     case MODE_REMOVE:
@@ -370,26 +364,33 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       {
         final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
 
-        FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor(
-            workspace, heavyRealtion );
+        FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, heavyRealtion );
         visitor.visit( m_srcFE );
         Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( m_targetFE );
         if( bodyFeatureFor.length > 0 )
-          command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(),bodyFeatureFor[0], heavyRealtion.getLink2().getName(), m_targetFE );
+          command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(), bodyFeatureFor[0], heavyRealtion
+              .getLink2().getName(), m_targetFE );
         else
           command = null;
       }
       else
       {
         final RelationType normalRelation = (RelationType)relation;
-        command = new RemoveRelationCommand( workspace, m_srcFE,
-            normalRelation.getLink().getName(), m_targetFE );
+        command = new RemoveRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), m_targetFE );
       }
       break;
     default:
       command = null;
     }
-    return command;
+    try
+    {
+      workspace.postCommand( command );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   private void updateProblemsText()
@@ -561,8 +562,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       public void mouseUp( MouseEvent e )
       {
-        final TreeItem item = m_viewer.getTree().getItem(
-            new org.eclipse.swt.graphics.Point( e.x, e.y ) );
+        final TreeItem item = m_viewer.getTree().getItem( new org.eclipse.swt.graphics.Point( e.x, e.y ) );
         if( item != null )
         {
           final Object element = item.getData();

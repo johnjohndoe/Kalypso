@@ -36,16 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author vDoemming
@@ -54,17 +53,17 @@ public class PanToWidget extends AbstractWidget
 {
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public PanToWidget( String name, String toolTip )
   {
-    super( name, toolTip );    
+    super( name, toolTip );
   }
 
   private Point endPoint = null;
 
   private Point startPoint = null;
-  
+
   public void dragged( Point p )
   {
     if( startPoint != null )
@@ -95,10 +94,7 @@ public class PanToWidget extends AbstractWidget
     perform();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
-   */
-  public ICommand performIntern()
+  public void perform()
   {
     if( startPoint != null && endPoint != null )
     {
@@ -112,8 +108,11 @@ public class PanToWidget extends AbstractWidget
       endPoint = null;
 
       if( panBox != null )
-        return new ChangeExtentCommand( mapPanel, panBox );
+      {
+        ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, panBox );
+        postViewCommand( command, null );
+      }
+
     }
-    return null;
   }
 }

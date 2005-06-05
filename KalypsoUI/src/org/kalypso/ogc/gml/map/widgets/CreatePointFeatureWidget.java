@@ -36,62 +36,65 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * @author vDoemming
  */
 public class CreatePointFeatureWidget extends AbstractWidget
 {
-//  private Point myPoint = null;
+  //  private Point myPoint = null;
 
-//  private final FeatureTypeProperty myFtp;
+  //  private final FeatureTypeProperty myFtp;
 
   private final CreateGeometryFeatureWidget myParentWidget;
 
-//  private final IKalypsoFeatureTheme m_theme;
+  //  private final IKalypsoFeatureTheme m_theme;
 
-  public CreatePointFeatureWidget(String name,String tooltip, CreateGeometryFeatureWidget parentWidget,
-      final IKalypsoFeatureTheme theme, FeatureTypeProperty ftp )
+  public CreatePointFeatureWidget( String name, String tooltip, CreateGeometryFeatureWidget parentWidget, final IKalypsoFeatureTheme theme,
+      FeatureTypeProperty ftp )
   {
-    super(name,tooltip);
+    super( name, tooltip );
     myParentWidget = parentWidget;
     theme.getClass();
     ftp.getClass();
-//    m_theme = theme;
-//    myFtp = ftp;
+    //    m_theme = theme;
+    //    myFtp = ftp;
   }
 
   public void leftPressed( Point p )
   {
-//    myPoint = p;
+    //    myPoint = p;
     myParentWidget.perform();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
+   * 
+   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  public ICommand performIntern()
+  public void perform()
   {
-//    if( myPoint != null )
-//    {
-//      final Feature feature = FeatureFactory.createFeature( "x", m_theme.getFeatureType() );
-//      final GM_Position position = myParentWidget.getPosition( myPoint );
-//      final CS_CoordinateSystem coordinatesSystem = myLayer.getCoordinatesSystem();
-//      final GM_Object geometry = GeometryFactory.createGM_Point( position, coordinatesSystem );
-//      final FeatureProperty fp = FeatureFactory.createFeatureProperty( myFtp.getName(), geometry );
-//      feature.setProperty( fp );
-//      return new CreateFeatureCommand( myLayer, new Feature[]
-//      { feature } );
-//    }
-    return null;
+    //    if( myPoint != null )
+    //    {
+    //      final Feature feature = FeatureFactory.createFeature( "x",
+    // m_theme.getFeatureType() );
+    //      final GM_Position position = myParentWidget.getPosition( myPoint );
+    //      final CS_CoordinateSystem coordinatesSystem =
+    // myLayer.getCoordinatesSystem();
+    //      final GM_Object geometry = GeometryFactory.createGM_Point( position,
+    // coordinatesSystem );
+    //      final FeatureProperty fp = FeatureFactory.createFeatureProperty(
+    // myFtp.getName(), geometry );
+    //      feature.setProperty( fp );
+    //      return new CreateFeatureCommand( myLayer, new Feature[]
+    //      { feature } );
+    //    }
   }
 }

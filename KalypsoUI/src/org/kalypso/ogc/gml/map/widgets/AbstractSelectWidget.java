@@ -62,12 +62,12 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 {
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public AbstractSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
-    
+
   }
 
   /**
@@ -119,10 +119,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
   {
     if( m_startPoint != null && m_endPoint != null )
     {
-      int px = (int)( m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint
-          .getX() );
-      int py = (int)( m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint
-          .getY() );
+      int px = (int)( m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX() );
+      int py = (int)( m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY() );
       int dx = (int)Math.abs( m_endPoint.getX() - m_startPoint.getX() );
       int dy = (int)Math.abs( m_endPoint.getY() - m_startPoint.getY() );
 
@@ -131,9 +129,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     }
   }
 
-  public ICommand performIntern()
+  public void perform()
   {
-    return null;
+    // nothing
   }
 
   private void select()
@@ -159,15 +157,14 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         // TODO depend on featuretype
         // line and point with radius
         // polygon with without radius
-        double gisRadius = Math.abs(transform.getSourceX( m_startPoint.getX() + m_radius ) - g1x);
-        
+        double gisRadius = Math.abs( transform.getSourceX( m_startPoint.getX() + m_radius ) - g1x );
+
         JMSelector selector = new JMSelector( getSelectionMode() );
 
-        GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y , mapPanel.getMapModell().getCoordinatesSystem());
-        
-        final Feature fe = selector.selectNearest( pointSelect, gisRadius,
-            ( (IKalypsoFeatureTheme)activeTheme ).getFeatureListVisible(null), false, mapPanel
-                .getSelectionID() );
+        GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, mapPanel.getMapModell().getCoordinatesSystem() );
+
+        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme ).getFeatureListVisible( null ),
+            false, mapPanel.getSelectionID() );
 
         final List listFe = new ArrayList();
         if( fe != null )
@@ -196,8 +193,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         {
           final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
-              .getFeatureListVisible(null), withinStatus, mapPanel.getSelectionID() );
+          List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme ).getFeatureListVisible( null ), withinStatus, mapPanel
+              .getSelectionID() );
           if( !features.isEmpty() )
             fireCommand( features, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
         }
@@ -207,8 +204,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     m_endPoint = null;
   }
 
-  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme,
-      final int selectionId )
+  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme, final int selectionId )
   {
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )
@@ -217,10 +213,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       command = new SingleSelectCommand( activeTheme.getWorkspace(), fe, selectionId, activeTheme );
     }
     else
-      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId,
-          getSelectionMode() );
+      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId, getSelectionMode() );
 
-    postCommand( command, null );
+    postViewCommand( command, null );
   }
 
   /**

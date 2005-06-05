@@ -42,19 +42,18 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Point;
 
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
+import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.visitors.FindNearestVisitor;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author Belger
@@ -77,9 +76,10 @@ public class EditFeatureWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#performIntern()
+   * 
+   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  public ICommand performIntern()
+  public void perform()
   {
     if( m_point != null )
     {
@@ -101,11 +101,9 @@ public class EditFeatureWidget extends AbstractWidget
           editFeature( featureTheme, featureTheme.getWorkspace(), result );
       }
     }
-    return null;
   }
 
-  private void editFeature( final ICommandTarget commandTarget, final GMLWorkspace workspace,
-      final Feature feature )
+  private void editFeature( final ICommandTarget commandTarget, final GMLWorkspace workspace, final Feature feature )
   {
     if( m_shell != null && feature != null )
     {
@@ -116,8 +114,7 @@ public class EditFeatureWidget extends AbstractWidget
       {
         public void run()
         {
-          final FeatureviewDialog dialog = new FeatureviewDialog( workspace, commandTarget, shell,
-              helper );
+          final FeatureviewDialog dialog = new FeatureviewDialog( workspace, commandTarget, shell, helper );
           dialog.open();
         }
       } );
