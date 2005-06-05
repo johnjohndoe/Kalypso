@@ -118,8 +118,7 @@ public class GMLFactory
   /**
    * creates a GMLGeometry from a DOM Element
    * 
-   * @param element
-   *          DOM Element containing a GMLGeometry
+   * @param element DOM Element containing a GMLGeometry
    */
   public synchronized static GMLGeometry createGMLGeometry( Element element )
   {
@@ -172,16 +171,14 @@ public class GMLFactory
   /**
    * creates a GMLGeometry from a GM_Object
    * 
-   * @param geo
-   *          geometry
+   * @param geo geometry
    */
-  public synchronized static GMLGeometry createGMLGeometry( GMLDocument doc, GM_Object geo )
-      throws GMLException
+  public synchronized static GMLGeometry createGMLGeometry( GMLDocument doc, GM_Object geo ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLGeometry(GM_Object)" );
 
-    if( doc== null )
-      doc = new GMLDocument_Impl(  );
+    if( doc == null )
+      doc = new GMLDocument_Impl();
     GMLGeometry geom = null;
 
     if( geo instanceof GM_Point )
@@ -216,8 +213,7 @@ public class GMLFactory
   /**
    * creates a GMLPoint from a GM_Point
    * 
-   * @param geo
-   *          point
+   * @param geo point
    */
   private static GMLPoint createGMLPoint( GM_Point geo, GMLDocument doc )
   {
@@ -226,8 +222,7 @@ public class GMLFactory
     Element coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
 
     GMLCoordinates gmlCo = new GMLCoordinates_Impl( coord );
-    gmlCo.setCoordinates( geo.getX() + "," + geo.getY()
-        + ( ( geo.getCoordinateDimension() == 3 ) ? "," + geo.getZ() : "" ) );
+    gmlCo.setCoordinates( geo.getX() + "," + geo.getY() + ( ( geo.getCoordinateDimension() == 3 ) ? "," + geo.getZ() : "" ) );
     gmlCo.setCoordinateSeperator( ',' );
     gmlCo.setDecimalSeperator( '.' );
     gmlCo.setTupleSeperator( ' ' );
@@ -254,11 +249,9 @@ public class GMLFactory
   /**
    * creates a GMLLineString from a GM_Curve
    * 
-   * @param geo
-   *          GM_Curve
+   * @param geo GM_Curve
    */
-  private static GMLLineString createGMLLineString( GM_Curve geo, GMLDocument doc )
-      throws GMLException
+  private static GMLLineString createGMLLineString( GM_Curve geo, GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLLineString" );
 
@@ -277,8 +270,7 @@ public class GMLFactory
       for( int i = 0; i < ls.getNumberOfPoints(); i++ )
       {
         GM_Position pt = ls.getPositionAt( i );
-        sb.append( pt.getX() + "," + pt.getY()
-            + ( ( pt.getAsArray().length == 3 ) ? "," + pt.getZ() : "" ) + " " );
+        sb.append( pt.getX() + "," + pt.getY() + ( ( pt.getAsArray().length == 3 ) ? "," + pt.getZ() : "" ) + " " );
       }
     }
     catch( Exception e )
@@ -313,11 +305,9 @@ public class GMLFactory
   /**
    * creates a GMLPolygon from a GM_Surface
    * 
-   * @param geo
-   *          GM_Surface
+   * @param geo GM_Surface
    */
-  private static GMLPolygon createGMLPolygon( GM_Surface geo, GMLDocument doc )
-      throws GMLException
+  private static GMLPolygon createGMLPolygon( GM_Surface geo, GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLSurface" );
 
@@ -447,11 +437,9 @@ public class GMLFactory
   /**
    * creates a GMLMultiPoint from a GM_MultiPoint
    * 
-   * @param geo
-   *          GM_MultiPoint
+   * @param geo GM_MultiPoint
    */
-  private static GMLMultiPoint createGMLMultiPoint( GM_MultiPoint geo, GMLDocument doc )
-      throws GMLException
+  private static GMLMultiPoint createGMLMultiPoint( GM_MultiPoint geo, GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
@@ -488,16 +476,13 @@ public class GMLFactory
   /**
    * creates a GMLMultiLineString from a GM_MultiCurve
    * 
-   * @param geo
-   *          GM_MultiCurve
+   * @param geo GM_MultiCurve
    */
-  private static GMLMultiLineString createGMLMultiLineString( GM_MultiCurve geo,
-      GMLDocument doc ) throws GMLException
+  private static GMLMultiLineString createGMLMultiLineString( GM_MultiCurve geo, GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
-    GMLMultiLineString gmlMLineString = GMLMultiLineString_Impl.createGMLMultiLineString( doc
-        .getDocument() );
+    GMLMultiLineString gmlMLineString = GMLMultiLineString_Impl.createGMLMultiLineString( doc.getDocument() );
 
     try
     {
@@ -530,11 +515,9 @@ public class GMLFactory
   /**
    * creates a GMLMultiPolygon from a GM_MultiSurface
    * 
-   * @param geo
-   *          GM_MultiSurface
+   * @param geo GM_MultiSurface
    */
-  private static GMLMultiPolygon createGMLMultiPolygon( GM_MultiSurface geo, GMLDocument doc )
-      throws GMLException
+  private static GMLMultiPolygon createGMLMultiPolygon( GM_MultiSurface geo, GMLDocument doc ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLPoint" );
 
@@ -571,8 +554,7 @@ public class GMLFactory
   /**
    * creates a GMLFeature from a XML Element
    */
-  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature )
-      throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -606,14 +588,15 @@ public class GMLFactory
 
   /**
    * creates an empty GMLFeatureCollection
+   * 
+   * @deprecated
    */
   public static GMLFeatureCollection createGMLFeatureCollection( String name )
   {
     return new GMLFeatureCollection_Impl( name );
   }
 
-  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature )
-      throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -632,13 +615,12 @@ public class GMLFactory
     return gmlFeature;
   }
 
-  private static void addGMLProperties( final GMLDocument doc, final GMLFeature gmlFeature,
-      final Object value, final FeatureTypeProperty ftp, final int min ) throws GMLException
+  private static void addGMLProperties( final GMLDocument doc, final GMLFeature gmlFeature, final Object value, final FeatureTypeProperty ftp,
+      final int min ) throws GMLException
   {
 
     // marshalling
-    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
-        .getTypeHandlerForClassName( ftp.getType() );
+    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
 
     GMLProperty prop = null;
     if( value instanceof List )
@@ -657,8 +639,8 @@ public class GMLFactory
       final Element element = doc.createElementNS( ftp.getNamespace(), ftp.getName() );
       try
       {
-//      TODO give context not null
-  typeHandler.marshall( value, element ,null);
+        //      TODO give context not null
+        typeHandler.marshall( value, element, null );
       }
       catch( TypeRegistryException e )
       {
@@ -668,7 +650,7 @@ public class GMLFactory
     }
     else if( value instanceof GM_Object )
     {
-      prop = doc.createGMLGeoProperty( ftp,(GM_Object)value);
+      prop = doc.createGMLGeoProperty( ftp, (GM_Object)value );
     }
     else if( value instanceof Feature )
     {
@@ -679,8 +661,9 @@ public class GMLFactory
     else if( value instanceof String && ftp instanceof FeatureAssociationTypeProperty )
     {
       // gmlproperty of featureassociation must be created with featuretype
-      String href = value.toString();
-      prop = doc.createGMLProperty( ftp, href );
+      String href = value.toString(); //fid
+      if( href != null && href.length() > 0 )
+        prop = doc.createGMLProperty( ftp, href );
     }
     else
       prop = doc.createGMLProperty( ftp, Mapper.mapJavaValueToXml( value ) );
@@ -695,22 +678,19 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.15  2005/05/03 11:38:52  belger
+ * Revision 1.16  2005/06/05 22:43:54  doemming
  * *** empty log message ***
- *
- * Revision 1.14  2005/03/13 12:52:15  belger
- * *** empty log message ***
- *
- * Revision 1.13  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.12  2005/03/04 15:05:04  doemming
- * *** empty log message ***
- *
- * Revision 1.11  2005/02/28 13:34:14  doemming
- * *** empty log message ***
- * Revision 1.10 2005/02/15 17:52:53 belger *** empty
+ * Revision 1.15 2005/05/03 11:38:52 belger *** empty
  * log message ***
+ * 
+ * Revision 1.14 2005/03/13 12:52:15 belger *** empty log message ***
+ * 
+ * Revision 1.13 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.12 2005/03/04 15:05:04 doemming *** empty log message ***
+ * 
+ * Revision 1.11 2005/02/28 13:34:14 doemming *** empty log message *** Revision
+ * 1.10 2005/02/15 17:52:53 belger *** empty log message ***
  * 
  * Revision 1.9 2005/02/08 18:43:59 belger *** empty log message *** Revision
  * 1.8 2005/01/18 12:50:42 doemming *** empty log message ***
