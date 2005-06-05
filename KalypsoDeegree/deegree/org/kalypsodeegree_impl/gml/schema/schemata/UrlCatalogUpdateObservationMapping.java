@@ -45,14 +45,14 @@ import java.util.Map;
 import org.kalypso.java.net.AbstractUrlCatalog;
 
 /**
- * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die
- * gleichen Schemata (zumindest obslink) werden auch fürs binding benutzt ist
- * sind dadurch endlich wirklich nur noch einmal vorhanden.
+ * This catalog returns the gml schema that is used in the
+ * updatetransformationprocess
  * 
- * @author gernot
+ * @author doemming
  */
-public class DeegreeUrlCatalog extends AbstractUrlCatalog
+public class UrlCatalogUpdateObservationMapping extends AbstractUrlCatalog
 {
+  public final static String NS = "http://org.kalypso.updateObservationMapping";
 
   /**
    * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
@@ -60,8 +60,6 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {
-    catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
-    catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
-    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
+    catalog.put( NS, getClass().getResource( "updateObservationMapping/V1.0/updateObservationMapping.xsd" ) );
   }
 }

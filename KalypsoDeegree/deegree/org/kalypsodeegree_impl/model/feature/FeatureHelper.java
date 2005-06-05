@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -64,20 +65,28 @@ public class FeatureHelper
       return (String)value;
     return value.toString();
   }
+
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
-   * <p>Die Properties werden dabei anhand der übergebenen {@link Properties} zugeordnet. 
+   * <p>
+   * Die Properties werden dabei anhand der übergebenen {@link Properties}
+   * zugeordnet.
    * 
-   *  Es gilt:
+   * Es gilt:
    * <ul>
-   *  <li>Es erfolgt ein Deep-Copy, inneliegende Features werden komplett kopiert.</li>
-   *  <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
-   *  <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
+   * <li>Es erfolgt ein Deep-Copy, inneliegende Features werden komplett
+   * kopiert.</li>
+   * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das
+   * Referenzierte Feature bleibt gleich./li>
+   * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
    * 
-   * @throws IllegalArgumentException Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
-   * @throws NullPointerException falls eines der Argumente <codce>null</code> ist.
-   * @throws UnsupportedOperationException Noch sind nicht alle Typen implementiert
+   * @throws IllegalArgumentException Falls eine Zuordnung zwischen Properties
+   *           unterschiedlkicher Typen erfolgt.
+   * @throws NullPointerException falls eines der Argumente <codce>null</code>
+   *           ist.
+   * @throws UnsupportedOperationException Noch sind nicht alle Typen
+   *           implementiert
    */
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap )
   {
@@ -117,6 +126,10 @@ public class FeatureHelper
     if( object == null )
       return null;
 
+    // imutable types
+    if( object instanceof Boolean )
+      return object;
+
     if( object instanceof String )
       return object;
 
@@ -137,7 +150,6 @@ public class FeatureHelper
       // TODO: eigentlich clonen!
       return object;
     }
-
     throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
   }
 
@@ -170,5 +182,24 @@ public class FeatureHelper
     if( pos > -1 )
       return pos;
     return list.indexOf( destFE.getId() );
+  }
+
+  public static Feature[] getFeaturess( Object object )
+  {
+    if( object == null )
+      return new Feature[] {};
+    if( object instanceof Feature )
+    {
+      return new Feature[]
+      { (Feature)object };
+    }
+    else if( object instanceof FeatureList )
+    {
+      return ( (FeatureList)object ).toFeatures();
+    }
+    else
+    {
+      throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
+    }
   }
 }
