@@ -40,7 +40,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -59,8 +58,11 @@ public abstract class ScrolledCompositeCreator
   {
     final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
         | SWT.V_SCROLL | style );
-    // don't forget that line!
-    scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    // Die folgende Zeile hängt vom Layout des Parent ab, wenn der Parent kein GridLayout hat,
+    // kommts zu seltsamen Effekten beim Resize etc.
+    // sollte demnach vom aufrufenden gesetzt werden
+    // scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     m_contentControl = createContents( scrolledComposite, contentStyle );
     scrolledComposite.setContent( m_contentControl );
