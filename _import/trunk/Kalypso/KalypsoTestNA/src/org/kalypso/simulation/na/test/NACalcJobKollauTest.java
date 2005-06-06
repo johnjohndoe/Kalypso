@@ -27,6 +27,8 @@ import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 
+import com.sun.rsasign.s;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -85,10 +87,10 @@ public class NACalcJobKollauTest extends TestCase
     registry.registerTypeHandler( new DiagramTypeHandler() );
     try
     {
-      weisseElster();
-      weisseElsterOptimize();
+      //      weisseElster();
+      //      weisseElsterOptimize();
       kollau();
-      kollauOptimize();
+      //      kollauOptimize();
     }
     catch( CalcJobServiceException e )
     {
@@ -186,6 +188,7 @@ public class NACalcJobKollauTest extends TestCase
   public void kollau() throws CalcJobServiceException
   {
     final File tmp = getTmpDir();
+    System.out.println( "Berechnungsverzeichnis: " + tmp.getPath() );
 
     final ICalcDataProvider dataProvider = new ICalcDataProvider()
     {
@@ -198,7 +201,10 @@ public class NACalcJobKollauTest extends TestCase
         if( NaModelConstants.IN_CONTROL_ID.equals( id ) )
           return clazz.getResource( "kollau/expertControl.gml" );
         if( NaModelConstants.IN_MODELL_ID.equals( id ) )
-          return clazz.getResource( "kollau/calcCase.gml" );
+          return clazz.getResource( "kollau/calcCase_kollau.gml" );
+        // 
+        //        if( NaModelConstants.IN_MODELL_ID.equals( id ) )
+        //          return clazz.getResource( "kollau/calcCase_cycle.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
           return clazz.getResource( "kollau/.calculation" );
         if( NaModelConstants.IN_TEMPLATE_ID.equals( id ) )
@@ -331,20 +337,23 @@ public class NACalcJobKollauTest extends TestCase
         System.out.println( message + "\n" );
       }
 
-	public void setFinishInfo(int status, String text) {
-		// TODO Auto-generated method stub
-		
-	}
+      public void setFinishInfo( int status, String text )
+      {
+      // TODO Auto-generated method stub
 
-	public String getFinishText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      }
 
-	public int getFinishStatus() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+      public String getFinishText()
+      {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      public int getFinishStatus()
+      {
+        // TODO Auto-generated method stub
+        return 0;
+      }
     };
 
   }
