@@ -1,8 +1,7 @@
 package com.bce.eind.core.profil.util;
 
-import gnu.trove.TDoubleArrayList;
-
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 /**
  * holds a range (from-to) and an optional precision with optional factor.
@@ -100,7 +99,8 @@ public class Range
     // estimate initial size
     int count = (int)Math.round( Math.abs( m_to - m_from ) / step );
 
-    TDoubleArrayList values = new TDoubleArrayList( count );
+    final ArrayList<Double> values = new ArrayList<Double>( count );
+//    TDoubleArrayList values = new TDoubleArrayList( count );
 
     int sign = 1;
 
@@ -113,7 +113,7 @@ public class Range
     for( double d = m_from; (Double.compare( m_to, d ) == sign) || (Double.compare( m_to, d ) == 0); d += step )
       values.add( d );
 
-    return values.toNativeArray();
+    return com.bce.eind.core.profil.util.Arrays.rawDoubles( values.toArray( new Double[values.size()] ) );
   }
 
   /**
