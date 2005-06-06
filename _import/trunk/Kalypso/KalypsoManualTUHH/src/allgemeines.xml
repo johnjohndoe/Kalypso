@@ -11,17 +11,11 @@
   <title>Einführung</title>
 
   <section id="allgemeines_zu_kalypso">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>KALYPSO-Konzept</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Allgemeines zu KALYPSO</title>
 
-    <para id="para1">Das Programm-System KALYPSO Enterprise ist eine Open
-    Source Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in
-    Kooperation mit dem Arbeitsbereich Wasserbau der Technischen Universität
+    <para>Das Programm-System KALYPSO Enterprise ist eine Open-Source
+    Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
+    mit dem Arbeitsbereich Wasserbau der Technischen Universität
     Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
     numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
     einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
@@ -43,47 +37,218 @@
       </listitem>
     </itemizedlist>
 
-    <para></para>
-
     <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
     an:</para>
 
-    <para><itemizedlist>
-        <listitem>
-          <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
-          Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
+    <itemizedlist>
+      <listitem>
+        <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
+        Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
 
-          <para><graphic fileref="img/wasserbau-logo.png" scale="" /></para>
-        </listitem>
-      </itemizedlist>oder</para>
+        <para><graphic fileref="img/wasserbau-logo.png" scale="" /></para>
+      </listitem>
+    </itemizedlist>
+
+    <para>oder</para>
 
     <itemizedlist>
       <listitem>
         <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
         Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
         info@bjoernsen.de</para>
+
+        <para><graphic fileref="img/000_001_bce_sw_300.png" /></para>
       </listitem>
     </itemizedlist>
 
-    <graphic fileref="img/000_001_bce_sw_300.png" />
+    <section id="nymphe_kalypso">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO-Konzept</primary>
+          </indexterm></date>
+      </sectioninfo>
 
-    <para></para>
+      <title>Die Nymphe Kalypso</title>
 
-    <para><emphasis role="bold">Die Nymphe Kalypso</emphasis></para>
+      <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
+      genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
+      Namen.</para>
 
-    <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
-    genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
-    Namen.</para>
+      <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem
+      sein Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel
+      Ogygia gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus
+      Liebe dort gefangen und wollte ihn zu Ihrem unsterblichen Ehemann
+      nehmen. Doch selbst nach Jahren des Umwerbens und Betörens von Kalypsos
+      Seite sehnte sich Odysseus immer noch nach seiner Frau und seinem
+      Sohn.</para>
 
-    <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem sein
-    Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel Ogygia
-    gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus Liebe dort
-    gefangen und wollte ihn zu Ihrem unsterblichen Ehemann nehmen. Doch selbst
-    nach Jahren des Umwerbens und Betörens von Kalypso's Seite sehnte sich
-    Odysseus immer noch nach seiner Frau und seinem Sohn.</para>
+      <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
+      entsandte, ließ Kalypso Odysseus frei, sodass er seine Reise Richtung
+      Heimat fortsetzen konnte.</para>
+    </section>
+  </section>
 
-    <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
-    entsandte, liess Kalypso Odysseus frei, sodass er seine Reise Richtung
-    Heimat fortsetzen konnte.</para>
+  <section id="kalypso_installation_lhwz_sachsen">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Installation</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>KALYPSO-Installation</title>
+
+    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
+    serverseitigen Dienste sind als installation auf dem physisch
+    eigenständigen KALYPSO-Server möglich:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Durchführung von numerischen Modellberechnungen
+        (Rechen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Installation-Server</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Server-Installation</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Installation-Client</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Client-Installation</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Update</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Update</title>
+
+      <para></para>
+    </section>
+  </section>
+
+  <section id="anwendungsfaelle">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Anwendungsfälle</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Anwendungsfälle</title>
+
+    <para>Die KALYPSO-Installation unterscheidet grundsätzlich drei
+    Anwendungsfälle:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Administration</emphasis>: Der
+        Fachadministrator nimmt hauptsächlich die Aufgabe wahr, neue Modelle
+        bzw. Modelltypen in KALYPSO zu implementieren.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Modellierung</emphasis>: Der Modellaufbau,
+        die Modellpflege und -fortschreibung wird durch den Experten
+        (Modellierer) geleistet.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Anwendungsbetrieb</emphasis>: Im
+        Planungsfall müssen durch den Anwender schnell und zuverlässig
+        Modellberechnungen auf Basis vorhandener Modelle durchgeführt werden.
+        Zur Zeit besteht im Anwedungsbetrieb lediglich die Möglichkeit für
+        speziell aufbereitete Modelle eine Hochwasservorhersage
+        durchzuführen.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Die Benutzung von KALYPSO im Hinblick auf die Modellierung (<xref
+    linkend="grafische_oberflaeche" /> und <xref
+    linkend="zeitreihen_repository" />) und den Anwedungsbetrieb ist im
+    vorliegenden Handbuch beschrieben.</para>
+  </section>
+
+  <section id="datenmanagement">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Datenmanagement LHWZ</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Datenmanagement</title>
+
+    <para>Die in <xref linkend="kalypso_installation_lhwz_sachsen" />
+    beschriebene Client-Server-Architektur basiert auf folgendem
+    Datenmanagement-Prinzip:</para>
+
+    <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem
+    KALYPSO-Server gespeicherte Modelle geladen werden. Diese aktuellen
+    Modelle - es können mehrere Modelle parallel geöffnet und bearbeitet
+    werden - werden im lokalen Arbeitsverzeichnis von KALYPSO verwaltet. Alle
+    Änderungen am Modell, das Anlegen neuer Rechenvarianten, etc. sind somit
+    im ersten Schritt nur wirksam für die lokale Modellversion.</para>
+
+    <para>Das Speichern des Modells (einschließlich Modellspezifikation,
+    Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
+    Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels der
+    speziellen Menüs <guilabel>Modell</guilabel> und
+    <guimenu>Rechenvariante</guimenu> (siehe <xref
+    linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
+
+    <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im
+    KALYPSO-Modeler (Expertenmodus), wo der Experte sehr detailliert und
+    gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
+    kann.</para>
+
+    <para>Für den Anwender und Planer bleibt das Datenmanagement verborgen, da
+    er automatisch durch den jeweiligen Wizard geführt wird.</para>
+  </section>
+
+  <section id="dokumentationen">
+    <title>Dokumentationen</title>
+
+    <para>Zur KALYPSO-Installation wurden Dokumentationen zu verschiedenen
+    Anwendungsbereichen erstellt, die im Folgenden aufgelistet sind.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>KALYPSO-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikprogramm-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+    </itemizedlist>
   </section>
 </chapter>

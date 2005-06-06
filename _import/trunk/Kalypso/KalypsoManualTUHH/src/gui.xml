@@ -235,6 +235,13 @@
         </listitem>
 
         <listitem>
+          <para>Baumvorlage (*.gmv)</para>
+
+          <para>Diese Vorlage visualisiert die Modelldaten in Form eines
+          Baumes. Innere Abhangigkeiten sind so editierbar.</para>
+        </listitem>
+
+        <listitem>
           <para>Zeitreihendiagramm (*.odt)</para>
 
           <para>Zeitreihen im zml-Format werden in einem Diagramm angezeigt,
@@ -251,11 +258,10 @@
         </listitem>
       </itemizedlist>
 
-      <para>Die Vorlagen sind durch den Benutzer editierbar. Eine Ausführliche
-      Beschreibung zur Erstellung und Änderung von Formatvorlagen enhält die
-      Technische Dokumentation. In den folgenden Abschnitten sind die
-      Darstellungsmöglichkeiten beschrieben, die sich aus den einzelnen
-      Formatvorlagen ergeben.</para>
+      <para>Die Vorlagen sind teilweise durch den Benutzer editierbar, so dass
+      eine Erstellung und Änderung von Formatvorlagen nach eigenen Vorlieben
+      möglich. In den folgenden Abschnitten sind die Darstellungsmöglichkeiten
+      beschrieben, die sich aus den einzelnen Formatvorlagen ergeben.</para>
     </section>
 
     <section id="menu_karte">
@@ -303,6 +309,16 @@
         </mediaobject>
       </figure>
 
+      <para>Mit Hilfe des grünen Plus-Symbols in der Werkzeugleiste der
+      Gliederung kann einer Karte ein neues Thema hinzugefügt werden. Die
+      Auswahl des neuen hinzuzufügenden Themas wird durch einen Wizard
+      vereinfacht. Es besteht die Möglichkeit im Projekt vorhandene
+      (importierte) ESRI Shape Dateien, Geometriedaten aus einer GML-Instanz,
+      Rasterdaten oder Daten von einem Web Feature Service bzw. Web Map
+      Service hinzuzufügen. Durch einen Doppelklick auf die gewünschte
+      Datenform wird der spezifische Assistent zum Datenimport gestartet.
+      </para>
+
       <para>Das Layout der Karten-Ansicht bzw. der Kartenvorlage wird anhand
       des Style-Editors angepasst (siehe <xref linkend="style_editor" />).
       Dazu wird in der Gliederung-Ansicht ein Thema ausgewählt, für welches
@@ -337,6 +353,21 @@
       aufgerufenen Kartenvorlage aktualisiert, sobald die Speicherung
       durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
       Aufrufe der Kartenvorlage wirksam sind.</para>
+
+      <para>Eine neue Karte kann im Projekt durch den Menüpunkt <guimenu>Datei
+      --&gt; Neu--&gt; Andere</guimenu> hinzugefügt werden. Hierzu ist der
+      Assistent GiSMapView unter dem Ordner Andere auszuwählen.</para>
+
+      <para id="pic_neue_karte"><figure>
+          <title>Neue Karte erzeugen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/gis_neue_karte.png" scale="60" />
+            </imageobject>
+          </mediaobject>
+        </figure>Mit Hilfe des Assistenten kann der Speicherort sowie der Name
+      der neuen Karte bestimmt werden.</para>
     </section>
 
     <section id="menu_tabelle">
@@ -652,7 +683,7 @@
 
         <para>Über diesen Menüpunkt wird der Vorhersage-Wizard gestartet. Dies
         ist lediglich möglich, wenn ein Vorhersagewizard für das Modell zuvor
-        integriert wurde.</para>
+        konfiguriert wurde.</para>
       </section>
     </section>
 
@@ -934,7 +965,7 @@
           Berichtswesen</emphasis></para>
 
           <para>Dargestellte Diagramme und Tabellen können zur Dokumentation
-          der Ergebnisse an das Berichtswesen exportiert werden</para>
+          der Ergebnisse an das Berichtswesen exportiert werden.</para>
 
           <figure>
             <title>Menü Tabellen</title>
