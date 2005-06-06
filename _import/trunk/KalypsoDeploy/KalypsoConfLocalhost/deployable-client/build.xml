@@ -6,9 +6,20 @@
 >
   <!-- set installationDir! -->
   <property name="kalypso.client.install"
+            value="P:\\Software\\KalypsoEnterpriseClient\\testing"
+  />
+  
+  <!--
+  <property name="kalypso.client.install"
+            value="C:\\Programme\\KalypsoClient\\"
+  <property name="kalypso.client.install"
+            value="P:\\Software\\KalypsoEnterpriseClient\\stable"
+  />
+  <property name="kalypso.client.install"
             value="C:\\Programme\\KalypsoClient\\"
   />
-
+-->
+  <!-- set updatesite! -->
   <property name="kalypso.client.updatesite"
             value="C:\\Programme\\KalypsoClientUpdateSite\\"
   />
@@ -47,6 +58,7 @@
           depends="copy-eclipse-base"
           description="Copy the kalypso configuration files to the installation dir and others"
   >
+
     <copy todir="${kalypso.client.install}">
       <fileset dir="${project.path}/deployable-client/client"
                includes="*/**"
@@ -60,6 +72,7 @@
           depends="copy-kalypso-custom"
           description="Copy generated plugins and features to the installation dir and others"
   >
+
     <echo message="Kalypso Client Installation in: ${kalypso.client.install}" />
     <echo message="hinweis: erst task feature-and-plugins ausführen, dann diese task starten"
     />
@@ -85,11 +98,23 @@
     />
   </target>
 
+  <target name="feature-and-plugins-TUHH-FeatureNA"
+          depends="prepare"
+          description="deploy kalypso feature and plugins TUHH-FeatureNA"
+  >
+
+    <pde.exportFeatures features="org.kalypso.enterprise.na"
+                        destination="${dist.client}"
+                        exportType="directory"
+                        exportSource="false"
+    />
+  </target>
+
   <target name="feature-and-plugins-as-updatesite"
           depends="prepare"
           description="deploy kalypso feature and plugins"
   >
-  <pde.exportFeatures features="org.kalypso.enterprise"
+    <pde.exportFeatures features="org.kalypso.enterprise"
                         destination="${kalypso.client.updatesite}"
                         exportType="update"
                         exportSource="false"
