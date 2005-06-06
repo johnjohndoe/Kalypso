@@ -69,8 +69,8 @@ import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.java.util.FortranFormatHelper;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
@@ -102,6 +102,8 @@ public class NetFileManager extends AbstractManager
   public static boolean DEBUG = false;
 
   final public NAConfiguration m_conf;
+  
+  private static final String BranchingPropName = "BranchingMember";
 
   private final UrlUtilities m_urlUtilities;
 
@@ -122,7 +124,7 @@ public class NetFileManager extends AbstractManager
    * 
    * importing ascii file to gml-modell
    * 
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
+   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
    */
   public Feature[] parseFile( URL url ) throws Exception
   {
@@ -533,6 +535,7 @@ public class NetFileManager extends AbstractManager
       int iueb = 0;
       int izuf = 0;
       int ivzwg = 0;
+
       // verzweigung ?
       final Feature linkedNodeFE = workspace.resolveLink( nodeFE, "verzweigungNodeMember" );
       if( linkedNodeFE != null )

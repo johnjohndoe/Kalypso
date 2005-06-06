@@ -71,7 +71,6 @@ public class WriteAsciiVisitor extends NetElementVisitor
    */
   public boolean visit( NetElement netElement )
   {
-    System.out.println("WriteAsciiVisitor: "+netElement.getChannel().getId());
     netElement.write( m_asciiBuffer, m_nodeCollector );
     try
     {

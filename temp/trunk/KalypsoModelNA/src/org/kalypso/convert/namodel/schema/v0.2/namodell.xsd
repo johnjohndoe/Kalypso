@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Technische Universität Hamburg Harburg (Technische Universität Hamburg-Harburg) -->
-<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Andersen (no) -->
-<schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.9">
+<schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="0.2">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<!--<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
-	
                <element name="Abfluss" type="obslink:TimeseriesLinkType/>
         jetzt: <element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty/>
--->
+	-->
 	<element name="NaModell" type="na:NaModellType"/>
 	<complexType name="NaModellType">
 		<complexContent>
@@ -62,6 +59,11 @@
 								<tooltip>geometriescher Ort</tooltip>
 								<description>Geometrie des Objektes</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>geometric position</tooltip>
+								<description>Geometry of the Object</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="num" type="integer">
@@ -91,37 +93,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!-- ZR Zufluss falls zufluss vorhanden -->
-					<element name="zuflussZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zufluss Eingang</label>
-								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten</tooltip>
-								<description>.</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zufluss Eingang</label>
-								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten Vorhersage</tooltip>
-								<description>.</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zufluss Berechnung</label>
-								<tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
-								<description>.</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="nzufPfad" type="string"/>
-					<!-- TODO loeschen -->
-					<!-- ZR Pegel falls Pegel vorhanden-->
 					<element name="pegelZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
@@ -159,6 +130,35 @@
 							</documentation>
 						</annotation>
 					</element>
+					<!--ab hier kann entfernt werden, falls Branching verwendet wird-->
+					<!-- ZR Zufluss falls zufluss vorhanden -->
+					<element name="zuflussZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Eingang</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Eingang</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten Vorhersage</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Berechnung</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
 					<!-- verzweigung -->
 					<element name="zproz" type="double">
 						<annotation>
@@ -178,6 +178,144 @@
 							</documentation>
 						</annotation>
 					</element>
+					<!--bis hier kann entfernt werden, falls Branching verwendet wird-->
+					<!-- branching ab hier aktivieren
+					<element name="qzug" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zugabemenge</label>
+								<tooltip>kont. Zugabemenge [m^3/s]</tooltip>
+								<description>kontinuierliche Zugabemenge [m^3/s] zum Knotenabfluss</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="BranchingMember" type="na:BranchingAssociationType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Knoten zu Knoten</label>
+								<tooltip>Verzweigung, Zufluss, Entnahme,Überlauf</tooltip>
+								<description>Verbindung mit oder von einem Zielknoten (Verzweigung, Zufluss, Entnahme,Überlauf)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BranchingAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="na:_Branching"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="_Branching" type="na:AbstractBranchingType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<complexType name="AbstractBranchingType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="branchingNodeMember" type="na:NodeAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Relation Knoten</label>
+								<tooltip>RelationVerzweigungsknoten</tooltip>
+								<description>Relation zum Verzweigungsknoten der Knoten zu Knoten Beziehung</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="kontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="ContExtractionFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="qabg" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Entnahmemenge</label>
+								<tooltip>kont. Entnahmemenge [m^3/s]</tooltip>
+								<description>kont. Entnahmemenge [m^3/s], welche dem Zielknoten zugeschlagen wird</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="OverfallFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="queb" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überlaufhöhe</label>
+								<tooltip>Überlaufhöhe [m^3/s]</tooltip>
+								<description>Überlaufhöhe [m^3/s], bei Überschreitung wird der darüber liegende Abfluss dem Zielknoten zugeschlagen</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Zuflusspegel" type="na:InflowGageFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="InflowGageFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="zuflussZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Eingang</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="zuflussZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Eingang</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Eingangsdaten Vorhersage</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zufluss Berechnung</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching"/>
+	<complexType name="BranchingFeatureType">
+		<complexContent>
+			<extension base="na:AbstractBranchingType">
+				<sequence>
+					<element name="zproz" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verzweigungsfaktor</label>
+								<tooltip>Abflussanteil zum Verzweigungsknoten (0-1)</tooltip>
+								<description>Anteil des Abflusses, der dem Verzweigungsknoten zugefuehrt wird (0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+-->
 				</sequence>
 			</extension>
 		</complexContent>
@@ -244,6 +382,15 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="entwaesserungsStrangMember" type="na:ChannelAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zielstrang</label>
+								<tooltip>Relation zum Entwässerungsstrang</tooltip>
+								<description>Relation zum dem Strang, in welchen das Teilgebiet entwässert.</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="generateResult" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
@@ -253,25 +400,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="ispk" type="integer">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Gebietsart</label>
-								<tooltip>Art der Berechnung (Gebietsbearbeitungsfall)</tooltip>
-								<description>Bearbeitung/Berechnung des Gebietes mit Hydrotopen - nicht veraenderbar</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="text" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Kommentar</label>
-								<tooltip>Gebietsbeschreibung</tooltip>
-								<description>Kommentar/Beschreibung zur leichteren Gebietszuordnung, evtl. mittels Namensgebung </description>
-							</documentation>
-						</annotation>
-					</element>
-					<!-- TODO benoetigt ? -->
 					<element name="flaech" type="long">
 						<annotation>
 							<documentation xml:lang="de">
@@ -282,14 +410,6 @@
 						</annotation>
 						<!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
 					</element>
-					<element name="pns" type="string"/>
-					<!-- TODO loeschen, standardwert rausschreiben -->
-					<element name="kurzzeit" type="string"/>
-					<!-- TODO loeschen, da jetzt Teilgebietsmodell -->
-					<element name="langzeit" type="string"/>
-					<!-- TODO loeschen, da jetzt Teilgebietsmodell -->
-					<element name="namfn" type="string"/>
-					<!-- TODO loeschen, da standard-name -->
 					<element name="faktn" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -299,14 +419,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="namft" type="string"/>
-					<!-- TODO loeschen, da standard-name -->
-					<element name="namept" type="string"/>
-					<!-- TODO loeschen, da standard-name -->
-					<element name="namfzf" type="string"/>
-					<!-- TODO zeitflaechenfunktion lesen -->
-					<element name="namhydro" type="string"/>
-					<!-- TODO hydrotope uebernehmen -->
 					<element name="snowtype" type="string">
 						<annotation>
 							<documentation xml:lang="de">
@@ -348,8 +460,6 @@
 						</annotation>
 						<!--JH, wird aus Hydrotopdatei übernommen (im Rechenkern), ist hier daher auch eigentlich überflüssig-->
 					</element>
-					<element name="anzlayy" type="integer"/>
-					<!-- TODO loeschen sollte aus listtenanzahl hervorgehen-->
 					<element name="bimax" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -369,17 +479,14 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="faktorBianf" type="double"/>
-					<!-- TODO loeschen, bianf ist schon der faktor -->
-					<element name="izkn_vers" type="integer">
+					<element name="izkn_vers" type="na:NodeAssociationType" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zielknoten Qvers</label>
-								<tooltip>Zielknoten Abfluss versiegelter Flächen</tooltip>
-								<description>Zielknoten zu welchem bei Bedarf der Abfluss versiegelter Flächen umgeleitet werden kann</description>
+								<tooltip>Link Zielknoten Abfluss versiegelter Flächen</tooltip>
+								<description>Link zum Zielknoten zu welchem bei Bedarf der Abfluss versiegelter Flächen umgeleitet werden kann</description>
 							</documentation>
 						</annotation>
-						<!-- TODO loeschen, geht aus relation hervor, JH: nicht löschen, hat Bedeutung -->
 					</element>
 					<element name="tint" type="double">
 						<annotation>
@@ -425,7 +532,7 @@ siehe bodenkorrekturmember...
 								<description>Vegetationsabhaengige Korrektur der Verdunstung</description>
 							</documentation>
 						</annotation>
-						<!-- JH, wird fuer Gebietsbearbeitungsfall ispk =7 nicht verwendet-->
+						<!-- JH, wird fuer Gebietsbearbeitungsfall ispk =7 nicht verwendet?-->
 					</element>
 					<element name="aint" type="double">
 						<annotation>
@@ -442,15 +549,6 @@ siehe bodenkorrekturmember...
 								<label>Anfangsinhalt Grundwasserspeicher</label>
 								<tooltip>Anfangsinhalt Grundwasserspeicher (Anfangswert)</tooltip>
 								<description>Inhalt des Grundwasserspeichers als Anfangswert für den ersten Berechnungszyklus</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="faktorAigw" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Faktor AIGW</label>
-								<tooltip>Optimierungsfaktor Anfangsinhalt GW Speicher</tooltip>
-								<description>Faktor, welcher bei der Berechnung einer Optimierung den Anfangsinhalt Grundwasserspeicher optimiert</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -472,6 +570,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
+					<!--        Retentionskonstanten       -->
 					<element name="retvs" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -496,15 +595,6 @@ siehe bodenkorrekturmember...
 								<label>k QIntf.</label>
 								<tooltip>Retentionskonstante Interflow [h]</tooltip>
 								<description>Retentionskonstante (Speicherkonstante) des Interflows</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="faktorRetobRetint" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Faktor RETOB,RETINT</label>
-								<tooltip>Optimierungsfaktor Retentionskonstanten Oberflächenabfluss (natürlich) und Interflow</tooltip>
-								<description>Faktor, welcher bei der Berechnung einer Optimierung die Retentionskonstanten des Oberflächenabflusses natürlicher Flächen und des Interflows optimiert</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -540,27 +630,15 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="igwzu" type="integer"/>
-					<!-- TODO loeschen, sollte aus listenanzahl hervorgehen -->
-					<!--
- (ngwzu,*)_...
- (gwwi,*)_...
--->
+					<!-- (ngwzu,*)_...
+						  (gwwi,*)_...-->
+					<!--     Grundwasser       -->
 					<element name="grundwasserabflussMember" type="na:grundwasserabflussAssociationType" maxOccurs="6">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Link GW Relation</label>
 								<tooltip>Link Grundwasserrelation</tooltip>
 								<description>Link Grundwasserrelation in Nachbargebiete</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="entwaesserungsStrangMember" type="na:ChannelAssociationType" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zielstrang</label>
-								<tooltip>Relation zum Entwässerungsstrang</tooltip>
-								<description>Relation zum dem Strang, in welchen das Teilgebiet entwässert.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -627,55 +705,12 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="izkn" type="integer">
+					<element name="izkn" type="na:NodeAssociationType" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Relation tiefenGW</label>
 								<tooltip>Relation zum Knoten des Tiefengrundwasserleiters</tooltip>
 								<description>Rekation zum Knoten, welcher den Abfluss Tiefengrundwasser aufnimmt</description>
-							</documentation>
-						</annotation>
-						<!-- TODO loeschen, sollte aus relation hervorgehen, JH: nicht löschen, ist weitere Relation. -->
-					</element>
-					<element name="temperaturZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>l</label>
-								<tooltip>tip</tooltip>
-								<description>.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>l</label>
-								<tooltip>t</tooltip>
-								<description>d</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="temperaturZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>l</label>
-								<tooltip>tip</tooltip>
-								<description>.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>l</label>
-								<tooltip>t</tooltip>
-								<description>d</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="temperaturZR" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>l</label>
-								<tooltip>tip</tooltip>
-								<description>.</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>l</label>
-								<tooltip>t</tooltip>
-								<description>d</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -722,13 +757,18 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<!-- temperatur -->
+					<!--ZR Temperatur-->
 					<element name="temperaturZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>l</label>
 								<tooltip>tip</tooltip>
 								<description>.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>l</label>
+								<tooltip>t</tooltip>
+								<description>d</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -739,6 +779,11 @@ siehe bodenkorrekturmember...
 								<tooltip>tip</tooltip>
 								<description>.</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>l</label>
+								<tooltip>t</tooltip>
+								<description>d</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="temperaturZR" type="obslink:TimeseriesLinkFeatureProperty">
@@ -747,6 +792,60 @@ siehe bodenkorrekturmember...
 								<label>l</label>
 								<tooltip>tip</tooltip>
 								<description>.</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>l</label>
+								<tooltip>t</tooltip>
+								<description>d</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!-- ZR Verdunstung -->
+					<element name="verdunstungZRRepository" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>l</label>
+								<tooltip>tip</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="verdunstungZRRepositoryVorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>l</label>
+								<tooltip>tip</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="verdunstungZR" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>l</label>
+								<tooltip>tip</tooltip>
+								<description>.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--               Optimierung              -->
+					<element name="faktorBianf" type="double"/>
+					<!-- TODO loeschen, bianf ist schon der faktor -->
+					<element name="faktorAigw" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor AIGW</label>
+								<tooltip>Optimierungsfaktor Anfangsinhalt GW Speicher</tooltip>
+								<description>Faktor, welcher bei der Berechnung einer Optimierung den Anfangsinhalt Grundwasserspeicher optimiert</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="faktorRetobRetint" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor RETOB,RETINT</label>
+								<tooltip>Optimierungsfaktor Retentionskonstanten Oberflächenabfluss (natürlich) und Interflow</tooltip>
+								<description>Faktor, welcher bei der Berechnung einer Optimierung die Retentionskonstanten des Oberflächenabflusses natürlicher Flächen und des Interflows optimiert</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -807,7 +906,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="downStreamNodeMember" type="na:NodeAssociationType" minOccurs="0">
+					<element name="downStreamNodeMember" type="na:NodeAssociationType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Relation UW-Knoten</label>
@@ -856,6 +955,16 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
+					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ref. KM-Parameter</label>
+								<tooltip>Referenz Kalinin-Miljukov Parameter</tooltip>
+								<description>Referenz auf die Kalinin-Miljukov Parameter des Stranges</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--    Optimierung   -->
 					<element name="faktorRkf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -871,15 +980,6 @@ siehe bodenkorrekturmember...
 								<label>Faktor n</label>
 								<tooltip>Optimierungsfaktor Speicheranzahl n (Kalinin-Miljukov-Verfahren)</tooltip>
 								<description>Faktor, welcher bei der Berechnung einer Optimierung die Speicheranzahl n optimiert (Kalinin-Miljukov-Verfahren)</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Ref. KM-Parameter</label>
-								<tooltip>Referenz Kalinin-Miljukov Parameter</tooltip>
-								<description>Referenz auf die Kalinin-Miljukov Parameter des Stranges</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -911,16 +1011,6 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="itext" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Kommentar RHB</label>
-								<tooltip>Kommentar / Name RHB</tooltip>
-								<description>beliebiger Kommentar zum Rückhaltebecken</description>
-							</documentation>
-						</annotation>
-					</element>
-					<!--JH:evtl. durch Name abgedeckt, jedoch Name ist optional. Abfangen,falls nicht gesetzt-->
 					<element name="sv" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -953,7 +1043,7 @@ siehe bodenkorrekturmember...
 							<documentation xml:lang="de">
 								<label>WVQ-Beziehung</label>
 								<tooltip>Wasserstand [mNN]-Volumen [hm^3]-Abgabe [m^3/s]-Beziehung</tooltip>
-								<description>Beziehung zwischen Wasserstand [mNN], Volumen/ Inhalt [hm^3] und Abgabe/ Abfluss [m^3/s] aus dem Speicher (max. 24 Wertepaare)</description>
+								<description>Beziehung zwischen Wasserstand [mNN], Volumen/ Inhalt [hm^3] und Abgabe/ Abfluss [m^3/s] aus dem Speicher (max. 24 Wertetripel)</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -961,6 +1051,7 @@ siehe bodenkorrekturmember...
 			</extension>
 		</complexContent>
 	</complexType>
+	<!-- ________Sonstiges__________________ -->
 	<!--Kalinin-Miljukov Parameter -->
 	<complexType name="KMParameterAssociationType">
 		<complexContent>
@@ -1208,7 +1299,7 @@ siehe bodenkorrekturmember...
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anteil GW-Abfluss</label>
-								<tooltip>Anteil des Grundwasserabflusses</tooltip>
+								<tooltip>Anteil des Grundwasserabflusses Nachbargebiet (Summe = 1)</tooltip>
 								<description>Anteil des Grundwasserabfluss in das Nachbargebiet (Summe = 1)</description>
 							</documentation>
 							<documentation xml:lang="en">

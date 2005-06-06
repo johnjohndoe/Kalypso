@@ -49,7 +49,7 @@ public abstract class NetElementVisitor
 {
   private Logger m_logger = null;
 
-  public abstract boolean visit( NetElement netElement );
+  public abstract boolean visit( NetElement netElement ) throws Exception;
 
   public void log( String info )
   {

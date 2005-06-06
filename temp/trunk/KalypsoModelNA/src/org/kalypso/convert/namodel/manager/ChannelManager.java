@@ -50,15 +50,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.java.util.FortranFormatHelper;
+import org.kalypso.ogc.gml.typehandler.DiagramProperty;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.java.util.FortranFormatHelper;
-import org.kalypso.ogc.gml.typehandler.DiagramProperty;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -92,7 +93,7 @@ public class ChannelManager extends AbstractManager
 
   /**
    * 
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
+   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
    */
   public Feature[] parseFile( URL url ) throws Exception
   {
@@ -161,7 +162,7 @@ public class ChannelManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace )
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
     Feature rootFeature = workspace.getRootFeature();
     Feature channelCol = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
@@ -175,7 +176,7 @@ public class ChannelManager extends AbstractManager
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, GMLWorkspace workspace )
+  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, GMLWorkspace workspace ) throws Exception
   {
     asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
@@ -198,46 +199,36 @@ public class ChannelManager extends AbstractManager
     {
       asciiBuffer.getChannelBuffer().append( STORAGECHANNEL + "\n" );
 
-      // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)      
-      // RHB 5
-
+      // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)
+      // RHB 5-7
       asciiBuffer.getRhbBuffer().append( "SPEICHER" + toAscci( feature, 5 ) );
-
-      // RHB 6
-      
+      //Ueberlaufknoten optional
       Feature nodeFE = workspace.resolveLink( feature, "iknotNodeMember" );
-
       if( nodeFE == null )
         asciiBuffer.getRhbBuffer().append( "       0" );
       else
         asciiBuffer.getRhbBuffer().append( toAscci( nodeFE, 6 ) );
-
-      // RHB 7
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 7 ) + "\n" );
-
-      // (itext,a80)      
+      
+      // (itext,a80)
       // RHB 8
-
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 8 ) + "\n" );
-      
-      // (lfs,i4)(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
-      
-      // RHB 9
+
+      // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
+      // RHB 9-10
       Feature dnodeFE = workspace.resolveLink( feature, "downStreamNodeMember" );
       asciiBuffer.getRhbBuffer().append( toAscci( dnodeFE, 9 ) );
-    
-      // RHB 10
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
-      
       DiagramProperty rhbDiagram = (DiagramProperty)feature.getProperty( "hvvsqd" );
-      
-      
-      //TODO: maximal 24 Wertepaare zulassen!
-      asciiBuffer.getRhbBuffer().append(FortranFormatHelper.printf(Integer.toString(rhbDiagram.size()),"i4"));
-          
-      asciiBuffer.getRhbBuffer().append("\n" );
+      asciiBuffer.getRhbBuffer().append(
+          FortranFormatHelper.printf( Integer.toString( rhbDiagram.size() ), "i4" ) );
+      if( rhbDiagram.size() > 24 )
+        throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rueckhaltebecken: #"
+            + FeatureHelper.getAsString( feature, "inum" ) );
+      asciiBuffer.getRhbBuffer().append( "\n" );
 
+      // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
       // RHB 11
       for( int i = 0; i < rhbDiagram.size(); i++ )
       {
@@ -253,7 +244,7 @@ public class ChannelManager extends AbstractManager
         asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( q, "f8.3" ) );
         asciiBuffer.getRhbBuffer().append( "\n" );
       }
-
+      // Kommentar Ende Speicher
       // RHB 12
       asciiBuffer.getRhbBuffer().append( "ENDE" + "\n" );
 

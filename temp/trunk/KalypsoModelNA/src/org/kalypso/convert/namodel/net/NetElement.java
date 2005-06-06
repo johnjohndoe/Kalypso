@@ -336,7 +336,7 @@ public class NetElement
       nodeList.add( knotU );
   }
 
-  public void accept( NetElementVisitor visitor )
+  public void accept( NetElementVisitor visitor ) throws Exception
   {
     visitor.visit( this );
   }

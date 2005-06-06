@@ -62,9 +62,10 @@ public class DownStreamVisitor extends NetElementVisitor
 
   /**
    * 
+   * @throws Exception
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
-  public boolean visit( NetElement netElement )
+  public boolean visit( NetElement netElement ) throws Exception
   {
     if( m_innerVisitor.visit( netElement ) )
     {

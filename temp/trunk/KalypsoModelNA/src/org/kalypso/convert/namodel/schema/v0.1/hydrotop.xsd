@@ -115,7 +115,16 @@
 							<documentation xml:lang="de">
 								<label>Faktor Versiegelung</label>
 								<tooltip>Korrekturfaktor Versiegelungsgrad [-] (= 0-1)</tooltip>
-								<description>Korrekturfaktor Versiegelungsgrad [-] (= 0-1). Wird dieser nicht gesetzt, so wird der Faktor zu 1 angenommen</description>
+								<description>Korrekturfaktor Versiegelungsgrad [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="entwArt" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Entwaesserung</label>
+								<tooltip>Entwaesserungsart (besielt/unbesielt)</tooltip>
+								<description>Untergliederung der in besielte und unbesielte Flaechen (wird zur Zeit noch nicht im Modell verwendet)</description>
 							</documentation>
 						</annotation>
 					</element>

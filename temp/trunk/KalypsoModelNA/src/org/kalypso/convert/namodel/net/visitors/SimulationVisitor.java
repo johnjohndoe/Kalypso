@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypsodeegree.model.feature.Feature;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -53,25 +54,50 @@ public class SimulationVisitor extends NetElementVisitor
 
   private final List m_simulated;
 
+  private final List m_cycleTest = new ArrayList();
+
   /*
    * 
    * @author doemming
    */
   public SimulationVisitor( NetElementVisitor innerVisitor )
-  {       
+  {
     m_innerVisitor = innerVisitor;
     m_simulated = new ArrayList();
+
   }
 
   /**
    * 
+   * @throws Exception
    * @see org.kalypso.convert.namodel.net.visitors.NetElementVisitor#visit(org.kalypso.convert.namodel.net.NetElement)
    */
-  public boolean visit( NetElement netElement )
-  {    
+  public boolean visit( NetElement netElement ) throws Exception
+  {
     if( m_simulated.contains( netElement ) )
-      return false;    
-    System.out.println(" SimulationVisitor: "+netElement.getChannel().getId());
+      return false;
+    // check cycle
+    if( m_cycleTest.contains( netElement ) )
+    {
+      StringBuffer b = new StringBuffer( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" );
+      int start = m_cycleTest.indexOf( netElement );
+      for( int i = start; i < m_cycleTest.size(); i++ )
+      {
+        Feature element = ( (NetElement)m_cycleTest.get( i ) ).getChannel();
+        if( element.getProperty( "inum" ) != null )
+        {
+
+          b.append( ( i - start+1 ) + ". bei Strang Nr. " + element.getProperty( "inum" ).toString()
+              + "(ID=" + element.getId() + ")\n" );
+        }
+        else
+          b.append( ( i - start ) + ". bei " + element.getId() + "\n" );
+      }
+      log(b.toString());
+      throw new Exception(b.toString());
+    }
+    m_cycleTest.add( netElement );
+    
     // first calculate upstream
     if( !netElement.resultExists() )
     {
