@@ -494,7 +494,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
-        logger.info( "lese berechneten Abfluss fuer Knoten #" + key + "\n" );
+        logger.info( "lese berechnetes Ergebnis fuer Knoten #" + key + "\n" );
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
