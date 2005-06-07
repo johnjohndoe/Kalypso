@@ -53,6 +53,11 @@
 								<tooltip>geometriescher Ort</tooltip>
 								<description>Geometrie des Objektes</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>geometric position</tooltip>
+								<description>Geometry of the Object</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="flaech" type="double">
@@ -61,6 +66,11 @@
 								<label>Hydrotopflaeche</label>
 								<tooltip>Flaeche des Hydrotopes [m^2]</tooltip>
 								<description>Gesamtflaeche des Hydrotopes [m^2]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Area</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -71,6 +81,11 @@
 								<tooltip>Link zum Nutzungsschlüssel</tooltip>
 								<description>vorhandene Nutzung - Link zum Nutzungsschlüssel, welcher in der Nutzungsdatensammlung vorhanden sein muss (maximal 10 Zeichen)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Landuse</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
 						</annotation>
 					</element>
 					<element name="boden" type="string">
@@ -80,6 +95,12 @@
 								<tooltip>Link zum Bodenschlüssel</tooltip>
 								<description>anstehender Boden - Link zum Bodenschlüssel, welcher in der Bodendatensammlung vorhanden sein muss (maximal 10 Zeichen)</description>
 							</documentation>
+							<documentation xml:lang="en">
+								<label>Soilkey</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
+							
 						</annotation>
 					</element>
 					<!--TODO: Link zu Parameter.xsd Bodentyp -> text6-->
@@ -90,6 +111,12 @@
 								<tooltip>maximale Perkolationsrate [mm/d]</tooltip>
 								<description>maximale Perkolationsrate [mm/d]</description>
 							</documentation>
+														<documentation xml:lang="en">
+								<label>max percolation rate</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
+
 						</annotation>
 					</element>
 					<element name="m_f1gws" type="double">
@@ -99,6 +126,12 @@
 								<tooltip>Zuflussanteil Grundwasser [-] (= 0-1)</tooltip>
 								<description>Zuflussanteil Grundwasser [-] (= 0-1)</description>
 							</documentation>
+														<documentation xml:lang="en">
+								<label>GW coefficient</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
+
 						</annotation>
 					</element>
 					<element name="m_vers" type="double">
@@ -108,6 +141,12 @@
 								<tooltip>Versiegelungsgrad des Hydrotopes [-] (= 0-1)</tooltip>
 								<description>Versiegelungsgrad des Hydrotopes [-] (= 0-1)</description>
 							</documentation>
+														<documentation xml:lang="en">
+								<label>sealing rate</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
+
 						</annotation>
 					</element>
 					<element name="fak_vers" type="double" minOccurs="0">
@@ -117,6 +156,12 @@
 								<tooltip>Korrekturfaktor Versiegelungsgrad [-] (= 0-1)</tooltip>
 								<description>Korrekturfaktor Versiegelungsgrad [-] (= 0-1)</description>
 							</documentation>
+														<documentation xml:lang="en">
+								<label>coefficient sealing rate</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
+
 						</annotation>
 					</element>
 					<element name="entwArt" type="string">
@@ -126,6 +171,12 @@
 								<tooltip>Entwaesserungsart (besielt/unbesielt)</tooltip>
 								<description>Untergliederung der in besielte und unbesielte Flaechen (wird zur Zeit noch nicht im Modell verwendet)</description>
 							</documentation>
+														<documentation xml:lang="en">
+								<label>sewersystem</label>
+								<tooltip>.</tooltip>
+								<description>.</description>
+							</documentation>
+
 						</annotation>
 					</element>
 				</sequence>
