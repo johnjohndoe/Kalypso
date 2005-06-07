@@ -56,6 +56,7 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
+import org.kalypso.java.util.StringUtilities;
 
 /**
  * Utility class for io and files
@@ -75,22 +76,17 @@ public class FileUtilities
    * 
    * @param charMode
    * 
-   * @param prefix
-   *          prefix of new file name
-   * @param suffix
-   *          suffix of new file name
-   * @param url
-   *          data is read from this url
-   * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
+   * @param prefix prefix of new file name
+   * @param suffix suffix of new file name
+   * @param url data is read from this url
+   * @param useCache if true tries to use an existing file with these
+   *          prefix/suffix
    * 
    * @return newly created file
    * 
-   * @throws IOException
-   *           there are problems!
+   * @throws IOException there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix,
-      URL url, boolean useCache ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, URL url, boolean useCache ) throws IOException
   {
     return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
   }
@@ -102,29 +98,24 @@ public class FileUtilities
    * 
    * @param charMode
    * 
-   * @param prefix
-   *          prefix of file name
-   * @param suffix
-   *          suffix of file name
-   * @param ins
-   *          the input stream, that is the source
-   * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
+   * @param prefix prefix of file name
+   * @param suffix suffix of file name
+   * @param ins the input stream, that is the source
+   * @param useCache if true tries to use an existing file with these
+   *          prefix/suffix
    * 
    * @return the newly created file or null if an exception was thrown.
    * 
-   * @throws IOException
-   *           problems reading from stream or writing to temp. file
+   * @throws IOException problems reading from stream or writing to temp. file
    */
-  public static File makeFileFromStream( boolean charMode, final String prefix,
-      final String suffix, InputStream ins, boolean useCache ) throws IOException
+  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins, boolean useCache )
+      throws IOException
   {
     if( useCache )
     {
       try
       {
-        final File existingFile = fileExistsInDir( prefix, suffix, System
-            .getProperty( "java.io.tmpdir" ) );
+        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( "java.io.tmpdir" ) );
         return existingFile;
       }
       catch( final FileNotFoundException ignored )
@@ -153,8 +144,7 @@ public class FileUtilities
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode, final File file,
-      final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
   {
     if( charMode )
     {
@@ -178,21 +168,18 @@ public class FileUtilities
    * Returns the file in the positive. If more than one such file is found,
    * returns the first of them.
    * 
-   * @param prefix
-   *          name of the file should begin with this prefix
-   * @param suffix
-   *          name of the file should end with this suffix
+   * @param prefix name of the file should begin with this prefix
+   * @param suffix name of the file should end with this suffix
    * @param path
    * 
    * @return the (first) File found
    * 
-   * @throws FileNotFoundException
-   *           when file was not found or path does not denote a directory
+   * @throws FileNotFoundException when file was not found or path does not
+   *           denote a directory
    * 
    * @see PrefixSuffixFilter
    */
-  public static File fileExistsInDir( String prefix, String suffix, String path )
-      throws FileNotFoundException
+  public static File fileExistsInDir( String prefix, String suffix, String path ) throws FileNotFoundException
   {
     File dir = new File( path );
 
@@ -206,16 +193,14 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix
-        + ") was not found in " + path );
+    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in " + path );
   }
 
   /**
    * Rekursives l?schen von Dateien und Verzeichnissen
    * 
-   * @param file
-   *          Falls das Argument eine Datei ist, wird diese gel?scht. Ist es ein
-   *          Verzeichnis, werden alle dieses mitsamt aller darin liegenden
+   * @param file Falls das Argument eine Datei ist, wird diese gel?scht. Ist es
+   *          ein Verzeichnis, werden alle dieses mitsamt aller darin liegenden
    *          Verzeichnisse und Dateien gel?scht.
    */
   public static void deleteRecursive( final File file )
@@ -299,25 +284,32 @@ public class FileUtilities
   {
     if( basedir == null )
       return absoluteFile.getAbsolutePath();
-    
     final String baseAbs = basedir.getAbsolutePath();
     final String absAbs = absoluteFile.getAbsolutePath();
-    if( !absAbs.startsWith( baseAbs ) )
+    return getRelativePathTo( baseAbs, absAbs );
+  }
+
+  public static String getRelativePathTo( String base, String absolute )
+  {
+    if( !absolute.startsWith( base ) )
     {
-      String difference = StringUtils.difference( baseAbs, absAbs );
+      if( base.lastIndexOf( "/" ) > -1 )
+        base = base.substring( 0,base.lastIndexOf( "/" )+1 );
+      //      base=base.replaceAll(File.separator+".+$","");
+      String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) )
         return null;
-      final int index = absAbs.indexOf( difference );
+      final int index = absolute.indexOf( difference );
       if( index < 5 )
         return null;
-      String back = baseAbs.substring( index );
+      String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      String x = back.replaceAll( "[a-zA-Z0-9]+", ".." );
-      String result = x + File.separator + difference;
-      return result;
+      String x = back.replaceAll( "([a-zA-Z0-9]|\\.)+", ".." );
+      if(x.length()>0)
+        return x+ File.separator + difference;
+      return difference;
     }
-    final String rel = absAbs.length() == baseAbs.length() ? "" : absAbs.substring( baseAbs
-        .length() );
+    final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() );
 
     return rel;
   }
@@ -346,8 +338,7 @@ public class FileUtilities
   }
 
   /**
-   * @param name
-   *          name of path of the file
+   * @param name name of path of the file
    * @return characters after last "." of given file name
    */
   public static String getSuffix( final String name )
@@ -404,7 +395,7 @@ public class FileUtilities
   {
     if( !root.exists() )
       return;
-    
+
     // zuerst die Datei selbst
     final boolean stop = !visitor.visit( root );
     if( stop || !root.isDirectory() )
@@ -417,8 +408,8 @@ public class FileUtilities
     for( int i = 0; i < files.length; i++ )
     {
       final File file = files[i];
-      
-      if( file.isFile() || ( file.isDirectory() && recurse  ) )
+
+      if( file.isFile() || ( file.isDirectory() && recurse ) )
         accept( file, visitor, recurse );
     }
   }
@@ -447,7 +438,7 @@ public class FileUtilities
         _shx = new File( shapeBase + ".shx" );
         if( _shx.exists() )
           FileUtils.copyFileToDirectory( _shx, target );
-        else 
+        else
           return;
         _sbn = new File( shapeBase + ".sbn" );
         if( _sbn.exists() )
