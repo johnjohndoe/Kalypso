@@ -88,6 +88,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.optimize.transform.OptimizeModelUtils;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
@@ -116,7 +117,9 @@ public class NaModelInnerCalcJob implements ICalcJob
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  private final String EXE_FILE = "start/kalypso.exe";
+  //  private final String EXE_FILE = "start/kalypso_WeisseElster.exe";
+  // TODO hier noch was machen
+  private final String EXE_FILE = "start/kalypso_2.01_3000.exe";
 
   private boolean m_succeeded = false;
 
@@ -460,13 +463,150 @@ public class NaModelInnerCalcJob implements ICalcJob
     //    resultEater.addResult( NaModelConstants.OUT_ZML, outputDir );
   }
 
+  private String getTitleForSuffix( String suffix )
+  {
+    //    j Gesamtabfluss Knoten .qgs
+    if( suffix.equalsIgnoreCase( "qgs" ) )
+      return "Abfluss";
+    //    n Schnee .sch
+    if( suffix.equalsIgnoreCase( "sch" ) )
+      return "Schnee";
+    //    n Bodenspeicher .bsp
+    if( suffix.equalsIgnoreCase( "bsp" ) )
+      return "Bodenspeicher";
+    //    n Gesamtabfluss TG .qgg
+    if( suffix.equalsIgnoreCase( "qgg" ) )
+      return "Gesamtabfluss TG";
+    //    n Kluftgrundw1 .qt1
+    if( suffix.equalsIgnoreCase( "qt1" ) )
+      return "Kluftgrundw1";
+    //    n Kluftgrundw .qtg
+    if( suffix.equalsIgnoreCase( "qtg" ) )
+      return "Kluftgrundw";
+    //    n Grundwasser .qgw
+    if( suffix.equalsIgnoreCase( "qgw" ) )
+      return "Grundwasser";
+    //    n Kapil.Aufstieg/Perkolation .kap
+    if( suffix.equalsIgnoreCase( "kap" ) )
+      return "Kapil.Aufstieg/Perkolation";
+    //    n Evapotranspiration .vet
+    if( suffix.equalsIgnoreCase( "vet" ) )
+      return "Evapotranspiration";
+    //    n Ausgabe hydrotope .hyd
+    if( suffix.equalsIgnoreCase( "hyd" ) )
+      return "Ausgabe hydrotope";
+    //    n Abflussbilanz .bil
+    if( suffix.equalsIgnoreCase( "bil" ) )
+      return "Abflussbilanz";
+    //    n Statistische Abflusswerte .nmq
+    if( suffix.equalsIgnoreCase( "nmq" ) )
+      return "Statistische Abflusswerte";
+    //    n Speicherinhalt .spi
+    if( suffix.equalsIgnoreCase( "spi" ) )
+      return "Speicherinhalt";
+    //    n Speicherueberlauf .sup
+    if( suffix.equalsIgnoreCase( "sup" ) )
+      return "Speicherueberlauf";
+    //    n Wasserstand Speicher .sph
+    if( suffix.equalsIgnoreCase( "sph" ) )
+      return "Wasserstand Speicher";
+    //    n Talsperrenverdunstung .spv
+    if( suffix.equalsIgnoreCase( "spv" ) )
+      return "Talsperrenverdunstung";
+    //    n Zehrung .spn
+    if( suffix.equalsIgnoreCase( "spn" ) )
+      return "Zehrung";
+    //    n Evaporation .vep
+    if( suffix.equalsIgnoreCase( "vep" ) )
+      return "Evaporation";
+    //    j Temperatur .tmp
+    if( suffix.equalsIgnoreCase( "tmp" ) )
+      return "Temperatur";
+    //    j Bodenfeuchte .bof
+    if( suffix.equalsIgnoreCase( "bof" ) )
+      return "Bodenfeuchte";
+    //    n Grundwasserstand .gws
+    if( suffix.equalsIgnoreCase( "gws" ) )
+      return "Grundwasserstand";
+    //    n Basisabfluss .qbs
+    if( suffix.equalsIgnoreCase( "qbs" ) )
+      return "Basisabfluss";
+    //    n Oberflaechenabfluss .qna
+    if( suffix.equalsIgnoreCase( "qna" ) )
+      return "Oberflaechenabfluss";
+    //    n Abfluss vers. Flaechen .qvs
+    if( suffix.equalsIgnoreCase( "qvs" ) )
+      return "Abfluss vers. Flaechen";
+    //    j Niederschlag .pre
+    if( suffix.equalsIgnoreCase( "pre" ) )
+      return "Niederschlag";
+    //    n Interflow .qif
+    if( suffix.equalsIgnoreCase( "qif" ) )
+      return "Interflow";
+    return suffix;
+  }
+
   private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger, File outputDir ) throws Exception
+  {
+    //    j Gesamtabfluss Knoten .qgs
+    FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+    loadTSResults( "qgs", nodeFT, "num", "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir, modellWorkspace, logger,
+        outputDir, 1.0d );
+    //    n Schnee .sch
+    //    n Bodenspeicher .bsp
+    //    n Kluftgrundw1 .qt1
+    //    n Kluftgrundw .qtg
+    //    n Kapil.Aufstieg/Perkolation .kap
+    //    n Evapotranspiration .vet
+    //    n Ausgabe hydrotope .hyd
+    //    n Abflussbilanz .bil
+    //    n Statistische Abflusswerte .nmq
+    //    n Speicherinhalt .spi
+    //    n Speicherueberlauf .sup
+    //    n Talsperrenverdunstung .spv
+    //    n Zehrung .spn
+    //    n Evaporation .vep
+    //    j Bodenfeuchte .bof
+
+    FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
+    //    j Niederschlag .pre
+    loadTSResults( "pre", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace, logger, outputDir,
+        1.0d );
+    //    j Temperatur .tmp
+    loadTSResults( "tmp", catchmentFT, "inum", "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir, modellWorkspace, logger, outputDir,
+        1.0d );
+
+    //    n Interflow .qif
+    loadTSResults( "qif", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d );
+
+    //    n Grundwasser .qgw
+    loadTSResults( "qgw", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d );
+    //    n Wasserstand Speicher .sph
+    loadTSResults( "shp", catchmentFT, "inum", "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir,
+        1.0d );
+    //    n Gesamtabfluss TG .qgg
+    loadTSResults( "qgg", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d );
+
+    //    n Grundwasserstand .gws
+    loadTSResults( "gws", catchmentFT, "inum", "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir, modellWorkspace, logger, outputDir,
+        100.0d );
+    //    n Basisabfluss .qbs
+    loadTSResults( "qbs", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d );
+    //    n Oberflaechenabfluss .qna
+    loadTSResults( "qna", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d );
+    //    n Abfluss vers. Flaechen .qvs
+    loadTSResults( "qvs", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace, logger, outputDir, 1.0d );
+  }
+
+  private void loadTSResults( String suffix, FeatureType resultFT, String keyPropName, String titlePropName, String resultType,
+      String metadataTSLink, String targetTSLink, File inputDir, GMLWorkspace modellWorkspace, Logger logger, File outputDir, double resultFactor )
+      throws Exception
   {
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
     final File ascciResultDir = new File( inputDir, "out_we.nat" );
     MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[]
-    { "*.qgs" }, false, false, true );
+    { "*" + suffix+"*" }, false, false, true );
     File[] qgsFiles = ascciResultDir.listFiles( filter );
     if( qgsFiles.length != 0 )
     {
@@ -476,25 +616,25 @@ public class NaModelInnerCalcJob implements ICalcJob
       ts.importBlockFile( qgsFiles[0] );
 
       // iterate model nodes and generate zml
-      final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
-      final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
+
+      final Feature[] nodeFEs = modellWorkspace.getFeatures( resultFT );
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
         if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
           continue; // should not generate results
-        final String key = FeatureHelper.getAsString( feature, "num" );
+        final String key = FeatureHelper.getAsString( feature, keyPropName );
         final String feID = feature.getId();
-        final String feName = (String)feature.getProperty( "name" );
+        final String feName = (String)feature.getProperty( titlePropName );
         final String title;
         if( feName != null )
-          title = "Berechnung " + feName + " (" + feID + ")";
+          title = "Berechnung " + getTitleForSuffix( suffix ) + " " + feName + " (" + feID + ")";
         else
-          title = "Berechnung (" + feID + ")";
+          title = "Berechnung " + getTitleForSuffix( suffix ) + " (" + feID + ")";
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
-        logger.info( "lese berechnetes Ergebnis fuer Knoten #" + key + "\n" );
+        logger.info( "lese berechnetes Ergebnis fuer #" + key + "\n" );
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
@@ -506,12 +646,14 @@ public class NaModelInnerCalcJob implements ICalcJob
         {
           Map.Entry entry = (Map.Entry)iter.next();
           tupelData[pos][0] = (Date)entry.getKey();
-          tupelData[pos][1] = new Double( entry.getValue().toString() );
+          tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
           pos++;
         }
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
-        final IAxis qAxis = new DefaultAxis( TimeserieConstants.TYPE_RUNOFF, TimeserieConstants.TYPE_RUNOFF, "qm/s", Double.class, false );
+
+        final IAxis qAxis = new DefaultAxis( getTitleForSuffix( suffix ) + "_" + title, resultType, TimeserieUtils.getUnit( resultType ),
+            Double.class, false );
         IAxis[] axis = new IAxis[]
         {
             dateAxis,
@@ -521,7 +663,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         final MetadataList metadataList = new MetadataList();
 
         // if pegel exists, copy metadata (inclusive wq-function)
-        final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( "pegelZR" );
+
+        final TimeseriesLink pegelLink = (TimeseriesLink)feature.getProperty( metadataTSLink );
         if( pegelLink != null )
         {
           final URL pegelURL = m_urlUtilities.resolveURL( modellWorkspace.getContext(), pegelLink.getHref() );
@@ -560,13 +703,23 @@ public class NaModelInnerCalcJob implements ICalcJob
           }
         }
         // lese ergebnis-link um target fuer zml zu finden
-        TimeseriesLink resultLink = (TimeseriesLink)feature.getProperty( "qberechnetZR" );
-        if( resultLink == null )
+        String resultPathRelative;
+        try
         {
-          logger.info( "ergebnis konnte nicht geschrieben werden, da ergebnislink nicht gesetzt ist FID=#" + feature.getId() + " ." );
-          continue;
+          TimeseriesLink resultLink = (TimeseriesLink)feature.getProperty( targetTSLink );
+          if( resultLink == null )
+          {
+            logger.info( "kein ergebnislink gesetzt für FID=#" + feature.getId() + " ." );
+          }
+          resultPathRelative = resultLink.getHref();
         }
-        String resultPathRelative = resultLink.getHref();
+        catch( Exception e )
+        {
+          // if there is target defined or there are some problems with that we
+          // generate one
+          resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_" + key + "_" + feature.getId()
+              + ".zml";
+        }
 
         final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
@@ -575,8 +728,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         //        final IObservation resultObservation = new SimpleObservation(
         // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
         // qTuppelModel );
-        final IObservation resultObservation = new SimpleObservation( resultLink.getHref(), "ID", title, false, null, metadataList, axis,
-            qTuppelModel );
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", title, false, null, metadataList, axis, qTuppelModel );
 
         // write result
         final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );

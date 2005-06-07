@@ -1,0 +1,2 @@
+kalypso_WeisseElster:
+kalypso_2.01_3000: Schulung Ing-büros Langzeit 2h 30000 Zeitschritte
