@@ -1,10 +1,12 @@
 package org.kalypso.floodrisk.process.impl;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.floodrisk.process.IProcessDataProvider;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
@@ -49,33 +51,32 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class ProcessDataProvider implements IProcessDataProvider
+public class ProcessDataProvider implements ICalcDataProvider
 {
   private Map m_idhash;
 
-  public ProcessDataProvider (CalcJobClientBean[] input){
+  public ProcessDataProvider( CalcJobClientBean[] input )
+  {
     m_idhash = indexInput( input );
   }
-  
+
   private Map indexInput( final CalcJobClientBean[] input )
   {
     final Map index = new HashMap( input.length );
     for( int i = 0; i < input.length; i++ )
     {
       final CalcJobClientBean bean = input[i];
-      index.put( bean.getId(), bean.getPath() );
+      try
+      {
+        URL path = ( new File( bean.getPath() ) ).toURL();
+        index.put( bean.getId(), path );
+      }
+      catch( MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
     }
-
     return index;
-  }
-
-  /**
-   * 
-   * @see org.kalypso.floodrisk.process.IProcessDataProvider#getObjectForID(java.lang.String)
-   */
-  public Object getObjectForID( String id )
-  {
-    return (String)m_idhash.get( id );
   }
 
   /**
@@ -92,8 +93,7 @@ public class ProcessDataProvider implements IProcessDataProvider
    */
   public URL getURLForID( String id ) throws CalcJobServiceException
   {
-    //not used
-    return null;
+    return (URL)m_idhash.get( id );
   }
 
 }

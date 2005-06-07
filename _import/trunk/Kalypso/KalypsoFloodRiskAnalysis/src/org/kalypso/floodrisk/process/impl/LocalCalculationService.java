@@ -48,6 +48,8 @@ import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.services.calculation.service.ICalculationService;
+import org.kalypso.services.calculation.service.impl.ICalcJobFactory;
 
 /**
  * LocalCalculationService
@@ -57,60 +59,39 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  * 
  * @author Nadja Peiler (19.05.2005)
  */
-public class LocalCalculationService //implements ICalculationService
+public class LocalCalculationService implements ICalculationService
 {
   /** Vector of {@link LocalCalcJobThread}s */
   private final Vector m_threads = new Vector();
 
   private Timer m_timer;
 
-  private long m_schedulingPeriod =  2000;
+  private long m_schedulingPeriod = 2000;
 
   private int m_maxThreads = 1;
-  
-  public LocalCalculationService(){
-    super();
+
+  private ICalcJobFactory m_calcJobFactory;
+
+  public LocalCalculationService( final ICalcJobFactory factory )
+  {
+    m_calcJobFactory = factory;
   }
 
-  public long getSchemaValidity( final String namespace ) throws CalcJobServiceException
+  /**
+   * @see org.kalypso.services.IKalypsoService#getServiceVersion()
+   */
+  public int getServiceVersion() throws RemoteException
   {
-    // not used in local calculation service
     return 0;
   }
 
-  public String[] getSupportedSchemata() throws CalcJobServiceException
+  public synchronized final String[] getJobTypes()
   {
-    // not used in local calculation service
-    return null;
+    return m_calcJobFactory.getSupportedTypes();
   }
 
-  public DataHandler getSchema( final String namespace ) throws CalcJobServiceException
-  {
-//  not used in local calculation service
-    return null;
-  }
-
-  public String[] getJobTypes() throws CalcJobServiceException
-  {
-    // local calculation service does not know
-    // TODO: über ProcessExtensions abfragen, z.B. Methode, die nur Prozesse vom
-    // Typ "local" zurückgibt
-    return null;
-  }
-
-  public CalcJobServerBean[] getRequiredInput( final String typeID ) throws CalcJobServiceException
-  {
-    // not used in local calculation service
-    return null;
-  }
-
-  public CalcJobServerBean[] getDeliveringResults( final String typeID ) throws CalcJobServiceException
-  {
-//  not used in local calculation service
-    return null;
-  }
-
-  public CalcJobInfoBean[] getJobs() throws CalcJobServiceException
+  public synchronized CalcJobInfoBean[] getJobs()
+      throws CalcJobServiceException
   {
     synchronized( m_threads )
     {
@@ -127,12 +108,17 @@ public class LocalCalculationService //implements ICalculationService
     }
   }
 
+  /**
+   * @throws CalcJobServiceException
+   * @see org.kalypso.services.calculation.service.ICalculationService#getJob(java.lang.String)
+   */
   public CalcJobInfoBean getJob( String jobID ) throws CalcJobServiceException
   {
     return findJobThread( jobID ).getJobBean();
   }
 
-  private LocalCalcJobThread findJobThread( final String jobID ) throws CalcJobServiceException
+  private LocalCalcJobThread findJobThread( final String jobID )
+      throws CalcJobServiceException
   {
     synchronized( m_threads )
     {
@@ -148,16 +134,15 @@ public class LocalCalculationService //implements ICalculationService
     throw new CalcJobServiceException( "Job not found: " + jobID, null );
   }
 
-  public CalcJobInfoBean startJob( final String typeID, final String description,
-      final DataHandler zipHandler, final CalcJobClientBean[] input,
-      final CalcJobClientBean[] output ) throws CalcJobServiceException
-  {
-    // startLocalJob-method has to be used!
-    return null;
-  }
-
-  public CalcJobInfoBean startLocalJob( final String typeID, final String description, ICalcJob job,
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#startJob(java.lang.String,
+   *      java.lang.String, javax.activation.DataHandler,
+   *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
+   */
+  public CalcJobInfoBean startJob( final String typeID,
+      final String description, final DataHandler zipHandler,
       final CalcJobClientBean[] input, final CalcJobClientBean[] output )
+      throws CalcJobServiceException
   {
     LocalCalcJobThread cjt = null;
     synchronized( m_threads )
@@ -175,7 +160,9 @@ public class LocalCalculationService //implements ICalculationService
       if( id == -1 )
         id = m_threads.size();
 
-      cjt = new LocalCalcJobThread( "" + id, description, typeID, job, input, output );
+      ICalcJob job = m_calcJobFactory.createJob( typeID );
+      cjt = new LocalCalcJobThread( "" + id, description, typeID, job, input,
+          output );
 
       if( id == m_threads.size() )
         m_threads.add( cjt );
@@ -188,7 +175,7 @@ public class LocalCalculationService //implements ICalculationService
 
     return cjt == null ? null : cjt.getJobBean();
   }
-  
+
   private void startScheduling()
   {
     if( m_timer == null )
@@ -201,10 +188,11 @@ public class LocalCalculationService //implements ICalculationService
           scheduleJobs();
         }
       };
-      m_timer.schedule( timerTask, m_schedulingPeriod = 2000, m_schedulingPeriod );
+      m_timer.schedule( timerTask, m_schedulingPeriod = 2000,
+          m_schedulingPeriod );
     }
   }
-  
+
   public void scheduleJobs()
   {
     synchronized( m_threads )
@@ -249,7 +237,7 @@ public class LocalCalculationService //implements ICalculationService
       }
     }
   }
-  
+
   private void stopScheduling()
   {
     if( m_timer != null )
@@ -258,30 +246,25 @@ public class LocalCalculationService //implements ICalculationService
       m_timer = null;
     }
   }
-
+  
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#cancelJob(java.lang.String)
+   */
   public void cancelJob( String jobID ) throws CalcJobServiceException
   {
     findJobThread( jobID ).getJobBean().cancel();
   }
 
-  public DataHandler transferCurrentResults( String arg0 ) throws CalcJobServiceException
-  {
-    // not used in local calculation service
-    return null;
-  }
-
-  public String[] getCurrentResults( String jobID ) throws CalcJobServiceException
-  {
-    final LocalCalcJobThread thread = findJobThread( jobID );
-    return thread.getCurrentResults();
-  }
-
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#disposeJob(java.lang.String)
+   */
   public void disposeJob( String jobID ) throws CalcJobServiceException
   {
     final LocalCalcJobThread cjt = findJobThread( jobID );
 
     if( cjt.isAlive() )
-      throw new CalcJobServiceException( "Cannot dispose a running job! Cancel it first.", null );
+      throw new CalcJobServiceException(
+          "Cannot dispose a running job! Cancel it first.", null );
 
     cjt.dispose();
 
@@ -293,9 +276,98 @@ public class LocalCalculationService //implements ICalculationService
     }
   }
 
-  public int getServiceVersion() throws RemoteException
+  /**
+   * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann
+   * alle restlichen Jobs zerstören und insbesondere alle Dateien löschen
+   * 
+   * @see java.lang.Object#finalize()
+   */
+  protected void finalize() throws Throwable
   {
+    synchronized( m_threads )
+    {
+      for( final Iterator iter = m_threads.iterator(); iter.hasNext(); )
+      {
+        final LocalCalcJobThread cjt = (LocalCalcJobThread)iter.next();
+        final CalcJobInfoBean jobBean = cjt.getJobBean();
+        disposeJob( jobBean.getId() );
+      }
+
+    }
+
+    super.finalize();
+  }
+
+  /**
+   * @throws CalcJobServiceException
+   * @see org.kalypso.services.calculation.service.ICalculationService#transferCurrentResults(java.lang.String)
+   */
+  public DataHandler transferCurrentResults( String jobID )
+      throws CalcJobServiceException
+  {
+    // not implemented
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getCurrentResults(java.lang.String)
+   */
+  public String[] getCurrentResults( String jobID )
+      throws CalcJobServiceException
+  {
+    final LocalCalcJobThread thread = findJobThread( jobID );
+    return thread.getCurrentResults();
+  }
+
+  /**
+   * @throws CalcJobServiceException
+   * @see org.kalypso.services.calculation.service.ICalculationService#getRequiredInput(java.lang.String)
+   */
+  public CalcJobServerBean[] getRequiredInput( final String typeID )
+      throws CalcJobServiceException
+  {
+    // not implemented
+    return null;
+  }
+
+  /**
+   * @throws CalcJobServiceException
+   * @see org.kalypso.services.calculation.service.ICalculationService#getDeliveringResults(java.lang.String)
+   */
+  public CalcJobServerBean[] getDeliveringResults( final String typeID )
+      throws CalcJobServiceException
+  {
+    //  not implemented
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
+   */
+  public DataHandler getSchema( final String namespace )
+      throws CalcJobServiceException
+  {
+    //  not implemented
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getSchemaValidity(java.lang.String)
+   */
+  public long getSchemaValidity( final String namespace )
+      throws CalcJobServiceException
+  {
+    // not implemented
     return 0;
+  }
+
+  /**
+   * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
+   */
+  public String[] getSupportedSchemata() throws CalcJobServiceException
+  {
+    // not implemented
+    return null;
   }
 
 }

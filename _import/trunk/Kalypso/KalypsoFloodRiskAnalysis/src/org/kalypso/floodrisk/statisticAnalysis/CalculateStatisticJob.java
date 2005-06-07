@@ -7,7 +7,6 @@ import java.util.Hashtable;
 
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
-import org.kalypso.floodrisk.process.IProcessDataProvider;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -76,7 +75,8 @@ public class CalculateStatisticJob implements ICalcJob
   public static final String StatisticDataID = "StatisticData";
 
   //schemas
-  private URL statisticData_schemaURL = getClass().getResource( "../schema/StatisticData.xsd" );
+  private URL statisticData_schemaURL = getClass().getResource(
+      "../schema/StatisticData.xsd" );
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
@@ -87,52 +87,50 @@ public class CalculateStatisticJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ICalcDataProvider inputProvider,
+      ICalcResultEater resultEater, ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     try
     {
       //Generate input
       //damageRaster
-      monitor.setMessage("Lese Eingabedateien");
-      File damageRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( DamageRasterID ) );
+      monitor.setMessage( "Lese Eingabedateien" );
+      URL damageRasterGML = inputProvider.getURLForID( DamageRasterID );
       RectifiedGridCoverage damageRaster = rasterDataModel
-          .getRectifiedGridCoverage( damageRasterGML.toURL() );
+          .getRectifiedGridCoverage( damageRasterGML );
 
       //landuseRaster
-      File landuseRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( LanduseRasterDataID ) );
+      URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel
-          .getRectifiedGridCoverage( landuseRasterGML.toURL() );
+          .getRectifiedGridCoverage( landuseRasterGML );
 
       //contextModel
-      File contextModelGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( ContextModelID ) );
-      ContextModel contextModel = new ContextModel( contextModelGML.toURL() );
-      
-      monitor.setProgress(40);
+      URL contextModelGML = inputProvider.getURLForID( ContextModelID );
+      ContextModel contextModel = new ContextModel( contextModelGML );
+
+      monitor.setProgress( 40 );
 
       //Calculation
       //statisticAnalysis
       monitor.setMessage( "Berechne" );
       Hashtable statistics = null;
-      if( ( (IProcessDataProvider)inputProvider ).getObjectForID( TemplateRasterID ) != null )
+      if( inputProvider.getURLForID( TemplateRasterID ) != null )
       {
         //templateRaster
-        File templateRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
-            .getObjectForID( TemplateRasterID ) );
+        URL templateRasterGML = inputProvider.getURLForID( TemplateRasterID );
         RectifiedGridCoverage templateRaster = rasterDataModel
-            .getRectifiedGridCoverage( templateRasterGML.toURL() );
-        statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster,
-            templateRaster );
+            .getRectifiedGridCoverage( templateRasterGML );
+        statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster,
+            landuseRaster, templateRaster );
       }
       else
       {
-        statistics = StatisticAnalysis.getStatistics( damageRaster, landuseRaster );
+        statistics = StatisticAnalysis.getStatistics( damageRaster,
+            landuseRaster );
       }
-      
-      monitor.setProgress(20);
+
+      monitor.setProgress( 20 );
 
       //Generate output
       //statisticData
@@ -140,22 +138,26 @@ public class CalculateStatisticJob implements ICalcJob
       CalcJobClientBean statisticDataOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( StatisticDataID );
       File statisticDataFile = new File( statisticDataOutputBean.getPath() );
-      if(!statisticDataFile.exists()){
+      if( !statisticDataFile.exists() )
+      {
         statisticDataFile.createNewFile();
       }
-      StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(),
-          statisticDataFile.toURL(), statisticData_schemaURL );
+      StatisticAnalysis
+          .exportStatisticAsXML( statistics, contextModel.getLanduseList(),
+              statisticDataFile.toURL(), statisticData_schemaURL );
       resultEater.addResult( statisticDataOutputBean.getId(), null );
-      
+
       monitor.setProgress( 40 );
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new CalcJobServiceException(
+          "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new CalcJobServiceException(
+          "CalculateDamageJob Service Exception", e );
     }
   }
 

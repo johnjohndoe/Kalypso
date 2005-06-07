@@ -1,5 +1,6 @@
 package org.kalypso.floodrisk.process;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.kalypso.services.calculation.job.ICalcResultEater;
@@ -46,12 +47,36 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
  *  ---------------------------------------------------------------------------*/
 
 public interface IProcessResultEater extends ICalcResultEater
-{  
+{
   /** Gibt zurück, welche Ergebnisse momentan verfügbar sind. */
   public String[] getCurrentResults();
+
+  /**
+   * Kopiert die aktuell vorliegenden Ergebnisse aus dem tempDir an die richtige
+   * Stelle im FileSystem
+   * 
+   * @throws CalcJobServiceException
+   */
+  //public void copyCurrentResults() throws CalcJobServiceException;
+  /**
+   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch
+   * gedacht.
+   */
+  public void addFile( final File file );
+
+  /**
+   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird
+   * auch der Inhalt rekursiv gelöscht.
+   */
+  public void disposeFiles();
   
   /**
-   *  Gibt die Liste mit OutputBeans zurück
+   * Löscht alle bisher berechneten Ergebnis-Dateien
+   */
+  public void disposeResults();
+
+  /**
+   * returns the outputMap (key=inputID, value=calcJobClientBean)
    */
   public HashMap getOutputMap();
 }

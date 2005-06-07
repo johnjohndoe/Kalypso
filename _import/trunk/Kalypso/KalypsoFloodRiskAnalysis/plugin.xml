@@ -20,6 +20,7 @@
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.kalypso.ui"/>
       <import plugin="org.kalypso.ui.addlayer"/>
+      <import plugin="org.kalypso.services.calculation.local"/>
    </requires>
    <extension-point id="AddProcess" name="AddProcess" schema="extpSchema/schema/AddProcess.exsd"/>
    <!--<extension
@@ -52,11 +53,11 @@
    </extension>
    <extension
          point="KalypsoFloodRiskAnalysis.AddProcess">
-      <KalypsoProcess
+      <!--<KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
             name="Rasterung (Landnutzung)"
-            id="RasterizeLanduseJob"/>
+            id="RasterizeLanduseJob"/>-->
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
@@ -81,6 +82,10 @@
             icon="icons/sample.gif"
             class="org.kalypso.floodrisk.action.ExportThemeAction"
             tooltip="Export active theme as jpg"/>
+   </extension>
+   <extension
+         point="org.kalypso.ui.calculationService">
+      <factory class="org.kalypso.floodrisk.process.impl.LocalCalculationServiceFactory"/>
    </extension>
 
 </plugin>

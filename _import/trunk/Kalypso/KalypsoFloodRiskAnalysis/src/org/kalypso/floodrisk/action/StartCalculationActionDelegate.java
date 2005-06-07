@@ -45,7 +45,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.process.ProcessExtension;
-import org.kalypso.floodrisk.process.ProcessExtensions;
+import org.kalypso.floodrisk.process.ProcessExtensionReader;
 import org.kalypso.floodrisk.wizard.ChooseProcessDialog;
 import org.kalypso.floodrisk.wizard.ProcessInputWizard;
 
@@ -79,7 +79,7 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
       if( ResourceUtilities.getSelectedProjects().length > 0 )
       {
         final IProject firstSelectedProject = ResourceUtilities.getSelectedProjects()[0];
-        final ProcessExtension[] processes = ProcessExtensions.retrieveExtensions();
+        final ProcessExtension[] processes = ProcessExtensionReader.retrieveExtensions();
         //ChooseProcessWizard processWizard = new ChooseProcessWizard( firstSelectedProject,
         //    processes );
         //final WizardDialog dialog = new WizardDialog( m_window.getShell(), processWizard );

@@ -58,6 +58,8 @@ public class ProcessResultEater implements IProcessResultEater
 
   private Vector m_results = new Vector();
 
+  private Vector m_files = new Vector();
+
   public ProcessResultEater( final CalcJobClientBean[] clientOutput )
   {
     m_clientOutputMap = new HashMap( clientOutput.length );
@@ -69,23 +71,16 @@ public class ProcessResultEater implements IProcessResultEater
   }
 
   /**
-   * 
-   * @see org.kalypso.floodrisk.process.IProcessResultEater#getOutputMap()
-   */
-  public HashMap getOutputMap()
-  {
-    return m_clientOutputMap;
-  }
-
-  /**
    * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
    *      java.io.File)
    */
   public void addResult( String id, File file ) throws CalcJobServiceException
   {
-    final CalcJobClientBean clientBean = (CalcJobClientBean)m_clientOutputMap.get( id );
+    final CalcJobClientBean clientBean = (CalcJobClientBean)m_clientOutputMap
+        .get( id );
     if( clientBean == null )
-      throw new CalcJobServiceException( "Unerwartete Ausgabe mit ID: " + id, null );
+      throw new CalcJobServiceException( "Unerwartete Ausgabe mit ID: " + id,
+          null );
 
     m_results.add( clientBean );
   }
@@ -113,6 +108,48 @@ public class ProcessResultEater implements IProcessResultEater
       final CalcJobClientBean resultBean = (CalcJobClientBean)iter.next();
       FileUtilities.deleteRecursive( new File( resultBean.getPath() ) );
     }
+  }
+
+  // public void copyCurrentResults() throws CalcJobServiceException
+  // {
+  //   for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
+  //   {
+  //     final CalcResult result = (CalcResult)iter.next();
+  //
+  //     final File sourceFile = result.getFile();
+  //     final String targetPath = result.getPath();
+  //     final File targetFile = new File( targetPath );
+  //
+  //     try
+  //     {
+  //       FileUtils.copyFile( sourceFile, targetFile );
+  //     }
+  //     catch( IOException e )
+  //     {
+  //       throw new CalcJobServiceException(
+  //           "Ergebnisse konnten nicht übertragen werden.", e );
+  //     }
+  //   }
+  //
+  // }
+
+  public void addFile( File file )
+  {
+    m_files.add( file );
+  }
+
+  public void disposeFiles()
+  {
+    for( final Iterator iter = m_files.iterator(); iter.hasNext(); )
+    {
+      final File file = (File)iter.next();
+      FileUtilities.deleteRecursive( file );
+    }
+  }
+
+  public HashMap getOutputMap()
+  {
+    return m_clientOutputMap;
   }
 
 }

@@ -72,11 +72,12 @@ public class RasterizeLanduseJob implements ICalcJob
   //input
   public static final String LanduseVectorDataID = "LanduseVectorData";
 
-  public static final String VectorDataCoordinateSystemID = "VectorDataCoordinateSystem";
+  //public static final String VectorDataCoordinateSystemID =
+  // "VectorDataCoordinateSystem";
 
   public static final String ContextModelID = "ContextModel";
 
-  public static final String LandusePropertyNameID = "LandusePropertyName";
+  //public static final String LandusePropertyNameID = "LandusePropertyName";
 
   public static final String BaseRasterID = "BaseRaster";
 
@@ -95,24 +96,24 @@ public class RasterizeLanduseJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ICalcDataProvider inputProvider,
+      ICalcResultEater resultEater, ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     monitor.setMessage( "Lese Eingabedateien" );
-    String csName = (String)( (IProcessDataProvider)inputProvider )
-        .getObjectForID( VectorDataCoordinateSystemID );
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( csName );
-    String shapeBaseFile = (String)( (IProcessDataProvider)inputProvider )
-        .getObjectForID( LanduseVectorDataID );
-    List featureList = getFeatureList( FileUtilities.nameWithoutExtension( shapeBaseFile ), cs );
-    String propertyName = (String)( (IProcessDataProvider)inputProvider )
-        .getObjectForID( LandusePropertyNameID );
-    File contextModelGML = new File( (String)( (IProcessDataProvider)inputProvider )
-        .getObjectForID( ContextModelID ) );
+    //String csName = (String)( (IProcessDataProvider)inputProvider )
+    //    .getObjectForID( VectorDataCoordinateSystemID );
+    //CS_CoordinateSystem cs =
+    // ConvenienceCSFactory.getInstance().getOGCCSByName( csName );
+    URL landuseVectorDataGML = inputProvider.getURLForID( LanduseVectorDataID );
+    List featureList = getFeatureList( landuseVectorDataGML );
+    //String propertyName = (String)( (IProcessDataProvider)inputProvider )
+    //    .getObjectForID( LandusePropertyNameID );
+    URL contextModelGML = inputProvider.getURLForID( ContextModelID );
     Hashtable landuseTypeList;
     try
     {
-      ContextModel contextModel = new ContextModel( contextModelGML.toURL() );
+      ContextModel contextModel = new ContextModel( contextModelGML );
       landuseTypeList = contextModel.getLanduseList();
     }
     catch( MalformedURLException e )
@@ -121,14 +122,13 @@ public class RasterizeLanduseJob implements ICalcJob
     }
     try
     {
-      File baseRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( BaseRasterID ) );
+      URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML
-          .toURL() );
+      RectifiedGridCoverage baseRaster = rasterDataModel
+          .getRectifiedGridCoverage( baseRasterGML );
       monitor.setMessage( "Berechne" );
-      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, propertyName,
-          landuseTypeList, baseRaster, monitor );
+      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid(
+          featureList, landuseTypeList, baseRaster, monitor );
 
       CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( LanduseRasterDataID );
@@ -148,8 +148,7 @@ public class RasterizeLanduseJob implements ICalcJob
   /**
    * returns a list of Features for a given shapeFile
    * 
-   * @param shapeFileBase
-   *          (base of shape)
+   * @param shapeFileBase (base of shape)
    * 
    * @return List of Features
    */
@@ -157,7 +156,8 @@ public class RasterizeLanduseJob implements ICalcJob
   {
     try
     {
-      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs, null );
+      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs,
+          null );
       Feature root = workspace.getRootFeature();
       List featureList = (List)root.getProperty( "featureMember" );
       return featureList;

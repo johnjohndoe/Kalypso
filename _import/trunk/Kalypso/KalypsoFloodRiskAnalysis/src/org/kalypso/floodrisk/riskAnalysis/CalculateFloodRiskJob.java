@@ -22,7 +22,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.data.RiskContextModel;
-import org.kalypso.floodrisk.process.IProcessDataProvider;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -108,38 +107,39 @@ public class CalculateFloodRiskJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ICalcDataProvider inputProvider,
+      ICalcResultEater resultEater, ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     try
     {
       //Generate input
       //annualDamageRaster
-      monitor.setMessage("Lese Eingabedateien");
-      File annualDamageRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( AnnualDamageRasterDataID ) );
+      monitor.setMessage( "Lese Eingabedateien" );
+      URL annualDamageRasterGML = inputProvider
+          .getURLForID( AnnualDamageRasterDataID );
       RectifiedGridCoverage annualDamageRaster = rasterDataModel
-          .getRectifiedGridCoverage( annualDamageRasterGML.toURL() );
+          .getRectifiedGridCoverage( annualDamageRasterGML );
 
       //landuseRaster
-      File landuseRasterGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( LanduseRasterDataID ) );
+      URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
       RectifiedGridCoverage landuseRaster = rasterDataModel
-          .getRectifiedGridCoverage( landuseRasterGML.toURL() );
+          .getRectifiedGridCoverage( landuseRasterGML );
 
       //contextModel
-      File riskContextModelGML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( RiskContextModelID ) );
-      RiskContextModel riskContextModel = new RiskContextModel( riskContextModelGML.toURL() );
-      
-      monitor.setProgress(40);
+      URL riskContextModelGML = inputProvider.getURLForID( RiskContextModelID );
+      RiskContextModel riskContextModel = new RiskContextModel(
+          riskContextModelGML );
+
+      monitor.setProgress( 40 );
 
       //start riskAnalysis
       monitor.setMessage( "Berechne" );
-      RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster,
-          landuseRaster, riskContextModel.getRiskClassLists() );
-      
-      monitor.setProgress(20);
+      RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk(
+          annualDamageRaster, landuseRaster, riskContextModel
+              .getRiskClassLists() );
+
+      monitor.setProgress( 20 );
 
       //Generate output
       //floodrisk raster
@@ -159,7 +159,8 @@ public class CalculateFloodRiskJob implements ICalcJob
       //floodrisk style
       String styleName = "FloodRisk";
       Symbolizer rasterSymbolizer = StyleFactory.createRasterSymbolizer();
-      TreeMap defaultColorMap = ( (RasterSymbolizer)rasterSymbolizer ).getColorMap();
+      TreeMap defaultColorMap = ( (RasterSymbolizer)rasterSymbolizer )
+          .getColorMap();
       // add riskClass colorMapEntries to defaultColorMap
       Hashtable riskClassList = riskContextModel.getRiskClassKeyList();
       Iterator it = riskClassList.keySet().iterator();
@@ -176,14 +177,15 @@ public class CalculateFloodRiskJob implements ICalcJob
         // label
         String label = riskClassKey;
         // new riskClass colorMapEntry
-        ColorMapEntry riskClassEntry = new ColorMapEntry_Impl( color, opacity, quantity, label );
+        ColorMapEntry riskClassEntry = new ColorMapEntry_Impl( color, opacity,
+            quantity, label );
         defaultColorMap.put( new Double( quantity ), riskClassEntry );
       }
       Symbolizer[] symbolizer = new Symbolizer[]
       { rasterSymbolizer };
       //create Style
-      StyledLayerDescriptor defaultRasterStyle = DefaultStyleFactory.createDefaultStyle( styleName,
-          symbolizer );
+      StyledLayerDescriptor defaultRasterStyle = DefaultStyleFactory
+          .createDefaultStyle( styleName, symbolizer );
       //write Style to File
       CalcJobClientBean floodRiskStyleOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( FloodRiskRasterStyleID );
@@ -192,24 +194,27 @@ public class CalculateFloodRiskJob implements ICalcJob
         floodRiskStyleFile.createNewFile();
       writeSLDtoFile( floodRiskStyleFile, defaultRasterStyle );
       resultEater.addResult( floodRiskStyleOutputBean.getId(), null );
-      
+
       monitor.setProgress( 40 );
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new CalcJobServiceException(
+          "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new CalcJobServiceException(
+          "CalculateDamageJob Service Exception", e );
     }
   }
 
-  private void writeSLDtoFile( File targetFile, StyledLayerDescriptor sld ) throws IOException,
-      SAXException, TransformerFactoryConfigurationError, TransformerException
+  private void writeSLDtoFile( File targetFile, StyledLayerDescriptor sld )
+      throws IOException, SAXException, TransformerFactoryConfigurationError,
+      TransformerException
   {
-    Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld )
-        .exportAsXML() ) );
+    Document doc = XMLTools.parse( new StringReader(
+        ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     Result result = new StreamResult( targetFile );
     Transformer t = TransformerFactory.newInstance().newTransformer();

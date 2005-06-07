@@ -52,7 +52,7 @@ import org.kalypso.services.calculation.job.ICalcJob;
  * 
  * @author Nadja Peiler (13.05.2005)
  */
-public class ProcessExtensions
+public class ProcessExtensionReader
 {
 
   private static String ADDPROCESS_EXTENSION_POINT = "KalypsoFloodRiskAnalysis.AddProcess";

@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.kalypso.floodrisk.data.RasterDataModel;
-import org.kalypso.floodrisk.process.IProcessDataProvider;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -77,25 +76,27 @@ public class GenerateTemplateRasterJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ICalcDataProvider inputProvider,
+      ICalcResultEater resultEater, ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     try
     {
       //Generate input
       //Raster1
-      File raster1GML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( Raster1ID ) );
-      RectifiedGridCoverage raster1 = rasterDataModel.getRectifiedGridCoverage( raster1GML.toURL() );
+      URL raster1GML = inputProvider.getURLForID( Raster1ID );
+      RectifiedGridCoverage raster1 = rasterDataModel
+          .getRectifiedGridCoverage( raster1GML );
 
       //Raster2
-      File raster2GML = new File( (String)( (IProcessDataProvider)inputProvider )
-          .getObjectForID( Raster2ID ) );
-      RectifiedGridCoverage raster2 = rasterDataModel.getRectifiedGridCoverage( raster2GML.toURL() );
+      URL raster2GML = inputProvider.getURLForID( Raster2ID );
+      RectifiedGridCoverage raster2 = rasterDataModel
+          .getRectifiedGridCoverage( raster2GML );
 
       //Calculation
       //substract Grids
-      RectifiedGridCoverage templateRaster = RasterTools.substractGrids( raster1, raster2 );
+      RectifiedGridCoverage templateRaster = RasterTools.substractGrids(
+          raster1, raster2 );
 
       //Generate output
       //template raster
@@ -109,11 +110,13 @@ public class GenerateTemplateRasterJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new CalcJobServiceException(
+          "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
+      throw new CalcJobServiceException(
+          "CalculateDamageJob Service Exception", e );
     }
   }
 

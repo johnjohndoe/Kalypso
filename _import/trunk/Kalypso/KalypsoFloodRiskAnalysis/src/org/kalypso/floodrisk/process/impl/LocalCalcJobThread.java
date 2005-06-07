@@ -36,10 +36,12 @@ package org.kalypso.floodrisk.process.impl;
 
 import java.io.File;
 
+import org.kalypso.java.io.FileUtilities;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
+import org.kalypso.services.common.ServiceConfig;
 
 /**
  * LocalCalcJobThread
@@ -83,7 +85,9 @@ public class LocalCalcJobThread extends Thread
     {
       System.out.println( "Calling run for ID: " + jobID );
 
-      final File tmpdir = null;
+      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig
+          .getTempDir() );
+      m_resultEater.addFile( tmpdir );
       
       m_job.run( tmpdir, m_inputProvider, m_resultEater, m_jobBean );
 
@@ -127,6 +131,7 @@ public class LocalCalcJobThread extends Thread
   public void dispose()
   {
     m_resultEater.disposeResults();
+    m_resultEater.disposeFiles();
   }
 
 }
