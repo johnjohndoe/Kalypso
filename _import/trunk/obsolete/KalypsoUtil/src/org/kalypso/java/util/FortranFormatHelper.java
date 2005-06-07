@@ -102,6 +102,7 @@ public class FortranFormatHelper
   {
     HashMap result = new HashMap();
     line = line + "                                                ";
+    line=line.replaceAll("\\t"," ");
     List nameCollector = new ArrayList();
     StringBuffer pattern = new StringBuffer( "^" );
     String[] formats = patternBrackets.split( formatLine );
@@ -112,7 +113,7 @@ public class FortranFormatHelper
       pattern.append( regExp );
     }
     pattern.append( "\\s*$" );
-    Pattern linePattern = Pattern.compile( pattern.toString() );
+    Pattern linePattern = Pattern.compile( pattern.toString() );    
     Matcher m = linePattern.matcher( line );
     if( !m.matches() )
     {
