@@ -71,6 +71,9 @@ public class WiskiTimeserie implements IObservation
 
   public WiskiTimeserie( final TsInfoItem tsinfo )
   {
+    if( tsinfo == null )
+      throw new IllegalArgumentException( "TsInfoItem must not be null" );
+
     m_tsinfo = tsinfo;
 
     m_axes = new IAxis[3];
