@@ -13,9 +13,12 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -69,7 +72,8 @@ public class HydrotopManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public HydrotopManager( GMLSchema schema, GMLSchema hydrotopSchema, NAConfiguration conf ) throws IOException
+  public HydrotopManager( GMLSchema schema, GMLSchema hydrotopSchema, NAConfiguration conf )
+      throws IOException
   {
     super( conf.getHydrotopFormatURL() );
     //    m_crs = crs;
@@ -95,7 +99,8 @@ public class HydrotopManager extends AbstractManager
     return null;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace hydWorkspace, GMLWorkspace modelWorkspace ) throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace hydWorkspace,
+      GMLWorkspace modelWorkspace ) throws Exception
   {
     //Catchment
     Feature modelRootFeature = modelWorkspace.getRootFeature();
@@ -109,7 +114,7 @@ public class HydrotopManager extends AbstractManager
     FeatureList hydList = (FeatureList)hydCol.getProperty( "HydrotopMember" );
     Date calcDate = new Date();
     asciiBuffer.getHydBuffer().append( "Hydrotope Modell, Datum " + calcDate.toString() + "\n" );
-
+      
     while( catchmentIter.hasNext() )
     {
       double versFlaeche = 0.0;
@@ -117,25 +122,29 @@ public class HydrotopManager extends AbstractManager
       double gesFlaeche = 0.0;
       List hydWriteList = new ArrayList();
       final Feature catchmentFE = (Feature)catchmentIter.next();
-      GM_Surface tGGeomProp = (GM_Surface)catchmentFE.getProperty( "Ort" );
+      //      GM_Surface tGGeomProp = (GM_Surface)catchmentFE.getProperty( "Ort" );
+      GM_Object tGGeomProp = (GM_Object)catchmentFE.getProperty( "Ort" );
       // Hydrotope im TeilgebietsEnvelope
       List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
       Iterator hydInEnvIter = hydInEnvList.iterator();
-
+      //      System.out.println( "Teilgebiet Nummer:" + catchmentFE.getProperty(
+      // "inum" ) );
       while( hydInEnvIter.hasNext() )
       {
         final Feature hydFeature = (Feature)hydInEnvIter.next();
-        GM_Surface hydGeomProp = (GM_Surface)hydFeature.getProperty( "Ort" );
-        if( tGGeomProp.contains( hydGeomProp.getCentroid() ) )
+        final GM_Object hydGeomProp = (GM_Object)hydFeature.getProperty( "Ort" );
+        
         //TODO: der centroid muss nicht zwangsläufig im teilgebiet sein zu
         // welchem das hydrotop gehört!!! (wie kann man das besser abfragen)
         //        if( tGGeomProp.contains( hydGeomProp) )
+        if(GeometryUtilities.isInside(tGGeomProp,hydGeomProp))
         {
           hydWriteList.add( hydFeature );
-          double hydGesFlaeche = ( (Double)hydFeature.getProperty( "flaech" ) ).doubleValue();
+          double hydGesFlaecheTest = ( (Double)hydFeature.getProperty( "flaech" ) ).doubleValue();
+          double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
           double versGrad = ( (Double)hydFeature.getProperty( "m_vers" ) ).doubleValue();
           double korVersGrad = ( (Double)hydFeature.getProperty( "fak_vers" ) ).doubleValue();
-          if( korVersGrad == 0.0 )
+          if( korVersGrad < 0.0 )
           {
             // TODO evt. beim NAImport setzen
             korVersGrad = 1.0;
@@ -149,14 +158,24 @@ public class HydrotopManager extends AbstractManager
       }
 
       int hydAnzahl = hydWriteList.size();
-      double tGArea = tGGeomProp.getArea();
+
+      double tGArea = GeometryUtilities.calcArea( tGGeomProp );
+
       if( (int)tGArea != (int)gesFlaeche )
       {
         System.out.println( "Fehler in den Hydrotopen!" );
-        System.out.println( "Fläche Teilgebiet (" + (int)tGArea + ") entspricht nicht der Summe der Hydrotopflächen (" + (int)gesFlaeche + ")" );
+        double fehler = (tGArea-gesFlaeche);
+        System.out.println( "Fläche Teilgebiet (Nummer:" + catchmentFE.getProperty( "inum" )
+            + ") (" + (int)tGArea + ") entspricht nicht der Summe der Hydrotopflächen ("
+            + (int)gesFlaeche + ") Fehler :"+(fehler/gesFlaeche*100d) +"% diff: "+fehler);
       }
-      asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
-      asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche + "\n" );
+      else
+        System.out.println( "OK Fläche Teilgebiet (Nummer:" + catchmentFE.getProperty( "inum" ));
+      asciiBuffer.getHydBuffer().append(
+          FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
+      asciiBuffer.getHydBuffer().append(
+          " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche
+              + "\n" );
 
       Iterator hydIter = hydWriteList.iterator();
       int anzHydrotope = 0;
@@ -169,7 +188,8 @@ public class HydrotopManager extends AbstractManager
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope ) throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, int anzHydrotope )
+      throws Exception
   {
     double HGesFlaeche = ( (Double)feature.getProperty( "flaech" ) ).doubleValue();
     double HVersGrad = ( (Double)feature.getProperty( "m_vers" ) ).doubleValue();
@@ -183,17 +203,22 @@ public class HydrotopManager extends AbstractManager
     StringBuffer b = new StringBuffer();
     b.append( FortranFormatHelper.printf( Integer.toString( natHFlaeche ), "a10" ) );
     b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutz" ), "a10" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "a10" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) );
+    b.append( " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "a10" ) );
+    b.append( " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
+    b.append( " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) );
     b.append( " " + "0.000" );
     b.append( " " + "10.000" );
     b.append( " " + "0.27" );
     b.append( " " + "0.000" );
     b.append( " " + anzHydrotope );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_vers" ), "*" ) );
+    b.append( " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_vers" ), "*" ) );
 
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "fak_vers" ), "*" ) );
+    b.append( " "
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "fak_vers" ), "*" ) );
 
     asciiBuffer.getHydBuffer().append( b.toString() + "\n" );
   }

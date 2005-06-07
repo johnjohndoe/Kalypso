@@ -314,7 +314,8 @@ public class NaModelInnerCalcJob implements ICalcJob
     //       "notset" );
     Calendar c = Calendar.getInstance();
     c.setTime( startForecastDate );
-    c.add( Calendar.DATE, 2 );
+    // FETTES TODO
+    //    c.add( Calendar.DATE, 2 );
     Date endDate = c.getTime();
     conf.setSimulationEnd( endDate );
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );

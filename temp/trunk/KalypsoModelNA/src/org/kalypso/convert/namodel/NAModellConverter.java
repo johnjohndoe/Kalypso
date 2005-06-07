@@ -156,13 +156,14 @@ public class NAModellConverter
   {
     final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
     File asciiBaseDir = new File(
-        "D:\\Kalypso_NA\\9-Programmtest\\Portierung_NAM-BuenzAu\\BuenzenerAu" );
+        "D:\\FE-Projekte\\2004_SchulungIngBueros\\KalypsoSchulung\\tmp\\ex6-longterm\\solution" );
+    
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     Feature modelRootFeature = modelAsciiToFeature( conf );
     //    Feature parameterRootFeature = parameterAsciiToFeature( conf );
     //    Feature hydrotopRootFeature = hydrotopShapeToFeature (conf);
 
-    String shapeDir = "D:\\Kalypso_NA\\9-Programmtest\\Portierung_NAM-BuenzAu\\GIS_Daten\\Buenzau";
+    String shapeDir = "D:\\Kalypso_NA\\9-Programmtest\\Uebungsmodell\\Shapes";
     insertSHPGeometries( modelRootFeature, shapeDir );
 
     File modelGmlFile = new File( gmlBaseDir, "modell.gml" );
@@ -206,17 +207,17 @@ public class NAModellConverter
     CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:31467" ) );
 
-    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\catchment",
+    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Teilgebiete",
         cSystem, null );
     final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\buenzau_strg",
+    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\gewaesser",
         cSystem, null );
     final List channelFeatures = (List)channelWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\buenzau_knt",
+    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\knoten",
         cSystem, null );
     final List nodeFeatures = (List)nodeWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
@@ -232,13 +233,13 @@ public class NAModellConverter
     System.out.println( "inserting geometries: channels" );
     Feature channelCollection = (Feature)modelFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCollection.getProperty( "channelMember" );
-    copyProperties( channelFeatures, "GEOM", "ID", (Feature[])channelList
+    copyProperties( channelFeatures, "GEOM", "STRANGNR", (Feature[])channelList
         .toArray( new Feature[channelList.size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: nodes" );
     Feature nodeCollection = (Feature)modelFeature.getProperty( "NodeCollectionMember" );
     List nodeList = (List)nodeCollection.getProperty( "nodeMember" );
-    copyProperties( nodeFeatures, "GEOM", "ID", (Feature[])nodeList
+    copyProperties( nodeFeatures, "GEOM", "KNOTENNR", (Feature[])nodeList
         .toArray( new Feature[nodeList.size()] ), "Ort", "num" );
   }
 
