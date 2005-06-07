@@ -2,8 +2,12 @@ package org.kalypsodeegree_impl.tools;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -60,7 +64,8 @@ public class GeometryUtilities
     super();
   }
 
-  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP ) throws GM_Exception
+  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP )
+      throws GM_Exception
   {
     final GM_Position[] pos = new GM_Position[]
     {
@@ -69,16 +74,23 @@ public class GeometryUtilities
     return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
-  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP, double weightLength, double weightWidth ) throws GM_Exception
+  public static GM_Curve createArrowLineString( GM_Point srcP, GM_Point targetP,
+      double weightLength, double weightWidth ) throws GM_Exception
   {
     double dx = targetP.getX() - srcP.getX();
     double dy = targetP.getY() - srcP.getY();
 
     final GM_Position p1 = srcP.getPosition();
     final GM_Position p4 = targetP.getPosition();
-    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength * dy );
-    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth * dx );
-    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth * dx );
+    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1
+        .getY()
+        + weightLength * dy );
+    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2
+        .getY()
+        - weightWidth * dx );
+    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2
+        .getY()
+        + weightWidth * dx );
 
     final GM_Position[] pos = new GM_Position[]
     {
@@ -96,7 +108,8 @@ public class GeometryUtilities
    * positions and has a special distance from basePoint in the direction
    * towards the directionPoint
    */
-  public static GM_Position createGM_PositionAt( GM_Position basePoint, GM_Position directionPoint, double distanceFromBasePoint )
+  public static GM_Position createGM_PositionAt( GM_Position basePoint, GM_Position directionPoint,
+      double distanceFromBasePoint )
   {
     final double[] p1 = basePoint.getAsArray();
     double distance = basePoint.getDistance( directionPoint );
@@ -120,12 +133,14 @@ public class GeometryUtilities
     // check between
     if( c < -0.01d || c > 1.01d )
       return null;
-    return GeometryFactory.createGM_Position( p1.getX() + c * dx, p1.getY() + c * ( p2.getY() - p1.getY() ), iso );
+    return GeometryFactory.createGM_Position( p1.getX() + c * dx, p1.getY() + c
+        * ( p2.getY() - p1.getY() ), iso );
   }
 
   public static GM_Position createGM_PositionAtCenter( GM_Position p1, GM_Position p2 )
   {
-    return GeometryFactory.createGM_Position( ( p1.getX() + p2.getX() ) / 2d, ( p1.getY() + p2.getY() ) / 2d, ( p1.getZ() + p2.getZ() ) / 2d );
+    return GeometryFactory.createGM_Position( ( p1.getX() + p2.getX() ) / 2d, ( p1.getY() + p2
+        .getY() ) / 2d, ( p1.getZ() + p2.getZ() ) / 2d );
   }
 
   /**
@@ -133,7 +148,8 @@ public class GeometryUtilities
    */
   public static GM_Point createGM_PositionAtCenter( GM_Point p1, GM_Point p2 )
   {
-    return GeometryFactory.createGM_Point( ( p1.getX() + p2.getX() ) / 2d, ( p1.getY() + p2.getY() ) / 2d, p1.getCoordinateSystem() );
+    return GeometryFactory.createGM_Point( ( p1.getX() + p2.getX() ) / 2d,
+        ( p1.getY() + p2.getY() ) / 2d, p1.getCoordinateSystem() );
   }
 
   public static double calcAngleToSurface( GM_Surface surface, GM_Point point )
@@ -158,13 +174,16 @@ public class GeometryUtilities
   /**
    * guess point that is on the surface
    * 
-   * @param surface surface that should contain the result point
+   * @param surface
+   *          surface that should contain the result point
    * @param pointGuess
-   * @param tries numer of maximal interations
+   * @param tries
+   *          numer of maximal interations
    * @return point that is somewhere on the surface (e.g. can act as label
    *         point)
    */
-  public static GM_Point guessPointOnSurface( final GM_Surface surface, GM_Point pointGuess, int tries )
+  public static GM_Point guessPointOnSurface( final GM_Surface surface, GM_Point pointGuess,
+      int tries )
   {
     if( surface == null )
       return null;
@@ -205,11 +224,14 @@ public class GeometryUtilities
     double angle1 = calcAngleToSurface( surface, pointGuess );
     final double r1 = surface.distance( pointGuess );
     final GM_Point p1 = createPointFrom( pointGuess, angle1, r1 );
-    final GM_Point p2 = calcFarestPointOnSurfaceInDirection( surface, p1, angle1, Math.sqrt(Math.pow(surface.getEnvelope().getHeight(),2)*Math.pow(surface.getEnvelope().getWidth(),2)), 8 );
+    final GM_Point p2 = calcFarestPointOnSurfaceInDirection( surface, p1, angle1, Math.sqrt( Math
+        .pow( surface.getEnvelope().getHeight(), 2 )
+        * Math.pow( surface.getEnvelope().getWidth(), 2 ) ), 8 );
     return guessPointOnSurface( surface, createGM_PositionAtCenter( p1, p2 ), tries );
   }
 
-  private static GM_Point calcFarestPointOnSurfaceInDirection( GM_Surface surface, GM_Point pOnSurface, double angle, double max, int tries )
+  private static GM_Point calcFarestPointOnSurfaceInDirection( GM_Surface surface,
+      GM_Point pOnSurface, double angle, double max, int tries )
   {
     final GM_Point point = createPointFrom( pOnSurface, angle, max );
     if( surface.contains( point ) )
@@ -290,5 +312,40 @@ public class GeometryUtilities
     double x = centroid.getX() + Math.cos( angle ) * radius;
     double y = centroid.getY() + Math.sin( angle ) * radius;
     return GeometryFactory.createGM_Point( x, y, centroid.getCoordinateSystem() );
+  }
+
+  public static double calcArea( GM_Object geom )
+  {
+    if( geom instanceof GM_Surface )
+      return ( (GM_Surface)geom ).getArea();
+    else if( geom instanceof GM_MultiSurface )
+    {
+      double area = 0;
+      GM_Surface[] allSurfaces = ( (GM_MultiSurface)geom ).getAllSurfaces();
+      for( int j = 0; j < allSurfaces.length; j++ )
+        area += calcArea( allSurfaces[j] );
+      return area;
+    }
+    else if( geom instanceof GM_MultiPrimitive )
+    {
+      double area = 0;
+      GM_Primitive[] allPrimitives = ( (GM_MultiPrimitive)geom ).getAllPrimitives();
+      for( int i = 0; i < allPrimitives.length; i++ )
+        area += calcArea( allPrimitives[i] );
+      return area;
+    }
+    return 0d;
+  }
+
+  public static boolean isInside( GM_Object a, GM_Object b )
+  {
+    if( a instanceof GM_Surface && b instanceof GM_Surface )
+      return a.contains( guessPointOnSurface((GM_Surface)b, b.getCentroid(),3)   );
+//      return a.contains(b);
+    if( a instanceof GM_MultiSurface )
+      return isInside( ( (GM_MultiSurface)a ).getAllSurfaces()[0], b );
+    if( b instanceof GM_MultiSurface )
+      return isInside( a, ( (GM_MultiSurface)b ).getAllSurfaces()[0] );
+    return false;
   }
 }
