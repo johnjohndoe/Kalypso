@@ -36,6 +36,98 @@ public class SpecialPropertyMapper
       }
     } );
 
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Integer", "java.lang.Double" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Double( ( (Integer)srcObject ).doubleValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Long", "java.lang.Double" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Double( ( (Long)srcObject ).doubleValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Float", "java.lang.Double" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Double( ( (Float)srcObject ).doubleValue() );
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Double", "java.lang.Integer" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Integer( ( (Double)srcObject ).intValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Double", "java.lang.Long" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Long( ( (Double)srcObject ).longValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Double", "java.lang.Float" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Float( ( (Double)srcObject ).floatValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Float", "java.lang.Long" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Long( ( (Number)srcObject ).longValue() );
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Long", "java.lang.Float" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Float( ( (Number)srcObject ).floatValue() );
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Integer", "java.lang.Long" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Long( ( (Number)srcObject ).longValue() );
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Long", "java.lang.Integer" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Integer( ( (Number)srcObject ).intValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Integer", "java.lang.Float" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Float( ( (Number)srcObject ).floatValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Float", "java.lang.Integer" )
+    {
+      public Object map( Object srcObject )
+      {
+        return new Integer( ( (Number)srcObject ).intValue() );
+      }
+    } );
+
   }
 
   private SpecialPropertyMapper()
@@ -64,7 +156,10 @@ public class SpecialPropertyMapper
   {
     if( srcType.equals( targetType ) )
       return true;
-    return m_map.containsKey( srcType + targetType );
+    boolean isValid = m_map.containsKey( srcType + targetType );
+    if( isValid )
+      return true;
+    return false;
   }
 
   private abstract class SpecialMapper
