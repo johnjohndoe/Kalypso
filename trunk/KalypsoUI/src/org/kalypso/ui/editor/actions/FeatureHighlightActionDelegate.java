@@ -34,17 +34,14 @@
  */
 package org.kalypso.ui.editor.actions;
 
-import java.util.List;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.SelectFeaturesCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.DeleteFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * FeatureRemoveActionDelegate
@@ -54,7 +51,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * 
  * @author doemming (24.05.2005)
  */
-public class FeatureRemoveActionDelegate implements IActionDelegate
+public class FeatureHighlightActionDelegate implements IActionDelegate
 {
 
   private ICommandableFeatureSelection m_selection = null;
@@ -64,30 +61,25 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
    */
   public void run( IAction action )
   {
-    System.out.println( "action remove Feature" );
     if( action.isEnabled() && m_selection != null )
     {
       final IKalypsoFeatureTheme theme = m_selection.getKalypsoFeatureTheme();
       final CommandableWorkspace workspace = theme.getWorkspace();
-      final FeatureList featureList = theme.getFeatureList();
-      final Feature parentFeature = featureList.getParentFeature();
-      final FeatureTypeProperty ftp = featureList.getParentFeatureTypeProperty();
-      final List list = m_selection.toList();
-      for( int i = 0; i < list.size(); i++ )
+      final Feature[] fes = (Feature[])m_selection.toList().toArray( new Feature[m_selection.size()] );
+      final SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, fes, m_selection.getSelectionId() );
+      try
       {
-        Feature f = (Feature)list.get( i );
-        DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, ftp.getName(), f );
-        try
-        {
-          workspace.postCommand( command );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        // TODO post to a view command target, not to the workspace, cause
+        // selection
+        // changes the view not the modell
+        workspace.postCommand( command );
       }
-      System.out.println( "  do remove Feature" );
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
     }
+
   }
 
   /**
@@ -96,15 +88,13 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
+    if( selection instanceof ICommandableFeatureSelection )
     {
       m_selection = (ICommandableFeatureSelection)selection;
-      if( m_selection.size() >= 2 )
+      // TODO check maxOccurs
+      if( !m_selection.isEmpty() )
       {
         action.setEnabled( true );
-        String text = action.getText();
-        String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
-        action.setText( newText );
         return;
       }
     }

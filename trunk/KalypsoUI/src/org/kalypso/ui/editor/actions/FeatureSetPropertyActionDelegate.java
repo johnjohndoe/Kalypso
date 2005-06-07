@@ -101,7 +101,7 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
     {
       m_selection = (ICommandableFeatureSelection)selection;
       m_ftp = m_selection.getSelectedFeatureTypeProperty();
-      if( m_ftp != null )
+      if( m_ftp != null && m_selection.size()>=2)
       {
         action.setEnabled( true );
         String text = action.getText();

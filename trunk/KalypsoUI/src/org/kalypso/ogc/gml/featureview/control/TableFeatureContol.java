@@ -209,13 +209,20 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       if( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
       {
         final Event event = new Event();
-        Control control = m_viewer.getControl();
+        final Control control = m_viewer.getControl();
         if( control != null && !control.isDisposed() )
         {
-          event.widget = control;
-          final ModifyEvent me = new ModifyEvent( event );
-          for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
-            ( (ModifyListener)mIt.next() ).modifyText( me );
+          control.getDisplay().asyncExec( new Runnable()
+          {
+            public void run()
+            {
+              event.widget = control;
+              final ModifyEvent me = new ModifyEvent( event );
+              for( final Iterator mIt = m_listeners.iterator(); mIt.hasNext(); )
+                ( (ModifyListener)mIt.next() ).modifyText( me );
+
+            }
+          } );
         }
       }
     }

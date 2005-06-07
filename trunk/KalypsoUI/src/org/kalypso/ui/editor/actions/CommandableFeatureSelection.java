@@ -72,16 +72,19 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
 
   private final Feature m_selectedRow;
 
+  private final int m_selectionId;
+
   /**
-   * 
+   *  
    */
   public CommandableFeatureSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection, final FeatureTypeProperty ftp,
-      final Feature selectedRow )
+      final Feature selectedRow, int selectionID )
   {
     m_theme = theme;
     m_selection = selection;
     m_ftp = ftp;
     m_selectedRow = selectedRow;
+    m_selectionId = selectionID;
   }
 
   public Object getFirstElement()
@@ -139,5 +142,14 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   public Feature getSelectedRow()
   {
     return m_selectedRow;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getSelectionId()
+   */
+  public int getSelectionId()
+  {
+    return m_selectionId;
+
   }
 }

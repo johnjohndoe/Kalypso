@@ -25,15 +25,15 @@ public class GMLEditorLabelProvider extends LabelProvider
     ImageDescriptor descriptor = null;
     if( element instanceof FeatureElement )
     {
-      descriptor = ImageProvider.IMAGE_ZML_FILE;
+      descriptor = ImageProvider.IMAGE_FEATURE;
     }
     else if( element instanceof PropertyElement )
     {
-      descriptor = ImageProvider.IMAGE_ICON_GTT;
+      descriptor = ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
     }
     else if( element instanceof LinkedFeatureElement )
     {
-      descriptor = ImageProvider.IMAGE_UTIL_BERICHT_ICON;
+      descriptor = ImageProvider.IMAGE_FEATURE_LINKED;
     }
     else
     {

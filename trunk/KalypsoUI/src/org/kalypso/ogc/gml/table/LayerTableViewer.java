@@ -203,6 +203,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private Feature m_lastSelectedFE;
 
+  private final int m_selectionID;
+
   /**
    * @param parent
    * @param templateTarget
@@ -218,6 +220,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     m_featureControlFactory = featureControlFactory;
     m_templateTarget = templateTarget;
+    m_selectionID = selectionID;
 
     setContentProvider( new LayerTableContentProvider() );
     setLabelProvider( new LayerTableLabelProvider( this ) );
@@ -247,6 +250,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public void rememberLastSelectedFTPAndRow( int xPos, int yPos )
   {
     final TableItem item = getTable().getItem( new Point( xPos, yPos ) );
+    if(item==null)
+      return;
     m_lastSelectedFE = (Feature)item.getData();
     final TableColumn[] columns = getTable().getColumns();
 
@@ -535,6 +540,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
             handleModelChanged( modellEvent );
           }
         } );
+    }
+    else
+    {
+      refresh();
     }
     fireModellEvent( modellEvent );
   }
@@ -850,6 +859,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final CommandableWorkspace workspace = theme.getWorkspace();
     if( workspace == null )
       return selection;
-    return new CommandableFeatureSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE );
+    return new CommandableFeatureSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE, m_selectionID );
   }
 }

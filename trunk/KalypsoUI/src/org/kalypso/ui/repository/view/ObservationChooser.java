@@ -109,7 +109,7 @@ public class ObservationChooser extends AbstractViewer implements
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
 
     m_repContainer.addRepositoryContainerListener( this );
-
+    
     m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
