@@ -77,7 +77,6 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     final Feature feature = workspace.getRootFeature();
     final FeatureElement element = new FeatureElement( rootElement, feature );
     createFeatureChildren( element, feature );
-
     return rootElement;
   }
 

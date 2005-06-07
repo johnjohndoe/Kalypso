@@ -105,6 +105,7 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -181,7 +182,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    * The local CaluclationServices, e.g. the ones createt from the extension
    * point
    */
-  private Map m_localCalcServices;
+  private Map m_localCalcServices = null;
 
   // TODO put definition in preferences dialog
   // TODO add crs attribute in boundingbox of *.gmt files
@@ -374,7 +375,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private void registerUrlStreamHandler( final BundleContext context, final String scheme, final URLStreamHandler handler )
   {
     final Hashtable properties = new Hashtable( 1 );
-    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { scheme } );
+    properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
+    { scheme } );
     context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }
 
@@ -389,8 +391,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     InputStream ins = null;
     try
     {
-      ins = getClass().getResourceAsStream(
-          "resources/deletetempdir.properties" );
+      ins = getClass().getResourceAsStream( "resources/deletetempdir.properties" );
       props.load( ins );
       ins.close();
 
@@ -427,13 +428,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     final Map proxies = new LinkedHashMap();
 
     // put lokal services first, so they will will be taken in preference
+    //System.out.println( "check local Calcservices" );
     proxies.putAll( getLocalCalcServices() );
+    //System.out.println( "check local Calcservices DONE" );
 
     try
     {
-      final Map stubs = m_proxyFactory.getAllProxiesAsMap(
-          "Kalypso_CalculationService", ClassUtilities
-              .getOnlyClassName( ICalculationService.class ) );
+      final Map stubs = m_proxyFactory
+          .getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities.getOnlyClassName( ICalculationService.class ) );
       proxies.putAll( stubs );
     }
     catch( final ServiceException e )
@@ -453,27 +455,28 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       // alle proxy-factories holen und erzeugen
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IExtensionPoint point = registry.getExtensionPoint( getId(),
-          IKalypsoUIConstants.PL_CALCULATION_SERVICE );
+      final IExtensionPoint point = registry.getExtensionPoint( getId(), IKalypsoUIConstants.PL_CALCULATION_SERVICE );
+      // ??
+     // System.out.println( "extensionPoint available ?" );
       if( point == null )
+      {
+   //     System.out.println( "extensionPoint == null" );
         return null;
-
+      }
       final IExtension[] extensions = point.getExtensions();
       for( int i = 0; i < extensions.length; i++ )
       {
+    //    System.out.println( "Extension: >" + extensions[i].getLabel() + "<" );
         final IExtension extension = extensions[i];
-        final IConfigurationElement[] configurationElements = extension
-            .getConfigurationElements();
+        final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
         for( int j = 0; j < configurationElements.length; j++ )
         {
+   //       System.out.println( " ConfigElelemnt: >" + configurationElements[j].getName() + "<" );
           final IConfigurationElement element = configurationElements[j];
           try
           {
-            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element
-                .createExecutableExtension( "class" );
-            proxies.put( "" + j + "_local_service_"
-                + ClassUtilities.getOnlyClassName( factory.getClass() ),
-                factory.createService() );
+            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element.createExecutableExtension( "class" );
+            proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory.createService() );
           }
           catch( final CoreException e )
           {
@@ -619,15 +622,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
       final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
       final IUrlCatalog calcCatalog = new CalcServiceCatalog();
-      //      final IUrlCatalog twoDCatalog = new
-      // org.kalypsodeegree_impl.gml.schema.schemata.twoD.UrlCatalog2d();
-      //      final IUrlCatalog naCatalog = new UrlCatalogNA();
+      // TODO  wohin sonst
+      final IUrlCatalog updateObs = new UrlCatalogUpdateObservationMapping();
 
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
       {
           // test
-//          naCatalog,
-//          twoDCatalog,
+          //          naCatalog,
+          //          twoDCatalog,
+          updateObs,
           serverUrlCatalog,
           calcCatalog } );
 
@@ -888,8 +891,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    * written in the File javadoc, you should call .deleteOnExit() on the
    * returned file instance to make it a real 'temp' file.
    */
-  public File createTempFile( final String subDirName, final String prefix,
-      final String suffix ) throws IOException
+  public File createTempFile( final String subDirName, final String prefix, final String suffix ) throws IOException
   {
     final IPath path = getStateLocation();
     final File dir = new File( path.toFile(), subDirName );

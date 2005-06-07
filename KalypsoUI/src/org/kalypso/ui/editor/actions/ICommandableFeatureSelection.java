@@ -54,5 +54,7 @@ public interface ICommandableFeatureSelection extends IStructuredSelection
   public FeatureTypeProperty getSelectedFeatureTypeProperty();
 
   public Feature getSelectedRow();
+  
+  public int getSelectionId();
 
 }

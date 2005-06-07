@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import java.util.Iterator;
@@ -53,7 +53,7 @@ import org.kalypso.util.command.ICommand;
 /**
  * Setzt die selektierten Features innerhalb eines Workspace
  * 
- * @author belger
+ * @author belger TODO rename to highlight...something
  */
 public class SelectFeaturesCommand implements ICommand
 {
@@ -67,8 +67,7 @@ public class SelectFeaturesCommand implements ICommand
 
   private final UnselectFeatureVisitor m_unselectVisitor;
 
-  public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection,
-      final int selectionID )
+  public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection, final int selectionID )
   {
     m_workspace = workspace;
     m_selection = selection;

@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.table;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -55,15 +56,15 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
 {
   private final LayerTableViewer m_viewer;
 
-//  private final Color m_selectionColor;
-//
-//  private final Color m_noSelectionColor;
+  private final Color m_selectionColor;
+
+  private final Color m_noSelectionColor;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
     m_viewer = layerTable;
-//    m_selectionColor = m_viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_LIST_SELECTION );
-//    m_noSelectionColor = m_viewer.getControl().getBackground();
+    m_selectionColor = m_viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_YELLOW );
+    m_noSelectionColor = m_viewer.getControl().getBackground();
   }
 
   /**
@@ -151,7 +152,12 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public Color getBackground( Object element )
   {
-    return null;
+    if( element instanceof Feature )
+    {
+      if( ( (Feature)element ).isSelected( 1 ) )
+        return m_selectionColor;
+    }
+    return m_noSelectionColor;
     //    // TODO check highlight
     //    final ISelection selection = m_viewer.getSelection();
     //    if( selection instanceof IStructuredSelection )
