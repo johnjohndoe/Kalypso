@@ -138,6 +138,11 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     }
   }
 
+  public void paintSelected( Graphics g, Graphics hg,GeoTransform p, double scale, GM_Envelope bbox,
+      int selectionId )
+  {
+      paintSelected(hg, p, scale, bbox, selectionId);
+  }
   public void addModellListener( final ModellEventListener listener )
   {
     myEventProvider.addModellListener( listener );

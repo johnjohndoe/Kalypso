@@ -234,7 +234,11 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     }
 
   }
-
+  public void paintSelected( Graphics g,Graphics hg, GeoTransform p, double scale, GM_Envelope bbox,
+      int selectionId )
+  {
+      paintSelected(hg, p, scale, bbox, selectionId);
+  }
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */

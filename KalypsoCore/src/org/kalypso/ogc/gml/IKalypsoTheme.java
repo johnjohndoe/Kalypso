@@ -68,4 +68,6 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
   public void setName( final String name );
   
   public GM_Envelope getBoundingBox();
+
+  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId );
 }

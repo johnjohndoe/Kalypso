@@ -76,8 +76,7 @@ public class GisTemplateMapModell implements IMapModell
 
   private final URL m_context;
 
-  public GisTemplateMapModell( final Gismapview gisview, final URL context,
-      final CS_CoordinateSystem crs, IProject project )
+  public GisTemplateMapModell( final Gismapview gisview, final URL context, final CS_CoordinateSystem crs, IProject project )
   {
     m_context = context;
     m_modell = new MapModell( crs, project );
@@ -93,8 +92,7 @@ public class GisTemplateMapModell implements IMapModell
 
     for( int i = 0; i < layerList.size(); i++ )
     {
-      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList
-          .get( i );
+      final GismapviewType.LayersType.Layer layerType = (GismapviewType.LayersType.Layer)layerList.get( i );
 
       final IKalypsoTheme theme = loadTheme( layerType, context );
       if( theme != null )
@@ -108,8 +106,7 @@ public class GisTemplateMapModell implements IMapModell
     }
   }
 
-  public IKalypsoTheme addTheme(
-      org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer )
+  public IKalypsoTheme addTheme( org.kalypso.template.gismapview.GismapviewType.LayersType.Layer layer )
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -132,34 +129,27 @@ public class GisTemplateMapModell implements IMapModell
     {
       String layerName = layerType.getName();
       String source = layerType.getHref();
-      CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem();
-      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source,
-          cs );
+      CS_CoordinateSystem cs = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, cs );
     }
-    if( layerType.getLinktype().equals( "tif" )
-        || layerType.getLinktype().equals( "jpg" )
-        || layerType.getLinktype().equals( "png" )
+    if( layerType.getLinktype().equals( "tif" ) || layerType.getLinktype().equals( "jpg" ) || layerType.getLinktype().equals( "png" )
         || layerType.getLinktype().equals( "gif" ) )
     {
       String source = layerType.getHref();
       String layerName = layerType.getName();
-      return new KalypsoPictureTheme( layerName, layerType.getLinktype(),
-          source, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
     }
     return new GisTemplateFeatureTheme( layerType, context );
   }
 
   // Helper
-  public Gismapview createGismapTemplate( final GM_Envelope bbox )
-      throws JAXBException
+  public Gismapview createGismapTemplate( final GM_Envelope bbox ) throws JAXBException
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
     //
     final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
-    final LayersType layersType = maptemplateFactory
-        .createGismapviewTypeLayersType();
+    final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
     if( bbox != null )
     {
       final ExtentType extentType = extentFac.createExtentType();
@@ -181,27 +171,23 @@ public class GisTemplateMapModell implements IMapModell
     IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
-      final Layer layer = maptemplateFactory
-          .createGismapviewTypeLayersTypeLayer();
+      final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
 
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
       {
-        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_"
-            + i, m_modell.isThemeEnabled( kalypsoTheme ) );
+        ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
         String name = kalypsoTheme.getName();
-        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell
-            .isThemeEnabled( kalypsoTheme ), (KalypsoWMSTheme)kalypsoTheme );
+        GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, m_modell.isThemeEnabled( kalypsoTheme ), (KalypsoWMSTheme)kalypsoTheme );
         layerList.add( layer );
       }
       else if( kalypsoTheme instanceof KalypsoPictureTheme )
       {
-        ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i,
-            m_modell.isThemeEnabled( kalypsoTheme ) );
+        ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
 
@@ -211,10 +197,8 @@ public class GisTemplateMapModell implements IMapModell
 
     try
     {
-      GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory
-          .getInstance().getOGCCSByName( "EPSG:4326" ) );
-      GM_Envelope env = gt.transformEnvelope( bbox, KalypsoGisPlugin
-          .getDefault().getCoordinatesSystem() );
+      GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
+      GM_Envelope env = gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
       System.out.println( env );
 
     }
@@ -301,10 +285,14 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.moveUp( theme );
   }
 
-  public void paintSelected( Graphics g, GeoTransform p, GM_Envelope bbox,
-      double scale, int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
   {
     m_modell.paintSelected( g, p, bbox, scale, selectionId );
+  }
+
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
+  {
+    m_modell.paintSelected( g, hg, p, bbox, scale, selectionId );
   }
 
   public void removeModellListener( ModellEventListener listener )
@@ -327,8 +315,7 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.swapThemes( theme1, theme2 );
   }
 
-  public void saveTheme( final IKalypsoFeatureTheme theme,
-      final IProgressMonitor monitor ) throws CoreException
+  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
   {
     if( theme instanceof GisTemplateFeatureTheme )
       ( (GisTemplateFeatureTheme)theme ).saveFeatures( monitor );
@@ -338,8 +325,7 @@ public class GisTemplateMapModell implements IMapModell
     //    else if (theme instanceof KalypsoPictureTheme )
     //      ((KalypsoPictureTheme)theme).saveTheme(monitor);
     else
-      throw new UnsupportedOperationException( "theme must be of type "
-          + GisTemplateFeatureTheme.class.getName() );
+      throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() );
   }
 
   /**

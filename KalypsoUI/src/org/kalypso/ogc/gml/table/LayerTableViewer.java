@@ -250,21 +250,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public void rememberLastSelectedFTPAndRow( int xPos, int yPos )
   {
     final TableItem item = getTable().getItem( new Point( xPos, yPos ) );
-    if(item==null)
+    if( item == null )
       return;
     m_lastSelectedFE = (Feature)item.getData();
-    final TableColumn[] columns = getTable().getColumns();
-
-    // calulcate position from viewable area
-    int x = getTable().getClientArea().x;
-
-    for( int i = 0; i < columns.length; i++ )
+    if( m_tableCursor != null && !m_tableCursor.isDisposed() )
     {
-      TableColumn column = columns[i];
-      x += column.getWidth();
-      if( x > xPos )
+      int column = m_tableCursor.getColumn();
+      if( column >= 0 && column < m_modifier.length )
       {
-        m_lastSelectedFTP = m_modifier[i].getFeatureTypeProperty();
+        m_lastSelectedFTP = m_modifier[column].getFeatureTypeProperty();
         return;
       }
     }
@@ -304,7 +298,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public void applyTableTemplate( final Gistableview tableView, final URL context )
   {
     m_isApplyTemplate = true;
-
     clearColumns();
     setTheme( null );
 
@@ -331,7 +324,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     refreshCellEditors();
     refreshColumnProperties();
     refresh();
-
+    checkColumns();
     m_isApplyTemplate = false;
   }
 
@@ -355,6 +348,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( !isDisposed() )
       setInput( theme );
+    checkColumns();
   }
 
   public void clearColumns()
@@ -429,6 +423,37 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     tc.setData( TableColumnTooltipListener.TOOLTIP_PROPERTY, tooltip );
   }
 
+  private void checkColumns()
+  {
+    final Object input = getInput();
+    if( input == null || !( input instanceof GisTemplateFeatureTheme ) )
+      return;
+    final FeatureType featureType = ( (GisTemplateFeatureTheme)input ).getFeatureType();
+    if( featureType == null )
+      return;
+    final TableColumn[] columns = getTable().getColumns();
+    boolean changed = false;
+    for( int i = 0; i < columns.length; i++ )
+    {
+      final TableColumn column = columns[i];
+      if( column != null )
+      {
+        final String propName = column.getData( COLUMN_PROP_NAME ).toString();
+        if( featureType.getProperty( propName ) == null )
+        {
+          column.dispose();
+          changed = true;
+        }
+      }
+    }
+    if( changed )
+    {
+      refreshCellEditors();
+      refreshColumnProperties();
+      refresh();
+    }
+  }
+
   public void removeColumn( final String name )
   {
     final TableColumn column = getColumn( name );
@@ -447,6 +472,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( isDisposed() )
       return;
+    checkColumns();
     // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
@@ -525,8 +551,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( getTheme() == null )
       return;
-    // TODO hanlde here the highlighting stuff
-    // Feature-Selection auf Selection übertragen
     if( ( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == getTheme().getWorkspace() )
         ||
 
@@ -543,7 +567,16 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
     else
     {
-      refresh();
+      if( !isDisposed() )
+      {
+        getControl().getDisplay().asyncExec( new Runnable()
+        {
+          public void run()
+          {
+            refresh();
+          }
+        } );
+      }
     }
     fireModellEvent( modellEvent );
   }
@@ -839,9 +872,12 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       for( int i = 0; i < m_modifier.length; i++ )
       {
         final IFeatureModifier fm = m_modifier[i];
-        final FeatureTypeProperty ftp = fm.getFeatureTypeProperty();
-        if( ftp.getName().equals( name ) )
-          return fm;
+        if( fm != null )
+        {
+          final FeatureTypeProperty ftp = fm.getFeatureTypeProperty();
+          if( ftp.getName().equals( name ) )
+            return fm;
+        }
       }
     }
     return null;

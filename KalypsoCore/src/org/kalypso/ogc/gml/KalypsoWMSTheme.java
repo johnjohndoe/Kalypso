@@ -109,8 +109,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private GM_Envelope m_maxEnv = null;
 
-  public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
-      final CS_CoordinateSystem localCRS )
+  public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localCRS )
   {
     super( themeName, linktype.toUpperCase() );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
@@ -153,8 +152,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       final WMSCapabilities wmsCaps = wmsCapFac.createCapabilities( reader );
       m_remoteWMS = new RemoteWMService( wmsCaps );
       //match the local with the remote coordiante system
-      CS_CoordinateSystem[] crs = WMSHelper
-          .negotiateCRS( m_localCSR, wmsCaps, m_layers.split( "," ) );
+      CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( m_localCSR, wmsCaps, m_layers.split( "," ) );
       if( !crs[0].equals( m_localCSR ) )
         m_remoteCSR = crs[0];
       else
@@ -195,27 +193,21 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   }
 
   /**
-   * @param g
-   *          the graphics context from the map panel
-   * @param p
-   *          world to screen transformation
-   * @param scale
-   *          scale
-   * @param bbox
-   *          bounding box from map model (screen)
+   * @param g the graphics context from the map panel
+   * @param p world to screen transformation
+   * @param scale scale
+   * @param bbox bounding box from map model (screen)
    * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
-      int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
   {
     // kann keine selektion zeichnen!
     if( selectionId != 0 )
       return;
-    //the image is only updated when the wish bbox is bigger then bbox of the
-    // requestedbbox (image)
+    //the image is only updated when the wish bbox is ok
     if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
     {
 
@@ -240,6 +232,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       int height = (int)g.getClip().getBounds().getHeight();
       updateImage( width, height, bbox );
     }
+  }
+
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+  {
+    paintSelected( hg, p, scale, bbox, selectionId );
   }
 
   public void updateImage( int width, int height, GM_Envelope bbox )
@@ -313,8 +310,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   //Helper
   private static String env2bboxString( GM_Envelope env )
   {
-    return round( env.getMin().getX() ) + "," + round( env.getMin().getY() ) + ","
-        + round( env.getMax().getX() ) + "," + round( env.getMax().getY() );
+    return round( env.getMin().getX() ) + "," + round( env.getMin().getY() ) + "," + round( env.getMax().getX() ) + "," + round( env.getMax().getY() );
   }
 
   //Helper
@@ -356,13 +352,18 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
           final Document wmsException = ( (WMSGetMapResponse)response ).getException();
           if( wmsException != null )
           {
-            int width = (int)m_requestedBBox.getWidth();
-            int height = (int)m_requestedBBox.getHeight();
-            final BufferedImage image = new BufferedImage( width, height,
-                BufferedImage.TYPE_INT_ARGB );
-            final Graphics gr = image.getGraphics();
-            gr.drawString( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ), width / 2,
-                height / 2 );
+            System.out.println( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ) );
+            // TODO @christoph: hier wir ein image mit der Gauss-Krüger BBOX
+            // aufgemacht, das gibt sofort eine out of memory exception
+
+            //            int width = (int)m_requestedBBox.getWidth();
+            //            int height = (int)m_requestedBBox.getHeight();
+            //
+            //            final BufferedImage image = new BufferedImage( width, height,
+            // BufferedImage.TYPE_INT_ARGB );
+            //            final Graphics gr = image.getGraphics();
+            //            gr.drawString( "OGC_WMS_Exception:\n" + XMLHelper.toString(
+            // wmsException ), width / 2, height / 2 );
           }
         }
       }
@@ -374,7 +375,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public void dispose()
   {
-  //do nothing (no graphics to dispose)
+    //do nothing (no graphics to dispose)
   }
 
   /**
