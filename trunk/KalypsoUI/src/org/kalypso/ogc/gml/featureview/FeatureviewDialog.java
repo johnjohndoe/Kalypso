@@ -111,7 +111,8 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
         return (Composite)featureComposite.createControl( scrollParent,
             style );
       }};
-     creator.createControl( panel, SWT.NONE, SWT.NONE );
+      creator.createControl( panel, SWT.NONE, SWT.NONE );
+      creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     featureComposite.addModifyListener( this );
 

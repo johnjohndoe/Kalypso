@@ -103,4 +103,6 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public GM_Envelope getFullExtentBoundingBox();
   
   public IProject getProject();
+
+  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int i );
 }

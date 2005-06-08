@@ -196,6 +196,21 @@ public class MapModell implements IMapModell
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintSelected(java.awt.Graphics, java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope, double, int)
+   */
+  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
+  {
+    if( getThemeSize() == 0 )
+      return;
+
+    for( int i = 0; i < getThemeSize(); i++ )
+    {
+      IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
+      if( isThemeEnabled( theme ) )
+        theme.paintSelected( gr,hg, p, scale, bbox, selectionId );
+    }
+  }
   //  public double getScale()
   //  {
   //    return myScale;
@@ -340,4 +355,6 @@ public class MapModell implements IMapModell
   {
     return m_project;
   }
+
+  
 }

@@ -139,6 +139,16 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
+  public void paintSelected( final Graphics graphics, Graphics hg, final GeoTransform projection, final double scale, final GM_Envelope bbox,
+      final int selectionId )
+  {
+    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
+    {
+      StyleDisplayMap map = (StyleDisplayMap)iter.next();
+      map.paintSelected( graphics, hg, projection, scale, bbox, selectionId );
+    }
+  }
+
   public void addStyle( final KalypsoUserStyle style )
   {
     final StyleDisplayMap styleDisplayMap = new StyleDisplayMap( style );
@@ -200,7 +210,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
           case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
             setDirty();
-            restyleFeature( parent );           
+            restyleFeature( parent );
             break;
           default:
             setDirty();
@@ -363,6 +373,36 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       for( int i = 0; i < layerList.length; i++ )
         for( Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
           ( (DisplayElement)iterator.next() ).paint( g, p );
+    }
+
+    public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+    {
+      restyle( bbox );
+      final List selectedDE = m_dispayElements; 
+//        getSelectedDisplayElements( null, selectionId, bbox );
+      final List[] layerList = new List[m_maxDisplayArray];
+      // try to keep order of rules in userstyle
+      for( int i = 0; i < layerList.length; i++ )
+        layerList[i] = new ArrayList();
+      for( Iterator iter = selectedDE.iterator(); iter.hasNext(); )
+      {
+        Object object = iter.next();
+        DisplayElement[] element = (DisplayElement[])object;
+        for( int i = 0; i < element.length; i++ )
+        {
+          if( element[i].doesScaleConstraintApply( scale ) )
+            layerList[i].add( element[i] );
+        }
+      }
+      for( int i = 0; i < layerList.length; i++ )
+        for( Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
+        {
+          DisplayElement de = (DisplayElement)iterator.next();
+          if( de.getFeature().isSelected( selectionId ) )
+            de.paint( hg, p );
+          else
+            de.paint( g, p );
+        }
     }
 
     public void restyle( GM_Envelope env )
