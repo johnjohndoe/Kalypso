@@ -229,7 +229,7 @@ public class CalculateFloodRiskJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return null;
+    return getClass().getResource( "resources/riskCalcjob_spec.xml" );
   }
 
 }

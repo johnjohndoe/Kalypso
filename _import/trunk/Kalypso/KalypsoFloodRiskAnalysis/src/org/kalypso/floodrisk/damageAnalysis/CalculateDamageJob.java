@@ -334,7 +334,7 @@ public class CalculateDamageJob implements ICalcJob
 
   public URL getSpezifikation()
   {
-    return null;
+    return getClass().getResource( "resources/damageCalcjob_spec.xml" );
   }
 
 }

@@ -74,10 +74,6 @@ public class CalculateStatisticJob implements ICalcJob
   //output
   public static final String StatisticDataID = "StatisticData";
 
-  //schemas
-  private URL statisticData_schemaURL = getClass().getResource(
-      "../schema/StatisticData.xsd" );
-
   RasterDataModel rasterDataModel = new RasterDataModel();
 
   /**
@@ -144,7 +140,7 @@ public class CalculateStatisticJob implements ICalcJob
       }
       StatisticAnalysis
           .exportStatisticAsXML( statistics, contextModel.getLanduseList(),
-              statisticDataFile.toURL(), statisticData_schemaURL );
+              statisticDataFile.toURL() );
       resultEater.addResult( statisticDataOutputBean.getId(), null );
 
       monitor.setProgress( 40 );
@@ -167,7 +163,7 @@ public class CalculateStatisticJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return null;
+    return getClass().getResource( "resources/statisticCalcjob_spec.xml" );
   }
 
 }

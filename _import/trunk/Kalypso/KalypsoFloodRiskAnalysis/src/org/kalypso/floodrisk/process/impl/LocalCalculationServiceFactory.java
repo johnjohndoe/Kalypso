@@ -34,6 +34,7 @@
  */
 package org.kalypso.floodrisk.process.impl;
 
+import java.rmi.RemoteException;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
@@ -70,6 +71,10 @@ public class LocalCalculationServiceFactory implements
           localCalcJobFactory, new UrlCatalogFloodRisk() ) );
     }
     catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
+    catch( RemoteException e )
     {
       e.printStackTrace();
     }

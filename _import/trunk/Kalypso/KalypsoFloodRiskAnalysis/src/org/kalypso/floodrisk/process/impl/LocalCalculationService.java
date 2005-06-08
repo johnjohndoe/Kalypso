@@ -37,6 +37,7 @@ package org.kalypso.floodrisk.process.impl;
 import java.net.URL;
 import java.net.URLConnection;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
@@ -45,8 +46,11 @@ import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
@@ -55,6 +59,7 @@ import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.calculation.service.impl.ICalcJobFactory;
+import org.kalypso.services.calculation.service.impl.ModelspecData;
 
 /**
  * LocalCalculationService
@@ -79,11 +84,26 @@ public class LocalCalculationService implements ICalculationService
 
   private IUrlCatalog m_catalog;
 
+  private final Unmarshaller m_unmarshaller;
+
+  private final Map m_modelspecMap = new HashMap();
+
   public LocalCalculationService( final ICalcJobFactory factory,
-      final IUrlCatalog catalog )
+      final IUrlCatalog catalog ) throws RemoteException
   {
     m_calcJobFactory = factory;
     m_catalog = catalog;
+
+    try
+    {
+      m_unmarshaller = new ObjectFactory().createUnmarshaller();
+    }
+    catch( final JAXBException e )
+    {
+      throw new RemoteException(
+          "Unmarshaller für Modellspezifikation konnte nicht erzeugt werden.",
+          e );
+    }
   }
 
   /**
@@ -169,9 +189,12 @@ public class LocalCalculationService implements ICalculationService
       if( id == -1 )
         id = m_threads.size();
 
+      final ModelspecData modelspec = getModelspec( typeID );
+
       ICalcJob job = m_calcJobFactory.createJob( typeID );
-      cjt = new LocalCalcJobThread( "" + id, description, typeID, job, input,
-          output );
+
+      cjt = new LocalCalcJobThread( "" + id, description, typeID, job,
+          modelspec, input, output );
 
       if( id == m_threads.size() )
         m_threads.add( cjt );
@@ -328,6 +351,21 @@ public class LocalCalculationService implements ICalculationService
     return thread.getCurrentResults();
   }
 
+  private ModelspecData getModelspec( final String typeID )
+      throws CalcJobServiceException
+  {
+    ModelspecData data = (ModelspecData)m_modelspecMap.get( typeID );
+    if( data != null )
+      return data;
+
+    final ICalcJob job = m_calcJobFactory.createJob( typeID );
+    final URL modelspecURL = job.getSpezifikation();
+    data = new ModelspecData( modelspecURL, m_unmarshaller );
+    m_modelspecMap.put( typeID, data );
+
+    return data;
+  }
+
   /**
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getRequiredInput(java.lang.String)
@@ -335,8 +373,7 @@ public class LocalCalculationService implements ICalculationService
   public CalcJobServerBean[] getRequiredInput( final String typeID )
       throws CalcJobServiceException
   {
-    // not implemented
-    return null;
+    return getModelspec( typeID ).getInput();
   }
 
   /**
@@ -346,8 +383,7 @@ public class LocalCalculationService implements ICalculationService
   public CalcJobServerBean[] getDeliveringResults( final String typeID )
       throws CalcJobServiceException
   {
-    //  not implemented
-    return null;
+    return getModelspec( typeID ).getOutput();
   }
 
   /**

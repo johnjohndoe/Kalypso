@@ -126,7 +126,7 @@ public class GenerateTemplateRasterJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return null;
+    return getClass().getResource( "resources/generateTemplateCalcjob_spec.xml" );
   }
 
 }

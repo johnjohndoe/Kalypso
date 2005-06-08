@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateDamageJob">
+
+	<input id="LanduseRasterData" description="Rasterdaten Landnutzung"/>
+	<input id="WaterlevelData" description="Steuerungsdatei, in der festgelegt wird, welche Überschwemmungsgebiete bei der Schadenspotentialberechnung berücksichtigt werden"/>
+	<input id="ContextModel" description="Steuerungsdatei, in der die Schädigungfunktionen und Vermögenswerte definiert sind sowie deren Zuordnung zu den Landnutzungsarten"/>
+	
+	<output id="DamageDirectory" description="Verzeichnis, in dem die Schadenspotential-Raster für jede gewählte Jährlichkeit mit einem zugehörigen Default-Style gespeichert werden"/>
+	<output id="AnnualDamageRasterData" description="Räumliche Verteilung des jährlichen Schadenserwartungswertes"/>
+	
+</modelspec>

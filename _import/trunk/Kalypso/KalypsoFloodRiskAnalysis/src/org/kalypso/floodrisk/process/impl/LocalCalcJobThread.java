@@ -41,6 +41,8 @@ import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.services.calculation.service.impl.ModelspecData;
 import org.kalypso.services.common.ServiceConfig;
 
 /**
@@ -63,7 +65,9 @@ public class LocalCalcJobThread extends Thread
   private ProcessDataProvider m_inputProvider;
 
   public LocalCalcJobThread( final String id, final String description, final String typeID,
-      final ICalcJob job, final CalcJobClientBean[] input, final CalcJobClientBean[] output )
+      final ICalcJob job, final ModelspecData modelspec,
+      final CalcJobClientBean[] input, final CalcJobClientBean[] output )
+      throws CalcJobServiceException
   {
     m_job = job;
 
@@ -71,6 +75,8 @@ public class LocalCalcJobThread extends Thread
         -1, "" );
     m_inputProvider = new ProcessDataProvider( input );
     m_resultEater = new ProcessResultEater( output );
+    
+    modelspec.checkInput(m_inputProvider);
   }
   
   /**

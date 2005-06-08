@@ -250,7 +250,7 @@ public class StatisticAnalysis
    *  
    */
   public static void exportStatisticAsXML( Hashtable statistics, Hashtable landuseTypeList,
-      URL statisticDataURL, URL statisticData_schemaURL ) throws Exception
+      URL statisticDataURL) throws Exception
   {
     //  load schema
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_STATISTICDATA );
