@@ -94,23 +94,17 @@ public class RasterizeLanduseJobTest extends TestCase
   {
     String base = "D://Nadja//eclipse//runtime-workspace//Test//";
     //Input
-    int numInputBeans = 5;
+    int numInputBeans = 3;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
     CalcJobClientBean input1 = new CalcJobClientBean( RasterizeLanduseJob.LanduseVectorDataID, base
-        + "Landuse//landuse.shp" );
+        + "Landuse//LanduseVectorData.gml" );
     input[0] = input1;
-    CalcJobClientBean input2 = new CalcJobClientBean(
-        RasterizeLanduseJob.VectorDataCoordinateSystemID, "EPSG:31467" );
-    input[1] = input2;
-    CalcJobClientBean input3 = new CalcJobClientBean( RasterizeLanduseJob.ContextModelID, base
+    CalcJobClientBean input2 = new CalcJobClientBean( RasterizeLanduseJob.ContextModelID, base
         + "Control//contextModell.gml" );
-    input[2] = input3;
-    CalcJobClientBean input4 = new CalcJobClientBean( RasterizeLanduseJob.LandusePropertyNameID,
-        "NUTZUNG" );
-    input[3] = input4;
-    CalcJobClientBean input5 = new CalcJobClientBean( RasterizeLanduseJob.BaseRasterID, base
+    input[1] = input2;
+    CalcJobClientBean input3 = new CalcJobClientBean( RasterizeLanduseJob.BaseRasterID, base
         + "Waterlevel//wsp_hq100.gml" );
-    input[4] = input5;
+    input[2] = input3;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
     //Output
     int numOutputBeans = 1;

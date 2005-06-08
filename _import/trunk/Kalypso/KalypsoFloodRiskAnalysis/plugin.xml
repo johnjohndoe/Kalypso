@@ -53,11 +53,11 @@
    </extension>
    <extension
          point="KalypsoFloodRiskAnalysis.AddProcess">
-      <!--<KalypsoProcess
+      <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
             name="Rasterung (Landnutzung)"
-            id="RasterizeLanduseJob"/>-->
+            id="RasterizeLanduseJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"

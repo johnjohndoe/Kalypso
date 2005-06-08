@@ -1,6 +1,7 @@
 package org.kalypso.wizard;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -25,6 +26,9 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree_impl.io.shpapi.DBaseException;
+import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
+import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -74,7 +78,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author N. Peiler
  */
 
-public class SelectLanduseWizardPage extends WizardPage implements FocusListener
+public class SelectLanduseWizardPage extends WizardPage implements
+    FocusListener
 {
 
   private Composite m_topLevel;
@@ -85,15 +90,25 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
   File m_file;
 
-  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() )
+      .getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
 
   String selectedCoordinateSystemName;
 
+  private Combo landusePropCombo;
+
+  protected String propertyName;
+
+  private boolean check;
+
+  private Label landusePropLabel;
+
   public SelectLanduseWizardPage()
   {
-    super( "page_type:landuse", "Landnutzungsdaten einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    super( "page_type:landuse", "Landnutzungsdaten einlesen",
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     setDescription( "Landuse WizardPage" );
     setPageComplete( false );
   }
@@ -133,13 +148,14 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     gridLayout.numColumns = 3;
     group.setLayout( gridLayout );
 
-    //  line 1
+    //  line 1: ShapeFile selection
     Label label = new Label( group, SWT.NONE );
     label.setText( "Shape-Datei: " );
 
     m_textFileSource = new Text( group, SWT.BORDER );
     m_textFileSource.setText( DEFAUL_FILE_LABEL );
     m_textFileSource.addFocusListener( this );
+    m_textFileSource.setEditable(false);
 
     GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
@@ -159,12 +175,21 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
         String filePath = chooseFile( m_file, new String[]
         { "*.shp" } );
         if( filePath != null )
+        {
           m_file = new File( filePath );
+          if( m_file.exists() )
+          {
+            loadLanduseProperties( FileUtilities.nameWithoutExtension( m_file
+                .toString() ) );
+            landusePropLabel.setEnabled(true);
+            landusePropCombo.setEnabled( true );
+          }
+        }
         validate();
       }
     } );
 
-    //line2
+    //line2: coordinate system
     Label csLabel = new Label( group, SWT.NONE );
     csLabel.setText( "Coordinate system: " );
 
@@ -172,7 +197,8 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     csCombo.setItems( coordinateSystems );
     try
     {
-      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault()
+          .getCoordinatesSystem().getName();
     }
     catch( RemoteException e1 )
     {
@@ -210,6 +236,60 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       }
     } );
 
+    //line 3: landusePropertyName
+    landusePropLabel = new Label( group, SWT.NONE );
+    landusePropLabel.setText( "Attribut Landnutzung: " );
+    landusePropLabel.setEnabled(false);
+
+    landusePropCombo = new Combo( group, SWT.READ_ONLY );
+    landusePropCombo.setEnabled( false );
+    landusePropCombo.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        propertyName = landusePropCombo.getText();
+      }
+    } );
+    
+    Label dummyLabel2 = new Label( group, SWT.NONE );
+
+    //line 4: check autogenerateLanduseCollection
+    final Button checkButton = new Button( group, SWT.CHECK );
+    checkButton.setSelection( check );
+    checkButton.addSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        check = checkButton.getSelection();
+      }
+    } );
+    
+    Label landuseColLabel = new Label( group, SWT.NONE );
+    landuseColLabel.setText("LanduseCollection automatisch generieren");
+  }
+
+  void loadLanduseProperties( String shapeBaseFile )
+  {
+    try
+    {
+      ShapeFile shape = new ShapeFile( shapeBaseFile );
+      String[] propertyNames = shape.getProperties();
+      landusePropCombo.setItems( propertyNames );
+      propertyName = propertyNames[0];
+      landusePropCombo.select( landusePropCombo.indexOf( propertyName ) );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    catch( HasNoDBaseFileException e )
+    {
+      e.printStackTrace();
+    }
+    catch( DBaseException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   String chooseFile( File selectedFile, String[] filterExtensions )
@@ -244,7 +324,6 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     if( m_file != null )
     {
       m_textFileSource.setText( m_file.getAbsolutePath() );
-      prepareNextPage();
       if( !m_file.exists() )
       {
         error.append( "Datei existiert nicht\n\n" );
@@ -260,13 +339,20 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
     if( selectedCoordinateSystemName != null )
     {
-      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
-          selectedCoordinateSystemName );
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance()
+          .getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
         error.append( "Koordinatensystem existiert nicht\n\n" );
         setPageComplete( false );
       }
+    }
+    
+    if(propertyName != null){
+      //nothing
+    }else{
+      error.append("Attribut Landnutzung wählen.\n\n");
+      setPageComplete(false);
     }
 
     if( error.length() > 0 )
@@ -288,16 +374,14 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
     return selectedCoordinateSystem;
   }
 
-  private void prepareNextPage()
+  public boolean isCheck()
   {
-    CheckAutoGenerateWizardPage nextPage = (CheckAutoGenerateWizardPage)getNextPage();
-    String currentShapeBaseFile = FileUtilities.nameWithoutExtension( getLanduseDataFile()
-        .toString() );
-    if( nextPage.isCheck() && !currentShapeBaseFile.equals(nextPage.getShapeBaseFile()) )
-    {
-      nextPage.setShapeBaseFile( currentShapeBaseFile );
-      nextPage.loadLanduseProperties();
-    }
+    return check;
+  }
+
+  public String getPropertyName()
+  {
+    return propertyName;
   }
 
   /**

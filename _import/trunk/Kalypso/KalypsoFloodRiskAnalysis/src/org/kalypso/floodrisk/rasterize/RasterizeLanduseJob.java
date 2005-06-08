@@ -1,16 +1,14 @@
 package org.kalypso.floodrisk.rasterize;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
 
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
-import org.kalypso.floodrisk.process.IProcessDataProvider;
 import org.kalypso.floodrisk.process.IProcessResultEater;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -20,8 +18,8 @@ import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -72,12 +70,7 @@ public class RasterizeLanduseJob implements ICalcJob
   //input
   public static final String LanduseVectorDataID = "LanduseVectorData";
 
-  //public static final String VectorDataCoordinateSystemID =
-  // "VectorDataCoordinateSystem";
-
   public static final String ContextModelID = "ContextModel";
-
-  //public static final String LandusePropertyNameID = "LandusePropertyName";
 
   public static final String BaseRasterID = "BaseRaster";
 
@@ -100,32 +93,31 @@ public class RasterizeLanduseJob implements ICalcJob
       ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
-    monitor.setMessage( "Lese Eingabedateien" );
-    //String csName = (String)( (IProcessDataProvider)inputProvider )
-    //    .getObjectForID( VectorDataCoordinateSystemID );
-    //CS_CoordinateSystem cs =
-    // ConvenienceCSFactory.getInstance().getOGCCSByName( csName );
-    URL landuseVectorDataGML = inputProvider.getURLForID( LanduseVectorDataID );
-    List featureList = getFeatureList( landuseVectorDataGML );
-    //String propertyName = (String)( (IProcessDataProvider)inputProvider )
-    //    .getObjectForID( LandusePropertyNameID );
-    URL contextModelGML = inputProvider.getURLForID( ContextModelID );
-    Hashtable landuseTypeList;
     try
     {
+      monitor.setMessage( "Lese Eingabedateien" );
+
+      //landuseVectorData: featureList
+      URL landuseVectorDataGML = inputProvider
+          .getURLForID( LanduseVectorDataID );
+      GMLWorkspace landuseVectorData;
+      landuseVectorData = GmlSerializer
+          .createGMLWorkspace( landuseVectorDataGML );
+      FeaturePath featureMember = new FeaturePath( "FeatureMember" );
+      List featureList = (List)featureMember.getFeature( landuseVectorData );
+      
+      //contextModel: landuseTypeList
+      URL contextModelGML = inputProvider.getURLForID( ContextModelID );
+      Hashtable landuseTypeList;
       ContextModel contextModel = new ContextModel( contextModelGML );
       landuseTypeList = contextModel.getLanduseList();
-    }
-    catch( MalformedURLException e )
-    {
-      throw new CalcJobServiceException( e.getMessage(), e );
-    }
-    try
-    {
+      
+      //baseRaster
       URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
       RectifiedGridCoverage baseRaster = rasterDataModel
           .getRectifiedGridCoverage( baseRasterGML );
+      
       monitor.setMessage( "Berechne" );
       RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid(
           featureList, landuseTypeList, baseRaster, monitor );

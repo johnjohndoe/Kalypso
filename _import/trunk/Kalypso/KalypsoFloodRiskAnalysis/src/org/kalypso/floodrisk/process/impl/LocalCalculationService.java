@@ -34,14 +34,19 @@
  */
 package org.kalypso.floodrisk.process.impl;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.rmi.RemoteException;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.activation.DataHandler;
+import javax.activation.URLDataSource;
 
+import org.kalypso.java.net.IUrlCatalog;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
@@ -72,9 +77,13 @@ public class LocalCalculationService implements ICalculationService
 
   private ICalcJobFactory m_calcJobFactory;
 
-  public LocalCalculationService( final ICalcJobFactory factory )
+  private IUrlCatalog m_catalog;
+
+  public LocalCalculationService( final ICalcJobFactory factory,
+      final IUrlCatalog catalog )
   {
     m_calcJobFactory = factory;
+    m_catalog = catalog;
   }
 
   /**
@@ -246,7 +255,7 @@ public class LocalCalculationService implements ICalculationService
       m_timer = null;
     }
   }
-  
+
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#cancelJob(java.lang.String)
    */
@@ -347,8 +356,11 @@ public class LocalCalculationService implements ICalculationService
   public DataHandler getSchema( final String namespace )
       throws CalcJobServiceException
   {
-    //  not implemented
-    return null;
+    final URL url = m_catalog.getURL( namespace );
+    if( url == null )
+      return null;
+
+    return new DataHandler( new URLDataSource( url ) );
   }
 
   /**
@@ -357,8 +369,23 @@ public class LocalCalculationService implements ICalculationService
   public long getSchemaValidity( final String namespace )
       throws CalcJobServiceException
   {
-    // not implemented
-    return 0;
+    try
+    {
+      final URL url = m_catalog.getURL( namespace );
+      if( url == null )
+        throw new CalcJobServiceException( "Unknown schema namespace: "
+            + namespace, null );
+
+      final URLConnection connection = url.openConnection();
+      return connection.getLastModified();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      throw new CalcJobServiceException( "Unknown schema namespace: "
+          + namespace, e );
+    }
   }
 
   /**
@@ -366,8 +393,13 @@ public class LocalCalculationService implements ICalculationService
    */
   public String[] getSupportedSchemata() throws CalcJobServiceException
   {
-    // not implemented
-    return null;
+    final Map catalog = m_catalog.getCatalog();
+    final String[] namespaces = new String[catalog.size()];
+    int count = 0;
+    for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
+      namespaces[count++] = (String)mapIt.next();
+
+    return namespaces;
   }
 
 }

@@ -55,6 +55,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -103,9 +104,12 @@ import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
@@ -151,7 +155,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 
   private IProgressMonitor monitor;
 
-  private CheckAutoGenerateWizardPage checkAutoGenerateWizardPage;
+  //private CheckAutoGenerateWizardPage checkAutoGenerateWizardPage;
 
   private GMLWorkspace landuseShapeWS;
 
@@ -180,8 +184,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     selectLanduseWizardPage = new SelectLanduseWizardPage();
     addPage( selectLanduseWizardPage );
 
-    checkAutoGenerateWizardPage = new CheckAutoGenerateWizardPage();
-    addPage( checkAutoGenerateWizardPage );
+    //checkAutoGenerateWizardPage = new CheckAutoGenerateWizardPage();
+    //addPage( checkAutoGenerateWizardPage );
 
     selectWaterlevelWizardPage = new SelectWaterlevelWizardPage();
     addPage( selectWaterlevelWizardPage );
@@ -254,9 +258,11 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
       if( monitor.isCanceled() )
         performCancle();
 
-      if( checkAutoGenerateWizardPage.isCheck() )
+      HashSet landuseTypeSet = createLanduseDataGML();
+
+      if( selectLanduseWizardPage.isCheck() )
       {
-        autogenerateLanduseCollection();
+        autogenerateLanduseCollection( landuseTypeSet );
       }
 
       Vector targetFiles = createWaterlevelGrids();
@@ -318,8 +324,8 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         .append( "/Damage" ) ) ).toFile();
     damageDir.mkdir();
     //Risk
-    File riskDir = ( workspacePath.append( projectHandel.getFullPath()
-        .append( "/Risk" ) ) ).toFile();
+    File riskDir = ( workspacePath.append( projectHandel.getFullPath().append(
+        "/Risk" ) ) ).toFile();
     riskDir.mkdir();
     //Statistic
     File statisticDir = ( workspacePath.append( projectHandel.getFullPath()
@@ -360,7 +366,76 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
         "featureMember", "Landnutzung" );
   }
 
-  private void autogenerateLanduseCollection() throws Exception
+  private HashSet createLanduseDataGML() throws IOException,
+      GmlSerializeException
+  {
+    String ns_vectorData = "http://elbe.wb.tu-harburg.de/vectorData";
+
+    File landuseDataGML = workspacePath.append(
+        projectHandel.getFullPath() + "/Landuse/LanduseVectorData.gml" )
+        .toFile();
+
+    //load schema
+    GMLSchema schema = GMLSchemaCatalog.getSchema( ns_vectorData );
+
+    String rootFeatureTypeName = "VectorDataCollection";
+    String featureTypePropertyName = "FeatureMember";
+    String shapeFeatureTypePropertyName = "featureMember";
+    String shapeGeomPropertyName = "GEOM";
+
+    // create feature and workspace gml
+    final FeatureType[] types = schema.getFeatureTypes();
+
+    FeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
+    Feature rootFeature = FeatureFactory.createFeature( rootFeatureTypeName
+        + "0", rootFeatureType );
+    FeatureTypeProperty ftp_feature = rootFeatureType
+        .getProperty( featureTypePropertyName );
+
+    // create features: Feature
+    Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+    List featureList = (List)shapeRootFeature
+        .getProperty( shapeFeatureTypePropertyName );
+    String propertyName = selectLanduseWizardPage.getPropertyName();
+    HashSet landuseTypeSet = new HashSet();
+    for( int i = 0; i < featureList.size(); i++ )
+    {
+      Feature feat = (Feature)featureList.get( i );
+      String propertyValue = (String)feat.getProperty( propertyName );
+      if( !landuseTypeSet.contains( propertyValue ) )
+      {
+        landuseTypeSet.add( propertyValue );
+      }
+      Object[] properties = new Object[]
+      {
+          "",
+          "",
+          null,
+          (GM_Object)feat.getProperty( shapeGeomPropertyName ),
+          propertyValue };
+      Feature feature = FeatureFactory.createFeature( "Feature" + i,
+          ( (FeatureAssociationTypeProperty)ftp_feature )
+              .getAssociationFeatureType(), properties );
+      rootFeature.addProperty( FeatureFactory.createFeatureProperty(
+          ftp_feature.getName(), feature ) );
+    }
+
+    //create workspace
+    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature,
+        landuseDataGML.toURL(), "", schema.getTargetNS(), schema
+            .getNamespaceMap() );
+
+    // serialize Workspace
+    FileWriter fw = new FileWriter( landuseDataGML );
+    GmlSerializer.serializeWorkspace( fw, workspace );
+    fw.close();
+
+    return landuseTypeSet;
+
+  }
+
+  private void autogenerateLanduseCollection( HashSet landuseTypeSet )
+      throws Exception
   {
     URL contextModelURL = workspacePath.append(
         projectHandel.getFullPath() + "/Control/contextModell.gml" ).toFile()
@@ -391,31 +466,23 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     Feature parentFeature_risk = (Feature)rootFeature_risk
         .getProperty( parentFeatureName );
 
-    Feature shapeRootFeature = landuseShapeWS.getRootFeature();
-    List featureList = (List)shapeRootFeature.getProperty( "featureMember" );
-    String propertyName = checkAutoGenerateWizardPage.getPropertyName();
-    HashSet landuseTypeSet = new HashSet();
-    for( int i = 0; i < featureList.size(); i++ )
+    Iterator it = landuseTypeSet.iterator();
+    while( it.hasNext() )
     {
-      Feature feat = (Feature)featureList.get( i );
-      String propertyValue = (String)feat.getProperty( propertyName );
-      if( !landuseTypeSet.contains( propertyValue ) )
-      {
-        landuseTypeSet.add( propertyValue );
-        //contextModel
-        Feature landuseFeature = contextModel.createFeature( ftLanduse );
-        landuseFeature.setProperty( FeatureFactory.createFeatureProperty(
-            featureProperty, propertyValue ) );
-        contextModel.addFeatureAsComposition( parentFeature,
-            featurePropertyName, 0, landuseFeature );
-        //riskContextModel
-        Feature landuseFeature_risk = riskContextModel
-            .createFeature( ftLanduse_risk );
-        landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty(
-            featureProperty, propertyValue ) );
-        riskContextModel.addFeatureAsComposition( parentFeature_risk,
-            featurePropertyName, 0, landuseFeature_risk );
-      }
+      String landusePropertyName = (String)it.next();
+      //contextModel
+      Feature landuseFeature = contextModel.createFeature( ftLanduse );
+      landuseFeature.setProperty( FeatureFactory.createFeatureProperty(
+          featureProperty, landusePropertyName ) );
+      contextModel.addFeatureAsComposition( parentFeature, featurePropertyName,
+          0, landuseFeature );
+      //riskContextModel
+      Feature landuseFeature_risk = riskContextModel
+          .createFeature( ftLanduse_risk );
+      landuseFeature_risk.setProperty( FeatureFactory.createFeatureProperty(
+          featureProperty, landusePropertyName ) );
+      riskContextModel.addFeatureAsComposition( parentFeature_risk,
+          featurePropertyName, 0, landuseFeature_risk );
     }
     //save changes
     //  contextModel

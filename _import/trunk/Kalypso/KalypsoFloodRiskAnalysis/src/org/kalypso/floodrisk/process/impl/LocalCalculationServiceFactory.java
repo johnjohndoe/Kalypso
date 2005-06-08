@@ -39,6 +39,7 @@ import java.util.Vector;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.ProcessExtensionReader;
+import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.services.calculation.ICalculationServiceProxyFactory;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.local.CalcJobServiceProxyWrapper;
@@ -66,7 +67,7 @@ public class LocalCalculationServiceFactory implements
           .retrieveExtensions();
       ICalcJobFactory localCalcJobFactory = createCalcJobFactoryForLocalProcesses( extensions );
       return new CalcJobServiceProxyWrapper( new LocalCalculationService(
-          localCalcJobFactory ) );
+          localCalcJobFactory, new UrlCatalogFloodRisk() ) );
     }
     catch( CoreException e )
     {
