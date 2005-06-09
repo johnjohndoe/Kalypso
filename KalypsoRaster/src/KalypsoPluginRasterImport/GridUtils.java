@@ -213,15 +213,6 @@ public abstract class GridUtils
 
     String rasterDataSchemaNS = "http://elbe.wb.tu-harburg.de/rasterData";
 
-    // set RangeSetDataFile
-    if( grid.getRangeSet().getRangeSetDataFile() == null )
-    {
-      String fileName = rasterDataModelGML.getName();
-      String[] fileNameSplit = fileName.split( "\\." );
-      String rangeSetFileName = rasterDataModelGML.getParent() + "/" + fileNameSplit[0] + ".dat";
-      grid.getRangeSet().setRangeSetDataFile( new File( rangeSetFileName ) );
-    }
-
     // load schema
     final GMLSchema schema = GMLSchemaCatalog.getSchema( rasterDataSchemaNS );
 

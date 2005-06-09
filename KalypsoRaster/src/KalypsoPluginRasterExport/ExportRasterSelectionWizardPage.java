@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
+import org.kalypso.ui.dialog.KalypsoResourceSelectionDialog;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
