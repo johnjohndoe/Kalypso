@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.floodrisk.process.ProcessExtension;
-import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
+import org.kalypso.ui.dialog.KalypsoResourceSelectionDialog;
 
 /**
  * ProcessInputWizardPage

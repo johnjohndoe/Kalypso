@@ -31,7 +31,7 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Annuality" type="double"/>
-					<element name="WaterlevelRasterData" type="anyURI"/>
+					<element name="WaterlevelRasterData" type="resourceFile"/>
 				</sequence>
 			</extension>
 		</complexContent>

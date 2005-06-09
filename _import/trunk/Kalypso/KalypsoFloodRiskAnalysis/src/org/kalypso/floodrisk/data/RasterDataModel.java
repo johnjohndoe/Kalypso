@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.net.URL;
 
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
-import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -91,14 +90,6 @@ public class RasterDataModel
 
   public void toFile( File rasterDataModelGML, RectifiedGridCoverage grid ) throws Exception
   {
-    // set RangeSetDataFile
-    if( grid.getRangeSet().getRangeSetDataFile() == null )
-    {
-      String fileName = rasterDataModelGML.getName();
-      String rangeSetFileName = rasterDataModelGML.getParent() + "/"
-          + FileUtilities.nameWithoutExtension( fileName ) + ".dat";
-      grid.getRangeSet().setRangeSetDataFile( new File( rangeSetFileName ) );
-    }
 
     // load schema
     final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
