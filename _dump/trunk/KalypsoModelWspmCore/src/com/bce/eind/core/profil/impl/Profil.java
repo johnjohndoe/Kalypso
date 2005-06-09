@@ -489,6 +489,9 @@ public class Profil implements IProfil
       throws ProfilDataException
   {
     final ProfilPoint oldPosition = (ProfilPoint)getDevider( deviderKey );
+//TODO:gleiche Position abfangen
+    if( (newPosition.getValueFor(deviderKey.getProfilPointProperty())!=0))
+      throw new ProfilDataException( "ungültige Position" );
     if( !(profilPointExists( newPosition ) & (profilPointExists( oldPosition ))) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
     final double deviderValue = oldPosition.getValueFor( deviderKey.getProfilPointProperty() );
@@ -740,6 +743,20 @@ public class Profil implements IProfil
     m_building.setValue( buildingProperty, value );
     fireProfilDataChanged( null, buildingProperty );
     return true;
+  }
+
+  public IProfilPoint getPointCloseTo( double breite ) throws ProfilDataException
+  {
+    IProfilPoint pkt = getPoint( 0 );
+
+    for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
+    {
+      IProfilPoint p = ptIt.next();
+      final double distance = Math.abs( breite - p.getValueFor( ProfilPointProperty.BREITE ) );
+      if( Math.abs( pkt.getValueFor( ProfilPointProperty.BREITE ) - breite ) > distance )
+        pkt = p;
+    }
+    return pkt;
   }
 
 }

@@ -134,5 +134,5 @@ public interface IProfil
   public boolean editBuilding(final ProfilBuildingProperty buildingProperty,final double value) throws ProfilBuildingException;
   public void  setValuesFor(List<IProfilPoint> pointList, ProfilPointProperty pointProperty, double value )
   throws ProfilDataException;
-
+public IProfilPoint getPointCloseTo(final double breite) throws ProfilDataException;
 }
