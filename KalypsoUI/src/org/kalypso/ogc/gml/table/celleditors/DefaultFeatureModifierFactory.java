@@ -48,12 +48,13 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Belger
  */
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
-{
+{    
   /**
    * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String)
    */
@@ -77,6 +78,8 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
       return new StringModifier( ftp );
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
+    if( FeatureHelper.isGeometryType(type) )
+      return new ButtonModifier( workspace, ftp );
     if( "FeatureAssociationType".equals( type ) )
       return new ButtonModifier( workspace, ftp );
 

@@ -37,6 +37,7 @@ import java.awt.Frame;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Date;
 
 import javax.swing.JScrollPane;
 
@@ -174,7 +175,7 @@ public class ObservationViewer extends Composite
     m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
     m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
-    
+
     //    m_txtHref.addModifyListener( new ModifyListener()
     //    {
     //      public void modifyText( final ModifyEvent e )
@@ -223,8 +224,12 @@ public class ObservationViewer extends Composite
                 URL url2 = ResourceUtilities.createURL( r );
 
                 String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
-                if( href != null )
+                if( href == null )
+                  m_txtHref.setText( "" );
+                else
                   m_txtHref.setText( href );
+                // refresh...
+                setHref( m_txtHref.getText(), m_txtFilter.getText() );
               }
             }
           }
@@ -255,6 +260,8 @@ public class ObservationViewer extends Composite
           final String href = dlg.getSelectedObservation();
           if( href != null )
             m_txtHref.setText( href );
+          // doemming
+          setHref( m_txtHref.getText(), m_txtFilter.getText() );
         }
       }
 
@@ -297,8 +304,8 @@ public class ObservationViewer extends Composite
 
     m_btnSelectFilter = new Button( header, SWT.NONE );
     m_btnSelectFilter.setText( "..." );
-    GridData gd1=new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
-    gd1.horizontalSpan=2;
+    GridData gd1 = new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
+    gd1.horizontalSpan = 2;
     m_btnSelectFilter.setLayoutData( gd1 );
     m_btnSelectFilter.addSelectionListener( new SelectionListener()
     {
@@ -306,7 +313,11 @@ public class ObservationViewer extends Composite
       {
         final InputDialog dlg = new InputDialog( getShell(), "", "", m_txtFilter.getText(), null );
         if( dlg.open() == Window.OK )
+        {
           m_txtFilter.setText( dlg.getValue() );
+          // doemming
+          setHref( m_txtHref.getText(), m_txtFilter.getText() );
+        }
       }
 
       public void widgetDefaultSelected( final SelectionEvent e )
@@ -327,15 +338,18 @@ public class ObservationViewer extends Composite
 
     m_btnSelectRange = new Button( header, SWT.NONE );
     m_btnSelectRange.setText( "..." );
-    GridData gd2=new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
-    gd2.horizontalSpan=2;
+    GridData gd2 = new GridData( GridData.VERTICAL_ALIGN_BEGINNING );
+    gd2.horizontalSpan = 2;
     m_btnSelectRange.setLayoutData( gd2 );
     m_btnSelectRange.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        final DateRangeInputControlStuct drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, DateFormat
-            .getDateTimeInstance() );
+        final DateRangeInputControlStuct drs;
+        if( m_dr == null )
+          drs = new DateRangeInputControlStuct( true, new Date(), new Date(), 0, DateFormat.getDateTimeInstance() );
+        else
+          drs = new DateRangeInputControlStuct( true, m_dr.getFrom(), m_dr.getTo(), 0, DateFormat.getDateTimeInstance() );
         final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "", "", drs );
         if( dlg.open() == Window.OK )
         {
@@ -442,6 +456,8 @@ public class ObservationViewer extends Composite
         final IObservation obs = ZmlFactory.parseXML( url, hereHref );
         updateViewer( obs );
       }
+      else
+        updateViewer( null );
       m_href = href;
     }
     catch( final SensorException e )

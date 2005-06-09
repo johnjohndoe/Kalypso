@@ -812,6 +812,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    */
   public boolean canModify( final Object element, final String property )
   {
+    // TODO ask modifier also, as for some types editor may not be implemented 
     return isEditable( property );
   }
 
@@ -848,10 +849,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         return;
 
       final Object object = modifier.parseInput( feature, value );
-
+			// dialogs may return FeatureChange objects (doemming)
+      final FeatureChange fc;
       final IKalypsoFeatureTheme theme = getTheme();
-
-      final FeatureChange fc = new FeatureChange( feature, property, object );
+      if( object instanceof FeatureChange )
+        fc = (FeatureChange)object;
+      else
+        fc = new FeatureChange( feature, property, object );
 
       final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[]
       { fc } );
