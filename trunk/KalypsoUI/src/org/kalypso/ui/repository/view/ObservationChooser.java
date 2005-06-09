@@ -74,8 +74,7 @@ import org.kalypso.util.adapter.IAdaptable;
  * 
  * @author schlienger (19.05.2005)
  */
-public class ObservationChooser extends AbstractViewer implements
-    IRepositoryContainerListener, ISelectionProvider
+public class ObservationChooser extends AbstractViewer implements IRepositoryContainerListener, ISelectionProvider
 {
   private final IRepositoryContainer m_repContainer;
 
@@ -101,7 +100,7 @@ public class ObservationChooser extends AbstractViewer implements
   {
     this( parent, null );
   }
-  
+
   public ObservationChooser( final Composite parent, final IViewSite site )
   {
     m_site = site;
@@ -109,7 +108,7 @@ public class ObservationChooser extends AbstractViewer implements
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
 
     m_repContainer.addRepositoryContainerListener( this );
-    
+
     m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
@@ -229,8 +228,7 @@ public class ObservationChooser extends AbstractViewer implements
     final Object element = sel.getFirstElement();
     if( element instanceof IAdaptable )
     {
-      final IObservation obs = (IObservation)( (IAdaptable)element )
-          .getAdapter( IObservation.class );
+      final IObservation obs = (IObservation)( (IAdaptable)element ).getAdapter( IObservation.class );
 
       return obs;
     }

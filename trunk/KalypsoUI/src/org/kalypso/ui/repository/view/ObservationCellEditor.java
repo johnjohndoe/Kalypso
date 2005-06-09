@@ -79,5 +79,5 @@ public class ObservationCellEditor extends DialogCellEditor
     }
     
     return null;
-  }
+  }    
 }

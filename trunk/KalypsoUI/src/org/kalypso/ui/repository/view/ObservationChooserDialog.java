@@ -95,7 +95,6 @@ public class ObservationChooserDialog extends ResizableDialog
         return obs.getIdentifier();
       }
     }
-
     return null;
   }
 

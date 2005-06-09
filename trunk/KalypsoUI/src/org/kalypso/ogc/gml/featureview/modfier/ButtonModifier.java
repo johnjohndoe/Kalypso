@@ -36,19 +36,24 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -61,10 +66,11 @@ import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 public class ButtonModifier implements IFeatureModifier
 {
   private final FeatureTypeProperty m_ftp;
+
   private final GMLWorkspace m_workspace;
 
   private Feature m_feature;
-  
+
   public ButtonModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
   {
     m_workspace = workspace;
@@ -81,7 +87,8 @@ public class ButtonModifier implements IFeatureModifier
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature, java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.Object)
    */
   public Object parseInput( final Feature f, final Object value )
   {
@@ -93,20 +100,42 @@ public class ButtonModifier implements IFeatureModifier
    */
   public CellEditor createCellEditor( final Composite parent )
   {
-    return new DialogCellEditor( parent ) {
+    return new DialogCellEditor( parent )
+    {
+      IFeatureDialog m_featureDialog = null;
+
       protected boolean openDialog( final Control parentControl )
       {
-        final IFeatureDialog dialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty() );
-        return dialog.open( parentControl.getShell() ) == Window.OK;
+        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty() );
+        return m_featureDialog.open( parentControl.getShell() ) == Window.OK;
       }
-      };
+
+      /**
+       * @see org.kalypso.ogc.gml.table.celleditors.DialogCellEditor#doGetValue()
+       */
+      protected Object doGetValue()
+      {
+        // collect changes from dialog
+        final List col = new ArrayList();
+        m_featureDialog.collectChanges( col );
+        if( col.size() > 1 ) // TODO support more
+          throw new UnsupportedOperationException( "Dialog must provide exactly one change" );
+        if( col.size() > 0 )
+        {
+          final Object change = col.get( 0 );
+          if( change instanceof FeatureChange )
+            return change;
+        }
+        return super.doGetValue();
+      }
+    };
   }
 
   protected GMLWorkspace getWorkspace()
   {
     return m_workspace;
   }
-  
+
   protected Feature getFeature()
   {
     return m_feature;
@@ -117,7 +146,7 @@ public class ButtonModifier implements IFeatureModifier
    */
   public String isValid( final Object value )
   {
-    return null;
+    return null; // null means vaild
   }
 
   /**
@@ -137,9 +166,19 @@ public class ButtonModifier implements IFeatureModifier
     final Object value = getValue( f );
     final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( m_ftp.getType() );
     if( handler != null && value != null )
-      // TODO: schön wäre es, wenn der Type-Handler dies tun würde
+    // TODO: schön wäre es, wenn der Type-Handler dies tun würde
+    {
+      // hack:
+      if( value instanceof TimeseriesLink )
+      {
+        String href = ( (TimeseriesLink)value ).getHref();
+        if( href == null || href.length() < 1 )
+          return "";
+        return href;
+      }
       return value.toString();
-    
+    }
+
     return "<Editieren...>";
   }
 

@@ -74,7 +74,7 @@ public class ObservationPropertySource implements IPropertySource
    */
   public IPropertyDescriptor[] getPropertyDescriptors()
   {
-    if( m_descriptors == null )
+    if( m_descriptors == null && m_observation!=null)
     {
       MetadataList md = m_observation.getMetadataList();
       
