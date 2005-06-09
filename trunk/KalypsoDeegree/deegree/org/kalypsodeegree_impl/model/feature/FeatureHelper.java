@@ -14,6 +14,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -201,5 +202,13 @@ public class FeatureHelper
     {
       throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
     }
+  }
+
+  /**
+   * TODO change String argument to <code>class</code> type
+   */
+  public static boolean isGeometryType( String type )
+  {
+    return type.startsWith( GM_Object.class.getPackage().getName() );
   }
 }
