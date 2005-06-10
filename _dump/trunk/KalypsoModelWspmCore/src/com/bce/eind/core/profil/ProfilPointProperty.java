@@ -58,7 +58,7 @@ public class ProfilPointProperty
       false, false, false,false, 4 );
 
   public final static ProfilPointProperty BORDVOLL = new ProfilPointProperty( "Bordvollpunkt",
-      true, true, false,false, 4 );
+      true, false, false,false, 4 );
 
   
   private ProfilPointProperty( final String label, final boolean optional, final boolean visible,

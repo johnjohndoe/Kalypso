@@ -40,7 +40,7 @@ public class StrangSerializer
       lnr = new LineNumberReader( new FileReader( strFile ) );
 
       final File profDir = strFile.getParentFile();
-      final File prfSollFile = new File( profDir, prfname );
+      final File prfSollFile = prfname == null ? null : new File( profDir, prfname );
 
       final Collection<ProfilInfo> infos = new LinkedList<ProfilInfo>();
 

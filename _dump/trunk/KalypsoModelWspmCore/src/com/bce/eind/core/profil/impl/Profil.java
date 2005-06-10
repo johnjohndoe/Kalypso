@@ -103,6 +103,25 @@ public class Profil implements IProfil
     this.m_profilMetaData.put( metaDataKey, data );
     fireMetaDataChanged( null, "" );
   }
+private void setDefaults(final ProfilPointProperty property)
+{
+ if(property == ProfilPointProperty.BORDVOLL)
+ 
+  {
+    final ProfilPoint lpkt = (ProfilPoint)m_points.getFirst();
+    final ProfilPoint rpkt = (ProfilPoint)m_points.getLast();
+ try
+{
+  lpkt.setValueFor(property,-1);
+  rpkt.setValueFor(property,1);
+}
+catch( ProfilDataException e )
+{
+  // TODO Auto-generated catch block
+  e.printStackTrace();
+}
+  }
+}
 
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#addColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
@@ -125,7 +144,7 @@ public class Profil implements IProfil
     }
     else
       m_points.addProperty( pointProperty );
-
+    setDefaults( pointProperty );
     firePointChanged( null, pointProperty );
     return true;
   }

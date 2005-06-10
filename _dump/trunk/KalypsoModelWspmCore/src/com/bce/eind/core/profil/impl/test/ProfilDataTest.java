@@ -30,6 +30,7 @@ public class ProfilDataTest extends TestCase
     final IProfil p = CreateTestProfil();
     setGetMoveDevider( p );
     setGetBuilding( p );
+    addMoveBordvoll(p);
   }
 
   public IProfil CreateTestProfil( ) throws Exception
@@ -85,7 +86,13 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint aktPkt = p.getDevider( DeviderKey.DURCHSTROEMTE_L );
     assertEquals( "neu Durchstroemte links:", newPkt, aktPkt );
   }
-
+public void addMoveBordvoll( final IProfil p ) throws Exception
+{
+  p.addProfilPointProperty(ProfilPointProperty.BORDVOLL);
+  final IProfilPoint aktPkt = p.getPoint(2); 
+  p.moveDevider(DeviderKey.BORDVOLL_L,aktPkt);
+  assertEquals("Bordvoll Position:",aktPkt,p.getDevider(DeviderKey.BORDVOLL_L));
+}
   public void setGetBuilding( final IProfil p ) throws Exception
   {
     p.setProfilBuilding( IProfil.BUILDING_TYP.BRUECKE );
