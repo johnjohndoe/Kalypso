@@ -1,7 +1,11 @@
 package com.bce.eind.core.strang;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+
+import com.bce.eind.core.result.IResult;
 
 
 /**
@@ -13,11 +17,13 @@ public class StrangInfo
   private final ProfilInfo[] m_profiles;
   private int m_index;
   private Collection<IStranginfoListener> m_listeners = new LinkedList<IStranginfoListener>();
+  private final IResult[] m_results;
 
-  public StrangInfo( final ProfilInfo[] profile, final int index )
+  public StrangInfo( final ProfilInfo[] profile, final int index, final IResult[] results )
   {
     m_profiles = profile;
     m_index = index;
+    m_results = results;
   }
   
   /**
@@ -58,6 +64,26 @@ public class StrangInfo
   public ProfilInfo getInfo()
   {
     return m_profiles[m_index];
+  }
+  
+  public ResultInfo[] getCurrentResults()
+  {
+    final List<ResultInfo> results = new ArrayList<ResultInfo>(m_results.length);
+    
+    final ProfilInfo info = getInfo();
+    if( info != null )
+    {
+      final double station = info.getStation();
+      for( int i = 0; i < m_results.length; i++ )
+      {
+        final IResult r = m_results[i];
+        final Double value = r.getResult( station );
+        if( value != null )
+          results.add( new ResultInfo( r.getType(), r.getName(), value ) );
+      }
+    }
+    
+    return results.toArray( new ResultInfo[results.size()] );
   }
   
   public int size()

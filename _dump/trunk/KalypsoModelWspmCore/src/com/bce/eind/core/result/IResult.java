@@ -6,7 +6,7 @@ package com.bce.eind.core.result;
  * */
 public interface IResult extends Iterable<Double>
 {
-  enum TYPE { WSP, v, H };
+  enum TYPE { SOHLHOEHE, BOESCHNG_LI, BOESCHUNG_RE, WSP, Q, LAENGE, PROFILART, VZK, WSP_BR, PROFILKENNUNG, SCHLEPPSPANNUNG, AUSUFERUNG_LI, AUSUFERUNG_RE, H };
   
   public String getName();
   

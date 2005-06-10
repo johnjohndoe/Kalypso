@@ -9,10 +9,18 @@ public class ProfilInfo
 
   private final String m_path;
 
-  public ProfilInfo( final String name, final String path )
+  private final double m_station;
+
+  public ProfilInfo( final double station, final String path )
   {
-    m_name = name;
+    m_station = station;
+    m_name = String.format( "%.4f", station );
     m_path = path;
+  }
+
+  public double getStation( )
+  {
+    return m_station;
   }
 
   public String getName( )
@@ -24,7 +32,7 @@ public class ProfilInfo
   {
     return m_path;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
