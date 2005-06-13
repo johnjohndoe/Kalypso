@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +19,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
@@ -232,10 +235,13 @@ public class CalculateDamageJob implements ICalcJob
       Feature waterlevelFeature = (Feature)it.next();
       double annuality = ( (Double)waterlevelFeature
           .getProperty( annualityPropertyName ) ).doubleValue();
-      URI dataURI = (URI)waterlevelFeature
+      String resourceFilePath = (String)waterlevelFeature
           .getProperty( waterlevelDataURLPropertyName );
+      IPath resourcePath = new Path( resourceFilePath );
+      IFile dataFile = ResourceUtilities.findFileFromPath( resourcePath );
+      System.out.println( ResourceUtilities.createURL( dataFile ) );
       RectifiedGridCoverage grid = rasterDataModel
-          .getRectifiedGridCoverage( dataURI.toURL() );
+          .getRectifiedGridCoverage( ResourceUtilities.createURL( dataFile ) );
       double p = 1 / annuality;
       waterlevelGrids.put( new Double( p ), grid );
     }

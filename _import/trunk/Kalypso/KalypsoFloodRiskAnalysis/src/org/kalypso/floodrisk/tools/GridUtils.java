@@ -1,4 +1,4 @@
-package org.kalypso.wizard;
+package org.kalypso.floodrisk.tools;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.feature.Feature;
@@ -194,7 +195,7 @@ public abstract class GridUtils
     return grid;
   }
 
-  static double round( double d, int scale, int mode )
+  public static double round( double d, int scale, int mode )
   {
     BigDecimal bd = new BigDecimal( Double.toString( d ) );
     return ( bd.setScale( scale, mode ) ).doubleValue();
@@ -211,10 +212,8 @@ public abstract class GridUtils
       throws Exception
   {
 
-    String rasterDataSchemaNS = "http://elbe.wb.tu-harburg.de/rasterData";
-
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( rasterDataSchemaNS );
+    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
 
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
