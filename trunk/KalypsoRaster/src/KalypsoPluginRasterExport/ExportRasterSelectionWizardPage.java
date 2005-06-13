@@ -135,7 +135,6 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     createControlSource( m_topLevel );
     createControlTarget( m_topLevel );
     setControl( m_topLevel );
-    validate();
   }
 
   public void createControlSource( Composite parent )

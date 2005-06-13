@@ -3,18 +3,20 @@ package KalypsoPluginRasterExport;
 import java.io.File;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.floodrisk.tools.GridUtils;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-
-import KalypsoPluginRasterImport.GridUtils;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -78,7 +80,8 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
   public void init( IWorkbench workbench, IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
-    final List selectedResources = IDE.computeSelectedResources( currentSelection );
+    final List selectedResources = IDE
+        .computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
       m_selection = new StructuredSelection( selectedResources );
@@ -102,52 +105,73 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
   }
 
   /**
-   * @see org.eclipse.jface.wizard.IWizard#performCancel()
-   */
-  public boolean performCancel()
-  {
-    return true;
-  }
-
-  /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   public boolean performFinish()
   {
-    try
-    {
-      final RasterExportSelection selection = (RasterExportSelection)m_page1.getSelection();
-      final File fileSource = selection.getSourceFile();
-      final File fileTarget = selection.getFileTarget();
-      final String format = selection.getTargetFormat();
+    final RasterExportSelection selection = (RasterExportSelection)m_page1
+        .getSelection();
+    final File fileSource = selection.getSourceFile();
+    final File fileTarget = selection.getFileTarget();
+    final String format = selection.getTargetFormat();
 
-      if( fileSource.exists() )
+    if( fileSource.exists() )
+    {
+      if( format.equals( "Ascii" ) )
       {
-        if( format.equals( "Ascii" ) )
+        Job exportGridJob = new Job( "Raster exportieren" )
         {
-          Dialog monitor = new ProgressMonitorDialog( this.getShell() );
-          monitor.open();
-          RectifiedGridCoverage grid = GridUtils.readRasterData( fileSource );
-          GridUtils.exportGridArc( fileTarget, grid );
-          monitor.close();
-        }
-        else
-        {
-          MessageDialog.openConfirm( this.getShell(), "Information",
-              "Export-Function not implemented" );
-          return false;
-        }
+          protected IStatus run( final IProgressMonitor monitor )
+          {
+            RectifiedGridCoverage grid;
+            try
+            {
+              monitor.beginTask( "Lese Rasterdaten", 100 );
+              grid = GridUtils.readRasterData( fileSource );
+              monitor.worked( 50 );
+              if( monitor.isCanceled() )
+              {
+                return Status.CANCEL_STATUS;
+              }
+              monitor.setTaskName( "Schreibe Ascii-Datei" );
+              GridUtils.exportGridArc( fileTarget, grid );
+              if( monitor.isCanceled() )
+              {
+                if( fileTarget.exists() )
+                  fileTarget.delete();
+                return Status.CANCEL_STATUS;
+              }
+              monitor.worked( 50 );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e
+                  .getMessage(), e );
+            }
+            finally
+            {
+              monitor.done();
+            }
+            return Status.OK_STATUS;
+          }
+        };
+        exportGridJob.setUser( true );
+        exportGridJob.schedule();
+
       }
       else
       {
-        System.out.println( "fileSource does not exist" );
+        MessageDialog.openConfirm( this.getShell(), "Information",
+            "Export-Function not implemented" );
+        return false;
       }
     }
-    catch( Exception e )
+    else
     {
-      e.printStackTrace();
-      return false;
+      System.out.println( "fileSource does not exist" );
     }
+
     return true;
   }
 

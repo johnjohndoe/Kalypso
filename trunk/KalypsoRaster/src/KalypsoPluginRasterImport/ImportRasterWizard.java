@@ -5,15 +5,19 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.floodrisk.tools.GridUtils;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -82,7 +86,8 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   {
     m_selection = currentSelection;
     m_workbench = workbench;
-    final List selectedResources = IDE.computeSelectedResources( currentSelection );
+    final List selectedResources = IDE
+        .computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
       m_selection = new StructuredSelection( selectedResources );
@@ -118,47 +123,80 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
    */
   public boolean performFinish()
   {
-    try
-    {
-      final RasterImportSelection selection = (RasterImportSelection)m_page1.getSelection();
-      final File fileSource = selection.getFileSource();
-      final File fileTarget = selection.getTargetFile();
-      final IProject targetProject = selection.getProject();
-      final String format = selection.getSourceFormat();
-      CS_CoordinateSystem cs = m_page1.getSelectedCoordinateSystem();
+    final RasterImportSelection selection = (RasterImportSelection)m_page1
+        .getSelection();
+    final File fileSource = selection.getFileSource();
+    final File fileTarget = selection.getTargetFile();
+    final IProject targetProject = selection.getProject();
+    final String format = selection.getSourceFormat();
+    final CS_CoordinateSystem cs = m_page1.getSelectedCoordinateSystem();
 
-      if( fileSource.exists() )
+    if( fileSource.exists() )
+    {
+      if( format.equals( "Ascii" ) )
       {
-        if( format.equals( "Ascii" ) )
+        Job importGridJob = new Job( "Raster importieren" )
         {
-          Dialog monitor = new ProgressMonitorDialog( this.getShell() );
-          monitor.open();
-          RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
-          GridUtils.writeRasterData( fileTarget, rasterGrid );
-          targetProject.refreshLocal(IResource.DEPTH_INFINITE,null);
-          monitor.close();
-        }
-        else
-        {
-          MessageDialog.openConfirm( this.getShell(), "Information",
-              "Import-Function not implemented" );
-          return false;
-        }
+          protected IStatus run( final IProgressMonitor monitor )
+          {
+            try
+            {
+              monitor.beginTask( "Lese Rasterdaten", 100 );
+              RectifiedGridCoverage rasterGrid = GridUtils.importGridArc(
+                  fileSource, cs );
+              monitor.worked( 50 );
+              if( monitor.isCanceled() )
+              {
+                return Status.CANCEL_STATUS;
+              }
+              monitor.setTaskName( "Schreibe GML-Datei" );
+              GridUtils.writeRasterData( fileTarget, rasterGrid );
+              targetProject.refreshLocal( IResource.DEPTH_INFINITE, null );
+              if( monitor.isCanceled() )
+              {
+                if( fileTarget.exists() )
+                {
+                  fileTarget.delete();
+                  targetProject.refreshLocal( IResource.DEPTH_INFINITE, null );
+                }
+                return Status.CANCEL_STATUS;
+              }
+              monitor.worked( 50 );
+            }
+            catch( Exception e )
+            {
+              e.printStackTrace();
+              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e
+                  .getMessage(), e );
+            }
+            finally
+            {
+              monitor.done();
+            }
+            return Status.OK_STATUS;
+          }
+        };
+        importGridJob.setUser( true );
+        importGridJob.schedule();
+
       }
       else
       {
-        System.out.println( "fileSource does not exist" );
+        MessageDialog.openConfirm( this.getShell(), "Information",
+            "Import-Function not implemented" );
+        return false;
       }
     }
-    catch( Exception e )
+    else
     {
-      e.printStackTrace();
-      return false;
+      System.out.println( "fileSource does not exist" );
     }
+
     return true;
   }
-  
-  public IWorkbench getWorkbench(){
+
+  public IWorkbench getWorkbench()
+  {
     return m_workbench;
   }
 
