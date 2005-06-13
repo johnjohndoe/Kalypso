@@ -20,6 +20,7 @@
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.kalypso.ui.addlayer"/>
+      <import plugin="KalypsoFloodRiskAnalysis"/>
    </requires>
 
    <extension
