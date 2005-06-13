@@ -63,21 +63,21 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class RasterizeLanduseJob implements ICalcJob
+public class RasterizeAdministrationUnitJob implements ICalcJob
 {
 
   //IDs
   //input
-  public static final String LanduseVectorDataID = "LanduseVectorData";
+  public static final String AdministrationUnitDataID = "AdministrationUnitVectorData";
 
   public static final String ContextModelID = "ContextModel";
 
   public static final String BaseRasterID = "BaseRaster";
 
   //output
-  public static final String LanduseRasterDataID = "LanduseRasterData";
+  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData";
 
-  public RasterizeLanduseJob()
+  public RasterizeAdministrationUnitJob()
   {
     super();
 
@@ -97,20 +97,20 @@ public class RasterizeLanduseJob implements ICalcJob
     {
       monitor.setMessage( "Lese Eingabedateien" );
 
-      //landuseVectorData: featureList
-      URL landuseVectorDataGML = inputProvider
-          .getURLForID( LanduseVectorDataID );
-      GMLWorkspace landuseVectorData;
-      landuseVectorData = GmlSerializer
-          .createGMLWorkspace( landuseVectorDataGML );
+      //administrationUnitVectorData: featureList
+      URL administrationUnitVectorDataGML = inputProvider
+          .getURLForID( AdministrationUnitDataID );
+      GMLWorkspace administrationUnitVectorData;
+      administrationUnitVectorData = GmlSerializer
+          .createGMLWorkspace( administrationUnitVectorDataGML );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" );
-      List featureList = (List)featureMember.getFeature( landuseVectorData );
+      List featureList = (List)featureMember.getFeature( administrationUnitVectorData );
       
-      //contextModel: landuseTypeList
+      //contextModel: administrationUnitTypeList
       URL contextModelGML = inputProvider.getURLForID( ContextModelID );
-      Hashtable landuseTypeList;
+      Hashtable administrationUnitTypeList;
       ContextModel contextModel = new ContextModel( contextModelGML );
-      landuseTypeList = contextModel.getLanduseList();
+      administrationUnitTypeList = contextModel.getAdministrationUnitList();
       
       //baseRaster
       URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
@@ -120,10 +120,10 @@ public class RasterizeLanduseJob implements ICalcJob
       
       monitor.setMessage( "Berechne" );
       RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid(
-          featureList, landuseTypeList, baseRaster, monitor );
+          featureList, administrationUnitTypeList, baseRaster, monitor );
 
       CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( LanduseRasterDataID );
+          .getOutputMap().get( AdministrationUnitRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
@@ -166,7 +166,7 @@ public class RasterizeLanduseJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return getClass().getResource( "resources/rasterLanduseCalcjob_spec.xml" );
+    return getClass().getResource( "resources/rasterAdminUnitCalcjob_spec.xml" );
   }
 
 }
