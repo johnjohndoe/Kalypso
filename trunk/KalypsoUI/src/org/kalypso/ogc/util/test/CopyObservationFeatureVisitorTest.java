@@ -49,12 +49,17 @@ import junit.framework.TestCase;
  * CopyObservationFeatureVisitorTest
  * <p>
  * 
+ * this is not actually a test on the CopyObservationFeatureVisitor, but it
+ * calls the ZmlFactory in the same way as the CopyObservationFeatureVisitor
+ * 
  * created by
  * 
  * @author doemming (14.06.2005)
+ *  
  */
 public class CopyObservationFeatureVisitorTest extends TestCase
 {
+
   public void testObservationWithComplexFilter() throws Exception
   {
     try
@@ -75,10 +80,36 @@ public class CopyObservationFeatureVisitorTest extends TestCase
           + "</filter>" //
           + "<from>1995-08-30T17:00:00</from>" //
           + "<to>1995-09-07T17:00:00</to>";
-
-      // this is not actually a test on the CopyObservationFeatureVisitor, but
-      // it calls the ZmlFactory in the same way as the
-      // CopyObservationFeatureVisitor
+      // @marc: hier meine Überlegungen:
+      //     Problem: wie sollte ein filter aussehen, der in einer href (URL)
+      // codiert ist ?
+      // <br>
+      //      der context muss irgendwie drin sein, da im filter relative pfade
+      // verwendet werden können. <br>
+      //
+      //      bisher:
+      // file://DIRa/DIRb/zeitreihe.zml?<from>...</from><to>...</to>
+      // kein Problem, der filter wird einfach auf die existierende URL
+      // angewendet.
+      //
+      // nun ist die zeitreihe aber innerhalb des filters und die url wird nur
+      // als context gebraucht, z.B.:
+      // file://DIRa/DIRb/context.gml?<filer>...<filter>
+      // die zeitreihe ergibt sich durch auswertung des filters, da die
+      // Datenquelle tief innerhalb des filters ist, die URL muss dazu nicht als
+      // stream geparst werden.
+      //
+      // und wie soll es aussehen wenn beides zusammenkommt ?
+      // z.B.:
+      // file://DIRa/DIRb/context.gml?<filer>...<filter><from>...</from><to>...</to>
+      //      
+      // hm, woran erkennt das programm nun, ob es die URL als stream einlesen
+      // soll (Zeitreihe aus der URL),
+      // oder ob es die url nur als context verwenden soll (Zeitreihe aus
+      // filter)?
+      // vielleicht sollte erst der Teil nach dem ? in der URL eingelesen werden
+      // und dann anhand dem Typ der Filter entschieden werden, ob die URL als
+      // Context oder Observation verwendet wird.
       final URL context = getClass().getResource( "contextFake.txt" );
       final URL sourceURL = new UrlResolver().resolveURL( context, ref );
       final IObservation observation = ZmlFactory.parseXML( sourceURL, "id" );
