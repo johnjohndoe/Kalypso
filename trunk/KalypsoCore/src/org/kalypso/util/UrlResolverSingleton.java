@@ -38,10 +38,11 @@
  v.doemming@tuhh.de
   
 ------------------------------------------------------------------------------------ */
-package org.kalypso.util.url;
+package org.kalypso.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 
 /**
  * UrlResolverSingleton

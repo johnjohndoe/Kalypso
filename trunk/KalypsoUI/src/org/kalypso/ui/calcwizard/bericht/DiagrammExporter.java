@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

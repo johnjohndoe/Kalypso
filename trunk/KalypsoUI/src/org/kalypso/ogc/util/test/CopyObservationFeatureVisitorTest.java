@@ -41,7 +41,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 
 import junit.framework.TestCase;
 
@@ -110,10 +110,18 @@ public class CopyObservationFeatureVisitorTest extends TestCase
       // vielleicht sollte erst der Teil nach dem ? in der URL eingelesen werden
       // und dann anhand dem Typ der Filter entschieden werden, ob die URL als
       // Context oder Observation verwendet wird.
-      final URL context = getClass().getResource( "contextFake.txt" );
+      
+      
+      // Marc@Andreas: es scheint jetzt zu funktionieren! Habe das Konzept von
+      // Context im Filter und ZmlFactory Zeug eingeführt.
+      // Damit das funktionniert muss der Zml-Link so aussehen:
+      // file:context://foo/bar/script.foo?<filter>blablabla</filter>...
+      final String strc = getClass().getResource( "contextFake.txt" )
+          .toExternalForm();
+      final URL context = new URL( strc.replaceAll( "file:", "file:context:" ) );
       final URL sourceURL = new UrlResolver().resolveURL( context, ref );
       final IObservation observation = ZmlFactory.parseXML( sourceURL, "id" );
-      assertNull( observation );
+      assertNotNull( observation );
     }
     catch( Exception e )
     {

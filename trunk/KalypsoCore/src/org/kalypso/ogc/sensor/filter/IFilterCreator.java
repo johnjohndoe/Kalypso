@@ -36,9 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter;
+
+import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -54,12 +56,10 @@ public interface IFilterCreator
   /**
    * Creates the observation filter
    * 
-   * @param aft
-   *          the binding object from which to create the FilterCreator
-   * @param baseObs
-   *          [optional] the observation on which the filtering will be done.
-   *          This argument is optional. Basically there are two possibilities
-   *          to define the specification of a filter:
+   * @param aft the binding object from which to create the FilterCreator
+   * @param baseObs [optional] the observation on which the filtering will be
+   *          done. This argument is optional. Basically there are two
+   *          possibilities to define the specification of a filter:
    *          <nl>
    *          <li>using the URL to link to an observation. In that case
    *          <code>obs</code> must be specified when calling this method
@@ -68,10 +68,12 @@ public interface IFilterCreator
    *          observation). In that case you won't set <code>obs</code> here
    *          since it is fetched per se.
    *          </nl>
+   * @param context [optional] the context can be used if the filter needs to
+   *          resolve relative observations. For an example, see the ZmlFilter.
    * 
    * @return filter
    * @throws SensorException
    */
   public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs ) throws SensorException;
+      IObservation baseObs, URL context ) throws SensorException;
 }

@@ -320,7 +320,7 @@ public class KalypsoObservationService implements IObservationService
       updateObservation( obs, obean.getId() );
 
       // tricky: maybe make a filtered observation out of this one
-      obs = FilterFactory.createFilterFrom( hereHref, obs );
+      obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
       final ObservationType obsType = ZmlFactory.createXML( obs, dra,
           m_timezone );

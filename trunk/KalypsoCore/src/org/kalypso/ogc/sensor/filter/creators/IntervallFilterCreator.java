@@ -36,9 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
+
+import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -50,15 +52,15 @@ import org.kalypso.zml.filters.IntervallFilterType;
 
 public class IntervallFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs )
-      throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft,
+      IObservation baseObs, final URL context ) throws SensorException
   {
     IntervallFilterType filter = (IntervallFilterType)aft;
     IntervallFilter intervallFilter = new IntervallFilter( filter );
 
-    final IObservation filteredObs = FilterCreatorHelper
-        .resolveFilter( filter.getFilter(), baseObs );
-    intervallFilter.initFilter( filteredObs, filteredObs );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter
+        .getFilter(), baseObs, context );
+    intervallFilter.initFilter( filteredObs, filteredObs, context );
     return intervallFilter;
   }
 

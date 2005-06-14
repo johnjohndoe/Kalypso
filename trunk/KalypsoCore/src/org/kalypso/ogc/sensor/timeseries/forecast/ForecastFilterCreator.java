@@ -36,9 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
+
+import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -55,22 +57,21 @@ import org.kalypso.zml.filters.ForecastFilterType;
  */
 public class ForecastFilterCreator implements IFilterCreator
 {
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
-   */
   public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs ) throws SensorException
+      IObservation baseObs, final URL context ) throws SensorException
   {
-    if( !(aft instanceof ForecastFilterType) )
-      throw new IllegalArgumentException( "Not a " + ForecastFilterType.class.getName() );
-    
-    final ForecastFilterType ft = (ForecastFilterType) aft;
+    if( !( aft instanceof ForecastFilterType ) )
+      throw new IllegalArgumentException( "Not a "
+          + ForecastFilterType.class.getName() );
 
-    final IObservation[] filteredObs = FilterCreatorHelper.resolveFilters( ft.getFilter(), baseObs );
-	
+    final ForecastFilterType ft = (ForecastFilterType)aft;
+
+    final IObservation[] filteredObs = FilterCreatorHelper.resolveFilters( ft
+        .getFilter(), baseObs, context );
+
     final ForecastFilter filter = new ForecastFilter();
-    filter.initFilter( filteredObs, filteredObs[0] );
-    
+    filter.initFilter( filteredObs, filteredObs[0], context );
+
     return filter;
   }
 }

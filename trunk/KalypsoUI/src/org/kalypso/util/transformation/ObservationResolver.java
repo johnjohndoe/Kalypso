@@ -67,10 +67,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.util.UrlResolver;
 import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -282,7 +282,7 @@ public class ObservationResolver extends AbstractTransformation
           fc.initFilter( new IObservation[]
           {
               obs1,
-              obs2 }, obs1 );
+              obs2 }, obs1, null );
           obs = fc;
         }
 

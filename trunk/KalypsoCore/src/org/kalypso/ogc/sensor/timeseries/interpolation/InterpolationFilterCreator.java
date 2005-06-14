@@ -36,9 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.interpolation;
+
+import java.net.URL;
 
 import org.kalypso.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -56,24 +58,23 @@ import org.kalypso.zml.filters.InterpolationFilterType;
  */
 public class InterpolationFilterCreator implements IFilterCreator
 {
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType,
-   *      org.kalypso.ogc.sensor.IObservation)
-   */
   public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs ) throws SensorException
+      IObservation baseObs, final URL context ) throws SensorException
   {
-    if( !(aft instanceof InterpolationFilterType) )
+    if( !( aft instanceof InterpolationFilterType ) )
       throw new IllegalArgumentException( "Not a "
           + InterpolationFilterType.class.getName() );
 
-    final InterpolationFilterType ft = (InterpolationFilterType) aft;
+    final InterpolationFilterType ft = (InterpolationFilterType)aft;
 
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft
-        .getFilter(), baseObs );
+        .getFilter(), baseObs, context );
 
-    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus() );
-    filter.initFilter( null, filteredObs );
+    final InterpolationFilter filter = new InterpolationFilter(
+        CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft
+            .getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft
+            .getDefaultStatus() );
+    filter.initFilter( null, filteredObs, context );
 
     return filter;
   }

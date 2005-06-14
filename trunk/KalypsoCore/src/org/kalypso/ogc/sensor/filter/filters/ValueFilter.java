@@ -40,6 +40,7 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -63,14 +64,9 @@ public class ValueFilter extends AbstractObservationFilter
 {
   private final Map m_axisMap = new Hashtable();
 
-  /**
-   * @throws SensorException
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation)
-   */
-  public void initFilter( final Object conf, final IObservation obs ) throws SensorException
+  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
-    super.initFilter( conf, obs );
+    super.initFilter( conf, obs, context );
 
     m_axisMap.clear();
     

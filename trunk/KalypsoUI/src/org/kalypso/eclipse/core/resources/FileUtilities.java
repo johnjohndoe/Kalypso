@@ -66,12 +66,6 @@ public class FileUtilities
 
   /**
    * Sets the contents of the dest file using the source file.
-   * 
-   * @param sourceCharset
-   * @param source
-   * @param dest
-   * @param monitor
-   * @throws CoreException
    */
   public static void copyFile( final String sourceCharset, final File source,
       final IFile dest, final IProgressMonitor monitor ) throws CoreException

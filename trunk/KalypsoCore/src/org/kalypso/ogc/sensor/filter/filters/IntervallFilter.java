@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
+import java.net.URL;
 import java.util.Date;
 
 import org.kalypso.java.util.CalendarUtilities;
@@ -80,10 +81,10 @@ public class IntervallFilter extends AbstractObservationFilter
     m_amount = filter.getAmount();
   }
 
-  public void initFilter( Object dummy, IObservation baseObs ) throws SensorException
+  public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
-    super.initFilter( dummy, baseObs );
+    super.initFilter( dummy, baseObs, context );
   }
 
   public ITuppleModel getValues( IVariableArguments args ) throws SensorException

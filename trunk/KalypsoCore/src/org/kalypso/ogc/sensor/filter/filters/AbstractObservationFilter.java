@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
+import java.net.URL;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -59,14 +61,16 @@ public abstract class AbstractObservationFilter implements IObservationFilter
 {
   protected IObservation m_obs = null;
   protected Object m_conf = null;
+  protected URL m_context = null;
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation)
+   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
-  public void initFilter( final Object conf, final IObservation obs ) throws SensorException
+  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
     m_conf = conf;
     m_obs = obs;
+    m_context = context;
   }
 
   public boolean equals( Object obj )
@@ -157,7 +161,6 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     
     return m_obs.toString();
   }
-  
   
   public void addListener( IObservationListener listener )
   {

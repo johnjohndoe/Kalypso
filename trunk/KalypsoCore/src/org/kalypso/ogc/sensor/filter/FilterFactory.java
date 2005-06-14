@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -76,7 +77,7 @@ public class FilterFactory
   /**
    * Constructor. Reads the properties and creates the factory.
    */
-  protected FilterFactory( )
+  protected FilterFactory()
   {
     final InputStream ins = getClass().getResourceAsStream(
         "resource/filters.props" );
@@ -103,7 +104,7 @@ public class FilterFactory
    * 
    * @return singleton instance
    */
-  private static FilterFactory getInstance( )
+  private static FilterFactory getInstance()
   {
     if( m_instance == null )
       m_instance = new FilterFactory();
@@ -121,7 +122,7 @@ public class FilterFactory
   {
     final String className = ClassUtilities.getOnlyClassName( aft.getClass() );
 
-    final IFilterCreator creator = (IFilterCreator) getInstance().m_fact
+    final IFilterCreator creator = (IFilterCreator)getInstance().m_fact
         .getObjectInstance( className, IFilterCreator.class );
 
     return creator;
@@ -135,34 +136,23 @@ public class FilterFactory
    * @return IObservation
    */
   public static IObservation createFilterFrom( final String href,
-      final IObservation obs ) throws SensorException
+      final IObservation obs, final URL context ) throws SensorException
   {
-    if( href == null || href.length() == 0 )
+    final String strFilterXml = getFilterPart( href );
+    if( strFilterXml == null )
       return obs;
     
-    final int i1 = href.indexOf( ZmlURLConstants.TAG_FILTER1 );
-    if( i1 == -1 )
-      return obs;
-
-    final int i2 = href.indexOf( ZmlURLConstants.TAG_FILTER2, i1 );
-    if( i2 == -1 )
-      throw new SensorException(
-          "URL-fragment does not contain a valid filter specification. URL: "
-              + href );
-
-    final String strFilterXml = href
-        .substring( i1 + ZmlURLConstants.TAG_FILTER1.length(), i2 );
-
     final StringReader sr = new StringReader( strFilterXml );
 
     final IObservation obsFilter;
     try
     {
-      final AbstractFilterType af = (AbstractFilterType) OF_FILTER.createUnmarshaller().unmarshal( new InputSource( sr ) );
+      final AbstractFilterType af = (AbstractFilterType)OF_FILTER
+          .createUnmarshaller().unmarshal( new InputSource( sr ) );
       sr.close();
-      
+
       final IFilterCreator creator = getCreatorInstance( af );
-      obsFilter = creator.createFilter( af, obs );
+      obsFilter = creator.createFilter( af, obs, context );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
@@ -175,46 +165,73 @@ public class FilterFactory
 
     return obsFilter;
   }
-  
+
+  /**
+   * Returns the filter part of the given url
+   */
+  public static String getFilterPart( final URL url ) throws SensorException
+  {
+    return getFilterPart( url.toExternalForm() );
+  }
+
+  /**
+   * Returns the filter part of the given url-string
+   */
+  public static String getFilterPart( final String strUrl )
+      throws SensorException
+  {
+    if( strUrl == null || strUrl.length() == 0 )
+      return null;
+
+    final int i1 = strUrl.indexOf( ZmlURLConstants.TAG_FILTER1 );
+    if( i1 == -1 )
+      return null;
+
+    final int i2 = strUrl.indexOf( ZmlURLConstants.TAG_FILTER2, i1 );
+    if( i2 == -1 )
+      throw new SensorException(
+          "URL-fragment does not contain a valid filter specification. URL: "
+              + strUrl );
+
+    final String strFilterXml = strUrl.substring( i1
+        + ZmlURLConstants.TAG_FILTER1.length(), i2 );
+
+    return strFilterXml;
+  }
+
   /**
    * Creates a filter hierarchy using the InputSource.
-   * 
-   * @param ins
-   * @return filter
-   * @throws SensorException
    */
-  public static IObservation createFilter( final InputSource ins )
+  public static IObservation createFilter( final InputSource ins, final URL context )
       throws SensorException
   {
     try
     {
-      final AbstractFilterType af = (AbstractFilterType) OF_FILTER.createUnmarshaller().unmarshal( ins );
+      final AbstractFilterType af = (AbstractFilterType)OF_FILTER
+          .createUnmarshaller().unmarshal( ins );
 
       final IFilterCreator creator = getCreatorInstance( af );
-      return creator.createFilter( af, null );
+      return creator.createFilter( af, null, context );
     }
     catch( Exception e )
     {
       throw new SensorException( e );
     }
   }
-  
+
   /**
    * Creates a filter hierarchy using the InputStream.
-   * 
-   * @param ins
-   * @return filter
-   * @throws SensorException
    */
-  public static IObservation createFilter( final InputStream ins )
+  public static IObservation createFilter( final InputStream ins, final URL context )
       throws SensorException
   {
     try
     {
-      final AbstractFilterType af = (AbstractFilterType) OF_FILTER.createUnmarshaller().unmarshal( ins );
+      final AbstractFilterType af = (AbstractFilterType)OF_FILTER
+          .createUnmarshaller().unmarshal( ins );
 
       final IFilterCreator creator = getCreatorInstance( af );
-      return creator.createFilter( af, null );
+      return creator.createFilter( af, null, context );
     }
     catch( Exception e )
     {

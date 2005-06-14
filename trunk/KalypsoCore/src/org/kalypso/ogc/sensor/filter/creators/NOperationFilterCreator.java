@@ -36,9 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
+
+import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -50,15 +52,16 @@ import org.kalypso.zml.filters.NOperationFilterType;
 
 public class NOperationFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs )
-      throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft,
+      IObservation baseObs, final URL context ) throws SensorException
   {
     final NOperationFilterType filter = (NOperationFilterType)aft;
 
-    final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filter.getFilter(), baseObs );
+    final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filter
+        .getFilter(), baseObs, context );
 
     final NOperationFilter nOperationFilter = new NOperationFilter( filter );
-    nOperationFilter.initFilter( innerObs, innerObs[0] );
+    nOperationFilter.initFilter( innerObs, innerObs[0], context );
     return nOperationFilter;
   }
 }

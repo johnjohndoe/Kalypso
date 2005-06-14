@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
+import java.net.URL;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -80,9 +82,9 @@ public class NOperationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
-  public void initFilter( Object conf, IObservation baseObs ) throws SensorException
+  public void initFilter( Object conf, IObservation baseObs, URL context ) throws SensorException
   {
-    super.initFilter( null, baseObs );
+    super.initFilter( null, baseObs, context );
     m_innerObservations = (IObservation[])conf;
   }
 

@@ -44,7 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Comparator;
 
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 
 
 public final class KeyComparator implements Comparator

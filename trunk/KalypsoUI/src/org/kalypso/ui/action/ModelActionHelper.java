@@ -49,7 +49,7 @@ import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -85,7 +85,7 @@ public class ModelActionHelper
   {
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IProject[] projects = ResourceUtilities.findeProjectsFromSelection( selection );
+    final IProject[] projects = ProjectUtilities.findeProjectsFromSelection( selection );
 
     if( projects == null || projects.length == 0 )
       throw new CoreException( new StatusInfo( IStatus.WARNING,

@@ -50,7 +50,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.calcwizard.CalcWizardDialog;
 
@@ -89,7 +89,7 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
     final ISelection selection = m_window.getSelectionService().getSelection(
         IPageLayout.ID_RES_NAV );
 
-    final IProject[] projects = ResourceUtilities.findeProjectsFromSelection( selection );
+    final IProject[] projects = ProjectUtilities.findeProjectsFromSelection( selection );
 
     if( projects == null || projects.length != 1 )
     {
