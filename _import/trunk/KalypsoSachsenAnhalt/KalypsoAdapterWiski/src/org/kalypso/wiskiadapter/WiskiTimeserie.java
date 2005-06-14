@@ -281,7 +281,7 @@ public class WiskiTimeserie implements IObservation
     final InterpolationFilter intfil = new InterpolationFilter(
         Calendar.HOUR_OF_DAY, 1, false, 0, KalypsoStati.STATUS_USERMOD
             .intValue() );
-    intfil.initFilter( null, obs );
+    intfil.initFilter( null, obs, null );
 
     final HashMap timeseries_map = new HashMap();
     final HashMap tsID_map = new HashMap();
