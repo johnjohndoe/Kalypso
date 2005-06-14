@@ -169,7 +169,7 @@ public class DamageAnalysis
    * @param landuseGrid
    * @param administrationUnitGrid
    * @param assets
-   *          key=landuseKey,administrationKey, value=asset as Double
+   *          key=landuseKey,(administrationKey), value=asset as Double
    * @return RectifiedGridCoverage damageGrid
    * @throws Exception
    */

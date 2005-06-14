@@ -73,6 +73,11 @@
             class="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
             name="Statistische Auswertung"
             id="CalculateStatisticJob"/>
+      <!--<KalypsoProcess
+            type="local"
+            class="org.kalypso.floodrisk.substract.GenerateTemplateRasterJob"
+            name="Templateraster erstellen"
+            id="GenerateTemplateRasterJob"/>-->
    </extension>
    <extension
          point="org.kalypso.ui.mapviewaction">

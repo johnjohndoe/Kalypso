@@ -150,7 +150,7 @@ public class ContextModel
   /**
    * returns the AssetValueList for this ContextModel
    * 
-   * @return AssetValueList if(administrationUnitGrid!=null){
+   * @return AssetValueList if(administrationUnitLink!=null){
    *         (key="landuseTypeKey,administrationUnitKey"(String),
    *         value=asset(Double)) }else{ (key=landuseTypeKey(String),
    */

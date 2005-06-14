@@ -102,6 +102,9 @@ public class CalculateDamageJob implements ICalcJob
   //input
   public static final String LanduseRasterDataID = "LanduseRasterData";
 
+  //optional
+  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData";
+
   public static final String WaterlevelDataID = "WaterlevelData";
 
   public static final String ContextModelID = "ContextModel";
@@ -110,8 +113,6 @@ public class CalculateDamageJob implements ICalcJob
   public static final String DamageDirectoryID = "DamageDirectory";
 
   public static final String AnnualDamageRasterDataID = "AnnualDamageRasterData";
-
-  //public static final String StyleDirectoryID = "StyleDirectory";
 
   RasterDataModel rasterDataModel = new RasterDataModel();
 
@@ -135,6 +136,16 @@ public class CalculateDamageJob implements ICalcJob
       RectifiedGridCoverage landuseRaster = rasterDataModel
           .getRectifiedGridCoverage( landuseRasterGML );
 
+      //administrationUnitRaster
+      RectifiedGridCoverage administrationUnitRaster = null;
+      if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
+      {
+        URL administrationUnitRasterGML = inputProvider
+            .getURLForID( AdministrationUnitRasterDataID );
+        administrationUnitRaster = rasterDataModel
+            .getRectifiedGridCoverage( administrationUnitRasterGML );
+      }
+
       //contextModel
       URL contextModelGML = inputProvider.getURLForID( ContextModelID );
       ContextModel contextModel = new ContextModel( contextModelGML );
@@ -153,8 +164,8 @@ public class CalculateDamageJob implements ICalcJob
 
       // calculate damage
       TreeMap damageGrids = DamageAnalysis.calculateDamages(
-          damagePercentageGrids, landuseRaster, null, contextModel
-              .getAssetValueList() );
+          damagePercentageGrids, landuseRaster, administrationUnitRaster,
+          contextModel.getAssetValueList() );
 
       // calculate annualDamage
       Vector tempGrids = DamageAnalysis

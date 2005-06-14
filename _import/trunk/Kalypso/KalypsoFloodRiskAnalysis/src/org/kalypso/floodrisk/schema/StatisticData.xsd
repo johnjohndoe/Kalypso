@@ -10,29 +10,31 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="LanduseCollectionMember" type="hws:LanduseCollectionMemberAssociationType"/>
+					<element name="CollectionMember" type="hws:CollectionMemberAssociationType"/>
+					<element name="OverallSum" type="double" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<!-- =========================================================== -->
-	<!-- LanduseCollectionMember=========================================================== -->
-	<complexType name="LanduseCollectionMemberAssociationType">
+	<!-- CollectionMember=========================================================== -->
+	<complexType name="CollectionMemberAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="hws:LanduseCollection"/>
+					<element ref="hws:Collection"/>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="LanduseCollection" type="hws:LanduseCollectionType" substitutionGroup="gml:_Feature"/>
-	<complexType name="LanduseCollectionType">
+	<element name="Collection" type="hws:CollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="CollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
+					<element name="Name" type="string" minOccurs="0"/>
+					<element name="Sum" type="double"/>
 					<element name="LanduseMember" type="hws:LanduseMemberAssociationType" maxOccurs="unbounded"/>
-					<element name="OverallSum" type="double"/>
 				</sequence>
 			</restriction>
 		</complexContent>

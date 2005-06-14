@@ -66,6 +66,9 @@ public class CalculateStatisticJob implements ICalcJob
 
   public static final String LanduseRasterDataID = "LanduseRasterData";
 
+  //optional
+  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData";
+
   public static final String ContextModelID = "ContextModel";
 
   //optional
@@ -101,6 +104,16 @@ public class CalculateStatisticJob implements ICalcJob
       RectifiedGridCoverage landuseRaster = rasterDataModel
           .getRectifiedGridCoverage( landuseRasterGML );
 
+      //administrationUnitRaster
+      RectifiedGridCoverage administrationUnitRaster = null;
+      if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
+      {
+        URL administrationUnitRasterGML = inputProvider
+            .getURLForID( AdministrationUnitRasterDataID );
+        administrationUnitRaster = rasterDataModel
+            .getRectifiedGridCoverage( administrationUnitRasterGML );
+      }
+
       //contextModel
       URL contextModelGML = inputProvider.getURLForID( ContextModelID );
       ContextModel contextModel = new ContextModel( contextModelGML );
@@ -117,13 +130,22 @@ public class CalculateStatisticJob implements ICalcJob
         URL templateRasterGML = inputProvider.getURLForID( TemplateRasterID );
         RectifiedGridCoverage templateRaster = rasterDataModel
             .getRectifiedGridCoverage( templateRasterGML );
-        statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster,
-            landuseRaster, templateRaster );
+        if( administrationUnitRaster != null )
+          statistics = StatisticAnalysis.getStatisticsWithTemplate(
+              damageRaster, landuseRaster, administrationUnitRaster,
+              templateRaster );
+        else
+          statistics = StatisticAnalysis.getStatisticsWithTemplate(
+              damageRaster, landuseRaster, templateRaster );
       }
       else
       {
-        statistics = StatisticAnalysis.getStatistics( damageRaster,
-            landuseRaster );
+        if( administrationUnitRaster != null )
+          statistics = StatisticAnalysis.getStatistics( damageRaster,
+              landuseRaster, administrationUnitRaster );
+        else
+          statistics = StatisticAnalysis.getStatistics( damageRaster,
+              landuseRaster );
       }
 
       monitor.setProgress( 20 );
@@ -138,9 +160,13 @@ public class CalculateStatisticJob implements ICalcJob
       {
         statisticDataFile.createNewFile();
       }
-      StatisticAnalysis
-          .exportStatisticAsXML( statistics, contextModel.getLanduseList(),
-              statisticDataFile.toURL() );
+      if( administrationUnitRaster != null )
+        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel
+            .getLanduseList(), contextModel.getAdministrationUnitList(),
+            statisticDataFile.toURL() );
+      else
+        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel
+            .getLanduseList(), statisticDataFile.toURL() );
       resultEater.addResult( statisticDataOutputBean.getId(), null );
 
       monitor.setProgress( 40 );
