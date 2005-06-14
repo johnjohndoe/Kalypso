@@ -49,6 +49,10 @@ import org.eclipse.ui.IPerspectiveFactory;
 public class FloodRiskPerspective implements IPerspectiveFactory
 {
 
+  /**
+   * 
+   * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
+   */
   public void createInitialLayout( IPageLayout layout )
   {
     // von ModelerPerspectiveFactory übernommen!!!

@@ -87,6 +87,16 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * ExportThemeAction
+ * <p>
+ * Action to export a rasterTheme as jpg-image with world-file
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (14.06.2005)
+ */
 public class ExportThemeAction implements PluginMapOutlineAction
 {
 
@@ -97,16 +107,22 @@ public class ExportThemeAction implements PluginMapOutlineAction
    */
   public void run( GisMapOutlineViewer outlineviewer )
   {
-    final IKalypsoTheme activeTheme = outlineviewer.getMapModell().getActiveTheme();
+    final IKalypsoTheme activeTheme = outlineviewer.getMapModell()
+        .getActiveTheme();
     if( activeTheme instanceof GisTemplateFeatureTheme )
     {
-      FeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme ).getFeatureType();
+      FeatureType featureType = ( (GisTemplateFeatureTheme)activeTheme )
+          .getFeatureType();
       if( featureType.getName().equals( "RectifiedGridCoverage" ) )
       {
         //System.out.println( "CreateImage" );
-        String targetFileName = chooseFile( outlineviewer.getControl().getShell(), m_targetFile,
-            new String[]
-            { "*.jpg",".JPG",".JPEG",".jpeg" } );
+        String targetFileName = chooseFile( outlineviewer.getControl()
+            .getShell(), m_targetFile, new String[]
+        {
+            "*.jpg",
+            ".JPG",
+            ".JPEG",
+            ".jpeg" } );
         if( targetFileName != null )
         {
           if( targetFileName.indexOf( "." ) == -1 )
@@ -130,28 +146,38 @@ public class ExportThemeAction implements PluginMapOutlineAction
       }
       else
       {
-        MessageDialog.openConfirm( outlineviewer.getControl().getShell(), "Information",
-            "Export-Function not implemented" );
+        MessageDialog.openConfirm( outlineviewer.getControl().getShell(),
+            "Information", "Export-Function not implemented" );
       }
     }
     else
     {
-      MessageDialog.openConfirm( outlineviewer.getControl().getShell(), "Information",
-          "Export-Function not implemented" );
+      MessageDialog.openConfirm( outlineviewer.getControl().getShell(),
+          "Information", "Export-Function not implemented" );
     }
   }
 
-  IStatus createImage( GisTemplateFeatureTheme activeTheme, IProgressMonitor monitor )
+  /**
+   * creates the image and saves it as jpg to m_targetFile
+   * 
+   * @param activeTheme theme with featureTypeName = "RectifiedGridCoverage"
+   * @param monitor
+   * @return
+   *  
+   */
+  IStatus createImage( GisTemplateFeatureTheme activeTheme,
+      IProgressMonitor monitor )
   {
     monitor.beginTask( "Create Image", IProgressMonitor.UNKNOWN );
     FeatureList featureList = activeTheme.getFeatureList();
     UserStyle[] style = activeTheme.getStyles();
     int pos = 0;
-    RasterSymbolizer rasterSym = (RasterSymbolizer)style[pos].getFeatureTypeStyles()[pos]
-        .getRules()[pos].getSymbolizers()[pos];
-    RectifiedGridDomain rgDomain = (RectifiedGridDomain)( (Feature)featureList.get( pos ) )
-        .getProperty( "rectifiedGridDomain" );
-    RangeSet rangeSet = (RangeSet)( (Feature)featureList.get( pos ) ).getProperty( "rangeSet" );
+    RasterSymbolizer rasterSym = (RasterSymbolizer)style[pos]
+        .getFeatureTypeStyles()[pos].getRules()[pos].getSymbolizers()[pos];
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain)( (Feature)featureList
+        .get( pos ) ).getProperty( "rectifiedGridDomain" );
+    RangeSet rangeSet = (RangeSet)( (Feature)featureList.get( pos ) )
+        .getProperty( "rangeSet" );
     monitor.beginTask( "Create Image", IProgressMonitor.UNKNOWN );
     Raster raster = getSurrogateRaster( rgDomain, rangeSet, rasterSym, monitor );
     PlanarImage image = getSurrogateImage( raster );
@@ -166,13 +192,22 @@ public class ExportThemeAction implements PluginMapOutlineAction
     return Status.OK_STATUS;
   }
 
+  /**
+   * writes a worldFile with the geometric information of the
+   * RectifiedGridDomain
+   * 
+   * @param worldFile
+   * @param rgDomain RectifiedGridDomain of a RectifiedGridCoverage
+   *  
+   */
   private void createWorldFile( File worldFile, RectifiedGridDomain rgDomain )
   {
     try
     {
       BufferedWriter bw = new BufferedWriter( new FileWriter( worldFile ) );
       //dx
-      double dx = rgDomain.getOffsetX(rgDomain.getOrigin(null).getCoordinateSystem());
+      double dx = rgDomain.getOffsetX( rgDomain.getOrigin( null )
+          .getCoordinateSystem() );
       bw.write( "" + dx );
       bw.newLine();
       //phi x
@@ -182,7 +217,8 @@ public class ExportThemeAction implements PluginMapOutlineAction
       bw.write( "0.0" );
       bw.newLine();
       //dy
-      double dY = rgDomain.getOffsetY(rgDomain.getOrigin(null).getCoordinateSystem());
+      double dY = rgDomain.getOffsetY( rgDomain.getOrigin( null )
+          .getCoordinateSystem() );
       bw.write( "-" + dY );
       bw.newLine();
       //origin x (upper left corner)
@@ -210,14 +246,17 @@ public class ExportThemeAction implements PluginMapOutlineAction
   /**
    * saves a surrogateImage as JPG
    * 
-   * @param outFile
-   *          file for saving the image
+   * @param outFile file for saving the image
+   * @param surrogateImage surrogate image of RectifiedGridCoverage (no
+   *          transparency!)
+   *  
    */
   void saveAsJpg( File outFile, PlanarImage surrogateImage )
   {
     try
     {
-      JAI.create( "filestore", surrogateImage, outFile.getAbsolutePath(), "jpeg" );
+      JAI.create( "filestore", surrogateImage, outFile.getAbsolutePath(),
+          "jpeg" );
 
     }
     catch( Exception e )
@@ -226,7 +265,8 @@ public class ExportThemeAction implements PluginMapOutlineAction
     }
   }
 
-  String chooseFile( Shell parentShell, File selectedFile, String[] filterExtensions )
+  String chooseFile( Shell parentShell, File selectedFile,
+      String[] filterExtensions )
   {
     FileDialog dialog = new FileDialog( parentShell, SWT.SINGLE );
     dialog.setFilterExtensions( filterExtensions );
@@ -246,6 +286,13 @@ public class ExportThemeAction implements PluginMapOutlineAction
     return filePath;
   }
 
+  /**
+   * get a surrogate image for displaying with byte values of the given raster
+   * with int values
+   * 
+   * @param surrogateRaster
+   * @return PlanarImage (surrogate image)
+   */
   private PlanarImage getSurrogateImage( Raster surrogateRaster )
   {
     PlanarImage surrogateImage = getPlanarImage( surrogateRaster );
@@ -257,17 +304,35 @@ public class ExportThemeAction implements PluginMapOutlineAction
     return surrogateImage;
   }
 
+  /**
+   * get an image with the given Raster-Object
+   * 
+   * @param raster
+   * @return Image
+   */
   private PlanarImage getPlanarImage( Raster raster )
   {
-    ColorModel colorModel = PlanarImage.createColorModel( raster.getSampleModel() );
-    TiledImage tiledImage = new TiledImage( 0, 0, raster.getWidth(), raster.getHeight(), 0, 0,
-        raster.getSampleModel(), colorModel );
+    ColorModel colorModel = PlanarImage.createColorModel( raster
+        .getSampleModel() );
+    TiledImage tiledImage = new TiledImage( 0, 0, raster.getWidth(), raster
+        .getHeight(), 0, 0, raster.getSampleModel(), colorModel );
     tiledImage.setData( raster );
     return tiledImage;
   }
 
-  private Raster getSurrogateRaster( RectifiedGridDomain gridDomain, RangeSet rangeSet,
-      RasterSymbolizer rasterSym, IProgressMonitor monitor )
+  /**
+   * creates a surrogate raster of the given rectifiedGridDomain and rangeSet
+   * with the given colorTable in the rasterSymbolizer
+   * 
+   * @param gridDomain
+   * @param rangeSet
+   * @param rasterSym
+   * @param monitor
+   * @return
+   *  
+   */
+  private Raster getSurrogateRaster( RectifiedGridDomain gridDomain,
+      RangeSet rangeSet, RasterSymbolizer rasterSym, IProgressMonitor monitor )
   {
     final int mode_intervalColorMapping = 0;
     final int mode_valueColorMapping = 1;
@@ -280,8 +345,8 @@ public class ExportThemeAction implements PluginMapOutlineAction
 
     int nCols = gridDomain.getNumColumns();
     int nRows = gridDomain.getNumRows();
-    SampleModel sampleModel = RasterFactory.createBandedSampleModel( DataBuffer.TYPE_INT, nCols,
-        nRows, 3 ); //4 );
+    SampleModel sampleModel = RasterFactory.createBandedSampleModel(
+        DataBuffer.TYPE_INT, nCols, nRows, 3 ); //4 );
     DataBuffer dataBuffer = sampleModel.createDataBuffer();
     Vector rangeSetData = rangeSet.getRangeSetData();
     for( int i = 0; i < rangeSetData.size(); i++ )
@@ -293,7 +358,8 @@ public class ExportThemeAction implements PluginMapOutlineAction
         //double actualOpacity = 1;
         if( rangeSetDataRow.get( j ) != null )
         {
-          double actualValue = ( (Double)rangeSetDataRow.get( j ) ).doubleValue();
+          double actualValue = ( (Double)rangeSetDataRow.get( j ) )
+              .doubleValue();
           switch( mode )
           {
           case mode_intervalColorMapping:
@@ -316,7 +382,8 @@ public class ExportThemeAction implements PluginMapOutlineAction
             TreeMap colorMap = rasterSym.getColorMap();
             if( colorMap.containsKey( new Double( actualValue ) ) )
             {
-              ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( new Double( actualValue ) );
+              ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap
+                  .get( new Double( actualValue ) );
               actualColor = colorMapEntry.getColor();
               //actualOpacity = colorMapEntry.getOpacity();
             }
@@ -330,7 +397,8 @@ public class ExportThemeAction implements PluginMapOutlineAction
           double nullValue = -9999;
           if( colorMap.containsKey( new Double( nullValue ) ) )
           {
-            ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap.get( new Double( nullValue ) );
+            ColorMapEntry colorMapEntry = (ColorMapEntry)colorMap
+                .get( new Double( nullValue ) );
             actualColor = colorMapEntry.getColor();
             //actualOpacity = colorMapEntry.getOpacity();
           }
@@ -349,18 +417,21 @@ public class ExportThemeAction implements PluginMapOutlineAction
         dataBuffer.setElem( 2, j + ( i * nCols ), blueValue );
         //dataBuffer.setElem( 3, j + ( i * nCols ), alphaValue );
       }
-      monitor.setTaskName( i + " rows of " + rangeSetData.size() + " calculated." );
+      monitor.setTaskName( i + " rows of " + rangeSetData.size()
+          + " calculated." );
       //monitor.worked( i );
     }
     Point origin = new Point( 0, 0 );
-    Raster surrogateRaster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, origin );
+    Raster surrogateRaster = RasterFactory.createWritableRaster( sampleModel,
+        dataBuffer, origin );
     return surrogateRaster;
   }
 
-  public void selectionChanged( PluginMapOutlineActionDelegate action, ISelection selection )
+  public void selectionChanged( PluginMapOutlineActionDelegate action,
+      ISelection selection )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

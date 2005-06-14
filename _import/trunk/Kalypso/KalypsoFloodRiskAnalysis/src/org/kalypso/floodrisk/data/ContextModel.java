@@ -201,6 +201,7 @@ public class ContextModel
 
   /**
    * returns the IntegerValue of the featureID (Format: "Name_ID")
+   * @deprecated should use getID( String fid, FeatureType featureType )
    * 
    * @param fid
    *          featureID (Format: "Name_ID")

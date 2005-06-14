@@ -96,6 +96,16 @@ import org.w3c.dom.Document;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * CalculateDamageJob
+ * <p>
+ * Job to process a damage analysis
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (14.06.2005)
+ */
 public class CalculateDamageJob implements ICalcJob
 {
   //IDs
@@ -226,6 +236,16 @@ public class CalculateDamageJob implements ICalcJob
     }
   }
 
+  /**
+   * reads the waterlevelData and puts the grids in a TreeMap
+   * 
+   * @param waterlevelDataGML controlfile with location of each waterlevelGrid
+   *          relative to the project and associated annuality
+   * @return TreeMap(key=p, value=waterlevelGrid(RectifiedGridCoverage))
+   * @throws MalformedURLException
+   * @throws Exception
+   *  
+   */
   private TreeMap readWaterlevelData( URL waterlevelDataGML )
       throws MalformedURLException, Exception
   {
@@ -260,6 +280,15 @@ public class CalculateDamageJob implements ICalcJob
     return waterlevelGrids;
   }
 
+  /**
+   * writes all results in the result directory
+   * 
+   * @param damageGrids
+   * @param tempGrids
+   * @param damageResultDir resultDirectory
+   * @throws Exception
+   *  
+   */
   public void generateDamageResultDir( TreeMap damageGrids, Vector tempGrids,
       File damageResultDir ) throws Exception
   {
@@ -297,6 +326,17 @@ public class CalculateDamageJob implements ICalcJob
     }
   }
 
+  /**
+   * creates a default rasterStyle with the given number of categories
+   * 
+   * @param resultFile
+   * @param styleName
+   * @param grid RectifiedGridCoverage
+   * @param color lightest color
+   * @param numOfCategories
+   * @throws Exception
+   *  
+   */
   private void createRasterStyle( File resultFile, String styleName,
       RectifiedGridCoverage grid, Color color, int numOfCategories )
       throws Exception
@@ -349,6 +389,10 @@ public class CalculateDamageJob implements ICalcJob
     t.transform( source, result );
   }
 
+  /**
+   * 
+   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
+   */
   public URL getSpezifikation()
   {
     return getClass().getResource( "resources/damageCalcjob_spec.xml" );

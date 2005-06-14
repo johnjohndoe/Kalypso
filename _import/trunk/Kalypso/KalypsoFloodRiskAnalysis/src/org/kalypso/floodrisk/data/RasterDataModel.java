@@ -59,46 +59,84 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * RasterDataModel
+ * <p>
+ * Methods for reading and writing rasterdata (Schema: RasterDataModel.xsd)
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (14.06.2005)
+ */
 public class RasterDataModel
 {
-
-  //final URL rasterDataModel_schemaURL = getClass().getResource(
-  // "../schema/RasterDataModel.xsd" );
 
   public RasterDataModel()
   {
     super();
   }
 
-  public RectifiedGridCoverage getRectifiedGridCoverage( URL gmlURL ) throws Exception
+  /**
+   * creates a rectifiedGridCoverage object of a gml object
+   * 
+   * @param gmlURL (Schema: RasterDataModel.xsd)
+   * @return RectifiedGridCoverage
+   * @throws Exception
+   *  
+   */
+  public RectifiedGridCoverage getRectifiedGridCoverage( URL gmlURL )
+      throws Exception
   {
 
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
     Feature rootFeature = workspace.getRootFeature();
 
-    return RectifiedGridCoverageFactory.createRectifiedGridCoverage( rootFeature );
+    return RectifiedGridCoverageFactory
+        .createRectifiedGridCoverage( rootFeature );
   }
 
-  public static RectifiedGridCoverage getRectifiedGridCoverage( GMLWorkspace workspace )
-      throws Exception
+  /**
+   * creates a rectifiedGridCoverage object of a gml workspace
+   * 
+   * @param workspace
+   * @return RectifiedGridCoverage
+   * @throws Exception
+   *  
+   */
+  public static RectifiedGridCoverage getRectifiedGridCoverage(
+      GMLWorkspace workspace ) throws Exception
   {
 
     Feature rootFeature = workspace.getRootFeature();
 
-    return RectifiedGridCoverageFactory.createRectifiedGridCoverage( rootFeature );
+    return RectifiedGridCoverageFactory
+        .createRectifiedGridCoverage( rootFeature );
   }
 
-  public void toFile( File rasterDataModelGML, RectifiedGridCoverage grid ) throws Exception
+  /**
+   * creates gml workspace of a rectifiedGridCoverage object and serializes it to a
+   * file
+   * 
+   * @param rasterDataModelGML
+   * @param grid
+   * @throws Exception
+   *  
+   */
+  public void toFile( File rasterDataModelGML, RectifiedGridCoverage grid )
+      throws Exception
   {
 
     // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
+    final GMLSchema schema = GMLSchemaCatalog
+        .getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
 
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
 
     // create rootFeature: RasterDataModel
-    Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0", types[0] );
+    Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0",
+        types[0] );
     FeatureTypeProperty[] ftps = types[0].getProperties();
     // create feature: RectifiedGridCoverage
     Object[] properties = new Object[]
@@ -108,14 +146,16 @@ public class RasterDataModel
         null,
         grid.getGridDomain(),
         grid.getRangeSet() };
-    Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( "RectifiedGridCoverage0",
-        ( (FeatureAssociationTypeProperty)ftps[3] ).getAssociationFeatureType(), properties );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftps[3].getName(),
-        rectifiedGridCoverageFeature ) );
+    Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature(
+        "RectifiedGridCoverage0", ( (FeatureAssociationTypeProperty)ftps[3] )
+            .getAssociationFeatureType(), properties );
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftps[3]
+        .getName(), rectifiedGridCoverageFeature ) );
 
     //create workspace
-    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, rasterDataModelGML.toURL(),
-        "", schema.getTargetNS(), schema.getNamespaceMap() );
+    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature,
+        rasterDataModelGML.toURL(), "", schema.getTargetNS(), schema
+            .getNamespaceMap() );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( rasterDataModelGML );

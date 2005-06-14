@@ -57,20 +57,34 @@ import org.kalypso.floodrisk.wizard.ProcessInputWizard;
  * 
  * @author Nadja Peiler (13.05.2005)
  */
-public class StartCalculationActionDelegate implements IWorkbenchWindowActionDelegate
+public class StartCalculationActionDelegate implements
+    IWorkbenchWindowActionDelegate
 {
   private IWorkbenchWindow m_window;
 
+  /**
+   * 
+   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+   */
   public void dispose()
   {
-  //nothing
+    //nothing
   }
 
+  /**
+   * 
+   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+   */
   public void init( IWorkbenchWindow window )
   {
     m_window = window;
   }
 
+  /**
+   * open ProcessDialog and InputWizard to start one or more processes
+   * 
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
   public void run( IAction action )
   {
     //System.out.println( "Run..." );
@@ -78,24 +92,30 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     {
       if( ResourceUtilities.getSelectedProjects().length > 0 )
       {
-        final IProject firstSelectedProject = ResourceUtilities.getSelectedProjects()[0];
-        final ProcessExtension[] processes = ProcessExtensionReader.retrieveExtensions();
-        //ChooseProcessWizard processWizard = new ChooseProcessWizard( firstSelectedProject,
-        //    processes );
-        //final WizardDialog dialog = new WizardDialog( m_window.getShell(), processWizard );
-        ChooseProcessDialog dialog = new ChooseProcessDialog(m_window.getShell(),processes);
+        final IProject firstSelectedProject = ResourceUtilities
+            .getSelectedProjects()[0];
+        final ProcessExtension[] processes = ProcessExtensionReader
+            .retrieveExtensions();
+        ChooseProcessDialog dialog = new ChooseProcessDialog( m_window
+            .getShell(), processes );
         int open = dialog.open();
-        if(open == Window.OK){
-          ProcessInputWizard processInputWizard = new ProcessInputWizard( firstSelectedProject, dialog.getProcesses() );
-          final WizardDialog wizardDialog = new WizardDialog( m_window.getShell(), processInputWizard );
+        if( open == Window.OK )
+        {
+          ProcessInputWizard processInputWizard = new ProcessInputWizard(
+              firstSelectedProject, dialog.getProcesses() );
+          final WizardDialog wizardDialog = new WizardDialog( m_window
+              .getShell(), processInputWizard );
           wizardDialog.open();
-        }else{
+        }
+        else
+        {
           //nothing
         }
       }
       else
       {
-        MessageDialog.openError( m_window.getShell(), "Error", "Bitte Projekt auswählen!" );
+        MessageDialog.openError( m_window.getShell(), "Error",
+            "Bitte Projekt auswählen!" );
       }
     }
     catch( CoreException e )
@@ -104,9 +124,13 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
     }
   }
 
+  /**
+   * 
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   */
   public void selectionChanged( IAction action, ISelection selection )
   {
-  //nothing
+    //nothing
   }
 
 }
