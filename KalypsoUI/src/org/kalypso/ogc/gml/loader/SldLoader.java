@@ -44,14 +44,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 /**
  * @author schlienger

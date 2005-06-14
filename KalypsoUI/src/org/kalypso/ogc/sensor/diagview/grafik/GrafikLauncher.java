@@ -94,8 +94,8 @@ import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.UrlResolver;
 import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.url.UrlResolver;
 import org.xml.sax.InputSource;
 
 /**

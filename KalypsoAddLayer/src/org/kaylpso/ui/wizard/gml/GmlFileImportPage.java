@@ -32,7 +32,7 @@ import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 import org.kalypso.ui.editor.gmleditor.util.model.Model;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;

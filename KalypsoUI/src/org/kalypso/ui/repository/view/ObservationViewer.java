@@ -81,8 +81,8 @@ import org.kalypso.ogc.sensor.template.ObsView.ItemData;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.util.UrlResolverSingleton;
 import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.url.UrlResolverSingleton;
 
 /**
  * ObservationViewer

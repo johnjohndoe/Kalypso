@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.util.UrlResolverSingleton;
 
 /**
  * ZmlFilter
@@ -68,13 +69,11 @@ public final class ZmlFilter extends AbstractObservationFilter
 
   
   /**
-   * @throws SensorException
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation)
+   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
-  public void initFilter( final Object conf, final IObservation obs ) throws SensorException
+  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
-    super.initFilter( conf, obs );
+    super.initFilter( conf, obs, context );
 
     // conf is the href string
     final String href = conf.toString();
@@ -120,7 +119,8 @@ public final class ZmlFilter extends AbstractObservationFilter
       // no use the standard URL resolving facility
       try
       {
-        final IObservation observation = ZmlFactory.parseXML( new URL( href ),
+        final URL sourceUrl = UrlResolverSingleton.resolveUrl( context, href );
+        final IObservation observation = ZmlFactory.parseXML( sourceUrl,
             href );
 
         // override observation from abstract filter (super type)
@@ -134,8 +134,14 @@ public final class ZmlFilter extends AbstractObservationFilter
   }
   
   /**
+   * Allows to specify the list of repositories to use when resolving
+   * the underlying zml. This facility is provided for convenience
+   * for the server-side of Kalypso.
+   * <p>
+   * If the zml if found in one of the repositories, then there's no need
+   * to use the ZmlFactory.
    * 
-   * @param repositories
+   * @param repositories [nullable]
    */
   public static void configureFor( final List repositories )
   {

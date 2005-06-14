@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.url;
+package org.kalypso.util;
 
 import java.io.File;
 import java.io.FileOutputStream;

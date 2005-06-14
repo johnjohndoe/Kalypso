@@ -58,11 +58,11 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.util.CopyObservationHandler.Source;
+import org.kalypso.util.UrlResolver;
 import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.url.UrlResolver;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -137,7 +137,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         fc.initFilter( new IObservation[]
         {
             sourceObses[0],
-            sourceObses[1] }, sourceObses[0] );
+            sourceObses[1] }, sourceObses[0], null ); // TODO check if null context is ok here
         obs = fc;
       }
 
@@ -213,5 +213,4 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
     return ZmlFactory.parseXML( sourceURL, feature.getId() );
   }
-
 }

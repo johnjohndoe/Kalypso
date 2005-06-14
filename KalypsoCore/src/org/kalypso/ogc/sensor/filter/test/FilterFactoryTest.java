@@ -73,7 +73,7 @@ public class FilterFactoryTest extends TestCase
 
   public void testCreateFilter() throws SensorException
   {
-    IObservation obs = FilterFactory.createFilter( m_ins );
+    IObservation obs = FilterFactory.createFilter( m_ins, null );
     assertTrue( obs instanceof WQTimeserieProxy );
   }
 

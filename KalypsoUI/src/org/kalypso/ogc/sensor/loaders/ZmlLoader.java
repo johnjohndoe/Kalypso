@@ -54,7 +54,7 @@ import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 import org.kalypso.zml.ObservationType;
 
 /**

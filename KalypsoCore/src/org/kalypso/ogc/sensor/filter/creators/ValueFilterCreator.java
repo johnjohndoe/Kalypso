@@ -36,10 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,55 +70,51 @@ import org.kalypso.zml.filters.valuecomp.SmallerValueCompType;
  */
 public class ValueFilterCreator implements IFilterCreator
 {
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
-   */
   public IObservationFilter createFilter( final AbstractFilterType aft,
-      final IObservation baseObs ) throws SensorException
+      final IObservation baseObs, final URL context ) throws SensorException
   {
-    if( !(aft instanceof ValueFilterType) )
-      throw new IllegalArgumentException( "Not a " + ValueFilterType.class.getName() );
-    
-    final ValueFilterType ft = (ValueFilterType) aft;
+    if( !( aft instanceof ValueFilterType ) )
+      throw new IllegalArgumentException( "Not a "
+          + ValueFilterType.class.getName() );
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs );
-	
+    final ValueFilterType ft = (ValueFilterType)aft;
+
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft
+        .getFilter(), baseObs, context );
+
     final ValueFilter filter = new ValueFilter();
-    
+
     try
     {
-      filter.initFilter( createComparators( ft.getValueComp(), filteredObs.getAxisList() ), filteredObs );
+      filter.initFilter( createComparators( ft.getValueComp(), filteredObs
+          .getAxisList() ), filteredObs, context );
     }
     catch( ParserException e )
     {
       throw new SensorException( e );
     }
-    
+
     return filter;
   }
 
   /**
    * Creates the comparators
-   * 
-   * @param comps
-   * @param axes
-   * @return list of comparators
-   * @throws ParserException
    */
-  private final static List createComparators( final List comps, final IAxis[] axes ) throws ParserException
+  private final static List createComparators( final List comps,
+      final IAxis[] axes ) throws ParserException
   {
     final List fc = new ArrayList( comps.size() );
-    
+
     for( final Iterator it = comps.iterator(); it.hasNext(); )
     {
-      final AbstractValueCompType vc = (AbstractValueCompType) it.next();
-      
+      final AbstractValueCompType vc = (AbstractValueCompType)it.next();
+
       fc.add( createComp( vc, axes ) );
     }
-    
+
     return fc;
   }
-  
+
   /**
    * Creates the comparator for the given binding type
    * 
@@ -125,24 +122,28 @@ public class ValueFilterCreator implements IFilterCreator
    * @param axes
    * @throws ParserException
    */
-  private static IValueComp createComp( final AbstractValueCompType avc, final IAxis[] axes ) throws ParserException
+  private static IValueComp createComp( final AbstractValueCompType avc,
+      final IAxis[] axes ) throws ParserException
   {
     if( avc instanceof SmallerValueCompType )
     {
-      final SmallerValueCompType comp = (SmallerValueCompType) avc;
-      return new CompSmaller( axes, avc.getAxisType(), comp.getValue(), comp.isModeIncl() );
+      final SmallerValueCompType comp = (SmallerValueCompType)avc;
+      return new CompSmaller( axes, avc.getAxisType(), comp.getValue(), comp
+          .isModeIncl() );
     }
 
     if( avc instanceof BetweenValueCompType )
     {
-      final BetweenValueCompType comp = (BetweenValueCompType) avc;
-      return new CompBetween( axes, avc.getAxisType(), comp.getFrom(), comp.isModeInclFrom(), comp.getTo(), comp.isModeInclTo() );
+      final BetweenValueCompType comp = (BetweenValueCompType)avc;
+      return new CompBetween( axes, avc.getAxisType(), comp.getFrom(), comp
+          .isModeInclFrom(), comp.getTo(), comp.isModeInclTo() );
     }
 
     if( avc instanceof BiggerValueCompType )
     {
-      final BiggerValueCompType comp = (BiggerValueCompType) avc;
-      return new CompBigger( axes, avc.getAxisType(), comp.getValue(), comp.isModeIncl() );
+      final BiggerValueCompType comp = (BiggerValueCompType)avc;
+      return new CompBigger( axes, avc.getAxisType(), comp.getValue(), comp
+          .isModeIncl() );
     }
 
     return null;

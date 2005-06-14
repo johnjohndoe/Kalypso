@@ -185,15 +185,16 @@ public class ZmlFactory
   }
 
   /**
-   * Parses the XML and creates a IObservation object.
+   * Parses the XML and creates an IObservation object.
    * 
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * 
-   * @param url
-   * @param identifier ID für Repository
+   * @param url the url specification of the zml
+   * @param identifier [optional] ID für Repository
+   * 
    * @return IObservation object
    * 
-   * @throws SensorException
+   * @throws SensorException in case of parsing or creation problem
    */
   public static IObservation parseXML( final URL url, final String identifier )
       throws SensorException
@@ -204,12 +205,30 @@ public class ZmlFactory
     {
       final String zmlId = ZmlURL.getIdentifierPart( url );
 
-      // check if this is a local url. In the positive, we remove the
-      // query part because Eclipse Platform's URLStreamHandler cannot deal with
-      // it.
+      if( zmlId.indexOf( ":context:" ) != -1  )
+      {
+        /*
+         * if the scheme contains "context" then we are dealing with a
+         * special kind of zml-url: the scheme only denotes a context, the
+         * observation is strictly built using the filter specification.
+         */
+        
+        // re-create the real context
+        final String strContextUrl = zmlId.replaceAll( ":context:", ":" );
+        final URL context = new URL( strContextUrl );
+        
+        // directly return the filtered observation
+        return FilterFactory.createFilterFrom( url.toExternalForm(), null, context );
+      }
+      
       final String scheme = ZmlURL.getSchemePart( url );
       if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) )
       {
+        /*
+         * if this is a local url, we remove the query part because Eclipse
+         * Platform's URLStreamHandler cannot deal with it.
+         */
+
         // only take the simple part of the url
         final URL tmpUrl = new URL( zmlId );
 
@@ -345,7 +364,7 @@ public class ZmlFactory
 
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( href,
-        zmlObs );
+        zmlObs, context );
 
     // tricky: check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( href, filteredObs );
@@ -442,7 +461,7 @@ public class ZmlFactory
     {
       // first of all fetch values
       final ITuppleModel values = obs.getValues( args );
-      
+
       final ObservationType obsType = OF.createObservation();
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );

@@ -57,6 +57,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -100,7 +101,7 @@ public class ExportAsFileWizard extends Wizard
   {
     super.addPages();
 
-    final IProject[] projects = ResourceUtilities.getSelectedProjects();
+    final IProject[] projects = ProjectUtilities.getSelectedProjects();
     String fileName = "";
 
     if( projects.length > 0 )

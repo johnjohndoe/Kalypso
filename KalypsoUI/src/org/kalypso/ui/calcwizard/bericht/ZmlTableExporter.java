@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 
 /**
  * @author belger

@@ -102,7 +102,7 @@ public class InterpolationFilterTest extends TestCase
   {
     InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, -1, 0 );
     
-    filter.initFilter( null, m_obs );
+    filter.initFilter( null, m_obs, null );
     
     CAL.setTime( m_to );
     CAL.add( Calendar.DAY_OF_MONTH, 5 );

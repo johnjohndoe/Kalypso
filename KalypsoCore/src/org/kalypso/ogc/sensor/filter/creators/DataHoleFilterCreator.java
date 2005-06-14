@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
+import java.net.URL;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -55,17 +57,14 @@ import org.kalypso.zml.filters.DataholeFilterType;
  */
 public class DataHoleFilterCreator implements IFilterCreator
 {
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
-   */
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, URL context ) throws SensorException
   {
     if( !(aft instanceof DataholeFilterType) )
       throw new IllegalArgumentException( "Not a " + DataholeFilterType.class.getName() );
     
     final DataholeFilterType ft = (DataholeFilterType) aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
 	
     Double replaceWith = null;
     if( ft.isReplace() )
@@ -73,7 +72,7 @@ public class DataHoleFilterCreator implements IFilterCreator
     
     final DataHoleFilter filter = new DataHoleFilter( ft.getValue(), ft.getStatus(), replaceWith );
     
-    filter.initFilter( null, filteredObs );
+    filter.initFilter( null, filteredObs, context );
     
     return filter;  
   }

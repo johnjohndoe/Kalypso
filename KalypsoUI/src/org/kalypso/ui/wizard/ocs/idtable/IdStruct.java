@@ -46,8 +46,8 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 
 /**
  * Structure containing an observation file and its server side Identifier.

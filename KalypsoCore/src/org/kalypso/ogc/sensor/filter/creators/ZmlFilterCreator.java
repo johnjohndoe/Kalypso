@@ -40,6 +40,8 @@
 ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
+import java.net.URL;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -55,11 +57,8 @@ import org.kalypso.zml.filters.ZmlFilterType;
  */
 public final class ZmlFilterCreator implements IFilterCreator
 {
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
-   */
   public IObservationFilter createFilter( final AbstractFilterType aft,
-      final IObservation obs ) throws SensorException
+      final IObservation obs, final URL context ) throws SensorException
   {
     if( !(aft instanceof ZmlFilterType) )
       throw new IllegalArgumentException( "Not a " + ZmlFilterType.class.getName() );
@@ -67,7 +66,7 @@ public final class ZmlFilterCreator implements IFilterCreator
     final ZmlFilterType ft = (ZmlFilterType) aft;
 
     final ZmlFilter filter = new ZmlFilter();
-    filter.initFilter( ft.getZml().getHref(), obs );
+    filter.initFilter( ft.getZml().getHref(), obs, context );
     
     return filter;
   }

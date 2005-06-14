@@ -52,7 +52,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.ogc.util.CopyObservationHandler;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 
 /**
  * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist

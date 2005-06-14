@@ -57,7 +57,7 @@ import org.apache.tools.ant.Task;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.dwd.KrigingReader;
 import org.kalypso.transformation.dwd.SourceObservationProvider;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;

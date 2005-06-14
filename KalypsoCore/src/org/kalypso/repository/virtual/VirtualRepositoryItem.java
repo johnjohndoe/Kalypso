@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
 import java.lang.reflect.UndeclaredThrowableException;
@@ -73,7 +73,8 @@ public class VirtualRepositoryItem implements IRepositoryItem
    * @param itemId
    * @param parent
    */
-  public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId, final VirtualRepositoryItem parent )
+  public VirtualRepositoryItem( final IRepository rep, final String name,
+      final String itemId, final VirtualRepositoryItem parent )
   {
     m_repository = rep;
     m_name = name;
@@ -84,17 +85,19 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
 
   /**
-   * Returns <pre>vrep://<item_id></pre>.
+   * Returns
+   * 
+   * <pre>vrep://<item_id></pre>.
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return getRepository().getIdentifier() + m_itemId;
   }
@@ -102,7 +105,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( )
+  public IRepositoryItem getParent()
   {
     return m_parent;
   }
@@ -110,7 +113,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return m_children != null && m_children.length > 0;
   }
@@ -118,26 +121,28 @@ public class VirtualRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
     return m_children;
   }
 
   public void setChildren( final List children )
   {
-    m_children = (IRepositoryItem[]) children.toArray( new IRepositoryItem[children.size()] );
+    m_children = (IRepositoryItem[])children
+        .toArray( new IRepositoryItem[children.size()] );
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return m_repository;
   }
 
   /**
-   * Sets the filter type. If valid, this allows this item to be adapted into an IObservation.
+   * Sets the filter type. If valid, this allows this item to be adapted into an
+   * IObservation.
    * 
    * @param filterType
    */
@@ -145,7 +150,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   {
     m_filterType = filterType;
   }
-  
+
   /**
    * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
@@ -155,10 +160,12 @@ public class VirtualRepositoryItem implements IRepositoryItem
     {
       try
       {
-        final IFilterCreator creator = FilterFactory.getCreatorInstance( m_filterType );
-        
-        final IObservationFilter filter = creator.createFilter( m_filterType, null );
-        
+        final IFilterCreator creator = FilterFactory
+            .getCreatorInstance( m_filterType );
+
+        final IObservationFilter filter = creator.createFilter( m_filterType,
+            null, null );
+
         return filter;
       }
       catch( Exception e ) // generic exception caught for simplicity
@@ -167,7 +174,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
         throw new UndeclaredThrowableException( e );
       }
     }
-    
+
     return null;
   }
 }
