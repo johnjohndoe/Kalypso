@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.dialog.KalypsoResourceSelectionDialog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -320,7 +320,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
       {
         try
         {
-          selectedProject = ResourceUtilities.getSelectedProjects()[0];
+          selectedProject = ProjectUtilities.getSelectedProjects()[0];
           KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
           { "gml" } );
           dialog.open();
