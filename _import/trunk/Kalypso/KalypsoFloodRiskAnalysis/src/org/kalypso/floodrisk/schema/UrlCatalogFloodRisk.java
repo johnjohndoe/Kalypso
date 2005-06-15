@@ -44,10 +44,12 @@ import java.util.Map;
 
 import org.kalypso.java.net.AbstractUrlCatalog;
 
-/*
- * class UrlCatalogFloodRisk
+/**
  * 
- * created by @author Nadja Peiler (11.05.2005)
+ * UrlCatalogFloodRisk
+ * <p>
+ * 
+ * created by @author Nadja Peiler (15.06.2005)
  */
 public class UrlCatalogFloodRisk extends AbstractUrlCatalog
 {

@@ -63,13 +63,22 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
+/**
+ * 
+ * StatisticAnalysis
+ * <p>
+ * Methods for calculating statistics
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (15.06.2005)
+ */
 public class StatisticAnalysis
 {
 
   /**
-   * returns the statistic values sum, minValue and maxValue for each
-   * landuseType
+   * returns the statistic values sum, minValue and maxValue of a damageGrid for
+   * each landuseType
    * 
    * @param damageGrid
    * @param landuseGrid
@@ -614,9 +623,9 @@ public class StatisticAnalysis
 
   /**
    * interprets the results of the statistical evaluation and creates a
-   * resultFile (Schema: StatisticData.xsd) for the user 
-   * Attention: if you want to use this method you have to change the schema, 
-   * property "CollectionMember" must have maxOccurs="unbounded"
+   * resultFile (Schema: StatisticData.xsd) for the user Attention: if you want
+   * to use this method you have to change the schema, property
+   * "CollectionMember" must have maxOccurs="unbounded"
    * 
    * @param statistics Hashtable(key=administrationUnitKey,
    *          value=Hashtable(key=landuseTypeKey, value=Vector {sum,min,max}))

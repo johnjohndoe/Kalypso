@@ -57,6 +57,13 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * CalculateStatisticJob
+ * <p>Job for calculating statistics of damageGrids
+ * 
+ * created by @author Nadja Peiler (15.06.2005)
+ */
 public class CalculateStatisticJob implements ICalcJob
 {
 

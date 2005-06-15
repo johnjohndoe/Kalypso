@@ -15,8 +15,8 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Class for converting Vectordata (shapeFiles) to Rasterdata
- * (RectifiedGridCoverages)
+ * Class for converting Vectordata (featureList (Properties: "GEOM" and
+ * "RasterProperty")) to Rasterdata (RectifiedGridCoverages)
  * 
  * @author N. Peiler
  *  
@@ -28,9 +28,7 @@ public class VectorToGridConverter
    * converts a List of Features to a RectifiedGridCoverage
    * 
    * @param featureList List of Features with properties "GEOM" and
-   *          "RasterProperty"
-   * @param propertyName Name of property of feature, which should be the value
-   *          of gridcell
+   *          "RasterProperty" (value of gridCell)
    * @param propertyTable Mapping of key and propertyValue (e.g.
    *          landuseTypeList)
    * @param baseGrid RectifiedGridCoverage that defines the origin, offset and

@@ -11,7 +11,7 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
- * Class for creating FloodRiskMaps
+ * Class holds methods for creating FloodRiskMaps
  * 
  * @author N. Peiler
  *  

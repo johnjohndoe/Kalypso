@@ -63,6 +63,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * RasterizeLanduseJob
+ * <p>Job for rastering the landuse vector data
+ * 
+ * created by @author Nadja Peiler (15.06.2005)
+ */
 public class RasterizeLanduseJob implements ICalcJob
 {
 
@@ -139,6 +146,7 @@ public class RasterizeLanduseJob implements ICalcJob
 
   /**
    * returns a list of Features for a given shapeFile
+   * wird nicht mehr verwendet
    * 
    * @param shapeFileBase (base of shape)
    * 

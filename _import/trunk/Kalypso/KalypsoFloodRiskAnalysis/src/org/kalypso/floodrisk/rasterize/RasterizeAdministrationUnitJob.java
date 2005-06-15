@@ -9,18 +9,15 @@ import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -63,6 +60,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * RasterizeAdministrationUnitJob
+ * <p>Job for rastering the administration vector data
+ * 
+ * created by @author Nadja Peiler (15.06.2005)
+ */
 public class RasterizeAdministrationUnitJob implements ICalcJob
 {
 
@@ -134,30 +138,6 @@ public class RasterizeAdministrationUnitJob implements ICalcJob
     catch( Exception e1 )
     {
       throw new CalcJobServiceException( e1.getMessage(), e1 );
-    }
-  }
-
-  /**
-   * returns a list of Features for a given shapeFile
-   * 
-   * @param shapeFileBase (base of shape)
-   * 
-   * @return List of Features
-   */
-  private List getFeatureList( String shapeFileBase, CS_CoordinateSystem cs )
-  {
-    try
-    {
-      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs,
-          null );
-      Feature root = workspace.getRootFeature();
-      List featureList = (List)root.getProperty( "featureMember" );
-      return featureList;
-    }
-    catch( Exception e )
-    {
-      System.out.println( e );
-      return null;
     }
   }
 

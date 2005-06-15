@@ -82,7 +82,13 @@ import org.xml.sax.SAXException;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
+/**
+ * 
+ * CalculateFloodRiskJob
+ * <p>Job for creating damagerisk maps
+ * 
+ * created by @author Nadja Peiler (15.06.2005)
+ */
 public class CalculateFloodRiskJob implements ICalcJob
 {
   //IDs
