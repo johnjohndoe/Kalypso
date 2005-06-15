@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ui.dialog.KalypsoResourceSelectionDialog;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -174,7 +174,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
     {
       public void widgetSelected( SelectionEvent e )
       {
-        selectedProject = ResourceUtilities.getSelectedProjects()[0];
+        selectedProject = ProjectUtilities.getSelectedProjects()[0];
         KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
         { "gml" } );
         dialog.open();
