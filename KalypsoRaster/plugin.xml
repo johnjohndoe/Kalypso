@@ -21,6 +21,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.kalypso.ui.addlayer"/>
       <import plugin="KalypsoFloodRiskAnalysis"/>
+      <import plugin="org.bce.eclipse.platform.contrib"/>
    </requires>
 
    <extension
