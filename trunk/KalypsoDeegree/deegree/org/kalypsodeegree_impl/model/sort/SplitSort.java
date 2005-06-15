@@ -384,11 +384,13 @@ public class SplitSort implements FeatureList
   }
 
   /**
+   * @deprecated use toArray() cause in a splitsort can be also featureIds (String), if feature is linked from the list
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
   public Feature[] toFeatures()
   {
-    return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
+    
+       return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
   }
 
   /**

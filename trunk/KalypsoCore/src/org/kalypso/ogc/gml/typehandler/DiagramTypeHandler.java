@@ -5,6 +5,7 @@ import java.net.URL;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.java.xml.XMLUtilities;
 import org.w3c.dom.Node;
 
@@ -115,7 +116,7 @@ public class DiagramTypeHandler implements ITypeHandler
    * 
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( Node node, URL context ) throws TypeRegistryException
+  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     try
     {

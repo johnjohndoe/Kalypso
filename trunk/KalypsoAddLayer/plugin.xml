@@ -20,6 +20,7 @@
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.bce.eclipse.platform.contrib"/>
    </requires>
    <extension
          id="mapviewaction"

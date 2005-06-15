@@ -151,7 +151,7 @@ public class RangeSetFeatureDialog implements IFeatureDialog
       Label fileLabel = new Label( mainComposite, SWT.NONE );
       fileLabel.setText( "RangeSetData file: " );
       Label filePathLabel = new Label( mainComposite, SWT.NONE );
-      filePathLabel.setText( rangeSet.getRangeSetDataFile().getAbsolutePath() );
+      filePathLabel.setText( rangeSet.getRangeSetDataFile() );
 
       return mainComposite;
     }

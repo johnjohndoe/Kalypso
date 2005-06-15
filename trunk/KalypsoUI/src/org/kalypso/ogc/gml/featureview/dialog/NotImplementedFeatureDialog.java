@@ -51,9 +51,21 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class NotImplementedFeatureDialog implements IFeatureDialog
 {
+  private final String m_userInfoMessage;
+  private final String m_cellInfoMessage;
+
+  public NotImplementedFeatureDialog(String userInfoMessage,String cellInfoMessage)
+  {
+    super();
+    m_userInfoMessage = userInfoMessage;
+    m_cellInfoMessage = cellInfoMessage;
+  }
+  
   public NotImplementedFeatureDialog()
   {
     super();
+    m_userInfoMessage="Die Operation ist noch nicht implementiert.";
+    m_cellInfoMessage="<nicht editierbar>";
   }
 
   /**
@@ -61,7 +73,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    MessageDialog.openInformation( shell, "Feature editieren", "Die Operation ist noch nicht implementiert." );
+    MessageDialog.openInformation( shell, "Feature editieren", m_userInfoMessage );
     return Window.CANCEL;
   }
 
@@ -78,7 +90,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
    */
   public String getLabel()
   {
-    return "<nicht editierbar>";
+    return m_cellInfoMessage;
   }
 
 }

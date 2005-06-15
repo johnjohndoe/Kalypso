@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -554,7 +555,7 @@ public class GMLFactory
   /**
    * creates a GMLFeature from a XML Element
    */
-  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature ) throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature, URL context ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -596,7 +597,7 @@ public class GMLFactory
     return new GMLFeatureCollection_Impl( name );
   }
 
-  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature ) throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, Feature feature, URL context ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -607,7 +608,7 @@ public class GMLFactory
     final FeatureTypeProperty[] ftp = ft.getProperties();
     final Object[] properties = feature.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      addGMLProperties( doc, gmlFeature, properties[i], ftp[i], ft.getMinOccurs( i ) );
+      addGMLProperties( doc, context, gmlFeature, properties[i], ftp[i], ft.getMinOccurs( i ) );
 
     final String id = feature.getId();
     if( id != null )
@@ -615,7 +616,7 @@ public class GMLFactory
     return gmlFeature;
   }
 
-  private static void addGMLProperties( final GMLDocument doc, final GMLFeature gmlFeature, final Object value, final FeatureTypeProperty ftp,
+  private static void addGMLProperties( final GMLDocument doc, URL context, final GMLFeature gmlFeature, final Object value, final FeatureTypeProperty ftp,
       final int min ) throws GMLException
   {
 
@@ -627,7 +628,7 @@ public class GMLFactory
     {
       final Iterator iterator = ( (List)value ).iterator();
       while( iterator.hasNext() )
-        addGMLProperties( doc, gmlFeature, iterator.next(), ftp, min );
+        addGMLProperties( doc, context, gmlFeature, iterator.next(), ftp, min );
     }
     else if( value == null )
     {
@@ -640,7 +641,7 @@ public class GMLFactory
       try
       {
         //      TODO give context not null
-        typeHandler.marshall( value, element, null );
+        typeHandler.marshall( value, element, context );
       }
       catch( TypeRegistryException e )
       {
@@ -655,7 +656,7 @@ public class GMLFactory
     else if( value instanceof Feature )
     {
       final Feature fe = (Feature)value;
-      final GMLFeature gmlFe = createGMLFeature( doc, fe );
+      final GMLFeature gmlFe = createGMLFeature( doc, fe, context );
       prop = doc.createGMLProperty( ftp, gmlFe.getAsElement() );
     }
     else if( value instanceof String && ftp instanceof FeatureAssociationTypeProperty )
@@ -678,6 +679,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.17  2005/06/15 15:16:58  doemming
+ * *** empty log message ***
+ *
  * Revision 1.16  2005/06/05 22:43:54  doemming
  * *** empty log message ***
  * Revision 1.15 2005/05/03 11:38:52 belger *** empty

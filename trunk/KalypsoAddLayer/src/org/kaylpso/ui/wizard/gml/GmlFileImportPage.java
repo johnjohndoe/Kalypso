@@ -2,6 +2,7 @@ package org.kaylpso.ui.wizard.gml;
 
 import java.net.URL;
 
+import org.bce.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -35,7 +36,6 @@ import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
 import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
