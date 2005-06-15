@@ -54,6 +54,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Vector;
 
+import org.bce.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -84,7 +85,6 @@ import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kaylpso.ui.dialog.KalypsoResourceSelectionDialog;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

@@ -2,6 +2,7 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
+import org.kalypso.java.net.IUrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Node;
@@ -41,7 +42,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( Node node,URL context  )
+  public Object unmarshall( Node node,URL context,IUrlResolver urlResolver  )
   {
     throw new UnsupportedOperationException( "TODO implement it" );
   }

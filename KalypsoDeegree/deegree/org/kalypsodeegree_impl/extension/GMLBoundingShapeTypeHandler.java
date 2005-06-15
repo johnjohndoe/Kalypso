@@ -2,6 +2,7 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
+import org.kalypso.java.net.IUrlResolver;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
@@ -116,7 +117,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( Node node ,URL context )
+  public Object unmarshall( Node node ,URL context, IUrlResolver urlResolver )
   {
   	return new GM_Envelope_Impl(  );
   }

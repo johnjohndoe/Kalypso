@@ -3,15 +3,18 @@ package org.kalypsodeegree_impl.model.cv;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Vector;
 
+import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,7 +28,9 @@ import org.w3c.dom.Node;
 public class RangeSetTypeHandler implements ITypeHandler
 {
   public static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
-  public static final String TYPENAME= NSRGC + ":" + "RangeSetType";
+
+  public static final String TYPENAME = NSRGC + ":" + "RangeSetType";
+
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
    */
@@ -44,23 +49,33 @@ public class RangeSetTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object,
+   *      org.w3c.dom.Node, java.net.URL)
    */
-  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
-  
+  public void marshall( Object object, Node node, URL context )
+      throws TypeRegistryException
+
   {
     RangeSet rangeSet = (RangeSet)object;
     Document ownerDocument = node.getOwnerDocument();
 
     Element e_File = ownerDocument.createElementNS( NSRGC, "rgc:File" );
     Element e_FileName = ownerDocument.createElementNS( NSRGC, "rgc:fileName" );
-    String fileName = ( rangeSet.getRangeSetDataFile() ).getAbsolutePath();
-    e_FileName.appendChild( ownerDocument.createTextNode( fileName ) );
+    File rangeSetDataFile = new File( FileUtilities
+        .nameWithoutExtension( context.getFile() )
+        + ".dat" );
+    if( rangeSet.getRangeSetDataFile() == null )
+    {
+      String fileName = rangeSetDataFile.getName();
+      rangeSet.setRangeSetDataFile( fileName );
+    }
+    e_FileName.appendChild( ownerDocument.createTextNode( rangeSet
+        .getRangeSetDataFile() ) );
     e_File.appendChild( e_FileName );
     Vector rangeSetData = rangeSet.getRangeSetData();
     try
     {
-      setRangeSetData( rangeSet.getRangeSetDataFile(), rangeSetData );
+      setRangeSetData( rangeSetDataFile, rangeSetData );
     }
     catch( Exception e )
     {
@@ -72,26 +87,48 @@ public class RangeSetTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node,
+   *      java.net.URL)
    */
-  public Object unmarshall( Node node, URL context ) throws TypeRegistryException  
+  public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver )
+      throws TypeRegistryException
   {
     // TODO do not give context here, better give resolver
-    Node node_File = ( (Element)node ).getElementsByTagNameNS( NSRGC, "File" ).item( 0 );
-    Node node_FileName = ( (Element)node_File ).getElementsByTagNameNS( NSRGC, "fileName" )
+    Node node_File = ( (Element)node ).getElementsByTagNameNS( NSRGC, "File" )
         .item( 0 );
+    Node node_FileName = ( (Element)node_File ).getElementsByTagNameNS( NSRGC,
+        "fileName" ).item( 0 );
     String fileName = node_FileName.getFirstChild().getNodeValue();
-    File rangeSetDataFile = new File( fileName );
+    URL rangeSetDataURL;
+    InputStreamReader rangeSetDataReader = null;
+    try
+    {
+      rangeSetDataURL = new URL( replaceNameInURL( gmlURL.toString(), fileName ) );
+      if( urlResolver != null )
+      {
+        rangeSetDataReader = urlResolver.createReader( rangeSetDataURL );
+      }
+      else
+      {
+        UrlUtilities urlUtilities = new UrlUtilities();
+        rangeSetDataReader = urlUtilities.createReader( rangeSetDataURL );
+      }
+    }
+    catch( IOException ioException )
+    {
+      System.out.println( ioException );
+    }
+    //read rangeSetData
     Vector rangeSetData = null;
     try
     {
-      rangeSetData = getRangeSetData( rangeSetDataFile );
+      rangeSetData = getRangeSetData( rangeSetDataReader );
     }
     catch( Exception e )
     {
       System.out.println( e );
     }
-    RangeSet rangeSet = new RangeSet( rangeSetData, rangeSetDataFile );
+    RangeSet rangeSet = new RangeSet( rangeSetData, fileName );
     return rangeSet;
   }
 
@@ -106,15 +143,15 @@ public class RangeSetTypeHandler implements ITypeHandler
   /**
    * reads the rangeSetData from the rangeSetDataFile
    * 
-   * @param rangeSetDataFile
-   *          File, where rangeSetData is stored
+   * @param rangeSetDataFile File, where rangeSetData is stored
    * @return Vector, which stores the rangeSet data; the data of each row is
    *         stored in a Vector
    */
-  public static Vector getRangeSetData( File rangeSetDataFile ) throws Exception
+  public static Vector getRangeSetData( InputStreamReader rangeSetReader )
+      throws Exception
   {
     Vector rangeSetData = new Vector();
-    BufferedReader br = new BufferedReader( new FileReader( rangeSetDataFile ) );
+    BufferedReader br = new BufferedReader( rangeSetReader );
     String line = null;
     while( ( line = br.readLine() ) != null )
     {
@@ -140,14 +177,13 @@ public class RangeSetTypeHandler implements ITypeHandler
   /**
    * writes the rangeSetData to rangeSetDataFile
    * 
-   * @param rangeSetDataFile
-   *          File, where rangeSetData is stored
-   * @param rangeSetData
-   *          Vector, which stores the rangeSet data; the data of each row is
-   *          stored in a Vector
+   * @param rangeSetDataFile File, where rangeSetData is stored
+   * @param rangeSetData Vector, which stores the rangeSet data; the data of
+   *          each row is stored in a Vector
    * @throws Exception
    */
-  public static void setRangeSetData( File rangeSetDataFile, Vector rangeSetData ) throws Exception
+  public static void setRangeSetData( File rangeSetDataFile, Vector rangeSetData )
+      throws Exception
   {
     BufferedWriter bw = new BufferedWriter( new FileWriter( rangeSetDataFile ) );
     for( int i = 0; i < rangeSetData.size(); i++ )
@@ -171,12 +207,22 @@ public class RangeSetTypeHandler implements ITypeHandler
     bw.close();
   }
 
+  private String replaceNameInURL( String url, String fileName )
+  {
+    String[] urlSegments = url.split( "/" );
+    urlSegments[urlSegments.length - 1] = fileName;
+    StringBuffer buffer = new StringBuffer();
+    for( int i = 0; i < urlSegments.length; i++ )
+    {
+      buffer.append( urlSegments[i] + "/" );
+    }
+    return buffer.toString();
+  }
+
   private static double round( double d, int scale, int mode )
   {
     BigDecimal bd = new BigDecimal( Double.toString( d ) );
     return ( bd.setScale( scale, mode ) ).doubleValue();
   }
-
-
 
 }

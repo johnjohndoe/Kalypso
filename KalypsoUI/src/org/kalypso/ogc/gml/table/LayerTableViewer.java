@@ -222,7 +222,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_templateTarget = templateTarget;
     m_selectionID = selectionID;
 
-    setContentProvider( new LayerTableContentProvider() );
+    setContentProvider( new LayerTableContentProvider(this) );
     setLabelProvider( new LayerTableLabelProvider( this ) );
     setCellModifier( this );
     setSorter( m_sorter );

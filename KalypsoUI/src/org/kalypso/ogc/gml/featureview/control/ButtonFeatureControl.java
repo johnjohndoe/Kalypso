@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -77,7 +78,8 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 /**
  * @author belger
  */
-public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
+public class ButtonFeatureControl extends AbstractFeatureControl implements
+    ModellEventListener
 {
   private Button m_button;
 
@@ -85,16 +87,16 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature,
-      final FeatureTypeProperty ftp )
+  public ButtonFeatureControl( final GMLWorkspace workspace,
+      final Feature feature, final FeatureTypeProperty ftp )
   {
     super( workspace, feature, ftp );
 
     m_dialog = chooseDialog( workspace, feature, ftp );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature,
-      final FeatureTypeProperty ftp )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace,
+      final Feature feature, final FeatureTypeProperty ftp )
   {
     final String typename = ftp.getType();
     // TODO make extensionpoint for this
@@ -126,7 +128,29 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     }
 
     if( "FeatureAssociationType".equals( typename ) )
-      return new FeatureDialog( workspace, feature, ftp );
+    {
+      int maxOccurs = feature.getFeatureType().getMaxOccurs( ftp.getName() );
+      if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+      { // it is a list of features or links to features or mixed
+        return new FeatureDialog( workspace, feature, ftp );
+      }
+      // it is not a list
+      final Object property = feature.getProperty( ftp.getName() );
+      final Feature linkedFeature;
+      if( property instanceof String ) // link auf ein Feature mit FeatureID
+      {
+        if(((String)property).length()<1)
+          return new NotImplementedFeatureDialog("hier ist kein Element verknüpft","<leer>");
+        linkedFeature = workspace.getFeature( (String)property );
+      }
+      else if( property instanceof Feature )
+      {
+        linkedFeature = (Feature)property;
+      }
+      else
+        return new NotImplementedFeatureDialog("hier ist kein Element verknüpft","<leer>");        
+      return new FeatureDialog( workspace, linkedFeature );
+    }
 
     if( RectifiedGridDomain.class.getName().equals( typename ) )
       return new RectifiedGridDomainFeatureDialog( feature, ftp );

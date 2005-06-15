@@ -36,37 +36,66 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
-import org.kalypsodeegree.model.feature.FeatureList;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author bce
  */
 public class LayerTableContentProvider implements IStructuredContentProvider
 {
+
+  private final LayerTableViewer m_viewer;
+
+  public LayerTableContentProvider( LayerTableViewer viewer )
+  {
+    m_viewer = viewer;
+  }
+
   /**
-   * Input muss ein IKalypsoFeatureTheme sein
-   * Output sind die Features
+   * Input muss ein IKalypsoFeatureTheme sein Output sind die Features
    * 
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   public Object[] getElements( final Object inputElement )
   {
+    final List result = new ArrayList();
     final FeatureList featureList;
     if( inputElement instanceof IKalypsoFeatureTheme )
-      featureList = ((IKalypsoFeatureTheme)inputElement).getFeatureList();
+      featureList = ( (IKalypsoFeatureTheme)inputElement ).getFeatureList();
     else if( inputElement instanceof FeatureList )
       featureList = (FeatureList)inputElement;
     else
       return new Object[] {};
-    
-    return featureList == null ? new Object[] {} : featureList.toFeatures();
+
+    if( featureList == null )
+      return new Object[] {};
+
+    final Object[] objects = featureList.toArray();
+    final KalypsoFeatureTheme theme = (KalypsoFeatureTheme)m_viewer.getInput();
+    final GMLWorkspace workspace = theme.getWorkspace();
+    for( int i = 0, j = objects.length; i < j; i++ )
+    {
+      if( objects[i] instanceof Feature )
+        result.add( objects[i] );
+      else if( objects[i] instanceof String ) // it is a ID
+      {
+        result.add( workspace.getFeature( (String)objects[i] ) );
+      }
+    }
+    return result.toArray();
   }
 
   /**
@@ -74,13 +103,15 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public void dispose()
   {
-  //  
+    //  
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+   *      java.lang.Object, java.lang.Object)
    */
-  public void inputChanged( final Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, Object oldInput,
+      Object newInput )
   {
     //
   }

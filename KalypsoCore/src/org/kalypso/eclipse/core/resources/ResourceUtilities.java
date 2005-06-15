@@ -78,6 +78,11 @@ public class ResourceUtilities
     if( path == null )
       return null;
 
+    return findFileFromPath( path );
+  }
+  
+  public static IFile findFileFromPath( IPath path )
+  {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFile( path );
   }

@@ -2,6 +2,7 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
+import org.kalypso.java.net.IUrlResolver;
 import org.w3c.dom.Node;
 
 /**
@@ -35,7 +36,7 @@ public interface ITypeHandler
    * @param context
    *          use this context for relative url
    */
-  public Object unmarshall( final Node node, URL context ) throws TypeRegistryException;
+  public Object unmarshall( final Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname();

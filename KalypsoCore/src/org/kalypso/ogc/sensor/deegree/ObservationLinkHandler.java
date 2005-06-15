@@ -47,6 +47,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
@@ -118,7 +119,7 @@ public class ObservationLinkHandler implements ITypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( final Node node,URL context ) throws TypeRegistryException
+  public Object unmarshall( final Node node,URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     try
     {
