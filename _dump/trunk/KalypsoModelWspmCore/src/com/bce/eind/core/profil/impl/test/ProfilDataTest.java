@@ -90,7 +90,6 @@ public void addMoveBordvoll( final IProfil p ) throws Exception
 {
   p.addProfilPointProperty(ProfilPointProperty.BORDVOLL);
   final IProfilPoint aktPkt = p.getPoint(2); 
-  p.moveDevider(DeviderKey.BORDVOLL_L,aktPkt);
   assertEquals("Bordvoll Position:",aktPkt,p.getDevider(DeviderKey.BORDVOLL_L));
 }
   public void setGetBuilding( final IProfil p ) throws Exception

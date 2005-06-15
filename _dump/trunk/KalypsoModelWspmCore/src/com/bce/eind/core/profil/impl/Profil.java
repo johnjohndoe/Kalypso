@@ -105,11 +105,12 @@ public class Profil implements IProfil
   }
 private void setDefaults(final ProfilPointProperty property)
 {
+  //TODO: ohne if-gedöhns in eine abstrakte klasse ProfilPointProperty schreiben 
  if(property == ProfilPointProperty.BORDVOLL)
  
   {
-    final ProfilPoint lpkt = (ProfilPoint)m_points.getFirst();
-    final ProfilPoint rpkt = (ProfilPoint)m_points.getLast();
+    final ProfilPoint lpkt = (ProfilPoint)getDevider(DeviderKey.TRENNFLAECHE_L);
+    final ProfilPoint rpkt = (ProfilPoint)getDevider(DeviderKey.TRENNFLAECHE_R);
  try
 {
   lpkt.setValueFor(property,-1);
@@ -551,11 +552,12 @@ catch( ProfilDataException e )
   public IProfilBuilding removeProfilBuilding( )
   {
     final IProfilBuilding oldBuilding = m_building;
-    for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties()
+  /*  for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties()
         .iterator(); pbIt.hasNext(); )
     {
       removeProfilPointProperty( pbIt.next() );
-    }
+    }*/
+    removeProfilPointProperty(ProfilPointProperty.OBERKANTEBRUECKE);
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
     fireProfilDataChanged( null, m_building );
     return oldBuilding;
@@ -600,6 +602,7 @@ catch( ProfilDataException e )
       result = (m_points.removeProperty( ProfilPointProperty.HOCHWERT ) & m_points
           .removeProperty( ProfilPointProperty.RECHTSWERT ));
     }
+    
     result = m_points.removeProperty( pointProperty );
     firePointChanged( null, pointProperty );
     return result;
