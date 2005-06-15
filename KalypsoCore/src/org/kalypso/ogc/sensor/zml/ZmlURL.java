@@ -39,7 +39,6 @@ import java.util.Date;
 import org.kalypso.util.parser.ParserException;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.XmlTypes;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 
 /**
  * Provides utility methods for manipulating the URLs designed to be used as
@@ -57,6 +56,25 @@ public final class ZmlURL
     // not intended to be instanciated
   }
 
+  /**
+   * Returns true if the given Zml-Url solely denotes a context. In that case
+   * the Zml-Url will not be parsed the usual way. 
+   */
+  public static boolean isUseAsContext( final URL zmlUrl )
+  {
+    return isUseAsContext( zmlUrl.toExternalForm() );
+  }
+
+  /**
+   * Returns true if the given Zml-Url solely denotes a context. In that case
+   * the Zml-Url will not be parsed the usual way. 
+   */
+  public static boolean isUseAsContext( final String href )
+  {
+    final String test = href.toLowerCase();
+    return test.indexOf( ZmlURLConstants.FRAGMENT_USEASCONTEXT ) != -1;
+  }
+  
   /**
    * Return true if the given id represents a server-side url. A server-side url
    * begins with the server-specific scheme-name.

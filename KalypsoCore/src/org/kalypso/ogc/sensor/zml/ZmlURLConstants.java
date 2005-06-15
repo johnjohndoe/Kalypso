@@ -41,6 +41,9 @@ package org.kalypso.ogc.sensor.zml;
  */
 public interface ZmlURLConstants
 {
+  /** fragment part of the url denoting a Zml-Url with a context, not a Zml-Id */
+  public final static String FRAGMENT_USEASCONTEXT = "useascontext";
+  
   /** URL-Scheme that identifies the observation service */
   public final static String SCHEME_OCS = "kalypso-ocs";
 

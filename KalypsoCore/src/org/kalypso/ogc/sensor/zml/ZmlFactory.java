@@ -205,22 +205,21 @@ public class ZmlFactory
     {
       final String zmlId = ZmlURL.getIdentifierPart( url );
 
-      if( zmlId.indexOf( ":context:" ) != -1  )
+      if( ZmlURL.isUseAsContext( url ) )
       {
         /*
-         * if the scheme contains "context" then we are dealing with a
-         * special kind of zml-url: the scheme only denotes a context, the
-         * observation is strictly built using the filter specification.
+         * if there is a fragment called "useascontext" then we are dealing with
+         * a special kind of zml-url: the scheme denotes solely a context, the
+         * observation is strictly built using the query part and the context.
          */
-        
-        // re-create the real context
-        final String strContextUrl = zmlId.replaceAll( ":context:", ":" );
-        final URL context = new URL( strContextUrl );
-        
-        // directly return the filtered observation
-        return FilterFactory.createFilterFrom( url.toExternalForm(), null, context );
+
+        // create the real context
+        final URL context = new URL( zmlId );
+
+        // directly return the observation
+        return decorateObservation( null, url.toExternalForm(), context );
       }
-      
+
       final String scheme = ZmlURL.getSchemePart( url );
       if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) )
       {
@@ -362,6 +361,21 @@ public class ZmlFactory
         obs.getName(), obs.isEditable(), target, metadata, model.getAxisList(),
         model );
 
+    return decorateObservation( zmlObs, href, context );
+  }
+
+  /**
+   * Central method for decorating the observation according to its context and
+   * identifier. It internally checks for:
+   * <ol>
+   * <li>a filter specification (for example: interpolation filter)
+   * <li>a proxy specification (for example: from-to)
+   * <li>an auto-proxy possibility (for example: WQ-Metadata)
+   * </ol>
+   */
+  private static IObservation decorateObservation( final IObservation zmlObs,
+      final String href, final URL context ) throws SensorException
+  {
     // tricky: maybe make a filtered observation out of this one
     final IObservation filteredObs = FilterFactory.createFilterFrom( href,
         zmlObs, context );

@@ -34,16 +34,12 @@
  */
 package org.kalypso.ogc.util.test;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.util.UrlResolver;
-
 import junit.framework.TestCase;
+
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * CopyObservationFeatureVisitorTest
@@ -115,12 +111,10 @@ public class CopyObservationFeatureVisitorTest extends TestCase
       // Marc@Andreas: es scheint jetzt zu funktionieren! Habe das Konzept von
       // Context im Filter und ZmlFactory Zeug eingeführt.
       // Damit das funktionniert muss der Zml-Link so aussehen:
-      // file:context://foo/bar/script.foo?<filter>blablabla</filter>...
-      final String strc = getClass().getResource( "contextFake.txt" )
-          .toExternalForm();
-      final URL context = new URL( strc.replaceAll( "file:", "file:context:" ) );
-      final URL sourceURL = new UrlResolver().resolveURL( context, ref );
-      final IObservation observation = ZmlFactory.parseXML( sourceURL, "id" );
+      // file://foo/bar/script.foo?<filter>blablabla</filter>...#useascontext
+      final String strUrl = getClass().getResource( "contextFake.txt" ).toExternalForm() + ref + "#useascontext";
+      final URL url = new URL( strUrl );
+      final IObservation observation = ZmlFactory.parseXML( url, "id" );
       assertNotNull( observation );
     }
     catch( Exception e )
