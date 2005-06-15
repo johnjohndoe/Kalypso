@@ -43,7 +43,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.ProcessExtensionReader;
 import org.kalypso.floodrisk.wizard.ChooseProcessDialog;
@@ -90,9 +90,9 @@ public class StartCalculationActionDelegate implements
     //System.out.println( "Run..." );
     try
     {
-      if( ResourceUtilities.getSelectedProjects().length > 0 )
+      if( ProjectUtilities.getSelectedProjects().length > 0 )
       {
-        final IProject firstSelectedProject = ResourceUtilities
+        final IProject firstSelectedProject = ProjectUtilities
             .getSelectedProjects()[0];
         final ProcessExtension[] processes = ProcessExtensionReader
             .retrieveExtensions();
