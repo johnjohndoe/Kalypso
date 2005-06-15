@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bce.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -34,7 +35,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.dialog.KalypsoResourceSelectionDialog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
