@@ -18,10 +18,6 @@ public interface IProfil
     NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ
   }
 
-  /*
-   * public static enum BUILDING_VALUES {
-   * BEZUGSPUNKT_X,BEZUGSPUNKT_Y,STEIGUNG,SOHLGEFAELLE,HOEHE,BREITE }
-   */
   public static enum METADATA
   {
     KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
@@ -42,16 +38,15 @@ public interface IProfil
     UNDEFINED, BOESCHUNG, SOHLE
   }
 
-  public void addCommentLine( final String line );
-
   public IProfilPoint addPoint( final double breite, final double hoehe )
       throws ProfilDataException;
 
-  public void addProfilListener( final ProfilListener pl );
+  public void addProfilListener( final IProfilListener pl );
 
   public void addProfilMetaData( final METADATA metaDataKey, final Object data );
 
-  public boolean addProfilPointProperty( final ProfilPointProperty pointProperty );
+  public void addProfilPointProperty( final ProfilPointProperty pointProperty )
+      throws ProfilDataException;
 
   public void addUnknownObject( final Object unknownData );
 
@@ -70,14 +65,14 @@ public interface IProfil
   public List<IProfilPoint> getPoints( );
 
   public List<IProfilPoint> getPoints( final IProfilPoint startPoint );
-  
+
   public List<IProfilPoint> getPoints( final IProfilPoint startPoint, final IProfilPoint endPoint );
 
   public LinkedList<IProfilPoint> getPointsAtPos( final double breite );
 
   public int getPointsCount( );
 
-  public IProfilPoint getPreviousPoint( IProfilPoint point ) throws ProfilDataException;
+  public IProfilPoint getPreviousPoint( final IProfilPoint point ) throws ProfilDataException;
 
   public IProfilBuilding getProfilBuilding( );
 
@@ -94,8 +89,13 @@ public interface IProfil
 
   public int indexOf( final IProfilPoint point );
 
+  /**
+   * Erzeugt einen neuen Punkt und fügt in in das Profil ein. Er wird genau in die Mitte des
+   * angegebenen Segments gesetzt, seine Werte interpoliert oder fortgesetzt.
+   */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException;
 
+  /** Fügt einen neuen Punkt ein. Wie {@link #insertPoint(IProfilPoint)}, nur Breite und Höhe sind bereits vorgegeben */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
       final double hoehe ) throws ProfilDataException;
 
@@ -105,15 +105,15 @@ public interface IProfil
   public void moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
       throws ProfilDataException;
 
-  public boolean removePoint( final IProfilPoint point );
+  public void removePoint( final IProfilPoint point );
 
   public IProfilBuilding removeProfilBuilding( );
 
-  public void removeProfilListener( final ProfilListener pl );
+  public void removeProfilListener( final IProfilListener pl );
 
-  public boolean removeProfilMetaData( final METADATA metaData );
+  public void removeProfilMetaData( final METADATA metaData );
 
-  public boolean removeProfilPointProperty( final ProfilPointProperty pointProperty );
+  public void removeProfilPointProperty( final ProfilPointProperty pointProperty );
 
   public void setComment( final String comment );
 
@@ -123,16 +123,23 @@ public interface IProfil
   public boolean setDeviderTyp( final DeviderKey deviderKey, final TRENNFLAECHEN_TYP deviderTyp )
       throws ProfilDataException;
 
-  public void setProfilBuilding( final IProfil.BUILDING_TYP buildingTyp );
+  public void setProfilBuilding( final IProfil.BUILDING_TYP buildingTyp )
+      throws ProfilDataException;
 
-  public boolean setProfilMetaData( final METADATA metaDataKey, final Object data );
+  public void setProfilMetaData( final METADATA metaDataKey, final Object data );
 
   public void setRauheitTyp( final RAUHEITEN_TYP r );
 
-  public boolean setValueFor( IProfilPoint point, ProfilPointProperty pointProperty, double value )
+  public void setValueFor( final IProfilPoint point, final ProfilPointProperty pointProperty, final double value )
       throws ProfilDataException;
-  public boolean editBuilding(final ProfilBuildingProperty buildingProperty,final double value) throws ProfilBuildingException;
-  public void  setValuesFor(List<IProfilPoint> pointList, ProfilPointProperty pointProperty, double value )
-  throws ProfilDataException;
-public IProfilPoint getPointCloseTo(final double breite) throws ProfilDataException;
+
+  public void setValues( final ProfilChange[] changes ) throws ProfilDataException;
+
+  public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
+      throws ProfilBuildingException;
+
+  public void setValuesFor( final List<IProfilPoint> pointList,
+      final ProfilPointProperty pointProperty, final double value ) throws ProfilDataException;
+
+  public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException;
 }

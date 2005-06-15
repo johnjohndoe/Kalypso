@@ -10,19 +10,13 @@ import java.util.Collection;
  */
 public interface IProfilPoint
 {
-  
   public double getValueFor( final ProfilPointProperty pointProperty ) throws ProfilDataException;
-
-  //public boolean setValueFor( final IProfilPointProperty pointProperty, final double value )
-  //    throws ProfilDataException;
 
   public boolean hasProperty( final ProfilPointProperty pointProperty );
 
   public IProfilPoint clonePoint( );
 
   public Collection<ProfilPointProperty> getProperties( );
-  
-  public  boolean isPosition( final double breite,final double hoehe) throws ProfilDataException; 
-  
-}  
 
+  public boolean isPosition( final double breite, final double hoehe ) throws ProfilDataException;
+}

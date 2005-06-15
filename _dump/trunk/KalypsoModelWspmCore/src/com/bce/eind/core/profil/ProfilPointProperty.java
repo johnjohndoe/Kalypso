@@ -119,5 +119,10 @@ public class ProfilPointProperty
   {
     return m_clonable;
   }
-
+  
+  @Override
+  public String toString( )
+  {
+    return m_label;
+  }
 }

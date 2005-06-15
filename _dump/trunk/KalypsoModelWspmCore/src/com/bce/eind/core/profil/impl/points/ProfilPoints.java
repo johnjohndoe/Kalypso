@@ -91,7 +91,6 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   }
 
   public final IProfilPoint addPoint( final IProfilPoint thePointBefore )
-      throws ProfilDataException
   {
     final ProfilPoint point = new ProfilPoint();
     for( final Iterator<ProfilPointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
