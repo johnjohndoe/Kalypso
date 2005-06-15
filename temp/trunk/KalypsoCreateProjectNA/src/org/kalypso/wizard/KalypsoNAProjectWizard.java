@@ -75,7 +75,7 @@ import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.util.url.UrlResolver;
+import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
