@@ -1,0 +1,166 @@
+-----------------
+Feature Requests:
+-----------------
+
+1) Excel Im- und Export der Tabellen
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:
+
+2) Zeitflächenfunktion in Schema und Import von CSV
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:
+
+3) Ergebnissablage (angepasste Berichtsablage an die Ergebnisadateien), Kalibrierungsprotokoll
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:
+	Bearbeiter:
+
+4) Berechnung wahlweise von Pegel zu Pegel oder das Gesamtmodell
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:
+	Bearbeiter:
+
+5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
+	Wer: 		Ingenieurbüros, Claudia
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:
+	Bearbeiter:
+
+6) Im nacontrol.xsd annotations einfügen
+	Wer: 		Ingenieurbüros, Brüning
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		angenommen
+	Kommentar:
+	Bearbeiter:	Huebsch
+
+7) Regionalisierung
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		angenommen
+	Kommentar:	Schemata weitestgehend übersetzt, Regionalisierung der Texte,Buttons usw. nach
+				Konzeptentwurf (evtl. KDC-KalypsoDeveloperConferece)
+	Bearbeiter:	Huebsch (Schemata), Text?
+
+8) weitere Knoten zu Knoten Beziehungen einfügen
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		angenommen
+	Kommentar:	SubstitutionGroup?!?	
+	Bearbeiter:	Huebsch (Schemata), Netzaufbau?
+
+9) Koordinatensystem sollte auch beim Import wählbar sein (zur Zeit epsg31467 festgelegt).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Sollte im Code auch einheitlich durchgezogen werden (Modellunabhängig, da sonst Probleme bei
+				Modellen in Hamburg, Europa... mit global gesetztem CRS in den Preferences)	.
+	Bearbeiter:	
+
+10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+
+----------------------------------------------------------------------------------------------------------
+-----
+Bugs:
+-----
+
+1) GrafikTool schließen führt zum Absturz, wenn man es nicht im Grafiktool selbst beendet (Bearbeitsungsfenster in der Oberfläche)
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+2) Grafiktoool kann nicht direkt für *.odt Vorlage geöffnet werden, obwohl das symbol aktiviert ist. man muss also die *.odt immer erst speichern.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+3) maximale Perkolationsrate wird nicht angezeigt (Hydrotope), da sie in Wassenschaftlicher Schreibweise vorliegt (1.0E5).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Pattern der wissenschaftlichen Schreibweise in Tabellen hinzufügen/ erlauben?
+	Bearbeiter:	
+
+4) Hydrotope werden nicht vollständig korrekt den Teilgebieten zugeordnet - wie zuweisen?
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+5) Beim Modellimport aus Shapedateien werden einige Relationen unvollständig und fälschlicher weise gesetzt (href#). da die id fehlt (href ist invollständig) scheint es als seinen die Relationen vorhanden und man kann an dieser stelle keine neuen Relationen setzen. Wird das Modell nach einer Änderung gespeichert werden die unvollständigen Relationen nicht mehr gespeichert (das Modell kann jetzt normal bearbeitet werden).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		angenommen
+	Kommentar:	Es liegt das alte Schema beim Import vor, muss denke ich nur das neue Schema verwendet werden.
+	Bearbeiter:	Hübsch
+
+5) Beim Zeitreihenimport ist der next Button auch auf der letzten Seite aktiv.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+6) StyleEditor: Symbolizerauswahl auf den gewählten/editierten Symbolizer abstimmen; x und y werden nicht gespeichert.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+7) Teilgebietsfläche wird als long beim import nicht richtig eingelesen.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+8) Bei nicht erfolgreicher Berechnung des Fortran-Programmes werden auch nicht die log-Dateien übertragen.
+    Diese sind jedoch für die Fehlersuche notwendig, damit man nicht auf dem Server nachschauen muss (ist
+    als "normaler" Nutzer nicht möglich).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
