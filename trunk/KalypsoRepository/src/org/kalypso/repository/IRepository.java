@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+import java.io.Writer;
 import java.util.Properties;
 
 /**
@@ -135,6 +136,11 @@ public interface IRepository extends IRepositoryItem
    * @throws RepositoryException
    */
   public void reload( ) throws RepositoryException;
+  
+  /**
+   * Dumps the contents (structure and summary of items)
+   */
+  public void dumpStructure( final Writer writer ) throws RepositoryException;
   
   /**
    * Clears potential resources

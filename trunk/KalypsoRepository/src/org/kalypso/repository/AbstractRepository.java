@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -166,8 +168,8 @@ public abstract class AbstractRepository implements IRepository
    * 
    * @return item if found, else null
    */
-  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item,
-      final String id ) throws RepositoryException
+  protected final IRepositoryItem findItemRecursive(
+      final IRepositoryItem item, final String id ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;
@@ -175,7 +177,7 @@ public abstract class AbstractRepository implements IRepository
     final IRepositoryItem[] items = item.getChildren();
     if( items == null )
       return null;
-    
+
     for( int i = 0; i < items.length; i++ )
     {
       final IRepositoryItem item2 = findItemRecursive( items[i], id );
@@ -215,6 +217,40 @@ public abstract class AbstractRepository implements IRepository
   public IRepository getRepository()
   {
     return this;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#dumpStructure(java.io.Writer)
+   */
+  public void dumpStructure( final Writer writer ) throws RepositoryException
+  {
+    dumpRecursive( writer, this, "" );
+  }
+
+  /**
+   * Dumps the contents of this item and all its children using recursion
+   */
+  private void dumpRecursive( final Writer writer, final IRepositoryItem item,
+      final String indent ) throws RepositoryException
+  {
+    try
+    {
+      writer.write( indent + item.toString() );
+      writer.write( "\n" );
+    }
+    catch( final IOException e )
+    {
+      throw new RepositoryException( e );
+    }
+
+    final String recIndent = indent + "\t";
+
+    final IRepositoryItem[] items = item.getChildren();
+    if( items == null )
+      return;
+
+    for( int i = 0; i < items.length; i++ )
+      dumpRecursive( writer, items[i], recIndent );
   }
 
   /**
