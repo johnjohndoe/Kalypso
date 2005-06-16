@@ -531,5 +531,8 @@ public class WiskiTimeserie implements IObservation
     final String catchment = (String)details.get( "catchment_name" );
     if( catchment != null )
       md.setProperty( TimeserieConstants.MD_FLUSSGEBIET, catchment );
+    final String kennz = (String)details.get( "station_no" );
+    if( kennz != null )
+      md.setProperty( TimeserieConstants.MD_KENNZIFFER, kennz );    
   }
 }
