@@ -52,9 +52,7 @@ public class ProfilPoint implements IProfilPoint
     return point;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see com.bce.eind.core.profil.IProfilPoint#getProperties()
    */
   public Collection<ProfilPointProperty> getProperties( )
@@ -71,9 +69,7 @@ public class ProfilPoint implements IProfilPoint
     return m_pointProperties.get( pointProperty ).doubleValue();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see com.bce.eind.core.profilinterface.IProfilPoint#hasTableData(com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
   public boolean hasProperty( ProfilPointProperty pointProperty )

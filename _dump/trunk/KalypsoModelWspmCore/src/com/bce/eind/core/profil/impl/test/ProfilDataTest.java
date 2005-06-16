@@ -1,6 +1,3 @@
-/*
- * Created on 02.03.2005
- */
 package com.bce.eind.core.profil.impl.test;
 
 import junit.framework.TestCase;
@@ -11,7 +8,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.ProfilPointProperty;
-import com.bce.eind.core.profil.IProfil.RAUHEITEN_TYP;
+import com.bce.eind.core.profil.IPlainProfil.RAUHEITEN_TYP;
 import com.bce.eind.core.profil.impl.Profil;
 
 /**
@@ -19,18 +16,12 @@ import com.bce.eind.core.profil.impl.Profil;
  */
 public class ProfilDataTest extends TestCase
 {
-//  private final IProfil m_p = CreateTestProfil();
-//  
-//  public ProfilDataTest() throws Exception
-//  {
-//  }
-  
   public void testRunTest( ) throws Exception
   {
     final IProfil p = CreateTestProfil();
     setGetMoveDevider( p );
     setGetBuilding( p );
-    addMoveBordvoll(p);
+    addMoveBordvoll( p );
   }
 
   public IProfil CreateTestProfil( ) throws Exception
@@ -86,38 +77,40 @@ public class ProfilDataTest extends TestCase
     final IProfilPoint aktPkt = p.getDevider( DeviderKey.DURCHSTROEMTE_L );
     assertEquals( "neu Durchstroemte links:", newPkt, aktPkt );
   }
-public void addMoveBordvoll( final IProfil p ) throws Exception
-{
-  p.addProfilPointProperty(ProfilPointProperty.BORDVOLL);
-  final IProfilPoint aktPkt = p.getPoint(2); 
-  assertEquals("Bordvoll Position:",aktPkt,p.getDevider(DeviderKey.BORDVOLL_L));
-}
+
+  public void addMoveBordvoll( final IProfil p ) throws Exception
+  {
+    p.addProfilPointProperty( ProfilPointProperty.BORDVOLL );
+    final IProfilPoint aktPkt = p.getPoint( 2 );
+    assertEquals( "Bordvoll Position:", aktPkt, p.getDevider( DeviderKey.BORDVOLL_L ) );
+  }
+
   public void setGetBuilding( final IProfil p ) throws Exception
   {
     p.setProfilBuilding( IProfil.BUILDING_TYP.BRUECKE );
     assertEquals( "neues Gebäude:", IProfil.BUILDING_TYP.BRUECKE, p.getProfilBuilding()
         .getBuildingTyp() );
-    final IProfilPoint firstPkt = p.getPoint(0);
-    p.setValueFor(firstPkt,ProfilPointProperty.OBERKANTEBRUECKE,1000.65432);
-    p.setValueFor(firstPkt,ProfilPointProperty.UNTERKANTEBRUECKE,1000.23456);
-    p.getProfilBuilding().setValue( ProfilBuildingProperty.PFEILERFORM,0.5 );
-    p.getProfilBuilding().setValue( ProfilBuildingProperty.RAUHEIT,5.5 );
+    final IProfilPoint firstPkt = p.getPoint( 0 );
+    p.setValueFor( firstPkt, ProfilPointProperty.OBERKANTEBRUECKE, 1000.65432 );
+    p.setValueFor( firstPkt, ProfilPointProperty.UNTERKANTEBRUECKE, 1000.23456 );
+    p.getProfilBuilding().setValue( ProfilBuildingProperty.PFEILERFORM, 0.5 );
+    p.getProfilBuilding().setValue( ProfilBuildingProperty.RAUHEIT, 5.5 );
     assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getProfilBuilding().getValue(
         ProfilBuildingProperty.PFEILERFORM ) );
-    assertEquals("Hoehe Unterkante: ",1000.23456, firstPkt.getValueFor(ProfilPointProperty.UNTERKANTEBRUECKE));
+    assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt
+        .getValueFor( ProfilPointProperty.UNTERKANTEBRUECKE ) );
     p.removeProfilBuilding();
     assertEquals( "kein Gebäude:", IProfil.BUILDING_TYP.NONE, p.getProfilBuilding()
         .getBuildingTyp() );
- 
+
     try
     {
-      firstPkt.getValueFor(ProfilPointProperty.UNTERKANTEBRUECKE);
+      firstPkt.getValueFor( ProfilPointProperty.UNTERKANTEBRUECKE );
     }
     catch( ProfilDataException e )
     {
-      assertEquals("Exception erwartet: ",ProfilDataException.class,e.getClass());
+      assertEquals( "Exception erwartet: ", ProfilDataException.class, e.getClass() );
     }
-  
 
   }
 }

@@ -17,9 +17,9 @@ public interface IProfilListener
   
   public void onPointPropertiesRemoved( final ProfilPointProperty[] removedProperties );
   
-  public void onBauwerkChanged();
+  public void onBuildingChanged();
 
-  public void onBauwerkDataChanged( final IProfilBuilding building, final ProfilBuildingProperty buildingProperty, final double value );
+  public void onBuildingDataChanged( final IProfilBuilding building, final ProfilBuildingProperty buildingProperty, final double value );
   
   public void onMetaDataChanged( final IProfil.METADATA metadata, final Object value );
   

@@ -1,6 +1,6 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfil.METADATA;
+import com.bce.eind.core.profil.IPlainProfil.METADATA;
 
 /**
  * Default implementation of {@link com.bce.eind.core.profil.IProfilListener}. The default
@@ -56,9 +56,9 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBauwerkChanged()
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged()
    */
-  public void onBauwerkChanged( )
+  public void onBuildingChanged( )
   {
   }
 
@@ -75,10 +75,10 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBauwerkDataChanged(com.bce.eind.core.profil.IProfilBuilding,
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(com.bce.eind.core.profil.IProfilBuilding,
    *      com.bce.eind.core.profil.ProfilBuildingProperty, double)
    */
-  public void onBauwerkDataChanged( final IProfilBuilding building,
+  public void onBuildingDataChanged( final IProfilBuilding building,
       final ProfilBuildingProperty buildingProperty, double value )
   {
   }

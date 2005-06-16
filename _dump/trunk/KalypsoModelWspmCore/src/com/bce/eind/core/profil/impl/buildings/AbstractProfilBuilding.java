@@ -10,24 +10,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.ProfilPointProperty;
-import com.bce.eind.core.profil.IProfil.BUILDING_TYP;
 
 /**
  * @author kimwerner
  */
 public abstract class AbstractProfilBuilding implements IProfilBuilding
 {
-  private final BUILDING_TYP m_buildingTyp;
+  private final IProfil.BUILDING_TYP m_buildingTyp;
 
   protected final List<ProfilPointProperty> m_pointProperties;
 
   private final HashMap<ProfilBuildingProperty, Double> m_buildingValues = new HashMap<ProfilBuildingProperty, Double>();
 
-  public AbstractProfilBuilding( BUILDING_TYP buildingTyp,
+  public AbstractProfilBuilding( IProfil.BUILDING_TYP buildingTyp,
       List<ProfilBuildingProperty> buildingProperties )
   {
     m_buildingTyp = buildingTyp;
@@ -41,13 +41,12 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /**
    * @return Returns the buildingTyp.
    */
-  public BUILDING_TYP getBuildingTyp( )
+  public IProfil.BUILDING_TYP getBuildingTyp( )
   {
     return m_buildingTyp;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
    * 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
@@ -56,8 +55,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
     return Collections.unmodifiableList( m_pointProperties );
   }
 
-  /*
-   * (non-Javadoc)
+  /**
    * 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.ProfilBuildingProperty)
    */
