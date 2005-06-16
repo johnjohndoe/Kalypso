@@ -61,6 +61,7 @@ import org.kalypso.ui.repository.actions.AddRepositoryAction;
 import org.kalypso.ui.repository.actions.CollapseAllAction;
 import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
 import org.kalypso.ui.repository.actions.CopyLinkAction;
+import org.kalypso.ui.repository.actions.DumpStructureAction;
 import org.kalypso.ui.repository.actions.ExportAsFileAction;
 import org.kalypso.ui.repository.actions.ReloadAction;
 import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
@@ -95,6 +96,8 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   private ExportAsFileAction m_exportAsFileAction;
 
   private CopyLinkAction m_copyLinkAction;
+
+  private DumpStructureAction m_dumpAction;
 
   public ObservationChooser( final Composite parent )
   {
@@ -134,6 +137,9 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
 
     if( m_exportAsFileAction != null )
       m_exportAsFileAction.dispose();
+
+    if( m_dumpAction != null )
+      m_dumpAction.dispose();
   }
 
   private void initActions()
@@ -145,6 +151,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     m_collapseAction = new CollapseAllAction( this );
     m_exportAsFileAction = new ExportAsFileAction( this );
     m_copyLinkAction = new CopyLinkAction( this );
+    m_dumpAction = new DumpStructureAction( this );
   }
 
   private void initContextMenu()
@@ -182,6 +189,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     menu.add( m_collapseAction );
     menu.add( new Separator() );
     menu.add( m_exportAsFileAction );
+    menu.add( m_dumpAction );
 
     if( isObservationSelected( m_repViewer.getSelection() ) != null )
     {
@@ -210,6 +218,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     toolBarManager.add( m_collapseAction );
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_exportAsFileAction );
+    toolBarManager.add( m_dumpAction );
 
     if( m_site != null )
       m_site.getActionBars().updateActionBars();
