@@ -118,9 +118,10 @@ public class NaModelInnerCalcJob implements ICalcJob
   private final String m_resourceBase = "template/";
 
   // TODO hier noch was machen
-  //  private final String EXE_FILE = "start/kalypso_WeisseElster.exe";
+  private final String EXE_FILE = "start/kalypso_WeisseElster.exe";
 //  private final String EXE_FILE = "start/kalypso_2.01_3000.exe";
-  private final String EXE_FILE = "start/kalypso_2.01_7500.exe";
+//  private final String EXE_FILE = "start/kalypso_2.01_7500.exe";
+//private final String EXE_FILE = "start/kalypso_2.02.exe";
 
   private boolean m_succeeded = false;
 
