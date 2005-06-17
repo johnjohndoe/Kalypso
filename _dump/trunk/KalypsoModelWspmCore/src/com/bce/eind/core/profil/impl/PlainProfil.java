@@ -72,13 +72,26 @@ public class PlainProfil implements IPlainProfil
 
   private void setDefaults( final ProfilPointProperty property ) throws ProfilDataException
   {
+    final List<IProfilPoint> points = getPoints();
+
+    final ProfilPoint firstPoint = (ProfilPoint)(points.isEmpty() ? null : points.get( 0 ));
+    final ProfilPoint lastPoint = (ProfilPoint)(points.isEmpty() ? null : points
+        .get( points.size() - 1 ));
+
     if( property == ProfilPointProperty.BORDVOLL )
     {
       final ProfilPoint lpkt = (ProfilPoint)getDevider( DeviderKey.TRENNFLAECHE_L );
       final ProfilPoint rpkt = (ProfilPoint)getDevider( DeviderKey.TRENNFLAECHE_R );
-      lpkt.setValueFor( property, -1 );
-      rpkt.setValueFor( property, 1 );
+
+      final ProfilPoint leftPoint = (lpkt == null ? firstPoint : lpkt);
+      final ProfilPoint rightPoint = (rpkt == null ? lastPoint : rpkt);
+
+      setDevider(leftPoint, rightPoint, property );
     }
+    else if( property == ProfilPointProperty.TRENNFLAECHE )
+      setDevider( firstPoint, lastPoint, property );
+    else if( property == ProfilPointProperty.DURCHSTROEMTE )
+      setDevider( firstPoint, lastPoint, property );
   }
 
   /**
@@ -164,11 +177,13 @@ public class PlainProfil implements IPlainProfil
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getDeviderTyp(com.bce.eind.core.profildata.tabledata.DeviderKey)
    */
-  public TRENNFLAECHEN_TYP getDeviderTyp( DeviderKey deviderKey )
+  public TRENNFLAECHEN_TYP getDeviderTyp( final DeviderKey deviderKey )
   {
     if( deviderKey.getProfilPointProperty() != ProfilPointProperty.TRENNFLAECHE )
       return IProfil.TRENNFLAECHEN_TYP.UNDEFINED;
-    final IProfilPoint pktTrennflaeche = this.getDevider( deviderKey );
+    final IProfilPoint pktTrennflaeche = getDevider( deviderKey );
+    if( pktTrennflaeche == null )
+      return IProfil.TRENNFLAECHEN_TYP.UNDEFINED;
 
     try
     {
@@ -176,7 +191,7 @@ public class PlainProfil implements IPlainProfil
           .getProfilPointProperty() ) );
       return IProfil.TRENNFLAECHEN_TYP.values()[deviderTypKey];
     }
-    catch( ProfilDataException e )
+    catch( final ProfilDataException e )
     {
       e.printStackTrace();
       return IProfil.TRENNFLAECHEN_TYP.UNDEFINED;
@@ -400,12 +415,12 @@ public class PlainProfil implements IPlainProfil
    * @see com.bce.eind.core.profilinterface.IProfil#moveDevider(com.bce.eind.core.profildata.tabledata.DeviderKey,
    *      com.bce.eind.core.profilinterface.IProfilPoint)
    */
-  public void moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
+  public boolean moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
       throws ProfilDataException
   {
     final ProfilPoint oldPosition = (ProfilPoint)getDevider( deviderKey );
-
-    // TODO:gleiche Position abfangen
+    if( oldPosition == newPosition )
+      return false;
 
     if( (newPosition.getValueFor( deviderKey.getProfilPointProperty() ) != 0) )
       throw new ProfilDataException( "ungültige Position" );
@@ -414,6 +429,8 @@ public class PlainProfil implements IPlainProfil
     final double deviderValue = oldPosition.getValueFor( deviderKey.getProfilPointProperty() );
     ((ProfilPoint)newPosition).setValueFor( deviderKey.getProfilPointProperty(), deviderValue );
     oldPosition.setValueFor( deviderKey.getProfilPointProperty(), 0.0 );
+    
+    return true;
   }
 
   /**
@@ -514,7 +531,7 @@ public class PlainProfil implements IPlainProfil
   public void setDevider( final IProfilPoint leftPoint, final IProfilPoint rightPoint,
       final ProfilPointProperty pointProperty ) throws ProfilDataException
   {
-    if( !(profilPointExists( leftPoint ) & (profilPointExists( rightPoint ))) )
+    if( !( profilPointExists( leftPoint ) & (profilPointExists( rightPoint ) ) ) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
 
     setValuesFor( pointProperty, 0.0 );

@@ -267,13 +267,16 @@ public class Profil implements IProfil
    * @see com.bce.eind.core.profilinterface.IProfil#moveDevider(com.bce.eind.core.profildata.tabledata.DeviderKey,
    *      com.bce.eind.core.profilinterface.IProfilPoint)
    */
-  public void moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
+  public boolean moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
       throws ProfilDataException
   {
-    m_profil.moveDevider( deviderKey, newPosition );
+    final boolean changed = m_profil.moveDevider( deviderKey, newPosition );
 
     // TODO: eventuell eigener event typ?
-    firePointValuesChanged( null );
+    if( changed )
+      firePointValuesChanged( null );
+    
+    return changed;
   }
 
   /**

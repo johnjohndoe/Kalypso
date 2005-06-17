@@ -33,7 +33,7 @@ public class ProfilPointProperty
   public final static ProfilPointProperty BREITE = new ProfilPointProperty( "Breite", false, true,
       true,true, 4 );
 
-  public final static ProfilPointProperty DURCHSTROEMTE = new ProfilPointProperty( "Durchströmte",
+  public final static ProfilPointProperty DURCHSTROEMTE = new ProfilPointProperty( "Durchströmte Bereiche",
       false, false, false,false, 4 );
 
   public final static ProfilPointProperty HOCHWERT = new ProfilPointProperty( "Hochwert", true,
@@ -45,7 +45,7 @@ public class ProfilPointProperty
   public final static ProfilPointProperty OBERKANTEBRUECKE = new ProfilPointProperty(
       "Brückenoberkante", true, true, false,true, 4 );
 
-  public final static ProfilPointProperty HOEHE = new ProfilPointProperty( "Höhe", false, true,
+  public final static ProfilPointProperty HOEHE = new ProfilPointProperty( "Geländehöhe", false, true,
       true,true, 4 );
 
   public final static ProfilPointProperty RAUHEIT = new ProfilPointProperty( "Rauheit", false,
@@ -54,10 +54,10 @@ public class ProfilPointProperty
   public final static ProfilPointProperty RECHTSWERT = new ProfilPointProperty( "Rechtswert", true,
       true, true,true, 4 );
 
-  public final static ProfilPointProperty TRENNFLAECHE = new ProfilPointProperty( "Trennefläche",
+  public final static ProfilPointProperty TRENNFLAECHE = new ProfilPointProperty( "Trennflächen",
       false, false, false,false, 4 );
 
-  public final static ProfilPointProperty BORDVOLL = new ProfilPointProperty( "Bordvollpunkt",
+  public final static ProfilPointProperty BORDVOLL = new ProfilPointProperty( "Bordvollpunkte",
       true, false, false,false, 4 );
 
   

@@ -98,7 +98,12 @@ public interface IPlainProfil
   public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
       throws ProfilDataException;
 
-  public void moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
+  /**
+   * @return true, falls die Daten geändert wurden; false, falls der devider eh schon auf diesem
+   *         Punkt lag
+   * @throws ProfilDataException
+   */
+  public boolean moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
       throws ProfilDataException;
 
   public void removePoint( final IProfilPoint point );
@@ -128,7 +133,6 @@ public interface IPlainProfil
 
   public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
       throws ProfilBuildingException;
-
 
   public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException;
 }
