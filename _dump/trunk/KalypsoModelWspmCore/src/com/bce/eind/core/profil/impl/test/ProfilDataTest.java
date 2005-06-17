@@ -51,12 +51,12 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Trennfläche links:", p2, tpL );
     assertEquals( "Trennfläche rechts:", p3, tpR );
 
-    p.setRauheitTyp( RAUHEITEN_TYP.KS );
+    p.setRauheitTyp( RAUHEITEN_TYP.ks );
     p.setValueFor( p2, ProfilPointProperty.RAUHEIT, 1.2345 );
 
     assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL
         .getValueFor( ProfilPointProperty.RAUHEIT ) );
-    assertEquals( "RauheitTyp:", RAUHEITEN_TYP.KS, p.getRauheitTyp() );
+    assertEquals( "RauheitTyp:", RAUHEITEN_TYP.ks, p.getRauheitTyp() );
     return p;
   }
 

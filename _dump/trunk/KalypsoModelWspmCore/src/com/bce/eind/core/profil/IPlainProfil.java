@@ -10,7 +10,7 @@ public interface IPlainProfil
 {
   public static enum BUILDING_TYP
   {
-    NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ
+    NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ;
   }
 
   public static enum METADATA
@@ -25,7 +25,7 @@ public interface IPlainProfil
 
   public static enum RAUHEITEN_TYP
   {
-    UNDEFINED, KS, KST
+    UNDEFINED, ks, KST
   }
 
   public static enum TRENNFLAECHEN_TYP
