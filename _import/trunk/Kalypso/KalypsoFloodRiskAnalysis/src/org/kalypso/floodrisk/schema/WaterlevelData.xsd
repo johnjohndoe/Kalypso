@@ -31,9 +31,13 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Annuality" type="double"/>
-					<element name="WaterlevelRasterData" type="resourceFile"/>
+					<element name="WaterlevelRasterData" type="hws:resourceFile"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	<!-- simpleType=================================================================-->
+	<simpleType name="resourceFile">
+		<restriction base="string"/>
+	</simpleType>
 </schema>
