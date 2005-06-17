@@ -17,4 +17,7 @@
 		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
 		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/Spree#*.zml"
 		name="Spree" /> 
+<!--
+<repository factory="org.kalypso.dcadapter.DataCenterRepositoryFactory" name="Datacenter"  conf="jdbc:edbc://134.28.87.20:WB/elbe::abwb_v2/INGRES#ingres#ingres42" readOnly="false" />
+-->		
 </repconf>
