@@ -55,6 +55,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * LocalCalcJobHandler
  * <p>
+ * Handler for local calculation jobs
+ * 
+ * @see org.kalypso.ui.nature.calcjob.CalcJobHandler
  * 
  * created by
  * 
@@ -72,6 +75,13 @@ public class LocalCalcJobHandler
 
   private ICalculationService m_calcService;
 
+  /**
+   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#CalcJobHandler(ModeldataType,
+   *      ICalculationService)
+   * 
+   * @param modelData
+   * @param calcService LocalCalculationService
+   */
   public LocalCalcJobHandler( final ModeldataType modelData,
       final ICalculationService calcService )
   {
@@ -79,6 +89,16 @@ public class LocalCalcJobHandler
     m_calcService = calcService;
   }
 
+  /**
+   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#runJob(IFolder,
+   *      IProgressMonitor)
+   * 
+   * @param project project to calculate, instead of calculationFolder
+   * @param monitor
+   * @return
+   * @throws CoreException
+   *  
+   */
   public IStatus runJob( final IProject project, final IProgressMonitor monitor )
       throws CoreException
   {
@@ -182,6 +202,17 @@ public class LocalCalcJobHandler
     }
   }
 
+  /**
+   * get input and output, then start the calcJob by calling the
+   * startJob(typeID, description, dataHandler, input, output)-method of
+   * localCalculationService
+   * 
+   * @param project
+   * @param monitor
+   * @return
+   * @throws CoreException
+   *  
+   */
   private String startCalcJob( final IProject project,
       final IProgressMonitor monitor ) throws CoreException
   {
@@ -197,6 +228,7 @@ public class LocalCalcJobHandler
       final CalcJobInfoBean bean;
       try
       {
+        //dataHandler = null
         bean = m_calcService.startJob( m_modelData.getTypeID(), "Description",
             null, input, output );
         return bean.getId();
@@ -213,6 +245,14 @@ public class LocalCalcJobHandler
     }
   }
 
+  /**
+   * create the inputdata-beans from ModelDataType (modeldata.xml)
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   *  
+   */
   private CalcJobClientBean[] getInput( IProject project ) throws CoreException
   {
     List inputList = m_modelData.getInput();
@@ -241,6 +281,14 @@ public class LocalCalcJobHandler
     return input;
   }
 
+  /**
+   * create the outputdata-beans from ModelDataType (modeldata.xml)
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   *  
+   */
   private CalcJobClientBean[] getOutput( IProject project )
       throws CoreException
   {

@@ -70,6 +70,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.floodrisk.tools.GridUtils;
+import org.kalypso.floodrisk.tools.Number;
 import org.kalypso.java.io.FileUtilities;
 import org.kalypso.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -117,6 +118,7 @@ import org.w3c.dom.Document;
 /**
  * CreateFloodRiskProjectJob
  * <p>
+ * Job for creating a floodrisk project
  * 
  * created by
  * 
@@ -150,6 +152,20 @@ public class CreateFloodRiskProjectJob extends Job
 
   private CS_CoordinateSystem m_waterlevelCooSystem;
 
+  /**
+   * Constructor, gets all information needed for creating the project
+   * 
+   * @param name
+   * @param workspacePath
+   * @param projectHandel
+   * @param landuseDataFile Shape file
+   * @param landusePropertyName
+   * @param landuseCooSystem
+   * @param autogenerateLanduseCollection flag; true: generate LanduseCollection
+   *          in ContextModel and RiskContextModel, false: not
+   * @param waterlevelGrids Ascii files
+   * @param waterlevelCooSystem
+   */
   public CreateFloodRiskProjectJob( String name, IPath workspacePath,
       IProject projectHandel, File landuseDataFile, String landusePropertyName,
       CS_CoordinateSystem landuseCooSystem,
@@ -167,11 +183,22 @@ public class CreateFloodRiskProjectJob extends Job
     m_waterlevelCooSystem = waterlevelCooSystem;
   }
 
+  /**
+   * 
+   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+   */
   protected IStatus run( IProgressMonitor monitor )
   {
     return createProject( monitor );
   }
 
+  /**
+   * creates the project
+   * 
+   * @param monitor
+   * @return status of process
+   *  
+   */
   protected IStatus createProject( IProgressMonitor monitor )
   {
     int totalWork = 100;
@@ -292,6 +319,13 @@ public class CreateFloodRiskProjectJob extends Job
     return Status.OK_STATUS;
   }
 
+  /**
+   * copies resources to project
+   * 
+   * @param path project path
+   * @throws IOException
+   *  
+   */
   private void copyResourcesToProject( IPath path ) throws IOException
   {
     final String resource = m_resourceBase;
@@ -308,6 +342,9 @@ public class CreateFloodRiskProjectJob extends Job
     }
   }
 
+  /**
+   * creates the emty folders "Damage", "Risk" and "Statistic"
+   */
   private void createEmtyFolders()
   {
     //Damage
@@ -324,6 +361,12 @@ public class CreateFloodRiskProjectJob extends Job
     statisticDir.mkdir();
   }
 
+  /**
+   * copies the landuse shapeBase files to the folder "Landuse" in project
+   * 
+   * @throws IOException
+   *  
+   */
   private void copyLanduseShape() throws IOException
   {
     String landuseSourceBase = FileUtilities
@@ -342,6 +385,14 @@ public class CreateFloodRiskProjectJob extends Job
 
   }
 
+  /**
+   * creates a DummyTheme for landuse to calculate the extent of the created map
+   * (Waterlevel.gmt)
+   * 
+   * @return KalypsoFeatureTheme landuse
+   * @throws GmlSerializeException
+   *  
+   */
   private IKalypsoTheme createDummyLanduseTheme() throws GmlSerializeException
   {
     String shapeBase = ( m_workspacePath.append( m_projectHandel.getFullPath()
@@ -355,6 +406,15 @@ public class CreateFloodRiskProjectJob extends Job
         "featureMember", "Landnutzung" );
   }
 
+  /**
+   * creates the gml version of the landuseData (LanduseVectorData.gml, Schema:
+   * VectorDataModel.xsd)
+   * 
+   * @return Set of landuse types (HashSet)
+   * @throws IOException
+   * @throws GmlSerializeException
+   *  
+   */
   private HashSet createLanduseDataGML() throws IOException,
       GmlSerializeException
   {
@@ -423,6 +483,14 @@ public class CreateFloodRiskProjectJob extends Job
 
   }
 
+  /**
+   * Creates a LanduseCollection with the given set of landuse types in
+   * ContextModel and RiskContextModel
+   * 
+   * @param landuseTypeSet Set of existing landuse types
+   * @throws Exception
+   *  
+   */
   private void autogenerateLanduseCollection( HashSet landuseTypeSet )
       throws Exception
   {
@@ -484,6 +552,15 @@ public class CreateFloodRiskProjectJob extends Job
     fw_risk.close();
   }
 
+  /**
+   * reads the waterlevelData from ascii files and writes the data in the gml
+   * rasterdata format
+   * 
+   * @param monitor
+   * @return targetFiles gml files with waterlevel rasterData
+   * @throws Exception
+   *  
+   */
   private Vector createWaterlevelGrids( IProgressMonitor monitor )
       throws Exception
   {
@@ -521,6 +598,18 @@ public class CreateFloodRiskProjectJob extends Job
     return targetFiles;
   }
 
+  /**
+   * Creates a rasterStyle (interval-value) with the given number of intervals
+   * and a given color as lightest color
+   * 
+   * @param resultFile style
+   * @param styleName name of style
+   * @param grid
+   * @param color lightest color
+   * @param numOfCategories number of intervals
+   * @throws Exception
+   *  
+   */
   private void createRasterStyle( File resultFile, String styleName,
       RectifiedGridCoverage grid, Color color, int numOfCategories )
       throws Exception
@@ -534,7 +623,7 @@ public class CreateFloodRiskProjectJob extends Job
     double intervalStep = ( max - min ) / numOfCategories;
     for( int i = 0; i < numOfCategories; i++ )
     {
-      double quantity = GridUtils.round( ( min + ( i * intervalStep ) ), 4,
+      double quantity = Number.round( ( min + ( i * intervalStep ) ), 4,
           BigDecimal.ROUND_HALF_EVEN );
       ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 1, quantity,
           "" );
@@ -571,6 +660,15 @@ public class CreateFloodRiskProjectJob extends Job
     t.transform( source, result );
   }
 
+  /**
+   * creates the control file waterlevelData.gml with all given waterlevelGrids
+   * as parameters
+   * 
+   * @param targetFiles
+   * @throws IOException
+   * @throws GmlSerializeException
+   *  
+   */
   private void createWaterlevelData( Vector targetFiles ) throws IOException,
       GmlSerializeException
   {
@@ -621,6 +719,14 @@ public class CreateFloodRiskProjectJob extends Job
     fw.close();
   }
 
+  /**
+   * creates a landuse layer
+   * 
+   * @param sourceFile
+   * @return landuse layer
+   * @throws Exception
+   *  
+   */
   private org.kalypso.template.gismapview.GismapviewType.LayersType.Layer createLanduseLayer(
       File sourceFile ) throws Exception
   {
@@ -656,6 +762,15 @@ public class CreateFloodRiskProjectJob extends Job
 
   int id = 2;
 
+  /**
+   * creates a waterlevel layer
+   * 
+   * @param sourceFile
+   * @param styleName
+   * @return waterlevel layer
+   * @throws Exception
+   *  
+   */
   private org.kalypso.template.gismapview.GismapviewType.LayersType.Layer createWaterlevelLayer(
       File sourceFile, String styleName ) throws Exception
   {
@@ -690,6 +805,12 @@ public class CreateFloodRiskProjectJob extends Job
     return newLayer;
   }
 
+  /**
+   * deletes the project, when job is canceled
+   * 
+   * @return
+   *  
+   */
   public boolean performCancle()
   {
     try

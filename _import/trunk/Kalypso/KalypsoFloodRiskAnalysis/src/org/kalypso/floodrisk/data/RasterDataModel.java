@@ -115,8 +115,8 @@ public class RasterDataModel
   }
 
   /**
-   * creates gml workspace of a rectifiedGridCoverage object and serializes it to a
-   * file
+   * creates gml workspace of a rectifiedGridCoverage object and serializes it
+   * to a file
    * 
    * @param rasterDataModelGML
    * @param grid
@@ -133,11 +133,15 @@ public class RasterDataModel
 
     // create feature and workspace gml
     final FeatureType[] types = schema.getFeatureTypes();
+    
+    String rootFeatureTypeName = "RasterDataModel";
+    String rgcFeatureTypePropertyName = "RectifiedGridCoverageMember";
 
-    // create rootFeature: RasterDataModel
+    FeatureType rootFeatureType = schema.getFeatureType( rootFeatureTypeName );
     Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0",
-        types[0] );
-    FeatureTypeProperty[] ftps = types[0].getProperties();
+        rootFeatureType );
+    FeatureTypeProperty ftp_rgc = rootFeature.getFeatureType().getProperty(
+        rgcFeatureTypePropertyName );
     // create feature: RectifiedGridCoverage
     Object[] properties = new Object[]
     {
@@ -147,9 +151,9 @@ public class RasterDataModel
         grid.getGridDomain(),
         grid.getRangeSet() };
     Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature(
-        "RectifiedGridCoverage0", ( (FeatureAssociationTypeProperty)ftps[3] )
+        "RectifiedGridCoverage0", ( (FeatureAssociationTypeProperty)ftp_rgc )
             .getAssociationFeatureType(), properties );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftps[3]
+    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftp_rgc
         .getName(), rectifiedGridCoverageFeature ) );
 
     //create workspace

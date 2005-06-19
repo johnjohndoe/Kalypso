@@ -55,6 +55,13 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * GenerateTemplateRasterJob
+ * <p>Job for generating TemplateRaster
+ * 
+ * created by @author Nadja Peiler (17.06.2005)
+ */
 public class GenerateTemplateRasterJob implements ICalcJob
 {
 

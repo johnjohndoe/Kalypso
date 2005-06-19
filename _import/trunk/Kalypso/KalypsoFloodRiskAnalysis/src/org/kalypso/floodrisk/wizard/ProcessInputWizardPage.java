@@ -53,6 +53,7 @@ import org.kalypso.floodrisk.process.ProcessExtension;
 /**
  * ProcessInputWizardPage
  * <p>
+ * WizardPage, which asks for the location of the inputdata
  * 
  * created by
  * 
@@ -69,17 +70,35 @@ public class ProcessInputWizardPage extends WizardPage
 
   private IProject m_project;
 
-  protected ProcessInputWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  /**
+   * Constructor
+   * 
+   * @param pageName
+   * @param title
+   * @param titleImage
+   */
+  protected ProcessInputWizardPage( String pageName, String title,
+      ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     setPageComplete( false );
   }
 
+  /**
+   * sets the process for which inputdata is needed
+   * 
+   * @param processExt
+   *  
+   */
   public void setProcessExtension( ProcessExtension processExt )
   {
     m_processExt = processExt;
   }
 
+  /**
+   * 
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   public void createControl( Composite parent )
   {
     initializeDialogUnits( parent );
@@ -139,24 +158,37 @@ public class ProcessInputWizardPage extends WizardPage
     setControl( m_topLevel );
   }
 
-  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  KalypsoResourceSelectionDialog createResourceDialog(
+      String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select modelData",
-        fileResourceExtensions, m_project );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project,
+        "Select modelData", fileResourceExtensions, m_project );
   }
 
+  /**
+   * sets the selected project
+   * 
+   * @param project
+   *  
+   */
   public void setProject( IProject project )
   {
     m_project = project;
   }
 
+  /**
+   * validates the user input
+   * 
+   *  
+   */
   void validate()
   {
     setErrorMessage( null );
     boolean pageComplete = true;
 
     // modelData
-    if( m_textModelData.getText() != null && m_textModelData.getText().length() > 0 )
+    if( m_textModelData.getText() != null
+        && m_textModelData.getText().length() > 0 )
     {
       //ok
     }

@@ -2,8 +2,10 @@ package org.kalypso.floodrisk.tools;
 
 /**
  * 
- * @author N. Peiler
- *  
+ * Interval
+ * <p>
+ * 
+ * created by @author Nadja Peiler (17.06.2005)
  */
 public class Interval {
 
@@ -12,7 +14,7 @@ public class Interval {
 	private double upperLimit;
 
 	/**
-	 * constructs an Inteval with the given lower and upper limit
+	 * constructs an Interval with the given lower and upper limit
 	 * 
 	 * @param lowerLimit
 	 * @param upperLimit

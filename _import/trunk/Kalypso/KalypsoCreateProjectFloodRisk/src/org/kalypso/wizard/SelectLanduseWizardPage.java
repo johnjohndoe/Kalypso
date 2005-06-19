@@ -75,7 +75,15 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * @author N. Peiler
+ * 
+ * SelectLanduseWizardPage
+ * <p>
+ * Select: shape file (landuse), coordinate system, name of property to raster
+ * and selection automatically create landuseCollection
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (19.06.2005)
  */
 
 public class SelectLanduseWizardPage extends WizardPage implements
@@ -155,7 +163,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
     m_textFileSource = new Text( group, SWT.BORDER );
     m_textFileSource.setText( DEFAUL_FILE_LABEL );
     m_textFileSource.addFocusListener( this );
-    m_textFileSource.setEditable(false);
+    m_textFileSource.setEditable( false );
 
     GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
@@ -181,7 +189,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
           {
             loadLanduseProperties( FileUtilities.nameWithoutExtension( m_file
                 .toString() ) );
-            landusePropLabel.setEnabled(true);
+            landusePropLabel.setEnabled( true );
             landusePropCombo.setEnabled( true );
           }
         }
@@ -239,7 +247,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
     //line 3: landusePropertyName
     landusePropLabel = new Label( group, SWT.NONE );
     landusePropLabel.setText( "Attribut Landnutzung: " );
-    landusePropLabel.setEnabled(false);
+    landusePropLabel.setEnabled( false );
 
     landusePropCombo = new Combo( group, SWT.READ_ONLY );
     landusePropCombo.setEnabled( false );
@@ -250,7 +258,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
         propertyName = landusePropCombo.getText();
       }
     } );
-    
+
     Label dummyLabel2 = new Label( group, SWT.NONE );
 
     //line 4: check autogenerateLanduseCollection
@@ -263,11 +271,17 @@ public class SelectLanduseWizardPage extends WizardPage implements
         check = checkButton.getSelection();
       }
     } );
-    
+
     Label landuseColLabel = new Label( group, SWT.NONE );
-    landuseColLabel.setText("LanduseCollection automatisch generieren");
+    landuseColLabel.setText( "LanduseCollection automatisch generieren" );
   }
 
+  /**
+   * loads the property names of a shape file
+   * 
+   * @param shapeBaseFile
+   *  
+   */
   void loadLanduseProperties( String shapeBaseFile )
   {
     try
@@ -292,6 +306,14 @@ public class SelectLanduseWizardPage extends WizardPage implements
     }
   }
 
+  /**
+   * opens a file dialog
+   * 
+   * @param selectedFile
+   * @param filterExtensions
+   * @return selected filePath
+   *  
+   */
   String chooseFile( File selectedFile, String[] filterExtensions )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
@@ -347,12 +369,15 @@ public class SelectLanduseWizardPage extends WizardPage implements
         setPageComplete( false );
       }
     }
-    
-    if(propertyName != null){
+
+    if( propertyName != null )
+    {
       //nothing
-    }else{
-      error.append("Attribut Landnutzung wählen.\n\n");
-      setPageComplete(false);
+    }
+    else
+    {
+      error.append( "Attribut Landnutzung wählen.\n\n" );
+      setPageComplete( false );
     }
 
     if( error.length() > 0 )

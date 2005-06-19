@@ -77,7 +77,14 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * @author N. Peiler
+ * 
+ * SelectWaterlevelWizardPage
+ * <p>
+ * Select: waterlevel files (ascii) and coordinate system
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (19.06.2005)
  */
 
 public class SelectWaterlevelWizardPage extends WizardPage
@@ -91,8 +98,9 @@ public class SelectWaterlevelWizardPage extends WizardPage
   Vector waterlevelGrids = new Vector();
 
   protected File waterlevelFile;
-  
-  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
+
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() )
+      .getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
 
@@ -110,7 +118,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
   {
     return waterlevelGrids;
   }
-  
+
   public CS_CoordinateSystem getSelectedCoordinateSystem()
   {
     return selectedCoordinateSystem;
@@ -152,8 +160,8 @@ public class SelectWaterlevelWizardPage extends WizardPage
     group.setText( "Überschwemmungsflächen" );
 
     Composite tableComposite = new Composite( group, SWT.NULL );
-    GridData gridData = new GridData( GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
-        | GridData.FILL_BOTH );
+    GridData gridData = new GridData( GridData.FILL_VERTICAL
+        | GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH );
     tableComposite.setLayoutData( gridData );
     GridLayout layout = new GridLayout( 2, false );
     layout.marginWidth = 4;
@@ -164,16 +172,16 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
     // Create Buttons
     createButtons( tableComposite );
-    
+
     // Create CSCombo
-    createCombo(tableComposite);
+    createCombo( tableComposite );
 
   }
 
   private void createTable( Composite parent )
   {
-    waterlevelTable = new Table( parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
-        | SWT.FULL_SELECTION );
+    waterlevelTable = new Table( parent, SWT.SINGLE | SWT.H_SCROLL
+        | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     GridData gridData = new GridData( GridData.FILL_BOTH );
     gridData.grabExcessVerticalSpace = true;
     gridData.horizontalSpan = 2;
@@ -203,10 +211,10 @@ public class SelectWaterlevelWizardPage extends WizardPage
   private void createButtons( Composite parent )
   {
 
-    Composite buttonComp = new Composite(parent, SWT.NULL);
+    Composite buttonComp = new Composite( parent, SWT.NULL );
     GridLayout layout = new GridLayout( 2, false );
     buttonComp.setLayout( layout );
-    
+
     // Create and configure the "Add" button
     Button add = new Button( buttonComp, SWT.PUSH | SWT.CENTER );
     add.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
@@ -262,12 +270,13 @@ public class SelectWaterlevelWizardPage extends WizardPage
         validate();
       }
     } );
-    
-    Label dummyLabel = new Label(parent, SWT.NONE);
-    dummyLabel.setText("");
+
+    Label dummyLabel = new Label( parent, SWT.NONE );
+    dummyLabel.setText( "" );
   }
-  
-  private void createCombo(Composite parent){
+
+  private void createCombo( Composite parent )
+  {
     Label csLabel = new Label( parent, SWT.NONE );
     csLabel.setText( "Coordinate system: " );
 
@@ -275,7 +284,8 @@ public class SelectWaterlevelWizardPage extends WizardPage
     csCombo.setItems( coordinateSystems );
     try
     {
-      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault()
+          .getCoordinatesSystem().getName();
     }
     catch( RemoteException e1 )
     {
@@ -297,15 +307,17 @@ public class SelectWaterlevelWizardPage extends WizardPage
     } );
 
     csCombo.addModifyListener( new ModifyListener()
-        {
-          public void modifyText( ModifyEvent e )
-          {
-            setPageComplete(false);
-          }
-        } );
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        setPageComplete( false );
+      }
+    } );
 
-    csCombo.addListener (SWT.DefaultSelection, new Listener () {
-      public void handleEvent (Event e) {
+    csCombo.addListener( SWT.DefaultSelection, new Listener()
+    {
+      public void handleEvent( Event e )
+      {
         selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
         validate();
       }
@@ -313,6 +325,14 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
   }
 
+  /**
+   * opens a file dialog
+   * 
+   * @param selectedFile
+   * @param filterExtensions
+   * @return selected filePath
+   *  
+   */
   String chooseFile( File selectedFile, String[] filterExtensions )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
@@ -342,30 +362,41 @@ public class SelectWaterlevelWizardPage extends WizardPage
     setMessage( null );
     setPageComplete( true );
     StringBuffer error = new StringBuffer();
-    
+
     if( !( waterlevelGrids.size() > 0 ) )
     {
       error.append( "Keine Dateien ausgewählt\n\n" );
       setPageComplete( false );
     }
-    
+
     if( selectedCoordinateSystemName != null )
     {
-      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
-          selectedCoordinateSystemName );
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance()
+          .getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
         error.append( "Koordinatensystem existiert nicht\n\n" );
         setPageComplete( false );
       }
     }
-    
+
     if( error.length() > 0 )
       setMessage( error.toString() );
     else
       setMessage( "Eingabe OK" );
   }
 
+  /**
+   * 
+   * WaterlevelInputDialog
+   * <p>
+   * Dialog to choose waterlevel file (ascii) and assign an annuality
+   * !! not uses at the moment !!
+   * 
+   * created by
+   * 
+   * @author Nadja Peiler (19.06.2005)
+   */
   class WaterlevelInputDialog extends Dialog
   {
     private String DEFAUL_FILE_LABEL = "";

@@ -48,9 +48,11 @@ import org.kalypso.services.common.ServiceConfig;
 /**
  * LocalCalcJobThread
  * <p>
+ * Thread to run the local calcJob
+ * 
+ * @see org.kalypso.services.calculation.service.impl.CalcJobThread
  * 
  * created by
- * 
  * @author Nadja Peiler (19.05.2005)
  */
 public class LocalCalcJobThread extends Thread
@@ -64,21 +66,40 @@ public class LocalCalcJobThread extends Thread
 
   private ProcessDataProvider m_inputProvider;
 
-  public LocalCalcJobThread( final String id, final String description, final String typeID,
-      final ICalcJob job, final ModelspecData modelspec,
+  /**
+   * @see org.kalypso.services.calculation.service.impl.CalcJobThread#CalcJobThread(java.lang.String,
+   *      java.lang.String, java.lang.String,
+   *      org.kalypso.services.calculation.job.ICalcJob,
+   *      org.kalypso.services.calculation.service.impl.ModelspecData,
+   *      javax.activation.DataHandler,
+   *      org.kalypso.services.calculation.service.CalcJobClientBean[],
+   *      org.kalypso.services.calculation.service.CalcJobClientBean[])
+   * 
+   * @param id id of the calcJob
+   * @param description description of the calcJob
+   * @param typeID typeID of the process
+   * @param job the job to process
+   * @param modelspec ModelspecData(specification) of the calcJob, input- and
+   *          output-ids and descriptions
+   * @param input input-beans
+   * @param output output-beans
+   * @throws CalcJobServiceException
+   */
+  public LocalCalcJobThread( final String id, final String description,
+      final String typeID, final ICalcJob job, final ModelspecData modelspec,
       final CalcJobClientBean[] input, final CalcJobClientBean[] output )
       throws CalcJobServiceException
   {
     m_job = job;
 
-    m_jobBean = new CalcJobInfoBean( "" + id, description, typeID, ICalcServiceConstants.WAITING,
-        -1, "" );
+    m_jobBean = new CalcJobInfoBean( "" + id, description, typeID,
+        ICalcServiceConstants.WAITING, -1, "" );
     m_inputProvider = new ProcessDataProvider( input );
     m_resultEater = new ProcessResultEater( output );
-    
-    modelspec.checkInput(m_inputProvider);
+
+    modelspec.checkInput( m_inputProvider );
   }
-  
+
   /**
    * @see java.lang.Thread#run()
    */
@@ -91,10 +112,10 @@ public class LocalCalcJobThread extends Thread
     {
       System.out.println( "Calling run for ID: " + jobID );
 
-      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig
-          .getTempDir() );
+      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID
+          + "-", ServiceConfig.getTempDir() );
       m_resultEater.addFile( tmpdir );
-      
+
       m_job.run( tmpdir, m_inputProvider, m_resultEater, m_jobBean );
 
       System.out.println( "Run finished for ID: " + jobID );
@@ -117,23 +138,41 @@ public class LocalCalcJobThread extends Thread
     }
   }
 
+  /**
+   * 
+   * @return CalcJobInfoBean with current results
+   *  
+   */
   public CalcJobInfoBean getJobBean()
   {
     m_jobBean.setCurrentResults( m_resultEater.getCurrentResults() );
 
     return m_jobBean;
   }
-  
+
+  /**
+   * 
+   * @return calcJob
+   *  
+   */
   public ICalcJob getJob()
   {
     return m_job;
   }
-  
+
+  /**
+   * 
+   * @return the ids of the current results
+   *  
+   */
   public String[] getCurrentResults()
   {
     return m_resultEater.getCurrentResults();
   }
-  
+
+  /**
+   * called, when the calcJob is disposed (canceled)
+   */
   public void dispose()
   {
     m_resultEater.disposeResults();

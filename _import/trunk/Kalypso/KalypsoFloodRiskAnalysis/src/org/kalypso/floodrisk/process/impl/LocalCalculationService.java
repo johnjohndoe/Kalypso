@@ -65,6 +65,8 @@ import org.kalypso.services.calculation.service.impl.ModelspecData;
  * LocalCalculationService
  * <p>
  * 
+ * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService
+ * 
  * created by
  * 
  * @author Nadja Peiler (19.05.2005)
@@ -88,6 +90,13 @@ public class LocalCalculationService implements ICalculationService
 
   private final Map m_modelspecMap = new HashMap();
 
+  /**
+   * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService#QueuedCalcJobService(org.kalypso.services.calculation.service.impl.ICalcJobFactory,
+   *      org.kalypso.java.net.IUrlCatalog, int, long)
+   * @param factory LocalCalcJobFactory
+   * @param catalog catalog with needed schemas for the calcJobs
+   * @throws RemoteException
+   */
   public LocalCalculationService( final ICalcJobFactory factory,
       final IUrlCatalog catalog ) throws RemoteException
   {
@@ -114,11 +123,19 @@ public class LocalCalculationService implements ICalculationService
     return 0;
   }
 
+  /**
+   * 
+   * @see org.kalypso.services.calculation.service.ICalculationService#getJobTypes()
+   */
   public synchronized final String[] getJobTypes()
   {
     return m_calcJobFactory.getSupportedTypes();
   }
 
+  /**
+   * 
+   * @see org.kalypso.services.calculation.service.ICalculationService#getJobs()
+   */
   public synchronized CalcJobInfoBean[] getJobs()
       throws CalcJobServiceException
   {
@@ -146,6 +163,13 @@ public class LocalCalculationService implements ICalculationService
     return findJobThread( jobID ).getJobBean();
   }
 
+  /**
+   * 
+   * @param jobID
+   * @return LocalCalcJobThread for the given jobID
+   * @throws CalcJobServiceException
+   *  
+   */
   private LocalCalcJobThread findJobThread( final String jobID )
       throws CalcJobServiceException
   {
@@ -351,6 +375,13 @@ public class LocalCalculationService implements ICalculationService
     return thread.getCurrentResults();
   }
 
+  /**
+   * 
+   * @param typeID
+   * @return ModelspecData for given typeID
+   * @throws CalcJobServiceException
+   *  
+   */
   private ModelspecData getModelspec( final String typeID )
       throws CalcJobServiceException
   {

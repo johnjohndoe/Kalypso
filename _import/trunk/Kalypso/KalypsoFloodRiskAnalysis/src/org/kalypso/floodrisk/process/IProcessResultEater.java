@@ -46,6 +46,13 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * IProcessResultEater
+ * <p>
+ * 
+ * created by @author Nadja Peiler (17.06.2005)
+ */
 public interface IProcessResultEater extends ICalcResultEater
 {
   /** Gibt zurück, welche Ergebnisse momentan verfügbar sind. */

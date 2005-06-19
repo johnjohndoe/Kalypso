@@ -32,6 +32,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
+
 package org.kalypso.floodrisk.process;
 
 import org.eclipse.core.runtime.IPath;
@@ -40,6 +41,7 @@ import org.kalypso.services.calculation.job.ICalcJob;
 /**
  * ProcessExtension
  * <p>
+ * Class for handling process extensions
  * 
  * created by
  * 
@@ -47,21 +49,39 @@ import org.kalypso.services.calculation.job.ICalcJob;
  */
 public class ProcessExtension
 {
+  // name of the process, used as label in user interface
   private final String m_name;
 
+  // type: local or remote
   private final String m_type;
 
+  // Class to run the calculation
   private final ICalcJob m_calcJob;
 
+  // typeID of process
   private final String m_id;
 
+  // optional: icon to show in user interface
   private final String m_icon;
 
+  // flag, true: process should be calculated, false: process should not be
+  // calculated
   private boolean m_calculate = false;
 
+  // path to the modelData for this process
   private IPath m_modelDataPath;
 
-  public ProcessExtension( String name, String type, ICalcJob calcJob, String id, String icon )
+  /**
+   * Constructor
+   * 
+   * @param name
+   * @param type
+   * @param calcJob
+   * @param id
+   * @param icon
+   */
+  public ProcessExtension( String name, String type, ICalcJob calcJob,
+      String id, String icon )
   {
     m_name = name;
     m_type = type;
@@ -69,7 +89,7 @@ public class ProcessExtension
     m_id = id;
     m_icon = icon;
   }
-
+  
   public ICalcJob getCalcJob()
   {
     return m_calcJob;

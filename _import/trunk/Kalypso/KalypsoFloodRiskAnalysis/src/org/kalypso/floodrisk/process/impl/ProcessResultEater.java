@@ -51,6 +51,17 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * ProcessResultEater
+ * <p>
+ * ResultEater for local calculations, results are stored directly in the file
+ * system (without dataHandler)
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (17.06.2005)
+ */
 public class ProcessResultEater implements IProcessResultEater
 {
 
@@ -60,6 +71,11 @@ public class ProcessResultEater implements IProcessResultEater
 
   private Vector m_files = new Vector();
 
+  /**
+   * Constructor
+   * 
+   * @param clientOutput output-beans
+   */
   public ProcessResultEater( final CalcJobClientBean[] clientOutput )
   {
     m_clientOutputMap = new HashMap( clientOutput.length );
@@ -101,6 +117,10 @@ public class ProcessResultEater implements IProcessResultEater
     return results;
   }
 
+  /**
+   * 
+   * @see org.kalypso.floodrisk.process.IProcessResultEater#disposeResults()
+   */
   public void disposeResults()
   {
     for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
@@ -133,11 +153,18 @@ public class ProcessResultEater implements IProcessResultEater
   //
   // }
 
+  /**
+   * @see org.kalypso.floodrisk.process.IProcessResultEater#addFile(File)
+   */
   public void addFile( File file )
   {
     m_files.add( file );
   }
 
+  /**
+   * 
+   * @see org.kalypso.floodrisk.process.IProcessResultEater#disposeFiles()
+   */
   public void disposeFiles()
   {
     for( final Iterator iter = m_files.iterator(); iter.hasNext(); )
@@ -147,6 +174,10 @@ public class ProcessResultEater implements IProcessResultEater
     }
   }
 
+  /**
+   * 
+   * @see org.kalypso.floodrisk.process.IProcessResultEater#getOutputMap()
+   */
   public HashMap getOutputMap()
   {
     return m_clientOutputMap;

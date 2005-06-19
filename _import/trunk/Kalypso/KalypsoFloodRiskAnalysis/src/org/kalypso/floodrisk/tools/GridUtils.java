@@ -7,28 +7,59 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.Vector;
 
-import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypsodeegree.model.coverage.GridRange;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverageFactory;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
+
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
 
 /**
  * 
@@ -40,17 +71,17 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public abstract class GridUtils
 {
+  static RasterDataModel rasterDataModel = new RasterDataModel();
 
   /**
    * exports a RectifiedGridCoverage to an Ascii-Grid
    * 
-   * @param out
-   *          ascii output file
-   * @param grid
-   *          RectifiedGridCoverage to export
+   * @param out ascii output file
+   * @param grid RectifiedGridCoverage to export
    * @throws Exception
    */
-  public static void exportGridArc( File out, RectifiedGridCoverage grid ) throws Exception
+  public static void exportGridArc( File out, RectifiedGridCoverage grid )
+      throws Exception
   {
     BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
     RectifiedGridDomain gridDomain = grid.getGridDomain();
@@ -65,8 +96,9 @@ public abstract class GridUtils
     Vector rangeSetData = rangeSet.getRangeSetData();
     try
     {
-      bw.write( "ncols " + nCols + "\nnrows " + nRows + "\nxllcorner " + originX + "\nyllcorner "
-          + originY + "\ncellsize " + offsetX + "\nnodata_value " + nodata );
+      bw.write( "ncols " + nCols + "\nnrows " + nRows + "\nxllcorner "
+          + originX + "\nyllcorner " + originY + "\ncellsize " + offsetX
+          + "\nnodata_value " + nodata );
       bw.newLine();
 
       for( int i = 0; i < rangeSetData.size(); i++ )
@@ -77,7 +109,8 @@ public abstract class GridUtils
           if( rowData.get( j ) != null )
           {
             double value = ( (Double)rowData.get( j ) ).doubleValue();
-            double roundValue = round( value, 6, BigDecimal.ROUND_HALF_EVEN );
+            double roundValue = Number.round( value, 6,
+                BigDecimal.ROUND_HALF_EVEN );
             bw.write( roundValue + " " );
           }
           else
@@ -108,11 +141,12 @@ public abstract class GridUtils
   /**
    * imports an ascii-grid file
    * 
-   * @param in
-   *          input file
+   * @param in input file (*.asc)
+   * @param cs the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridCoverage importGridArc( File in, CS_CoordinateSystem cs )
+  public static RectifiedGridCoverage importGridArc( File in,
+      CS_CoordinateSystem cs )
   {
     int nCols = 0;
     int nRows = 0;
@@ -169,7 +203,8 @@ public abstract class GridUtils
         nCols,
         nRows };
     GridRange gridRange = new GridRange_Impl( low, high );
-    RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offset, gridRange );
+    RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offset,
+        gridRange );
     //String[] dataAsString = rangeData.toString().split(" ");
     for( int i = 0; i < nRows; i++ )
     {
@@ -182,7 +217,8 @@ public abstract class GridUtils
         }
         else
         {
-          double actualValue = Double.parseDouble( (String)rangeData.get( n + ( i * nCols ) ) );
+          double actualValue = Double.parseDouble( (String)rangeData.get( n
+              + ( i * nCols ) ) );
           rowData.addElement( new Double( actualValue ) );
         }
       }
@@ -191,58 +227,38 @@ public abstract class GridUtils
       rangeSetData.addElement( rowData );
     }
     RangeSet rangeSet = new RangeSet( rangeSetData, null );
-    RectifiedGridCoverage grid = new RectifiedGridCoverage( gridDomain, rangeSet );
+    RectifiedGridCoverage grid = new RectifiedGridCoverage( gridDomain,
+        rangeSet );
     return grid;
   }
 
-  public static double round( double d, int scale, int mode )
-  {
-    BigDecimal bd = new BigDecimal( Double.toString( d ) );
-    return ( bd.setScale( scale, mode ) ).doubleValue();
-  }
-
-  public static RectifiedGridCoverage readRasterData( File rasterDataModelGML ) throws Exception
-  {
-    GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( rasterDataModelGML.toURL() );
-    Feature rootFeature = gmlWorkspace.getRootFeature();
-    return RectifiedGridCoverageFactory.createRectifiedGridCoverage( rootFeature );
-  }
-
-  public static void writeRasterData( File rasterDataModelGML, RectifiedGridCoverage grid )
+  /**
+   * @see org.kalypso.floodrisk.data.RasterDataModel#getRectifiedGridCoverage(URL)
+   * 
+   * @param rasterDataModelGML
+   * @return RectifiedGridCoverage
+   * @throws Exception
+   *  
+   */
+  public static RectifiedGridCoverage readRasterData( File rasterDataModelGML )
       throws Exception
   {
+    return rasterDataModel
+        .getRectifiedGridCoverage( rasterDataModelGML.toURL() );
+  }
 
-    // load schema
-    final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogFloodRisk.NS_RASTERDATAMODEL );
-
-    // create feature and workspace gml
-    final FeatureType[] types = schema.getFeatureTypes();
-
-    // create rootFeature: RasterDataModel
-    Feature rootFeature = FeatureFactory.createFeature( "RasterDataModel0", types[0] );
-    FeatureTypeProperty[] ftps = types[0].getProperties();
-    // create feature: RectifiedGridCoverage
-    Object[] properties = new Object[]
-    {
-        "",
-        "",
-        null,
-        grid.getGridDomain(),
-        grid.getRangeSet() };
-    Feature rectifiedGridCoverageFeature = FeatureFactory.createFeature( "RectifiedGridCoverage0",
-        ( (FeatureAssociationTypeProperty)ftps[3] ).getAssociationFeatureType(), properties );
-    rootFeature.addProperty( FeatureFactory.createFeatureProperty( ftps[3].getName(),
-        rectifiedGridCoverageFeature ) );
-
-    //create workspace
-    GMLWorkspace workspace = new GMLWorkspace_Impl( types, rootFeature, rasterDataModelGML.toURL(),
-        "", schema.getTargetNS(), schema.getNamespaceMap() );
-
-    // serialize Workspace
-    FileWriter fw = new FileWriter( rasterDataModelGML );
-    GmlSerializer.serializeWorkspace( fw, workspace );
-    fw.close();
-
+  /**
+   * @see org.kalypso.floodrisk.data.RasterDataModel#toFile(File,
+   *      RectifiedGridCoverage)
+   * @param rasterDataModelGML
+   * @param grid
+   * @throws Exception
+   *  
+   */
+  public static void writeRasterData( File rasterDataModelGML,
+      RectifiedGridCoverage grid ) throws Exception
+  {
+    rasterDataModel.toFile( rasterDataModelGML, grid );
   }
 
 }

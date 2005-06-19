@@ -51,15 +51,38 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * ProcessDataProvider
+ * <p>
+ * DataProvider for local calculations, data is read directly from the file
+ * system (without dataHandler)
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (17.06.2005)
+ */
 public class ProcessDataProvider implements ICalcDataProvider
 {
   private Map m_idhash;
 
+  /**
+   * Constructor
+   * 
+   * @param input input-Beans
+   */
   public ProcessDataProvider( CalcJobClientBean[] input )
   {
     m_idhash = indexInput( input );
   }
 
+  /**
+   * creates a map with key=inputBeanID, value=inputData-URL
+   * 
+   * @param input input-beans
+   * @return Map(key=inputBeanID, value=inputData-URL)
+   *  
+   */
   private Map indexInput( final CalcJobClientBean[] input )
   {
     final Map index = new HashMap( input.length );

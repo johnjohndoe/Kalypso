@@ -45,12 +45,20 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * GridGeometryHelper
+ * <p>Holds methods for controling the geometry of a grid
+ * 
+ * created by @author Nadja Peiler (17.06.2005)
+ */
+
 public class GridGeometryHelper
 {
 
   /**
    * controls, if coordinate system, origin, grid extent and offset is equal for
-   * to given RectifiedGridDomains; If not, an Exception is thrown with a
+   * two given RectifiedGridDomains; If not, an Exception is thrown with a
    * certain errorMessage
    * 
    * @param gridDomain1

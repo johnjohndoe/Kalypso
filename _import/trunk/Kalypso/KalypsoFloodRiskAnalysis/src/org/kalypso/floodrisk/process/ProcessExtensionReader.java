@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.services.calculation.job.ICalcJob;
 
 /**
- * ProcessExtensions
+ * ProcessExtensionReader
  * <p>
  * 
  * created by

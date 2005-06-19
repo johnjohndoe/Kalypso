@@ -54,8 +54,11 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.ui.ImageProvider;
 
 /**
- * @author N. Peiler
- *  
+ * 
+ * KalypsoFloodRiskProjectWizard
+ * <p>Wizard for creating a floodrisk project
+ * 
+ * created by @author Nadja Peiler (19.06.2005)
  */
 public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 {
@@ -75,6 +78,10 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     super();
   }
 
+  /**
+   * 
+   * @see org.eclipse.jface.wizard.IWizard#addPages()
+   */
   public void addPages()
   {
     try
@@ -104,7 +111,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
   }
 
   /**
-   * This method creates the new Project
+   * This method creates the new project
    * 
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */

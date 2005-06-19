@@ -75,6 +75,14 @@ public class ProcessJob extends Job
 
   private ProcessExtension m_extension;
 
+  /**
+   * Constructor
+   * 
+   * @param modelData modelData for the process
+   * @param project
+   * @param extension information of process
+   * @param lock
+   */
   public ProcessJob( final ModeldataType modelData, final IProject project,
       final ProcessExtension extension, final ILock lock )
   {
@@ -86,6 +94,10 @@ public class ProcessJob extends Job
     setUser( true );
   }
 
+  /**
+   * 
+   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+   */
   public IStatus run( IProgressMonitor monitor )
   {
 
@@ -111,6 +123,15 @@ public class ProcessJob extends Job
     }
   }
 
+  /**
+   * get CalculationService, create CalcJobHandler, run Job
+   * 
+   * @param monitor
+   * @return Status of the calculation
+   * @throws CoreException
+   * @throws ServiceException
+   *  
+   */
   private IStatus runCalculation( IProgressMonitor monitor )
       throws CoreException, ServiceException
   {
@@ -141,6 +162,13 @@ public class ProcessJob extends Job
         "Berechnung abgeschlossen.", null );
   }
 
+  /**
+   * 
+   * @param typeID
+   * @return CalculationService for given typeID of process
+   * @throws ServiceException
+   *  
+   */
   private ICalculationService findCalulationServiceForType( final String typeID )
       throws ServiceException
   {

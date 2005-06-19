@@ -60,12 +60,18 @@ public class LocalCalculationServiceFactory implements
     ICalculationServiceProxyFactory
 {
 
+  /**
+   * 
+   * @see org.kalypso.services.calculation.ICalculationServiceProxyFactory#createService()
+   */
   public ICalculationService createService()
   {
     try
     {
+      //get registered process extensions
       ProcessExtension[] extensions = ProcessExtensionReader
           .retrieveExtensions();
+      //create CalcJobFactory for local processes
       ICalcJobFactory localCalcJobFactory = createCalcJobFactoryForLocalProcesses( extensions );
       return new CalcJobServiceProxyWrapper( new LocalCalculationService(
           localCalcJobFactory, new UrlCatalogFloodRisk() ) );
@@ -81,6 +87,12 @@ public class LocalCalculationServiceFactory implements
     return null;
   }
 
+  /**
+   * 
+   * @param extensions ProcessExtensions
+   * @return LocalCalcJobFactory
+   *  
+   */
   private ICalcJobFactory createCalcJobFactoryForLocalProcesses(
       ProcessExtension[] extensions )
   {
@@ -97,16 +109,35 @@ public class LocalCalculationServiceFactory implements
 
   }
 
+  /**
+   * 
+   * LocalCalcJobFactory
+   * <p>
+   * Factory for local calculation jobs
+   * 
+   * created by
+   * 
+   * @author Nadja Peiler (17.06.2005)
+   */
   class LocalCalcJobFactory implements ICalcJobFactory
   {
 
     private ProcessExtension[] m_localExtensions;
 
+    /**
+     * Constructor
+     * 
+     * @param localExtensions
+     */
     LocalCalcJobFactory( ProcessExtension[] localExtensions )
     {
       m_localExtensions = localExtensions;
     }
 
+    /**
+     * 
+     * @see org.kalypso.services.calculation.service.impl.ICalcJobFactory#getSupportedTypes()
+     */
     public String[] getSupportedTypes()
     {
       String[] supportedTypes = new String[m_localExtensions.length];
@@ -117,6 +148,10 @@ public class LocalCalculationServiceFactory implements
       return supportedTypes;
     }
 
+    /**
+     * 
+     * @see org.kalypso.services.calculation.service.impl.ICalcJobFactory#createJob(java.lang.String)
+     */
     public ICalcJob createJob( String typeId ) throws CalcJobServiceException
     {
       ICalcJob calcJob = null;
