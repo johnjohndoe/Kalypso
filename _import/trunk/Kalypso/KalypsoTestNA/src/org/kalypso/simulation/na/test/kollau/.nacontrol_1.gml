@@ -6,35 +6,35 @@
   <comment>Kommentar</comment>
   <calctime>2001-12-17T09:30:47</calctime>
   <startsimulation>1995-09-01T01:00:00</startsimulation>
-  <startforecast>1995-09-04T12:00:00</startforecast>
-  <endsimulation>1995-09-09T01:00:00</endsimulation>
-  <timeStep>0.083</timeStep>
+  <startforecast>2000-09-04T12:00:00</startforecast>
+  <endsimulation>2000-09-09T01:00:00</endsimulation>
+  <timeStep>24</timeStep>
   <tmp>true</tmp>
   <pre>true</pre>
-  <sch>false</sch>
-  <bof>false</bof>
-  <bsp>false</bsp>
-  <gws>false</gws>
+  <sch>true</sch>
+  <bof>true</bof>
+  <bsp>true</bsp>
+  <gws>true</gws>
   <qgs>true</qgs>
-  <qgg>false</qgg>
-  <qna>false</qna>
-  <qif>false</qif>
-  <qvs>false</qvs>
-  <qbs>false</qbs>
-  <qt1>false</qt1>
-  <qtg>false</qtg>
-  <qgw>false</qgw>
-  <kap>false</kap>
-  <vet>false</vet>
-  <hyd>false</hyd>
-  <bil>false</bil>
-  <nmq>false</nmq>
-  <spi>false</spi>
-  <sub>false</sub>
-  <sph>false</sph>
-  <spv>false</spv>
-  <spn>false</spn>
-  <vep>false</vep>
+  <qgg>true</qgg>
+  <qna>true</qna>
+  <qif>true</qif>
+  <qvs>true</qvs>
+  <qbs>true</qbs>
+  <qt1>true</qt1>
+  <qtg>true</qtg>
+  <qgw>true</qgw>
+  <kap>true</kap>
+  <vet>true</vet>
+  <hyd>true</hyd>
+  <bil>true</bil>
+  <nmq>true</nmq>
+  <spi>true</spi>
+  <sub>true</sub>
+  <sph>true</sph>
+  <spv>true</spv>
+  <spn>true</spn>
+  <vep>true</vep>
   <automaticCallibration>true</automaticCallibration>
   <Catchments><![CDATA[//:Catchment[@fid="Catchment100" or @fid="Catchment101" or @fid="Catchment102" or @fid="Catchment103" or @fid="Catchment104" or @fid="Catchment105"]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>

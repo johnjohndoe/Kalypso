@@ -32,37 +32,44 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.test.kriging;
+package org.kalypso.test.dwdraster;
 
 import java.io.File;
 
-import javax.xml.bind.JAXBException;
-
 import junit.framework.TestCase;
 
-import org.kalypso.ant.KrigingTask;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
+import org.kalypso.dwd.DWDRaster;
+import org.kalypso.dwd.DWDRasterGeoLayer;
+import org.kalypso.dwd.RasterPart;
+import org.kalypso.dwd.RasterStorage;
+import org.kalypso.dwd.schema.UrlCatalogDWD;
 import org.kalypso.java.net.IUrlCatalog;
 import org.kalypso.java.net.MultiUrlCatalog;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * GenerateObservationMappingKrigingTest
+ * DWDRasterTest
  * <p>
  * 
  * created by
  * 
- * @author doemming (01.06.2005)
+ * @author doemming (16.06.2005)
  */
-public class KrigingTaskTest extends TestCase
+public class DWDRasterTest extends TestCase
 {
-  public void testExecute() throws TypeRegistryException, JAXBException
+  public void testDWDRaster() throws Exception
   {
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
@@ -71,6 +78,7 @@ public class KrigingTaskTest extends TestCase
     final MultiUrlCatalog multiCatalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
         new UrlCatalogNA(),
+        new UrlCatalogDWD(),
         new UrlCatalogUpdateObservationMapping(),
         new DeegreeUrlCatalog() } );
     final File cache = new File( "C:\\TMP\\schemaCatalog" );
@@ -78,30 +86,32 @@ public class KrigingTaskTest extends TestCase
       cache.mkdirs();
     GMLSchemaCatalog.init( multiCatalog, cache );
 
-    final KrigingTask mappingKriging = new KrigingTask();
-    // setting inputs
-    // general
-    mappingKriging.setContext( getClass().getResource( "resources/" ) );
-    mappingKriging.setEpsg( "EPSG:31468" );
-    // polygon modell
-    mappingKriging.setModellGML( "modell.gml" );
-    mappingKriging.setModellGMLFeaturePath( "CatchmentCollectionMember/catchmentMember" );
-    mappingKriging.setModellGMLpolygonPropname( "Ort" );
-    mappingKriging.setModellGMLTargetObservationlinkPropname( "niederschlagZR" );
-    // kriging mapping
-    mappingKriging.setHrefKrigingTXT( "Kriging_GewichteWeisseElster.txt" );
-    // src modell
-    mappingKriging.setSourceGML( "ombrometer.gml" );
-    mappingKriging.setSourceGMLFeaturePath( "ombrometerMember" );
-    mappingKriging.setSourceGMLIDLinkProperty( "DWDID" );
-    mappingKriging.setSourceGMLObservationLinkProperty( "N" );
-    // setting outputs
-    String hrefResult = "C:\\TMP\\mappingOut.gml";
-    mappingKriging.setHrefGeneratesGml( hrefResult );
-
-    mappingKriging.setTimeStepMinutes( 15 );
-    mappingKriging.execute();
-    System.out.println( "wrote mapping to " + hrefResult );
-
+    RasterStorage storage = new RasterStorage();
+    storage.loadRaster( getClass().getResource( "resources/lm_inv_slug" ) );
+    storage.loadRaster( getClass().getResource( "resources/lm_2004_11_10_00" ) );
+    DWDRaster xRaster = (DWDRaster)storage.get( DWDRaster.KEY_100000_LON );
+    DWDRaster yRaster = (DWDRaster)storage.get( DWDRaster.KEY_100000_LAT );
+    DWDRasterGeoLayer geoRaster = new DWDRasterGeoLayer( "EPSG:31469", xRaster, yRaster );
+    geoRaster.saveAsGML( new File( "C:\\TMP\\raster.gml" ) );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getClass().getResource( "resources/modell_epsg31469.gml" ) );
+    FeatureType featureType = workspace.getFeatureType( "Catchment" );
+    Feature[] features = workspace.getFeatures( featureType );
+    for( int i = 0; i < features.length; i++ )
+    {
+      Feature feature = features[i];
+      GM_Surface surface = (GM_Surface)feature.getProperty( "Ort" );
+      double modellArea = GeometryUtilities.calcArea( surface );
+      RasterPart[] positions = geoRaster.getPositions( surface );
+      System.out.println( "Feature: " + feature.getId() + " : " + positions.length );
+      System.out.println( "A(modell)=" + modellArea );
+      double cellArea = 0;
+      for( int j = 0; j < positions.length; j++ )
+      {
+        cellArea += positions[j].getPortion();
+        //        System.out.println( " " + positions[j].getPosition() + ". " +
+        // positions[j].getPortion() );
+      }
+      System.out.println( "A(cell)=  " + cellArea + " deltaA=" + ( modellArea - cellArea ) + " faktor=" + modellArea / cellArea );
+    }
   }
 }

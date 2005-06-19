@@ -6,7 +6,7 @@
 >
   <!-- set installationDir! -->
   <property name="kalypso.client.install"
-            value="P:\\Software\\KalypsoEnterpriseClient\\testing"
+            value="P:\\Software\\KalypsoEnterpriseClient\\stableV1.9"
   />
   
   <!--

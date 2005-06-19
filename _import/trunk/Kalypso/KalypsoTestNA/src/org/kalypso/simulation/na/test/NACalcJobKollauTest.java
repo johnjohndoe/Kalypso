@@ -280,7 +280,7 @@ public class NACalcJobKollauTest extends TestCase
        */
       public void addResult( String id, File file )
       {
-        System.out.print( "ID" + id + " File:" + file.getAbsolutePath() );
+        System.out.println( "ID" + id + " File:" + file.getAbsolutePath() );
       }
     };
   }

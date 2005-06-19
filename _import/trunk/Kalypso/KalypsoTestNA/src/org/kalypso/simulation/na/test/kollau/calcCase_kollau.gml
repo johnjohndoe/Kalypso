@@ -18,7 +18,7 @@
             </gml:Polygon>
           </Ort>
           <inum>100</inum>
-          <generateResult>false</generateResult>
+          <generateResult>true</generateResult>
           <ispk>7</ispk>
           <text>Kollaueinzugsgebiet</text>
           <flaech>1123080</flaech>
@@ -167,7 +167,7 @@
             </gml:Polygon>
           </Ort>
           <inum>101</inum>
-          <generateResult>false</generateResult>
+          <generateResult>true</generateResult>
           <ispk>7</ispk>
           <text>Kollaueinzugsgebiet</text>
           <flaech>123036</flaech>
@@ -316,7 +316,7 @@
             </gml:Polygon>
           </Ort>
           <inum>102</inum>
-          <generateResult>false</generateResult>
+          <generateResult>true</generateResult>
           <ispk>7</ispk>
           <text>Kollaueinzugsgebiet</text>
           <flaech>534199</flaech>
