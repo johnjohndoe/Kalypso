@@ -1,55 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates><template id="org.eclipse.jdt.ui.text.codetemplates.gettercomment" name="gettercomment" description="Comment for getter method" context="gettercomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.settercomment" name="settercomment" description="Comment for setter method" context="settercomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.constructorcomment" name="constructorcomment" description="Comment for created constructors" context="constructorcomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.typecomment" name="typecomment" description="Comment for created types" context="typecomment_context" enabled="true" deleted="false">/**&#13;
- * ${type_name}&#13;
- * &lt;p&gt;&#13;
- * &#13;
- * created by @author ${user} (${date})&#13;
- */</template><template id="org.eclipse.jdt.ui.text.codetemplates.fieldcomment" name="fieldcomment" description="Comment for fields" context="fieldcomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.methodcomment" name="methodcomment" description="Comment for non-overriding methods" context="methodcomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.overridecomment" name="overridecomment" description="Comment for overriding methods" context="overridecomment_context" enabled="true" deleted="false">/**
+<templates><template id="org.eclipse.jdt.ui.text.codetemplates.gettercomment" name="gettercomment" description="Comment for getter method" context="gettercomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.settercomment" name="settercomment" description="Comment for setter method" context="settercomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.constructorcomment" name="constructorcomment" description="Comment for created constructors" context="constructorcomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.typecomment" name="typecomment" description="Comment for created types" context="typecomment_context" enabled="true" deleted="false">/**
+ *
+ * TODO: insert type comment here
+ *
+ * @author ${user}
+ */</template><template id="org.eclipse.jdt.ui.text.codetemplates.fieldcomment" name="fieldcomment" description="Comment for fields" context="fieldcomment_context" enabled="true" deleted="false"/><template id="org.eclipse.jdt.ui.text.codetemplates.methodcomment" name="methodcomment" description="Comment for non-overriding methods" context="methodcomment_context" enabled="true" deleted="false">/**&#13;
+ * ${tags}&#13;
+ */</template><template id="org.eclipse.jdt.ui.text.codetemplates.overridecomment" name="overridecomment" description="Comment for overriding methods" context="overridecomment_context" enabled="true" deleted="false">/**
  * ${see_to_overridden}
- */</template><template id="org.eclipse.jdt.ui.text.codetemplates.newtype" name="newtype" description="Newly created files" context="newtype_context" enabled="true" deleted="false">/* --------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
- 
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-  
---------------------------------------------------------------------------------------------------- */
-${package_declaration}
-
-${typecomment}
-${type_declaration}</template><template id="org.eclipse.jdt.ui.text.codetemplates.catchblock" name="catchblock" description="Code in new catch blocks" context="catchblock_context" enabled="true" deleted="false">// ${todo} Auto-generated catch block
-${exception_var}.printStackTrace();</template><template id="org.eclipse.jdt.ui.text.codetemplates.methodbody" name="methodbody" description="Code in created method stubs" context="methodbody_context" enabled="true" deleted="false">// ${todo} Auto-generated method stub
-${body_statement}</template><template id="org.eclipse.jdt.ui.text.codetemplates.constructorbody" name="constructorbody" description="Code in created constructor stubs" context="constructorbody_context" enabled="true" deleted="false">${body_statement}
-// ${todo} Auto-generated constructor stub</template><template id="org.eclipse.jdt.ui.text.codetemplates.getterbody" name="getterbody" description="Code in created getters" context="getterbody_context" enabled="true" deleted="false">return ${field};</template><template id="org.eclipse.jdt.ui.text.codetemplates.setterbody" name="setterbody" description="Code in created setters" context="setterbody_context" enabled="true" deleted="false">${field} = ${param};</template></templates>
+ */</template></templates>
