@@ -1,0 +1,56 @@
+18.6.2005
+Andreas: - Übersicht über das ganze kalypso-projekt
+         - Baustellen identifizieren und schließen (bzw. planen wie die Baustelllen geschlossen werden)
+	- Kalypso_philosophie
+	- Veröffentlichung ?
+
+Nadja : - Schnittstellen zur erweiterung oder Benutzung später
+
+Gernot: - Welche Projekte mach die TUHH, (Flows ??)
+	- pairprogramming
+	- Kalypso 1.0 ins Rollen bringen 
+	- Kontinuität sicherstellen
+Christoph:
+	- (Code-) Konzepte in Kalypso
+	- wie kann Kalypso in Flows genutzt werden (Rechendienste!)
+	- Modul-konzept
+	- wofür steht Kalypso (im Vergleich zu z.B. ArcView. )
+	- Kalypso 1.0	
+
+Jessica:
+	- Überblick (Code und Zuständigkeiten) 
+	- Disskussion über Zukunft von Datacenter, WspWin
+	- Konzept Benutzerführung, Internationalisierung
+	- Dokumentation
+Monika:
+	- Verschiedene Sichten auf Kalypso (Anwender, Entwickler)
+	- Gegenüberstellung Aufgaben <-> Module
+	- Wizzardkonzept dynamischer machen
+	- Darstellung, Veröffentlichung
+	- Testing
+	- GUI-Guidelines
+	- Code-Guidelines
+Marc:
+	- Entstehung von Kalypso -> was ist der aktueller Stand von Kalypso
+	- welche GIS-Unterstützung gibt es in kalypso
+	- kritische Punkte - welche API-Bereiche sind eigentlich stabil ?
+	- was sind die Stärken von kalypso ?
+	- Was sind die Schwächen von kalypso ?
+	- Kalypso und der Rest der Welt ? Verknüpfung mit externen Programmen
+Silke:
+
+Alle:	- Was haben die anderen (z.B.nadja) eigentlich gemacht 
+	- Welche Modelle gibt es in Kalypso
+	- Was ist Kalypso (Definition für User)
+	- Bei welchen Aufgaben hilft Kalypso ?
+	- Woher nehmen wir die Zeit ??
+Sonstiges:
+	- FAQ
+	- Komunikation (user - user | user - entwickler | entwickler - entwickler)
+	- Wer arbeitet alles mit Kalypso
+
+
+
+
+
+

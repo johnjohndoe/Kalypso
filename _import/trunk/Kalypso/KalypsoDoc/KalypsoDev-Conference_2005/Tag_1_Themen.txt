@@ -1,0 +1,104 @@
+18.6.2005
+
+[Vorträge]
+	- OpenGIS + GML3
+	- UDig
+	- GMA
+	- IRepository
+
+
+
+	- Übersicht über das ganze kalypso-projekt
+	- Welche Projekte mach die TUHH, (Flows ??)
+	- Was haben die anderen (z.B.nadja) eigentlich gemacht 
+	- Überblick (Code und Zuständigkeiten, Code-Projekte) 
+	- Entstehung von Kalypso -> was ist der aktueller Stand von Kalypso
+	- Wer arbeitet alles mit Kalypso
+	- welche GIS-Unterstützung gibt es in kalypso
+	- Welche Modelle gibt es in Kalypso
+	- Bei welchen Aufgaben hilft Kalypso ?
+	- Zwangspunkte, Prioritäten
+	- Gegenüberstellung Aufgaben <-> Module
+
+1. Jeder stellt seine Tätigkeit vor.
+	[Vorträge]
+	für welche Anwendung (welche Projekte)?
+	mit welchen Anwendern
+	welche Code-Bereiche
+	welche Schnittstellen zu anderen Entwicklern (Code-Bereichen, Abhängigkeiten)
+	evt. Vorführungen
+	-> Mini-Workshops (zu Plugins, Einbettung in Gesamtframework)
+	-> Terminliste
+	-> Projektliste, Anforderungen
+	
+
+	- Veröffentlichung ?
+	- Darstellung, Veröffentlichung
+	- Was ist Kalypso (Definition für User) und Was ist es nicht
+	- Kalypso 1.0 ins Rollen bringen 
+	- Kontinuität sicherstellen
+	- Kalypso_philosophie
+	- wofür steht Kalypso (im Vergleich zu z.B. ArcView. )
+	- Ausblick, Ideensammlung
+	- Dritten wollen Kalypso (source-code) haben?
+	- was sind die Stärken von kalypso ?
+	- Was sind die Schwächen von kalypso ?
+
+2. Marketing/Business
+	[Große Runde]
+	- Ideen/Brainstorming
+	- Zuständigkeiten/Rollen (Ansprechpartner)
+	- Lizenzierungsfragen (Common, Projektspezifisch, Extern/Libs)
+	- Akquisitionsmöglichkeiten
+	-> Web Präsenz
+	-> Akquise Artefakten (Zeug)
+	-> Längerfristige Ziele
+	-> Pr Pasche Lobotomising (Gehirnwäsche) -> Magic?
+
+
+	- pairprogramming
+	- (Code-) Konzepte in Kalypso
+	- Kontinuität sicherstellen
+	- Wizzardkonzept dynamischer machen
+	- wie kann Kalypso in Flows genutzt werden (Rechendienste!)
+	- Modul-konzept
+	- Schnittstellen zur erweiterung oder Benutzung später
+        - Baustellen identifizieren und schließen (bzw. planen wie die Baustelllen geschlossen werden)
+	- Konzept Benutzerführung, Internationalisierung
+	- Build/Deploy
+	- Java 5.0 + Eclipse 3.1
+	- Ant JDK Name?
+	
+3. Code
+	[2 gemischten Gruppen]
+
+
+
+	- Testing
+	- GUI-Guidelines
+	- Code-Guidelines
+	- Dokumentation
+	- FAQ erstellen
+	- kritische Punkte - welche API-Bereiche sind eigentlich stabil ?
+	- was sind die Stärken von kalypso ?
+	- was sind die Schwächen von kalypso ?
+	- Kollaboration /GForge)
+	- Projektzyklen, Rollendefinition
+	- Zuständigkeiten
+
+4. Infrastruktur/Qualität
+
+
+
+	- Kalypso und der Rest der Welt ? Verknüpfung mit externen Programmen
+	- Disskussion über Zukunft von Datacenter, WspWin 
+	- Verschiedene Sichten auf Kalypso (Anwender, Entwickler)
+	- Komunikation (user - user | user - entwickler | entwickler - entwickler)
+
+5. Diverses
+
+
+
+	- Woher nehmen wir die Zeit ??
+
+6. Magic
