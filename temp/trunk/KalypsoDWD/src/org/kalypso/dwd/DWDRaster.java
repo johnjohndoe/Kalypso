@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd;
 
 import java.util.Date;
@@ -71,7 +71,6 @@ import java.util.Vector;
 
 public class DWDRaster
 {
-  
   public static final int KEY_RAIN = 424;
 
   public static final int KEY_SNOW = 425;
@@ -82,60 +81,126 @@ public class DWDRaster
 
   public static final int KEY_100000_LON = 115;
 
-  
-    public boolean equals(Object obj)
+  final int m_key;
+
+  final Date m_date;
+
+  final Vector m_data;
+
+  public static final double SCALE = 100000d;
+
+  public boolean equals( Object obj )
+  {
+    if( !( obj instanceof DWDRaster ) )
+      return false;
+    return ( (DWDRaster)obj ).getKey() == getKey();
+  }
+
+  public int hashCode()
+  {
+    return getKey();
+  }
+
+  public DWDRaster( final Date date, final int key )
+  {
+    m_key = key;
+    m_date = date;
+    m_data = new Vector();
+  }
+
+  public int getKey()
+  {
+    return m_key;
+  }
+
+  public void addValues( Object[] values )
+  {
+    for( int i = 0; i < values.length; i++ )
+      m_data.add( values[i] );
+  }
+
+  public void addValue( Object value )
+  {
+    m_data.add( value );
+  }
+
+  public int size()
+  {
+    return m_data.size();
+  }
+
+  public Object getElementAt( int index )
+  {
+    return m_data.elementAt( index );
+  }
+
+  public double getValueAt( int index )
+  {
+    return Double.parseDouble( (String)m_data.elementAt( index ) );
+  }
+
+  public Date getDate()
+  {
+    return m_date;
+  }
+
+  public double getSum( int ids[] )
+  {
+    double result = 0;
+    for( int i = 0; i < ids.length; i++ )
+      result += getValueAt( ids[i] );
+    return result;
+  }
+
+  public double getAverage( int ids[] )
+  {
+    if( ids.length == 0 )
+      return 0;
+    double result = 0;
+    for( int i = 0; i < ids.length; i++ )
+      result += getValueAt( ids[i] );
+    return result / ids.length;
+  }
+
+  public double getMin()
+  {
+    boolean found = false;
+    double result = 0;
+    for( int i = 0, j = size(); i < j; i++ )
     {
-        if (!(obj instanceof DWDRaster))
-            return false;
-        return ((DWDRaster) obj).getKey() == getKey();
+      double value = getValueAt( i );
+      if( !found )
+      {
+        result = value;
+        found = true;
+      }
+      else
+      {
+        if( value < result )
+          result = value;
+      }
     }
+    return result;
+  }
 
-    public int hashCode()
+  public double getMax()
+  {
+    boolean found = false;
+    double result = 0;
+    for( int i = 0, j = size(); i < j; i++ )
     {
-        return getKey();
+      double value = getValueAt( i );
+      if( !found )
+      {
+        result = value;
+        found = true;
+      }
+      else
+      {
+        if( value > result )
+          result = value;
+      }
     }
-
-    final int m_key;
-
-    final Date m_date;
-
-    final Vector m_data;
-
-    public DWDRaster(final Date date, final int key)
-    {
-        m_key = key;
-        m_date = date;
-        m_data = new Vector();
-    }
-
-    public int getKey()
-    {
-        return m_key;
-    }
-
-    public void addValues(Object[] values)
-    {
-        for (int i = 0; i < values.length; i++)
-            m_data.add(values[i]);
-    }
-
-    public void addValue(Object value)
-    {
-        m_data.add(value);
-    }
-
-    public int size()
-    {
-        return m_data.size();
-    }
-
-    public Object getElementAt(int index)
-    {
-        return m_data.elementAt(index);
-    }
-
-    public Date getDate()
-    {
-        return m_date;
-    }
+    return result;
+  }
 }

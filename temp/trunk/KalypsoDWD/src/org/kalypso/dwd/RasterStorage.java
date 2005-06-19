@@ -36,15 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,12 +58,13 @@ import java.util.regex.Pattern;
 
 /**
  * storage and loader of dwd raster format files
+ * 
  * @author doemming
  */
 public class RasterStorage
 {
   public static boolean TEST_SCENARIO = false;
-  
+
   private final String DATUM = "([0-9]{10})";
 
   private final String KEY = "([0-9]+)";
@@ -71,19 +74,19 @@ public class RasterStorage
   /**
    * dateformat used in dwd raster format: "YYMMDDHHhh"
    */
-  private static final SimpleDateFormat m_rasterDF = new SimpleDateFormat( "yyMMddHHmm" );
+  private static final SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
 
   private final Pattern HEADER_STATIC = Pattern.compile( " " + DATUM + " +" + KEY );
 
   private final Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   private final HashMap m_store;
-  
+
   public RasterStorage()
   {
-  m_store=new HashMap();  
+    m_store = new HashMap();
   }
-  
+
   public void loadRaster( LineNumberReader reader ) throws IOException, ParseException
   {
     String line = null;
@@ -95,7 +98,7 @@ public class RasterStorage
       {
         System.out.println( line );
         storeRaster( raster );
-        final Date date = m_rasterDF.parse( dynamicHeaderMatcher.group( 1 ) );
+        final Date date = DATEFORMAT_RASTER.parse( dynamicHeaderMatcher.group( 1 ) );
         final int key = Integer.parseInt( dynamicHeaderMatcher.group( 2 ) );
         final long hour = Long.parseLong( dynamicHeaderMatcher.group( 3 ) );
         Date forecastDate = new Date( date.getTime() + 60 * 60 * 1000 * hour );
@@ -107,7 +110,7 @@ public class RasterStorage
       {
         System.out.println( line );
         storeRaster( raster );
-        final Date date = m_rasterDF.parse( staticHeaderMatcher.group( 1 ) );
+        final Date date = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
         final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
         raster = new DWDRaster( date, key );
         continue;
@@ -127,12 +130,12 @@ public class RasterStorage
     storeRaster( raster );
   }
 
-  public Object get(int key)
+  public Object get( int key )
   {
     final Integer storeKey = new Integer( key );
-    return m_store.get(storeKey); 
+    return m_store.get( storeKey );
   }
-  
+
   public void storeRaster( DWDRaster raster )
   {
     if( raster == null )
@@ -152,7 +155,12 @@ public class RasterStorage
       break;
     }
   }
-  
+
+  public void loadRaster( URL url ) throws IOException, ParseException
+  {
+    loadRaster( new LineNumberReader( new InputStreamReader( url.openStream() ) ) );
+  }
+
   public void loadRaster( File rasterFile ) throws IOException, ParseException
   {
     final Reader reader = new FileReader( rasterFile );
@@ -160,5 +168,5 @@ public class RasterStorage
     loadRaster( lineReader );
     lineReader.close();
     reader.close();
-  }  
+  }
 }
