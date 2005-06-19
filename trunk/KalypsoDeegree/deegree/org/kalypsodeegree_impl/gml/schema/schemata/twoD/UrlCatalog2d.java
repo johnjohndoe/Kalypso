@@ -1,3 +1,5 @@
+
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,7 +40,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.schema.schemata;
+package org.kalypsodeegree_impl.gml.schema.schemata.twoD;
 
 import java.util.Map;
 
@@ -51,18 +53,15 @@ import org.kalypso.java.net.AbstractUrlCatalog;
  * 
  * @author gernot
  */
-public class DeegreeUrlCatalog extends AbstractUrlCatalog
+public class UrlCatalog2d extends AbstractUrlCatalog
 {
-
   /**
    * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
    *      java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {
-    catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
-    catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
-    catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
-    catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
+    catalog.put( "http://elbe.wb.tu-harburg.de/2dModel", getClass().getResource( "2dgml.xsd" ) );
   }
+
 }

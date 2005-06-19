@@ -106,14 +106,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope_Impl( GM_Position min, GM_Position max )
   {
-    this.min = GeometryFactory.createGM_Position(
-    min.getX()<max.getX() ? min.getX():max.getX(),		
-    min.getY()<max.getY() ? min.getY():max.getY()		
-    );
-    this.max = GeometryFactory.createGM_Position(
-    min.getX()>max.getX() ? min.getX():max.getX(),		
-    min.getY()>max.getY() ? min.getY():max.getY()		
-    );
+    this.min = GeometryFactory.createGM_Position( min.getX() < max.getX() ? min.getX() : max.getX(), min.getY() < max.getY() ? min.getY() : max
+        .getY() );
+    this.max = GeometryFactory.createGM_Position( min.getX() > max.getX() ? min.getX() : max.getX(), min.getY() > max.getY() ? min.getY() : max
+        .getY() );
   }
 
   /**
@@ -122,8 +118,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public Object clone()
   {
-    return new GM_Envelope_Impl( (GM_Position)( (GM_Position_Impl)min ).clone(),
-        (GM_Position)( (GM_Position_Impl)max ).clone() );
+    return new GM_Envelope_Impl( (GM_Position)( (GM_Position_Impl)min ).clone(), (GM_Position)( (GM_Position_Impl)max ).clone() );
   }
 
   /**
@@ -163,8 +158,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public boolean contains( GM_Position point )
   {
-    if( ( point.getX() >= min.getX() ) && ( point.getX() <= max.getX() )
-        && ( point.getY() >= min.getY() ) && ( point.getY() <= max.getY() ) )
+    if( ( point.getX() >= min.getX() ) && ( point.getX() <= max.getX() ) && ( point.getY() >= min.getY() ) && ( point.getY() <= max.getY() ) )
     {
       return true;
     }
@@ -189,86 +183,87 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     double maxx2 = bb.getMax().getX();
     double maxy2 = bb.getMax().getY();
 
-    
-    if(!(Math.max(minx1, minx2)<=Math.min(maxx1, maxx2)))
+    if( !( Math.max( minx1, minx2 ) <= Math.min( maxx1, maxx2 ) ) )
       return false;
-    if(!(Math.max(miny1, miny2)<=Math.min(maxy1, maxy2)))
+    if( !( Math.max( miny1, miny2 ) <= Math.min( maxy1, maxy2 ) ) )
       return false;
     return true;
-//    // special cases: box2 lays completly inside box1
-//    if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && ( north1 >= north2 ) )
-//    {
-//      return true;
-//    }
-//
-//    if( ( west1 >= west2 ) && ( south1 >= south2 ) && ( east1 <= east2 ) && ( north1 <= north2 ) )
-//    {
-//      return true;
-//    }
-//
-//    // in any other case of intersection, at least one line of the BBOX has
-//    // to cross a line of the other BBOX
-//    // check western boundary of box 1
-//    // "touching" boxes must not intersect
-//    if( ( west1 >= west2 ) && ( west1 < east2 ) )
-//    {
-//      if( ( south1 <= south2 ) && ( north1 > south2 ) )
-//      {
-//        return true;
-//      }
-//
-//      if( ( south1 < north2 ) && ( north1 >= north2 ) )
-//      {
-//        return true;
-//      }
-//    }
-//
-//    // check eastern boundary of box 1
-//    // "touching" boxes must not intersect
-//    if( ( east1 > west2 ) && ( east1 <= east2 ) )
-//    {
-//      if( ( south1 <= south2 ) && ( north1 > south2 ) )
-//      {
-//        return true;
-//      }
-//
-//      if( ( south1 < north2 ) && ( north1 >= north2 ) )
-//      {
-//        return true;
-//      }
-//    }
-//
-//    // check southern boundary of box 1
-//    // "touching" boxes must not intersect
-//    if( ( south1 >= south2 ) && ( south1 < north2 ) )
-//    {
-//      if( ( west1 <= west2 ) && ( east1 > west2 ) )
-//      {
-//        return true;
-//      }
-//
-//      if( ( west1 < east2 ) && ( east1 >= east2 ) )
-//      {
-//        return true;
-//      }
-//    }
-//
-//    // check northern boundary of box 1
-//    // "touching" boxes must not intersect
-//    if( ( north1 > south2 ) && ( north1 <= north2 ) )
-//    {
-//      if( ( west1 <= west2 ) && ( east1 > west2 ) )
-//      {
-//        return true;
-//      }
-//
-//      if( ( west1 < east2 ) && ( east1 >= east2 ) )
-//      {
-//        return true;
-//      }
-//    }
-//
-//    return false;
+    //    // special cases: box2 lays completly inside box1
+    //    if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && (
+    // north1 >= north2 ) )
+    //    {
+    //      return true;
+    //    }
+    //
+    //    if( ( west1 >= west2 ) && ( south1 >= south2 ) && ( east1 <= east2 ) && (
+    // north1 <= north2 ) )
+    //    {
+    //      return true;
+    //    }
+    //
+    //    // in any other case of intersection, at least one line of the BBOX has
+    //    // to cross a line of the other BBOX
+    //    // check western boundary of box 1
+    //    // "touching" boxes must not intersect
+    //    if( ( west1 >= west2 ) && ( west1 < east2 ) )
+    //    {
+    //      if( ( south1 <= south2 ) && ( north1 > south2 ) )
+    //      {
+    //        return true;
+    //      }
+    //
+    //      if( ( south1 < north2 ) && ( north1 >= north2 ) )
+    //      {
+    //        return true;
+    //      }
+    //    }
+    //
+    //    // check eastern boundary of box 1
+    //    // "touching" boxes must not intersect
+    //    if( ( east1 > west2 ) && ( east1 <= east2 ) )
+    //    {
+    //      if( ( south1 <= south2 ) && ( north1 > south2 ) )
+    //      {
+    //        return true;
+    //      }
+    //
+    //      if( ( south1 < north2 ) && ( north1 >= north2 ) )
+    //      {
+    //        return true;
+    //      }
+    //    }
+    //
+    //    // check southern boundary of box 1
+    //    // "touching" boxes must not intersect
+    //    if( ( south1 >= south2 ) && ( south1 < north2 ) )
+    //    {
+    //      if( ( west1 <= west2 ) && ( east1 > west2 ) )
+    //      {
+    //        return true;
+    //      }
+    //
+    //      if( ( west1 < east2 ) && ( east1 >= east2 ) )
+    //      {
+    //        return true;
+    //      }
+    //    }
+    //
+    //    // check northern boundary of box 1
+    //    // "touching" boxes must not intersect
+    //    if( ( north1 > south2 ) && ( north1 <= north2 ) )
+    //    {
+    //      if( ( west1 <= west2 ) && ( east1 > west2 ) )
+    //      {
+    //        return true;
+    //      }
+    //
+    //      if( ( west1 < east2 ) && ( east1 >= east2 ) )
+    //      {
+    //        return true;
+    //      }
+    //    }
+    //
+    //    return false;
   }
 
   /**
@@ -291,17 +286,14 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    * GM_Envelope with the specified GM_Envelope. * Note: If there is no
    * intersection at all GM_Envelope will be null.
    * 
-   * @param bb
-   *          the GM_Envelope to be intersected with this GM_Envelope
+   * @param bb the GM_Envelope to be intersected with this GM_Envelope
    * @return the largest GM_Envelope contained in both the specified GM_Envelope
    *         and in this GM_Envelope.
    */
   public GM_Envelope createIntersection( GM_Envelope bb )
   {
-    Rectangle2D rect = new Rectangle2D.Double( bb.getMin().getX(), bb.getMin().getY(), bb
-        .getWidth(), bb.getHeight() );
-    Rectangle2D rect2 = new Rectangle2D.Double( this.getMin().getX(), this.getMin().getY(), this
-        .getWidth(), this.getHeight() );
+    Rectangle2D rect = new Rectangle2D.Double( bb.getMin().getX(), bb.getMin().getY(), bb.getWidth(), bb.getHeight() );
+    Rectangle2D rect2 = new Rectangle2D.Double( this.getMin().getX(), this.getMin().getY(), this.getWidth(), this.getHeight() );
 
     if( rect2.intersects( bb.getMin().getX(), bb.getMin().getY(), bb.getWidth(), bb.getHeight() ) )
     {
@@ -338,17 +330,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
       return false;
     }
 
-    return ( min.equals( ( (GM_Envelope)other ).getMin() ) && max.equals( ( (GM_Envelope)other )
-        .getMax() ) );
+    return ( min.equals( ( (GM_Envelope)other ).getMin() ) && max.equals( ( (GM_Envelope)other ).getMax() ) );
   }
 
-  /**
-   * 
-   * 
-   * @param b
-   * 
-   * @return
-   */
   public GM_Envelope getBuffer( double b )
   {
     GM_Position bmin = new GM_Position_Impl( new double[]
@@ -360,6 +344,35 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
         max.getX() + b,
         max.getY() + b } );
     return GeometryFactory.createGM_Envelope( bmin, bmax );
+  }
+
+  public GM_Envelope getMerged( GM_Position pos )
+  {
+    double minx = min.getX();
+    double miny = min.getY();
+    double maxx = max.getX();
+    double maxy = max.getY();
+    if( pos != null )
+    {
+      if( pos.getX() < minx )
+      {
+        minx = pos.getX();
+      }
+      if( pos.getY() < miny )
+      {
+        miny = pos.getY();
+      }
+      if( pos.getX() > maxx )
+      {
+        maxx = pos.getX();
+      }
+      if( pos.getY() > maxy )
+      {
+        maxy = pos.getY();
+      }
+    }
+    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
+
   }
 
   /**
@@ -393,11 +406,6 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;
@@ -425,19 +433,17 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.11  2005/04/17 21:19:24  doemming
+ * Revision 1.12  2005/06/19 15:10:01  doemming
  * *** empty log message ***
- *
- * Revision 1.10  2005/03/08 11:01:04  doemming
+ * Revision 1.11 2005/04/17 21:19:24 doemming
  * *** empty log message ***
- *
- * Revision 1.9  2005/03/02 18:17:17  doemming
- * *** empty log message ***
- *
- * Revision 1.8  2005/02/20 18:56:50  doemming
- * *** empty log message ***
- * Revision 1.7 2005/02/15 17:13:49 doemming ***
- * empty log message ***
+ * 
+ * Revision 1.10 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.9 2005/03/02 18:17:17 doemming *** empty log message ***
+ * 
+ * Revision 1.8 2005/02/20 18:56:50 doemming *** empty log message *** Revision
+ * 1.7 2005/02/15 17:13:49 doemming *** empty log message ***
  * 
  * Revision 1.6 2005/01/18 12:50:41 doemming *** empty log message ***
  * 

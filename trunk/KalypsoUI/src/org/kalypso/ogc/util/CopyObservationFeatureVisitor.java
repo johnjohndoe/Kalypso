@@ -89,8 +89,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final Date m_forecastTo;
 
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
-      final String targetobservation, final Source[] sources, final Date forecastFrom, final Date forecastTo, final PrintWriter logWriter )
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final String targetobservation, final Source[] sources,
+      final Date forecastFrom, final Date forecastTo, final PrintWriter logWriter )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -116,7 +116,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         m_logWriter.println( SUMM_INFO + "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
         return true;
       }
-      
+
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
         m_logWriter.println( SUMM_INFO + "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
@@ -137,7 +137,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         fc.initFilter( new IObservation[]
         {
             sourceObses[0],
-            sourceObses[1] }, sourceObses[0], null ); // TODO check if null context is ok here
+            sourceObses[1] }, sourceObses[0], null ); // TODO check if null
+                                                      // context is ok here
         obs = fc;
       }
 
@@ -146,13 +147,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       TimeserieUtils.setForecast( obs, m_forecastFrom, m_forecastTo );
 
       // protocol the observations here and inform the user
-      KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ),  m_logWriter, SUMM_INFO );
+      KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ), m_logWriter, SUMM_INFO );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
 
-      final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL(
-          m_context, href ) );
+      final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
       // TODO: check if valid
       FolderUtilities.mkdirs( targetfile.getParent() );
 
@@ -169,7 +169,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       m_logWriter.println( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
       m_logWriter.println( e.getLocalizedMessage() );
     }
@@ -185,7 +185,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       final Source source = m_sources[i];
       obses[i] = getObservation( f, source.getProperty(), source.getFrom(), source.getTo() );
 
-//      m_summaryWriter.write( "Zeitreihe unbekannt: " + ( (TimeseriesLink)f.getProperty( source.getProperty() ) ).getHref() );
+      //      m_summaryWriter.write( "Zeitreihe unbekannt: " + (
+      // (TimeseriesLink)f.getProperty( source.getProperty() ) ).getHref() );
       // TODO: catch exception and log unknown obs
       //      write( "Zeitreihe möglicherweise unbekannt: "
       //          + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref(),
@@ -196,18 +197,19 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return obses;
   }
 
-  private IObservation getObservation( final Feature feature, final String sourceProperty,
-      final Date from, final Date to ) throws MalformedURLException, SensorException
+  private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from, final Date to )
+      throws MalformedURLException, SensorException
   {
     if( sourceProperty == null )
       return null;
 
     final TimeseriesLink sourcelink = (TimeseriesLink)feature.getProperty( sourceProperty );
-    if( sourcelink == null ) // keine Zeitreihe verlink, z.B. kein Pegel am
-      // Knoten in KalypsoNA
+    if( sourcelink == null )
       return null;
-    final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(), new DateRangeArgument(
-        from, to ) );
+    // keine Zeitreihe verlink, z.B. kein Pegel am
+    // Knoten in KalypsoNA
+    String href = sourcelink.getHref();
+    final String sourceref = ZmlURL.insertDateRange( href, new DateRangeArgument( from, to ) );
 
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 

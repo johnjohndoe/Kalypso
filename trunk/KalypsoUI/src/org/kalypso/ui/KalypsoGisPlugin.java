@@ -622,6 +622,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
       final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
       final IUrlCatalog calcCatalog = new CalcServiceCatalog();
+      
       // TODO  wohin sonst
       final IUrlCatalog updateObs = new UrlCatalogUpdateObservationMapping();
 
@@ -630,6 +631,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           // test
           //          naCatalog,
           //          twoDCatalog,
+          
           updateObs,
           serverUrlCatalog,
           calcCatalog } );

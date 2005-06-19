@@ -112,7 +112,10 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
             style );
       }};
       creator.createControl( panel, SWT.NONE, SWT.NONE );
-      creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      // sTODO hier nur horizontal scrollen
+      // FIXME test 
+      creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      
 
     featureComposite.addModifyListener( this );
 

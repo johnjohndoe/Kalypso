@@ -71,7 +71,7 @@ public class Resources_fr extends Resources
   /**
    * The resource file, using UTF-8 encoding.
    */
-  static final String FILEPATH = "org/deegree_impl/model/resources/css/resources_fr.utf";
+  static final String FILEPATH = "org/kalypsodeegree_impl/model/resources/css/resources_fr.utf";
 
   /**
    * Construct resources for French.

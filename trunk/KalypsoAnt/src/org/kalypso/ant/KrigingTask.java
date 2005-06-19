@@ -54,6 +54,7 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.kalypso.java.xml.XMLUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.dwd.KrigingReader;
 import org.kalypso.transformation.dwd.SourceObservationProvider;
@@ -79,18 +80,12 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist
- * es, alle Features eines GML durchzugehen, und für jedes Feature eine
- * Zeitreihe (definiert über einen Link) zu lesen und an eine andere Stelle
- * (definiert durch eine andere Property des Features) zu schreiben.
  * 
  * <code>
- *    <copyObservation gml="${project.dir}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="Wiski" context="${calc.dir}" targetObservation="lokal">
- *      <source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}" />
- *    </copyObservation>
+ * TODO
  * </code>
  * 
- * @author belger
+ * @author doemming
  */
 
 public class KrigingTask extends Task
@@ -222,7 +217,7 @@ public class KrigingTask extends Task
     try
     {
       Logger logger = Logger.getAnonymousLogger();
-      logger.info("load mapping schema NS="+UrlCatalogUpdateObservationMapping.NS);
+      logger.info( "load mapping schema NS=" + UrlCatalogUpdateObservationMapping.NS );
       final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS );
       if( schema == null )
         throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
@@ -233,7 +228,7 @@ public class KrigingTask extends Task
       final GMLWorkspace resultWorkspace = new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, m_context, null, schema.getTargetNS(), schema
           .getNamespaceMap() );
 
-      logger.info("check coordinatessystem");
+      logger.info( "check coordinatessystem" );
       // crs stuff
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       final String targetCRSName = m_epsg;
@@ -243,7 +238,7 @@ public class KrigingTask extends Task
       if( cs == null )
         throw new Exception( "unknown coordinatesystem" );
       final CS_CoordinateSystem targetCRS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( cs );
-      logger.info("use coordinatessystem "+m_epsg+" OK");
+      logger.info( "use coordinatessystem " + m_epsg + " OK" );
 
       final UrlResolver urlResolver = new UrlResolver();
 
@@ -252,9 +247,9 @@ public class KrigingTask extends Task
       final URL krigingMapURL = urlResolver.resolveURL( m_context, m_hrefKrigingTXT );
       if( krigingMapURL == null )
         throw new Exception( "kriging raster not found" );
-      logger.info("use kriging ratser (mapping) "+krigingMapURL.toExternalForm());
+      logger.info( "use kriging ratser (mapping) " + krigingMapURL.toExternalForm() );
 
-      logger.info("load modell...");
+      logger.info( "load modell..." );
       // load catchment model
       if( m_modellGML == null )
         throw new Exception( "modell not set" );
@@ -272,7 +267,7 @@ public class KrigingTask extends Task
       final Object modellFeatureFromPath = modellWorkspace.getFeatureFromPath( m_modellGMLFeaturePath );
       final Feature[] modelFeatures = FeatureHelper.getFeaturess( modellFeatureFromPath );
 
-      logger.info("load src modell...");
+      logger.info( "load src modell..." );
       // load src model
       if( m_sourceGML == null )
         throw new Exception( "source modell not set" );
@@ -287,7 +282,7 @@ public class KrigingTask extends Task
       final SourceObservationProvider provider = new SourceObservationProvider( srcFeatures, m_sourceGMLIDLinkProperty,
           m_sourceGMLObservationLinkProperty );
 
-      logger.info("calculate mapping ...");
+      logger.info( "calculate mapping ..." );
       final Reader inputStreamReader = new InputStreamReader( krigingMapURL.openStream() );
 
       final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRS );
@@ -300,13 +295,19 @@ public class KrigingTask extends Task
       {
         final Feature feature = modelFeatures[i];
         final AbstractFilterType inFilter = kReader.createFilter( feature, m_modellGMLpolygonPropname );
+
         final Writer writer = new StringWriter();
         marshaller.marshal( inFilter, writer );
-
+        // TODO close writer
+        final String string = XMLUtilities.removeXMLHeader( writer.toString() );
+        final String filterInline = XMLUtilities.prepareInLine( string )+"#useascontext";
+        
+        //        final URL zmlURL = new URL( href + "?" + filterInline );
         final Feature mapFE = resultWorkspace.createFeature( mapFT );
         // in
         final TimeseriesLink inLink = obsLinkFac.createTimeseriesLink();
-        inLink.setHref( writer.toString() );
+        //        inLink.setHref( writer.toString() );
+        inLink.setHref( filterInline );
         final FeatureProperty inProp = FeatureFactory.createFeatureProperty( RESULT_TS_IN_PROP, inLink );
         mapFE.setProperty( inProp );
 

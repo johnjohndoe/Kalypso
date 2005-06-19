@@ -6,3 +6,4 @@ wfs=http://134.28.87.75:8000/deegreewms/wfs
 wms=http://localhost:8080/deegreewms/wms
 wms=http://134.28.87.71:8080/deegreewms/wms
 wms=http://134.28.87.75:8000/deegreewms/wms
+wms=http://gdz1.leipzig.ifag.de/servlet/com.esri.wms.Esrimap?servicename=dtk200_500_1000_a10_gk4_wms
