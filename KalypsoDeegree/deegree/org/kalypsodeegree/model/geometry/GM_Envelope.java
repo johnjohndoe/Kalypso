@@ -130,4 +130,6 @@ public interface GM_Envelope
 
   GM_Envelope getPaned( GM_Point centroid );
 
+  GM_Envelope getMerged( GM_Position position );
+
 }
