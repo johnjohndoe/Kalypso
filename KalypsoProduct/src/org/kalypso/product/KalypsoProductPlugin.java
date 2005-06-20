@@ -20,14 +20,13 @@ public class KalypsoProductPlugin extends AbstractUIPlugin
   /**
    * The constructor.
    */
-  public KalypsoProductPlugin( )
+  public KalypsoProductPlugin()
   {
     super();
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle
-          .getBundle( "org.kalypso.product.KalypsoProductPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.product.KalypsoProductPluginResources" );
     }
     catch( MissingResourceException x )
     {
@@ -54,22 +53,20 @@ public class KalypsoProductPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoProductPlugin getDefault( )
+  public static KalypsoProductPlugin getDefault()
   {
     return plugin;
   }
 
   /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not
-   * found.
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
   public static String getResourceString( String key )
   {
-    ResourceBundle bundle = KalypsoProductPlugin.getDefault()
-        .getResourceBundle();
+    ResourceBundle bundle = KalypsoProductPlugin.getDefault().getResourceBundle();
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return ( bundle != null ) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -80,7 +77,7 @@ public class KalypsoProductPlugin extends AbstractUIPlugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle( )
+  public ResourceBundle getResourceBundle()
   {
     return resourceBundle;
   }

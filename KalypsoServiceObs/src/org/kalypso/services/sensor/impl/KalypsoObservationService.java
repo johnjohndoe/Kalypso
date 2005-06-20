@@ -113,14 +113,13 @@ public class KalypsoObservationService implements IObservationService
 
   /** Data-ID(String) --> File */
   private final Map m_mapDataId2File;
-  
+
   private final File m_tmpDir;
 
   private final Logger m_logger;
 
   /** Timezone is used to convert dates between repositories and clients */
   private TimeZone m_timezone = null;
-
 
   /**
    * Constructs the service by reading the configuration.
@@ -140,18 +139,15 @@ public class KalypsoObservationService implements IObservationService
 
     try
     {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir()
-          + "/IObservation%g.log", 10000000, 1, true ) );
+      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IObservation%g.log", 10000000, 1, true ) );
     }
     catch( Exception e ) // generic Exception caught for simplicity
     {
       e.printStackTrace();
-      throw new RemoteException( "Exception in constructor von: "
-          + getClass().getName(), e );
+      throw new RemoteException( "Exception in constructor von: " + getClass().getName(), e );
     }
 
-    m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig
-        .getTempDir() );
+    m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
 
     init();
@@ -160,11 +156,11 @@ public class KalypsoObservationService implements IObservationService
   protected void finalize() throws Throwable
   {
     clearCache();
-    
+
     // force delete, even if we called deleteOnExit()
     m_tmpDir.delete();
   }
-  
+
   private void clearCache()
   {
     m_mapBeanId2Item.clear();
@@ -180,12 +176,12 @@ public class KalypsoObservationService implements IObservationService
 
     // clear temp files
     for( final Iterator it = m_mapDataId2File.values().iterator(); it.hasNext(); )
-      ((File)it.next()).delete();
+      ( (File)it.next() ).delete();
     m_mapDataId2File.clear();
-    
+
     ZmlFilter.configureFor( null );
   }
-  
+
   /**
    * Initialize the Service according to configuration.
    * 
@@ -197,16 +193,14 @@ public class KalypsoObservationService implements IObservationService
 
     try
     {
-      final File conf = new File( ServiceConfig.getConfDir(),
-          "IObservationService/repconf_server.xml" );
+      final File conf = new File( ServiceConfig.getConfDir(), "IObservationService/repconf_server.xml" );
       final InputStream stream = new FileInputStream( conf );
       // this call also closes the stream
       final List facConfs = RepositoryConfigUtils.loadConfig( stream );
 
       // load the service properties
       final Properties props = new Properties();
-      final File fProps = new File( ServiceConfig.getConfDir(),
-          "IObservationService/service.properties" );
+      final File fProps = new File( ServiceConfig.getConfDir(), "IObservationService/service.properties" );
       FileInputStream ins = null;
       try
       {
@@ -216,8 +210,7 @@ public class KalypsoObservationService implements IObservationService
       }
       catch( final IOException e )
       {
-        m_logger.warning( "Cannot read properties-file: "
-            + e.getLocalizedMessage() );
+        m_logger.warning( "Cannot read properties-file: " + e.getLocalizedMessage() );
       }
       finally
       {
@@ -227,8 +220,7 @@ public class KalypsoObservationService implements IObservationService
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
-        final IRepositoryFactory fact = item.createFactory( getClass()
-            .getClassLoader() );
+        final IRepositoryFactory fact = item.createFactory( getClass().getClassLoader() );
 
         final IRepository rep = fact.createRepository();
         m_repositories.add( rep );
@@ -241,9 +233,8 @@ public class KalypsoObservationService implements IObservationService
         final String cnManip = props.getProperty( pManip );
         if( cnManip != null )
         {
-          final IObservationManipulator man = (IObservationManipulator)ClassUtilities
-              .newInstance( cnManip, IObservationManipulator.class, getClass()
-                  .getClassLoader() );
+          final IObservationManipulator man = (IObservationManipulator)ClassUtilities.newInstance( cnManip,
+              IObservationManipulator.class, getClass().getClassLoader() );
           m_mapRepId2Manip.put( rep.getIdentifier(), man );
         }
       }
@@ -270,8 +261,7 @@ public class KalypsoObservationService implements IObservationService
     {
       m_logger.throwing( getClass().getName(), "init", e );
 
-      throw new RemoteException(
-          "Exception in KalypsoObservationService.init()", e );
+      throw new RemoteException( "Exception in KalypsoObservationService.init()", e );
     }
   }
 
@@ -294,39 +284,33 @@ public class KalypsoObservationService implements IObservationService
       }
       catch( final Exception e )
       {
-        m_logger.info( "No observation for " + obean.getId() + ". Reason: "
-            + e.getLocalizedMessage() );
+        m_logger.info( "No observation for " + obean.getId() + ". Reason: " + e.getLocalizedMessage() );
       }
       finally
       {
         if( obs == null )
         {
-          m_logger
-              .info( "Trying to create default observation based on request..." );
+          m_logger.info( "Trying to create default observation based on request..." );
 
           obs = RequestFactory.createDefaultObservation( hereHref );
         }
       }
 
       /*
-       * The query part of the URL (after the ?...) contains some additional
-       * specification: from-to, filter, etc.
+       * The query part of the URL (after the ?...) contains some additional specification: from-to, filter, etc.
        */
       final DateRangeArgument dra = ZmlURL.checkDateRange( hereHref );
 
-      m_logger.info( "Reading data for observation: " + obs.getName()
-          + " Date-Range: " + dra );
+      m_logger.info( "Reading data for observation: " + obs.getName() + " Date-Range: " + dra );
 
       updateObservation( obs, obean.getId() );
 
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
-      final ObservationType obsType = ZmlFactory.createXML( obs, dra,
-          m_timezone );
+      final ObservationType obsType = ZmlFactory.createXML( obs, dra, m_timezone );
 
-      final File f = File.createTempFile( "___" + obs.getName(), ".zml",
-          m_tmpDir );
+      final File f = File.createTempFile( "___" + obs.getName(), ".zml", m_tmpDir );
 
       // we say delete on exit even if we allow the client to delete the file
       // explicitely in the clearTempData() service call. This allows us to
@@ -339,7 +323,7 @@ public class KalypsoObservationService implements IObservationService
 
       final DataBean data = new DataBean( f.toString(), new DataHandler( new FileDataSource( f ) ) );
       m_mapDataId2File.put( data.getId(), f );
-      
+
       return data;
     }
     catch( final Exception e ) // generic exception used for simplicity
@@ -370,37 +354,31 @@ public class KalypsoObservationService implements IObservationService
       final boolean b = file.delete();
 
       if( !b )
-        m_logger.warning( "Could not delete file " + file.toString()
-            + " associated to dataId " + dataId );
+        m_logger.warning( "Could not delete file " + file.toString() + " associated to dataId " + dataId );
     }
     else
       m_logger.warning( "Unknown dataId: " + dataId );
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#writeData(ObservationBean,
-   *      DataHandler)
+   * @see org.kalypso.services.sensor.IObservationService#writeData(ObservationBean, DataHandler)
    */
-  public void writeData( final ObservationBean obean, final DataHandler odb )
-      throws RemoteException
+  public void writeData( final ObservationBean obean, final DataHandler odb ) throws RemoteException
   {
     try
     {
       final IRepositoryItem item = itemFromBean( obean );
 
-      final IObservation obs = (IObservation)item
-          .getAdapter( IObservation.class );
+      final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
 
       if( obs == null )
       {
-        final RemoteException e = new RemoteException( "No observation for "
-            + obean.getId() );
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() );
         m_logger.throwing( getClass().getName(), "writeData", e );
         throw e;
       }
 
-      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb
-          .getInputStream() ), obs.getIdentifier(), null );
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), obs.getIdentifier(), null );
 
       obs.setValues( zml.getValues( null ) );
     }
@@ -411,13 +389,11 @@ public class KalypsoObservationService implements IObservationService
     }
   }
 
-  private IRepositoryItem itemFromBean( final ItemBean obean )
-      throws RemoteException, RepositoryException
+  private IRepositoryItem itemFromBean( final ItemBean obean ) throws RemoteException, RepositoryException
   {
     if( obean == null )
     {
-      final NullPointerException e = new NullPointerException(
-          "ItemBean must not be null" );
+      final NullPointerException e = new NullPointerException( "ItemBean must not be null" );
       m_logger.throwing( getClass().getName(), "itemFromBean", e );
       throw e;
     }
@@ -435,8 +411,7 @@ public class KalypsoObservationService implements IObservationService
       final IRepositoryItem item = rep.findItem( obean.getId() );
 
       if( item == null )
-        throw new RepositoryException(
-            "Item does not exist or could not be found: " + obean.getId() );
+        throw new RepositoryException( "Item does not exist or could not be found: " + obean.getId() );
 
       return item;
     }
@@ -452,9 +427,8 @@ public class KalypsoObservationService implements IObservationService
         return item;
     }
 
-    final RemoteException e = new RemoteException(
-        "Unknonwn Repository or item. Repository: " + repId + ", Item: "
-            + obean.getId() );
+    final RemoteException e = new RemoteException( "Unknonwn Repository or item. Repository: " + repId + ", Item: "
+        + obean.getId() );
     m_logger.throwing( getClass().getName(), "itemFromBean", e );
     throw e;
   }
@@ -497,8 +471,7 @@ public class KalypsoObservationService implements IObservationService
         {
           final IRepository rep = (IRepository)m_repositories.get( i );
 
-          m_repositoryBeans[i] = new ItemBean( rep.getIdentifier(), rep
-              .getName() );
+          m_repositoryBeans[i] = new ItemBean( rep.getIdentifier(), rep.getName() );
           m_mapBeanId2Item.put( m_repositoryBeans[i].getId(), rep );
         }
       }
@@ -523,8 +496,7 @@ public class KalypsoObservationService implements IObservationService
 
       for( int i = 0; i < beans.length; i++ )
       {
-        beans[i] = new ItemBean( children[i].getIdentifier(), children[i]
-            .getName() );
+        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName() );
 
         // store it for future referencing
         m_mapBeanId2Item.put( beans[i].getId(), children[i] );
@@ -535,7 +507,7 @@ public class KalypsoObservationService implements IObservationService
 
       return beans;
     }
-    catch( final  RepositoryException e )
+    catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "getChildren", e );
       throw new RemoteException( "", e );
@@ -573,8 +545,7 @@ public class KalypsoObservationService implements IObservationService
     return null;
   }
 
-  private MetadataList updateObservation( final IObservation obs,
-      final String id )
+  private MetadataList updateObservation( final IObservation obs, final String id )
   {
     // always update the observation metadata with the ocs-id
     final MetadataList md = obs.getMetadataList();
@@ -582,8 +553,7 @@ public class KalypsoObservationService implements IObservationService
 
     // look if there is a manipulator and let it update the observation
     final String repId = RepositoryUtils.getRepositoryId( id );
-    final IObservationManipulator oman = (IObservationManipulator)m_mapRepId2Manip
-        .get( repId );
+    final IObservationManipulator oman = (IObservationManipulator)m_mapRepId2Manip.get( repId );
     if( oman != null )
     {
       try
@@ -593,8 +563,7 @@ public class KalypsoObservationService implements IObservationService
       catch( final SensorException e )
       {
         m_logger.throwing( getClass().getName(), "updateMetadata", e );
-        m_logger.info( "Could not manipulate observation with id: " + id
-            + " due to previous errors" );
+        m_logger.info( "Could not manipulate observation with id: " + id + " due to previous errors" );
       }
     }
 

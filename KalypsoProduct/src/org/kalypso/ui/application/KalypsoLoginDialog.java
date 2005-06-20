@@ -63,9 +63,8 @@ import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ui.KPImageProvider;
 
 /**
- * The KalypsoLoginDialog allows to enter user login information as well as make
- * scenario selection. Both are optional since Kalypso has various login
- * possibilities depending on the installation.
+ * The KalypsoLoginDialog allows to enter user login information as well as make scenario selection. Both are optional
+ * since Kalypso has various login possibilities depending on the installation.
  * 
  * @author schlienger
  */
@@ -99,11 +98,9 @@ public class KalypsoLoginDialog extends TitleAreaDialog
 
   private ISelectionChangedListener m_listener;
 
-  public KalypsoLoginDialog( final Shell shell, final String title,
-      final String message, final String userName,
-      final boolean userNameChangeable, final boolean passwordEnabled,
-      final boolean scenarioSelection, final String[] scenarios,
-      final String[] scenariosDesc )
+  public KalypsoLoginDialog( final Shell shell, final String title, final String message, final String userName,
+      final boolean userNameChangeable, final boolean passwordEnabled, final boolean scenarioSelection,
+      final String[] scenarios, final String[] scenariosDesc )
   {
     super( shell );
 
@@ -157,27 +154,24 @@ public class KalypsoLoginDialog extends TitleAreaDialog
 
       final Label lblSce = new Label( composite, SWT.LEFT );
       lblSce.setText( "Wählen Sie bitte ein Szenario aus:" );
-      lblSce
-          .setToolTipText( "Mit Szenarios werden zum Beispiel spezielle Anwendungsfälle"
-              + " wie Katastrophentest unterstützt" );
-      lblSce.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL,
-          GridData.VERTICAL_ALIGN_FILL, true, false, 2, 1 ) );
+      lblSce.setToolTipText( "Mit Szenarios werden zum Beispiel spezielle Anwendungsfälle"
+          + " wie Katastrophentest unterstützt" );
+      lblSce.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL, GridData.VERTICAL_ALIGN_FILL, true, false, 2,
+          1 ) );
 
       // fake label in order to eat one column
       new Label( composite, SWT.NONE );
 
       // scenario selection
       m_sceViewer = new ListViewer( composite, SWT.SINGLE | SWT.BORDER );
-      m_sceViewer.getControl()
-          .setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      m_sceViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
       m_sceViewer.add( m_scenarios.keySet().toArray() );
 
       // fake label
       new Label( composite, SWT.NONE );
 
       final Label lblDesc = new Label( composite, SWT.LEFT | SWT.WRAP );
-      lblDesc.setLayoutData( new GridData( GridData.BEGINNING,
-          GridData.VERTICAL_ALIGN_FILL, true, true, 1, 2 ) );
+      lblDesc.setLayoutData( new GridData( GridData.BEGINNING, GridData.VERTICAL_ALIGN_FILL, true, true, 1, 2 ) );
       //      lblDesc.set
 
       final Map scenarios = m_scenarios;
@@ -185,16 +179,14 @@ public class KalypsoLoginDialog extends TitleAreaDialog
       {
         public void selectionChanged( final SelectionChangedEvent event )
         {
-          final IStructuredSelection sel = (IStructuredSelection) event
-              .getSelection();
+          final IStructuredSelection sel = (IStructuredSelection)event.getSelection();
           final String scenario = sel.getFirstElement().toString();
-          String desc = (String) scenarios.get( scenario );
+          String desc = (String)scenarios.get( scenario );
 
           if( desc == null )
             desc = "";
 
-          lblDesc.setText( StringUtilities.spanOverLines( desc, 70, true,
-              StringUtilities.ALIGNMENT_LEFT ) );
+          lblDesc.setText( StringUtilities.spanOverLines( desc, 70, true, StringUtilities.ALIGNMENT_LEFT ) );
           composite.layout();
         }
       };
@@ -203,8 +195,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
 
       // default select first item
       if( m_scenarios.size() > 0 )
-        m_sceViewer.setSelection( new StructuredSelection( m_scenarios.keySet()
-            .toArray()[0] ), true );
+        m_sceViewer.setSelection( new StructuredSelection( m_scenarios.keySet().toArray()[0] ), true );
     }
 
     m_image = KPImageProvider.IMAGE_LOGIN.createImage();
@@ -220,7 +211,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   /**
    * Helper that sets the focus according to dialog settings
    */
-  private void setMyFocus( )
+  private void setMyFocus()
   {
     if( m_userNameChangeable )
       m_txtName.setFocus();
@@ -233,7 +224,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  protected void okPressed( )
+  protected void okPressed()
   {
     m_userName = m_txtName == null ? null : m_txtName.getText();
     m_passerword = m_txtPass == null ? null : m_txtPass.getText();
@@ -248,7 +239,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  public boolean close( )
+  public boolean close()
   {
     if( m_listener != null && m_sceViewer != null )
       m_sceViewer.removeSelectionChangedListener( m_listener );
@@ -259,17 +250,17 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     return super.close();
   }
 
-  public String getSelectedScenario( )
+  public String getSelectedScenario()
   {
     return m_selectedScenario;
   }
 
-  public String getUserName( )
+  public String getUserName()
   {
     return m_userName;
   }
 
-  public String getPassword( )
+  public String getPassword()
   {
     return m_passerword;
   }

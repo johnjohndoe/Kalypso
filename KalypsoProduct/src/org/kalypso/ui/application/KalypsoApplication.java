@@ -72,7 +72,6 @@ public class KalypsoApplication implements IPlatformRunnable
     final Display display = PlatformUI.createDisplay();
     final int returnCode = PlatformUI.createAndRunWorkbench( display, advisor );
 
-    return returnCode == PlatformUI.RETURN_RESTART ? IPlatformRunnable.EXIT_RESTART
-        : IPlatformRunnable.EXIT_OK;
+    return returnCode == PlatformUI.RETURN_RESTART ? IPlatformRunnable.EXIT_RESTART : IPlatformRunnable.EXIT_OK;
   }
 }

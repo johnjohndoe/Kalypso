@@ -43,24 +43,24 @@ package org.kalypso.ui.application.login;
 import org.kalypso.users.User;
 
 /**
- * ILoginValidator: convenience interface used for kalypso login. It defines the
- * contract that kalypso's login-mechanisms have to follow.
+ * ILoginValidator: convenience interface used for kalypso login. It defines the contract that kalypso's
+ * login-mechanisms have to follow.
  * 
  * @author schlienger
  */
 public interface ILoginValidator
 {
   /** user can change its name */
-  public boolean userNameChangeable( );
+  public boolean userNameChangeable();
 
   /** user must enter password */
-  public boolean passwordEnabled( );
+  public boolean passwordEnabled();
 
   /** default user name (usually name of user at OS) */
-  public String getDefaultUserName( );
+  public String getDefaultUserName();
 
   /** login-dialog message */
-  public String getMessage( );
+  public String getMessage();
 
   /**
    * Validates the login of the given user
@@ -70,6 +70,5 @@ public interface ILoginValidator
    * @return a user object or null if login failed
    * @throws Exception
    */
-  public User validate( final String username, final String password )
-      throws Exception;
+  public User validate( final String username, final String password ) throws Exception;
 }

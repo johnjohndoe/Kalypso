@@ -44,16 +44,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Convenience class for storing references to image descriptors within
- * KalypsoProduct. Important note: the class must not be named ImageProvider
- * because the same class exists in the same package in KalypsoUI!
+ * Convenience class for storing references to image descriptors within KalypsoProduct. Important note: the class must
+ * not be named ImageProvider because the same class exists in the same package in KalypsoUI!
  */
 public class KPImageProvider
 {
   public static final ImageDescriptor id( final String location )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.product",
-        location );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.product", location );
   }
 
   public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "etc/kalypso16.gif" );

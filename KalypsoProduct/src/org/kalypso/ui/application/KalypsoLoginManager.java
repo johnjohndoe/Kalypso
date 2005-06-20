@@ -58,11 +58,9 @@ import org.kalypso.ui.application.login.SingleLoginValidator;
 import org.kalypso.users.User;
 
 /**
- * Takes care of handling various login-possibilities. The various login
- * possibilities are configured by the KalypsoUserService. If the
- * KalypsoUserService is not available (either down or not used at all) the
- * login manager uses the default AppLoginValidator which provides a static
- * login facility.
+ * Takes care of handling various login-possibilities. The various login possibilities are configured by the
+ * KalypsoUserService. If the KalypsoUserService is not available (either down or not used at all) the login manager
+ * uses the default AppLoginValidator which provides a static login facility.
  * 
  * @author schlienger
  */
@@ -70,15 +68,14 @@ public final class KalypsoLoginManager
 {
   private KalypsoLoginManager()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   /**
    * The login procedure follows this path:
    * <ul>
    * <li>it tries to access the UserService
-   * <li>if the UserService is up, then it asks it for its configuration (see
-   * UserService for more information)
+   * <li>if the UserService is up, then it asks it for its configuration (see UserService for more information)
    * <li>if the UserService is down, then it uses the default AppLoginValidator
    * </ul>
    */
@@ -166,10 +163,8 @@ public final class KalypsoLoginManager
           shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
         }
 
-        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell,
-            "Kalypso - Login", lv.getMessage(), username, lv
-                .userNameChangeable(), lv.passwordEnabled(), useScenario,
-            scenarios, scenarioDescriptions );
+        final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, "Kalypso - Login", lv.getMessage(), username, lv
+            .userNameChangeable(), lv.passwordEnabled(), useScenario, scenarios, scenarioDescriptions );
 
         if( dlg.open() == Window.OK )
         {
@@ -195,8 +190,7 @@ public final class KalypsoLoginManager
           break; // user successfully authenticated
         if( trials == 0 )
           throw new IllegalStateException( "Benutzer " + username
-              + " kann sich nicht einlogger. Seine Berechtigung sollte "
-              + "geprüft werden." );
+              + " kann sich nicht einlogger. Seine Berechtigung sollte " + "geprüft werden." );
       }
       catch( final Exception e )
       {

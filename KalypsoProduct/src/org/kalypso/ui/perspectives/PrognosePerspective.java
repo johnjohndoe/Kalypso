@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.perspectives;
 
 import org.eclipse.ui.IPageLayout;
@@ -56,13 +56,13 @@ public class PrognosePerspective implements IPerspectiveFactory
   public void createInitialLayout( final IPageLayout layout )
   {
     layout.addView( IKalypsoProductConstants.ID_PROGNOSE_VIEW, IPageLayout.LEFT, 0.95f, IPageLayout.ID_EDITOR_AREA );
-    
+
     layout.setFixed( true );
     layout.setEditorAreaVisible( false );
 
     // a bit dirty, but this perspective should be minimalistic
     if( layout instanceof PageLayout )
-      ((PageLayout)layout).getActionSets().clear();
+      ( (PageLayout)layout ).getActionSets().clear();
   }
 
 }

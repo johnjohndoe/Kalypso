@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.view;
 
 import java.io.IOException;
@@ -84,11 +84,11 @@ public class PrognosePanel
   private final ModelLabelProvider m_labelProvider = new ModelLabelProvider();
 
   private final FontUtilities m_fontUtils = new FontUtilities();
-  
+
   private final URL m_location;
 
   private Label m_imageLabel;
-  
+
   private Composite m_control;
 
   private ModelType m_model;
@@ -119,14 +119,14 @@ public class PrognosePanel
   public Composite createControl( final Composite parent )
   {
     final Display display = parent.getDisplay();
-    
+
     m_control = new Composite( parent, SWT.NONE );
 
     final GridLayout gridLayout = new GridLayout( 2, false );
-//    gridLayout.horizontalSpacing = 20;
-//    gridLayout.verticalSpacing = 20;
-//    gridLayout.marginHeight = 20;
-//    gridLayout.marginWidth = 20;
+    //    gridLayout.horizontalSpacing = 20;
+    //    gridLayout.verticalSpacing = 20;
+    //    gridLayout.marginHeight = 20;
+    //    gridLayout.marginWidth = 20;
     m_control.setLayout( gridLayout );
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     gridData.horizontalAlignment = GridData.CENTER;
@@ -166,21 +166,19 @@ public class PrognosePanel
     }
 
     final Label headingLabel = new Label( m_control, SWT.SINGLE );
-    final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
-        false, 2, 2 );
+    final GridData headingGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false, 2, 2 );
     headingLabel.setLayoutData( headingGridData );
-    final Font headingFont = m_fontUtils.createChangedFontData( headingLabel.getFont()
-        .getFontData(), 10, SWT.BOLD, headingLabel.getDisplay() );
+    final Font headingFont = m_fontUtils.createChangedFontData( headingLabel.getFont().getFontData(), 10, SWT.BOLD,
+        headingLabel.getDisplay() );
     headingLabel.setFont( headingFont );
     headingLabel.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
     headingLabel.setText( "Bitte wählen Sie das Einzugsgebiet" );
 
     final List list = new List( m_control, SWT.SINGLE );
-    final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false,
-        false );
+    final GridData listGridData = new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false );
     list.setLayoutData( listGridData );
-    final Font listfont = m_fontUtils.createChangedFontData( list.getFont().getFontData(), 10,
-        SWT.NONE, list.getDisplay() );
+    final Font listfont = m_fontUtils.createChangedFontData( list.getFont().getFontData(), 10, SWT.NONE, list
+        .getDisplay() );
     list.setFont( listfont );
 
     final ListViewer viewer = new ListViewer( list );
@@ -194,9 +192,9 @@ public class PrognosePanel
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final ModellistType.ModelType model = (ModelType)( (IStructuredSelection)event
-            .getSelection() ).getFirstElement();
-        
+        final ModellistType.ModelType model = (ModelType)( (IStructuredSelection)event.getSelection() )
+            .getFirstElement();
+
         setModel( model );
       }
     } );
@@ -214,11 +212,11 @@ public class PrognosePanel
 
     return m_control;
   }
-  
+
   public void setModel( final ModellistType.ModelType model )
   {
     m_model = model;
-    
+
     final Image oldImage = m_imageLabel.getImage();
 
     ImageData imageData = (ImageData)m_imageHash.get( model );

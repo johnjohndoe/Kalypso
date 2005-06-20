@@ -46,10 +46,8 @@ import org.kalypso.services.proxy.IUserService;
 import org.kalypso.users.User;
 
 /**
- * SingleLoginValidator: login used for single-sign-on with no possibility to
- * change the user name. Password is not necessary since the user is already
- * logged onto the OS. It will just check if the user has the right to use
- * Kalypso.
+ * SingleLoginValidator: login used for single-sign-on with no possibility to change the user name. Password is not
+ * necessary since the user is already logged onto the OS. It will just check if the user has the right to use Kalypso.
  * 
  * @author schlienger
  */
@@ -62,8 +60,7 @@ public class SingleLoginValidator implements ILoginValidator
     m_srv = srv;
   }
 
-  public User validate( final String username, final String password )
-      throws Exception
+  public User validate( final String username, final String password ) throws Exception
   {
     try
     {
@@ -80,22 +77,22 @@ public class SingleLoginValidator implements ILoginValidator
     return null;
   }
 
-  public boolean userNameChangeable( )
+  public boolean userNameChangeable()
   {
     return false;
   }
 
-  public boolean passwordEnabled( )
+  public boolean passwordEnabled()
   {
     return false;
   }
 
-  public String getDefaultUserName( )
+  public String getDefaultUserName()
   {
     return System.getProperty( "user.name" );
   }
 
-  public String getMessage( )
+  public String getMessage()
   {
     return "Melden Sie sich bitte an.";
   }

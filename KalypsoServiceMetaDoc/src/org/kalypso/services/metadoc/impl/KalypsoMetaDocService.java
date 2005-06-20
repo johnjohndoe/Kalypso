@@ -49,8 +49,7 @@ public class KalypsoMetaDocService implements IMetaDocService
 
     try
     {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IMetaDocService%g.log",
-          10000000, 1, true ) );
+      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IMetaDocService%g.log", 10000000, 1, true ) );
     }
     catch( Exception e ) // generic Exception caught for simplicity
     {
@@ -71,8 +70,7 @@ public class KalypsoMetaDocService implements IMetaDocService
    */
   private void init() throws RemoteException
   {
-    final File conf = new File( ServiceConfig.getConfDir(),
-        "IMetaDocService/metadocService.properties" );
+    final File conf = new File( ServiceConfig.getConfDir(), "IMetaDocService/metadocService.properties" );
 
     InputStream stream = null;
     try
@@ -83,8 +81,8 @@ public class KalypsoMetaDocService implements IMetaDocService
 
       // try to instanciate our commiter
       final String className = m_props.getProperty( PROP_COMMITER );
-      m_commiter = (IMetaDocCommiter)ClassUtilities.newInstance( className, IMetaDocCommiter.class,
-          getClass().getClassLoader() );
+      m_commiter = (IMetaDocCommiter)ClassUtilities.newInstance( className, IMetaDocCommiter.class, getClass()
+          .getClassLoader() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
@@ -121,11 +119,11 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
 
   /**
-   * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map,
-   *      javax.activation.DataHandler, java.lang.String)
+   * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map, javax.activation.DataHandler,
+   *      java.lang.String)
    */
-  public void commitNewDocument( final Map metadata, final DataHandler data,
-      final String fileExtension ) throws RemoteException
+  public void commitNewDocument( final Map metadata, final DataHandler data, final String fileExtension )
+      throws RemoteException
   {
     try
     {
