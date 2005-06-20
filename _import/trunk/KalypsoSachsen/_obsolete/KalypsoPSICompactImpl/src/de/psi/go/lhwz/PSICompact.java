@@ -1,7 +1,7 @@
 /*
  * 
- * To change the template for this generated file go to Window - Preferences -
- * Java - Code Generation - Code and Comments
+ * To change the template for this generated file go to Window - Preferences - Java - Code Generation - Code and
+ * Comments
  */
 package de.psi.go.lhwz;
 
@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * Interface für Zugriffe auf PSICompact
  * 
- * @author BKarpa To change the template for this generated type comment go to
- *         Window - Preferences - Java - Code Generation - Code and Comments
+ * @author BKarpa To change the template for this generated type comment go to Window - Preferences - Java - Code
+ *         Generation - Code and Comments
  */
 public interface PSICompact
 {
@@ -25,52 +25,46 @@ public interface PSICompact
   public static int STATUS_OK = 0;
 
   /**
-   * Archiv Status Der Archivwert ist manuell korrigiert worden, d.h. das
-   * Ergebnis der automatischen Verdichtung ist überschrieben worden. Der Wert
-   * kann für die Prognose verwendet werden.
+   * Archiv Status Der Archivwert ist manuell korrigiert worden, d.h. das Ergebnis der automatischen Verdichtung ist
+   * überschrieben worden. Der Wert kann für die Prognose verwendet werden.
    */
   public static int STATUS_MANKOR = 1;
 
   /**
-   * Archiv Status Mindestens ein Ersatzwert ist in die automatische Wertbildung
-   * eingeflossen, d.h. der Wert ist für die Prognose u.U. nicht verwendbar.
+   * Archiv Status Mindestens ein Ersatzwert ist in die automatische Wertbildung eingeflossen, d.h. der Wert ist für die
+   * Prognose u.U. nicht verwendbar.
    */
   public static int STATUS_ERSALLG = 2;
 
   /**
-   * Archiv Status Der Archivwert wurde durch die Simulation, bzw. Prognose
-   * gebildet. Dieser Status wird automatisch gesetzt, wenn Archivwerte durch
-   * die Prognose geschrieben wurden.
+   * Archiv Status Der Archivwert wurde durch die Simulation, bzw. Prognose gebildet. Dieser Status wird automatisch
+   * gesetzt, wenn Archivwerte durch die Prognose geschrieben wurden.
    */
   public static int STATUS_REKO = 3;
 
   /**
-   * Archiv Status Der Archivwert wurde durch eine automatische Nachberechnung
-   * gebildet. Der Wert kann für die Prognose verwendet werden.
+   * Archiv Status Der Archivwert wurde durch eine automatische Nachberechnung gebildet. Der Wert kann für die Prognose
+   * verwendet werden.
    */
   public static int STATUS_AUTO = 4;
 
   /**
-   * Archiv Status Der Archivwert wurde automatisch nachgeführt. Die
-   * automatische Nachführung sorgt beim Start des Archivdienstes automatisch
-   * dafür, dass nicht vorhandene Archivwerte erzeugt werden. Wie die
-   * Archivwerte erzeugt werden, richtet sich nach der parametrierten
-   * Nachführstrategie dieses Objektes. Der Wert kann für die Prognose u.U.
+   * Archiv Status Der Archivwert wurde automatisch nachgeführt. Die automatische Nachführung sorgt beim Start des
+   * Archivdienstes automatisch dafür, dass nicht vorhandene Archivwerte erzeugt werden. Wie die Archivwerte erzeugt
+   * werden, richtet sich nach der parametrierten Nachführstrategie dieses Objektes. Der Wert kann für die Prognose u.U.
    * nicht verwendet werden.
    */
   public static int STATUS_NACH = 5;
 
   /**
-   * Archiv Status Ein Archivwert wird als normiert bezeichnet, wenn er nicht
-   * existiert, d.h. nicht oder noch nicht geschrieben wurde. Der Wert kann für
-   * die Prognose nicht verwendet werden.
+   * Archiv Status Ein Archivwert wird als normiert bezeichnet, wenn er nicht existiert, d.h. nicht oder noch nicht
+   * geschrieben wurde. Der Wert kann für die Prognose nicht verwendet werden.
    */
   public static int STATUS_NORM = 6;
 
   /**
-   * Archiv Status Mindestens ein normierter Archivwert ist in die Wertbildung
-   * während der Verdichtung eingeflossen. Der Wert kann für die Prognose u.U.
-   * nicht verwendet werden.
+   * Archiv Status Mindestens ein normierter Archivwert ist in die Wertbildung während der Verdichtung eingeflossen. Der
+   * Wert kann für die Prognose u.U. nicht verwendet werden.
    */
   public static int STATUS_NORMALLG = 7;
 
@@ -264,8 +258,7 @@ public interface PSICompact
     private String river = null;
 
     /**
-     * die Liste von unterstützten Archiven für dieses Objekt, siehe ARC_*
-     * Konstanten
+     * die Liste von unterstützten Archiven für dieses Objekt, siehe ARC_* Konstanten
      */
     private int[] archiveData = null;
 
@@ -308,9 +301,9 @@ public interface PSICompact
      * @param archiveDataParam
      * @param idParam
      */
-    public ObjectMetaData( String idParam, int unitParam, double alarm1Param, double alarm2Param,
-        double alarm3Param, double alarm4Param, int mapNoParam, int rightParam, int heightParam,
-        int[] archiveDataParam, double levelParam, String levelUnitParam )
+    public ObjectMetaData( String idParam, int unitParam, double alarm1Param, double alarm2Param, double alarm3Param,
+        double alarm4Param, int mapNoParam, int rightParam, int heightParam, int[] archiveDataParam, double levelParam,
+        String levelUnitParam )
     {
       id = idParam;
       unit = unitParam;
@@ -867,10 +860,8 @@ public interface PSICompact
    * Klartext Informationen zu einem Objekttyp lesen
    * 
    * @param typespec
-   *          Objekttyp zu dem die Daten geholt werden sollen siehe Konstanten
-   *          TYPE_*.
-   * @return die Liste von Objektbeschreibungen für diesen Objekttyp, oder null,
-   *         wenn ein Fehler aufgetreten ist.
+   *          Objekttyp zu dem die Daten geholt werden sollen siehe Konstanten TYPE_*.
+   * @return die Liste von Objektbeschreibungen für diesen Objekttyp, oder null, wenn ein Fehler aufgetreten ist.
    */
   public ObjectInfo[] getInfo( int typespec ) throws ECommException;
 
@@ -878,46 +869,38 @@ public interface PSICompact
    * Lesen von Archivwerten für ein Objekt
    * 
    * @param id
-   *          Kennzeichen des Objekts für das Archivadaten abgefragt werden
-   *          sollen.
+   *          Kennzeichen des Objekts für das Archivadaten abgefragt werden sollen.
    * @param arcType
-   *          Archivtyp aus dem die Archivwerte geholt werden sollen, siehe
-   *          Konstanten ARC_*
+   *          Archivtyp aus dem die Archivwerte geholt werden sollen, siehe Konstanten ARC_*
    * @param from
    *          erster Archiveintrag der geholt werden soll
    * @param to
    *          letzter Archiveintrag der geholt werden soll
-   * @return die Liste von Archivdaten für dieses Objekt, oder null, wenn ein
-   *         Fehler aufgetreten ist.
+   * @return die Liste von Archivdaten für dieses Objekt, oder null, wenn ein Fehler aufgetreten ist.
    */
-  public ArchiveData[] getArchiveData( String id, int arcType, Date from, Date to )
-      throws ECommException;
+  public ArchiveData[] getArchiveData( String id, int arcType, Date from, Date to ) throws ECommException;
 
   /**
    * Schreiben von Archivwerten für ein Objekt
    * 
    * @param id
-   *          Kennzeichen des Objekts für das Archivadaten geschrieben werden
-   *          sollen.
+   *          Kennzeichen des Objekts für das Archivadaten geschrieben werden sollen.
    * @param arcType
-   *          Archivtyp aus dem die Archivwerte geholt werden sollen, siehe
-   *          Konstanten ARC_*
+   *          Archivtyp aus dem die Archivwerte geholt werden sollen, siehe Konstanten ARC_*
    * @param from
    *          erster Archiveintrag der geschrieben werden soll.
    * @param data
    *          die zu schreibenden Archivwerte
    * @return True falls alles OK, False wenn Fehler aufgetreten ist.
    */
-  public boolean setArchiveData( String id, int arcType, Date from, ArchiveData[] data )
-      throws ECommException;
+  public boolean setArchiveData( String id, int arcType, Date from, ArchiveData[] data ) throws ECommException;
 
   /**
    * Lesen von W-Q Parametern für ein Objekt
    * 
    * @param id
    *          Kennzeichen des Objekts für das W-Q Parameter geholt werden
-   * @return die Liste von W-Q Parametern für dieses Objekt, oder null, wenn ein
-   *         Fehler aufgetreten ist.
+   * @return die Liste von W-Q Parametern für dieses Objekt, oder null, wenn ein Fehler aufgetreten ist.
    */
   public WQParamSet[] getWQParams( String id ) throws ECommException;
 
@@ -926,8 +909,7 @@ public interface PSICompact
    * 
    * @param id
    *          Kennzeichen des Objekts für das Meta Daten geholt werden sollen.
-   * @return die Meta Daten dieses Objekt, oder null, wenn ein Fehler
-   *         aufgetreten ist.
+   * @return die Meta Daten dieses Objekt, oder null, wenn ein Fehler aufgetreten ist.
    */
   public ObjectMetaData getObjectMetaData( String id ) throws ECommException;
 
@@ -936,24 +918,20 @@ public interface PSICompact
    * 
    * @param userId
    *          Id des eingeloggten Benutzers
-   * @return Liste der Benutzerklassen, die für diesen Benutzer definiert
-   *         wurden, oder null wenn Benutzer nicht definiert, bzw. leeren Array,
-   *         wenn keine Benutzerklassen für diesen Benutzer parametriert sind.
-   *         Text
+   * @return Liste der Benutzerklassen, die für diesen Benutzer definiert wurden, oder null wenn Benutzer nicht
+   *         definiert, bzw. leeren Array, wenn keine Benutzerklassen für diesen Benutzer parametriert sind. Text
    */
   public String[] getUserClasses( String userId ) throws ECommException;
 
   /**
-   * Liefert alle Benutzerrechte für einen gegebenen Benutzer und eine
-   * Benutzerklasse
+   * Liefert alle Benutzerrechte für einen gegebenen Benutzer und eine Benutzerklasse
    * 
    * @param userId
    *          Id des eingeloggten Benutzers
    * @param userClass
    *          Benutzerklasse des eingeloggten Benutzers
-   * @return Liste der Benutzerrechte, die für diesen Benutzer definiert wurden,
-   *         oder null wenn Benutzer nicht definiert, bzw. leeren Array, wenn
-   *         keine Benutzerrechte für diesen Benutzer parametriert sind. Text
+   * @return Liste der Benutzerrechte, die für diesen Benutzer definiert wurden, oder null wenn Benutzer nicht
+   *         definiert, bzw. leeren Array, wenn keine Benutzerrechte für diesen Benutzer parametriert sind. Text
    */
   public String[] getUserRights( String userId, String userClass ) throws ECommException;
 
@@ -962,9 +940,8 @@ public interface PSICompact
    * 
    * @param id
    *          Kennzeichen des Objekts für das der Typ geholt werden sollen.
-   * @return Messungstyp, siehe auch MEAS_* Konstanten, MEAS_UNDEF wird
-   *         geliefert wenn das Objekt nicht existiert oder ein anderer Fehler
-   *         aufgetreten ist
+   * @return Messungstyp, siehe auch MEAS_* Konstanten, MEAS_UNDEF wird geliefert wenn das Objekt nicht existiert oder
+   *         ein anderer Fehler aufgetreten ist
    */
   public int getMeasureType( java.lang.String id ) throws ECommException;
 
@@ -977,9 +954,8 @@ public interface PSICompact
    * 
    * @param userClass
    *          Benutzerklasse
-   * @return Liste der Benutzer, die für diese Benutzerklasse definiert wurden,
-   *         oder null wenn Benutzerklasse nicht definiert, bzw. leeres Array,
-   *         wenn keine Benutzer für diese Benutzerklasse vorhanden sind.
+   * @return Liste der Benutzer, die für diese Benutzerklasse definiert wurden, oder null wenn Benutzerklasse nicht
+   *         definiert, bzw. leeres Array, wenn keine Benutzer für diese Benutzerklasse vorhanden sind.
    */
   public String[] getUser( String userClass ) throws ECommException;
 
@@ -1002,8 +978,7 @@ public interface PSICompact
   public boolean copyanddistributeFile( File source, String destination ) throws ECommException;
 
   /**
-   * TODO: Schnittstelle zum Informationsverteiler Realisierungspriorität von
-   * oben nach unten :-)
+   * TODO: Schnittstelle zum Informationsverteiler Realisierungspriorität von oben nach unten :-)
    */
 
   /**
@@ -1011,8 +986,7 @@ public interface PSICompact
    * 
    * @param Pegelkennziffer
    *          (letzten n Stellen).
-   * @return Bemerkung für diesen Pegel, die dem Pegelmelder vorgelesen werden
-   *         soll
+   * @return Bemerkung für diesen Pegel, die dem Pegelmelder vorgelesen werden soll
    */
   public String getComment( String Pegelkennziffer ) throws ECommException;
 

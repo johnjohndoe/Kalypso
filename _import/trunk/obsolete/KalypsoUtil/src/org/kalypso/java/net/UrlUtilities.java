@@ -72,8 +72,7 @@ public class UrlUtilities implements IUrlResolver
    *          URL, to which the relative url will be resolved
    * @param relativeURL
    *          a string designating an absolute or relative URL
-   * @return if relativeURL is relative, return new URL( baseURL, relativeURL ),
-   *         else return new URL( relativeURL )
+   * @return if relativeURL is relative, return new URL( baseURL, relativeURL ), else return new URL( relativeURL )
    * @throws MalformedURLException
    */
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
@@ -98,8 +97,7 @@ public class UrlUtilities implements IUrlResolver
   }
 
   /**
-   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
    */
   public void addReplaceToken( final String key, final String value )
   {
@@ -138,8 +136,7 @@ public class UrlUtilities implements IUrlResolver
   }
 
   /**
-   * Erzeugt den Reader anhand der URL und
-   * {@link URLConnection#getContentEncoding()}.
+   * Erzeugt den Reader anhand der URL und {@link URLConnection#getContentEncoding()}.
    * 
    * @see org.kalypso.java.net.IUrlResolver#createReader(java.net.URL)
    */
@@ -157,7 +154,7 @@ public class UrlUtilities implements IUrlResolver
   }
 
   /**
-   *  Öffnet die URL-Connection und gibt null zurück bei Fehler
+   * Öffnet die URL-Connection und gibt null zurück bei Fehler
    */
   public static URLConnection connectQuietly( URL url )
   {
@@ -175,4 +172,3 @@ public class UrlUtilities implements IUrlResolver
     return connection;
   }
 }
-

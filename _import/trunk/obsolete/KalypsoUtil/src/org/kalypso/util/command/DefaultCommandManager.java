@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
 import java.util.Vector;
@@ -85,7 +85,7 @@ public class DefaultCommandManager implements ICommandManager
       stack.clear();
       stackPos = -1;
     }
-    
+
     checkStatus();
 
     try
@@ -94,12 +94,12 @@ public class DefaultCommandManager implements ICommandManager
     }
     catch( final Exception e )
     {
-      // das letzte wieder löschen 
+      // das letzte wieder löschen
       stack.remove( stack.size() - 1 );
       stackPos--;
-      
+
       checkStatus();
-      
+
       throw e;
     }
 
@@ -136,14 +136,14 @@ public class DefaultCommandManager implements ICommandManager
 
       try
       {
-      ( (ICommand)stack.elementAt( stackPos + 1 ) ).undo();
+        ( (ICommand)stack.elementAt( stackPos + 1 ) ).undo();
       }
       catch( final Exception e )
       {
         stackPos++;
-        
+
         checkStatus();
-        
+
         throw e;
       }
     }
@@ -221,10 +221,10 @@ public class DefaultCommandManager implements ICommandManager
     return m_dirty;
   }
 
-  public void resetDirty( )
+  public void resetDirty()
   {
     m_dirty = false;
-    
+
     fireCommandManagerChanged();
   }
 }

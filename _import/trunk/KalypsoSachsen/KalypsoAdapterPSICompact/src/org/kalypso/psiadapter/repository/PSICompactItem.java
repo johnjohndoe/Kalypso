@@ -23,6 +23,7 @@ public class PSICompactItem implements IRepositoryItem
   private final PSICompactItem m_parent;
 
   private final String m_name;
+
   private final String m_identifier;
 
   private final List m_children;
@@ -55,7 +56,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -63,7 +64,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return getName();
   }
@@ -79,7 +80,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( )
+  public IRepositoryItem getParent()
   {
     return m_parent;
   }
@@ -87,7 +88,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return getChildren().length != 0;
   }
@@ -95,10 +96,9 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
-    return (IRepositoryItem[]) m_children
-        .toArray( new IRepositoryItem[m_children.size()] );
+    return (IRepositoryItem[])m_children.toArray( new IRepositoryItem[m_children.size()] );
   }
 
   /**
@@ -109,15 +109,14 @@ public class PSICompactItem implements IRepositoryItem
     try
     {
       final boolean adaptable = PSICompactFactory.getConnection().getMeasureType( m_identifier ) != PSICompact.TYPE_UNDEF;
-      
+
       if( adaptable && anotherClass == IObservation.class )
-        return new PSICompactObservationItem( getName(), getIdentifier(),
-            m_objectInfo, m_valueType );
+        return new PSICompactObservationItem( getName(), getIdentifier(), m_objectInfo, m_valueType );
     }
     catch( ECommException e )
     {
       e.printStackTrace();
-      
+
       return null;
     }
 
@@ -127,7 +126,7 @@ public class PSICompactItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     try
     {
@@ -137,8 +136,7 @@ public class PSICompactItem implements IRepositoryItem
     {
       e.printStackTrace();
 
-      throw new IllegalStateException(
-          "Invalid repository. See previous stack trace for the RepositoryException" );
+      throw new IllegalStateException( "Invalid repository. See previous stack trace for the RepositoryException" );
     }
   }
 
@@ -153,7 +151,7 @@ public class PSICompactItem implements IRepositoryItem
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return getRepository().getIdentifier() + m_identifier;
   }

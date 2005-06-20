@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Decorates an {@link java.io.OutputStream} and runs a {@link java.lang.Runnable} when the {@link #close()} Methdo is called.}
+ * Decorates an {@link java.io.OutputStream}and runs a {@link java.lang.Runnable}when the {@link #close()}Methdo is
+ * called.}
  * 
  * @author belger
  */
 public class RunAfterCloseOutputStream extends OutputStream
 {
   private final OutputStream m_os;
+
   private final Runnable m_runAfterClose;
 
   public RunAfterCloseOutputStream( final OutputStream os, final Runnable runAfterClose )
@@ -18,7 +20,7 @@ public class RunAfterCloseOutputStream extends OutputStream
     m_os = os;
     m_runAfterClose = runAfterClose;
   }
-  
+
   /**
    * @see java.io.OutputStream#close()
    */
@@ -45,7 +47,7 @@ public class RunAfterCloseOutputStream extends OutputStream
   {
     m_os.write( b );
   }
-  
+
   /**
    * All write methods are overwritten, to use performance improvements of decorated streeam.
    * 
@@ -55,7 +57,7 @@ public class RunAfterCloseOutputStream extends OutputStream
   {
     m_os.write( b );
   }
-  
+
   /**
    * All write methods are overwritten, to use performance improvements of decorated streeam.
    * 

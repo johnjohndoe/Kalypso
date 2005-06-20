@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io.filter;
 
 import java.io.File;
-
 import java.util.regex.Pattern;
 
 /**
@@ -58,8 +57,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
   private final boolean m_bFilterDirs;
 
   /**
-   * falls false, wird für accept( File f ) immer false zurückgegeben, falls f
-   * ein Verzeichnis ist
+   * falls false, wird für accept( File f ) immer false zurückgegeben, falls f ein Verzeichnis ist
    */
   private final boolean m_bShowDir;
 
@@ -67,11 +65,9 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
    * Constructor
    * 
    * @param patterns
-   *          string regex pattern unqualified filename must match to be
-   *          included.
+   *          string regex pattern unqualified filename must match to be included.
    */
-  public MultipleRegexFileFilter( final String[] patterns, boolean bFilterDirs, boolean bShowDirs,
-      boolean bIgnoreCase )
+  public MultipleRegexFileFilter( final String[] patterns, boolean bFilterDirs, boolean bShowDirs, boolean bIgnoreCase )
   {
     m_bFilterDirs = bFilterDirs;
     m_bShowDir = bShowDirs;
@@ -102,8 +98,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
    * @param file
    *          the name of the file
    * 
-   * @return true if and only if the name should be included in the file list;
-   *         false otherwise.
+   * @return true if and only if the name should be included in the file list; false otherwise.
    */
   public boolean accept( File file )
   {
@@ -117,7 +112,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
     // falls Pattern nicht auf Verzeichnis engewendet wereden soll, gleich
     // zurück
     if( file.isDirectory() && !m_bFilterDirs )
-return true;
+      return true;
 
     String name = file.getName();
 

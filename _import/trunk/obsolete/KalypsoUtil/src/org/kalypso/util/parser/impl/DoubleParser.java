@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.parser.impl;
 
 import org.kalypso.util.parser.AbstractParser;
@@ -56,7 +56,7 @@ public class DoubleParser extends AbstractParser
    */
   public DoubleParser()
   {
-    this( "");
+    this( "" );
   }
 
   /**
@@ -66,7 +66,7 @@ public class DoubleParser extends AbstractParser
    */
   public DoubleParser( String format )
   {
-    
+
     format.getClass();
     //
   }
@@ -94,7 +94,7 @@ public class DoubleParser extends AbstractParser
   {
     try
     {
-      return Double.valueOf(text);
+      return Double.valueOf( text );
     }
     catch( NumberFormatException e )
     {
@@ -109,15 +109,14 @@ public class DoubleParser extends AbstractParser
   {
     return obj.toString();
   }
-  
+
   /**
-   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
   public int compare( Object value1, Object value2 )
   {
-    double n1 = ((Number) value1).doubleValue();
-    double n2 = ((Number) value2).doubleValue();
+    double n1 = ( (Number)value1 ).doubleValue();
+    double n2 = ( (Number)value2 ).doubleValue();
 
     return Double.compare( n1, n2 );
   }

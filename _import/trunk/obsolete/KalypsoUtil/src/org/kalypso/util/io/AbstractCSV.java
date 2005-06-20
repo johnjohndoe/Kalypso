@@ -1,43 +1,43 @@
 /*--------------- Kalypso-Header --------------------------------------------------------------------
 
-This file is part of kalypso.
-Copyright (C) 2004, 2005 by:
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
 
-Technical University Hamburg-Harburg (TUHH)
-Institute of River and coastal engineering
-Denickestr. 22
-21073 Hamburg, Germany
-http://www.tuhh.de/wb
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
 
-and
+ and
 
-Bjoernsen Consulting Engineers (BCE)
-Maria Trost 3
-56070 Koblenz, Germany
-http://www.bjoernsen.de
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-Contact:
+ Contact:
 
-E-Mail:
-belger@bjoernsen.de
-schlienger@bjoernsen.de
-v.doemming@tuhh.de
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
 
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.io;
 
 import java.io.BufferedReader;
@@ -62,7 +62,7 @@ public abstract class AbstractCSV implements ITabledValues
   protected final boolean m_ignoreEmptyLines;
 
   protected String m_commentedLineBeginString = null;
-  
+
   /** separator used for serializing the contents. It is a semicolon by default. */
   private String m_separator = ";";
 
@@ -87,9 +87,10 @@ public abstract class AbstractCSV implements ITabledValues
   {
     m_commentedLineBeginString = str;
   }
-  
+
   /**
-   * @param separator The separator to set.
+   * @param separator
+   *          The separator to set.
    */
   public void setSeparator( String separator )
   {
@@ -99,7 +100,7 @@ public abstract class AbstractCSV implements ITabledValues
   /**
    * @see org.kalypso.util.io.ITabledValues#getLines()
    */
-  public int getLines( )
+  public int getLines()
   {
     return m_lines.size();
   }
@@ -108,16 +109,16 @@ public abstract class AbstractCSV implements ITabledValues
   {
     if( getLines() == 0 )
       return 0;
-    
-    return ((String[])m_lines.get(0)).length;
+
+    return ( (String[])m_lines.get( 0 ) ).length;
   }
-  
+
   /**
    * @see org.kalypso.util.io.ITabledValues#getItem(int, int)
    */
   public String getItem( final int row, final int col )
   {
-    return ((String[]) m_lines.get( row ))[col];
+    return ( (String[])m_lines.get( row ) )[col];
   }
 
   /**
@@ -125,12 +126,11 @@ public abstract class AbstractCSV implements ITabledValues
    */
   public void setItem( final int row, final int col, String element )
   {
-    ((String[]) m_lines.get( row ))[col] = element;
+    ( (String[])m_lines.get( row ) )[col] = element;
   }
-  
+
   /**
-   * Fetch the CSV-Values from the reader. Caller should take care of closing
-   * the reader.
+   * Fetch the CSV-Values from the reader. Caller should take care of closing the reader.
    * 
    * @param reader
    */
@@ -150,8 +150,7 @@ public abstract class AbstractCSV implements ITabledValues
 
     while( line != null )
     {
-      if( m_ignoreEmptyLines && line.length() == 0
-          || m_commentedLineBeginString != null
+      if( m_ignoreEmptyLines && line.length() == 0 || m_commentedLineBeginString != null
           && line.startsWith( m_commentedLineBeginString ) )
       {
         line = r.readLine();
@@ -168,7 +167,7 @@ public abstract class AbstractCSV implements ITabledValues
    * @param line
    */
   protected abstract void handleCurrentLine( final String line );
-  
+
   /**
    * Saves the contents in the given Writer
    * 
@@ -182,7 +181,7 @@ public abstract class AbstractCSV implements ITabledValues
 
     for( Iterator iter = m_lines.iterator(); iter.hasNext(); )
     {
-      String[] items = (String[]) iter.next();
+      String[] items = (String[])iter.next();
 
       for( int i = 0; i < items.length; i++ )
       {

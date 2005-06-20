@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.factory;
 
 /**
  * Exceptionklasse für Exceptions innerhalb des Factory Packages.
- *
+ * 
  * @author schlienger
  */
 public class FactoryException extends Exception

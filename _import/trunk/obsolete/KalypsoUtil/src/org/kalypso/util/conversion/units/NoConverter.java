@@ -11,17 +11,17 @@ public final class NoConverter implements IValueConverter
 
   private NoConverter()
   {
-    // no instanciation
+  // no instanciation
   }
-  
+
   public static NoConverter getInstance()
   {
     if( instance == null )
       instance = new NoConverter();
-    
+
     return instance;
   }
-  
+
   /**
    * @see org.kalypso.util.conversion.units.IValueConverter#convert(double)
    */

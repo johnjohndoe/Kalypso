@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.factory;
 
 import java.util.Hashtable;
@@ -52,18 +52,16 @@ import org.kalypso.java.lang.reflect.ClassUtilityException;
  * Eine sehr allgemeine Factory, die durch Properties konfiguriert wird.
  * </p>
  * <p>
- * Die Values der Properties bezeichnen den Klassennamen der zu erzeugenden
- * Objekte, die Keys dürfen beliebiege String sein.
+ * Die Values der Properties bezeichnen den Klassennamen der zu erzeugenden Objekte, die Keys dürfen beliebiege String
+ * sein.
  * </p>
  * <p>
- * Die Factory kann so konfiguriert werden, dass jede Objektart nur einmal
- * erzeugt wird, einmal erzeugte Objekte werden dann gecached und bei
- * nochmaliger Anfrage erneut zurückgegeben.
+ * Die Factory kann so konfiguriert werden, dass jede Objektart nur einmal erzeugt wird, einmal erzeugte Objekte werden
+ * dann gecached und bei nochmaliger Anfrage erneut zurückgegeben.
  * </p>
  * <p>
- * Beim Erzeugen eines Objects kann zusätzlich angegeben werden, ob dieses von
- * einer bestimmten Klasse ableiten soll. Erfüllt das Object diese Forderung
- * nicht wird eine Exception geworfen.
+ * Beim Erzeugen eines Objects kann zusätzlich angegeben werden, ob dieses von einer bestimmten Klasse ableiten soll.
+ * Erfüllt das Object diese Forderung nicht wird eine Exception geworfen.
  * </p>
  * <p>
  * Die Properties sind erweiterbar.
@@ -83,15 +81,14 @@ public class ConfigurableCachableObjectFactory
 
   /**
    * @param props
-   *          Die Keys sind die in getObjectInstance benutzten type's, die
-   *          Values sind die namen der Klassen, die jeweils erzeugt werden
+   *          Die Keys sind die in getObjectInstance benutzten type's, die Values sind die namen der Klassen, die
+   *          jeweils erzeugt werden
    * @param cache
-   *          falls true, werden die erzeugten Objekte gecached, sonst wird
-   *          immer ein neues Objekt erzeugt
-   * @param cl the class loader to use
+   *          falls true, werden die erzeugten Objekte gecached, sonst wird immer ein neues Objekt erzeugt
+   * @param cl
+   *          the class loader to use
    */
-  public ConfigurableCachableObjectFactory( final Properties props, final boolean cache,
-      final ClassLoader cl )
+  public ConfigurableCachableObjectFactory( final Properties props, final boolean cache, final ClassLoader cl )
   {
     m_props.putAll( props );
     m_cache = cache;
@@ -104,31 +101,26 @@ public class ConfigurableCachableObjectFactory
    * @return object instance
    * @throws FactoryException
    * 
-   * @see ConfigurableCachableObjectFactory#getObjectInstance(String, Class,
-   *      Object[])
+   * @see ConfigurableCachableObjectFactory#getObjectInstance(String, Class, Object[])
    */
-  public Object getObjectInstance( final String type, final Class expected )
-      throws FactoryException
+  public Object getObjectInstance( final String type, final Class expected ) throws FactoryException
   {
     return getObjectInstance( type, expected, null );
   }
-  
+
   public boolean isTypeKnown( final String type )
   {
     return m_props.getProperty( type ) != null;
   }
 
   /**
-   * Erzeugt eine neue Instanz oder benutzt die bestehende Instanz aus dem
-   * Cache, wenn aktiviert.
+   * Erzeugt eine neue Instanz oder benutzt die bestehende Instanz aus dem Cache, wenn aktiviert.
    * <p>
-   * Dabei sollte man achten dass die Instanz auch über argumente instanziiert
-   * werden kann. Wenn der Cache aktiviert ist, und man versucht andere
-   * Argumente, aber die gleiche type von Object zu instanziieren, bekommt man
-   * die Instanz aus dem Cache.
+   * Dabei sollte man achten dass die Instanz auch über argumente instanziiert werden kann. Wenn der Cache aktiviert
+   * ist, und man versucht andere Argumente, aber die gleiche type von Object zu instanziieren, bekommt man die Instanz
+   * aus dem Cache.
    * <p>
-   * WICHTIG: Dies bedeutet dass man also Argumente benutzen sollte nur wenn der
-   * Cache nicht aktiviert ist.
+   * WICHTIG: Dies bedeutet dass man also Argumente benutzen sollte nur wenn der Cache nicht aktiviert ist.
    * 
    * @param type
    * @param expected
@@ -183,6 +175,6 @@ public class ConfigurableCachableObjectFactory
 
   public boolean hasInstance( final String type )
   {
-    return m_objects.containsKey(type);
+    return m_objects.containsKey( type );
   }
 }

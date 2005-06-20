@@ -1,6 +1,5 @@
 package org.kalypso.java.lang.reflect;
 
-
 /**
  * An Exception that can occur using the ClassUtilities
  * 

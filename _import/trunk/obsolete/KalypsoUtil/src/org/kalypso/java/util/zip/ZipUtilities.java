@@ -82,8 +82,7 @@ public class ZipUtilities
     }
   }
 
-  public static void unzip( final InputStream inputStream, final File targetdir )
-      throws IOException
+  public static void unzip( final InputStream inputStream, final File targetdir ) throws IOException
   {
     final ZipInputStream zis = new ZipInputStream( inputStream );
     while( true )
@@ -123,14 +122,12 @@ public class ZipUtilities
    * @param files
    *          The files to zip
    * @param basedir
-   *          If given (i.e. != null) zipentries are genereates as relativ to
-   *          this basedir 8alle files must be within this dir). If null, alle
-   *          ZipEntries are create with full path.
+   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir 8alle files must be within
+   *          this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
    *  
    */
-  public static void zip( final File zipfile, final File[] files, final File basedir )
-      throws IOException
+  public static void zip( final File zipfile, final File[] files, final File basedir ) throws IOException
   {
     ZipOutputStream zos = null;
     try
@@ -154,10 +151,11 @@ public class ZipUtilities
   /**
    * Writes a single File into a Zip-Stream
    * 
-   * @param pathname The name of the zip entry (relative Path into zip archive).
+   * @param pathname
+   *          The name of the zip entry (relative Path into zip archive).
    */
-  public static void writeZipEntry( final ZipOutputStream zos, final File file,
-      final String pathname ) throws IOException
+  public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname )
+      throws IOException
   {
     final ZipEntry newEntry = new ZipEntry( pathname );
     zos.putNextEntry( newEntry );
@@ -167,7 +165,7 @@ public class ZipUtilities
     try
     {
       contentStream = new BufferedInputStream( new FileInputStream( file ) );
-      
+
       CopyUtils.copy( contentStream, zos );
     }
     finally

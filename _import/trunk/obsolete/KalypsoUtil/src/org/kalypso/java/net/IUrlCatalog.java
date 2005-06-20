@@ -44,16 +44,15 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * Interface for URL Catalogs. Provides {@link java.net.URL}s for a string
- * keys.
+ * Interface for URL Catalogs. Provides {@link java.net.URL}s for a string keys.
  * 
  * @author belger
  */
 public interface IUrlCatalog
 {
   /**
-   * Gibt eine URL für einen namespace zurück. Es sind nur solche namespaces
-   * bekannt, die auch über {@link #getCatalog()}zu finden sind.
+   * Gibt eine URL für einen namespace zurück. Es sind nur solche namespaces bekannt, die auch über
+   * {@link #getCatalog()}zu finden sind.
    */
   public URL getURL( final String namespace );
 

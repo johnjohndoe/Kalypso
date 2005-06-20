@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
 import java.util.Calendar;
@@ -50,11 +50,11 @@ import java.util.Calendar;
 public class CalendarUtilities
 {
   /** do not instanciate */
-  private CalendarUtilities( )
+  private CalendarUtilities()
   {
-    // no instanciation
+  // no instanciation
   }
-  
+
   /**
    * Helper method that returns the calendar field according to its name.
    * <p>

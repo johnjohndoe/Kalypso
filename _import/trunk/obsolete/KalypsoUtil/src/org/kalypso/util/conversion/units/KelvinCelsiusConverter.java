@@ -8,20 +8,20 @@ package org.kalypso.util.conversion.units;
 public class KelvinCelsiusConverter implements IValueConverter
 {
   private static KelvinCelsiusConverter m_instance = null;
-  
+
   private KelvinCelsiusConverter()
   {
-    // empty
+  // empty
   }
 
   public final static KelvinCelsiusConverter getInstance()
   {
     if( m_instance == null )
       m_instance = new KelvinCelsiusConverter();
-    
+
     return m_instance;
   }
-  
+
   /**
    * @see org.kalypso.util.conversion.units.IValueConverter#convert(double)
    */

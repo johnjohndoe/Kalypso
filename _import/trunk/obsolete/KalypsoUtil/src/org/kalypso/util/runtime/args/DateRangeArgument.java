@@ -48,8 +48,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.util.runtime.IVariableArguments;
 
 /**
- * Simple Date Range. Can be used as argument where IVariableArguments is
- * required.
+ * Simple Date Range. Can be used as argument where IVariableArguments is required.
  * 
  * @author schlienger
  */
@@ -62,7 +61,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   /**
    * Simple constructor. Uses current date as from and to.
    */
-  public DateRangeArgument( )
+  public DateRangeArgument()
   {
     this( null, null );
   }
@@ -81,8 +80,10 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   /**
    * Constructor with Dates
    * 
-   * @param from if null, current date is used
-   * @param to if null, current date is used.
+   * @param from
+   *          if null, current date is used
+   * @param to
+   *          if null, current date is used.
    */
   public DateRangeArgument( final Date from, final Date to )
   {
@@ -97,12 +98,12 @@ public class DateRangeArgument implements IVariableArguments, Comparable
       m_to = to;
   }
 
-  public Date getFrom( )
+  public Date getFrom()
   {
     return m_from;
   }
 
-  public Date getTo( )
+  public Date getTo()
   {
     return m_to;
   }
@@ -125,7 +126,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     DateFormat df = DateFormat.getDateTimeInstance();
     return df.format( m_from ) + " - " + df.format( m_to );
@@ -168,12 +169,11 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   {
     if( other == null )
       return 1;
-    
-    if( !(other instanceof DateRangeArgument) )
-      throw new IllegalArgumentException(
-          "Not comparing with a DateRangeArgument" );
 
-    final DateRangeArgument dra = (DateRangeArgument) other;
+    if( !( other instanceof DateRangeArgument ) )
+      throw new IllegalArgumentException( "Not comparing with a DateRangeArgument" );
+
+    final DateRangeArgument dra = (DateRangeArgument)other;
 
     int cmp = this.m_from.compareTo( dra.m_from );
     if( cmp != 0 )
@@ -190,11 +190,11 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   {
     return compareTo( obj ) == 0;
   }
-  
+
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode( )
+  public int hashCode()
   {
     final HashCodeBuilder hcb = new HashCodeBuilder();
     return hcb.append( m_from ).append( m_to ).hashCode();

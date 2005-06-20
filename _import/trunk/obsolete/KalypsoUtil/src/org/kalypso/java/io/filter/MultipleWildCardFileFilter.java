@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io.filter;
 
 /**
@@ -49,10 +49,11 @@ public class MultipleWildCardFileFilter extends MultipleRegexFileFilter
 {
   /**
    * Constructor
-   * @param wildCards string wildCards Die zu prüfenden WildCards
+   * 
+   * @param wildCards
+   *          string wildCards Die zu prüfenden WildCards
    */
-  public MultipleWildCardFileFilter( String[] wildCards, boolean bFilterDirs, boolean bShowDirs,
-                                     boolean bIgnoreCase )
+  public MultipleWildCardFileFilter( String[] wildCards, boolean bFilterDirs, boolean bShowDirs, boolean bIgnoreCase )
   {
     super( null, bFilterDirs, bShowDirs, bIgnoreCase );
 
@@ -67,42 +68,45 @@ public class MultipleWildCardFileFilter extends MultipleRegexFileFilter
 
   public static String translateWildCardToRegex( String wildCard )
   {
-    StringBuffer sb = new StringBuffer( wildCard.length(  ) ); // mindestens so lang wie die WildCard
+    StringBuffer sb = new StringBuffer( wildCard.length() ); // mindestens so lang wie die WildCard
 
-    for( int wildID = 0; wildID < wildCard.length(  ); wildID++ )
+    for( int wildID = 0; wildID < wildCard.length(); wildID++ )
     {
       char wildChar = wildCard.charAt( wildID );
 
       switch( wildChar )
       {
-        case '*':
-          sb.append( ".*" ); // eine Menge beliebiger Zeichen
+      case '*':
+        sb.append( ".*" ); // eine Menge beliebiger Zeichen
 
-          break;
+        break;
 
-        case '?':
-          sb.append( "." ); // ein beliebiges Zeichen
+      case '?':
+        sb.append( "." ); // ein beliebiges Zeichen
 
-          break;
+        break;
 
-        case '.':
-          sb.append( "\\." );
+      case '.':
+        sb.append( "\\." );
 
-          break;
+        break;
 
-        default:
+      default:
 
-          // alles andere einfach dranhängen
-          if( Character.isLetter( wildChar ) )
-            sb.append( "[" + Character.toLowerCase( wildChar ) + Character.toUpperCase( wildChar ) +
-                       "]" ); // Buchstaben immer in beiden Formen zulassen
-          else
-            sb.append( wildChar ); // sonst einfach anhängen td: das geht sicher nicht mit allen Zeichen gut
+        // alles andere einfach dranhängen
+        if( Character.isLetter( wildChar ) )
+          sb.append( "[" + Character.toLowerCase( wildChar ) + Character.toUpperCase( wildChar ) + "]" ); // Buchstaben
+                                                                                                          // immer in
+                                                                                                          // beiden
+                                                                                                          // Formen
+                                                                                                          // zulassen
+        else
+          sb.append( wildChar ); // sonst einfach anhängen td: das geht sicher nicht mit allen Zeichen gut
 
-          break;
+        break;
       }
     }
 
-    return sb.toString(  );
+    return sb.toString();
   }
 }

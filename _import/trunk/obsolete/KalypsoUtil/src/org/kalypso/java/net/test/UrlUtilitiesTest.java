@@ -36,17 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net.test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.kalypso.java.net.UrlUtilities;
-
 import junit.framework.TestCase;
 
+import org.kalypso.java.net.UrlUtilities;
 
 /**
  * UrlUtilitiesTest
@@ -56,10 +55,10 @@ import junit.framework.TestCase;
 public class UrlUtilitiesTest extends TestCase
 {
 
-  public void testResolveURL( ) throws MalformedURLException
+  public void testResolveURL() throws MalformedURLException
   {
-    final URL base = new URL("file://c/temp/hello");
-    
+    final URL base = new URL( "file://c/temp/hello" );
+
     final UrlUtilities urlUtilities = new UrlUtilities();
     final URL u1 = urlUtilities.resolveURL( base, "" );
     System.out.println( u1 );

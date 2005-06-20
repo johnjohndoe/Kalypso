@@ -5,9 +5,8 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * ISerializer denotes a class that can be serialized using read and write. The
- * interface is pretty much straight forward and allows an object to be written
- * to and read from a stream.
+ * ISerializer denotes a class that can be serialized using read and write. The interface is pretty much straight
+ * forward and allows an object to be written to and read from a stream.
  * 
  * @author schlienger
  */
@@ -30,6 +29,5 @@ public interface ISerializer
    * @param os
    *          OutputStream to write to
    */
-  public void write( final Object object, final OutputStream os )
-      throws InvocationTargetException;
+  public void write( final Object object, final OutputStream os ) throws InvocationTargetException;
 }

@@ -24,8 +24,7 @@ public class PSICompactRepository extends AbstractRepository
 {
   private PSICompactItem m_psiRoot = null;
 
-  public PSICompactRepository( String name, boolean readOnly )
-      throws RepositoryException
+  public PSICompactRepository( String name, boolean readOnly ) throws RepositoryException
   {
     super( name, PSICompactRepositoryFactory.class.getName(), "", readOnly );
 
@@ -33,16 +32,14 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
-   * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur
-   * umzuwandeln.
+   * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur umzuwandeln.
    * 
    * @param nodes
    * @param valueType
    * @return item
    * @throws ECommException
    */
-  private final PSICompactItem buildStructure( Map nodes, int valueType )
-      throws ECommException
+  private final PSICompactItem buildStructure( Map nodes, int valueType ) throws ECommException
   {
     final PSICompact psi = PSICompactFactory.getConnection();
 
@@ -73,8 +70,7 @@ public class PSICompactRepository extends AbstractRepository
           parent = (PSICompactItem)nodes.get( nodeID );
         else
         {
-          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID,
-              info, valueType );
+          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info, valueType );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
           // deswegen hier)
@@ -90,8 +86,7 @@ public class PSICompactRepository extends AbstractRepository
 
     // abnormal case...
     if( parent == null )
-      return new PSICompactItem( null, "Keine Struktur in PSICompact...",
-          "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
+      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
 
     while( parent.getParent() != null )
       parent = (PSICompactItem)parent.getParent();
@@ -140,17 +135,13 @@ public class PSICompactRepository extends AbstractRepository
     {
       final TreeMap nodes = new TreeMap();
 
-      final PSICompactItem nodeMeasurements = buildStructure( nodes,
-          PSICompact.TYPE_MEASUREMENT );
-      final PSICompactItem nodeForecasts = buildStructure( nodes,
-          PSICompact.TYPE_VALUE );
+      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
+      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
 
       if( nodeMeasurements != nodeForecasts )
       {
-        Logger
-            .getLogger( getClass().getName() )
-            .info(
-                "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
+        Logger.getLogger( getClass().getName() ).info(
+            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
 
         m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
       }

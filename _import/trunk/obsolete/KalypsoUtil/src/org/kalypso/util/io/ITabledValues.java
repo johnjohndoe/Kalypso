@@ -50,10 +50,10 @@ public interface ITabledValues
    * 
    * @return the number of lines fetched from the CSV-File
    */
-  public int getLines( );
+  public int getLines();
 
   public int getColumns();
-  
+
   /**
    * Returns the item at the given position in the CSV-File
    * 

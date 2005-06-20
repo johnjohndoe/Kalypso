@@ -36,34 +36,33 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.awt;
 
 import java.awt.Color;
 
-
 /**
- * Some useful method dealing with java.awt.Color. See also org.kalypso.java.util.StringUtilities for
- * some other methods using Colors and Strings.
- *
+ * Some useful method dealing with java.awt.Color. See also org.kalypso.java.util.StringUtilities for some other methods
+ * using Colors and Strings.
+ * 
  * @see org.kalypso.java.util.StringUtilities
- *
+ * 
  * @author schlienger
  */
 public class ColorUtilities
 {
   /**
-   * creates a returns the complementary Color of org. Each component of the color is substracted
-   * to 255 and set as component of the new color.
-   *
+   * creates a returns the complementary Color of org. Each component of the color is substracted to 255 and set as
+   * component of the new color.
+   * 
    * @param org
-   *
+   * 
    * @return new Color
    */
   public static Color createComplementary( final Color org )
   {
-    final Color cmp = new Color( 255 - org.getRed(  ), 255 - org.getGreen(  ), 255 - org.getBlue(  ) );
+    final Color cmp = new Color( 255 - org.getRed(), 255 - org.getGreen(), 255 - org.getBlue() );
 
     return cmp;
   }
@@ -73,9 +72,9 @@ public class ColorUtilities
    * 
    * @return a new Color which components have been given by Math.random().
    */
-  public static Color random(  )
+  public static Color random()
   {
-    return new Color( (float)Math.random(  ), (float)Math.random(  ), (float)Math.random(  ) );
+    return new Color( (float)Math.random(), (float)Math.random(), (float)Math.random() );
   }
 
   /**
@@ -87,6 +86,6 @@ public class ColorUtilities
    */
   public static Color random( final float alpha )
   {
-    return new Color( (float)Math.random(  ), (float)Math.random(  ), (float)Math.random(  ), alpha );
+    return new Color( (float)Math.random(), (float)Math.random(), (float)Math.random(), alpha );
   }
 }

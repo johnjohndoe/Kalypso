@@ -62,8 +62,7 @@ public class RegexCSV extends AbstractCSV
    * @param ignoreEmptyLines
    *          when true empty lines are ignored and not added to this object
    */
-  public RegexCSV( final Pattern p, final int line,
-      final boolean ignoreEmptyLines )
+  public RegexCSV( final Pattern p, final int line, final boolean ignoreEmptyLines )
   {
     super( line, ignoreEmptyLines );
 

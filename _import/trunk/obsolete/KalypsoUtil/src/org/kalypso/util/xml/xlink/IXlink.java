@@ -36,10 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.xml.xlink;
-
 
 /**
  * An interface for the XLink-Base specification
@@ -49,6 +48,8 @@ package org.kalypso.util.xml.xlink;
 public interface IXlink
 {
   public String getType();
+
   public String getActuate();
+
   public String getHRef();
 }

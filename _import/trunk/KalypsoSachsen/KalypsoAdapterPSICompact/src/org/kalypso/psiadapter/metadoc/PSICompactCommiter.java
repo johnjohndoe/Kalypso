@@ -28,8 +28,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties,
-   *      java.util.Map)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
    */
   public void prepareMetainf( final Properties serviceProps, final Map metadata )
   {
@@ -42,26 +41,21 @@ public class PSICompactCommiter implements IMetaDocCommiter
   }
 
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties,
-   *      java.util.Map, java.io.File)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File)
    */
-  public void commitDocument( final Properties serviceProps,
-      final Map metadata, final File docFile ) throws MetaDocException
+  public void commitDocument( final Properties serviceProps, final Map metadata, final File docFile )
+      throws MetaDocException
   {
-    final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile
-        .getAbsolutePath() )
-        + ".xml" );
+    final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile.getAbsolutePath() ) + ".xml" );
 
     try
     {
       final Properties mdProps = new Properties();
       mdProps.putAll( metadata );
 
-      final Writer writer = new OutputStreamWriter( new FileOutputStream(
-          xmlFile ), "UTF-8" );
+      final Writer writer = new OutputStreamWriter( new FileOutputStream( xmlFile ), "UTF-8" );
       // closes writer
-      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, docFile
-          .getName() );
+      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, docFile.getName() );
 
       // commit the both files (important: last one is the xml file)
       final String dist = serviceProps.getProperty( PSICOMPACT_DIST ) + "/";
@@ -84,13 +78,10 @@ public class PSICompactCommiter implements IMetaDocCommiter
     }
   }
 
-  private void distributeFile( final File file, final String distFile )
-      throws ECommException
+  private void distributeFile( final File file, final String distFile ) throws ECommException
   {
-    m_logger.info( "Distributing File " + file.getAbsolutePath() + " to "
-        + distFile );
-    final boolean b = PSICompactFactory.getConnection().copyanddistributeFile(
-        file, distFile );
+    m_logger.info( "Distributing File " + file.getAbsolutePath() + " to " + distFile );
+    final boolean b = PSICompactFactory.getConnection().copyanddistributeFile( file, distFile );
     m_logger.info( "File distributed: " + b );
   }
 }

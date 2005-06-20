@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
 import java.net.URLStreamHandler;
@@ -46,8 +46,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A configurable <code>URLStreamHandlerFactory</code>. You can set various
- * <code>URLStreamHandler</code> that match specific protocols. 
+ * A configurable <code>URLStreamHandlerFactory</code>. You can set various <code>URLStreamHandler</code> that
+ * match specific protocols.
  * 
  * @author schlienger
  */

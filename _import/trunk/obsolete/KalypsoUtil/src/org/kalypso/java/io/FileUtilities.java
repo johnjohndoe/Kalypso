@@ -56,7 +56,6 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.java.io.filter.PrefixSuffixFilter;
-import org.kalypso.java.util.StringUtilities;
 
 /**
  * Utility class for io and files
@@ -71,45 +70,52 @@ public class FileUtilities
   public static final File TMP_DIR = new File( System.getProperty( "java.io.tmpdir" ) );
 
   /**
-   * See makeFileFromStream(). this method calls makeFileFromStream with
-   * url.openStream() as parameter.
+   * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
    * 
    * @param charMode
    * 
-   * @param prefix prefix of new file name
-   * @param suffix suffix of new file name
-   * @param url data is read from this url
-   * @param useCache if true tries to use an existing file with these
-   *          prefix/suffix
+   * @param prefix
+   *          prefix of new file name
+   * @param suffix
+   *          suffix of new file name
+   * @param url
+   *          data is read from this url
+   * @param useCache
+   *          if true tries to use an existing file with these prefix/suffix
    * 
    * @return newly created file
    * 
-   * @throws IOException there are problems!
+   * @throws IOException
+   *           there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, URL url, boolean useCache ) throws IOException
+  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, URL url,
+      boolean useCache ) throws IOException
   {
     return makeFileFromStream( charMode, prefix, suffix, url.openStream(), useCache );
   }
 
   /**
-   * Creates a new temporary file given its pathName and an InputStream. The
-   * content from the InputStream is written into the file. The file will be
-   * deleted after the VM shuts down
+   * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
+   * into the file. The file will be deleted after the VM shuts down
    * 
    * @param charMode
    * 
-   * @param prefix prefix of file name
-   * @param suffix suffix of file name
-   * @param ins the input stream, that is the source
-   * @param useCache if true tries to use an existing file with these
-   *          prefix/suffix
+   * @param prefix
+   *          prefix of file name
+   * @param suffix
+   *          suffix of file name
+   * @param ins
+   *          the input stream, that is the source
+   * @param useCache
+   *          if true tries to use an existing file with these prefix/suffix
    * 
    * @return the newly created file or null if an exception was thrown.
    * 
-   * @throws IOException problems reading from stream or writing to temp. file
+   * @throws IOException
+   *           problems reading from stream or writing to temp. file
    */
-  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins, boolean useCache )
-      throws IOException
+  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins,
+      boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -135,16 +141,16 @@ public class FileUtilities
   }
 
   /**
-   * Wie
-   * {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)},
-   * benutzt aber eine vorgegebene Dateiposition
+   * Wie {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)}, benutzt aber eine vorgegebene
+   * Dateiposition
    * 
    * @param charMode
    * @param file
    * @param ins
    * @throws IOException
    */
-  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
+  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins )
+      throws IOException
   {
     if( charMode )
     {
@@ -164,18 +170,19 @@ public class FileUtilities
   }
 
   /**
-   * Looks in the given path if a file with the given prefix and suffix exists.
-   * Returns the file in the positive. If more than one such file is found,
-   * returns the first of them.
+   * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
+   * more than one such file is found, returns the first of them.
    * 
-   * @param prefix name of the file should begin with this prefix
-   * @param suffix name of the file should end with this suffix
+   * @param prefix
+   *          name of the file should begin with this prefix
+   * @param suffix
+   *          name of the file should end with this suffix
    * @param path
    * 
    * @return the (first) File found
    * 
-   * @throws FileNotFoundException when file was not found or path does not
-   *           denote a directory
+   * @throws FileNotFoundException
+   *           when file was not found or path does not denote a directory
    * 
    * @see PrefixSuffixFilter
    */
@@ -193,15 +200,16 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in " + path );
+    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in "
+        + path );
   }
 
   /**
    * Rekursives l?schen von Dateien und Verzeichnissen
    * 
-   * @param file Falls das Argument eine Datei ist, wird diese gel?scht. Ist es
-   *          ein Verzeichnis, werden alle dieses mitsamt aller darin liegenden
-   *          Verzeichnisse und Dateien gel?scht.
+   * @param file
+   *          Falls das Argument eine Datei ist, wird diese gel?scht. Ist es ein Verzeichnis, werden alle dieses mitsamt
+   *          aller darin liegenden Verzeichnisse und Dateien gel?scht.
    */
   public static void deleteRecursive( final File file )
   {
@@ -232,10 +240,8 @@ public class FileUtilities
   }
 
   /**
-   * Creates a temp directory inside the given one. It uses
-   * <code>System.currentTimeMillis</code> for naming the new temp dir. This
-   * method can hang a little while in the case the directory it tries to create
-   * already exist.
+   * Creates a temp directory inside the given one. It uses <code>System.currentTimeMillis</code> for naming the new
+   * temp dir. This method can hang a little while in the case the directory it tries to create already exist.
    * 
    * @param prefix
    * @param parentDir
@@ -257,9 +263,8 @@ public class FileUtilities
    * @param basedir
    * @param absoluteFile
    * 
-   * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn
-   *         <code>basedir</code> kein Parent-Dir von
-   *         <code>absoluteFile</code> ist
+   * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir
+   *         von <code>absoluteFile</code> ist
    */
   public static File getRelativeFileTo( final File basedir, final File absoluteFile )
   {
@@ -270,13 +275,12 @@ public class FileUtilities
   }
 
   /**
-   * Returns the relative path, without any reserved characters such as '.'.
-   * This is meant to be used without string concatenation function to reproduce
-   * an absolute path again. Directly creating a File object on the path
-   * returned by this method won't produce a good result. Use the
-   * <code>getRelativeFileTo()</code> method instead.
+   * Returns the relative path, without any reserved characters such as '.'. This is meant to be used without string
+   * concatenation function to reproduce an absolute path again. Directly creating a File object on the path returned by
+   * this method won't produce a good result. Use the <code>getRelativeFileTo()</code> method instead.
    * 
-   * @param basedir if null, the absolute path of absoluteFile is returned.
+   * @param basedir
+   *          if null, the absolute path of absoluteFile is returned.
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
@@ -294,7 +298,7 @@ public class FileUtilities
     if( !absolute.startsWith( base ) )
     {
       if( base.lastIndexOf( "/" ) > -1 )
-        base = base.substring( 0,base.lastIndexOf( "/" )+1 );
+        base = base.substring( 0, base.lastIndexOf( "/" ) + 1 );
       //      base=base.replaceAll(File.separator+".+$","");
       String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) )
@@ -305,8 +309,8 @@ public class FileUtilities
       String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
       String x = back.replaceAll( "([a-zA-Z0-9]|\\.)+", ".." );
-      if(x.length()>0)
-        return x+ File.separator + difference;
+      if( x.length() > 0 )
+        return x + File.separator + difference;
       return difference;
     }
     final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() );
@@ -315,8 +319,7 @@ public class FileUtilities
   }
 
   /**
-   * Returns true if childCandidate is stored under the path of parent, either
-   * directly or in a sub directory.
+   * Returns true if childCandidate is stored under the path of parent, either directly or in a sub directory.
    * 
    * @param parent
    * @param childCandidate
@@ -338,7 +341,8 @@ public class FileUtilities
   }
 
   /**
-   * @param name name of path of the file
+   * @param name
+   *          name of path of the file
    * @return characters after last "." of given file name
    */
   public static String getSuffix( final String name )
@@ -359,8 +363,7 @@ public class FileUtilities
   }
 
   /**
-   * Returns only the name part of the given file name removing the extension
-   * part.
+   * Returns only the name part of the given file name removing the extension part.
    * <p>
    * Example:
    * 
@@ -372,8 +375,7 @@ public class FileUtilities
    * </pre>
    * 
    * @param fileName
-   * @return fileName without the last '.???' extension part (NOTE: the
-   *         extension part is not limited to 3 chars)
+   * @return fileName without the last '.???' extension part (NOTE: the extension part is not limited to 3 chars)
    */
   public static String nameWithoutExtension( final String fileName )
   {
@@ -385,10 +387,10 @@ public class FileUtilities
   }
 
   /**
-   * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin
-   * enthaltenen Dateien besuchen.
+   * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin enthaltenen Dateien besuchen.
    * 
-   * @param recurse Falls true, werden auch Unterverzeichnisse besucht
+   * @param recurse
+   *          Falls true, werden auch Unterverzeichnisse besucht
    * @throws IOException
    */
   public static void accept( final File root, final FileVisitor visitor, final boolean recurse ) throws IOException

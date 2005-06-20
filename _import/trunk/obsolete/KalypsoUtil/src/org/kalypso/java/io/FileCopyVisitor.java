@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io;
 
 import java.io.File;
@@ -53,19 +53,24 @@ import org.apache.commons.io.FileUtils;
 public class FileCopyVisitor implements FileVisitor
 {
   private final File m_toDir;
+
   private final File m_fromDir;
+
   private final boolean m_overwriteIfNewer;
+
   private final String m_excludeDirWithFile;
 
   /**
-   * @param overwriteIfNewer Die Zieldatei selbst dann überschreiben, wenn sie neuer ist
+   * @param overwriteIfNewer
+   *          Die Zieldatei selbst dann überschreiben, wenn sie neuer ist
    */
   public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwriteIfNewer )
   {
     this( fromDir, toDir, overwriteIfNewer, null );
   }
-  
-  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwriteIfNewer, final String excludeDirWithFile )
+
+  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwriteIfNewer,
+      final String excludeDirWithFile )
   {
     m_fromDir = fromDir;
     m_toDir = toDir;
@@ -83,7 +88,7 @@ public class FileCopyVisitor implements FileVisitor
     if( relativePathTo != null )
     {
       final File targetFile = new File( m_toDir, relativePathTo );
-      
+
       // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
       if( m_excludeDirWithFile != null && file.isDirectory() )
       {
@@ -91,10 +96,10 @@ public class FileCopyVisitor implements FileVisitor
         if( excludeFile.exists() )
           return false;
       }
-      
+
       if( file.isDirectory() )
         targetFile.mkdir();
-      
+
       if( file.isFile() )
       {
         // falls die Zieldatei neuer ist und das überschreiben neuerer verboten wurde
@@ -108,17 +113,17 @@ public class FileCopyVisitor implements FileVisitor
             return false;
 
           // falls die Dateien wirklich gleich sind, nichts tun
-          if( targetLastModified == lastModified  && targetFile.length() == file.length() )
+          if( targetLastModified == lastModified && targetFile.length() == file.length() )
             return false;
         }
 
         // sonst kopieren
         FileUtils.copyFile( file, targetFile );
-        
+
         return false;
       }
     }
-    
+
     return true;
   }
 

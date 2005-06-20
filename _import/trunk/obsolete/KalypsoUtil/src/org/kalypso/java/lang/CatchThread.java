@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.lang;
 
 /**
@@ -62,8 +62,8 @@ public abstract class CatchThread extends Thread
       m_throwable = t;
     }
   }
-  
-  protected abstract void runIntern()  throws Throwable;
+
+  protected abstract void runIntern() throws Throwable;
 
   public Throwable getThrown()
   {

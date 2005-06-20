@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.math;
 
 import java.awt.geom.Point2D;
-
 import java.util.NoSuchElementException;
 
 /**
@@ -65,10 +64,9 @@ public class LinearEquation
   private double m_b;
 
   /**
-   * Creates a new LinearEquation object. Sets a default slope of 1 and an
-   * Y-coord of 0
+   * Creates a new LinearEquation object. Sets a default slope of 1 and an Y-coord of 0
    */
-  public LinearEquation( )
+  public LinearEquation()
   {
     m_a = 1;
     m_b = 0;
@@ -88,7 +86,7 @@ public class LinearEquation
   {
     m_a = slope;
 
-    m_b = y - (m_a * x);
+    m_b = y - ( m_a * x );
   }
 
   /**
@@ -106,8 +104,7 @@ public class LinearEquation
    * @throws SameXValuesException
    *           when x1 == x2
    */
-  public LinearEquation( double x1, double y1, double x2, double y2 )
-      throws SameXValuesException
+  public LinearEquation( double x1, double y1, double x2, double y2 ) throws SameXValuesException
   {
     setPoints( x1, y1, x2, y2 );
   }
@@ -129,8 +126,7 @@ public class LinearEquation
   }
 
   /**
-   * Redefine the LinearEquation with two points. Computes the slope and the
-   * Y-coordinate at the origin.
+   * Redefine the LinearEquation with two points. Computes the slope and the Y-coordinate at the origin.
    * 
    * @param x1
    *          first point's x
@@ -144,15 +140,14 @@ public class LinearEquation
    * @throws SameXValuesException
    *           when x1 == x2
    */
-  public void setPoints( double x1, double y1, double x2, double y2 )
-      throws SameXValuesException
+  public void setPoints( double x1, double y1, double x2, double y2 ) throws SameXValuesException
   {
     if( Double.compare( x2, x1 ) == 0 )
       throw SAME_X_EXCEPTION;
 
-    m_a = (y2 - y1) / (x2 - x1);
+    m_a = ( y2 - y1 ) / ( x2 - x1 );
 
-    m_b = y1 - (m_a * x1);
+    m_b = y1 - ( m_a * x1 );
   }
 
   /**
@@ -164,7 +159,7 @@ public class LinearEquation
    */
   public double computeX( double y )
   {
-    return (y - m_b) / m_a;
+    return ( y - m_b ) / m_a;
   }
 
   /**
@@ -176,20 +171,18 @@ public class LinearEquation
    */
   public double computeY( double x )
   {
-    return (m_a * x) + m_b;
+    return ( m_a * x ) + m_b;
   }
 
   /**
-   * Returns the Point that is located at the middle of the segment represented
-   * by the given points.
+   * Returns the Point that is located at the middle of the segment represented by the given points.
    * 
    * @param p1
    * @param p2
    * @return point
    * @throws SameXValuesException
    */
-  public static Point2D segmentMiddle( Point2D p1, Point2D p2 )
-      throws SameXValuesException
+  public static Point2D segmentMiddle( Point2D p1, Point2D p2 ) throws SameXValuesException
   {
     double x = p1.getX() < p2.getX() ? p1.getX() : p2.getX();
     x += Math.abs( p2.getX() - p1.getX() ) / 2;
@@ -204,7 +197,7 @@ public class LinearEquation
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return "Y = " + String.valueOf( m_a ) + "*X + " + String.valueOf( m_b );
   }
@@ -227,12 +220,11 @@ public class LinearEquation
     if( Double.compare( divisor, 0.0 ) == 0 )
       throw SOLVE_NO_SOLVE_EXCEPTION;
 
-    return (m_b - le.m_b) / divisor;
+    return ( m_b - le.m_b ) / divisor;
   }
 
   /**
-   * Computes the (orthogonal) distance between the Point p and the line
-   * represented by this LinearEquation.
+   * Computes the (orthogonal) distance between the Point p and the line represented by this LinearEquation.
    * 
    * @param p
    * 
@@ -240,19 +232,17 @@ public class LinearEquation
    */
   public double distance( Point2D p )
   {
-    return Math.abs( p.getY() - (m_a * p.getX()) - m_b )
-        / Math.sqrt( 1 + (m_b * m_b) );
+    return Math.abs( p.getY() - ( m_a * p.getX() ) - m_b ) / Math.sqrt( 1 + ( m_b * m_b ) );
   }
 
   /**
-   * The X-coordinates are identical, cannot compute a LinerEquation based on
-   * these X-values.
+   * The X-coordinates are identical, cannot compute a LinerEquation based on these X-values.
    * 
    * @author schlienger
    */
   public static class SameXValuesException extends Exception
   {
-    public SameXValuesException( )
+    public SameXValuesException()
     {
       super( "X-Values are identical. Cannot create LinearEquation" );
     }

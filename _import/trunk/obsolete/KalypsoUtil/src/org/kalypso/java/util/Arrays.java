@@ -63,10 +63,10 @@ public final class Arrays
   }
 
   /**
-   * creates an array of raw ints with a given array of Integer Objects by
-   * copying the int values.
+   * creates an array of raw ints with a given array of Integer Objects by copying the int values.
    * 
-   * @throws IllegalArgumentException if argument is null
+   * @throws IllegalArgumentException
+   *           if argument is null
    */
   public static int[] rawIntegers( Integer[] objDs )
   {
@@ -82,10 +82,10 @@ public final class Arrays
   }
 
   /**
-   * creates an array of raw doubles with a given array of Double Objects by
-   * copying the double values
+   * creates an array of raw doubles with a given array of Double Objects by copying the double values
    * 
-   * @throws IllegalArgumentException if argument is null
+   * @throws IllegalArgumentException
+   *           if argument is null
    */
   public static double[] rawDoubles( Double[] objDs )
   {
@@ -101,10 +101,10 @@ public final class Arrays
   }
 
   /**
-   * creates an array of object doubles with a given array of doubles by copying
-   * the double values
+   * creates an array of object doubles with a given array of doubles by copying the double values
    * 
-   * @throws IllegalArgumentException if argument is null
+   * @throws IllegalArgumentException
+   *           if argument is null
    */
   public static Double[] objectDoubles( double[] rawDs )
   {
@@ -120,23 +120,20 @@ public final class Arrays
   }
 
   /**
-   * convenient method to cast array into type. The code here is based on the
-   * code of Vector.toArray(Object[] type)
+   * convenient method to cast array into type. The code here is based on the code of Vector.toArray(Object[] type)
    * 
    * <pre>
    * Call example:  Double[] ds = Arrays.castArray(someArray, new Double[0]);
    * </pre>
    * 
    * <p>
-   * NOTE: the type of the elements in someArray must be the same as the type of
-   * the elements of the desired array.
+   * NOTE: the type of the elements in someArray must be the same as the type of the elements of the desired array.
    * </p>
    */
   public static Object[] castArray( Object[] array, Object[] type )
   {
     if( type.length < array.length )
-      type = (Object[])java.lang.reflect.Array.newInstance( type.getClass()
-          .getComponentType(), array.length );
+      type = (Object[])java.lang.reflect.Array.newInstance( type.getClass().getComponentType(), array.length );
 
     System.arraycopy( array, 0, type, 0, array.length );
 
@@ -147,8 +144,7 @@ public final class Arrays
   }
 
   /**
-   * returns the index of the first minimum value found in ds. If ds is empty,
-   * returns -1.
+   * returns the index of the first minimum value found in ds. If ds is empty, returns -1.
    */
   public static int indexOfMin( double[] ds )
   {
@@ -171,8 +167,7 @@ public final class Arrays
   }
 
   /**
-   * returns the index of the first minimum value found in is. If is is empty,
-   * returns -1.
+   * returns the index of the first minimum value found in is. If is is empty, returns -1.
    */
   public static int indexOfMin( int[] is )
   {
@@ -195,8 +190,7 @@ public final class Arrays
   }
 
   /**
-   * returns the index of the first maximum value found in is. If is is empty,
-   * returns -1.
+   * returns the index of the first maximum value found in is. If is is empty, returns -1.
    */
   public static int indexOfMax( int[] is )
   {
@@ -258,14 +252,14 @@ public final class Arrays
   }
 
   /**
-   * Creates a new truncated array with values that are smaller than the given
-   * value. The value itself is inserted into the array if it is not already
-   * contained.
+   * Creates a new truncated array with values that are smaller than the given value. The value itself is inserted into
+   * the array if it is not already contained.
    * 
-   * @param arr array to be truncated, must be sorted. Unpredictable results if
-   *          not sorted
-   * @param value the value that will serve as upper bound when truncating. It
-   *          will be added into the resulting array if it is not already inside
+   * @param arr
+   *          array to be truncated, must be sorted. Unpredictable results if not sorted
+   * @param value
+   *          the value that will serve as upper bound when truncating. It will be added into the resulting array if it
+   *          is not already inside
    *  
    */
   public static double[] truncSmaller( double[] arr, double value )
@@ -298,14 +292,14 @@ public final class Arrays
   }
 
   /**
-   * Creates a new truncated array with values that are bigger than the given
-   * value. The value itself is inserted into the array if it is not already
-   * contained.
+   * Creates a new truncated array with values that are bigger than the given value. The value itself is inserted into
+   * the array if it is not already contained.
    * 
-   * @param arr array to be truncated, must be sorted. Unpredictable results if
-   *          not sorted
-   * @param value the value that will serve as lower bound when truncating. It
-   *          will be added into the resulting array if it is not already inside
+   * @param arr
+   *          array to be truncated, must be sorted. Unpredictable results if not sorted
+   * @param value
+   *          the value that will serve as lower bound when truncating. It will be added into the resulting array if it
+   *          is not already inside
    *  
    */
   public static double[] truncBigger( double[] arr, double value )
@@ -318,7 +312,8 @@ public final class Arrays
 
       if( pos > arr.length )
       {
-        return new double[] { value };
+        return new double[]
+        { value };
       }
       double[] newArr = new double[arr.length - pos + 1];
       System.arraycopy( arr, pos, newArr, 1, arr.length - pos );
@@ -335,13 +330,11 @@ public final class Arrays
   }
 
   /**
-   * Merges the contents of the given array into one String, separating the
-   * elements with separator. You can restrict the elements to fetch from the
-   * array by setting from and to.
+   * Merges the contents of the given array into one String, separating the elements with separator. You can restrict
+   * the elements to fetch from the array by setting from and to.
    *  
    */
-  public static String implode( String[] array, String separator, int from,
-      int to )
+  public static String implode( String[] array, String separator, int from, int to )
   {
     StringBuffer buf = new StringBuffer();
 
@@ -354,11 +347,9 @@ public final class Arrays
   }
 
   /**
-   * Removes a new array same as da but without duplicates, given the array da
-   * is sorted! This method looks sequentially, checking if the elements at
-   * position i and i+1 are equal. <br>
-   * If you call this method on a potentially unsorted array, it might not
-   * change anything.
+   * Removes a new array same as da but without duplicates, given the array da is sorted! This method looks
+   * sequentially, checking if the elements at position i and i+1 are equal. <br>
+   * If you call this method on a potentially unsorted array, it might not change anything.
    *  
    */
   public static double[] removeDupicates( double[] da, double delta )
@@ -372,8 +363,7 @@ public final class Arrays
 
     while( i < da.length )
     {
-      while( ( i < ( da.length - 1 ) )
-          && ( dc.compare( da[i], da[i + 1] ) == 0 ) )
+      while( ( i < ( da.length - 1 ) ) && ( dc.compare( da[i], da[i + 1] ) == 0 ) )
         i++;
 
       dtmp[itmp] = da[i];
@@ -390,8 +380,7 @@ public final class Arrays
   }
 
   /**
-   * Creates a new Long-array and uses Long.valueOf() for each string in
-   * strArray.
+   * Creates a new Long-array and uses Long.valueOf() for each string in strArray.
    */
   public static Long[] toLong( final String[] strArray )
   {
@@ -401,7 +390,7 @@ public final class Arrays
 
     return longs;
   }
-  
+
   public static char[] tochar( final byte[] byteArray )
   {
     final char[] chars = new char[byteArray.length];

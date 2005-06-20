@@ -66,12 +66,12 @@ public class FortranFormatHelper
 
   final static String decimalPoint = "[ \\.]";
 
-  final static String decimalValue = "[0-9 -]";  
+  final static String decimalValue = "[0-9 -]";
 
   final static DecimalFormat decimalFormat;
   static
   {
-  // TODO remove this dirty hack with java 1.5 and use java printf instead
+    // TODO remove this dirty hack with java 1.5 and use java printf instead
     DecimalFormatSymbols dfs = new DecimalFormatSymbols();
     dfs.setDecimalSeparator( '.' );
     decimalFormat = new DecimalFormat(
@@ -95,14 +95,13 @@ public class FortranFormatHelper
    *          "(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2)"
    * @param line
    *          line to scan
-   * @return HasMap that contains the values, key as given in
-   *         formatLine(String),value is scaned value(String)
+   * @return HasMap that contains the values, key as given in formatLine(String),value is scaned value(String)
    */
   public static HashMap scanf( String formatLine, String line ) throws Exception
   {
     HashMap result = new HashMap();
     line = line + "                                                ";
-    line=line.replaceAll("\\t"," ");
+    line = line.replaceAll( "\\t", " " );
     List nameCollector = new ArrayList();
     StringBuffer pattern = new StringBuffer( "^" );
     String[] formats = patternBrackets.split( formatLine );
@@ -113,12 +112,12 @@ public class FortranFormatHelper
       pattern.append( regExp );
     }
     pattern.append( "\\s*$" );
-    Pattern linePattern = Pattern.compile( pattern.toString() );    
+    Pattern linePattern = Pattern.compile( pattern.toString() );
     Matcher m = linePattern.matcher( line );
     if( !m.matches() )
     {
-      throw new Exception( "parsingexception " + "\n format:" + formatLine + "\nline:" + line
-          + "\nregExp:" + pattern.toString() + "\n  does not match" );
+      throw new Exception( "parsingexception " + "\n format:" + formatLine + "\nline:" + line + "\nregExp:"
+          + pattern.toString() + "\n  does not match" );
     }
 
     for( int i = 0; i < m.groupCount(); i++ )
@@ -175,8 +174,7 @@ public class FortranFormatHelper
       }
       int max = Integer.parseInt( charMax );
       int decimal = Integer.parseInt( decimalPlace );
-      return regExpChar + "{1," + ( max - decimal - 1 ) + "}" + decimalPoint + regExpChar + "{"
-          + ( decimal ) + "}";
+      return regExpChar + "{1," + ( max - decimal - 1 ) + "}" + decimalPoint + regExpChar + "{" + ( decimal ) + "}";
     }
     throw new UnsupportedOperationException();
   }
@@ -213,7 +211,7 @@ public class FortranFormatHelper
   public static String printf( int value, String format )
   {
     // TODO remove this dirty hack with java 1.5 and use java printf instead
-    return printf( Integer.toString(value), format );
+    return printf( Integer.toString( value ), format );
   }
 
   /**

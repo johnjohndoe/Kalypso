@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.parser.impl;
 
 import java.text.NumberFormat;
@@ -60,7 +60,7 @@ public class IntegerParser extends AbstractParser
   /**
    * Default Constructor
    */
-  public IntegerParser( )
+  public IntegerParser()
   {
     this( "" );
   }
@@ -79,7 +79,7 @@ public class IntegerParser extends AbstractParser
   /**
    * @see org.kalypso.util.parser.IParser#getObjectClass()
    */
-  public Class getObjectClass( )
+  public Class getObjectClass()
   {
     return Integer.class;
   }
@@ -87,7 +87,7 @@ public class IntegerParser extends AbstractParser
   /**
    * @see org.kalypso.util.parser.IParser#getFormat()
    */
-  public String getFormat( )
+  public String getFormat()
   {
     return m_format;
   }
@@ -117,20 +117,19 @@ public class IntegerParser extends AbstractParser
   }
 
   /**
-   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
   public int compare( Object value1, Object value2 )
   {
-    int n1 = ((Number) value1).intValue();
-    int n2 = ((Number) value2).intValue();
+    int n1 = ( (Number)value1 ).intValue();
+    int n2 = ( (Number)value2 ).intValue();
 
     if( n1 < n2 )
       return -1;
-    
+
     if( n1 > n2 )
       return 1;
-    
+
     return 0;
   }
 }

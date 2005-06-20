@@ -58,12 +58,10 @@ public class PropertyUrlCatalog implements IUrlCatalog
   private final Map m_catalog = new HashMap();
 
   /**
-   * The argument is copied into this catalog, so changes to catalog are not
-   * backed by this object.
+   * The argument is copied into this catalog, so changes to catalog are not backed by this object.
    * 
    * @param context
-   *          All entries of catalog are resolved against this url. If null, the
-   *          entries are tried to parse stand-alone.
+   *          All entries of catalog are resolved against this url. If null, the entries are tried to parse stand-alone.
    */
   public PropertyUrlCatalog( final URL context, final Properties catalog )
   {

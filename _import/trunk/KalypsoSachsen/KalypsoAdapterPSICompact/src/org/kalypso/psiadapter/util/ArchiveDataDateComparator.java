@@ -5,10 +5,9 @@ import java.util.Date;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
-
 /**
  * @author schlienger
- *
+ *  
  */
 public class ArchiveDataDateComparator implements Comparator
 {
@@ -19,16 +18,16 @@ public class ArchiveDataDateComparator implements Comparator
   {
     Date d1 = null;
     Date d2 = null;
-    
+
     if( o1 instanceof ArchiveData )
-      d1 = ((ArchiveData)o1).getTimestamp();
+      d1 = ( (ArchiveData)o1 ).getTimestamp();
     else if( o1 instanceof Date )
       d1 = (Date)o1;
     else
       throw new IllegalArgumentException( "Cannot compare objects: not a Date nor an ArchiveData" );
-      
+
     if( o2 instanceof ArchiveData )
-      d2 = ((ArchiveData)o2).getTimestamp();
+      d2 = ( (ArchiveData)o2 ).getTimestamp();
     else if( o2 instanceof Date )
       d2 = (Date)o2;
     else

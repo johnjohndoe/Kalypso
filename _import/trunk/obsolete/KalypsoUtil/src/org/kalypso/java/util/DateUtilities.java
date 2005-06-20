@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
 import java.util.Calendar;
@@ -52,16 +52,16 @@ public final class DateUtilities
 {
   private DateUtilities()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
-  
+
   /**
    * @return the minimum Date that the Calendar can deliver.
    */
   public final static Date getMinimum()
   {
     final Calendar cal = Calendar.getInstance();
-    
+
     final int yearMin = cal.getMinimum( Calendar.YEAR );
     final int monthMin = cal.getMinimum( Calendar.MONTH );
     final int dayMin = cal.getMinimum( Calendar.DAY_OF_MONTH );
@@ -71,7 +71,7 @@ public final class DateUtilities
 
     cal.clear();
     cal.set( yearMin, monthMin, dayMin, hourMin, minMin, secMin );
-    
+
     return cal.getTime();
   }
 }

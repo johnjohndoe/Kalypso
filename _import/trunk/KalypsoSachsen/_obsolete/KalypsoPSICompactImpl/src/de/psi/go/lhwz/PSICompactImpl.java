@@ -45,7 +45,7 @@ public class PSICompactImpl implements PSICompact
   private static final String PROP_DISTRIB_PATH = "distributePath";
 
   private final static ArchiveData[] EMPTY_DATA = new ArchiveData[0];
-  
+
   private final Map m_id2obj;
 
   private final Map m_id2zml;
@@ -60,8 +60,7 @@ public class PSICompactImpl implements PSICompact
 
   private Properties m_conf;
 
-
-  public PSICompactImpl( )
+  public PSICompactImpl()
   {
     super();
 
@@ -79,14 +78,13 @@ public class PSICompactImpl implements PSICompact
    * @param mapZml
    * @throws ECommException
    */
-  private final void prepareObjects( final Map mapId, final Map mapZml )
-      throws ECommException
+  private final void prepareObjects( final Map mapId, final Map mapZml ) throws ECommException
   {
-    final BufferedReader reader ;
+    final BufferedReader reader;
     try
     {
-      reader = new BufferedReader( new InputStreamReader(
-          getClass().getResourceAsStream( "fake/lhwz-ids.csv" ), "UTF-8" ) );
+      reader = new BufferedReader( new InputStreamReader( getClass().getResourceAsStream( "fake/lhwz-ids.csv" ),
+          "UTF-8" ) );
     }
     catch( final UnsupportedEncodingException e1 )
     {
@@ -145,14 +143,13 @@ public class PSICompactImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#init()
    */
-  public void init( ) throws ECommException
+  public void init() throws ECommException
   {
     m_init = true;
 
     // load configuration from properties file
     m_conf = new Properties();
-    final InputStream ins = PSICompactImpl.class
-        .getResourceAsStream( "config.ini" );
+    final InputStream ins = PSICompactImpl.class.getResourceAsStream( "config.ini" );
     try
     {
       m_conf.load( ins );
@@ -177,7 +174,7 @@ public class PSICompactImpl implements PSICompact
     prepareObjects( m_id2obj, m_id2zml );
   }
 
-  private void testInitDone( ) throws ECommException
+  private void testInitDone() throws ECommException
   {
     if( !m_init )
       throw new ECommException( "PSICompact.init() not performed!" );
@@ -202,15 +199,13 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    return (ObjectInfo[]) m_id2obj.values().toArray( new ObjectInfo[0] );
+    return (ObjectInfo[])m_id2obj.values().toArray( new ObjectInfo[0] );
   }
 
   /**
-   * @see de.psi.go.lhwz.PSICompact#getArchiveData(java.lang.String, int,
-   *      java.util.Date, java.util.Date)
+   * @see de.psi.go.lhwz.PSICompact#getArchiveData(java.lang.String, int, java.util.Date, java.util.Date)
    */
-  public ArchiveData[] getArchiveData( String id, int arcType, Date from,
-      Date to ) throws ECommException
+  public ArchiveData[] getArchiveData( String id, int arcType, Date from, Date to ) throws ECommException
   {
     testInitDone();
 
@@ -221,14 +216,14 @@ public class PSICompactImpl implements PSICompact
     {
       // overriden?
       if( m_id2values.containsKey( id ) )
-        return (ArchiveData[]) m_id2values.get( id );
+        return (ArchiveData[])m_id2values.get( id );
 
       // zml?
       if( m_id2zml.containsKey( id ) )
         return readFromZml( id, from, to );
 
       // random
-//      return randomData( from, to );
+      //      return randomData( from, to );
       return EMPTY_DATA;
     }
 
@@ -243,11 +238,11 @@ public class PSICompactImpl implements PSICompact
   private IObservation getZmlObs( final String id ) throws ECommException
   {
     // already loaded?
-    IObservation obs = (IObservation) m_id2zmlObs.get( id );
+    IObservation obs = (IObservation)m_id2zmlObs.get( id );
     if( obs != null )
       return obs;
 
-    final String fname = (String) m_id2zml.get( id );
+    final String fname = (String)m_id2zml.get( id );
 
     final InputStream stream = getClass().getResourceAsStream( "fake/" + fname );
     InputSource ins = new InputSource( stream );
@@ -281,25 +276,21 @@ public class PSICompactImpl implements PSICompact
    * @return data
    * @throws ECommException
    */
-  private ArchiveData[] readFromZml( String id, Date from, Date to )
-      throws ECommException
+  private ArchiveData[] readFromZml( String id, Date from, Date to ) throws ECommException
   {
     try
     {
-      final ArgsObservationProxy obs = new ArgsObservationProxy(
-          new DateRangeArgument( from, to ), getZmlObs( id ) );
+      final ArgsObservationProxy obs = new ArgsObservationProxy( new DateRangeArgument( from, to ), getZmlObs( id ) );
 
       final ITuppleModel values = obs.getValues( null );
-      final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs
-          .getAxisList(), Date.class );
-      final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( obs
-          .getAxisList(), Number.class, true );
+      final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class );
+      final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
 
       final ArchiveData[] data = new ArchiveData[values.getCount()];
       for( int i = 0; i < data.length; i++ )
       {
-        Date d = (Date) values.getElement( i, dateAxis );
-        Number n = (Number) values.getElement( i, valueAxis );
+        Date d = (Date)values.getElement( i, dateAxis );
+        Number n = (Number)values.getElement( i, valueAxis );
 
         data[i] = new ArchiveData( d, PSICompact.STATUS_AUTO, n.doubleValue() );
       }
@@ -313,11 +304,10 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
-   * @see de.psi.go.lhwz.PSICompact#setArchiveData(java.lang.String, int,
-   *      java.util.Date, de.psi.go.lhwz.PSICompact.ArchiveData[])
+   * @see de.psi.go.lhwz.PSICompact#setArchiveData(java.lang.String, int, java.util.Date,
+   *      de.psi.go.lhwz.PSICompact.ArchiveData[])
    */
-  public boolean setArchiveData( String id, int arcType, Date from,
-      ArchiveData[] data ) throws ECommException
+  public boolean setArchiveData( String id, int arcType, Date from, ArchiveData[] data ) throws ECommException
   {
     testInitDone();
 
@@ -334,15 +324,14 @@ public class PSICompactImpl implements PSICompact
   {
     testInitDone();
 
-    WQParamSet[] pset = (WQParamSet[]) m_id2wq.get( id );
+    WQParamSet[] pset = (WQParamSet[])m_id2wq.get( id );
     if( pset != null )
       return pset;
 
     // try to get the info from the underlying zml, if any
     if( m_id2zml.containsKey( id ) )
     {
-      final String wqParam = getZmlObs( id ).getMetadataList().getProperty(
-          TimeserieConstants.MD_WQWECHMANN );
+      final String wqParam = getZmlObs( id ).getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
 
       if( wqParam != null )
       {
@@ -365,23 +354,21 @@ public class PSICompactImpl implements PSICompact
         final Iterator its = group.iterator();
         while( its.hasNext() )
         {
-          final WechmannSet ws = (WechmannSet) its.next();
+          final WechmannSet ws = (WechmannSet)its.next();
 
           final ArrayList wqds = new ArrayList();
           final Iterator itp = ws.iterator();
           while( itp.hasNext() )
           {
-            final WechmannParams params = (WechmannParams) itp.next();
-            final WQData data = new WQData( params.getWGR(), params.getW1(),
-                params.getLNK1(), params.getK2() );
+            final WechmannParams params = (WechmannParams)itp.next();
+            final WQData data = new WQData( params.getWGR(), params.getW1(), params.getLNK1(), params.getK2() );
             wqds.add( data );
           }
 
-          wqps.add( new WQParamSet( ws.getValidity(), (WQData[]) wqds
-              .toArray( new WQData[wqds.size()] ) ) );
+          wqps.add( new WQParamSet( ws.getValidity(), (WQData[])wqds.toArray( new WQData[wqds.size()] ) ) );
         }
 
-        pset = (WQParamSet[]) wqps.toArray( new WQParamSet[wqps.size()] );
+        pset = (WQParamSet[])wqps.toArray( new WQParamSet[wqps.size()] );
         m_id2wq.put( id, pset );
       }
     }
@@ -408,19 +395,19 @@ public class PSICompactImpl implements PSICompact
       String p = null;
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_1 );
       if( p != null )
-        omd.setAlarm1( Double.valueOf(p).doubleValue() );
+        omd.setAlarm1( Double.valueOf( p ).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_2 );
       if( p != null )
-        omd.setAlarm2( Double.valueOf(p).doubleValue() );
+        omd.setAlarm2( Double.valueOf( p ).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_3 );
       if( p != null )
-        omd.setAlarm3( Double.valueOf(p).doubleValue() );
+        omd.setAlarm3( Double.valueOf( p ).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_4 );
       if( p != null )
-        omd.setAlarm4( Double.valueOf(p).doubleValue() );
+        omd.setAlarm4( Double.valueOf( p ).doubleValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_GEWAESSER );
       if( p != null )
@@ -436,12 +423,11 @@ public class PSICompactImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_GKH );
       if( p != null )
-        omd.setHeight( Double.valueOf(p).intValue());
+        omd.setHeight( Double.valueOf( p ).intValue() );
 
-      
       p = mdl.getProperty( TimeserieConstants.MD_GKR );
       if( p != null )
-        omd.setRight( Double.valueOf(p).intValue() );
+        omd.setRight( Double.valueOf( p ).intValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_HOEHENANGABEART );
       if( p != null )
@@ -451,14 +437,13 @@ public class PSICompactImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_MESSTISCHBLATT );
       if( p != null )
-        omd.setMapNo( Double.valueOf(p).intValue() );
+        omd.setMapNo( Double.valueOf( p ).intValue() );
 
       p = mdl.getProperty( TimeserieConstants.MD_PEGELNULLPUNKT );
       if( p != null )
-        omd.setLevel( Double.valueOf(p).doubleValue() );
+        omd.setLevel( Double.valueOf( p ).doubleValue() );
 
-      final IAxis nba = KalypsoStatusUtils.findAxisByClass(
-          obs.getAxisList(), Number.class, true );
+      final IAxis nba = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
 
       omd.setUnit( whichUnit( nba.getUnit() ) );
     }
@@ -516,11 +501,9 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
-   * @see de.psi.go.lhwz.PSICompact#getUserRights(java.lang.String,
-   *      java.lang.String)
+   * @see de.psi.go.lhwz.PSICompact#getUserRights(java.lang.String, java.lang.String)
    */
-  public String[] getUserRights( String userId, String userClass )
-      throws ECommException
+  public String[] getUserRights( String userId, String userClass ) throws ECommException
   {
     testInitDone();
 
@@ -547,13 +530,12 @@ public class PSICompactImpl implements PSICompact
     final ArrayList data = new ArrayList();
     while( cal.getTime().compareTo( to ) < 0 )
     {
-      data.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_AUTO, Math
-          .random() * 100 ) );
+      data.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_AUTO, Math.random() * 100 ) );
 
       cal.add( Calendar.MINUTE, 15 );
     }
 
-    return (ArchiveData[]) data.toArray( new ArchiveData[data.size()] );
+    return (ArchiveData[])data.toArray( new ArchiveData[data.size()] );
   }
 
   /**
@@ -567,8 +549,7 @@ public class PSICompactImpl implements PSICompact
     if( m_id2zml.containsKey( id ) )
     {
       final IObservation obs = getZmlObs( id );
-      final IAxis nba = KalypsoStatusUtils.findAxisByClass(
-          obs.getAxisList(), Number.class, true );
+      final IAxis nba = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
 
       return toMeasType( nba.getType() );
     }
@@ -577,8 +558,7 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
-   * Helper that returns the psi measure type (MEAS_*) according to the axis
-   * type
+   * Helper that returns the psi measure type (MEAS_*) according to the axis type
    * 
    * @param axisType
    * @return measure type
@@ -593,7 +573,7 @@ public class PSICompactImpl implements PSICompact
       return PSICompact.MEAS_TEMPERATUR;
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       return PSICompact.MEAS_LEVEL;
-    
+
     return PSICompact.MEAS_UNDEF;
   }
 
@@ -608,31 +588,29 @@ public class PSICompactImpl implements PSICompact
   }
 
   /**
-   * @see de.psi.go.lhwz.PSICompact#copyanddistributeFile(java.io.File,
-   *      java.lang.String)
+   * @see de.psi.go.lhwz.PSICompact#copyanddistributeFile(java.io.File, java.lang.String)
    */
-  public boolean copyanddistributeFile( final File source, final String destination )
-      throws ECommException
+  public boolean copyanddistributeFile( final File source, final String destination ) throws ECommException
   {
     testInitDone();
 
     final String basepath = m_conf.getProperty( PROP_DISTRIB_PATH, null );
     if( basepath == null )
       return false;
-    
+
     final File dir = new File( basepath );
     final File destfile = new File( dir, destination );
     destfile.getParentFile().mkdirs();
     try
     {
-      FileUtils.copyFile( source , destfile );
+      FileUtils.copyFile( source, destfile );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       return false;
     }
-    
+
     return true;
   }
 
@@ -649,7 +627,7 @@ public class PSICompactImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getDataModelVersion()
    */
-  public int getDataModelVersion( ) throws ECommException
+  public int getDataModelVersion() throws ECommException
   {
     testInitDone();
 
@@ -669,7 +647,7 @@ public class PSICompactImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getActivDBGroup()
    */
-  public int getActivDBGroup( ) throws ECommException
+  public int getActivDBGroup() throws ECommException
   {
     testInitDone();
 

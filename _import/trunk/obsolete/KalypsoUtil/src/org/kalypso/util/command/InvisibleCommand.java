@@ -36,13 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
 /**
- * <p>Eine Art Dummy-Kommando, welches dazu dient, vom ICommandManager einfach geschluckt zu werden.</p>
- * <p>Es wird zwar ausgeführt, aber nicht in die Commandqueue aufgenommen</p>
+ * <p>
+ * Eine Art Dummy-Kommando, welches dazu dient, vom ICommandManager einfach geschluckt zu werden.
+ * </p>
+ * <p>
+ * Es wird zwar ausgeführt, aber nicht in die Commandqueue aufgenommen
+ * </p>
  * 
  * 
  * @author Belger
@@ -62,7 +66,7 @@ public class InvisibleCommand implements ICommand
    */
   public void process() throws Exception
   {
-    // nichts tun
+  // nichts tun
   }
 
   /**
@@ -78,7 +82,7 @@ public class InvisibleCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    // nichts tun
+  // nichts tun
   }
 
   /**

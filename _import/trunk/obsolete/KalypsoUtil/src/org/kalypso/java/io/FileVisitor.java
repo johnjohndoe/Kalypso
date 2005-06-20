@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io;
 
 import java.io.File;
@@ -53,8 +53,7 @@ public interface FileVisitor
   /**
    * 'Besucht' eine Datei.
    * 
-   * @return ob, bei einem recursiven Durchgang, die Rekursion weiterlaufen darf
-   *         oder nicht
+   * @return ob, bei einem recursiven Durchgang, die Rekursion weiterlaufen darf oder nicht
    */
   public boolean visit( final File file ) throws IOException;
 }

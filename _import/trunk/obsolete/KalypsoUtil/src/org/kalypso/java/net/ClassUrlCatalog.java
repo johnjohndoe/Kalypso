@@ -1,30 +1,25 @@
 /**
- * ---------------- FILE HEADER KALYPSO
- * ------------------------------------------
+ * ---------------- FILE HEADER KALYPSO ------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestraße 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestraße 22 21073
+ * Hamburg, Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -43,9 +38,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Ein URL Katalog, welche r die Namespace anhand von anderen URL-Katalogen
- * auflöst, deren Klassennamen er aus einer Property-Liste liest. Die Kataloge
- * werden per Reflektion über den Standard-Konstruktor instantiiert.
+ * Ein URL Katalog, welche r die Namespace anhand von anderen URL-Katalogen auflöst, deren Klassennamen er aus einer
+ * Property-Liste liest. Die Kataloge werden per Reflektion über den Standard-Konstruktor instantiiert.
  * 
  * @author thuel2
  */
@@ -64,22 +58,21 @@ public class ClassUrlCatalog implements IUrlCatalog
     {
       e.printStackTrace();
     }
-    
+
     return props;
   }
 
   /**
-   * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die
-   * 'keys' werden ignoriert.
+   * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die 'keys' werden ignoriert.
    */
   public ClassUrlCatalog( final File propertyFile )
   {
     this( loadProperties( propertyFile ) );
   }
-  
+
   /**
-   * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die
-   * 'keys' werden ignoriert. Jede Klasse selbst muss ein IUrlCatalog sein.
+   * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die 'keys' werden ignoriert. Jede Klasse
+   * selbst muss ein IUrlCatalog sein.
    */
   public ClassUrlCatalog( final Properties props )
   {

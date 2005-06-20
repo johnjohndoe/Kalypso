@@ -50,8 +50,7 @@ import org.kalypso.java.net.AbstractUrlCatalog;
 public class SpreeUrlCatalog extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
-   *      java.util.Map)
+   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {

@@ -60,8 +60,7 @@ public class ClassUtilities
    */
   public static String getOnlyClassName( final Class someClass )
   {
-    final String className = someClass.getName().substring(
-        someClass.getName().lastIndexOf( '.' ) + 1 );
+    final String className = someClass.getName().substring( someClass.getName().lastIndexOf( '.' ) + 1 );
 
     return className;
   }
@@ -73,21 +72,19 @@ public class ClassUtilities
    * @return new instance
    * @throws ClassUtilityException
    * 
-   * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[],
-   *      Object[])
+   * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
-  public static Object newInstance( final String classname, final Class target,
-      final ClassLoader cl ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class target, final ClassLoader cl )
+      throws ClassUtilityException
   {
     return newInstance( classname, target, cl, null, null );
   }
 
   /**
-   * fetches the classes of the arguments directly, calling getClass() on each
-   * Object. This might work most of the time, but in some cases, where the
-   * arguments do inherit from the class required in the constructor, the
-   * constructor might not be found. In these cases, use the full version of
-   * this method where you can exactly specify the classes of the arguments.
+   * fetches the classes of the arguments directly, calling getClass() on each Object. This might work most of the time,
+   * but in some cases, where the arguments do inherit from the class required in the constructor, the constructor might
+   * not be found. In these cases, use the full version of this method where you can exactly specify the classes of the
+   * arguments.
    * 
    * @param classname
    * @param target
@@ -96,12 +93,10 @@ public class ClassUtilities
    * @return new instance
    * @throws ClassUtilityException
    * 
-   * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[],
-   *      Object[])
+   * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
-  public static Object newInstance( final String classname, final Class target,
-      final ClassLoader cl, final Object[] arguments )
-      throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class target, final ClassLoader cl,
+      final Object[] arguments ) throws ClassUtilityException
   {
     Class[] argClasses = null;
     if( arguments != null )
@@ -126,14 +121,12 @@ public class ClassUtilities
    *          the ClassLoader to use for instantiating the object
    * 
    * @param argClasses
-   *          [optional] can be null, the list of the class of the arguments to
-   *          pass to Class.getConstructor(java.lang.Class[]). If
-   *          <code>arguments</code> is not null, then <code>argClasses</code>
-   *          should neither be null.
+   *          [optional] can be null, the list of the class of the arguments to pass to
+   *          Class.getConstructor(java.lang.Class[]). If <code>arguments</code> is not null, then
+   *          <code>argClasses</code> should neither be null.
    * @param arguments
-   *          [optional] can be null, the list of arguments to pass to the
-   *          constructor. If this argument is specified, you should also
-   *          specifiy the <code>argClasses</code> argument.
+   *          [optional] can be null, the list of arguments to pass to the constructor. If this argument is specified,
+   *          you should also specifiy the <code>argClasses</code> argument.
    * 
    * @return new Object
    * 
@@ -141,15 +134,14 @@ public class ClassUtilities
    * 
    * @see Class#getConstructor(java.lang.Class[])
    */
-  public static Object newInstance( final String classname, final Class target,
-      final ClassLoader cl, final Class[] argClasses, final Object[] arguments )
-      throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class target, final ClassLoader cl,
+      final Class[] argClasses, final Object[] arguments ) throws ClassUtilityException
   {
     try
     {
       final Class c = Class.forName( classname, true, cl );
 
-      if( (target == null) || target.isAssignableFrom( c ) )
+      if( ( target == null ) || target.isAssignableFrom( c ) )
       {
         if( arguments == null )
           return c.newInstance();
@@ -159,8 +151,7 @@ public class ClassUtilities
         return cons.newInstance( arguments );
       }
 
-      throw new ClassUtilityException( "Class " + classname
-          + " not assignable from " + target.getName() );
+      throw new ClassUtilityException( "Class " + classname + " not assignable from " + target.getName() );
     }
     catch( ClassNotFoundException e )
     {

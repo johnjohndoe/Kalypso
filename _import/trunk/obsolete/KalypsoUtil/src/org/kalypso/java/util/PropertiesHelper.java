@@ -54,7 +54,7 @@ public class PropertiesHelper
 
   private PropertiesHelper()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
   public static Properties parseFromString( final String source, final char separator )
@@ -87,11 +87,9 @@ public class PropertiesHelper
   }
 
   /**
-   * Macht ein Pattern-Matching auf allen Values einer Properties-Map und
-   * ersetzt gemäss der Replace-Properties Map.
+   * Macht ein Pattern-Matching auf allen Values einer Properties-Map und ersetzt gemäss der Replace-Properties Map.
    */
-  public static Properties replaceValues( final Properties sourceProps,
-      final Properties replaceProperties )
+  public static Properties replaceValues( final Properties sourceProps, final Properties replaceProperties )
   {
     final Properties newProps = new Properties();
 

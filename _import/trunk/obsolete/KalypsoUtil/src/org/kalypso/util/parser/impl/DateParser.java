@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.parser.impl;
 
 import java.text.ParseException;
@@ -123,17 +123,16 @@ public class DateParser extends AbstractParser
   }
 
   /**
-   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.util.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
   public int compare( Object value1, Object value2 )
   {
-    Date d1 = (Date) value1;
-    Date d2 = (Date) value2;
+    Date d1 = (Date)value1;
+    Date d2 = (Date)value2;
 
     return d1.compareTo( d2 );
   }
-  
+
   public void setTimezone( final TimeZone tz )
   {
     if( tz != null )

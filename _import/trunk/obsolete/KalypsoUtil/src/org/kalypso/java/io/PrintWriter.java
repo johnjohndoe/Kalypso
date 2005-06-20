@@ -72,8 +72,7 @@ public class PrintWriter extends java.io.PrintWriter
     super( outs, autoFlush );
   }
 
-  public void printf( final Locale lng, final String string,
-      final Object[] o )
+  public void printf( final Locale lng, final String string, final Object[] o )
   {
     try
     {

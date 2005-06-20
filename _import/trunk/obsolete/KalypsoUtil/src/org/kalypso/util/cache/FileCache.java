@@ -22,10 +22,9 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.util.serializer.ISerializer;
 
 /**
- * FileCache is an object cache using files and a custom serializing mechnismus.
- * The convention is to always use IFileCacheKey as keys. Failing to do so will
- * result in IllegalArgumentException. In order for objects to be serialized,
- * the ISerializer constructor argument needs to be specified.
+ * FileCache is an object cache using files and a custom serializing mechnismus. The convention is to always use
+ * IFileCacheKey as keys. Failing to do so will result in IllegalArgumentException. In order for objects to be
+ * serialized, the ISerializer constructor argument needs to be specified.
  * 
  * @author schlienger
  */
@@ -48,8 +47,7 @@ public class FileCache
    * Constructor
    * 
    * @param kFact
-   *          the key factory used to read and write the keys from/to a simple
-   *          string representation
+   *          the key factory used to read and write the keys from/to a simple string representation
    * @param kc
    *          key comparator
    * @param ser
@@ -57,12 +55,10 @@ public class FileCache
    * @param directory
    *          location of the index file and of all other files used for caching
    */
-  public FileCache( final IKeyFactory kFact, final Comparator kc,
-      final ISerializer ser, final File directory )
+  public FileCache( final IKeyFactory kFact, final Comparator kc, final ISerializer ser, final File directory )
   {
     if( !directory.exists() || !directory.isDirectory() )
-      throw new IllegalArgumentException( "Argument is not a directory: "
-          + directory.toString() );
+      throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() );
 
     m_keyFactory = kFact;
     m_kc = kc;
@@ -74,14 +70,14 @@ public class FileCache
     readIndexFile();
   }
 
-  protected void finalize( ) throws Throwable
+  protected void finalize() throws Throwable
   {
     m_index.clear();
 
     super.finalize();
   }
 
-  private final void readIndexFile( )
+  private final void readIndexFile()
   {
     final File indexFile = new File( m_directory, INDEX_FILE );
     if( !indexFile.exists() )
@@ -90,8 +86,7 @@ public class FileCache
     BufferedReader reader = null;
     try
     {
-      reader = new BufferedReader( new InputStreamReader( new FileInputStream(
-          indexFile ) ) );
+      reader = new BufferedReader( new InputStreamReader( new FileInputStream( indexFile ) ) );
 
       String line = reader.readLine();
       while( line != null )
@@ -122,21 +117,20 @@ public class FileCache
     }
   }
 
-  private void writeIndexFile( )
+  private void writeIndexFile()
   {
     final File indexFile = new File( m_directory, INDEX_FILE );
 
     BufferedWriter writer = null;
     try
     {
-      writer = new BufferedWriter( new OutputStreamWriter(
-          new FileOutputStream( indexFile ) ) );
+      writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( indexFile ) ) );
 
       for( final Iterator it = m_index.entrySet().iterator(); it.hasNext(); )
       {
-        final Map.Entry entry = (Entry) it.next();
+        final Map.Entry entry = (Entry)it.next();
         final String keySpec = m_keyFactory.toString( entry.getKey() );
-        final String fileName = ((File) entry.getValue()).getName();
+        final String fileName = ( (File)entry.getValue() ).getName();
 
         writer.write( keySpec );
         writer.write( ";" );
@@ -163,7 +157,7 @@ public class FileCache
     try
     {
       if( m_index.containsKey( key ) )
-        file = (File) m_index.get( key );
+        file = (File)m_index.get( key );
       else
         file = File.createTempFile( "cache", ".item", m_directory );
 
@@ -187,7 +181,7 @@ public class FileCache
 
   public Object getObject( final Object key )
   {
-    final File file = (File) m_index.get( key );
+    final File file = (File)m_index.get( key );
     if( file == null )
       return null;
 
@@ -210,7 +204,7 @@ public class FileCache
     }
   }
 
-  public int size( )
+  public int size()
   {
     return m_index.size();
   }
@@ -219,7 +213,7 @@ public class FileCache
   {
     if( m_index.containsKey( key ) )
     {
-      final File file = (File) m_index.get( key );
+      final File file = (File)m_index.get( key );
       file.delete();
 
       m_index.remove( key );
@@ -228,11 +222,11 @@ public class FileCache
     }
   }
 
-  public void clear( )
+  public void clear()
   {
     for( final Iterator it = m_index.values().iterator(); it.hasNext(); )
     {
-      final File file = (File) it.next();
+      final File file = (File)it.next();
       file.delete();
     }
 
@@ -243,12 +237,10 @@ public class FileCache
   }
 
   /**
-   * TRICKY: Returns the real key for the given key. Since we are using
-   * comparators for the internal index, it is possible that the real instance
-   * of the key is some other object than the key used for querying the cache.
+   * TRICKY: Returns the real key for the given key. Since we are using comparators for the internal index, it is
+   * possible that the real instance of the key is some other object than the key used for querying the cache.
    * <p>
-   * This is a convenient method that might be used by clients wishing to
-   * perform additional key-comparisons.
+   * This is a convenient method that might be used by clients wishing to perform additional key-comparisons.
    * 
    * @param key
    * @return null if not found

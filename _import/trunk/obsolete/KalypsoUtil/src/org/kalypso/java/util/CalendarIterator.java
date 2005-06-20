@@ -58,8 +58,7 @@ public class CalendarIterator implements Iterator
    * 
    * @author doemming
    */
-  public CalendarIterator( final Calendar start, final Calendar end, final int calendarField,
-      final int amount )
+  public CalendarIterator( final Calendar start, final Calendar end, final int calendarField, final int amount )
   {
     m_currentCal = (Calendar)start.clone();
     m_end = (Calendar)end.clone();
@@ -95,8 +94,7 @@ public class CalendarIterator implements Iterator
 
   public String toString()
   {
-    return "current : " + m_currentCal.getTime().toString() + "\n" + "    end : "
-        + m_end.getTime().toString();
+    return "current : " + m_currentCal.getTime().toString() + "\n" + "    end : " + m_end.getTime().toString();
   }
 
 }

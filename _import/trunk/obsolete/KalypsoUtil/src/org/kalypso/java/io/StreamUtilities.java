@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io;
 
 import java.io.IOException;
@@ -55,11 +55,9 @@ public class StreamUtilities
   }
 
   /**
-   * Kopiert den Inhalt eines Streams in einen anderen. Die Streams werden nach
-   * Ende der Operation geschlossen.
+   * Kopiert den Inhalt eines Streams in einen anderen. Die Streams werden nach Ende der Operation geschlossen.
    */
-  public static final void streamCopy( final InputStream is, final OutputStream os )
-      throws IOException
+  public static final void streamCopy( final InputStream is, final OutputStream os ) throws IOException
   {
     final byte[] buffer = new byte[1024 * 16];
     while( true )
@@ -82,7 +80,7 @@ public class StreamUtilities
       final int avail = is.available();
       if( avail == 0 )
         return;
-      
+
       final byte[] inBuffer = new byte[avail];
       is.read( inBuffer );
     }

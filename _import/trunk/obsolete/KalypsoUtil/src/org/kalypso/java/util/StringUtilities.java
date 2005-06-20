@@ -78,9 +78,8 @@ public final class StringUtilities
    * <p>
    * String has to have the following format: "R;G;B[;A]"
    * <p>
-   * with R, G, B being the Red, Green, Blue components of the color and
-   * expressed as integers in the range (0 - 255). with A optional, being the
-   * alpha composite value in the range (0 - 255).
+   * with R, G, B being the Red, Green, Blue components of the color and expressed as integers in the range (0 - 255).
+   * with A optional, being the alpha composite value in the range (0 - 255).
    * 
    * @param s
    * 
@@ -95,12 +94,11 @@ public final class StringUtilities
     final String[] sc = s.split( ";" );
 
     if( sc.length == 3 )
-      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer
-          .parseInt( sc[2] ) );
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
 
     if( sc.length == 4 )
-      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer
-          .parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ), Integer
+          .parseInt( sc[3] ) );
 
     throw new IllegalArgumentException( "Color String has wrong format: " + s );
   }
@@ -124,8 +122,7 @@ public final class StringUtilities
 
     final StringBuffer buf = new StringBuffer();
 
-    buf.append( c.getRed() ).append( ";" ).append( c.getGreen() ).append( ";" )
-        .append( c.getBlue() );
+    buf.append( c.getRed() ).append( ";" ).append( c.getGreen() ).append( ";" ).append( c.getBlue() );
 
     // alpha component is optional
     if( c.getAlpha() != 255 )
@@ -188,8 +185,7 @@ public final class StringUtilities
 
     final StringBuffer buf = new StringBuffer();
 
-    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" ).append(
-        f.getSize() );
+    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" ).append( f.getSize() );
 
     return buf.toString();
   }
@@ -218,20 +214,19 @@ public final class StringUtilities
   }
 
   /**
-   * Spans a string onto lines, thus it inserts NEWLINE chars at lineLength + 1
-   * for each line. It firsts removes all existing NEWLINE chars.
+   * Spans a string onto lines, thus it inserts NEWLINE chars at lineLength + 1 for each line. It firsts removes all
+   * existing NEWLINE chars.
    * 
    * @param str
    *          the string to span
    * @param lineLength
    *          the number of chars one line must have
    * @param keepWords
-   *          when true words are not cut at the end of the line but rather
-   *          postponed on the next line
+   *          when true words are not cut at the end of the line but rather postponed on the next line
    * @return newly spaned string or null if str is null
    */
-  public static String spanOverLines( final String str, final int lineLength,
-      final boolean keepWords, final int alignment )
+  public static String spanOverLines( final String str, final int lineLength, final boolean keepWords,
+      final int alignment )
   {
     if( str == null )
       return null;

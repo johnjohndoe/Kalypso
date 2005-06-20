@@ -55,26 +55,25 @@ public interface IUrlResolver
   public URL resolveURL( final URL base, final String relative ) throws MalformedURLException;
 
   /**
-   * An iterator over entries of a map (Map.Entry) Each entry represant a token ,
-   * wich can be replaced
+   * An iterator over entries of a map (Map.Entry) Each entry represant a token , wich can be replaced
    */
   public Iterator getReplaceEntries();
 
   /**
-   * add a Replace token to the map, which can be accessed via
-   * getReplaceEntries()
+   * add a Replace token to the map, which can be accessed via getReplaceEntries()
    */
   public void addReplaceToken( final String key, final String value );
 
   /**
-   * Erzeugt einen BufferedWriter, der an den Ort der URL schreibt. Der Writer
-   * muss vom Aufrufenden geschlossen werden.
+   * Erzeugt einen BufferedWriter, der an den Ort der URL schreibt. Der Writer muss vom Aufrufenden geschlossen werden.
    * 
    * @throws IOException
    */
   public OutputStreamWriter createWriter( final URL url ) throws IOException;
 
-  /** Erzeugt einen (ungepufferten) Reader anhand einer URL. Insbesondere wird
-   * das Encoding des Reader nach bestem Wissen und Gewissen gesetzt. */
+  /**
+   * Erzeugt einen (ungepufferten) Reader anhand einer URL. Insbesondere wird das Encoding des Reader nach bestem Wissen
+   * und Gewissen gesetzt.
+   */
   public InputStreamReader createReader( final URL url ) throws IOException;
 }

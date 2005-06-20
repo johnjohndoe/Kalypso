@@ -36,10 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.xml;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,27 +52,26 @@ import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-
 /**
  * Helper class for handling DOM stuff
- *
+ * 
  * @author schlienger
  */
 public class DomHelper
 {
   /**
    * Loads a document from an InputStream. Closes the stream once finished.
-   *
+   * 
    * @param ins -
-   *
+   * 
    * @throws DomLoadException -
    */
   public static Document loadDocument( final InputStream ins ) throws DomLoadException
   {
     try
     {
-      final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance(  );
-      final DocumentBuilder db = f.newDocumentBuilder(  );
+      final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+      final DocumentBuilder db = f.newDocumentBuilder();
 
       return db.parse( ins );
     }
@@ -86,20 +84,20 @@ public class DomHelper
       IOUtils.closeQuietly( ins );
     }
   }
-  
+
   /**
    * Loads a document from an InputSource.
-   *
+   * 
    * @param ins -
-   *
+   * 
    * @throws DomLoadException -
    */
   public static Document loadDocument( final InputSource ins ) throws DomLoadException
   {
     try
     {
-      final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance(  );
-      final DocumentBuilder db = f.newDocumentBuilder(  );
+      final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+      final DocumentBuilder db = f.newDocumentBuilder();
 
       return db.parse( ins );
     }
@@ -116,7 +114,7 @@ public class DomHelper
   {
     try
     {
-      return loadDocument( xmlURL.openStream(  ) );
+      return loadDocument( xmlURL.openStream() );
     }
     catch( IOException e )
     {
@@ -139,9 +137,9 @@ public class DomHelper
    */
   public static class DomLoadException extends Exception
   {
-    public DomLoadException(  )
+    public DomLoadException()
     {
-      super(  );
+      super();
     }
 
     public DomLoadException( String message )

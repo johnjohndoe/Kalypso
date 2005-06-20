@@ -46,34 +46,26 @@ public class MetaDocSerializer
   private final static String TAG_APPFILES = "AppFiles";
 
   /** date format for the date elements of the xml file */
-  private final static DateFormat DFDATE = new SimpleDateFormat(
-      "yyyy-MM-dd" );
+  private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd" );
 
-  private final static DateFormat DFDATETIME = new SimpleDateFormat(
-  "yyyy-MM-dd'T'HH:mm:ss" );
+  private final static DateFormat DFDATETIME = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
   /**
    * Prepares the properties with some default value
    * 
-   * TRICKY: we currently given the XSD-type of the value we expect and the
-   * default value. The value stuff is a ';' separated string
+   * TRICKY: we currently given the XSD-type of the value we expect and the default value. The value stuff is a ';'
+   * separated string
    * 
    * @param serviceProps
    * @param props
    */
-  public static void prepareProperties( final Properties serviceProps,
-      final Properties props )
+  public static void prepareProperties( final Properties serviceProps, final Properties props )
   {
-    props.setProperty( TAG_DOKUMENTTYP, "string;"
-        + serviceProps.getProperty( TAG_DOKUMENTTYP, "Dokumenttyp" ) );
-    props.setProperty( TAG_REGION, "string;"
-        + serviceProps.getProperty( TAG_REGION, "Region" ) );
-    props.setProperty( TAG_ERSTELLER, "string;"
-        + serviceProps.getProperty( TAG_ERSTELLER, "Ersteller" ) );
-    props.setProperty( TAG_AUTOR, "string;"
-        + serviceProps.getProperty( IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
-    props.setProperty( TAG_ERSTELLUNGSDATUM, "date;"
-        + DFDATE.format( new Date() ) );
+    props.setProperty( TAG_DOKUMENTTYP, "string;" + serviceProps.getProperty( TAG_DOKUMENTTYP, "Dokumenttyp" ) );
+    props.setProperty( TAG_REGION, "string;" + serviceProps.getProperty( TAG_REGION, "Region" ) );
+    props.setProperty( TAG_ERSTELLER, "string;" + serviceProps.getProperty( TAG_ERSTELLER, "Ersteller" ) );
+    props.setProperty( TAG_AUTOR, "string;" + serviceProps.getProperty( IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
+    props.setProperty( TAG_ERSTELLUNGSDATUM, "date;" + DFDATE.format( new Date() ) );
     props.setProperty( TAG_ENDEGDATUM, "date;" + DFDATE.format( new Date() ) );
   }
 
@@ -88,50 +80,39 @@ public class MetaDocSerializer
    * @param fileName
    * @throws IOException
    */
-  public static void buildXML( final Properties serviceProps,
-      final Properties mdProps, final Writer writer, final String fileName )
-      throws IOException
+  public static void buildXML( final Properties serviceProps, final Properties mdProps, final Writer writer,
+      final String fileName ) throws IOException
   {
     try
     {
       writer.write( XML_HEADER );
       writer.write( "<" + TAG_FOLDERDATA + ">" );
       writer.write( "<" + TAG_HEADER + ">" );
-      writer.write( "<" + TAG_IMPORTMODE + ">"
-          + valueOfProperty( serviceProps.getProperty( TAG_IMPORTMODE, "1" ) )
+      writer.write( "<" + TAG_IMPORTMODE + ">" + valueOfProperty( serviceProps.getProperty( TAG_IMPORTMODE, "1" ) )
           + "</" + TAG_IMPORTMODE + ">" );
       writer.write( "</" + TAG_HEADER + ">" );
       writer.write( "<" + TAG_RECORD + ">" );
-      writer.write( "<" + TAG_DOKUMENTTYP + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) ) + "</"
+      writer.write( "<" + TAG_DOKUMENTTYP + ">" + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) ) + "</"
           + TAG_DOKUMENTTYP + ">" );
-      writer.write( "<" + TAG_ERSTELLER + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_ERSTELLER ) ) + "</"
+      writer.write( "<" + TAG_ERSTELLER + ">" + valueOfProperty( mdProps.getProperty( TAG_ERSTELLER ) ) + "</"
           + TAG_ERSTELLER + ">" );
-      writer.write( "<" + TAG_AUTOR + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_AUTOR ) ) + "</"
-          + TAG_AUTOR + ">" );
-      writer.write( "<" + TAG_REGION + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_REGION, "ohne" ) ) + "</"
+      writer.write( "<" + TAG_AUTOR + ">" + valueOfProperty( mdProps.getProperty( TAG_AUTOR ) ) + "</" + TAG_AUTOR
+          + ">" );
+      writer.write( "<" + TAG_REGION + ">" + valueOfProperty( mdProps.getProperty( TAG_REGION, "ohne" ) ) + "</"
           + TAG_REGION + ">" );
 
-      writer.write( "<" + TAG_EINGANGSDATUM + ">"
-          + DFDATETIME.format( new Date() ) + "</" + TAG_EINGANGSDATUM + ">" );
-      writer.write( "<" + TAG_ERSTELLUNGSDATUM + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM ) )
+      writer.write( "<" + TAG_EINGANGSDATUM + ">" + DFDATETIME.format( new Date() ) + "</" + TAG_EINGANGSDATUM + ">" );
+      writer.write( "<" + TAG_ERSTELLUNGSDATUM + ">" + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM ) )
           + "</" + TAG_ERSTELLUNGSDATUM + ">" );
 
-      writer.write( "<" + TAG_ENDEGDATUM + ">"
-          + valueOfProperty( mdProps.getProperty( TAG_ENDEGDATUM ) ) + "</"
+      writer.write( "<" + TAG_ENDEGDATUM + ">" + valueOfProperty( mdProps.getProperty( TAG_ENDEGDATUM ) ) + "</"
           + TAG_ENDEGDATUM + ">" );
-      writer.write( "<" + TAG_VERSENDEN + ">"
-          + valueOfProperty( serviceProps.getProperty( TAG_VERSENDEN, "0" ) )
+      writer.write( "<" + TAG_VERSENDEN + ">" + valueOfProperty( serviceProps.getProperty( TAG_VERSENDEN, "0" ) )
           + "</" + TAG_VERSENDEN + ">" );
 
       writer.write( "<LHWZ-intern>1</LHWZ-intern>" );
-      
-      writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES
-          + ">" );
+
+      writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES + ">" );
 
       writer.write( "</" + TAG_RECORD + ">" );
       writer.write( "</" + TAG_FOLDERDATA + ">" );
@@ -143,8 +124,7 @@ public class MetaDocSerializer
   }
 
   /**
-   * Properties can contain the value type and the value. In that case, just
-   * return the value.
+   * Properties can contain the value type and the value. In that case, just return the value.
    * 
    * @param prop
    * @return value part of prop

@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.util;
 
 import java.util.Comparator;
-
 
 /**
  * @author belger
@@ -60,8 +59,8 @@ public class DoubleComparator implements Comparator
    */
   public int compare( Object o1, Object o2 )
   {
-    double d1 = ( (Number)o1 ).doubleValue(  );
-    double d2 = ( (Number)o2 ).doubleValue(  );
+    double d1 = ( (Number)o1 ).doubleValue();
+    double d2 = ( (Number)o2 ).doubleValue();
 
     return compare( d1, d2 );
   }

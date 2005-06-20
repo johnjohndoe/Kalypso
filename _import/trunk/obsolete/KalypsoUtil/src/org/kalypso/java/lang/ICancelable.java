@@ -40,11 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.lang;
 
-
 /**
  * Ein Ding, was man abbrechen kann.
  * 
- * Wird zur Zeit vom {@link org.kalypso.java.lang.ProcessHelper} und vom CalcService benutzt.
+ * Wird zur Zeit vom {@link org.kalypso.java.lang.ProcessHelper}und vom CalcService benutzt.
  * 
  * @author belger
  */

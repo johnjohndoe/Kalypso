@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io;
 
 import java.io.File;
@@ -50,14 +50,17 @@ import java.io.File;
 public class DeleteObsoleteFilesVisitor implements FileVisitor
 {
   private final File m_compareDir;
+
   private final File m_adoptDir;
+
   private final String m_excludeDirWithFile;
 
   public DeleteObsoleteFilesVisitor( final File adoptFile, final File compareDir, final String excludeDirWithFile )
   {
     m_adoptDir = adoptFile;
     m_compareDir = compareDir;
-    m_excludeDirWithFile = excludeDirWithFile;}
+    m_excludeDirWithFile = excludeDirWithFile;
+  }
 
   /**
    * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
@@ -74,7 +77,7 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
       if( excludeFile.exists() )
         return false;
     }
-    
+
     if( !compareFile.exists() )
     {
       FileUtilities.deleteRecursive( file );

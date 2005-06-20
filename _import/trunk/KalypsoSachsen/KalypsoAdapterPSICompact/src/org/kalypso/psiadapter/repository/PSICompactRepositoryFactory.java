@@ -32,7 +32,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( )
+  public boolean configureRepository()
   {
     return true;
   }
@@ -40,7 +40,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository( ) throws RepositoryException
+  public IRepository createRepository() throws RepositoryException
   {
     return getRepository();
   }
@@ -52,8 +52,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
    * 
    * @throws RepositoryException
    */
-  public final static PSICompactRepository getRepository( )
-      throws RepositoryException
+  public final static PSICompactRepository getRepository() throws RepositoryException
   {
     if( m_psiCompactRep == null )
     {
@@ -77,43 +76,42 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( status )
     {
-      case PSICompact.STATUS_AUTO:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_AUTO" ) );
-      case PSICompact.STATUS_ERSALLG:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_ERSALLG" ) );
-      case PSICompact.STATUS_MANKOR:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_MANKOR" ) );
-      case PSICompact.STATUS_NACH:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NACH" ) );
-      case PSICompact.STATUS_NORM:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORM" ) );
-      case PSICompact.STATUS_NORMALLG:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORMALLG" ) );
-      case PSICompact.STATUS_OK:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_OK" ) );
-      case PSICompact.STATUS_REKO:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_REKO" ) );
-      case PSICompact.STATUS_UNDEF:
-        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_UNDEF" ) );
+    case PSICompact.STATUS_AUTO:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_AUTO" ) );
+    case PSICompact.STATUS_ERSALLG:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_ERSALLG" ) );
+    case PSICompact.STATUS_MANKOR:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_MANKOR" ) );
+    case PSICompact.STATUS_NACH:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NACH" ) );
+    case PSICompact.STATUS_NORM:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORM" ) );
+    case PSICompact.STATUS_NORMALLG:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORMALLG" ) );
+    case PSICompact.STATUS_OK:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_OK" ) );
+    case PSICompact.STATUS_REKO:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_REKO" ) );
+    case PSICompact.STATUS_UNDEF:
+      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_UNDEF" ) );
 
-      default:
-        return m_zero;
+    default:
+      return m_zero;
     }
   }
 
   /**
-   * Converts bitMask (Kalypso Status) to PSI-Status. Always returns
-   * <code>PSICompact.STATUS_AUTO</code>. PSICompact automatically
-   * converts it to STATUS_REKO, independently from the status.
+   * Converts bitMask (Kalypso Status) to PSI-Status. Always returns <code>PSICompact.STATUS_AUTO</code>. PSICompact
+   * automatically converts it to STATUS_REKO, independently from the status.
    * 
    * @param mask
    * @return PSICompact-Status
    */
   public final static int maskToPsiStatus( final int mask )
   {
-//    if( KalypsoStatusUtils.checkMask( mask,
-//        KalypsoStati.BIT_USER_MODIFIED ) )
-//      return PSICompact.STATUS_MANKOR;
+    //    if( KalypsoStatusUtils.checkMask( mask,
+    //        KalypsoStati.BIT_USER_MODIFIED ) )
+    //      return PSICompact.STATUS_MANKOR;
 
     return PSICompact.STATUS_AUTO;
   }
@@ -130,24 +128,23 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( measType )
     {
-      case PSICompact.MEAS_FLOW:
-        return props.getProperty( "MEAS_FLOW" );
-      case PSICompact.MEAS_LEVEL:
-        return props.getProperty( "MEAS_LEVEL" );
-      case PSICompact.MEAS_RAINFALL:
-        return props.getProperty( "MEAS_RAINFALL" );
-      case PSICompact.MEAS_TEMPERATUR:
-        return props.getProperty( "MEAS_TEMPERATUR" );
-      case PSICompact.MEAS_UNDEF:
-        return props.getProperty( "MEAS_UNDEF" );
-      default:
-        return props.getProperty( "UNKNOWN" );
+    case PSICompact.MEAS_FLOW:
+      return props.getProperty( "MEAS_FLOW" );
+    case PSICompact.MEAS_LEVEL:
+      return props.getProperty( "MEAS_LEVEL" );
+    case PSICompact.MEAS_RAINFALL:
+      return props.getProperty( "MEAS_RAINFALL" );
+    case PSICompact.MEAS_TEMPERATUR:
+      return props.getProperty( "MEAS_TEMPERATUR" );
+    case PSICompact.MEAS_UNDEF:
+      return props.getProperty( "MEAS_UNDEF" );
+    default:
+      return props.getProperty( "UNKNOWN" );
     }
   }
-  
+
   /**
-   * Helper that returns the appropriate archive type depending on the 
-   * measure type.
+   * Helper that returns the appropriate archive type depending on the measure type.
    * 
    * @param measType
    * @return archive type
@@ -156,14 +153,14 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   {
     switch( measType )
     {
-      case PSICompact.MEAS_RAINFALL:
-        return PSICompact.ARC_MIN15;
-//      PSICompact.ARC_HOUR;
-      default:
-        return PSICompact.ARC_MIN15;
+    case PSICompact.MEAS_RAINFALL:
+      return PSICompact.ARC_MIN15;
+    //      PSICompact.ARC_HOUR;
+    default:
+      return PSICompact.ARC_MIN15;
     }
   }
-  
+
   /**
    * Helper für die Übersetzung des valueType in eine leesbare String
    * 
@@ -176,20 +173,19 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( valueType )
     {
-      case PSICompact.TYPE_MEASUREMENT:
-        return props.getProperty( "TYPE_MEASUREMENT" );
-      case PSICompact.TYPE_VALUE:
-        return props.getProperty( "TYPE_VALUE" );
-      case PSICompact.TYPE_UNDEF:
-        return props.getProperty( "TYPE_UNDEF" );
-      default:
-        return props.getProperty( "UNKNOWN" );
+    case PSICompact.TYPE_MEASUREMENT:
+      return props.getProperty( "TYPE_MEASUREMENT" );
+    case PSICompact.TYPE_VALUE:
+      return props.getProperty( "TYPE_VALUE" );
+    case PSICompact.TYPE_UNDEF:
+      return props.getProperty( "TYPE_UNDEF" );
+    default:
+      return props.getProperty( "UNKNOWN" );
     }
   }
 
   /**
-   * Helper für die Übersetzung des 'Unit' (ObjectMetaData) in eine leesbare
-   * String
+   * Helper für die Übersetzung des 'Unit' (ObjectMetaData) in eine leesbare String
    * 
    * @param unit
    * @return string
@@ -200,23 +196,23 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( unit )
     {
-      case PSICompact.SI_CUBIC_METER_PER_SECOND:
-        return props.getProperty( "SI_CUBIC_METER_PER_SECOND" );
-      case PSICompact.SI_KELVIN:
-        return props.getProperty( "SI_KELVIN" );
-      case PSICompact.SI_METER:
-        return props.getProperty( "SI_METER" );
-      case PSICompact.SI_QUBIC_METER:
-        return props.getProperty( "SI_QUBIC_METER" );
-      case PSICompact.SI_NO_UNIT:
-        return props.getProperty( "SI_NO_UNIT" );
-      case PSICompact.SI_UNDEF:
-        return props.getProperty( "SI_UNDEF" );
-      default:
-        return props.getProperty( "UNKNOWN" );
+    case PSICompact.SI_CUBIC_METER_PER_SECOND:
+      return props.getProperty( "SI_CUBIC_METER_PER_SECOND" );
+    case PSICompact.SI_KELVIN:
+      return props.getProperty( "SI_KELVIN" );
+    case PSICompact.SI_METER:
+      return props.getProperty( "SI_METER" );
+    case PSICompact.SI_QUBIC_METER:
+      return props.getProperty( "SI_QUBIC_METER" );
+    case PSICompact.SI_NO_UNIT:
+      return props.getProperty( "SI_NO_UNIT" );
+    case PSICompact.SI_UNDEF:
+      return props.getProperty( "SI_UNDEF" );
+    default:
+      return props.getProperty( "UNKNOWN" );
     }
   }
-  
+
   /**
    * Creates the adequate converter between psi and kalypso units
    * 
@@ -228,37 +224,36 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   {
     switch( psiUnit )
     {
-      case PSICompact.SI_KELVIN:
-        return KelvinCelsiusConverter.getInstance();
-      
-      case PSICompact.SI_CUBIC_METER_PER_SECOND:
-      case PSICompact.SI_METER:
-      case PSICompact.SI_QUBIC_METER:
-      {
-        final String strPsiUnit = unitToString( psiUnit );
-      
-        if( !strPsiUnit.equals( kalypsoUnit ) )
-          return new SIConverter( strPsiUnit, kalypsoUnit );
-      }
-      
-      case PSICompact.SI_NO_UNIT:
-      case PSICompact.SI_UNDEF:
-      default:
-      {
-        // empty
-      }
+    case PSICompact.SI_KELVIN:
+      return KelvinCelsiusConverter.getInstance();
+
+    case PSICompact.SI_CUBIC_METER_PER_SECOND:
+    case PSICompact.SI_METER:
+    case PSICompact.SI_QUBIC_METER:
+    {
+      final String strPsiUnit = unitToString( psiUnit );
+
+      if( !strPsiUnit.equals( kalypsoUnit ) )
+        return new SIConverter( strPsiUnit, kalypsoUnit );
     }
-    
+
+    case PSICompact.SI_NO_UNIT:
+    case PSICompact.SI_UNDEF:
+    default:
+    {
+      // empty
+    }
+    }
+
     return NoConverter.getInstance();
   }
-  
+
   /**
-   * Helper that converts PSICompact WQParamSet objects to a WechmannSets
-   * object.
+   * Helper that converts PSICompact WQParamSet objects to a WechmannSets object.
    * 
    * @param pset
    * @return WechmannGroup constructed from the WQParamSet array
-   * 
+   *  
    */
   public static WechmannGroup readWQParams( final WQParamSet[] pset )
   {
@@ -269,8 +264,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
       final WechmannParams[] wps = new WechmannParams[ds.length];
 
       for( int j = 0; j < ds.length; j++ )
-        wps[j] = new WechmannParams( ds[j].getW1(), ds[j].getLNK1(), ds[j]
-            .getK2(), ds[j].getWGR() );
+        wps[j] = new WechmannParams( ds[j].getW1(), ds[j].getLNK1(), ds[j].getK2(), ds[j].getWGR() );
 
       wsets[i] = new WechmannSet( pset[i].getValidFrom(), wps );
     }

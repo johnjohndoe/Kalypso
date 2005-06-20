@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.io.filter;
 
 import java.io.File;
@@ -45,7 +45,7 @@ import java.io.FileFilter;
 
 /**
  * Ein FileFilter der alle Dateien erlaubt.
- *
+ * 
  * @author Schlienger
  */
 public class AcceptAllFileFilter implements FileFilter

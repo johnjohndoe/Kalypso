@@ -35,7 +35,8 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * Constructor with ArchiveData[]
    * 
    * @param data
-   * @param axes list of axes (0: date, 1:value, 2:status)
+   * @param axes
+   *          list of axes (0: date, 1:value, 2:status)
    */
   public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes )
   {
@@ -46,8 +47,10 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * Constructor with ArchiveData[] and a value converter
    * 
    * @param data
-   * @param axes list of axes (0: date, 1:value, 2:status)
-   * @param vc optional value converter when units are different between kalypso and psi
+   * @param axes
+   *          list of axes (0: date, 1:value, 2:status)
+   * @param vc
+   *          optional value converter when units are different between kalypso and psi
    */
   public PSICompactTuppleModel( final ArchiveData[] data, final IAxis[] axes, final IValueConverter vc )
   {
@@ -58,7 +61,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
     m_values = new Double[m_data.length];
     m_kalypsoStati = new Integer[m_data.length];
-    
+
     for( int i = 0; i < axes.length; i++ )
       mapAxisToPos( axes[i], i );
   }
@@ -79,16 +82,16 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   {
     final IAxis[] axes = model.getAxisList();
 
-    final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-        Date.class );
-    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes,
-        Number.class, true );
+    final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
+    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Number.class, true );
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
 
-    final ArchiveData[] data = constructData( model, dateAxis, valueAxis,
-        statusAxis, vc );
+    final ArchiveData[] data = constructData( model, dateAxis, valueAxis, statusAxis, vc );
 
-    return new PSICompactTuppleModel( data, new IAxis[] { dateAxis, valueAxis,
+    return new PSICompactTuppleModel( data, new IAxis[]
+    {
+        dateAxis,
+        valueAxis,
         statusAxis } );
   }
 
@@ -99,35 +102,35 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * @param dateAxis
    * @param valueAxis
    * @param statusAxis
-   * @param vc optional converter
+   * @param vc
+   *          optional converter
    * @return ArchiveData[]
    * 
    * @throws SensorException
    */
-  private final static ArchiveData[] constructData( final ITuppleModel model,
-      final IAxis dateAxis, final IAxis valueAxis, final IAxis statusAxis, final IValueConverter vc )
-      throws SensorException
+  private final static ArchiveData[] constructData( final ITuppleModel model, final IAxis dateAxis,
+      final IAxis valueAxis, final IAxis statusAxis, final IValueConverter vc ) throws SensorException
   {
     final ArchiveData[] data = new ArchiveData[model.getCount()];
 
     for( int i = 0; i < data.length; i++ )
     {
-      Date date = (Date) model.getElement( i, dateAxis );
-      int status = PSICompactRepositoryFactory.maskToPsiStatus( ((Number) model
-          .getElement( i, statusAxis )).intValue() );
-      double value = ((Number) model.getElement( i, valueAxis )).doubleValue();
+      Date date = (Date)model.getElement( i, dateAxis );
+      int status = PSICompactRepositoryFactory.maskToPsiStatus( ( (Number)model.getElement( i, statusAxis ) )
+          .intValue() );
+      double value = ( (Number)model.getElement( i, valueAxis ) ).doubleValue();
 
       // convert the value if necessary
       if( vc != null )
         value = vc.reverse( value );
-      
+
       data[i] = new ArchiveData( date, status, value );
     }
 
     return data;
   }
 
-  public ArchiveData[] getData( )
+  public ArchiveData[] getData()
   {
     return m_data;
   }
@@ -137,10 +140,10 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     if( m_values[index] == null )
     {
       double value = m_data[index].getValue();
-      
+
       if( m_vc != null )
         value = m_vc.convert( value );
-      
+
       m_values[index] = new Double( value );
     }
 
@@ -150,8 +153,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   private Integer getKalypsoStatus( int index )
   {
     if( m_kalypsoStati[index] == null )
-      m_kalypsoStati[index] = PSICompactRepositoryFactory
-          .psiStatusToMask( m_data[index].getStatus() );
+      m_kalypsoStati[index] = PSICompactRepositoryFactory.psiStatusToMask( m_data[index].getStatus() );
 
     return m_kalypsoStati[index];
   }
@@ -161,24 +163,23 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     m_values[index] = value;
 
     double v = value.doubleValue();
-    
+
     if( m_vc != null )
       v = m_vc.reverse( v );
-    
+
     m_data[index].setValue( v );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( )
+  public int getCount()
   {
     return m_data.length;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   public int indexOf( final Object element, final IAxis axis )
   {
@@ -188,47 +189,42 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
     // TRICKY: wir gehen davon aus dass m_data sortiert ist! Sollte eigentlich der Fall
     // sein da es sich um eine Zeitreihe handelt.
-    return Arrays.binarySearch( m_data, element,
-        new ArchiveDataDateComparator() );
+    return Arrays.binarySearch( m_data, element, new ArchiveDataDateComparator() );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
   public Object getElement( int index, IAxis axis ) throws SensorException
   {
     switch( getPositionFor( axis ) )
     {
-      case 0:
-        return m_data[index].getTimestamp();
-      case 1:
-        return getValue( index );
-      case 2:
-        return getKalypsoStatus( index );
-      default:
-        throw new SensorException( "Position von Axis " + axis
-            + " ist ungültig" );
+    case 0:
+      return m_data[index].getTimestamp();
+    case 1:
+      return getValue( index );
+    case 2:
+      return getKalypsoStatus( index );
+    default:
+      throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
     }
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   public void setElement( int index, Object element, IAxis axis ) throws SensorException
   {
     switch( getPositionFor( axis ) )
     {
-      case 0: // TODO: darf das Datum überhaupt geändert werden???
-        m_data[index].setTimestamp( (Date) element );
-      case 1:
-        setValue( index, (Double) element );
-      case 2:
-        m_kalypsoStati[index] = (Integer) element;
-      default:
-        throw new SensorException( "Position von Achse " + axis
-            + " ist ungültig" );
+    case 0: // TODO: darf das Datum überhaupt geändert werden???
+      m_data[index].setTimestamp( (Date)element );
+    case 1:
+      setValue( index, (Double)element );
+    case 2:
+      m_kalypsoStati[index] = (Integer)element;
+    default:
+      throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
     }
   }
 }

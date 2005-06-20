@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.parser;
 
 import java.util.Date;
@@ -50,20 +50,20 @@ import org.kalypso.util.parser.impl.DoubleParser;
 import org.kalypso.util.parser.impl.IntegerParser;
 import org.kalypso.util.parser.impl.StringParser;
 
-
 /**
- * Eine Factory-Klasse was Instanzen von IParser anhand der
- * Parser-String-Spezifikation erzeugt.
+ * Eine Factory-Klasse was Instanzen von IParser anhand der Parser-String-Spezifikation erzeugt.
  * 
  * @author schlienger
  */
 public class ParserFactory
 {
   private final ConfigurableCachableObjectFactory m_objFactory;
-  
+
   /**
-   * @param props beinhaltet der mapping type -- className für welche Objekte erzeugt werden
-   * @param cl der ClassLoader der benutzt werden soll um die Klassen zu laden
+   * @param props
+   *          beinhaltet der mapping type -- className für welche Objekte erzeugt werden
+   * @param cl
+   *          der ClassLoader der benutzt werden soll um die Klassen zu laden
    */
   public ParserFactory( final Properties props, final ClassLoader cl )
   {
@@ -82,16 +82,16 @@ public class ParserFactory
   public IParser createParser( final String type, final String formatSpec ) throws FactoryException
   {
     String[] args = null;
-    
+
     if( formatSpec != null )
     {
       args = new String[1];
       args[0] = formatSpec;
     }
-      
+
     return (IParser)m_objFactory.getObjectInstance( type, IParser.class, args );
   }
- 
+
   /**
    * @param dataClass
    * @return adequate parser for the given dataclass
@@ -103,10 +103,10 @@ public class ParserFactory
 
     if( Integer.class.isAssignableFrom( dataClass ) )
       return new IntegerParser();
-    
+
     if( Double.class.isAssignableFrom( dataClass ) )
       return new DoubleParser();
-    
+
     return new StringParser();
   }
 }

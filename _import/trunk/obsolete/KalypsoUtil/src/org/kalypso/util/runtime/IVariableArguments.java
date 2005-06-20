@@ -36,16 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.runtime;
-
 
 /**
  * Eine interface um variable Argumente einer Methode zu übergeben.
  * <p>
- * Clients must implement this interface to represent their own specific
- * arguments.
+ * Clients must implement this interface to represent their own specific arguments.
  * 
  * @author schlienger
  */

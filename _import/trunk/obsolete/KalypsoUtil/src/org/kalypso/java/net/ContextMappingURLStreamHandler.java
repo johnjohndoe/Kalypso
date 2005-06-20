@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.java.net;
 
 import java.io.IOException;
@@ -50,10 +50,10 @@ import java.util.Map;
 /**
  * A URL context replacement based <code>URLStreamHandler</code>.
  * <p>
- * Removes the protocol of the <code>URL</code> and builds a new URL
- * using the mapped context URL for this protocol.
+ * Removes the protocol of the <code>URL</code> and builds a new URL using the mapped context URL for this protocol.
  * <p>
  * Example:
+ * 
  * <pre>
  * URL input: project:foo/bar/test.txt#script#foobar
  * 

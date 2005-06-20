@@ -7,9 +7,9 @@ package org.kalypso.java.lang;
  */
 public final class NumberUtils
 {
-  private NumberUtils( )
+  private NumberUtils()
   {
-    // do not instantiate
+  // do not instantiate
   }
 
   public static final boolean isDouble( final String string )

@@ -55,8 +55,7 @@ import org.kalypso.java.io.FileVisitor;
  * </p>
  * 
  * <p>
- * Die Namen der Zip entries (=Pfade im ZIP) können durch ein Pattern-Replace
- * aus den Dateinamen erzeugt werden
+ * Die Namen der Zip entries (=Pfade im ZIP) können durch ein Pattern-Replace aus den Dateinamen erzeugt werden
  * </p>
  * 
  * @author belger

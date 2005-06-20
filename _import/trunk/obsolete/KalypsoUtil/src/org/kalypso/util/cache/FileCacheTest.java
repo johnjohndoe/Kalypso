@@ -22,13 +22,12 @@ import org.kalypso.util.serializer.ISerializer;
  */
 public class FileCacheTest extends TestCase
 {
-  public void testGetObject( )
+  public void testGetObject()
   {
     final StringKeyFactory fact = new StringKeyFactory();
     final Comparator kc = new StringComparator();
     final ISerializer ser = new StringSerializer();
-    final FileCache cache = new FileCache( fact, kc, ser, new File( System
-        .getProperty( "java.io.tmpdir" ) ) );
+    final FileCache cache = new FileCache( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
 
     cache.addObject( "A", "A" );
     cache.addObject( "B", "B" );
@@ -54,8 +53,8 @@ public class FileCacheTest extends TestCase
   {
     public int compare( Object o1, Object o2 )
     {
-      final String s1 = (String) o1;
-      final String s2 = (String) o2;
+      final String s1 = (String)o1;
+      final String s2 = (String)o2;
 
       return s1.compareTo( s2 );
     }
@@ -70,7 +69,7 @@ public class FileCacheTest extends TestCase
 
     public String toString( Object key )
     {
-      return (String) key;
+      return (String)key;
     }
   }
 
@@ -96,8 +95,7 @@ public class FileCacheTest extends TestCase
       }
     }
 
-    public void write( Object object, OutputStream os )
-        throws InvocationTargetException
+    public void write( Object object, OutputStream os ) throws InvocationTargetException
     {
       BufferedWriter w = null;
       try

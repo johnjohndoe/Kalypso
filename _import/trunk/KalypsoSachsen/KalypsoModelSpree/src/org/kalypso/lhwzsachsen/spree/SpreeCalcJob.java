@@ -88,7 +88,7 @@ public class SpreeCalcJob implements ICalcJob
   public static final Map NAP_MAP = new LinkedHashMap();
 
   public static final String FEATURE_PROP_BODENFEUCHTE = "Bodenfeuchte";
-  
+
   static
   {
     NAP_MAP.put( "PEGEL", "Name" );
@@ -130,9 +130,9 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_SCHIRG" ),
       new TSDesc( "W_SCHIRG" ),
       new TSDesc( "Q_SCHIRG" ),
-      new TSDesc( "QX_SCHIRG", true, "W_SCHIRG"  ),
+      new TSDesc( "QX_SCHIRG", true, "W_SCHIRG" ),
       new TSDesc( "WV_SCHIRG" ),
-      new TSDesc( "QV_SCHIRG", true, "W_SCHIRG"  ),
+      new TSDesc( "QV_SCHIRG", true, "W_SCHIRG" ),
       new TSDesc( "QP_SCHIRG", true, "W_SCHIRG" ),
       new TSDesc( "PG_SCHIRG" ),
       new TSDesc( "PP_SCHIRG" ),
@@ -140,9 +140,9 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_BAUTZWB" ),
       new TSDesc( "W_BAUTZWB" ),
       new TSDesc( "Q_BAUTZWB" ),
-      new TSDesc( "QX_BAUTZWB", true, "W_BAUTZWB"  ),
+      new TSDesc( "QX_BAUTZWB", true, "W_BAUTZWB" ),
       new TSDesc( "WV_BAUTZWB" ),
-      new TSDesc( "QV_BAUTZWB", true, "W_BAUTZWB"  ),
+      new TSDesc( "QV_BAUTZWB", true, "W_BAUTZWB" ),
       new TSDesc( "QP_BAUTZWB", true, "W_BAUTZWB" ),
       new TSDesc( "PG_BAUTZWB" ),
       new TSDesc( "PP_BAUTZWB" ),
@@ -155,9 +155,9 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_GROEDI" ),
       new TSDesc( "W_GROEDI" ),
       new TSDesc( "Q_GROEDI" ),
-      new TSDesc( "QX_GROEDI", true, "W_GROEDI"  ),
+      new TSDesc( "QX_GROEDI", true, "W_GROEDI" ),
       new TSDesc( "WV_GROEDI" ),
-      new TSDesc( "QV_GROEDI", true, "W_GROEDI"  ),
+      new TSDesc( "QV_GROEDI", true, "W_GROEDI" ),
       new TSDesc( "QP_GROEDI", true, "W_GROEDI" ),
       new TSDesc( "ZG_GROEDI" ),
       new TSDesc( "PG_GROEDI" ),
@@ -169,16 +169,16 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_LIESKE" ),
       new TSDesc( "W_LIESKE" ),
       new TSDesc( "Q_LIESKE" ),
-      new TSDesc( "QX_LIESKE", true, "W_LIESKE"  ),
+      new TSDesc( "QX_LIESKE", true, "W_LIESKE" ),
       new TSDesc( "WV_LIESKE" ),
-      new TSDesc( "QV_LIESKE", true, "W_LIESKE"  ),
+      new TSDesc( "QV_LIESKE", true, "W_LIESKE" ),
       new TSDesc( "QP_LIESKE", true, "W_LIESKE" ),
       new TSDesc( "S_JAENKD" ),
       new TSDesc( "W_JAENKD" ),
       new TSDesc( "Q_JAENKD" ),
-      new TSDesc( "QX_JAENKD", true, "W_JAENKD"  ),
+      new TSDesc( "QX_JAENKD", true, "W_JAENKD" ),
       new TSDesc( "WV_JAENKD" ),
-      new TSDesc( "QV_JAENKD", true, "W_JAENKD"  ),
+      new TSDesc( "QV_JAENKD", true, "W_JAENKD" ),
       new TSDesc( "QP_JAENKD", true, "W_JAENKD" ),
       new TSDesc( "PG_JAENKD" ),
       new TSDesc( "PP_JAENKD" ),
@@ -191,9 +191,9 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_SAERI" ),
       new TSDesc( "W_SAERI" ),
       new TSDesc( "Q_SAERI" ),
-      new TSDesc( "QX_SAERI", true, "W_SAERI"  ),
+      new TSDesc( "QX_SAERI", true, "W_SAERI" ),
       new TSDesc( "WV_SAERI" ),
-      new TSDesc( "QV_SAERI", true, "W_SAERI"  ),
+      new TSDesc( "QV_SAERI", true, "W_SAERI" ),
       new TSDesc( "QP_SAERI", true, "W_SAERI" ),
       new TSDesc( "ZG_SAERI" ),
       new TSDesc( "PG_SAERI" ),
@@ -202,9 +202,9 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_BOXBRG" ),
       new TSDesc( "W_BOXBRG" ),
       new TSDesc( "Q_BOXBRG" ),
-      new TSDesc( "QX_BOXBRG", true, "W_BOXBRG"  ),
+      new TSDesc( "QX_BOXBRG", true, "W_BOXBRG" ),
       new TSDesc( "WV_BOXBRG" ),
-      new TSDesc( "QV_BOXBRG", true, "W_BOXBRG"  ),
+      new TSDesc( "QV_BOXBRG", true, "W_BOXBRG" ),
       new TSDesc( "QP_BOXBRG", true, "W_BOXBRG" ),
       new TSDesc( "S_BWALDE" ),
       new TSDesc( "QV_BWALDE" ),
@@ -215,18 +215,18 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_SPREY" ),
       new TSDesc( "W_SPREY" ),
       new TSDesc( "Q_SPREY" ),
-      new TSDesc( "QX_SPREY", true, "W_SPREY"  ),
+      new TSDesc( "QX_SPREY", true, "W_SPREY" ),
       new TSDesc( "WV_SPREY" ),
-      new TSDesc( "QV_SPREY", true, "W_SPREY"  ),
+      new TSDesc( "QV_SPREY", true, "W_SPREY" ),
       new TSDesc( "QP_SPREY", true, "W_SPREY" ),
       new TSDesc( "S_BURGNEU" ),
       new TSDesc( "QP_BURGNEU" ),
       new TSDesc( "S_SPWITZ" ),
       new TSDesc( "W_SPWITZ" ),
       new TSDesc( "Q_SPWITZ" ),
-      new TSDesc( "QX_SPWITZ", true, "W_SPWITZ"  ),
+      new TSDesc( "QX_SPWITZ", true, "W_SPWITZ" ),
       new TSDesc( "WV_SPWITZ" ),
-      new TSDesc( "QV_SPWITZ", true, "W_SPWITZ"  ),
+      new TSDesc( "QV_SPWITZ", true, "W_SPWITZ" ),
       new TSDesc( "QP_SPWITZ", true, "W_SPWITZ" ),
       new TSDesc( "S_RLKETTE" ),
       new TSDesc( "QV_RLKETTE" ),
@@ -234,9 +234,9 @@ public class SpreeCalcJob implements ICalcJob
       new TSDesc( "S_SPREMB" ),
       new TSDesc( "W_SPREMB" ),
       new TSDesc( "Q_SPREMB" ),
-      new TSDesc( "QX_SPREMB", true, "W_SPREMB"  ),
+      new TSDesc( "QX_SPREMB", true, "W_SPREMB" ),
       new TSDesc( "WV_SPREMB" ),
-      new TSDesc( "QV_SPREMB", true, "W_SPREMB"  ),
+      new TSDesc( "QV_SPREMB", true, "W_SPREMB" ),
       new TSDesc( "QP_SPREMB", true, "W_SPREMB" ) };
 
   private static final String EXE_FILE = "spree.exe";
@@ -253,15 +253,16 @@ public class SpreeCalcJob implements ICalcJob
       "Zwipar.dbf",
       "xHWKERNEL.DLL" };
 
-  
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater, org.kalypso.services.calculation.job.ICalcMonitor)
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
   public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
       final ICalcMonitor monitor ) throws CalcJobServiceException
   {
     final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
-    
+
     outputdir.mkdirs();
     final File logfile = new File( outputdir, "spree.log" );
 
@@ -337,8 +338,7 @@ public class SpreeCalcJob implements ICalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(),
-          e );
+      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
     }
     finally
     {
@@ -377,17 +377,18 @@ public class SpreeCalcJob implements ICalcJob
       final Double gmlValue = (Double)gmlFeature.getProperty( FEATURE_PROP_BODENFEUCHTE );
       if( gmlValue == null || Math.abs( gmlValue.doubleValue() ) < 0.01 )
       {
-        final double optimalValue = ((Double)napFeature.getProperty( "VORFEUCHTE" )).doubleValue();
+        final double optimalValue = ( (Double)napFeature.getProperty( "VORFEUCHTE" ) ).doubleValue();
 
-        final FeatureProperty newValue = FeatureFactory.createFeatureProperty( FEATURE_PROP_BODENFEUCHTE , new Double( optimalValue ) );
+        final FeatureProperty newValue = FeatureFactory.createFeatureProperty( FEATURE_PROP_BODENFEUCHTE, new Double(
+            optimalValue ) );
         gmlFeature.setProperty( newValue );
       }
     }
-    
+
     // gml in Ergebnisse schreiben
     final String outfilename = "calcCase.gml";
     final File outFile = new File( outdir, outfilename );
-    
+
     FileOutputStream fos = null;
     try
     {
@@ -412,8 +413,8 @@ public class SpreeCalcJob implements ICalcJob
     }
   }
 
-  private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter, final ICalcMonitor monitor )
-      throws CalcJobServiceException
+  private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter,
+      final ICalcMonitor monitor ) throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
@@ -427,8 +428,7 @@ public class SpreeCalcJob implements ICalcJob
 
       final File exefile = new File( exedir, EXE_FILE );
 
-      final String commandString = exefile + " " + timeString + " "
-          + tsFile.getName();
+      final String commandString = exefile + " " + timeString + " " + tsFile.getName();
 
       logwriter.println( commandString );
       logwriter.println( "Ausgabe des Rechenkerns" );
@@ -496,8 +496,7 @@ public class SpreeCalcJob implements ICalcJob
    * 
    * @throws CalcJobServiceException
    */
-  private void prepareExe( final File exedir, final PrintWriter logwriter )
-      throws CalcJobServiceException
+  private void prepareExe( final File exedir, final PrintWriter logwriter ) throws CalcJobServiceException
   {
     try
     {
@@ -516,8 +515,9 @@ public class SpreeCalcJob implements ICalcJob
   }
 
   /**
-   * Kopiert die entsrpechende Dateien aus den resourcen in das tmp-dir, aber
-   * nur, wenn sie neuer ist als die bereits vorhandene
+   * Kopiert die entsrpechende Dateien aus den resourcen in das tmp-dir, aber nur, wenn sie neuer ist als die bereits
+   * vorhandene
+   * 
    * @param exedir
    * @param filename
    * @throws IOException
@@ -583,7 +583,8 @@ public class SpreeCalcJob implements ICalcJob
         else
           dblVal = Double.NaN;
 
-        if( Double.isNaN( dblVal ) || Math.abs( dblVal + 99.9 ) < 0.01 || ( column.startsWith( "Q" ) && Double.compare( dblVal, 0.0 ) == 0 ) )
+        if( Double.isNaN( dblVal ) || Math.abs( dblVal + 99.9 ) < 0.01
+            || ( column.startsWith( "Q" ) && Double.compare( dblVal, 0.0 ) == 0 ) )
           values.add( null );
         else
           values.add( new Double( dblVal ) );
@@ -591,8 +592,8 @@ public class SpreeCalcJob implements ICalcJob
     }
 
     final String dateType = TimeserieConstants.TYPE_DATE;
-    final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieUtils.getUnit( dateType ),
-        Date.class, true );
+    final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieUtils.getUnit( dateType ), Date.class,
+        true );
 
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
 
@@ -616,8 +617,7 @@ public class SpreeCalcJob implements ICalcJob
       final Collection values = (Collection)valuesMap.get( column );
       if( values == null )
       {
-        FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
-            "resources/empty.zml" ) );
+        FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream( "resources/empty.zml" ) );
         continue;
       }
 
@@ -643,7 +643,7 @@ public class SpreeCalcJob implements ICalcJob
         final String valueType = TSMap.getTypeForName( column );
         final String unit = TimeserieUtils.getUnit( valueType );
         final String name = TimeserieUtils.getName( valueType );
-        
+
         final IAxis valueAxis = new DefaultAxis( name, valueType, unit, Double.class, false );
         final IAxis[] achsen = new IAxis[]
         {
@@ -663,7 +663,7 @@ public class SpreeCalcJob implements ICalcJob
 
         if( metadata == null )
           metadata = new MetadataList();
-          
+
         final IObservation observation = new SimpleObservation( outFileRelative.getPath(), column, column, false, null,
             metadata, achsen );
         observation.setValues( model );
@@ -674,8 +674,7 @@ public class SpreeCalcJob implements ICalcJob
         outStream.close();
       }
       else
-        FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream(
-            "resources/empty.zml" ) );
+        FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream( "resources/empty.zml" ) );
     }
   }
 

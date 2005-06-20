@@ -12,8 +12,7 @@ import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 
 /**
- * PSICompactRightsProvider, it simply forwards the rights that it gets from
- * PSICompact.
+ * PSICompactRightsProvider, it simply forwards the rights that it gets from PSICompact.
  * 
  * @author schlienger
  */
@@ -21,29 +20,28 @@ public class PSICompactRightsProvider implements IUserRightsProvider
 {
   private final PSICompact m_psicompact;
 
-  public PSICompactRightsProvider( )
+  public PSICompactRightsProvider()
   {
     m_psicompact = PSICompactFactory.getConnection();
 
     if( m_psicompact == null )
-      throw new IllegalStateException(
-          "PSI-Compact Schnittstelle konnte nicht initialisiert werden" );
+      throw new IllegalStateException( "PSI-Compact Schnittstelle konnte nicht initialisiert werden" );
   }
-  
+
   /**
    * @see org.kalypso.users.IUserRightsProvider#init(java.util.Properties)
    */
   public void init( Properties props ) throws UserRightsException
   {
-    // empty, not interesting for us
+  // empty, not interesting for us
   }
-  
+
   /**
    * @see org.kalypso.users.IUserRightsProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nothing to do
+  // nothing to do
   }
 
   /**
@@ -58,7 +56,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
     {
       final ArrayList rights = new ArrayList();
       final String[] userClasses = m_psicompact.getUserClasses( username.toLowerCase() );
-      
+
       // leere Rechte rauschmeissen
       for( int i = 0; i < userClasses.length; i++ )
       {
@@ -67,20 +65,18 @@ public class PSICompactRightsProvider implements IUserRightsProvider
         {
           right = right.trim();
 
-          if( right.length() != 0
-              && UserServiceConstants.isValidUserRight( right ) )
+          if( right.length() != 0 && UserServiceConstants.isValidUserRight( right ) )
             rights.add( right.trim() );
         }
       }
-      
-      return (String[]) rights.toArray( new String[rights.size()] );
+
+      return (String[])rights.toArray( new String[rights.size()] );
     }
     catch( final ECommException e )
     {
       e.printStackTrace();
 
-      throw new UserRightsException( "Fehler beim Abfragen der Benutzerrechte",
-          e );
+      throw new UserRightsException( "Fehler beim Abfragen der Benutzerrechte", e );
     }
   }
 
@@ -95,7 +91,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
     // weiterleiten, aber Sicherheitshalber machen wir das nicht
     // sonst wäre es möglich sich unerlaubt einem anderen Benutzer
     // die Rechte zu klauen.
-    
+
     return null;
   }
 }

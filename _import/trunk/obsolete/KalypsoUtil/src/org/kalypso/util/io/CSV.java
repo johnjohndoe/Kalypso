@@ -57,16 +57,15 @@ public class CSV extends AbstractCSV
    * @param split
    *          the string used for spliting each line into chunks
    */
-  public CSV( final String split, final int startLine,
-      final boolean ignoreEmptyLines )
+  public CSV( final String split, final int startLine, final boolean ignoreEmptyLines )
   {
     super( startLine, ignoreEmptyLines );
 
     m_split = split;
-    
+
     // note: m_split is used as separator, maybe that's not good enough to
     // use the same token as the one for spliting
-    setSeparator( m_split);
+    setSeparator( m_split );
   }
 
   /**
@@ -78,8 +77,7 @@ public class CSV extends AbstractCSV
   }
 
   /**
-   * Writes an two-dimensional Array of Strings as CSV into a writer. The Writer
-   * will NOT be closed after this operation
+   * Writes an two-dimensional Array of Strings as CSV into a writer. The Writer will NOT be closed after this operation
    * 
    * @param data
    * @param pw

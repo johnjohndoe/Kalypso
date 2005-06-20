@@ -13,11 +13,10 @@ public class StringValidityFileCache
 {
   private final FileCache m_cache;
 
-  public StringValidityFileCache( final ISerializer objectSerializer,
-      final File directory )
+  public StringValidityFileCache( final ISerializer objectSerializer, final File directory )
   {
-    m_cache = new FileCache( new StringValidityKeyFactory(), StringValidityKey
-        .createComparatorForStringCompareOnly(), objectSerializer, directory );
+    m_cache = new FileCache( new StringValidityKeyFactory(), StringValidityKey.createComparatorForStringCompareOnly(),
+        objectSerializer, directory );
   }
 
   /**
@@ -34,9 +33,9 @@ public class StringValidityFileCache
   {
     m_cache.addObject( key, object );
   }
-  
+
   public StringValidityKey getRealKey( final Object key )
   {
-    return (StringValidityKey) m_cache.getRealKey( key ); 
+    return (StringValidityKey)m_cache.getRealKey( key );
   }
 }

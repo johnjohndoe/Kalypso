@@ -14,11 +14,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 
 /**
- * Wraps a process and allows to wait until execution is terminated or has been
- * cancelled.
+ * Wraps a process and allows to wait until execution is terminated or has been cancelled.
  * <p>
- * Clients may inherit from this class and perform specific business in
- * processCanceled() and/or processTerminated().
+ * Clients may inherit from this class and perform specific business in processCanceled() and/or processTerminated().
  * 
  * @author schlienger
  */
@@ -58,7 +56,7 @@ public abstract class ProcessWraper
   /**
    * Force the underlying process to stop
    */
-  public synchronized void cancel( )
+  public synchronized void cancel()
   {
     m_canceled = true;
   }
@@ -69,8 +67,7 @@ public abstract class ProcessWraper
    * @throws IOException
    * @throws InterruptedException
    */
-  public synchronized void waitForProcess( ) throws IOException,
-      InterruptedException
+  public synchronized void waitForProcess() throws IOException, InterruptedException
   {
     final OutputStream nul_dev = new NullOutputStream();
     final Writer log;
@@ -81,10 +78,8 @@ public abstract class ProcessWraper
 
     try
     {
-      final Reader inStream = new BufferedReader( new InputStreamReader( m_proc
-          .getInputStream() ) );
-      final Reader errStream = new BufferedReader( new InputStreamReader( m_proc
-          .getErrorStream() ) );
+      final Reader inStream = new BufferedReader( new InputStreamReader( m_proc.getInputStream() ) );
+      final Reader errStream = new BufferedReader( new InputStreamReader( m_proc.getErrorStream() ) );
 
       while( true )
       {
@@ -127,7 +122,7 @@ public abstract class ProcessWraper
   /**
    * Called after the process has been told to be cancelled
    */
-  public abstract void processCanceled( );
+  public abstract void processCanceled();
 
   /**
    * Called after the process has stopped execution

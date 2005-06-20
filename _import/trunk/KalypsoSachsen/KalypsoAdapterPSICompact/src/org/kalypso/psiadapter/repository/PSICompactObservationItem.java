@@ -53,8 +53,7 @@ public class PSICompactObservationItem implements IObservation
 
   private IValueConverter m_vc;
 
-  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
-      this );
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
   /**
    * Constructor
@@ -67,20 +66,17 @@ public class PSICompactObservationItem implements IObservation
    * 
    * @throws ECommException
    */
-  public PSICompactObservationItem( final String name, final String id,
-      final PSICompact.ObjectInfo info, final int valueType )
-      throws ECommException
+  public PSICompactObservationItem( final String name, final String id, final PSICompact.ObjectInfo info,
+      final int valueType ) throws ECommException
   {
     m_name = name;
     m_identifier = id;
     m_objectInfo = info;
     m_valueType = valueType;
 
-    final PSICompact.ObjectMetaData psiMD = PSICompactFactory.getConnection()
-        .getObjectMetaData( m_objectInfo.getId() );
+    final PSICompact.ObjectMetaData psiMD = PSICompactFactory.getConnection().getObjectMetaData( m_objectInfo.getId() );
 
-    final PSICompact.WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams(
-        m_objectInfo.getId() );
+    final PSICompact.WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
 
     m_axes = prepareAxes( psiMD );
 
@@ -96,10 +92,8 @@ public class PSICompactObservationItem implements IObservation
     final IAxis[] axes = new IAxis[3];
 
     // immer Datum Axis
-    axes[0] = new DefaultAxis( TimeserieUtils
-        .getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE,
-        TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class,
-        true );
+    axes[0] = new DefaultAxis( TimeserieUtils.getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE,
+        TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class, true );
 
     // Wert (Einheit abfragen)
     final int psiUnit = psiMD.getUnit();
@@ -127,41 +121,30 @@ public class PSICompactObservationItem implements IObservation
    * 
    * @throws ECommException
    */
-  private final MetadataList prepareMetadata(
-      final PSICompact.ObjectMetaData psiMD, final PSICompact.WQParamSet[] psiWQ )
+  private final MetadataList prepareMetadata( final PSICompact.ObjectMetaData psiMD, final PSICompact.WQParamSet[] psiWQ )
       throws ECommException
   {
     final MetadataList metadata = new MetadataList();
 
     metadata.put( ObservationConstants.MD_NAME, getName() );
-    metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo
-        .getDescription() );
+    metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo.getDescription() );
     metadata.put( ObservationConstants.MD_ORIGIN, "PSICompact" );
 
     if( psiMD != null )
     {
-      metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD
-          .getHeight() ) );
-      metadata.put( TimeserieConstants.MD_GKR, String
-          .valueOf( psiMD.getRight() ) );
-      metadata
-          .put( TimeserieConstants.MD_HOEHENANGABEART, psiMD.getLevelUnit() );
-      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( psiMD
-          .getLevel() ) );
-      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( psiMD
-          .getMapNo() ) );
+      metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD.getHeight() ) );
+      metadata.put( TimeserieConstants.MD_GKR, String.valueOf( psiMD.getRight() ) );
+      metadata.put( TimeserieConstants.MD_HOEHENANGABEART, psiMD.getLevelUnit() );
+      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( psiMD.getLevel() ) );
+      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( psiMD.getMapNo() ) );
 
       // Bug 80: only waterlevel-timeseries should have alarmlevels
       if( TimeserieConstants.TYPE_WATERLEVEL.equals( measureTypeToString() ) )
       {
-        metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc
-            .convert( psiMD.getAlarm1() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc
-            .convert( psiMD.getAlarm2() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc
-            .convert( psiMD.getAlarm3() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc
-            .convert( psiMD.getAlarm4() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc.convert( psiMD.getAlarm1() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc.convert( psiMD.getAlarm2() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc.convert( psiMD.getAlarm3() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc.convert( psiMD.getAlarm4() ) ) );
       }
 
       metadata.put( TimeserieConstants.MD_GEWAESSER, psiMD.getRiver() );
@@ -172,8 +155,7 @@ public class PSICompactObservationItem implements IObservation
     {
       if( psiWQ != null )
       {
-        final WechmannGroup group = PSICompactRepositoryFactory
-            .readWQParams( psiWQ );
+        final WechmannGroup group = PSICompactRepositoryFactory.readWQParams( psiWQ );
         final String xml = WechmannFactory.createXMLString( group );
 
         metadata.put( TimeserieConstants.MD_WQWECHMANN, xml );
@@ -192,7 +174,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -200,7 +182,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_identifier;
   }
@@ -208,14 +190,13 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @return Messwerttyp dieser Zeitreihe (Siehe TimeserieConstants.TYPE_*)
    */
-  private String measureTypeToString( )
+  private String measureTypeToString()
   {
     int measType = PSICompact.MEAS_UNDEF;
 
     try
     {
-      measType = PSICompactFactory.getConnection().getMeasureType(
-          m_objectInfo.getId() );
+      measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
     }
     catch( ECommException e )
     {
@@ -228,14 +209,13 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @return welche Archivtyp benutzt werden soll
    */
-  private int measureTypeToArchiveType( )
+  private int measureTypeToArchiveType()
   {
     int measType = PSICompact.MEAS_UNDEF;
 
     try
     {
-      measType = PSICompactFactory.getConnection().getMeasureType(
-          m_objectInfo.getId() );
+      measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
     }
     catch( ECommException e )
     {
@@ -248,7 +228,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @return das Werttyp dieser Zeitreihe
    */
-  private String valueTypeToString( )
+  private String valueTypeToString()
   {
     return PSICompactRepositoryFactory.valueTypeToString( m_valueType );
   }
@@ -256,16 +236,15 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
-    return getName() + " (" + measureTypeToString() + ") "
-        + valueTypeToString();
+    return getName() + " (" + measureTypeToString() + ") " + valueTypeToString();
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public IXlink getTarget( )
+  public IXlink getTarget()
   {
     return null;
   }
@@ -273,7 +252,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public MetadataList getMetadataList( )
+  public MetadataList getMetadataList()
   {
     return m_metadata;
   }
@@ -281,7 +260,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     return m_axes;
   }
@@ -289,22 +268,19 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final IVariableArguments args )
-      throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     final DateRangeArgument dr;
 
     // tricky: when no date range specified, we create a default one
     // according to the config delivered by our PSICompactFactory
-    if( args == null || !(args instanceof DateRangeArgument) )
+    if( args == null || !( args instanceof DateRangeArgument ) )
       dr = DateRangeArgument.createFromPastDays( Integer.valueOf(
-          PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS",
-              "100" ) ).intValue() );
+          PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS", "100" ) ).intValue() );
     else
-      dr = (DateRangeArgument) args;
+      dr = (DateRangeArgument)args;
 
-    if( m_values != null && dr.getFrom().compareTo( m_from ) == 0
-        && dr.getTo().compareTo( m_to ) == 0 )
+    if( m_values != null && dr.getFrom().compareTo( m_from ) == 0 && dr.getTo().compareTo( m_to ) == 0 )
       return m_values;
 
     try
@@ -312,9 +288,8 @@ public class PSICompactObservationItem implements IObservation
       m_from = dr.getFrom();
       m_to = dr.getTo();
 
-      final PSICompact.ArchiveData[] data = PSICompactFactory.getConnection()
-          .getArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
-              m_from, m_to );
+      final PSICompact.ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
+          measureTypeToArchiveType(), m_from, m_to );
 
       m_values = new PSICompactTuppleModel( data, getAxisList(), m_vc );
       return m_values;
@@ -333,7 +308,7 @@ public class PSICompactObservationItem implements IObservation
     PSICompactTuppleModel model = null;
 
     if( values instanceof PSICompactTuppleModel )
-      model = (PSICompactTuppleModel) values;
+      model = (PSICompactTuppleModel)values;
     else
       model = PSICompactTuppleModel.copyModel( values, m_vc );
 
@@ -341,9 +316,8 @@ public class PSICompactObservationItem implements IObservation
     {
       try
       {
-        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(),
-            measureTypeToArchiveType(), model.getData()[0].getTimestamp(),
-            model.getData() );
+        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
+            model.getData()[0].getTimestamp(), model.getData() );
 
         // this observation has changed
         m_evtPrv.fireChangedEvent();
@@ -358,7 +332,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#isEditable()
    */
-  public boolean isEditable( )
+  public boolean isEditable()
   {
     // only editable when it represents a forecast
     return m_valueType == PSICompact.TYPE_VALUE;
@@ -383,7 +357,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
-  public void clearListeners( )
+  public void clearListeners()
   {
     m_evtPrv.clearListeners();
   }
@@ -391,7 +365,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getHref()
    */
-  public String getHref( )
+  public String getHref()
   {
     return null;
   }
