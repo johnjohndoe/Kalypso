@@ -109,16 +109,14 @@ public class CalculateDamageJobTest extends TestCase
     //Output
     int numOutputBeans = 2;
     CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( CalculateDamageJob.DamageDirectoryID, base
-        + "Damage" );
+    CalcJobClientBean output1 = new CalcJobClientBean( CalculateDamageJob.DamageDirectoryID, base + "Damage" );
     output[0] = output1;
-    CalcJobClientBean output2 = new CalcJobClientBean( CalculateDamageJob.AnnualDamageRasterDataID,
-        base + "Damage//annualDamage.gml" );
+    CalcJobClientBean output2 = new CalcJobClientBean( CalculateDamageJob.AnnualDamageRasterDataID, base
+        + "Damage//annualDamage.gml" );
     output[1] = output2;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateDamageJob",
-        ICalcServiceConstants.RUNNING, -1, "" );
+    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateDamageJob", ICalcServiceConstants.RUNNING, -1, "" );
 
     try
     {

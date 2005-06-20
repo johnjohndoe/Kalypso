@@ -20,8 +20,7 @@ public class FloodRiskAnalysis
 {
 
   /**
-   * returns a FloodRiskGrid as RectifiedGridCoverage for a given
-   * annualDamageGrid(RectifiedGridCoverage), a
+   * returns a FloodRiskGrid as RectifiedGridCoverage for a given annualDamageGrid(RectifiedGridCoverage), a
    * landuseGrid(RectifiedGridCoverage) and a riskClassTable
    * 
    * @param annualDamageGrid
@@ -29,8 +28,7 @@ public class FloodRiskAnalysis
    * @param landuseGrid
    *          (RectifiedGridCoverage)
    * @param riskClassTable
-   *          key=landuseKey, value=Hashtable of RiskClasses (value=riskKey,
-   *          value=Interval)
+   *          key=landuseKey, value=Hashtable of RiskClasses (value=riskKey, value=Interval)
    * @return floodRiskGrid(RectifiedGridCoverage)
    * @throws Exception
    */
@@ -39,11 +37,9 @@ public class FloodRiskAnalysis
   {
     System.out.println( "Calculate FloodRiskGrid..." );
     RectifiedGridCoverage floodRiskGrid = null;
-    GridGeometryHelper.controlGridGeometries( annualDamageGrid.getGridDomain(), landuseGrid
-        .getGridDomain() );
-    RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid
-        .getGridDomain().getOrigin( null ), annualDamageGrid.getGridDomain().getOffset(),
-        annualDamageGrid.getGridDomain().getGridRange() );
+    GridGeometryHelper.controlGridGeometries( annualDamageGrid.getGridDomain(), landuseGrid.getGridDomain() );
+    RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid.getGridDomain().getOrigin(
+        null ), annualDamageGrid.getGridDomain().getOffset(), annualDamageGrid.getGridDomain().getGridRange() );
     Vector annualDamage_rangeSetData = annualDamageGrid.getRangeSet().getRangeSetData();
     Vector landuse_rangeSetData = landuseGrid.getRangeSet().getRangeSetData();
     Vector floodRisk_rangeSetData = new Vector();
@@ -90,8 +86,7 @@ public class FloodRiskAnalysis
       }//for j
       floodRisk_rangeSetData.addElement( floodRisk_rowData );
       /*
-       * System.out.println(i + " rows of " + annualDamage_rangeSetData.size() + "
-       * calculated");
+       * System.out.println(i + " rows of " + annualDamage_rangeSetData.size() + " calculated");
        */
     }//for i
     RangeSet floodRisk_rangeSet = new RangeSet( floodRisk_rangeSetData, null );

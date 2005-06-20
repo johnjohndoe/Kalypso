@@ -1,3 +1,44 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+*
+*  This file is part of kalypso.
+*  Copyright (C) 2004 by:
+* 
+*  Technical University Hamburg-Harburg (TUHH)
+*  Institute of River and coastal engineering
+*  Denickestraﬂe 22
+*  21073 Hamburg, Germany
+*  http://www.tuhh.de/wb
+* 
+*  and
+*  
+*  Bjoernsen Consulting Engineers (BCE)
+*  Maria Trost 3
+*  56070 Koblenz, Germany
+*  http://www.bjoernsen.de
+* 
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+* 
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+* 
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+* 
+*  Contact:
+* 
+*  E-Mail:
+*  belger@bjoernsen.de
+*  schlienger@bjoernsen.de
+*  v.doemming@tuhh.de
+*   
+*  ---------------------------------------------------------------------------*/
+
 package org.kalypso.floodrisk.damageAnalysis;
 
 import java.awt.Color;
@@ -55,47 +96,6 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.w3c.dom.Document;
 
-/*----------------    FILE HEADER KALYPSO ------------------------------------------
- *
- *  This file is part of kalypso.
- *  Copyright (C) 2004 by:
- * 
- *  Technical University Hamburg-Harburg (TUHH)
- *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
- *  21073 Hamburg, Germany
- *  http://www.tuhh.de/wb
- * 
- *  and
- *  
- *  Bjoernsen Consulting Engineers (BCE)
- *  Maria Trost 3
- *  56070 Koblenz, Germany
- *  http://www.bjoernsen.de
- * 
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- * 
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- * 
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- *  Contact:
- * 
- *  E-Mail:
- *  belger@bjoernsen.de
- *  schlienger@bjoernsen.de
- *  v.doemming@tuhh.de
- *   
- *  ---------------------------------------------------------------------------*/
-
 /**
  * 
  * CalculateDamageJob
@@ -129,12 +129,10 @@ public class CalculateDamageJob implements ICalcJob
   /**
    * 
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider,
-      ICalcResultEater resultEater, ICalcMonitor monitor )
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
     try
@@ -143,17 +141,14 @@ public class CalculateDamageJob implements ICalcJob
       //landuseRaster
       monitor.setMessage( "Lese Eingabedateien" );
       URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
-      RectifiedGridCoverage landuseRaster = rasterDataModel
-          .getRectifiedGridCoverage( landuseRasterGML );
+      RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       //administrationUnitRaster
       RectifiedGridCoverage administrationUnitRaster = null;
       if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
       {
-        URL administrationUnitRasterGML = inputProvider
-            .getURLForID( AdministrationUnitRasterDataID );
-        administrationUnitRaster = rasterDataModel
-            .getRectifiedGridCoverage( administrationUnitRasterGML );
+        URL administrationUnitRasterGML = inputProvider.getURLForID( AdministrationUnitRasterDataID );
+        administrationUnitRaster = rasterDataModel.getRectifiedGridCoverage( administrationUnitRasterGML );
       }
 
       //contextModel
@@ -161,35 +156,30 @@ public class CalculateDamageJob implements ICalcJob
       ContextModel contextModel = new ContextModel( contextModelGML );
 
       //WaterlevelData
-      TreeMap waterlevelGrids = readWaterlevelData( inputProvider
-          .getURLForID( WaterlevelDataID ) );
+      TreeMap waterlevelGrids = readWaterlevelData( inputProvider.getURLForID( WaterlevelDataID ) );
       monitor.setProgress( 40 );
 
       //start damageAnalysis
       // calculate damagePercentage
       monitor.setMessage( "Berechne" );
-      TreeMap damagePercentageGrids = DamageAnalysis
-          .calculateDamagePercentages( waterlevelGrids, landuseRaster,
-              contextModel.getDamageFunctionList() );
+      TreeMap damagePercentageGrids = DamageAnalysis.calculateDamagePercentages( waterlevelGrids, landuseRaster,
+          contextModel.getDamageFunctionList() );
 
       // calculate damage
-      TreeMap damageGrids = DamageAnalysis.calculateDamages(
-          damagePercentageGrids, landuseRaster, administrationUnitRaster,
-          contextModel.getAssetValueList() );
+      TreeMap damageGrids = DamageAnalysis.calculateDamages( damagePercentageGrids, landuseRaster,
+          administrationUnitRaster, contextModel.getAssetValueList() );
 
       // calculate annualDamage
-      Vector tempGrids = DamageAnalysis
-          .calculateTempGridsAnnualDamage( damageGrids );
-      RectifiedGridCoverage annualDamageGrid = DamageAnalysis
-          .calculateAnnualDamage( tempGrids );
+      Vector tempGrids = DamageAnalysis.calculateTempGridsAnnualDamage( damageGrids );
+      RectifiedGridCoverage annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
 
       monitor.setProgress( 20 );
 
       //Generate Output
       // damage directory
       monitor.setMessage( "Schreibe Ausgabedateien" );
-      CalcJobClientBean damageDirOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( DamageDirectoryID );
+      CalcJobClientBean damageDirOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap()
+          .get( DamageDirectoryID );
       File damageResultDir = new File( damageDirOutputBean.getPath() );
       if( !damageResultDir.exists() )
         damageResultDir.mkdir();
@@ -197,22 +187,18 @@ public class CalculateDamageJob implements ICalcJob
       resultEater.addResult( damageDirOutputBean.getId(), null );
 
       // annualDamage
-      CalcJobClientBean annualDamageOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( AnnualDamageRasterDataID );
+      CalcJobClientBean annualDamageOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap()
+          .get( AnnualDamageRasterDataID );
       File annualDamageResultFile = new File( annualDamageOutputBean.getPath() );
       if( !annualDamageResultFile.exists() )
         annualDamageResultFile.createNewFile();
       rasterDataModel.toFile( annualDamageResultFile, annualDamageGrid );
       //style
-      File styleFile = new File( FileUtilities
-          .nameWithoutExtension( annualDamageResultFile.toString() )
-          + ".sld" );
+      File styleFile = new File( FileUtilities.nameWithoutExtension( annualDamageResultFile.toString() ) + ".sld" );
       Color lightRed = new Color( 255, 100, 100 );
       int numOfCategories = 4;
-      String styleName = FileUtilities
-          .nameWithoutExtension( annualDamageResultFile.getName() );
-      createRasterStyle( styleFile, styleName, annualDamageGrid, lightRed,
-          numOfCategories );
+      String styleName = FileUtilities.nameWithoutExtension( annualDamageResultFile.getName() );
+      createRasterStyle( styleFile, styleName, annualDamageGrid, lightRed, numOfCategories );
       resultEater.addResult( annualDamageOutputBean.getId(), null );
 
       monitor.setProgress( 40 );
@@ -226,53 +212,45 @@ public class CalculateDamageJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException(
-          "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException(
-          "CalculateDamageJob Service Exception", e );
+      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
     }
   }
 
   /**
    * reads the waterlevelData and puts the grids in a TreeMap
    * 
-   * @param waterlevelDataGML controlfile with location of each waterlevelGrid
-   *          relative to the project and associated annuality
+   * @param waterlevelDataGML
+   *          controlfile with location of each waterlevelGrid relative to the project and associated annuality
    * @return TreeMap(key=p, value=waterlevelGrid(RectifiedGridCoverage))
    * @throws MalformedURLException
    * @throws Exception
    *  
    */
-  private TreeMap readWaterlevelData( URL waterlevelDataGML )
-      throws MalformedURLException, Exception
+  private TreeMap readWaterlevelData( URL waterlevelDataGML ) throws MalformedURLException, Exception
   {
     String waterlevelFeatureListPropertyName = "WaterlevelMember";
     String annualityPropertyName = "Annuality";
     String waterlevelDataURLPropertyName = "WaterlevelRasterData";
 
     TreeMap waterlevelGrids = new TreeMap();
-    GMLWorkspace workspace = GmlSerializer
-        .createGMLWorkspace( waterlevelDataGML );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML );
     Feature waterlevelDataFeature = workspace.getRootFeature();
 
-    List waterlevelDataList = (List)waterlevelDataFeature
-        .getProperty( waterlevelFeatureListPropertyName );
+    List waterlevelDataList = (List)waterlevelDataFeature.getProperty( waterlevelFeatureListPropertyName );
     Iterator it = waterlevelDataList.iterator();
     while( it.hasNext() )
     {
       Feature waterlevelFeature = (Feature)it.next();
-      double annuality = ( (Double)waterlevelFeature
-          .getProperty( annualityPropertyName ) ).doubleValue();
-      String resourceFilePath = (String)waterlevelFeature
-          .getProperty( waterlevelDataURLPropertyName );
+      double annuality = ( (Double)waterlevelFeature.getProperty( annualityPropertyName ) ).doubleValue();
+      String resourceFilePath = (String)waterlevelFeature.getProperty( waterlevelDataURLPropertyName );
       IPath resourcePath = new Path( resourceFilePath );
       IFile dataFile = ResourceUtilities.findFileFromPath( resourcePath );
       System.out.println( ResourceUtilities.createURL( dataFile ) );
-      RectifiedGridCoverage grid = rasterDataModel
-          .getRectifiedGridCoverage( ResourceUtilities.createURL( dataFile ) );
+      RectifiedGridCoverage grid = rasterDataModel.getRectifiedGridCoverage( ResourceUtilities.createURL( dataFile ) );
       double p = 1 / annuality;
       waterlevelGrids.put( new Double( p ), grid );
     }
@@ -285,40 +263,33 @@ public class CalculateDamageJob implements ICalcJob
    * 
    * @param damageGrids
    * @param tempGrids
-   * @param damageResultDir resultDirectory
+   * @param damageResultDir
+   *          resultDirectory
    * @throws Exception
    *  
    */
-  public void generateDamageResultDir( TreeMap damageGrids, Vector tempGrids,
-      File damageResultDir ) throws Exception
+  public void generateDamageResultDir( TreeMap damageGrids, Vector tempGrids, File damageResultDir ) throws Exception
   {
     Object[] keys = damageGrids.keySet().toArray();
     for( int i = 0; i < keys.length; i++ )
     {
       Double key = (Double)keys[i];
       double annuality = 1 / key.doubleValue();
-      File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality
-          + ".gml" );
-      RectifiedGridCoverage damageGrid = (RectifiedGridCoverage)damageGrids
-          .get( key );
+      File damageFile = new File( damageResultDir, "damage_HQ" + (int)annuality + ".gml" );
+      RectifiedGridCoverage damageGrid = (RectifiedGridCoverage)damageGrids.get( key );
       rasterDataModel.toFile( damageFile, damageGrid );
       //style
-      File damageStyleFile = new File( FileUtilities
-          .nameWithoutExtension( damageFile.toString() )
-          + ".sld" );
+      File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() ) + ".sld" );
       Color lightRed = new Color( 255, 100, 100 );
       int numOfCategories = 4;
-      String styleName = FileUtilities.nameWithoutExtension( damageFile
-          .getName() );
-      createRasterStyle( damageStyleFile, styleName, damageGrid, lightRed,
-          numOfCategories );
+      String styleName = FileUtilities.nameWithoutExtension( damageFile.getName() );
+      createRasterStyle( damageStyleFile, styleName, damageGrid, lightRed, numOfCategories );
 
       if( i < keys.length - 1 )
       {
         Double nextKey = (Double)keys[i + 1];
         double deltaP = nextKey.doubleValue() - key.doubleValue();
-        RectifiedGridCoverage tempGrid = (RectifiedGridCoverage)tempGrids
-            .get( i );
+        RectifiedGridCoverage tempGrid = (RectifiedGridCoverage)tempGrids.get( i );
         File tempGridFile = new File( damageResultDir, "tempGrid_deltaP"
             + Number.round( deltaP, 4, BigDecimal.ROUND_HALF_EVEN ) + ".gml" );
         rasterDataModel.toFile( tempGridFile, tempGrid );
@@ -331,45 +302,40 @@ public class CalculateDamageJob implements ICalcJob
    * 
    * @param resultFile
    * @param styleName
-   * @param grid RectifiedGridCoverage
-   * @param color lightest color
+   * @param grid
+   *          RectifiedGridCoverage
+   * @param color
+   *          lightest color
    * @param numOfCategories
    * @throws Exception
    *  
    */
-  private void createRasterStyle( File resultFile, String styleName,
-      RectifiedGridCoverage grid, Color color, int numOfCategories )
-      throws Exception
+  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid, Color color,
+      int numOfCategories ) throws Exception
   {
     TreeMap colorMap = new TreeMap();
-    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE,
-        0, -9999, "Keine Daten" );
+    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     double min = grid.getRangeSet().getMinValue();
     double max = grid.getRangeSet().getMaxValue();
     double intervalStep = ( max - min ) / numOfCategories;
     for( int i = 0; i < numOfCategories; i++ )
     {
-      double quantity = Number.round( ( min + ( i * intervalStep ) ), 4,
-          BigDecimal.ROUND_HALF_EVEN );
-      ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 1, quantity,
-          "" );
+      double quantity = Number.round( ( min + ( i * intervalStep ) ), 4, BigDecimal.ROUND_HALF_EVEN );
+      ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 1, quantity, "" );
       color = color.darker();
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
-    ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1,
-        max, "" );
-    colorMap.put(
-        new Double( Number.round( max, 4, BigDecimal.ROUND_HALF_EVEN ) ),
-        colorMapEntry_max );
+    ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( Color.WHITE, 1, max, "" );
+    colorMap.put( new Double( Number.round( max, 4, BigDecimal.ROUND_HALF_EVEN ) ), colorMapEntry_max );
     RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
     Symbolizer[] symbolizers = new Symbolizer[]
     { rasterSymbolizer };
     FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     double minScaleDenominator = 0;
     double maxScaleDenominator = 1.8;
-    Rule rule = StyleFactory.createRule( symbolizers, "default", "default",
-        "default", minScaleDenominator, maxScaleDenominator );
+    Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator,
+        maxScaleDenominator );
     featureTypeStyle.addRule( rule );
     FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[]
     { featureTypeStyle };
@@ -377,10 +343,8 @@ public class CalculateDamageJob implements ICalcJob
     { new UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
     { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
-    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers,
-        "1.0" );
-    Document doc = XMLTools.parse( new StringReader(
-        ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
+    StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" );
+    Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     Result result = new StreamResult( resultFile );
     Transformer t = TransformerFactory.newInstance().newTransformer();

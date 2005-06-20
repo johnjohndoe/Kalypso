@@ -109,13 +109,12 @@ public class RasterizeLanduseJobTest extends TestCase
     //Output
     int numOutputBeans = 1;
     CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( RasterizeLanduseJob.LanduseRasterDataID,
-        base + "Landuse//landuseData.gml" );
+    CalcJobClientBean output1 = new CalcJobClientBean( RasterizeLanduseJob.LanduseRasterDataID, base
+        + "Landuse//landuseData.gml" );
     output[0] = output1;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "RasterizeLanduseJob",
-        ICalcServiceConstants.RUNNING, -1, "" );
+    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "RasterizeLanduseJob", ICalcServiceConstants.RUNNING, -1, "" );
 
     try
     {

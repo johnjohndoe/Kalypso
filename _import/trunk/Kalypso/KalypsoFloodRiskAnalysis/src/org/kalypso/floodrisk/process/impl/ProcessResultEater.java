@@ -55,8 +55,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  * 
  * ProcessResultEater
  * <p>
- * ResultEater for local calculations, results are stored directly in the file
- * system (without dataHandler)
+ * ResultEater for local calculations, results are stored directly in the file system (without dataHandler)
  * 
  * created by
  * 
@@ -74,7 +73,8 @@ public class ProcessResultEater implements IProcessResultEater
   /**
    * Constructor
    * 
-   * @param clientOutput output-beans
+   * @param clientOutput
+   *          output-beans
    */
   public ProcessResultEater( final CalcJobClientBean[] clientOutput )
   {
@@ -87,16 +87,13 @@ public class ProcessResultEater implements IProcessResultEater
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
-   *      java.io.File)
+   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
    */
   public void addResult( String id, File file ) throws CalcJobServiceException
   {
-    final CalcJobClientBean clientBean = (CalcJobClientBean)m_clientOutputMap
-        .get( id );
+    final CalcJobClientBean clientBean = (CalcJobClientBean)m_clientOutputMap.get( id );
     if( clientBean == null )
-      throw new CalcJobServiceException( "Unerwartete Ausgabe mit ID: " + id,
-          null );
+      throw new CalcJobServiceException( "Unerwartete Ausgabe mit ID: " + id, null );
 
     m_results.add( clientBean );
   }

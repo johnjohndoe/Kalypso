@@ -73,7 +73,7 @@ public class CalculateFloodRiskJobTest extends TestCase
         new DeegreeUrlCatalog(),
         new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-    
+
     //  register typeHandler
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     try
@@ -96,29 +96,29 @@ public class CalculateFloodRiskJobTest extends TestCase
     //Input
     int numInputBeans = 3;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
-    CalcJobClientBean input1 = new CalcJobClientBean(
-        CalculateFloodRiskJob.AnnualDamageRasterDataID, base + "Damage//annualDamage.gml" );
+    CalcJobClientBean input1 = new CalcJobClientBean( CalculateFloodRiskJob.AnnualDamageRasterDataID, base
+        + "Damage//annualDamage.gml" );
     input[0] = input1;
-    CalcJobClientBean input2 = new CalcJobClientBean( CalculateFloodRiskJob.LanduseRasterDataID,
-        base + "Landuse//landuseData.gml" );
+    CalcJobClientBean input2 = new CalcJobClientBean( CalculateFloodRiskJob.LanduseRasterDataID, base
+        + "Landuse//landuseData.gml" );
     input[1] = input2;
-    CalcJobClientBean input3 = new CalcJobClientBean( CalculateFloodRiskJob.RiskContextModelID,
-        base + "Control//riskContextModell.gml" );
+    CalcJobClientBean input3 = new CalcJobClientBean( CalculateFloodRiskJob.RiskContextModelID, base
+        + "Control//riskContextModell.gml" );
     input[2] = input3;
     ProcessDataProvider inputProvider = new ProcessDataProvider( input );
     //Output
     int numOutputBeans = 2;
     CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( CalculateFloodRiskJob.FloodRiskRasterDataID,
-        base + "Risk//floodrisk.gml" );
+    CalcJobClientBean output1 = new CalcJobClientBean( CalculateFloodRiskJob.FloodRiskRasterDataID, base
+        + "Risk//floodrisk.gml" );
     output[0] = output1;
-    CalcJobClientBean output2 = new CalcJobClientBean( CalculateFloodRiskJob.FloodRiskRasterStyleID,
-        base + ".styles//floodrisk.sld" );
+    CalcJobClientBean output2 = new CalcJobClientBean( CalculateFloodRiskJob.FloodRiskRasterStyleID, base
+        + ".styles//floodrisk.sld" );
     output[1] = output2;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateFloodRiskJob",
-        ICalcServiceConstants.RUNNING, -1, "" );
+    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateFloodRiskJob", ICalcServiceConstants.RUNNING, -1,
+        "" );
 
     try
     {

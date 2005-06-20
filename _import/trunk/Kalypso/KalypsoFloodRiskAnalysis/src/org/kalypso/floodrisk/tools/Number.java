@@ -15,12 +15,14 @@ public class Number
 {
 
   /**
-   * round a number "d" with "scale" decimal places considering the given "mode"
-   * (BidDecimal.class)
+   * round a number "d" with "scale" decimal places considering the given "mode" (BidDecimal.class)
    * 
-   * @param d number to round
-   * @param scale number of decimal places
-   * @param mode rule for rounding
+   * @param d
+   *          number to round
+   * @param scale
+   *          number of decimal places
+   * @param mode
+   *          rule for rounding
    * @see BigDecimal
    * @return rounded number
    */

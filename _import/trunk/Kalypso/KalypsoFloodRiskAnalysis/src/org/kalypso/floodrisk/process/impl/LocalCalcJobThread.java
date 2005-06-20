@@ -1,30 +1,25 @@
 /*
- * --------------- Kalypso-Header
- * --------------------------------------------------------------------
+ * --------------- Kalypso-Header --------------------------------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -67,33 +62,35 @@ public class LocalCalcJobThread extends Thread
   private ProcessDataProvider m_inputProvider;
 
   /**
-   * @see org.kalypso.services.calculation.service.impl.CalcJobThread#CalcJobThread(java.lang.String,
-   *      java.lang.String, java.lang.String,
-   *      org.kalypso.services.calculation.job.ICalcJob,
-   *      org.kalypso.services.calculation.service.impl.ModelspecData,
-   *      javax.activation.DataHandler,
+   * @see org.kalypso.services.calculation.service.impl.CalcJobThread#CalcJobThread(java.lang.String, java.lang.String,
+   *      java.lang.String, org.kalypso.services.calculation.job.ICalcJob,
+   *      org.kalypso.services.calculation.service.impl.ModelspecData, javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],
    *      org.kalypso.services.calculation.service.CalcJobClientBean[])
    * 
-   * @param id id of the calcJob
-   * @param description description of the calcJob
-   * @param typeID typeID of the process
-   * @param job the job to process
-   * @param modelspec ModelspecData(specification) of the calcJob, input- and
-   *          output-ids and descriptions
-   * @param input input-beans
-   * @param output output-beans
+   * @param id
+   *          id of the calcJob
+   * @param description
+   *          description of the calcJob
+   * @param typeID
+   *          typeID of the process
+   * @param job
+   *          the job to process
+   * @param modelspec
+   *          ModelspecData(specification) of the calcJob, input- and output-ids and descriptions
+   * @param input
+   *          input-beans
+   * @param output
+   *          output-beans
    * @throws CalcJobServiceException
    */
-  public LocalCalcJobThread( final String id, final String description,
-      final String typeID, final ICalcJob job, final ModelspecData modelspec,
-      final CalcJobClientBean[] input, final CalcJobClientBean[] output )
+  public LocalCalcJobThread( final String id, final String description, final String typeID, final ICalcJob job,
+      final ModelspecData modelspec, final CalcJobClientBean[] input, final CalcJobClientBean[] output )
       throws CalcJobServiceException
   {
     m_job = job;
 
-    m_jobBean = new CalcJobInfoBean( "" + id, description, typeID,
-        ICalcServiceConstants.WAITING, -1, "" );
+    m_jobBean = new CalcJobInfoBean( "" + id, description, typeID, ICalcServiceConstants.WAITING, -1, "" );
     m_inputProvider = new ProcessDataProvider( input );
     m_resultEater = new ProcessResultEater( output );
 
@@ -112,8 +109,7 @@ public class LocalCalcJobThread extends Thread
     {
       System.out.println( "Calling run for ID: " + jobID );
 
-      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID
-          + "-", ServiceConfig.getTempDir() );
+      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig.getTempDir() );
       m_resultEater.addFile( tmpdir );
 
       m_job.run( tmpdir, m_inputProvider, m_resultEater, m_jobBean );

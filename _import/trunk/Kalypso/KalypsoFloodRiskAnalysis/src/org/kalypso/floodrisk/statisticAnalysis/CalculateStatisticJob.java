@@ -60,9 +60,12 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 /**
  * 
  * CalculateStatisticJob
- * <p>Job for calculating statistics of damageGrids
+ * <p>
+ * Job for calculating statistics of damageGrids
  * 
- * created by @author Nadja Peiler (15.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (15.06.2005)
  */
 public class CalculateStatisticJob implements ICalcJob
 {
@@ -89,12 +92,10 @@ public class CalculateStatisticJob implements ICalcJob
   /**
    * 
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider,
-      ICalcResultEater resultEater, ICalcMonitor monitor )
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
     try
@@ -103,22 +104,18 @@ public class CalculateStatisticJob implements ICalcJob
       //damageRaster
       monitor.setMessage( "Lese Eingabedateien" );
       URL damageRasterGML = inputProvider.getURLForID( DamageRasterID );
-      RectifiedGridCoverage damageRaster = rasterDataModel
-          .getRectifiedGridCoverage( damageRasterGML );
+      RectifiedGridCoverage damageRaster = rasterDataModel.getRectifiedGridCoverage( damageRasterGML );
 
       //landuseRaster
       URL landuseRasterGML = inputProvider.getURLForID( LanduseRasterDataID );
-      RectifiedGridCoverage landuseRaster = rasterDataModel
-          .getRectifiedGridCoverage( landuseRasterGML );
+      RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       //administrationUnitRaster
       RectifiedGridCoverage administrationUnitRaster = null;
       if( inputProvider.getURLForID( AdministrationUnitRasterDataID ) != null )
       {
-        URL administrationUnitRasterGML = inputProvider
-            .getURLForID( AdministrationUnitRasterDataID );
-        administrationUnitRaster = rasterDataModel
-            .getRectifiedGridCoverage( administrationUnitRasterGML );
+        URL administrationUnitRasterGML = inputProvider.getURLForID( AdministrationUnitRasterDataID );
+        administrationUnitRaster = rasterDataModel.getRectifiedGridCoverage( administrationUnitRasterGML );
       }
 
       //contextModel
@@ -135,24 +132,19 @@ public class CalculateStatisticJob implements ICalcJob
       {
         //templateRaster
         URL templateRasterGML = inputProvider.getURLForID( TemplateRasterID );
-        RectifiedGridCoverage templateRaster = rasterDataModel
-            .getRectifiedGridCoverage( templateRasterGML );
+        RectifiedGridCoverage templateRaster = rasterDataModel.getRectifiedGridCoverage( templateRasterGML );
         if( administrationUnitRaster != null )
-          statistics = StatisticAnalysis.getStatisticsWithTemplate(
-              damageRaster, landuseRaster, administrationUnitRaster,
-              templateRaster );
+          statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster,
+              administrationUnitRaster, templateRaster );
         else
-          statistics = StatisticAnalysis.getStatisticsWithTemplate(
-              damageRaster, landuseRaster, templateRaster );
+          statistics = StatisticAnalysis.getStatisticsWithTemplate( damageRaster, landuseRaster, templateRaster );
       }
       else
       {
         if( administrationUnitRaster != null )
-          statistics = StatisticAnalysis.getStatistics( damageRaster,
-              landuseRaster, administrationUnitRaster );
+          statistics = StatisticAnalysis.getStatistics( damageRaster, landuseRaster, administrationUnitRaster );
         else
-          statistics = StatisticAnalysis.getStatistics( damageRaster,
-              landuseRaster );
+          statistics = StatisticAnalysis.getStatistics( damageRaster, landuseRaster );
       }
 
       monitor.setProgress( 20 );
@@ -168,25 +160,21 @@ public class CalculateStatisticJob implements ICalcJob
         statisticDataFile.createNewFile();
       }
       if( administrationUnitRaster != null )
-        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel
-            .getLanduseList(), contextModel.getAdministrationUnitList(),
-            statisticDataFile.toURL() );
+        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(), contextModel
+            .getAdministrationUnitList(), statisticDataFile.toURL() );
       else
-        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel
-            .getLanduseList(), statisticDataFile.toURL() );
+        StatisticAnalysis.exportStatisticAsXML( statistics, contextModel.getLanduseList(), statisticDataFile.toURL() );
       resultEater.addResult( statisticDataOutputBean.getId(), null );
 
       monitor.setProgress( 40 );
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException(
-          "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException(
-          "CalculateDamageJob Service Exception", e );
+      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
     }
   }
 

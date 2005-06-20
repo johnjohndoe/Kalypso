@@ -106,13 +106,13 @@ public class GenerateTemplateRasterJobTest extends TestCase
     //Output
     int numOutputBeans = 1;
     CalcJobClientBean[] output = new CalcJobClientBean[numOutputBeans];
-    CalcJobClientBean output1 = new CalcJobClientBean( GenerateTemplateRasterJob.TemplateRasterID,
-        base + "Waterlevel//templatehq10_5.gml" );
+    CalcJobClientBean output1 = new CalcJobClientBean( GenerateTemplateRasterJob.TemplateRasterID, base
+        + "Waterlevel//templatehq10_5.gml" );
     output[0] = output1;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "GenerateTemplateRasterJob",
-        ICalcServiceConstants.RUNNING, -1, "" );
+    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "GenerateTemplateRasterJob", ICalcServiceConstants.RUNNING,
+        -1, "" );
 
     try
     {

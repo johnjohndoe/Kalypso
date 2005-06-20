@@ -55,8 +55,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  * 
  * ProcessDataProvider
  * <p>
- * DataProvider for local calculations, data is read directly from the file
- * system (without dataHandler)
+ * DataProvider for local calculations, data is read directly from the file system (without dataHandler)
  * 
  * created by
  * 
@@ -69,7 +68,8 @@ public class ProcessDataProvider implements ICalcDataProvider
   /**
    * Constructor
    * 
-   * @param input input-Beans
+   * @param input
+   *          input-Beans
    */
   public ProcessDataProvider( CalcJobClientBean[] input )
   {
@@ -79,7 +79,8 @@ public class ProcessDataProvider implements ICalcDataProvider
   /**
    * creates a map with key=inputBeanID, value=inputData-URL
    * 
-   * @param input input-beans
+   * @param input
+   *          input-beans
    * @return Map(key=inputBeanID, value=inputData-URL)
    *  
    */

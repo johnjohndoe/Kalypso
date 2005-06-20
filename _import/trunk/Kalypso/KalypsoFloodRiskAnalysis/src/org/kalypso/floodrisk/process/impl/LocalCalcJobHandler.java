@@ -1,30 +1,25 @@
 /*
- * --------------- Kalypso-Header
- * --------------------------------------------------------------------
+ * --------------- Kalypso-Header --------------------------------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -67,40 +62,37 @@ public class LocalCalcJobHandler
 {
   private ModeldataType m_modelData;
 
-  private final CoreException m_cancelException = new CoreException(
-      new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), 0,
-          "Berechnung wurde vom Benutzer abgebrochen", null ) );
+  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin
+      .getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
 
   private String m_jobID;
 
   private ICalculationService m_calcService;
 
   /**
-   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#CalcJobHandler(ModeldataType,
-   *      ICalculationService)
+   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#CalcJobHandler(ModeldataType, ICalculationService)
    * 
    * @param modelData
-   * @param calcService LocalCalculationService
+   * @param calcService
+   *          LocalCalculationService
    */
-  public LocalCalcJobHandler( final ModeldataType modelData,
-      final ICalculationService calcService )
+  public LocalCalcJobHandler( final ModeldataType modelData, final ICalculationService calcService )
   {
     m_modelData = modelData;
     m_calcService = calcService;
   }
 
   /**
-   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#runJob(IFolder,
-   *      IProgressMonitor)
+   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#runJob(IFolder, IProgressMonitor)
    * 
-   * @param project project to calculate, instead of calculationFolder
+   * @param project
+   *          project to calculate, instead of calculationFolder
    * @param monitor
    * @return
    * @throws CoreException
    *  
    */
-  public IStatus runJob( final IProject project, final IProgressMonitor monitor )
-      throws CoreException
+  public IStatus runJob( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
 
     try
@@ -110,8 +102,8 @@ public class LocalCalcJobHandler
       if( monitor.isCanceled() )
         throw m_cancelException;
 
-      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor,
-          80, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK );
+      final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 80,
+          SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK );
       calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
       //int oldProgess = 0;
       while( true )
@@ -142,8 +134,7 @@ public class LocalCalcJobHandler
         {
           e1.printStackTrace();
 
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Kritischer Fehler", e1 ) );
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Kritischer Fehler", e1 ) );
         }
 
         int progress = bean.getProgress();
@@ -166,31 +157,28 @@ public class LocalCalcJobHandler
       switch( jobBean.getState() )
       {
       case ICalcServiceConstants.FINISHED:
-        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor(
-            monitor, 10 ) );
+        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
         final String finishText = jobBean.getFinishText();
         final String message = finishText == null ? "" : finishText;
-        return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(),
-            0, message, null );
+        return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
 
       case ICalcServiceConstants.CANCELED:
         throw m_cancelException;
 
       case ICalcServiceConstants.ERROR:
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Rechenvorgang fehlerhaft:\n" + jobBean.getMessage(), null ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
+            + jobBean.getMessage(), null ) );
 
       default:
         // darf eigentlich nie vorkommen
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-            "Rechenvorgang fehlerhaft:\n" + jobBean.getMessage(), null ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
+            + jobBean.getMessage(), null ) );
       }
     }
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Rechendienstes", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aufruf des Rechendienstes", e ) );
     }
     catch( final CoreException e )
     {
@@ -203,9 +191,8 @@ public class LocalCalcJobHandler
   }
 
   /**
-   * get input and output, then start the calcJob by calling the
-   * startJob(typeID, description, dataHandler, input, output)-method of
-   * localCalculationService
+   * get input and output, then start the calcJob by calling the startJob(typeID, description, dataHandler, input,
+   * output)-method of localCalculationService
    * 
    * @param project
    * @param monitor
@@ -213,8 +200,7 @@ public class LocalCalcJobHandler
    * @throws CoreException
    *  
    */
-  private String startCalcJob( final IProject project,
-      final IProgressMonitor monitor ) throws CoreException
+  private String startCalcJob( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -229,8 +215,7 @@ public class LocalCalcJobHandler
       try
       {
         //dataHandler = null
-        bean = m_calcService.startJob( m_modelData.getTypeID(), "Description",
-            null, input, output );
+        bean = m_calcService.startJob( m_modelData.getTypeID(), "Description", null, input, output );
         return bean.getId();
       }
       catch( RemoteException e )
@@ -259,23 +244,20 @@ public class LocalCalcJobHandler
     CalcJobClientBean[] input = new CalcJobClientBean[inputList.size()];
     for( int i = 0; i < inputList.size(); i++ )
     {
-      ModeldataType.InputType inputItem = (ModeldataType.InputType)inputList
-          .get( i );
+      ModeldataType.InputType inputItem = (ModeldataType.InputType)inputList.get( i );
 
       String inputPath = inputItem.getPath();
       if( !inputItem.isRelativeToCalcCase() )
       {
         IResource inputResource = project.findMember( inputPath );
         if( inputResource == null )
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Konnte Input-Resource nicht finden: " + inputPath
-                  + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Konnte Input-Resource nicht finden: "
+              + inputPath + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
         IPath projectRelativePath = inputResource.getLocation();
         inputPath = projectRelativePath.toString();
       }
 
-      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( inputItem
-          .getId(), inputPath );
+      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( inputItem.getId(), inputPath );
       input[i] = calcJobDataBean;
     }
     return input;
@@ -289,15 +271,13 @@ public class LocalCalcJobHandler
    * @throws CoreException
    *  
    */
-  private CalcJobClientBean[] getOutput( IProject project )
-      throws CoreException
+  private CalcJobClientBean[] getOutput( IProject project ) throws CoreException
   {
     List outputList = m_modelData.getOutput();
     CalcJobClientBean[] output = new CalcJobClientBean[outputList.size()];
     for( int i = 0; i < outputList.size(); i++ )
     {
-      ModeldataType.OutputType outputItem = (ModeldataType.OutputType)outputList
-          .get( i );
+      ModeldataType.OutputType outputItem = (ModeldataType.OutputType)outputList.get( i );
 
       String outputPath = outputItem.getPath();
       String resultPath = outputPath;
@@ -306,8 +286,7 @@ public class LocalCalcJobHandler
         resultPath = project.getLocation() + "/" + outputPath;
       }
 
-      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( outputItem
-          .getId(), resultPath );
+      CalcJobClientBean calcJobDataBean = new CalcJobClientBean( outputItem.getId(), resultPath );
       output[i] = calcJobDataBean;
     }
     return output;

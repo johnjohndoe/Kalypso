@@ -51,7 +51,9 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
  * IProcessResultEater
  * <p>
  * 
- * created by @author Nadja Peiler (17.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (17.06.2005)
  */
 public interface IProcessResultEater extends ICalcResultEater
 {
@@ -59,24 +61,21 @@ public interface IProcessResultEater extends ICalcResultEater
   public String[] getCurrentResults();
 
   /**
-   * Kopiert die aktuell vorliegenden Ergebnisse aus dem tempDir an die richtige
-   * Stelle im FileSystem
+   * Kopiert die aktuell vorliegenden Ergebnisse aus dem tempDir an die richtige Stelle im FileSystem
    * 
    * @throws CalcJobServiceException
    */
   //public void copyCurrentResults() throws CalcJobServiceException;
   /**
-   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch
-   * gedacht.
+   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch gedacht.
    */
   public void addFile( final File file );
 
   /**
-   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird
-   * auch der Inhalt rekursiv gelöscht.
+   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird auch der Inhalt rekursiv gelöscht.
    */
   public void disposeFiles();
-  
+
   /**
    * Löscht alle bisher berechneten Ergebnis-Dateien
    */

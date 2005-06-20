@@ -99,8 +99,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
   protected File waterlevelFile;
 
-  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() )
-      .getKnownCS();
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
 
@@ -108,8 +107,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
   public SelectWaterlevelWizardPage()
   {
-    super( "page_type:waterlevel", "Wasserstandsdaten einlesen",
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    super( "page_type:waterlevel", "Wasserstandsdaten einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     setDescription( "Waterlevel WizardPage" );
     setPageComplete( false );
   }
@@ -160,8 +158,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     group.setText( "Überschwemmungsflächen" );
 
     Composite tableComposite = new Composite( group, SWT.NULL );
-    GridData gridData = new GridData( GridData.FILL_VERTICAL
-        | GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH );
+    GridData gridData = new GridData( GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH );
     tableComposite.setLayoutData( gridData );
     GridLayout layout = new GridLayout( 2, false );
     layout.marginWidth = 4;
@@ -180,8 +177,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
   private void createTable( Composite parent )
   {
-    waterlevelTable = new Table( parent, SWT.SINGLE | SWT.H_SCROLL
-        | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
+    waterlevelTable = new Table( parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     GridData gridData = new GridData( GridData.FILL_BOTH );
     gridData.grabExcessVerticalSpace = true;
     gridData.horizontalSpan = 2;
@@ -191,8 +187,8 @@ public class SelectWaterlevelWizardPage extends WizardPage
     fileColumn.setText( "Datei" );
     fileColumn.setWidth( 400 );
     /*
-     * TableColumn hqColumn = new TableColumn( waterlevelTable, SWT.CENTER );
-     * hqColumn.setText( "HQ" ); hqColumn.setWidth( 100 );
+     * TableColumn hqColumn = new TableColumn( waterlevelTable, SWT.CENTER ); hqColumn.setText( "HQ" );
+     * hqColumn.setWidth( 100 );
      */
     waterlevelTable.setHeaderVisible( true );
     waterlevelTable.setLinesVisible( true );
@@ -284,8 +280,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     csCombo.setItems( coordinateSystems );
     try
     {
-      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem().getName();
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
     }
     catch( RemoteException e1 )
     {
@@ -371,8 +366,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
     if( selectedCoordinateSystemName != null )
     {
-      selectedCoordinateSystem = ConvenienceCSFactory.getInstance()
-          .getOGCCSByName( selectedCoordinateSystemName );
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
         error.append( "Koordinatensystem existiert nicht\n\n" );
@@ -390,8 +384,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
    * 
    * WaterlevelInputDialog
    * <p>
-   * Dialog to choose waterlevel file (ascii) and assign an annuality
-   * !! not uses at the moment !!
+   * Dialog to choose waterlevel file (ascii) and assign an annuality !! not uses at the moment !!
    * 
    * created by
    * 

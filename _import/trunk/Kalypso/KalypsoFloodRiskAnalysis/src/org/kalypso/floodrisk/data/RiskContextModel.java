@@ -28,7 +28,8 @@ public class RiskContextModel
   /**
    * constructor for initializing a GMLWorkspace of the RiskContextModelData
    * 
-   * @param gmlURL Instance location of RiskContextModelData
+   * @param gmlURL
+   *          Instance location of RiskContextModelData
    *  
    */
   public RiskContextModel( URL gmlURL )
@@ -48,14 +49,12 @@ public class RiskContextModel
   /**
    * returns the LanduseTypeList of this RiskContextModel
    * 
-   * @return LanduseTypeList (key=Name of LanduseType (String),
-   *         value=landuseTypeKey (Integer))
+   * @return LanduseTypeList (key=Name of LanduseType (String), value=landuseTypeKey (Integer))
    */
   public Hashtable getLanduseList()
   {
     Hashtable landuseList = new Hashtable();
-    Feature landuseCollection = (Feature)rootFeature
-        .getProperty( "LanduseCollectionMember" );
+    Feature landuseCollection = (Feature)rootFeature.getProperty( "LanduseCollectionMember" );
     Object landuseMemberList = landuseCollection.getProperty( "LanduseMember" );
     if( landuseMemberList instanceof List )
     {
@@ -66,8 +65,7 @@ public class RiskContextModel
         Object name = feat.getProperty( "Name" );
         String fid = feat.getId();
         landuseList.put( name, getID( fid, feat.getFeatureType() ) );
-        System.out.println( "Feature " + getID( fid, feat.getFeatureType() )
-            + ": " + name );
+        System.out.println( "Feature " + getID( fid, feat.getFeatureType() ) + ": " + name );
       }
     }
     return landuseList;
@@ -76,25 +74,20 @@ public class RiskContextModel
   /**
    * returns the RiskClassKeyList of this RiskContextModel
    * 
-   * @return RiskClassKeyList (key=Risk (String) {gering,mittel,hoch},
-   *         value=riskClassKey (Integer))
+   * @return RiskClassKeyList (key=Risk (String) {gering,mittel,hoch}, value=riskClassKey (Integer))
    */
   public Hashtable getRiskClassKeyList()
   {
     Hashtable riskClassKeyList = new Hashtable();
-    Feature riskClassCollection = (Feature)rootFeature
-        .getProperty( "RiskClassCollectionMember" );
-    List riskClassList = (List)riskClassCollection
-        .getProperty( "RiskClassMember" );
+    Feature riskClassCollection = (Feature)rootFeature.getProperty( "RiskClassCollectionMember" );
+    List riskClassList = (List)riskClassCollection.getProperty( "RiskClassMember" );
     for( int i = 0; i < riskClassList.size(); i++ )
     {
       Feature riskClassMember = (Feature)riskClassList.get( i );
       String fid = riskClassMember.getId();
       String risk = (String)riskClassMember.getProperty( "Risk" );
-      riskClassKeyList
-          .put( risk, getID( fid, riskClassMember.getFeatureType() ) );
-      System.out.println( "Risk: " + risk + ", ID: "
-          + getID( fid, riskClassMember.getFeatureType() ) );
+      riskClassKeyList.put( risk, getID( fid, riskClassMember.getFeatureType() ) );
+      System.out.println( "Risk: " + risk + ", ID: " + getID( fid, riskClassMember.getFeatureType() ) );
     }
     return riskClassKeyList;
   }
@@ -107,19 +100,15 @@ public class RiskContextModel
   public Hashtable getRiskClassLists()
   {
     Hashtable riskClassLists = new Hashtable();
-    Feature intervalMappingCollection = (Feature)rootFeature
-        .getProperty( "IntervalMappingCollectionMember" );
-    List intervalMappingList = (List)intervalMappingCollection
-        .getProperty( "IntervalMappingMember" );
+    Feature intervalMappingCollection = (Feature)rootFeature.getProperty( "IntervalMappingCollectionMember" );
+    List intervalMappingList = (List)intervalMappingCollection.getProperty( "IntervalMappingMember" );
     for( int i = 0; i < intervalMappingList.size(); i++ )
     {
       Feature intervalMappingMember = (Feature)intervalMappingList.get( i );
-      Feature intervalCollection = workspace.resolveLink(
-          intervalMappingMember, "IntervalCollectionLink" );
+      Feature intervalCollection = workspace.resolveLink( intervalMappingMember, "IntervalCollectionLink" );
       System.out.println( "RiskClassList:" );
       Hashtable riskClassList = getRiskClassList( intervalCollection );
-      Feature[] landuseLinks = workspace.resolveLinks( intervalMappingMember,
-          "LanduseLink" );
+      Feature[] landuseLinks = workspace.resolveLinks( intervalMappingMember, "LanduseLink" );
       for( int j = 0; j < landuseLinks.length; j++ )
       {
         String fid = landuseLinks[j].getId();
@@ -134,29 +123,25 @@ public class RiskContextModel
   /**
    * returns the RiskClassList for a landuseType
    * 
-   * @param intervalCollection Collection of RiskClassIntervals
+   * @param intervalCollection
+   *          Collection of RiskClassIntervals
    * @return RiskClassList (key=riskClassKey(Integer), value=RiskClassInterval)
    */
   public Hashtable getRiskClassList( Feature intervalCollection )
   {
     Hashtable riskClassList = new Hashtable();
-    List intervalMemberList = (List)intervalCollection
-        .getProperty( "IntervalMember" );
+    List intervalMemberList = (List)intervalCollection.getProperty( "IntervalMember" );
     for( int i = 0; i < intervalMemberList.size(); i++ )
     {
       Feature intervalMember = (Feature)intervalMemberList.get( i );
-      Feature featRisk = workspace
-          .resolveLink( intervalMember, "RiskClassLink" );
+      Feature featRisk = workspace.resolveLink( intervalMember, "RiskClassLink" );
       Double minValue = (Double)intervalMember.getProperty( "minValue" );
       Double maxValue = (Double)intervalMember.getProperty( "maxValue" );
-      Interval interval = new Interval( minValue.doubleValue(), maxValue
-          .doubleValue() );
+      Interval interval = new Interval( minValue.doubleValue(), maxValue.doubleValue() );
       Integer key = getID( featRisk.getId(), featRisk.getFeatureType() );
       riskClassList.put( key, interval );
-      System.out
-          .println( "RiskClass " + key + ": " + "MinValue="
-              + interval.getLowerLimit() + ", MaxValue="
-              + interval.getUpperLimit() );
+      System.out.println( "RiskClass " + key + ": " + "MinValue=" + interval.getLowerLimit() + ", MaxValue="
+          + interval.getUpperLimit() );
     }
     return riskClassList;
   }
@@ -166,7 +151,8 @@ public class RiskContextModel
    * 
    * @deprecated should use getID( String fid, FeatureType featureType )
    * 
-   * @param fid featureID (Format: "Name_ID")
+   * @param fid
+   *          featureID (Format: "Name_ID")
    * @return ID as Integer
    */
   private Integer get_ID( String fid )
@@ -179,9 +165,10 @@ public class RiskContextModel
   /**
    * returns the IntegerValue of the featureID (Format: "FeatureTypeNameID")
    * 
-   * @param fid featureID (Format: "FeatureTypeNameID") analog GMLWorkspace_Impl
-   *          createFeatureID
-   * @param featureType featureType of the feature
+   * @param fid
+   *          featureID (Format: "FeatureTypeNameID") analog GMLWorkspace_Impl createFeatureID
+   * @param featureType
+   *          featureType of the feature
    * @return ID as Integer
    */
   private Integer getID( String fid, FeatureType featureType )

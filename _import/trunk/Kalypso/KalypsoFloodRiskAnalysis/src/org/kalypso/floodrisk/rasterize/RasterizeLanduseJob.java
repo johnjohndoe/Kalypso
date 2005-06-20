@@ -66,9 +66,12 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * 
  * RasterizeLanduseJob
- * <p>Job for rastering the landuse vector data
+ * <p>
+ * Job for rastering the landuse vector data
  * 
- * created by @author Nadja Peiler (15.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (15.06.2005)
  */
 public class RasterizeLanduseJob implements ICalcJob
 {
@@ -92,12 +95,10 @@ public class RasterizeLanduseJob implements ICalcJob
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider,
-      ICalcResultEater resultEater, ICalcMonitor monitor )
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
     try
@@ -105,32 +106,29 @@ public class RasterizeLanduseJob implements ICalcJob
       monitor.setMessage( "Lese Eingabedateien" );
 
       //landuseVectorData: featureList
-      URL landuseVectorDataGML = inputProvider
-          .getURLForID( LanduseVectorDataID );
+      URL landuseVectorDataGML = inputProvider.getURLForID( LanduseVectorDataID );
       GMLWorkspace landuseVectorData;
-      landuseVectorData = GmlSerializer
-          .createGMLWorkspace( landuseVectorDataGML );
+      landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" );
       List featureList = (List)featureMember.getFeature( landuseVectorData );
-      
+
       //contextModel: landuseTypeList
       URL contextModelGML = inputProvider.getURLForID( ContextModelID );
       Hashtable landuseTypeList;
       ContextModel contextModel = new ContextModel( contextModelGML );
       landuseTypeList = contextModel.getLanduseList();
-      
+
       //baseRaster
       URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage baseRaster = rasterDataModel
-          .getRectifiedGridCoverage( baseRasterGML );
-      
-      monitor.setMessage( "Berechne" );
-      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid(
-          featureList, landuseTypeList, baseRaster, monitor );
+      RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
-      CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( LanduseRasterDataID );
+      monitor.setMessage( "Berechne" );
+      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, landuseTypeList, baseRaster,
+          monitor );
+
+      CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap().get(
+          LanduseRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
@@ -145,10 +143,10 @@ public class RasterizeLanduseJob implements ICalcJob
   }
 
   /**
-   * returns a list of Features for a given shapeFile
-   * wird nicht mehr verwendet
+   * returns a list of Features for a given shapeFile wird nicht mehr verwendet
    * 
-   * @param shapeFileBase (base of shape)
+   * @param shapeFileBase
+   *          (base of shape)
    * 
    * @return List of Features
    */
@@ -156,8 +154,7 @@ public class RasterizeLanduseJob implements ICalcJob
   {
     try
     {
-      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs,
-          null );
+      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs, null );
       Feature root = workspace.getRootFeature();
       List featureList = (List)root.getProperty( "featureMember" );
       return featureList;

@@ -56,9 +56,12 @@ import org.kalypso.ui.ImageProvider;
 /**
  * 
  * KalypsoFloodRiskProjectWizard
- * <p>Wizard for creating a floodrisk project
+ * <p>
+ * Wizard for creating a floodrisk project
  * 
- * created by @author Nadja Peiler (19.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (19.06.2005)
  */
 public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
 {
@@ -87,11 +90,9 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
     try
     {
       createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      createProjectPage
-          .setDescription( "Dieser Dialog erstellt ein neues Hochwasserrisiko Projekt." );
+      createProjectPage.setDescription( "Dieser Dialog erstellt ein neues Hochwasserrisiko Projekt." );
       createProjectPage.setTitle( "Neues Hochwasserrisiko Projekt" );
-      createProjectPage
-          .setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+      createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( createProjectPage );
     }
     catch( Exception e )
@@ -118,13 +119,11 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
   public boolean performFinish()
   {
 
-    final Job job = new CreateFloodRiskProjectJob( "Projekt erstellen",
-        createProjectPage.getLocationPath(), createProjectPage
-            .getProjectHandle(), selectLanduseWizardPage.getLanduseDataFile(),
-        selectLanduseWizardPage.getPropertyName(), selectLanduseWizardPage
-            .getSelectedCoordinateSystem(), selectLanduseWizardPage.isCheck(),
-        selectWaterlevelWizardPage.getWaterlevelGrids(),
-        selectWaterlevelWizardPage.getSelectedCoordinateSystem() );
+    final Job job = new CreateFloodRiskProjectJob( "Projekt erstellen", createProjectPage.getLocationPath(),
+        createProjectPage.getProjectHandle(), selectLanduseWizardPage.getLanduseDataFile(), selectLanduseWizardPage
+            .getPropertyName(), selectLanduseWizardPage.getSelectedCoordinateSystem(), selectLanduseWizardPage
+            .isCheck(), selectWaterlevelWizardPage.getWaterlevelGrids(), selectWaterlevelWizardPage
+            .getSelectedCoordinateSystem() );
     job.setUser( true );
     job.schedule();
 
@@ -137,7 +136,7 @@ public class KalypsoFloodRiskProjectWizard extends Wizard implements INewWizard
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    //nothing
+  //nothing
   }
 
 }

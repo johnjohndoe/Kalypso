@@ -48,33 +48,34 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * 
  * GridGeometryHelper
- * <p>Holds methods for controling the geometry of a grid
+ * <p>
+ * Holds methods for controling the geometry of a grid
  * 
- * created by @author Nadja Peiler (17.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (17.06.2005)
  */
 
 public class GridGeometryHelper
 {
 
   /**
-   * controls, if coordinate system, origin, grid extent and offset is equal for
-   * two given RectifiedGridDomains; If not, an Exception is thrown with a
-   * certain errorMessage
+   * controls, if coordinate system, origin, grid extent and offset is equal for two given RectifiedGridDomains; If not,
+   * an Exception is thrown with a certain errorMessage
    * 
    * @param gridDomain1
    * @param gridDomain2
    * @throws Exception
    */
-  public static void controlGridGeometries( RectifiedGridDomain gridDomain1,
-      RectifiedGridDomain gridDomain2 ) throws Exception
+  public static void controlGridGeometries( RectifiedGridDomain gridDomain1, RectifiedGridDomain gridDomain2 )
+      throws Exception
   {
     //check coordinateSystems
     CS_CoordinateSystem cs1 = gridDomain1.getOrigin( null ).getCoordinateSystem();
     CS_CoordinateSystem cs2 = gridDomain2.getOrigin( null ).getCoordinateSystem();
     if( !cs1.getName().equals( cs2.getName() ) )
     {
-      String errorMessage = "Diffrent Coordinate System. (CS 1: " + cs1.getName() + ", CS 2: "
-          + cs2.getName() + ")";
+      String errorMessage = "Diffrent Coordinate System. (CS 1: " + cs1.getName() + ", CS 2: " + cs2.getName() + ")";
       System.out.println( "Error: " + errorMessage );
       throw new Exception( errorMessage );
     }
@@ -107,16 +108,16 @@ public class GridGeometryHelper
     // check number of columns
     if( numCols1 != numCols2 )
     {
-      String errorMessage = "Diffrent number of columns. (Number of columns 1: " + numCols1
-          + ", Number of columns 2: " + numCols2 + ")";
+      String errorMessage = "Diffrent number of columns. (Number of columns 1: " + numCols1 + ", Number of columns 2: "
+          + numCols2 + ")";
       System.out.println( "Error: " + errorMessage );
       throw new Exception( errorMessage );
     }
     //check number of rows
     if( numRows1 != numRows2 )
     {
-      String errorMessage = "Diffrent number of rows. (Number of rows 1: " + numRows1
-          + ", Number of rows 2: " + numRows2 + ")";
+      String errorMessage = "Diffrent number of rows. (Number of rows 1: " + numRows1 + ", Number of rows 2: "
+          + numRows2 + ")";
       System.out.println( "Error: " + errorMessage );
       throw new Exception( errorMessage );
     }
@@ -128,16 +129,14 @@ public class GridGeometryHelper
     // check offsetX
     if( offsetX1 != offsetX2 )
     {
-      String errorMessage = "Diffrent offsetX. (OffsetX 1: " + offsetX1 + ", OffsetX 2: "
-          + offsetX2 + ")";
+      String errorMessage = "Diffrent offsetX. (OffsetX 1: " + offsetX1 + ", OffsetX 2: " + offsetX2 + ")";
       System.out.println( "Error: " + errorMessage );
       throw new Exception( errorMessage );
     }
     // check offsetY
     if( offsetY1 != offsetY2 )
     {
-      String errorMessage = "Diffrent offsetY. (OffsetY 1: " + offsetY1 + ", OffsetY 2: "
-          + offsetY2 + ")";
+      String errorMessage = "Diffrent offsetY. (OffsetY 1: " + offsetY1 + ", OffsetY 2: " + offsetY2 + ")";
       System.out.println( "Error: " + errorMessage );
       throw new Exception( errorMessage );
     }

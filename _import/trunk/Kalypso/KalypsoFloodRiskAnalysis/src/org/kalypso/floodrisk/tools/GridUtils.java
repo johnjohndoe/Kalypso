@@ -76,12 +76,13 @@ public abstract class GridUtils
   /**
    * exports a RectifiedGridCoverage to an Ascii-Grid
    * 
-   * @param out ascii output file
-   * @param grid RectifiedGridCoverage to export
+   * @param out
+   *          ascii output file
+   * @param grid
+   *          RectifiedGridCoverage to export
    * @throws Exception
    */
-  public static void exportGridArc( File out, RectifiedGridCoverage grid )
-      throws Exception
+  public static void exportGridArc( File out, RectifiedGridCoverage grid ) throws Exception
   {
     BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
     RectifiedGridDomain gridDomain = grid.getGridDomain();
@@ -96,9 +97,8 @@ public abstract class GridUtils
     Vector rangeSetData = rangeSet.getRangeSetData();
     try
     {
-      bw.write( "ncols " + nCols + "\nnrows " + nRows + "\nxllcorner "
-          + originX + "\nyllcorner " + originY + "\ncellsize " + offsetX
-          + "\nnodata_value " + nodata );
+      bw.write( "ncols " + nCols + "\nnrows " + nRows + "\nxllcorner " + originX + "\nyllcorner " + originY
+          + "\ncellsize " + offsetX + "\nnodata_value " + nodata );
       bw.newLine();
 
       for( int i = 0; i < rangeSetData.size(); i++ )
@@ -109,8 +109,7 @@ public abstract class GridUtils
           if( rowData.get( j ) != null )
           {
             double value = ( (Double)rowData.get( j ) ).doubleValue();
-            double roundValue = Number.round( value, 6,
-                BigDecimal.ROUND_HALF_EVEN );
+            double roundValue = Number.round( value, 6, BigDecimal.ROUND_HALF_EVEN );
             bw.write( roundValue + " " );
           }
           else
@@ -141,12 +140,13 @@ public abstract class GridUtils
   /**
    * imports an ascii-grid file
    * 
-   * @param in input file (*.asc)
-   * @param cs the coordinate system for the geometric data of the ascii-grid
+   * @param in
+   *          input file (*.asc)
+   * @param cs
+   *          the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridCoverage importGridArc( File in,
-      CS_CoordinateSystem cs )
+  public static RectifiedGridCoverage importGridArc( File in, CS_CoordinateSystem cs )
   {
     int nCols = 0;
     int nRows = 0;
@@ -203,8 +203,7 @@ public abstract class GridUtils
         nCols,
         nRows };
     GridRange gridRange = new GridRange_Impl( low, high );
-    RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offset,
-        gridRange );
+    RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offset, gridRange );
     //String[] dataAsString = rangeData.toString().split(" ");
     for( int i = 0; i < nRows; i++ )
     {
@@ -217,8 +216,7 @@ public abstract class GridUtils
         }
         else
         {
-          double actualValue = Double.parseDouble( (String)rangeData.get( n
-              + ( i * nCols ) ) );
+          double actualValue = Double.parseDouble( (String)rangeData.get( n + ( i * nCols ) ) );
           rowData.addElement( new Double( actualValue ) );
         }
       }
@@ -227,8 +225,7 @@ public abstract class GridUtils
       rangeSetData.addElement( rowData );
     }
     RangeSet rangeSet = new RangeSet( rangeSetData, null );
-    RectifiedGridCoverage grid = new RectifiedGridCoverage( gridDomain,
-        rangeSet );
+    RectifiedGridCoverage grid = new RectifiedGridCoverage( gridDomain, rangeSet );
     return grid;
   }
 
@@ -240,23 +237,19 @@ public abstract class GridUtils
    * @throws Exception
    *  
    */
-  public static RectifiedGridCoverage readRasterData( File rasterDataModelGML )
-      throws Exception
+  public static RectifiedGridCoverage readRasterData( File rasterDataModelGML ) throws Exception
   {
-    return rasterDataModel
-        .getRectifiedGridCoverage( rasterDataModelGML.toURL() );
+    return rasterDataModel.getRectifiedGridCoverage( rasterDataModelGML.toURL() );
   }
 
   /**
-   * @see org.kalypso.floodrisk.data.RasterDataModel#toFile(File,
-   *      RectifiedGridCoverage)
+   * @see org.kalypso.floodrisk.data.RasterDataModel#toFile(File, RectifiedGridCoverage)
    * @param rasterDataModelGML
    * @param grid
    * @throws Exception
    *  
    */
-  public static void writeRasterData( File rasterDataModelGML,
-      RectifiedGridCoverage grid ) throws Exception
+  public static void writeRasterData( File rasterDataModelGML, RectifiedGridCoverage grid ) throws Exception
   {
     rasterDataModel.toFile( rasterDataModelGML, grid );
   }

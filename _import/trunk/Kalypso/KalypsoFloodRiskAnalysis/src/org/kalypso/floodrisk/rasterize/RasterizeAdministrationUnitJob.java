@@ -63,9 +63,12 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 /**
  * 
  * RasterizeAdministrationUnitJob
- * <p>Job for rastering the administration vector data
+ * <p>
+ * Job for rastering the administration vector data
  * 
- * created by @author Nadja Peiler (15.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (15.06.2005)
  */
 public class RasterizeAdministrationUnitJob implements ICalcJob
 {
@@ -89,12 +92,10 @@ public class RasterizeAdministrationUnitJob implements ICalcJob
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider,
-      ICalcResultEater resultEater, ICalcMonitor monitor )
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
     try
@@ -102,32 +103,29 @@ public class RasterizeAdministrationUnitJob implements ICalcJob
       monitor.setMessage( "Lese Eingabedateien" );
 
       //administrationUnitVectorData: featureList
-      URL administrationUnitVectorDataGML = inputProvider
-          .getURLForID( AdministrationUnitDataID );
+      URL administrationUnitVectorDataGML = inputProvider.getURLForID( AdministrationUnitDataID );
       GMLWorkspace administrationUnitVectorData;
-      administrationUnitVectorData = GmlSerializer
-          .createGMLWorkspace( administrationUnitVectorDataGML );
+      administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML );
       FeaturePath featureMember = new FeaturePath( "FeatureMember" );
       List featureList = (List)featureMember.getFeature( administrationUnitVectorData );
-      
+
       //contextModel: administrationUnitTypeList
       URL contextModelGML = inputProvider.getURLForID( ContextModelID );
       Hashtable administrationUnitTypeList;
       ContextModel contextModel = new ContextModel( contextModelGML );
       administrationUnitTypeList = contextModel.getAdministrationUnitList();
-      
+
       //baseRaster
       URL baseRasterGML = inputProvider.getURLForID( BaseRasterID );
       RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage baseRaster = rasterDataModel
-          .getRectifiedGridCoverage( baseRasterGML );
-      
-      monitor.setMessage( "Berechne" );
-      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid(
-          featureList, administrationUnitTypeList, baseRaster, monitor );
+      RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
-      CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
-          .getOutputMap().get( AdministrationUnitRasterDataID );
+      monitor.setMessage( "Berechne" );
+      RectifiedGridCoverage resultGrid = VectorToGridConverter.toGrid( featureList, administrationUnitTypeList,
+          baseRaster, monitor );
+
+      CalcJobClientBean outputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater ).getOutputMap().get(
+          AdministrationUnitRasterDataID );
       File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();

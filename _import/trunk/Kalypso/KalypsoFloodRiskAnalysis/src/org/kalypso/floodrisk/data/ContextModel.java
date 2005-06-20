@@ -50,8 +50,7 @@ public class ContextModel
   /**
    * returns the LanduseTypeList of this ContextModel
    * 
-   * @return LanduseTypeList (key=Name of LanduseType (String),
-   *         value=landuseTypeKey (Integer))
+   * @return LanduseTypeList (key=Name of LanduseType (String), value=landuseTypeKey (Integer))
    */
   public Hashtable getLanduseList()
   {
@@ -77,8 +76,7 @@ public class ContextModel
   /**
    * returns the AdministrationUnitList of this ContextModel
    * 
-   * @return AdministrationUnitList (key=Name of AdministrationUnit (String),
-   *         value=administrationUnitKey (Integer))
+   * @return AdministrationUnitList (key=Name of AdministrationUnit (String), value=administrationUnitKey (Integer))
    */
   public Hashtable getAdministrationUnitList()
   {
@@ -86,10 +84,8 @@ public class ContextModel
     if( rootFeature.getProperty( "AdministrationUnitCollectionMember" ) != null )
     {
       administrationUnitList = new Hashtable();
-      Feature administrationUnitCollection = (Feature)rootFeature
-          .getProperty( "AdministrationUnitCollectionMember" );
-      Object administrationUnitMemberList = administrationUnitCollection
-          .getProperty( "AdministrationUnitMember" );
+      Feature administrationUnitCollection = (Feature)rootFeature.getProperty( "AdministrationUnitCollectionMember" );
+      Object administrationUnitMemberList = administrationUnitCollection.getProperty( "AdministrationUnitMember" );
       if( administrationUnitMemberList instanceof List )
       {
         List list = (List)administrationUnitMemberList;
@@ -110,16 +106,14 @@ public class ContextModel
   /**
    * returns the DamageFunctionList for this ContextModel
    * 
-   * @return DamageFunctionList (key=landuseTypeKey (String), DamageFunction
-   *         (ParseFunction))
+   * @return DamageFunctionList (key=landuseTypeKey (String), DamageFunction (ParseFunction))
    */
   public Hashtable getDamageFunctionList()
   {
     Hashtable damageFunctionList = new Hashtable();
     Feature damageFunctionMappingCollection = (Feature)rootFeature
         .getProperty( "DamageFunctionMappingCollectionMember" );
-    Object mappingList = damageFunctionMappingCollection
-        .getProperty( "DamageFunctionMappingMember" );
+    Object mappingList = damageFunctionMappingCollection.getProperty( "DamageFunctionMappingMember" );
     if( mappingList instanceof List )
     {
       List list = (List)mappingList;
@@ -136,11 +130,9 @@ public class ContextModel
           ParseFunction parseFunction = new ParseFunction( function );
           if( parseFunction.parse() )
           {
-            damageFunctionList.put( getID( landuseFID, landuse[j].getFeatureType() ).toString(),
-                parseFunction );
+            damageFunctionList.put( getID( landuseFID, landuse[j].getFeatureType() ).toString(), parseFunction );
           }
-          System.out.println( "Function=" + function + ", Landuse="
-              + landuse[j].getProperty( "Name" ) );
+          System.out.println( "Function=" + function + ", Landuse=" + landuse[j].getProperty( "Name" ) );
         }
       }
     }
@@ -150,15 +142,13 @@ public class ContextModel
   /**
    * returns the AssetValueList for this ContextModel
    * 
-   * @return AssetValueList if(administrationUnitLink!=null){
-   *         (key="landuseTypeKey,administrationUnitKey"(String),
+   * @return AssetValueList if(administrationUnitLink!=null){ (key="landuseTypeKey,administrationUnitKey"(String),
    *         value=asset(Double)) }else{ (key=landuseTypeKey(String),
    */
   public Hashtable getAssetValueList()
   {
     Hashtable assetValueList = new Hashtable();
-    Feature assetValueMappingCollection = (Feature)rootFeature
-        .getProperty( "AssetValueMappingCollectionMember" );
+    Feature assetValueMappingCollection = (Feature)rootFeature.getProperty( "AssetValueMappingCollectionMember" );
     Object mappingList = assetValueMappingCollection.getProperty( "AssetValueMappingMember" );
     if( mappingList instanceof List )
     {
@@ -201,6 +191,7 @@ public class ContextModel
 
   /**
    * returns the IntegerValue of the featureID (Format: "Name_ID")
+   * 
    * @deprecated should use getID( String fid, FeatureType featureType )
    * 
    * @param fid
@@ -218,8 +209,7 @@ public class ContextModel
    * returns the IntegerValue of the featureID (Format: "FeatureTypeNameID")
    * 
    * @param fid
-   *          featureID (Format: "FeatureTypeNameID") analog GMLWorkspace_Impl
-   *          createFeatureID
+   *          featureID (Format: "FeatureTypeNameID") analog GMLWorkspace_Impl createFeatureID
    * @param featureType
    *          featureType of the feature
    * @return ID as Integer

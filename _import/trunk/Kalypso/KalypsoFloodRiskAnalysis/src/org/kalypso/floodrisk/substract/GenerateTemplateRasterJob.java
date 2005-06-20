@@ -58,9 +58,12 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 /**
  * 
  * GenerateTemplateRasterJob
- * <p>Job for generating TemplateRaster
+ * <p>
+ * Job for generating TemplateRaster
  * 
- * created by @author Nadja Peiler (17.06.2005)
+ * created by
+ * 
+ * @author Nadja Peiler (17.06.2005)
  */
 public class GenerateTemplateRasterJob implements ICalcJob
 {
@@ -79,12 +82,10 @@ public class GenerateTemplateRasterJob implements ICalcJob
   /**
    * 
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider,
-      ICalcResultEater resultEater, ICalcMonitor monitor )
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
     try
@@ -92,18 +93,15 @@ public class GenerateTemplateRasterJob implements ICalcJob
       //Generate input
       //Raster1
       URL raster1GML = inputProvider.getURLForID( Raster1ID );
-      RectifiedGridCoverage raster1 = rasterDataModel
-          .getRectifiedGridCoverage( raster1GML );
+      RectifiedGridCoverage raster1 = rasterDataModel.getRectifiedGridCoverage( raster1GML );
 
       //Raster2
       URL raster2GML = inputProvider.getURLForID( Raster2ID );
-      RectifiedGridCoverage raster2 = rasterDataModel
-          .getRectifiedGridCoverage( raster2GML );
+      RectifiedGridCoverage raster2 = rasterDataModel.getRectifiedGridCoverage( raster2GML );
 
       //Calculation
       //substract Grids
-      RectifiedGridCoverage templateRaster = RasterTools.substractGrids(
-          raster1, raster2 );
+      RectifiedGridCoverage templateRaster = RasterTools.substractGrids( raster1, raster2 );
 
       //Generate output
       //template raster
@@ -117,13 +115,11 @@ public class GenerateTemplateRasterJob implements ICalcJob
     }
     catch( MalformedURLException e )
     {
-      throw new CalcJobServiceException(
-          "CalculateDamageJob Service Exception: Malformed URL", e );
+      throw new CalcJobServiceException( "CalculateDamageJob Service Exception: Malformed URL", e );
     }
     catch( Exception e )
     {
-      throw new CalcJobServiceException(
-          "CalculateDamageJob Service Exception", e );
+      throw new CalcJobServiceException( "CalculateDamageJob Service Exception", e );
     }
   }
 

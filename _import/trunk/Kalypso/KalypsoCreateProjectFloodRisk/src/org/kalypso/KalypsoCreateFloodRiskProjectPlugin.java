@@ -99,8 +99,7 @@ public class KalypsoCreateFloodRiskProjectPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not
-   * found.
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
   public static String getResourceString( String key )
   {

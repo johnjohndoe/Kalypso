@@ -1,30 +1,25 @@
 /*
- * --------------- Kalypso-Header
- * --------------------------------------------------------------------
+ * --------------- Kalypso-Header --------------------------------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -77,8 +72,7 @@ public class ProcessInputWizardPage extends WizardPage
    * @param title
    * @param titleImage
    */
-  protected ProcessInputWizardPage( String pageName, String title,
-      ImageDescriptor titleImage )
+  protected ProcessInputWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     setPageComplete( false );
@@ -158,11 +152,10 @@ public class ProcessInputWizardPage extends WizardPage
     setControl( m_topLevel );
   }
 
-  KalypsoResourceSelectionDialog createResourceDialog(
-      String[] fileResourceExtensions )
+  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project,
-        "Select modelData", fileResourceExtensions, m_project );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select modelData", fileResourceExtensions,
+        m_project );
   }
 
   /**
@@ -187,8 +180,7 @@ public class ProcessInputWizardPage extends WizardPage
     boolean pageComplete = true;
 
     // modelData
-    if( m_textModelData.getText() != null
-        && m_textModelData.getText().length() > 0 )
+    if( m_textModelData.getText() != null && m_textModelData.getText().length() > 0 )
     {
       //ok
     }

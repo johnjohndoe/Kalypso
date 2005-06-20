@@ -78,16 +78,15 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * SelectLanduseWizardPage
  * <p>
- * Select: shape file (landuse), coordinate system, name of property to raster
- * and selection automatically create landuseCollection
+ * Select: shape file (landuse), coordinate system, name of property to raster and selection automatically create
+ * landuseCollection
  * 
  * created by
  * 
  * @author Nadja Peiler (19.06.2005)
  */
 
-public class SelectLanduseWizardPage extends WizardPage implements
-    FocusListener
+public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 {
 
   private Composite m_topLevel;
@@ -98,8 +97,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
 
   File m_file;
 
-  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() )
-      .getKnownCS();
+  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
 
@@ -115,8 +113,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
 
   public SelectLanduseWizardPage()
   {
-    super( "page_type:landuse", "Landnutzungsdaten einlesen",
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    super( "page_type:landuse", "Landnutzungsdaten einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     setDescription( "Landuse WizardPage" );
     setPageComplete( false );
   }
@@ -187,8 +184,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
           m_file = new File( filePath );
           if( m_file.exists() )
           {
-            loadLanduseProperties( FileUtilities.nameWithoutExtension( m_file
-                .toString() ) );
+            loadLanduseProperties( FileUtilities.nameWithoutExtension( m_file.toString() ) );
             landusePropLabel.setEnabled( true );
             landusePropCombo.setEnabled( true );
           }
@@ -205,8 +201,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
     csCombo.setItems( coordinateSystems );
     try
     {
-      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem().getName();
+      selectedCoordinateSystemName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
     }
     catch( RemoteException e1 )
     {
@@ -361,8 +356,7 @@ public class SelectLanduseWizardPage extends WizardPage implements
 
     if( selectedCoordinateSystemName != null )
     {
-      selectedCoordinateSystem = ConvenienceCSFactory.getInstance()
-          .getOGCCSByName( selectedCoordinateSystemName );
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
         error.append( "Koordinatensystem existiert nicht\n\n" );

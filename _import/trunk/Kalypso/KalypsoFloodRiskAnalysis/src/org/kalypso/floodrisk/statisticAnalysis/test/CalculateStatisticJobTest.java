@@ -73,7 +73,7 @@ public class CalculateStatisticJobTest extends TestCase
         new DeegreeUrlCatalog(),
         new UrlCatalogFloodRisk() } );
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
-    
+
     //  register typeHandler
     final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
     try
@@ -99,8 +99,8 @@ public class CalculateStatisticJobTest extends TestCase
     CalcJobClientBean input1 = new CalcJobClientBean( CalculateStatisticJob.DamageRasterID, base
         + "Damage//annualDamage.gml" );
     input[0] = input1;
-    CalcJobClientBean input2 = new CalcJobClientBean( CalculateStatisticJob.LanduseRasterDataID,
-        base + "Landuse//landuseData.gml" );
+    CalcJobClientBean input2 = new CalcJobClientBean( CalculateStatisticJob.LanduseRasterDataID, base
+        + "Landuse//landuseData.gml" );
     input[1] = input2;
     CalcJobClientBean input3 = new CalcJobClientBean( CalculateStatisticJob.ContextModelID, base
         + "Control//contextModell.gml" );
@@ -114,8 +114,8 @@ public class CalculateStatisticJobTest extends TestCase
     output[0] = output1;
     ProcessResultEater resultEater = new ProcessResultEater( output );
 
-    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateStatisticJob",
-        ICalcServiceConstants.RUNNING, -1, "" );
+    CalcJobInfoBean jobBean = new CalcJobInfoBean( "", "", "CalculateStatisticJob", ICalcServiceConstants.RUNNING, -1,
+        "" );
 
     try
     {
