@@ -42,38 +42,42 @@ public class CsvSourceHandler implements ISourceHandler
   public GMLWorkspace getWorkspace() throws GmlConvertException
   {
     final String href = m_type.getHref();
-    
+
     final CsvFeatureReader reader = new CsvFeatureReader();
-    
+
     final List propList = m_type.getFeatureproperty();
     for( final Iterator propIt = propList.iterator(); propIt.hasNext(); )
     {
       final CsvSourceType.FeaturepropertyType element = (CsvSourceType.FeaturepropertyType)propIt.next();
-      
+
       final List columnList = element.getColumn();
       final int[] columns = new int[columnList.size()];
       for( int i = 0; i < columnList.size(); i++ )
       {
-        final CsvSourceType.FeaturepropertyType.Column col = (CsvSourceType.FeaturepropertyType.Column)columnList.get( i );
+        final CsvSourceType.FeaturepropertyType.Column col = (CsvSourceType.FeaturepropertyType.Column)columnList
+            .get( i );
         columns[i] = col.getValue();
       }
-      
-      final FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( element.getName(), "namespace", element.getType(), false, null );
-      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
+
+      final FeatureTypeProperty ftp = FeatureFactory.createFeatureTypeProperty( element.getName(), "namespace", element
+          .getType(), false, null );
+      final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element
+          .isIgnoreFormatExceptions() );
       reader.addInfo( ftp, info );
     }
-    
+
     InputStream stream = null;
     try
     {
       final URL url = m_resolver.resolveURL( m_context, href );
-      
+
       final URLConnection connection = url.openConnection();
       stream = connection.getInputStream();
 
       final String encoding = connection.getContentEncoding();
-      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
-      
+      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream,
+          encoding );
+
       return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter(), m_type.getLineskip() );
     }
     catch( final Exception e )

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
@@ -60,11 +60,14 @@ import org.kalypso.util.xml.xlink.IXlink;
 public abstract class AbstractObservationFilter implements IObservationFilter
 {
   protected IObservation m_obs = null;
+
   protected Object m_conf = null;
+
   protected URL m_context = null;
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation, java.net.URL)
+   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
@@ -77,72 +80,71 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.equals( obj );
   }
 
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getAxisList();
   }
 
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getIdentifier();
   }
 
-  public MetadataList getMetadataList( )
+  public MetadataList getMetadataList()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getMetadataList();
   }
 
-  public String getName( )
+  public String getName()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getName();
   }
 
-  public IXlink getTarget( )
+  public IXlink getTarget()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getTarget();
   }
 
-  public ITuppleModel getValues( IVariableArguments args )
-      throws SensorException
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getValues( args );
   }
 
-  public int hashCode( )
+  public int hashCode()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.hashCode();
   }
 
-  public boolean isEditable( )
+  public boolean isEditable()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.isEditable();
   }
 
@@ -150,47 +152,47 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     m_obs.setValues( values );
   }
 
-  public String toString( )
+  public String toString()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.toString();
   }
-  
+
   public void addListener( IObservationListener listener )
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     m_obs.addListener( listener );
   }
-  
+
   public void removeListener( IObservationListener listener )
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     m_obs.removeListener( listener );
   }
-  
-  public void clearListeners( )
+
+  public void clearListeners()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
-    m_obs.clearListeners( );
+
+    m_obs.clearListeners();
   }
-  
-  public String getHref( )
+
+  public String getHref()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
-    
+
     return m_obs.getHref();
   }
 }

@@ -130,7 +130,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureType;
   }
 
-  public void paintSelected( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final int selectionId )
+  public void paintSelected( final Graphics graphics, final GeoTransform projection, final double scale,
+      final GM_Envelope bbox, final int selectionId )
   {
     for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
@@ -139,8 +140,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
-  public void paintSelected( final Graphics graphics, Graphics hg, final GeoTransform projection, final double scale, final GM_Envelope bbox,
-      final int selectionId )
+  public void paintSelected( final Graphics graphics, Graphics hg, final GeoTransform projection, final double scale,
+      final GM_Envelope bbox, final int selectionId )
   {
     for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
@@ -265,14 +266,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       StyleDisplayMap map = (StyleDisplayMap)iter.next();
       map.queryVisibleFeatures( env, result );
     }
-    final FeatureList list = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
+    final FeatureList list = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList
+        .getParentFeatureTypeProperty() );
     list.addAll( result );
     return list;
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -378,8 +379,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
     {
       restyle( bbox );
-      final List selectedDE = m_dispayElements; 
-//        getSelectedDisplayElements( null, selectionId, bbox );
+      final List selectedDE = m_dispayElements;
+      //        getSelectedDisplayElements( null, selectionId, bbox );
       final List[] layerList = new List[m_maxDisplayArray];
       // try to keep order of rules in userstyle
       for( int i = 0; i < layerList.length; i++ )

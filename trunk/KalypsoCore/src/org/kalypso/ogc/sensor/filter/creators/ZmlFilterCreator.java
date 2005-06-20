@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
 import java.net.URL;
@@ -57,17 +57,17 @@ import org.kalypso.zml.filters.ZmlFilterType;
  */
 public final class ZmlFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( final AbstractFilterType aft,
-      final IObservation obs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation obs, final URL context )
+      throws SensorException
   {
-    if( !(aft instanceof ZmlFilterType) )
+    if( !( aft instanceof ZmlFilterType ) )
       throw new IllegalArgumentException( "Not a " + ZmlFilterType.class.getName() );
-    
-    final ZmlFilterType ft = (ZmlFilterType) aft;
+
+    final ZmlFilterType ft = (ZmlFilterType)aft;
 
     final ZmlFilter filter = new ZmlFilter();
     filter.initFilter( ft.getZml().getHref(), obs, context );
-    
+
     return filter;
   }
 }

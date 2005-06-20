@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
@@ -54,19 +54,19 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
 {
   public void dispose();
-  
-  public void paintSelected( final Graphics g, final GeoTransform p, final double scale,
-      final GM_Envelope bbox, final int selectionId );
-  
+
+  public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox,
+      final int selectionId );
+
   /**
    * returns the name of the layer
    */
   public String getName();
-  
+
   public String getType();
-  
+
   public void setName( final String name );
-  
+
   public GM_Envelope getBoundingBox();
 
   public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId );

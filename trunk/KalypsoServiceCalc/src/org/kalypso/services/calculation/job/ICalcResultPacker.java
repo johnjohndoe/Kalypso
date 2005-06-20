@@ -48,9 +48,8 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * <p>
- * Erweiterung des Eaters für das serverseitige Framework. Sammelt die Dateien,
- * die später gelöscht werden sollen, das ist aber nur für internen gebrauch
- * gedacht.
+ * Erweiterung des Eaters für das serverseitige Framework. Sammelt die Dateien, die später gelöscht werden sollen, das
+ * ist aber nur für internen gebrauch gedacht.
  * </p>
  * 
  * @author belger
@@ -68,14 +67,12 @@ public interface ICalcResultPacker extends ICalcResultEater
   public DataHandler packCurrentResults() throws CalcJobServiceException;
 
   /**
-   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch
-   * gedacht.
+   * Dateien sammeln, um diese später zu löschen. Nur für interen Gebrauch gedacht.
    */
   public void addFile( final File file );
 
   /**
-   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird
-   * auch der Inhalt rekursiv gelöscht.
+   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird auch der Inhalt rekursiv gelöscht.
    */
   public void disposeFiles();
 }

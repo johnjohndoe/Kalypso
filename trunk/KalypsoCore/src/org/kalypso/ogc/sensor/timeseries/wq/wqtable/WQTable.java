@@ -19,8 +19,7 @@ public class WQTable
 
   private final TreeSet m_wSortedPairs;
 
-  private final static WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException(
-      "Kann nicht interpolieren" );
+  private final static WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException( "Kann nicht interpolieren" );
 
   private final LinearEquation EQ = new LinearEquation();
 
@@ -75,12 +74,11 @@ public class WQTable
    * @param W
    * @param Q
    */
-  public WQTable( final Date validity, final int offset, final double[] W,
-      final double[] Q )
+  public WQTable( final Date validity, final int offset, final double[] W, final double[] Q )
   {
     this( validity, offset, WQPair.convert2pairs( W, Q ) );
   }
-  
+
   /**
    * Creates a WQTable with a default offset of 0
    * 
@@ -102,12 +100,11 @@ public class WQTable
    * @param W
    * @param Q
    */
-  public WQTable( final Date validity, final int offset, final Number[] W,
-      final Number[] Q )
+  public WQTable( final Date validity, final int offset, final Number[] W, final Number[] Q )
   {
     this( validity, offset, WQPair.convert2pairs( W, Q ) );
   }
-  
+
   /**
    * Creates a WQTable
    * 
@@ -142,8 +139,8 @@ public class WQTable
       throw CANNOT_INTERPOLATE_EXCEPTION; // TODO check if exception should be
     // thrown or a value be returned
 
-    final WQPair p1 = (WQPair) headSet.last();
-    final WQPair p2 = (WQPair) tailSet.first();
+    final WQPair p1 = (WQPair)headSet.last();
+    final WQPair p2 = (WQPair)tailSet.first();
 
     try
     {
@@ -167,8 +164,8 @@ public class WQTable
       throw CANNOT_INTERPOLATE_EXCEPTION; // TODO check if exception should be
     // thrown or a value be returned
 
-    final WQPair p1 = (WQPair) headSet.last();
-    final WQPair p2 = (WQPair) tailSet.first();
+    final WQPair p1 = (WQPair)headSet.last();
+    final WQPair p2 = (WQPair)tailSet.first();
 
     try
     {
@@ -182,16 +179,16 @@ public class WQTable
     return EQ.computeY( w );
   }
 
-  public Date getValidity( )
+  public Date getValidity()
   {
     return m_validity;
   }
 
-  public int getOffset( )
+  public int getOffset()
   {
     return m_offset;
   }
-  
+
   public void setOffset( int offset )
   {
     m_offset = offset;
@@ -200,19 +197,18 @@ public class WQTable
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     final StringBuffer sb = new StringBuffer();
 
-    sb.append( "Validity: " ).append( m_validity ).append( " Offset: " )
-        .append( m_offset ).append( "\n" ).append( m_wSortedPairs ).append(
-            "\n" );
+    sb.append( "Validity: " ).append( m_validity ).append( " Offset: " ).append( m_offset ).append( "\n" ).append(
+        m_wSortedPairs ).append( "\n" );
 
     return sb.toString();
   }
 
-  public WQPair[] getPairs( )
+  public WQPair[] getPairs()
   {
-    return (WQPair[]) m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
+    return (WQPair[])m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
   }
 }

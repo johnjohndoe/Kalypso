@@ -55,10 +55,9 @@ import org.kalypso.ogc.util.CopyObservationHandler;
 import org.kalypso.util.UrlResolver;
 
 /**
- * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist
- * es, alle Features eines GML durchzugehen, und für jedes Feature eine
- * Zeitreihe (definiert über einen Link) zu lesen und an eine andere Stelle
- * (definiert durch eine andere Property des Features) zu schreiben.
+ * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist es, alle Features eines GML durchzugehen,
+ * und für jedes Feature eine Zeitreihe (definiert über einen Link) zu lesen und an eine andere Stelle (definiert durch
+ * eine andere Property des Features) zu schreiben.
  * 
  * <code>
  *    <copyObservation gml="${project.dir}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="Wiski" context="${calc.dir}" targetObservation="lokal">
@@ -74,8 +73,7 @@ public class CopyObservationTask extends Task
   private String m_gml;
 
   /**
-   * Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten
-   * Features werden behandelt.
+   * Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten Features werden behandelt.
    */
   private String m_featurePath;
 
@@ -83,28 +81,25 @@ public class CopyObservationTask extends Task
   private URL m_context;
 
   /**
-   * Name der Feature-Property, welche den Link enthält, an welche Stelle das
-   * Ergebnis geschrieben wird.
+   * Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird.
    */
   private String m_targetobservation;
 
   /**
-   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu
-   * generieren Default mit -1 damit getestet werden kann ob die Eigenschaft
-   * gesetzt wurde.
+   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private long m_forecastFrom = -1;
 
   /**
-   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu
-   * generieren Default mit -1 damit getestet werden kann ob die Eigenschaft
-   * gesetzt wurde.
+   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private long m_forecastTo = -1;
 
   /**
-   * Ordered List of 'Source' Elements. Each source will be read as Observation,
-   * the combination of all sources will be written to 'targetobservation'
+   * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
+   * written to 'targetobservation'
    */
   private List m_sources = new LinkedList();
 
@@ -129,10 +124,9 @@ public class CopyObservationTask extends Task
       if( m_forecastTo != -1 )
         forecastTo = new Date( m_forecastTo );
 
-      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(),
-          getTargetobservation(), getContext(), (CopyObservationHandler.Source[])m_sources
-              .toArray( new CopyObservationHandler.Source[m_sources.size()] ), forecastFrom,
-          forecastTo, logPW );
+      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(),
+          getContext(), (CopyObservationHandler.Source[])m_sources.toArray( new CopyObservationHandler.Source[m_sources
+              .size()] ), forecastFrom, forecastTo, logPW );
 
       logPW.close();
 
@@ -197,8 +191,8 @@ public class CopyObservationTask extends Task
     final Date toDate = new Date( to );
 
     getProject().log(
-        "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to="
-            + toDate.toString(), Project.MSG_DEBUG );
+        "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(),
+        Project.MSG_DEBUG );
 
     m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate ) );
   }

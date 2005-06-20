@@ -1,4 +1,4 @@
-///*--------------- Kalypso-Header --------------------------------------------------------------------
+// /*--------------- Kalypso-Header --------------------------------------------------------------------
 //
 // This file is part of kalypso.
 // Copyright (C) 2004, 2005 by:
@@ -23,12 +23,12 @@
 //
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 // Contact:
 //
@@ -50,13 +50,13 @@
 // */
 //public class CreateFeatureCommand implements ICommand
 //{
-////  private final Feature[] m_features;
-////  private final GMLWorkspace m_workspace;
+//// private final Feature[] m_features;
+//// private final GMLWorkspace m_workspace;
 //  
 //  public CreateFeatureCommand( final GMLWorkspace workspace, final Feature[] features )
 //  {
-////    m_workspace = workspace;
-////    m_features = features;
+//// m_workspace = workspace;
+//// m_features = features;
 //    workspace.getClass();
 //    features.getClass();
 //  }
@@ -82,7 +82,7 @@
 //   */
 //  public void redo() throws Exception
 //  {
-////    m_layer.addFeatures(m_features);
+//// m_layer.addFeatures(m_features);
 //  }
 //
 //  /**
@@ -90,7 +90,7 @@
 //   */
 //  public void undo() throws Exception
 //  {
-////    m_layer.removeFeatures(m_features);
+//// m_layer.removeFeatures(m_features);
 //  }
 //
 //  /**

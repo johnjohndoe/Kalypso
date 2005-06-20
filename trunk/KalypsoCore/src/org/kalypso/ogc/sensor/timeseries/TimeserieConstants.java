@@ -99,7 +99,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   // METADATEN
 
   public final static String MD_TIMEZONE = "Zeitzone";
-  
+
   public final static String MD_WQWECHMANN = "WQ-Parameter";
 
   public final static String MD_WQTABLE = "WQ-Tabelle";
@@ -125,13 +125,12 @@ public abstract class TimeserieConstants implements ObservationConstants
   public final static String MD_FLUSSGEBIET = "Flussgebiet";
 
   public final static String MD_GEWAESSER = "Gewässer";
-  
+
   /** Stationskennziffer */
   public final static String MD_KENNZIFFER = "Kennziffer";
 
   /**
-   * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true),
-   * handelt es sich um eine Vorhersage Zeitreihe.
+   * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
    */
   public final static String MD_VORHERSAGE = "Vorhersage";
 

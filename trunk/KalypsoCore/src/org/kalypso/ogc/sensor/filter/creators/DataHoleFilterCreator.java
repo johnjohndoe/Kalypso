@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
 import java.net.URL;
@@ -57,23 +57,24 @@ import org.kalypso.zml.filters.DataholeFilterType;
  */
 public class DataHoleFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, URL context ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, URL context )
+      throws SensorException
   {
-    if( !(aft instanceof DataholeFilterType) )
+    if( !( aft instanceof DataholeFilterType ) )
       throw new IllegalArgumentException( "Not a " + DataholeFilterType.class.getName() );
-    
-    final DataholeFilterType ft = (DataholeFilterType) aft;
+
+    final DataholeFilterType ft = (DataholeFilterType)aft;
 
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
-	
+
     Double replaceWith = null;
     if( ft.isReplace() )
       replaceWith = new Double( ft.getReplaceWith() );
-    
+
     final DataHoleFilter filter = new DataHoleFilter( ft.getValue(), ft.getStatus(), replaceWith );
-    
+
     filter.initFilter( null, filteredObs, context );
-    
-    return filter;  
+
+    return filter;
   }
 }

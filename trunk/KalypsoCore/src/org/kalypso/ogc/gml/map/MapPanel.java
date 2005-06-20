@@ -70,8 +70,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author vdoemming
  *  
  */
-public class MapPanel extends Canvas implements IMapModellView, ComponentListener,
-    ModellEventProvider
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider
 {
   private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
 
@@ -119,13 +118,12 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_wishBBox;
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs,
-      final int selectionID )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final int selectionID )
   {
     m_selectionID = selectionID;
 
     // set empty Modell:
-    setMapModell( new MapModell( crs , null) );
+    setMapModell( new MapModell( crs, null ) );
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
@@ -196,25 +194,21 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final Rectangle clipBounds = g.getClipBounds();
       if( clipBounds != null )
       {
-        mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(),
-            clipBounds, getWidth(), getHeight(), model, m_selectionID );
+        mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
+            getHeight(), model, m_selectionID );
         setValidMap( mapImage != null );
       }
     }
 
     // paint selection ?
     /*
-     * if( !hasValidSelection() ) { selectionImage = new BufferedImage(
-     * getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB ); Graphics gr =
-     * selectionImage.getGraphics(); gr.setClip( 0, 0, getWidth(), getHeight() );
-     * try { setValidSelection( true ); //myMapView.paintSelected( gr ); }
-     * catch( Exception e ) { e.printStackTrace(); } gr.dispose(); } // paint
-     * highlights ? if( !hasValidHighlight() ) { highlightImage = new
-     * BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB );
-     * Graphics gr = highlightImage.getGraphics(); gr.setClip( 0, 0, getWidth(),
-     * getHeight() ); try { setValidHighlight( true );
-     * //myMapView.paintHighlighted( gr ); } catch( Exception e ) {
-     * e.printStackTrace(); } gr.dispose(); }
+     * if( !hasValidSelection() ) { selectionImage = new BufferedImage( getWidth(), getHeight(),
+     * BufferedImage.TYPE_INT_ARGB ); Graphics gr = selectionImage.getGraphics(); gr.setClip( 0, 0, getWidth(),
+     * getHeight() ); try { setValidSelection( true ); //myMapView.paintSelected( gr ); } catch( Exception e ) {
+     * e.printStackTrace(); } gr.dispose(); } // paint highlights ? if( !hasValidHighlight() ) { highlightImage = new
+     * BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB ); Graphics gr =
+     * highlightImage.getGraphics(); gr.setClip( 0, 0, getWidth(), getHeight() ); try { setValidHighlight( true );
+     * //myMapView.paintHighlighted( gr ); } catch( Exception e ) { e.printStackTrace(); } gr.dispose(); }
      */
     if( xOffset != 0 && yOffset != 0 ) // to clear backround ...
     {
@@ -324,8 +318,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   }
 
   /**
-   * calculates the current map scale (denominator) as defined in the OGC SLD
-   * 1.0.0 specification
+   * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
    * 
    * @return scale of the map
    */
@@ -349,11 +342,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_wishBBox = wishBBox;
     m_boundingBox = adjustBoundingBox( m_wishBBox );
     m_projection.setSourceRect( m_boundingBox );
-    /*if( m_model != null )
-    {
-      if( m_model.getCoordinatesSystem() != null )
-        m_projection.setSourceCS( m_model.getCoordinatesSystem() );
-    }*/
+    /*
+     * if( m_model != null ) { if( m_model.getCoordinatesSystem() != null ) m_projection.setSourceCS(
+     * m_model.getCoordinatesSystem() ); }
+     */
     // redraw
     onModellChange( null );
   }

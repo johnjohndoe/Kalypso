@@ -70,24 +70,21 @@ import org.kalypso.zml.filters.valuecomp.SmallerValueCompType;
  */
 public class ValueFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( final AbstractFilterType aft,
-      final IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
+      throws SensorException
   {
     if( !( aft instanceof ValueFilterType ) )
-      throw new IllegalArgumentException( "Not a "
-          + ValueFilterType.class.getName() );
+      throw new IllegalArgumentException( "Not a " + ValueFilterType.class.getName() );
 
     final ValueFilterType ft = (ValueFilterType)aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft
-        .getFilter(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
 
     final ValueFilter filter = new ValueFilter();
 
     try
     {
-      filter.initFilter( createComparators( ft.getValueComp(), filteredObs
-          .getAxisList() ), filteredObs, context );
+      filter.initFilter( createComparators( ft.getValueComp(), filteredObs.getAxisList() ), filteredObs, context );
     }
     catch( ParserException e )
     {
@@ -100,8 +97,7 @@ public class ValueFilterCreator implements IFilterCreator
   /**
    * Creates the comparators
    */
-  private final static List createComparators( final List comps,
-      final IAxis[] axes ) throws ParserException
+  private final static List createComparators( final List comps, final IAxis[] axes ) throws ParserException
   {
     final List fc = new ArrayList( comps.size() );
 
@@ -122,28 +118,25 @@ public class ValueFilterCreator implements IFilterCreator
    * @param axes
    * @throws ParserException
    */
-  private static IValueComp createComp( final AbstractValueCompType avc,
-      final IAxis[] axes ) throws ParserException
+  private static IValueComp createComp( final AbstractValueCompType avc, final IAxis[] axes ) throws ParserException
   {
     if( avc instanceof SmallerValueCompType )
     {
       final SmallerValueCompType comp = (SmallerValueCompType)avc;
-      return new CompSmaller( axes, avc.getAxisType(), comp.getValue(), comp
-          .isModeIncl() );
+      return new CompSmaller( axes, avc.getAxisType(), comp.getValue(), comp.isModeIncl() );
     }
 
     if( avc instanceof BetweenValueCompType )
     {
       final BetweenValueCompType comp = (BetweenValueCompType)avc;
-      return new CompBetween( axes, avc.getAxisType(), comp.getFrom(), comp
-          .isModeInclFrom(), comp.getTo(), comp.isModeInclTo() );
+      return new CompBetween( axes, avc.getAxisType(), comp.getFrom(), comp.isModeInclFrom(), comp.getTo(), comp
+          .isModeInclTo() );
     }
 
     if( avc instanceof BiggerValueCompType )
     {
       final BiggerValueCompType comp = (BiggerValueCompType)avc;
-      return new CompBigger( axes, avc.getAxisType(), comp.getValue(), comp
-          .isModeIncl() );
+      return new CompBigger( axes, avc.getAxisType(), comp.getValue(), comp.isModeIncl() );
     }
 
     return null;

@@ -36,15 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import java.util.List;
 
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypso.util.command.ICommand;
 
 /**
  * DOCUMENT ME!
@@ -61,8 +61,7 @@ public class JMMarkSelectCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public JMMarkSelectCommand( final GMLWorkspace workspace, final List features, int selectionId,
-      int selectionModus )
+  public JMMarkSelectCommand( final GMLWorkspace workspace, final List features, int selectionId, int selectionModus )
   {
     m_workspace = workspace;
     m_features = features;

@@ -80,6 +80,9 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist es, alle Features eines GML durchzugehen,
+ * und für jedes Feature eine Zeitreihe (definiert über einen Link) zu lesen und an eine andere Stelle (definiert durch
+ * eine andere Property des Features) zu schreiben.
  * 
  * <code>
  * TODO
@@ -112,8 +115,7 @@ public class KrigingTask extends Task
   private String m_modellGML;
 
   /**
-   * featurepath to the features that have the location property (mus be a
-   * polygon) (mandatory)
+   * featurepath to the features that have the location property (mus be a polygon) (mandatory)
    */
   private String m_modellGMLFeaturePath;
 
@@ -130,20 +132,18 @@ public class KrigingTask extends Task
   private String m_sourceGML;
 
   /**
-   * featurepath to features that contains links to source observations
-   * (mandatory)
+   * featurepath to features that contains links to source observations (mandatory)
    */
   private String m_sourceGMLFeaturePath;
 
   /**
-   * feature property name that contains links to source observations
-   * (mandatory)
+   * feature property name that contains links to source observations (mandatory)
    */
   private String m_sourceGMLObservationLinkProperty;
 
   /**
-   * feature property name that contains ids that are used for mapping to
-   * indentifiers in "kriging.txt" (optional, fid used f unset )
+   * feature property name that contains ids that are used for mapping to indentifiers in "kriging.txt" (optional, fid
+   * used f unset )
    */
   private String m_sourceGMLIDLinkProperty;
 
@@ -225,8 +225,8 @@ public class KrigingTask extends Task
       final FeatureType mapFT = schema.getFeatureType( "MappingObservation" );
 
       final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT );
-      final GMLWorkspace resultWorkspace = new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, m_context, null, schema.getTargetNS(), schema
-          .getNamespaceMap() );
+      final GMLWorkspace resultWorkspace = new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, m_context, null,
+          schema.getTargetNS(), schema.getNamespaceMap() );
 
       logger.info( "check coordinatessystem" );
       // crs stuff
@@ -259,7 +259,8 @@ public class KrigingTask extends Task
       final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL );
       if( modellWorkspace == null )
         throw new Exception( "could not load modell" );
-      modellWorkspace.accept( new TransformVisitor( targetCRS ), modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      modellWorkspace.accept( new TransformVisitor( targetCRS ), modellWorkspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
       modellWorkspace.accept( new ResortVisitor(), modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       if( m_modellGMLFeaturePath == null )
@@ -275,8 +276,10 @@ public class KrigingTask extends Task
       final GMLWorkspace srcModellWorkspace = GmlSerializer.createGMLWorkspace( srcModellURL );
       if( srcModellWorkspace == null )
         throw new Exception( "could not load source modell" );
-      srcModellWorkspace.accept( new TransformVisitor( targetCRS ), srcModellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-      srcModellWorkspace.accept( new ResortVisitor(), srcModellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      srcModellWorkspace.accept( new TransformVisitor( targetCRS ), srcModellWorkspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
+      srcModellWorkspace.accept( new ResortVisitor(), srcModellWorkspace.getRootFeature(),
+          FeatureVisitor.DEPTH_INFINITE );
       final Object srcFeatureFromPath = srcModellWorkspace.getFeatureFromPath( m_sourceGMLFeaturePath );
       final Feature[] srcFeatures = FeatureHelper.getFeaturess( srcFeatureFromPath );
       final SourceObservationProvider provider = new SourceObservationProvider( srcFeatures, m_sourceGMLIDLinkProperty,

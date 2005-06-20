@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.MalformedURLException;
@@ -47,8 +47,8 @@ import java.util.List;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -61,15 +61,15 @@ import org.kalypso.util.UrlResolverSingleton;
  */
 public final class ZmlFilter extends AbstractObservationFilter
 {
-  /** TRICKY: allows us to override the default behaviour of URL resolving
-   * by directly looking for the href as an identifier within the list
-   * of repositories
+  /**
+   * TRICKY: allows us to override the default behaviour of URL resolving by directly looking for the href as an
+   * identifier within the list of repositories
    */
   private static List REPS = null;
 
-  
   /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation, java.net.URL)
+   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
@@ -93,19 +93,19 @@ public final class ZmlFilter extends AbstractObservationFilter
         final String id = ZmlURL.getIdentifierPart( href );
 
         final Iterator it = REPS.iterator();
-        
+
         while( it.hasNext() )
         {
-          final IRepository rep = (IRepository) it.next();
-          
+          final IRepository rep = (IRepository)it.next();
+
           try
           {
             final IRepositoryItem item = rep.findItem( id );
-            
+
             if( item != null )
             {
-              m_obs = (IObservation) item.getAdapter( IObservation.class );
-              
+              m_obs = (IObservation)item.getAdapter( IObservation.class );
+
               return;
             }
           }
@@ -120,8 +120,7 @@ public final class ZmlFilter extends AbstractObservationFilter
       try
       {
         final URL sourceUrl = UrlResolverSingleton.resolveUrl( context, href );
-        final IObservation observation = ZmlFactory.parseXML( sourceUrl,
-            href );
+        final IObservation observation = ZmlFactory.parseXML( sourceUrl, href );
 
         // override observation from abstract filter (super type)
         m_obs = observation;
@@ -132,16 +131,15 @@ public final class ZmlFilter extends AbstractObservationFilter
       }
     }
   }
-  
+
   /**
-   * Allows to specify the list of repositories to use when resolving
-   * the underlying zml. This facility is provided for convenience
-   * for the server-side of Kalypso.
+   * Allows to specify the list of repositories to use when resolving the underlying zml. This facility is provided for
+   * convenience for the server-side of Kalypso.
    * <p>
-   * If the zml if found in one of the repositories, then there's no need
-   * to use the ZmlFactory.
+   * If the zml if found in one of the repositories, then there's no need to use the ZmlFactory.
    * 
-   * @param repositories [nullable]
+   * @param repositories
+   *          [nullable]
    */
   public static void configureFor( final List repositories )
   {

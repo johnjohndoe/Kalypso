@@ -102,8 +102,7 @@ public class IntervallFilter extends AbstractObservationFilter
       to = null;
     }
 
-    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_baseobservation
-        .getValues( args ), from, to );
+    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_baseobservation.getValues( args ), from, to );
 
   }
 
@@ -114,8 +113,7 @@ public class IntervallFilter extends AbstractObservationFilter
    */
   public void setValues( ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName()
-        + " setValues() wird zur Zeit nicht unterstuetzt ." );
+    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );
   }
 
 }

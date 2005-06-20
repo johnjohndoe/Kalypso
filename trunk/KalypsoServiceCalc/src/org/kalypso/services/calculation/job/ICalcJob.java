@@ -50,8 +50,8 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  */
 public interface ICalcJob
 {
-  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater, final ICalcMonitor monitor )
-      throws CalcJobServiceException;
+  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
+      final ICalcMonitor monitor ) throws CalcJobServiceException;
 
   /** Gibt den Ort der Spezifikation (XML) zurück. */
   public URL getSpezifikation();

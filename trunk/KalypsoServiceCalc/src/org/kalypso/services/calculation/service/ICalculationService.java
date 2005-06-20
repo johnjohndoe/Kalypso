@@ -56,23 +56,21 @@ import org.kalypso.services.calculation.job.ICalcJob;
  * Der ICalculationService ist ein Dienst um Berechnungen auszuführen.
  * </p>
  * <p>
- * Das ganze funktioniert ähnlich wie eine Druckerwarteschlange. Ein Auftrag
- * wird gesendet und in eine Liste gestellt, welche (normalerweise der Reihe
- * nach) abgearbeitet wird. Jeder Auftrag erhält dabei eine eindeutige ID. Ist
- * eine Auftrag fertig kann das Ergebnis abgeholt werden.
+ * Das ganze funktioniert ähnlich wie eine Druckerwarteschlange. Ein Auftrag wird gesendet und in eine Liste gestellt,
+ * welche (normalerweise der Reihe nach) abgearbeitet wird. Jeder Auftrag erhält dabei eine eindeutige ID. Ist eine
+ * Auftrag fertig kann das Ergebnis abgeholt werden.
  * 
  * @author belger
  */
 public interface ICalculationService extends Remote, IKalypsoService
 {
   public long getSchemaValidity( final String namespace ) throws CalcJobServiceException;
- 
+
   public String[] getSupportedSchemata() throws CalcJobServiceException;
-  
+
   /**
-   * Katalog-Service des Rechendienstes. Gibt für einen Namespace ein Schema
-   * zurück. Sollte alle Schemata der von der jeweiligen Konfiguration
-   * unterstüzten Modelle kennen.
+   * Katalog-Service des Rechendienstes. Gibt für einen Namespace ein Schema zurück. Sollte alle Schemata der von der
+   * jeweiligen Konfiguration unterstüzten Modelle kennen.
    */
   public DataHandler getSchema( final String namespace ) throws CalcJobServiceException;
 
@@ -91,13 +89,11 @@ public interface ICalculationService extends Remote, IKalypsoService
   public CalcJobServerBean[] getRequiredInput( final String typeID ) throws CalcJobServiceException;
 
   /**
-   * Gibt zurück, welche Ergebnisse von einem bestimmten Job-Typ geliefert
-   * werden.
+   * Gibt zurück, welche Ergebnisse von einem bestimmten Job-Typ geliefert werden.
    * 
    * @throws CalcJobServiceException
    */
-  public CalcJobServerBean[] getDeliveringResults( final String typeID )
-      throws CalcJobServiceException;
+  public CalcJobServerBean[] getDeliveringResults( final String typeID ) throws CalcJobServiceException;
 
   /**
    * Gibt den aktuellen Zustand aller vorhandenen {@link ICalcJob}zurück
@@ -114,8 +110,7 @@ public interface ICalculationService extends Remote, IKalypsoService
    * Erzeugt und startet einen neuen Auftrag (Job).
    * </p>
    * <p>
-   * Auftrag wird in eine Warteliste gestellt und (abhängig von der
-   * Implementation) baldmöglichst abgearbeitet.
+   * Auftrag wird in eine Warteliste gestellt und (abhängig von der Implementation) baldmöglichst abgearbeitet.
    * </p>
    * 
    * @param typeID
@@ -123,16 +118,13 @@ public interface ICalculationService extends Remote, IKalypsoService
    * @param description
    *          Menschenlesbare Beschreibung des Auftrags.
    * @param zipHandler
-   *          Die eigentlichen Eingangsdaten für den Job. Der Inhalt muss ein
-   *          JAR-Archiv sein.
+   *          Die eigentlichen Eingangsdaten für den Job. Der Inhalt muss ein JAR-Archiv sein.
    * @param input
-   *          Die Eingabedateien, die der Client zur Verfügung stellt. Die
-   *          relativen Pfade innerhalb der Benas beziehen sich auf Pfade
-   *          innerhalb des Archivs.
+   *          Die Eingabedateien, die der Client zur Verfügung stellt. Die relativen Pfade innerhalb der Benas beziehen
+   *          sich auf Pfade innerhalb des Archivs.
    */
-  public CalcJobInfoBean startJob( final String typeID, final String description,
-      final DataHandler zipHandler, final CalcJobClientBean[] input,
-      final CalcJobClientBean[] output ) throws CalcJobServiceException;
+  public CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler,
+      final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException;
 
   /**
    * Stoppt einen Auftrag
@@ -140,15 +132,13 @@ public interface ICalculationService extends Remote, IKalypsoService
   public void cancelJob( final String jobID ) throws CalcJobServiceException;
 
   /**
-   * Gibt die Ergebnisse eines Jobs zurück. Die Funktion kann jederzeit
-   * aufgerufen werden, es werden alle im Moment verfügbaren Ergebnisse
-   * zurückgeschickt. Der Job muss lediglich dafür sorgen, dass die Ergebnisse,
-   * die er angegeben hat, auch tatsächlich da sind.
+   * Gibt die Ergebnisse eines Jobs zurück. Die Funktion kann jederzeit aufgerufen werden, es werden alle im Moment
+   * verfügbaren Ergebnisse zurückgeschickt. Der Job muss lediglich dafür sorgen, dass die Ergebnisse, die er angegeben
+   * hat, auch tatsächlich da sind.
    * 
    * @param jobID
    *          Die id des Jobs, dessen Ergebnise geholt werden sollen.
-   * @return Die Ergebnisse als ZIP Archiv, sollte in die Rechenvariante als
-   *         Hauptverzeichnis entpackt werden.
+   * @return Die Ergebnisse als ZIP Archiv, sollte in die Rechenvariante als Hauptverzeichnis entpackt werden.
    * @throws CalcJobServiceException
    */
   public DataHandler transferCurrentResults( final String jobID ) throws CalcJobServiceException;

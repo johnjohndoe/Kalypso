@@ -62,11 +62,10 @@ public class DefaultAxis implements IAxis
   private final boolean m_persistable;
 
   /**
-   * Constructor. Calls the full constructor with the persistable argument set
-   * to true.
+   * Constructor. Calls the full constructor with the persistable argument set to true.
    */
-  public DefaultAxis( final String label, final String type, final String unit,
-      final Class dataClass, final boolean isKey )
+  public DefaultAxis( final String label, final String type, final String unit, final Class dataClass,
+      final boolean isKey )
   {
     this( label, type, unit, dataClass, isKey, true );
   }
@@ -74,16 +73,21 @@ public class DefaultAxis implements IAxis
   /**
    * Constructor
    * 
-   * @param label label of the axis
-   * @param type type of the axis
-   * @param unit unit of the axis
-   * @param dataClass className of the data on this axis
-   * @param isKey true if the axis is a key-axis
-   * @param persistable true if the axis should be persisted once observation is
-   *          saved
+   * @param label
+   *          label of the axis
+   * @param type
+   *          type of the axis
+   * @param unit
+   *          unit of the axis
+   * @param dataClass
+   *          className of the data on this axis
+   * @param isKey
+   *          true if the axis is a key-axis
+   * @param persistable
+   *          true if the axis should be persisted once observation is saved
    */
-  public DefaultAxis( final String label, final String type, final String unit,
-      final Class dataClass, final boolean isKey, final boolean persistable )
+  public DefaultAxis( final String label, final String type, final String unit, final Class dataClass,
+      final boolean isKey, final boolean persistable )
   {
     m_label = label;
     m_type = type;
@@ -98,8 +102,7 @@ public class DefaultAxis implements IAxis
    */
   public DefaultAxis( final IAxis axis )
   {
-    this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(),
-        axis.isKey(), axis.isPersistable() );
+    this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.isKey(), axis.isPersistable() );
   }
 
   /**
@@ -147,8 +150,8 @@ public class DefaultAxis implements IAxis
 
     final IAxis other = (IAxis)obj;
 
-    if( m_dataClass == other.getDataClass() && m_isKey == other.isKey()
-        && m_type.equals( other.getType() ) && m_unit.equals( other.getUnit() ) )
+    if( m_dataClass == other.getDataClass() && m_isKey == other.isKey() && m_type.equals( other.getType() )
+        && m_unit.equals( other.getUnit() ) )
       return true;
 
     return false;
@@ -161,8 +164,7 @@ public class DefaultAxis implements IAxis
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_type )
-        .append( m_unit );
+    bf.append( m_dataClass.getName() ).append( m_isKey ).append( m_type ).append( m_unit );
 
     return bf.toString().hashCode();
   }

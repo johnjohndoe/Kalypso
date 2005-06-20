@@ -36,16 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 import org.kalypso.util.factory.FactoryException;
 
 /**
  * <p>
- * Diese Factory erzeugt Objekte vom Typ {@link ILoader}anhand eines
- * übergebenen Typs (ein String)
+ * Diese Factory erzeugt Objekte vom Typ {@link ILoader}anhand eines übergebenen Typs (ein String)
  * </p>
  * <p>
  * Zusätzlich liefert sie alle Typen, die verwendet werden können.

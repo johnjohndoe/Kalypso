@@ -65,20 +65,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
 {
   private final ObjectFactory m_linkFactory = new ObjectFactory();
-  
-  
+
   private final String m_hrefPattern;
 
   private final String m_propertyName;
 
   /**
-   * Dieser Konstruktor wird benötigt, um dat dingen auch aus den gmc Skripten
-   * heraus zu benutzen.
+   * Dieser Konstruktor wird benötigt, um dat dingen auch aus den gmc Skripten heraus zu benutzen.
    */
   public TimeseriesLinkGenerateVisitor( final Properties properties )
   {
-    this( properties.getProperty( "link", "<Link-Property nicht gesetzt>" ), properties
-        .getProperty( "href", "" ) );
+    this( properties.getProperty( "link", "<Link-Property nicht gesetzt>" ), properties.getProperty( "href", "" ) );
   }
 
   public TimeseriesLinkGenerateVisitor( final String propertyName, final String hrefPattern )
@@ -99,14 +96,14 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     {
       final TimeseriesLinkType link = m_linkFactory.createTimeseriesLink();
       link.setHref( href );
-      
+
       f.setProperty( FeatureFactory.createFeatureProperty( m_propertyName, link ) );
     }
     catch( final JAXBException e )
     {
       e.printStackTrace();
     }
-    
+
     return true;
   }
 }

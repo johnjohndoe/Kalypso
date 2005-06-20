@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
@@ -98,7 +98,6 @@ public class NOperationFilter extends AbstractObservationFilter
 
   public void setValues( ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName()
-        + " setValues() wird zur Zeit nicht unterstuetzt ." );
+    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );
   }
 }

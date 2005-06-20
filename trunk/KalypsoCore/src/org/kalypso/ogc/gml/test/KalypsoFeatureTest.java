@@ -56,8 +56,7 @@ public class KalypsoFeatureTest extends TestCase
   {
     try
     {
-      final GMLSchema schema = new GMLSchema( KalypsoFeatureTest.class
-          .getResource( "point.xsd" ) );
+      final GMLSchema schema = new GMLSchema( KalypsoFeatureTest.class.getResource( "point.xsd" ) );
       final FeatureType featureType = schema.getFeatureTypes()[0];
 
       return FeatureFactory.createFeature( "x", featureType );

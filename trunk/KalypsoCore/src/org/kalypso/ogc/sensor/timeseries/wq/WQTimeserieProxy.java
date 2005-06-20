@@ -71,9 +71,11 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   private IAxis m_srcAxis;
 
   private IAxis m_destAxis;
+
   private IAxis m_destStatusAxis;
 
   private final String m_proxyAxisType;
+
   private final String m_realAxisType;
 
   private IWQConverter m_conv = null;
@@ -85,10 +87,10 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    *          type of the real axis that will be used to proxy another axis
    * @param proxyAxisType
    *          type of the axis that should be generated based on the real axis
-   * @param obs the underlying observation to proxy
+   * @param obs
+   *          the underlying observation to proxy
    */
-  public WQTimeserieProxy( final String realAxisType,
-      final String proxyAxisType, final IObservation obs )
+  public WQTimeserieProxy( final String realAxisType, final String proxyAxisType, final IObservation obs )
   {
     super( obs );
 
@@ -105,30 +107,27 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     for( int i = 0; i < axes.length; i++ )
       m_axes[i] = axes[i];
 
-    m_dateAxis = ObservationUtilities.findAxisByType( axes,
-        TimeserieConstants.TYPE_DATE );
+    m_dateAxis = ObservationUtilities.findAxisByType( axes, TimeserieConstants.TYPE_DATE );
 
     final String name = TimeserieUtils.getName( m_proxyAxisType );
     final String unit = TimeserieUtils.getUnit( m_proxyAxisType );
 
     m_srcAxis = ObservationUtilities.findAxisByType( axes, m_realAxisType );
-    m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class,
-        false, false );
+    m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
     m_axes[m_axes.length - 2] = m_destAxis;
-    
+
     m_destStatusAxis = KalypsoStatusUtils.createStatusAxisFor( m_destAxis, false );
     m_axes[m_axes.length - 1] = m_destStatusAxis;
 
     if( name.length() == 0 )
-      throw new IllegalArgumentException(
-          "Angegebene Typ für zu erzeugende Achsen wird nicht unterstützt: "
-              + m_proxyAxisType );
+      throw new IllegalArgumentException( "Angegebene Typ für zu erzeugende Achsen wird nicht unterstützt: "
+          + m_proxyAxisType );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     return m_axes;
   }
@@ -136,11 +135,10 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( IVariableArguments args )
-      throws SensorException
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
-    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis,
-        m_srcAxis, m_destAxis, m_destStatusAxis, getWQConverter() );
+    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_destAxis, m_destStatusAxis,
+        getWQConverter() );
   }
 
   /**
@@ -148,7 +146,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    * 
    * @throws SensorException
    */
-  private IWQConverter getWQConverter( ) throws SensorException
+  private IWQConverter getWQConverter() throws SensorException
   {
     if( m_conv == null )
     {
@@ -156,23 +154,18 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
       {
         if( getMetadataList().containsKey( TimeserieConstants.MD_WQWECHMANN ) )
         {
-          final String wechmann = getMetadataList().getProperty(
-              TimeserieConstants.MD_WQWECHMANN );
+          final String wechmann = getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
 
-          m_conv = WechmannFactory.parse( new InputSource( new StringReader(
-              wechmann ) ) );
+          m_conv = WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
         }
         else if( getMetadataList().containsKey( TimeserieConstants.MD_WQTABLE ) )
         {
-          final String wqtable = getMetadataList().getProperty(
-              TimeserieConstants.MD_WQTABLE );
+          final String wqtable = getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
 
-          m_conv = WQTableFactory.parse( new InputSource( new StringReader(
-              wqtable ) ) );
+          m_conv = WQTableFactory.parse( new InputSource( new StringReader( wqtable ) ) );
         }
         else
-          throw new IllegalStateException(
-              "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
+          throw new IllegalStateException( "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
       }
       catch( WQException e )
       {
@@ -191,17 +184,17 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     super.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
   }
 
-  public IAxis getDateAxis( )
+  public IAxis getDateAxis()
   {
     return m_dateAxis;
   }
 
-  public IAxis getDestAxis( )
+  public IAxis getDestAxis()
   {
     return m_destAxis;
   }
 
-  public IAxis getSrcAxis( )
+  public IAxis getSrcAxis()
   {
     return m_srcAxis;
   }

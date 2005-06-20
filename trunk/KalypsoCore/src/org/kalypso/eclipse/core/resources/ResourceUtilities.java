@@ -1,43 +1,32 @@
-/* --------------- Kalypso-Header --------------------------------------------
- 
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
- 
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-  
------------------------------------------------------------------------------------- */
+/*
+ * --------------- Kalypso-Header --------------------------------------------
+ * 
+ * This file is part of kalypso. Copyright (C) 2004, 2005 by:
+ * 
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
+ * 
+ * and
+ * 
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * Contact:
+ * 
+ * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
+ * 
+ * ------------------------------------------------------------------------------------
+ */
 package org.kalypso.eclipse.core.resources;
 
 import java.io.File;
@@ -64,7 +53,7 @@ public class ResourceUtilities
 {
   private ResourceUtilities()
   {
-    // do not instanciate
+  // do not instanciate
   }
 
   /**
@@ -80,13 +69,13 @@ public class ResourceUtilities
 
     return findFileFromPath( path );
   }
-  
+
   public static IFile findFileFromPath( IPath path )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFile( path );
   }
-  
+
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
@@ -96,7 +85,7 @@ public class ResourceUtilities
     final String projectName = path.segment( 0 );
     return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
-  
+
   public static IPath findPathFromURL( final URL u )
   {
     final String utostring = u.toString();
@@ -109,8 +98,7 @@ public class ResourceUtilities
 
     if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
-      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING
-          .length() - 1 );
+      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
 
       final Path path2 = new Path( path );
       return path2;
@@ -137,13 +125,13 @@ public class ResourceUtilities
         //part as the relative eclipse workspace path
         String[] array = urlpath.split( url.toString() );
         return new Path( array[1] );
-        
+
       }
     }
 
     return null;
   }
-  
+
   public static File makeFileFromPath( final IPath resource )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -164,7 +152,7 @@ public class ResourceUtilities
 
     return files;
   }
-  
+
   /**
    * Creates an URL given a resource. Uses the eclipse scheme defined in
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
@@ -194,5 +182,5 @@ public class ResourceUtilities
   public static String createURLSpec( final IPath path )
   {
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
-  }  
+  }
 }

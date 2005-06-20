@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
 import org.kalypso.ogc.sensor.IObservation;
@@ -58,19 +58,18 @@ public class ArgsObservationProxy extends AbstractObservationDecorator implement
   public ArgsObservationProxy( final IVariableArguments args, final IObservation obs )
   {
     super( obs );
-    
+
     m_args = args;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( IVariableArguments args )
-      throws SensorException
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
     if( args == null )
       args = m_args;
-    
+
     return m_obs.getValues( args );
   }
 }

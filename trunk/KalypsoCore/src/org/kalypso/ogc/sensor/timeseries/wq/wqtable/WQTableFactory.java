@@ -30,11 +30,11 @@ public class WQTableFactory implements ISerializer
 {
   private static ObjectFactory m_objectFactory = new ObjectFactory();
 
-  private WQTableFactory( )
+  private WQTableFactory()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
-  
+
   public static WQTableFactory getInstance()
   {
     return new WQTableFactory();
@@ -45,14 +45,12 @@ public class WQTableFactory implements ISerializer
    * 
    * @param ins
    */
-  public static RatingTableList parseSimple( final InputSource ins )
-      throws WQException
+  public static RatingTableList parseSimple( final InputSource ins ) throws WQException
   {
     try
     {
       final Unmarshaller unm = m_objectFactory.createUnmarshaller();
-      final RatingTableList xmlTableList = (RatingTableList) unm
-          .unmarshal( ins );
+      final RatingTableList xmlTableList = (RatingTableList)unm.unmarshal( ins );
 
       return xmlTableList;
     }
@@ -79,7 +77,7 @@ public class WQTableFactory implements ISerializer
       int iTable = 0;
       for( final Iterator it = xmlTables.iterator(); it.hasNext(); )
       {
-        final RatingTable xmlTable = (RatingTable) it.next();
+        final RatingTable xmlTable = (RatingTable)it.next();
 
         final Date validity = xmlTable.getValidity().getTime();
         final int offset = xmlTable.getOffset();
@@ -88,8 +86,7 @@ public class WQTableFactory implements ISerializer
         final String[] strY = xmlTable.getY().split( "," );
 
         if( strX.length != strY.length )
-          throw new WQException(
-              "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+          throw new WQException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
 
         final double[] W = new double[strX.length];
         final double[] Q = new double[strX.length];
@@ -117,15 +114,14 @@ public class WQTableFactory implements ISerializer
    * @return xml String
    * @throws WQException
    */
-  public static String createXMLString( final WQTableSet wqset )
-      throws WQException
+  public static String createXMLString( final WQTableSet wqset ) throws WQException
   {
     try
     {
       final RatingTableList xmlTables = m_objectFactory.createTables();
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
-      
+
       final WQTable[] tables = wqset.getTables();
       for( int i = 0; i < tables.length; i++ )
       {
@@ -139,10 +135,8 @@ public class WQTableFactory implements ISerializer
         final double[] W = new double[pairs.length];
         final double[] Q = new double[pairs.length];
         WQPair.convert2doubles( pairs, W, Q );
-        xmlTable.setX( ArrayUtils.toString( W ).replaceAll( "\\{", "" )
-            .replaceAll( "\\}", "" ) );
-        xmlTable.setY( ArrayUtils.toString( Q ).replaceAll( "\\{", "" )
-            .replaceAll( "\\}", "" ) );
+        xmlTable.setX( ArrayUtils.toString( W ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) );
+        xmlTable.setY( ArrayUtils.toString( Q ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) );
 
         xmlTables.getTable().add( xmlTable );
       }
@@ -170,7 +164,7 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      return parse( new InputSource(ins) );
+      return parse( new InputSource( ins ) );
     }
     catch( final WQException e )
     {
@@ -186,7 +180,7 @@ public class WQTableFactory implements ISerializer
   {
     try
     {
-      final String xml = createXMLString( (WQTableSet) object );
+      final String xml = createXMLString( (WQTableSet)object );
       os.write( xml.getBytes() );
     }
     catch( final Exception e ) // WQException, IOException

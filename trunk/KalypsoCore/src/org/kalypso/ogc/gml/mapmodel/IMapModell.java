@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
@@ -51,10 +51,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * TODO: getScale etc, hier rausschmeissen!
- *  die Umrechnung zwischen Bildschirm und Geokoordinaten ist Aufgabe des MapPanel,
- * die paint Mehtode hier sollte bereits mit Geokoordinaten arbeiten d.h. der Grafik-Kontext wird schon mit
- * umgerechneten Koordinaten übergeben 
+ * TODO: getScale etc, hier rausschmeissen! die Umrechnung zwischen Bildschirm und Geokoordinaten ist Aufgabe des
+ * MapPanel, die paint Mehtode hier sollte bereits mit Geokoordinaten arbeiten d.h. der Grafik-Kontext wird schon mit
+ * umgerechneten Koordinaten übergeben
  * 
  * @author belger
  */
@@ -62,7 +61,7 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
 {
   /** dispose off all themes! */
   public void dispose();
-  
+
   public void activateTheme( final IKalypsoTheme theme );
 
   public IKalypsoTheme getActiveTheme();
@@ -80,7 +79,8 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
    * 
    * @param g
    */
-  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final int selectionId );
+  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
+      final int selectionId );
 
   public IKalypsoTheme getTheme( int pos );
 
@@ -101,7 +101,7 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
   public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 );
 
   public GM_Envelope getFullExtentBoundingBox();
-  
+
   public IProject getProject();
 
   public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int i );

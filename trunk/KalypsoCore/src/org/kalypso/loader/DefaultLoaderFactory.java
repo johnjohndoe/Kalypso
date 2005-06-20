@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 import java.util.Properties;
@@ -47,9 +47,9 @@ import org.kalypso.util.factory.FactoryException;
 
 /**
  * Die Standardimplementation der {@link ILoaderFactory}
- *
+ * 
  * @author Schlienger
- *
+ *  
  */
 public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory implements ILoaderFactory
 {

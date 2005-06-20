@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.users;
 
 /**
@@ -47,7 +47,7 @@ package org.kalypso.users;
  */
 public class UserRightsException extends Exception
 {
-  public UserRightsException( )
+  public UserRightsException()
   {
     super();
   }

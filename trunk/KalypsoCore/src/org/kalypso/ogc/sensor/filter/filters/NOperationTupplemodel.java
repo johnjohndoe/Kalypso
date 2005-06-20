@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.util.Date;
@@ -60,7 +60,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
   public NOperationTupplemodel( ITuppleModel[] models, int operation )
   {
     super( models[0].getAxisList() );
-    
+
     m_baseModels = models;
     m_operation = operation;
   }
@@ -102,10 +102,10 @@ public class NOperationTupplemodel extends AbstractTuppleModel
         ITuppleModel model = m_baseModels[i];
         if( index >= model.getCount() )
           continue;
-        
-//        final IAxis a2 = ObservationUtilities.findAxisByName( m_baseModels[i].getAxisList(), axisName );
+
+        //        final IAxis a2 = ObservationUtilities.findAxisByName( m_baseModels[i].getAxisList(), axisName );
         final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
-        
+
         double nextValue = ( (Number)model.getElement( index, a2 ) ).doubleValue();
         switch( m_operation )
         {
@@ -140,32 +140,31 @@ public class NOperationTupplemodel extends AbstractTuppleModel
         ITuppleModel model = m_baseModels[i];
         if( index >= model.getCount() )
           continue;
-        
+
         final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
-        
+
         int nextValue = ( (Number)model.getElement( index, a2 ) ).intValue();
         value |= nextValue;
       }
-      
+
       return new Integer( value );
     }
-    
+
     throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt den Datentyp "
         + axis.getDataClass().getName() + " nicht." );
   }
 
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt setElement() nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
   }
 
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( element instanceof Date )
       return m_baseModels[0].indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt indexOf fuer die Axe " + axis.getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
+        + axis.getName() + " nicht." );
     // TODO support it
   }
 }

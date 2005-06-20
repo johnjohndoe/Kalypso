@@ -54,9 +54,8 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
- * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the
- * underlying axis type. It also manages the status information for the
- * generated axis, depending on the success of the computation.
+ * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the underlying axis type. It also manages the
+ * status information for the generated axis, depending on the success of the computation.
  * 
  * @author schlienger
  */
@@ -67,33 +66,39 @@ public class WQTuppleModel extends AbstractTuppleModel
   private final ITuppleModel m_model;
 
   private final IAxis m_dateAxis;
+
   private final IAxis m_srcAxis;
+
   private final IAxis m_destAxis;
+
   private final IAxis m_destStatusAxis;
 
   private final Map m_values = new HashMap();
+
   private final Map m_stati = new HashMap();
 
   private final IWQConverter m_converter;
 
   /**
-   * Creates a <code>WQTuppleModel</code> that can generate either W or Q on
-   * the fly. It needs an existing model from whitch the values of the given
-   * type are fetched.
+   * Creates a <code>WQTuppleModel</code> that can generate either W or Q on the fly. It needs an existing model from
+   * whitch the values of the given type are fetched.
    * <p>
-   * If it bases on a TimeserieConstants.TYPE_RUNOFF it can generate
-   * TYPE_WATERLEVEL values and vice versa.
+   * If it bases on a TimeserieConstants.TYPE_RUNOFF it can generate TYPE_WATERLEVEL values and vice versa.
    * 
-   * @param model base model delivering values of the given type
-   * @param axes axes of this WQ-model, usually the same as model plus destAxis
+   * @param model
+   *          base model delivering values of the given type
+   * @param axes
+   *          axes of this WQ-model, usually the same as model plus destAxis
    * @param dateAxis
-   * @param srcAxis source axis from which values are read
-   * @param destAxis destination axis for which values are computed
-   * @param destStatusAxis status axis for the destAxis (destination axis)
+   * @param srcAxis
+   *          source axis from which values are read
+   * @param destAxis
+   *          destination axis for which values are computed
+   * @param destStatusAxis
+   *          status axis for the destAxis (destination axis)
    */
-  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes,
-      final IAxis dateAxis, final IAxis srcAxis, final IAxis destAxis,
-      final IAxis destStatusAxis, final IWQConverter converter )
+  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis,
+      final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter )
   {
     super( axes );
 
@@ -118,11 +123,9 @@ public class WQTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( final int index, final IAxis axis )
-      throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     final boolean bDestAxis = axis.equals( m_destAxis );
 
@@ -130,8 +133,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     {
       final Integer objIndex = new Integer( index );
 
-      final Number number = (Number)m_model.getElement( objIndex.intValue(),
-          m_srcAxis );
+      final Number number = (Number)m_model.getElement( objIndex.intValue(), m_srcAxis );
 
       if( !m_values.containsKey( objIndex ) )
         read( objIndex, axis, number );
@@ -145,8 +147,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     return m_model.getElement( index, axis );
   }
 
-  private void read( final Integer objIndex, final IAxis axis, final Number number )
-      throws SensorException
+  private void read( final Integer objIndex, final IAxis axis, final Number number ) throws SensorException
   {
     Double value = null;
     Integer status = null;
@@ -186,11 +187,9 @@ public class WQTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( final int index, final Object element,
-      final IAxis axis ) throws SensorException
+  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     if( axis.equals( m_destAxis ) )
     {
@@ -210,7 +209,7 @@ public class WQTuppleModel extends AbstractTuppleModel
           final double q = ( (Number)element ).doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
         }
-        
+
         status = KalypsoStati.STATUS_DERIVATED;
       }
       catch( final WQException e )
@@ -222,7 +221,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       final Integer objIndex = new Integer( index );
       m_values.put( objIndex, element );
       m_stati.put( objIndex, status );
-      
+
       m_model.setElement( index, value, m_srcAxis );
     }
     else
@@ -230,11 +229,9 @@ public class WQTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( final Object element, final IAxis axis )
-      throws SensorException
+  public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( axis.equals( m_destAxis ) )
       return -1; // TODO: check if ok, always returning -1 here. Should be ok,
@@ -264,13 +261,11 @@ public class WQTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * Creates a TuppleModel from a potential WQTuppleModel for storing the values
-   * back in the original observation.
+   * Creates a TuppleModel from a potential WQTuppleModel for storing the values back in the original observation.
    * 
    * @throws SensorException
    */
-  public static ITuppleModel reverse( final ITuppleModel values, final IAxis[] axes )
-      throws SensorException
+  public static ITuppleModel reverse( final ITuppleModel values, final IAxis[] axes ) throws SensorException
   {
     final SimpleTuppleModel stm = new SimpleTuppleModel( axes );
 

@@ -43,8 +43,8 @@ package org.kalypso.services.calculation.service;
 import java.io.Serializable;
 
 /**
- * Bean zum Starten des CalcJobs (Input/Ouput).
- * Wird benutzt, um dem Server mitzuteilen, wie die IDs den relativen Pfaden auf dem Client zugeordnet sind.
+ * Bean zum Starten des CalcJobs (Input/Ouput). Wird benutzt, um dem Server mitzuteilen, wie die IDs den relativen
+ * Pfaden auf dem Client zugeordnet sind.
  * 
  * @author belger
  */

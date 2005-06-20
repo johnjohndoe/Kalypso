@@ -58,16 +58,17 @@ import org.kalypso.zml.filters.AbstractFilterType;
 public final class FilterCreatorHelper
 {
   /**
-   * Resolves the filter by checking if it can be created. If not, the baseObs
-   * is returned.
+   * Resolves the filter by checking if it can be created. If not, the baseObs is returned.
    * 
-   * @param aft the binding type to check
-   * @param baseObs the base observation onto which the filters are applied
+   * @param aft
+   *          the binding type to check
+   * @param baseObs
+   *          the base observation onto which the filters are applied
    * @return the filtered observation
    * @throws SensorException
    */
-  public static IObservation resolveFilter( final AbstractFilterType aft,
-      final IObservation baseObs, final URL context ) throws SensorException
+  public static IObservation resolveFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
+      throws SensorException
   {
     if( aft != null )
     {
@@ -95,14 +96,13 @@ public final class FilterCreatorHelper
    * 
    * @return array of filtered observations
    */
-  public static IObservation[] resolveFilters( final List afts,
-      final IObservation baseObs, final URL context ) throws SensorException
+  public static IObservation[] resolveFilters( final List afts, final IObservation baseObs, final URL context )
+      throws SensorException
   {
     final IObservation[] obs = new IObservation[afts.size()];
 
     for( int i = 0; i < obs.length; i++ )
-      obs[i] = resolveFilter( (AbstractFilterType)afts.get( i ), baseObs,
-          context );
+      obs[i] = resolveFilter( (AbstractFilterType)afts.get( i ), baseObs, context );
 
     return obs;
   }

@@ -45,14 +45,11 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
 
 /**
- * VirtualRepositoryFactory. Configuration should be built according to the
- * following rules:
+ * VirtualRepositoryFactory. Configuration should be built according to the following rules:
  * <p>
  * <ul>
- * <li>name: a unique identifier (also used as the name of the repository) to
- * identify the repository
- * <li>conf: the location of the config file for the repository (this string is
- * used with the file constructor)
+ * <li>name: a unique identifier (also used as the name of the repository) to identify the repository
+ * <li>conf: the location of the config file for the repository (this string is used with the file constructor)
  * </ul>
  * 
  * @author schlienger
@@ -62,23 +59,21 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( )
+  public boolean configureRepository()
   {
     return true;
   }
 
   /**
-   * Configuration string contains the location of the repository specification
-   * file (xml)
+   * Configuration string contains the location of the repository specification file (xml)
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository( ) throws RepositoryException
+  public IRepository createRepository() throws RepositoryException
   {
     if( getConfiguration() == null )
       throw new RepositoryException( "Configuration must contain the location" );
 
-    return new VirtualRepository( getClass().getName(), getRepositoryName(),
-        getConfiguration(), isReadOnly() );
+    return new VirtualRepository( getClass().getName(), getRepositoryName(), getConfiguration(), isReadOnly() );
   }
 }

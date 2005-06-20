@@ -85,15 +85,15 @@ public class VirtualRepository extends AbstractRepository
    * 
    * @param factory
    * @param identifier
-   *          uniquely identifies this repository among the list of repositories
-   *          used in a given context. The identifier is also used as name.
+   *          uniquely identifies this repository among the list of repositories used in a given context. The identifier
+   *          is also used as name.
    * @param location
    *          location of the specification file (xml)
    * @param readOnly
    * @throws RepositoryException
    */
-  public VirtualRepository( String factory, String identifier, String location,
-      boolean readOnly ) throws RepositoryException
+  public VirtualRepository( String factory, String identifier, String location, boolean readOnly )
+      throws RepositoryException
   {
     super( identifier, factory, location, readOnly );
 
@@ -112,30 +112,24 @@ public class VirtualRepository extends AbstractRepository
     }
   }
 
-  private final void buildRepository( ) throws JAXBException,
-      FileNotFoundException
+  private final void buildRepository() throws JAXBException, FileNotFoundException
   {
-    final InputSource specSource = new InputSource( new FileInputStream(
-        new File( m_location ) ) );
+    final InputSource specSource = new InputSource( new FileInputStream( new File( m_location ) ) );
 
-    final VirtualRepositoryType vrt = (VirtualRepositoryType) OF
-        .createUnmarshaller().unmarshal( specSource );
+    final VirtualRepositoryType vrt = (VirtualRepositoryType)OF.createUnmarshaller().unmarshal( specSource );
 
-    m_children = (IRepositoryItem[]) buildStructure( null, vrt.getLevel() )
-        .toArray( new IRepositoryItem[0] );
+    m_children = (IRepositoryItem[])buildStructure( null, vrt.getLevel() ).toArray( new IRepositoryItem[0] );
   }
 
-  private final List buildStructure( final VirtualRepositoryItem parent,
-      final List levels )
+  private final List buildStructure( final VirtualRepositoryItem parent, final List levels )
   {
     final List rItems = new ArrayList( levels.size() );
 
     for( final Iterator it = levels.iterator(); it.hasNext(); )
     {
-      final LevelType level = (LevelType) it.next();
+      final LevelType level = (LevelType)it.next();
 
-      final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this,
-          level.getName(), level.getId(), parent );
+      final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, level.getName(), level.getId(), parent );
 
       final List children = new ArrayList();
       children.addAll( buildStructure( rItem, level.getLevel() ) );
@@ -151,16 +145,14 @@ public class VirtualRepository extends AbstractRepository
     return rItems;
   }
 
-  private final List buildItems( final VirtualRepositoryItem parent,
-      final List items )
+  private final List buildItems( final VirtualRepositoryItem parent, final List items )
   {
     final List rItems = new ArrayList( items.size() );
     for( final Iterator it = items.iterator(); it.hasNext(); )
     {
-      final ItemType item = (ItemType) it.next();
+      final ItemType item = (ItemType)it.next();
 
-      final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, item
-          .getName(), item.getId(), parent );
+      final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, item.getName(), item.getId(), parent );
 
       rItem.setFilterType( item.getFilter() );
 
@@ -175,17 +167,17 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
     m_idMap.clear();
     m_children = null;
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return m_location;
   }
@@ -195,13 +187,13 @@ public class VirtualRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id )
   {
-    return (IRepositoryItem) m_idMap.get( id );
+    return (IRepositoryItem)m_idMap.get( id );
   }
 
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( ) throws RepositoryException
+  public void reload() throws RepositoryException
   {
     m_children = null;
     m_idMap.clear();
@@ -221,7 +213,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_identifier + "://";
   }
@@ -229,7 +221,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return m_children != null && m_children.length > 0;
   }
@@ -237,7 +229,7 @@ public class VirtualRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
     return m_children;
   }

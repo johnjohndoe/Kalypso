@@ -80,7 +80,8 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
   private String m_axisTypeValue;
 
   /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -94,8 +95,8 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false,
-        null, metaDataList, axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList,
+        axis, tuppelModel );
     return observation;
   }
 
@@ -140,18 +141,16 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \""
-                + lineIn + "\"\n" );
+            errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
           }
         }
         else
-          errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn
-              + "\"\n" );
+          errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
       }
       catch( Exception e )
       {
-        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \""
-            + e.getLocalizedMessage() + "\"\n" );
+        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage()
+            + "\"\n" );
       }
     }
     Object[][] tupelData = new Object[dateCollector.size()][2];
@@ -175,11 +174,10 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
    */
   public IAxis[] createAxis()
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class,
-        true );
+    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( m_axisTypeValue );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ),
-        m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils
+        .getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[]
     {
         dateAxis,

@@ -59,10 +59,15 @@ import org.kalypso.zml.filters.AbstractFilterType;
 public class VirtualRepositoryItem implements IRepositoryItem
 {
   private IRepository m_repository;
+
   private String m_name;
+
   private String m_itemId;
+
   private IRepositoryItem m_parent = null;
+
   private IRepositoryItem[] m_children = null;
+
   private AbstractFilterType m_filterType = null;
 
   /**
@@ -73,8 +78,8 @@ public class VirtualRepositoryItem implements IRepositoryItem
    * @param itemId
    * @param parent
    */
-  public VirtualRepositoryItem( final IRepository rep, final String name,
-      final String itemId, final VirtualRepositoryItem parent )
+  public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId,
+      final VirtualRepositoryItem parent )
   {
     m_repository = rep;
     m_name = name;
@@ -128,8 +133,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   public void setChildren( final List children )
   {
-    m_children = (IRepositoryItem[])children
-        .toArray( new IRepositoryItem[children.size()] );
+    m_children = (IRepositoryItem[])children.toArray( new IRepositoryItem[children.size()] );
   }
 
   /**
@@ -141,8 +145,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   }
 
   /**
-   * Sets the filter type. If valid, this allows this item to be adapted into an
-   * IObservation.
+   * Sets the filter type. If valid, this allows this item to be adapted into an IObservation.
    * 
    * @param filterType
    */
@@ -160,11 +163,9 @@ public class VirtualRepositoryItem implements IRepositoryItem
     {
       try
       {
-        final IFilterCreator creator = FilterFactory
-            .getCreatorInstance( m_filterType );
+        final IFilterCreator creator = FilterFactory.getCreatorInstance( m_filterType );
 
-        final IObservationFilter filter = creator.createFilter( m_filterType,
-            null, null );
+        final IObservationFilter filter = creator.createFilter( m_filterType, null, null );
 
         return filter;
       }

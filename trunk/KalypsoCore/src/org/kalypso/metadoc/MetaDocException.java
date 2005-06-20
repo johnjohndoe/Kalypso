@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.metadoc;
 
 /**
@@ -47,7 +47,7 @@ package org.kalypso.metadoc;
  */
 public class MetaDocException extends Exception
 {
-  public MetaDocException( )
+  public MetaDocException()
   {
     super();
   }

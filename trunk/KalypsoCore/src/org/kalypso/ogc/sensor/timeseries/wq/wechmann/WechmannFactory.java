@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 import java.io.StringWriter;
@@ -60,8 +60,7 @@ import org.xml.sax.InputSource;
 /**
  * Parses and generates XML for the Wechmann parameters.
  * 
- * Returns a simple XML-Representation of this object. The format of the XML is
- * as follows:
+ * Returns a simple XML-Representation of this object. The format of the XML is as follows:
  * 
  * <pre>
  *      &lt;set&gt;
@@ -84,9 +83,8 @@ import org.xml.sax.InputSource;
  * </pre>
  * 
  * <p>
- * The attribute validity is optional, if no attribute is provided, it takes the
- * minimum Date that is delivered by the <code>DateUtilities.getMinimum()</code>
- * method.
+ * The attribute validity is optional, if no attribute is provided, it takes the minimum Date that is delivered by the
+ * <code>DateUtilities.getMinimum()</code> method.
  * 
  * @author schlienger
  */
@@ -94,9 +92,9 @@ public class WechmannFactory
 {
   private final static org.kalypso.wechmann.ObjectFactory m_objectFactory = new org.kalypso.wechmann.ObjectFactory();
 
-  private WechmannFactory( )
+  private WechmannFactory()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
@@ -106,29 +104,27 @@ public class WechmannFactory
    * @return newly created WechmannGroup object
    * @throws WQException
    */
-  public static WechmannGroup parse(final InputSource ins)
-      throws WQException
+  public static WechmannGroup parse( final InputSource ins ) throws WQException
   {
     try
     {
       final Unmarshaller unm = m_objectFactory.createUnmarshaller();
 
-      WechmannType wm = (WechmannType) unm.unmarshal( ins );
+      WechmannType wm = (WechmannType)unm.unmarshal( ins );
 
       final WechmannSet[] sets = new WechmannSet[wm.getSet().size()];
       int i = 0;
 
       for( Iterator it = wm.getSet().iterator(); it.hasNext(); )
       {
-        final XMLWechmannSet wset = (XMLWechmannSet) it.next();
+        final XMLWechmannSet wset = (XMLWechmannSet)it.next();
 
-        final WechmannParams[] wparams = new WechmannParams[wset.getParams()
-            .size()];
+        final WechmannParams[] wparams = new WechmannParams[wset.getParams().size()];
         int j = 0;
 
         for( Iterator itp = wset.getParams().iterator(); itp.hasNext(); )
         {
-          XMLWechmannParams wp = (XMLWechmannParams) itp.next();
+          XMLWechmannParams wp = (XMLWechmannParams)itp.next();
 
           double k2 = wp.getK2();
           double lnk1 = wp.getLnk1();
@@ -150,11 +146,9 @@ public class WechmannFactory
           sets[i] = new WechmannSet( wparams );
         else
         {
-          final SimpleDateFormat df = new SimpleDateFormat( wset.getValidity()
-              .getFormat() );
+          final SimpleDateFormat df = new SimpleDateFormat( wset.getValidity().getFormat() );
 
-          sets[i] = new WechmannSet( df.parse( wset.getValidity().getValue() ),
-              wparams );
+          sets[i] = new WechmannSet( df.parse( wset.getValidity().getValue() ), wparams );
         }
         i++;
       }
@@ -174,8 +168,7 @@ public class WechmannFactory
    * @return xml String
    * @throws WQException
    */
-  public static String createXMLString(final WechmannGroup wg)
-      throws WQException
+  public static String createXMLString( final WechmannGroup wg ) throws WQException
   {
     try
     {
@@ -187,12 +180,10 @@ public class WechmannFactory
 
       for( final Iterator it = wg.iterator(); it.hasNext(); )
       {
-        final WechmannSet wset = (WechmannSet) it.next();
+        final WechmannSet wset = (WechmannSet)it.next();
 
-        final XMLWechmannSet wechmannSet = m_objectFactory
-            .createXMLWechmannSet();
-        final ValidityType validityType = m_objectFactory
-            .createXMLWechmannSetValidityType();
+        final XMLWechmannSet wechmannSet = m_objectFactory.createXMLWechmannSet();
+        final ValidityType validityType = m_objectFactory.createXMLWechmannSetValidityType();
 
         validityType.setFormat( df.toPattern() );
         validityType.setValue( df.format( wset.getValidity() ) );
@@ -200,10 +191,9 @@ public class WechmannFactory
 
         for( final Iterator itp = wset.iterator(); itp.hasNext(); )
         {
-          final WechmannParams wp = (WechmannParams) itp.next();
+          final WechmannParams wp = (WechmannParams)itp.next();
 
-          final XMLWechmannParams wechmannParams = m_objectFactory
-              .createXMLWechmannParams();
+          final XMLWechmannParams wechmannParams = m_objectFactory.createXMLWechmannParams();
           wechmannParams.setK2( wp.getK2() );
           wechmannParams.setLnk1( wp.getLNK1() );
           wechmannParams.setW1( wp.getW1() );

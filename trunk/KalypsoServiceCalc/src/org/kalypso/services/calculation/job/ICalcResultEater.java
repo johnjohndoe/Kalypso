@@ -45,23 +45,20 @@ import java.io.File;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
- * Sammelt die Ergebnisse des
- * {@link org.kalypso.services.calculation.job.ICalcJob}.
+ * Sammelt die Ergebnisse des {@link org.kalypso.services.calculation.job.ICalcJob}.
  * 
  * @author belger
  */
 public interface ICalcResultEater
 {
   /**
-   * Für den {@link ICalcJob}: wird aufgerufen, um ein Ergebnis an den Client
-   * zurückzugeben
+   * Für den {@link ICalcJob}: wird aufgerufen, um ein Ergebnis an den Client zurückzugeben
    * 
    * @param id
    *          Eine ID aus der Model-Spec
    * @param file
-   *          Eine beliebige Datei oder ein Verzeichnis. Wenns ein Verzeichnis
-   *          ist, wird der gesamte Inhalt (auch rekursiv) zum Client
-   *          zurückgeshrieben
+   *          Eine beliebige Datei oder ein Verzeichnis. Wenns ein Verzeichnis ist, wird der gesamte Inhalt (auch
+   *          rekursiv) zum Client zurückgeshrieben
    */
   public void addResult( final String id, final File file ) throws CalcJobServiceException;
 }

@@ -36,13 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.xml.xlink;
 
 import org.w3._1999.xlinkext.SimpleLinkType;
-
-
 
 /**
  * XLink wrapper over Jaxb XlinkBase.
@@ -57,7 +55,7 @@ public class JAXBXLink implements IXlink
   {
     if( xlink == null )
       throw new IllegalArgumentException( "xlink is null" );
-    
+
     m_xlink = xlink;
   }
 

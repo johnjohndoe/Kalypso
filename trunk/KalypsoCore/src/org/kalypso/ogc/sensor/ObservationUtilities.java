@@ -67,11 +67,12 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class ObservationUtilities
 {
   private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
+
   private static final Comparator AXIS_SORT_COMPARATOR = new AxisSortComparator();
 
-  private ObservationUtilities( )
+  private ObservationUtilities()
   {
-    //  not intended to be instanciated
+  //  not intended to be instanciated
   }
 
   /**
@@ -85,8 +86,7 @@ public class ObservationUtilities
    * @throws NoSuchElementException
    *           when no axis matches the name
    */
-  public static IAxis findAxisByName( final IAxis[] axes, final String axisName )
-      throws NoSuchElementException
+  public static IAxis findAxisByName( final IAxis[] axes, final String axisName ) throws NoSuchElementException
   {
     for( int i = 0; i < axes.length; i++ )
     {
@@ -104,8 +104,7 @@ public class ObservationUtilities
    * 
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    */
-  public static IAxis findAxisByNameNoEx( final IAxis[] axes,
-      final String axisName )
+  public static IAxis findAxisByNameNoEx( final IAxis[] axes, final String axisName )
   {
     try
     {
@@ -128,8 +127,7 @@ public class ObservationUtilities
    * @throws NoSuchElementException
    *           when no axis matches the name
    */
-  public static IAxis findAxisByType( final IAxis[] axes, final String axisType )
-      throws NoSuchElementException
+  public static IAxis findAxisByType( final IAxis[] axes, final String axisType ) throws NoSuchElementException
   {
     for( int i = 0; i < axes.length; i++ )
     {
@@ -158,7 +156,7 @@ public class ObservationUtilities
     if( list.size() == 0 )
       throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + desired );
 
-    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -176,12 +174,10 @@ public class ObservationUtilities
   }
 
   /**
-   * Returns the first axis that is compatible with the desired Dataclass, does
-   * not throw an exception if no such axis found. Returns null if no axis
-   * found.
+   * Returns the first axis that is compatible with the desired Dataclass, does not throw an exception if no such axis
+   * found. Returns null if no axis found.
    */
-  public static IAxis findAxisByClassNoEx( final IAxis[] axes,
-      final Class desired )
+  public static IAxis findAxisByClassNoEx( final IAxis[] axes, final Class desired )
   {
     for( int i = 0; i < axes.length; i++ )
     {
@@ -193,8 +189,7 @@ public class ObservationUtilities
   }
 
   /**
-   * @return the axes which are key-axes. Returns an empty array if no axis
-   *         found.
+   * @return the axes which are key-axes. Returns an empty array if no axis found.
    */
   public static IAxis[] findAxesByKey( final IAxis[] axes )
   {
@@ -206,7 +201,7 @@ public class ObservationUtilities
         list.add( axes[i] );
     }
 
-    return (IAxis[]) list.toArray( new IAxis[list.size()] );
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
   }
 
   /**
@@ -214,8 +209,7 @@ public class ObservationUtilities
    *          string separator between elements
    * @return simple string representation of the given model
    */
-  public static String dump( final ITuppleModel model, final String sep )
-      throws SensorException
+  public static String dump( final ITuppleModel model, final String sep ) throws SensorException
   {
     final StringWriter writer = new StringWriter();
 
@@ -232,11 +226,9 @@ public class ObservationUtilities
   }
 
   /**
-   * Dumps the contents of the model into a writer. Caller must close the
-   * writer.
+   * Dumps the contents of the model into a writer. Caller must close the writer.
    */
-  public static void dump( final ITuppleModel model, final String sep,
-      final Writer writer ) throws SensorException
+  public static void dump( final ITuppleModel model, final String sep, final Writer writer ) throws SensorException
   {
     final IAxis[] axes = model.getAxisList();
 
@@ -307,14 +299,14 @@ public class ObservationUtilities
    * 
    * @return string representation of the given line (tupple)
    */
-  public static String dump( final ITuppleModel model, final String sep,
-      final int index, final boolean excludeStatusAxes ) throws SensorException
+  public static String dump( final ITuppleModel model, final String sep, final int index,
+      final boolean excludeStatusAxes ) throws SensorException
   {
     IAxis[] axes = model.getAxisList();
 
     if( excludeStatusAxes )
       axes = KalypsoStatusUtils.withoutStatusAxes( axes );
-    
+
     // sort axes in order to have a better output
     sortAxes( axes );
 
@@ -354,8 +346,8 @@ public class ObservationUtilities
   }
 
   /**
-   * Copy the values from source into dest. Only copies the values of the axes
-   * that are found in the dest AND in source observation.
+   * Copy the values from source into dest. Only copies the values of the axes that are found in the dest AND in source
+   * observation.
    * 
    * @param source
    *          source observation from which values are read
@@ -364,21 +356,17 @@ public class ObservationUtilities
    * @param args
    *          [optional, can be null] variable arguments
    * @param fullCompatibilityExpected
-   *          when true an InvalidStateException is thrown to indicate that the
-   *          full compatibility cannot be guaranteed. The full compatibility is
-   *          expressed in terms of the axes: the source observation must have
-   *          the same axes as the dest observation. If false, just the axes
-   *          from dest that where found in source are used, thus leading to
-   *          potential null values in the tupple model
+   *          when true an InvalidStateException is thrown to indicate that the full compatibility cannot be guaranteed.
+   *          The full compatibility is expressed in terms of the axes: the source observation must have the same axes
+   *          as the dest observation. If false, just the axes from dest that where found in source are used, thus
+   *          leading to potential null values in the tupple model
    * @return model if some values have been copied, null otherwise
    * @throws SensorException
    * @throws IllegalStateException
    *           when compatibility is wished but could not be guaranteed
    */
-  public static ITuppleModel optimisticValuesCopy( final IObservation source,
-      final IObservation dest, final IVariableArguments args,
-      boolean fullCompatibilityExpected ) throws SensorException,
-      IllegalStateException
+  public static ITuppleModel optimisticValuesCopy( final IObservation source, final IObservation dest,
+      final IVariableArguments args, boolean fullCompatibilityExpected ) throws SensorException, IllegalStateException
   {
     final IAxis[] srcAxes = source.getAxisList();
     final IAxis[] destAxes = dest.getAxisList();
@@ -392,17 +380,15 @@ public class ObservationUtilities
     {
       try
       {
-        final IAxis A = ObservationUtilities.findAxisByType( srcAxes,
-            destAxes[i].getType() );
+        final IAxis A = ObservationUtilities.findAxisByType( srcAxes, destAxes[i].getType() );
 
         map.put( destAxes[i], A );
       }
       catch( NoSuchElementException e )
       {
-        if( fullCompatibilityExpected
-            && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
-          throw new IllegalStateException( "Required axis " + destAxes[i]
-              + " from " + dest + " could not be found in " + source );
+        if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
+          throw new IllegalStateException( "Required axis " + destAxes[i] + " from " + dest + " could not be found in "
+              + source );
 
         // else ignored, try with next one
       }
@@ -419,14 +405,12 @@ public class ObservationUtilities
 
       for( int j = 0; j < destAxes.length; j++ )
       {
-        final IAxis srcAxis = (IAxis) map.get( destAxes[j] );
+        final IAxis srcAxis = (IAxis)map.get( destAxes[j] );
 
         if( srcAxis != null )
-          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i,
-              srcAxis );
+          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i, srcAxis );
         else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
-          tupple[model.getPositionFor( destAxes[j] )] = new Integer(
-              KalypsoStati.BIT_OK );
+          tupple[model.getPositionFor( destAxes[j] )] = new Integer( KalypsoStati.BIT_OK );
       }
 
       model.addTupple( tupple );
@@ -438,8 +422,8 @@ public class ObservationUtilities
   }
 
   /**
-   * Returns the given row. Creates a new array containing the references to the
-   * values in the tuppleModel for that row and these columns
+   * Returns the given row. Creates a new array containing the references to the values in the tuppleModel for that row
+   * and these columns
    * 
    * @param row
    *          row index for which objects will be taken
@@ -447,8 +431,8 @@ public class ObservationUtilities
    *          columns for which objects will be taken
    * @throws SensorException
    */
-  public static Object[] getElements( final ITuppleModel tuppleModel,
-      final int row, final IAxis[] axisList ) throws SensorException
+  public static Object[] getElements( final ITuppleModel tuppleModel, final int row, final IAxis[] axisList )
+      throws SensorException
   {
     final Object[] result = new Object[axisList.length];
     for( int i = 0; i < axisList.length; i++ )
@@ -457,8 +441,8 @@ public class ObservationUtilities
   }
 
   /**
-   * Sort an array of axes according to the Kalypso convention: axes are sorted
-   * based on their type information. Example:
+   * Sort an array of axes according to the Kalypso convention: axes are sorted based on their type information.
+   * Example:
    * <p>
    * date, Q, T, V, W, etc.
    */
@@ -466,7 +450,7 @@ public class ObservationUtilities
   {
     Arrays.sort( axes, AXIS_SORT_COMPARATOR );
   }
-  
+
   /**
    * AxisSortComparator: sorts the axes according to their types
    * 

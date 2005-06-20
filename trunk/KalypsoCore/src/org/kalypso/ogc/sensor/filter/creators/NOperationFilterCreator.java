@@ -52,13 +52,12 @@ import org.kalypso.zml.filters.NOperationFilterType;
 
 public class NOperationFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
+      throws SensorException
   {
     final NOperationFilterType filter = (NOperationFilterType)aft;
 
-    final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filter
-        .getFilter(), baseObs, context );
+    final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filter.getFilter(), baseObs, context );
 
     final NOperationFilter nOperationFilter = new NOperationFilter( filter );
     nOperationFilter.initFilter( innerObs, innerObs[0], context );

@@ -56,14 +56,12 @@ import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
- * InterpolationFilter. This is a simple yet tricky interpolation filter. It
- * steps through the time and eventually interpolates the values at t, using the
- * values at t-1 and t+1.
+ * InterpolationFilter. This is a simple yet tricky interpolation filter. It steps through the time and eventually
+ * interpolates the values at t, using the values at t-1 and t+1.
  * <p>
- * This filter can also deal with Kalypso Status Axes. In that case it does not
- * perform a strict interpolation, but uses the bitwise OR-Operator to combine
- * the stati. When no status is available, it uses the default value for the
- * status provided in the constructor.
+ * This filter can also deal with Kalypso Status Axes. In that case it does not perform a strict interpolation, but uses
+ * the bitwise OR-Operator to combine the stati. When no status is available, it uses the default value for the status
+ * provided in the constructor.
  * 
  * @author schlienger
  */
@@ -82,18 +80,19 @@ public class InterpolationFilter extends AbstractObservationFilter
   /**
    * Constructor.
    * 
-   * @param calendarField which field of the date will be used for steping
-   *          through the timeserie
-   * @param amount amount of time for the step
-   * @param forceFill when true, fills the model with defaultValue when no base
-   *          value
-   * @param defaultValue default value to use when filling absent values
-   * @param defaultStatus value of the default status when base status is absent
-   *          or when status-interpolation cannot be proceeded
+   * @param calendarField
+   *          which field of the date will be used for steping through the timeserie
+   * @param amount
+   *          amount of time for the step
+   * @param forceFill
+   *          when true, fills the model with defaultValue when no base value
+   * @param defaultValue
+   *          default value to use when filling absent values
+   * @param defaultStatus
+   *          value of the default status when base status is absent or when status-interpolation cannot be proceeded
    */
-  public InterpolationFilter( final int calendarField, final int amount,
-      final boolean forceFill, final double defaultValue,
-      final int defaultStatus )
+  public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
+      final double defaultValue, final int defaultStatus )
   {
     m_calField = calendarField;
     m_amount = amount;
@@ -105,8 +104,7 @@ public class InterpolationFilter extends AbstractObservationFilter
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final IVariableArguments args )
-      throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     final ITuppleModel values = super.getValues( args );
 
@@ -114,13 +112,10 @@ public class InterpolationFilter extends AbstractObservationFilter
     if( args instanceof DateRangeArgument )
       dr = (DateRangeArgument)args;
 
-    final IAxis dateAxis = ObservationUtilities.findAxisByClass( values
-        .getAxisList(), Date.class );
-    final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( values
-        .getAxisList(), Number.class );
+    final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
+    final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( values.getAxisList(), Number.class );
 
-    final SimpleTuppleModel intModel = new SimpleTuppleModel( values
-        .getAxisList() );
+    final SimpleTuppleModel intModel = new SimpleTuppleModel( values.getAxisList() );
 
     final Calendar cal = Calendar.getInstance();
 
@@ -269,9 +264,8 @@ public class InterpolationFilter extends AbstractObservationFilter
    * @param cal
    * @throws SensorException
    */
-  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes,
-      final SimpleTuppleModel intModel, final Calendar cal )
-      throws SensorException
+  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final SimpleTuppleModel intModel,
+      final Calendar cal ) throws SensorException
   {
     final Object[] tupple = new Object[valueAxes.length + 1];
     tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();

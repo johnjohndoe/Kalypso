@@ -89,7 +89,7 @@ public class GmlPropertyTask extends Task
     m_gmlURL = gmlURL;
   }
 
-  public Property createProperty( )
+  public Property createProperty()
   {
     final Property p = new Property();
     m_properties.add( p );
@@ -107,7 +107,7 @@ public class GmlPropertyTask extends Task
       throw new BuildException( "Property 'gmlURL' must be set." );
 
     getProject().log( "Lade properties aus gml: " + gmlURL, Project.MSG_DEBUG );
-    
+
     try
     {
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
@@ -121,7 +121,7 @@ public class GmlPropertyTask extends Task
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       throw new BuildException( "Fehler beim Laden von GML: " + gmlURL, e );
     }
   }
@@ -132,7 +132,7 @@ public class GmlPropertyTask extends Task
     final String name = property.getName();
     if( name == null || name.length() == 0 )
       throw new BuildException( "Property 'name' is not set." );
-    
+
     final String featureProperty = property.getFeatureProperty();
     if( featureProperty == null || featureProperty.length() == 0 )
       throw new BuildException( "Property 'featureProperty' is not set." );
@@ -141,7 +141,7 @@ public class GmlPropertyTask extends Task
     final String featurePath = property.getFeaturePath();
     if( ( featureID == null || featureID.length() == 0 ) && featurePath == null )
       throw new BuildException( "Neither 'featureID' nor 'featurePath' is set." );
-    
+
     // find feature
     final Feature f;
     if( featureID != null )
@@ -155,10 +155,10 @@ public class GmlPropertyTask extends Task
       final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
       if( featureFromPath instanceof Feature )
         f = (Feature)featureFromPath;
-      else 
+      else
         throw new BuildException( "No feature found with path: " + featurePath );
     }
-    
+
     final Object value = f.getProperty( featureProperty );
     if( value instanceof Date )
     {
@@ -177,18 +177,18 @@ public class GmlPropertyTask extends Task
       }
       else
         date = dateValue;
-      
+
       addProperty( name, "" + date.getTime(), null );
     }
     else if( value != null )
       addProperty( name, value.toString(), null );
     else
-      getProject().log( "No value for feature with id " + f.getId() + " in property: " + featureProperty, Project.MSG_DEBUG );
+      getProject().log( "No value for feature with id " + f.getId() + " in property: " + featureProperty,
+          Project.MSG_DEBUG );
   }
 
   /**
-   * Actually add the given property/value to the project after writing a log
-   * message.
+   * Actually add the given property/value to the project after writing a log message.
    * 
    * @note: Taken from {@link XmlProperty}in Ant.
    */
@@ -217,7 +217,7 @@ public class GmlPropertyTask extends Task
       getProject().setNewProperty( name, value );
 
     m_addedAttributes.put( name, value );
-    
+
     if( id != null )
       getProject().addReference( id, value );
   }
@@ -231,8 +231,7 @@ public class GmlPropertyTask extends Task
     private String m_featurePath;
 
     /**
-     * ID of Feature which will be selected. If set, featurePath with be
-     * ignored.
+     * ID of Feature which will be selected. If set, featurePath with be ignored.
      */
     private String m_featureID;
 
@@ -242,25 +241,29 @@ public class GmlPropertyTask extends Task
     /** HACK: if the property is a date, add this offset */
     private Integer m_dateoffset;
 
-    /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc.  */
+    /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc. */
     private Integer m_dateoffsetfield;
-    
+
     public final Integer getDateoffset()
     {
       return m_dateoffset;
     }
+
     public final void setDateoffset( Integer dateoffset )
     {
       m_dateoffset = dateoffset;
     }
+
     public final Integer getDateoffsetfield()
     {
       return m_dateoffsetfield;
     }
+
     public final void setDateoffsetfield( Integer dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
     }
+
     public final String getFeatureID()
     {
       return m_featureID;

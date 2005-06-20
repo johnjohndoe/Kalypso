@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.valuecomp;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -51,8 +51,11 @@ import org.kalypso.util.parser.ParserException;
 public class CompBetween extends AbstractValueComp
 {
   private Object m_valueFrom;
+
   private Object m_valueTo;
+
   private boolean m_modeFromIncl;
+
   private boolean m_modeToIncl;
 
   /**
@@ -64,10 +67,11 @@ public class CompBetween extends AbstractValueComp
    * @param modeToInclusive
    * @throws ParserException
    */
-  public CompBetween( final IAxis[] axes, final String axisType, final String valueFrom, final boolean modeFromInclusive, final String valueTo, final boolean modeToInclusive ) throws ParserException
+  public CompBetween( final IAxis[] axes, final String axisType, final String valueFrom,
+      final boolean modeFromInclusive, final String valueTo, final boolean modeToInclusive ) throws ParserException
   {
     super( axes, axisType );
-    
+
     m_valueFrom = m_parser.parse( valueFrom );
     m_valueTo = m_parser.parse( valueTo );
     m_modeFromIncl = modeFromInclusive;
@@ -81,7 +85,7 @@ public class CompBetween extends AbstractValueComp
   {
     if( m_parser.compare( element, m_valueFrom ) < 0 )
       return false;
-    
+
     if( m_parser.compare( element, m_valueTo ) > 0 )
       return false;
 
@@ -90,7 +94,7 @@ public class CompBetween extends AbstractValueComp
 
     if( !m_modeToIncl && m_parser.compare( element, m_valueTo ) >= 0 )
       return false;
-    
+
     return true;
   }
 }

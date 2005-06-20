@@ -2,11 +2,11 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
 
+import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.java.xml.XMLUtilities;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.xml.XMLUtilities;
 import org.w3c.dom.Node;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -128,8 +128,7 @@ public class DiagramTypeHandler implements ITypeHandler
         for( int i = 0; i < tuppel.length; i++ )
         {
           String[] values = tuppel[i].split( "," );
-          result
-              .addValue( new Double( values[0] ), new Double( values[1] ), new Double( values[2] ) );
+          result.addValue( new Double( values[0] ), new Double( values[1] ), new Double( values[2] ) );
         }
       }
       return result;

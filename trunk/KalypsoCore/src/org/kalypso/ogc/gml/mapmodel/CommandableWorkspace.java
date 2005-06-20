@@ -72,8 +72,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public CommandableWorkspace( final GMLWorkspace workspace )
   {
     /**
-     * it does not make sence decorate something else than the real workspace
-     * <br>
+     * it does not make sence decorate something else than the real workspace <br>
      * the UML looks also nicer without recursive dependencies here
      */
     m_workspace = (GMLWorkspace_Impl)workspace;
@@ -204,8 +203,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.resolveLinks( srcFeature, linkPropertyName );
   }
 
-  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
-      String linkPropertyName )
+  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType, String linkPropertyName )
   {
     return m_workspace.resolveWhoLinksTo( linkTargetfeature, linkSrcFeatureType, linkPropertyName );
   }
@@ -256,20 +254,17 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */
-  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature )
-      throws Exception
+  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature ) throws Exception
   {
     m_workspace.addFeatureAsComposition( parent, propName, pos, newFeature );
   }
 
-  public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID )
-      throws Exception
+  public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID ) throws Exception
   {
     m_workspace.addFeatureAsAggregation( parent, propName, pos, featureID );
   }
 
-  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName,
-      String linkFeatureId )
+  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName, String linkFeatureId )
   {
     return m_workspace.removeLinkedAsAggregationFeature( parentFeature, propName, linkFeatureId );
   }
@@ -279,8 +274,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
-      Feature childFeature )
+  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName, Feature childFeature )
   {
     return m_workspace.removeLinkedAsCompositionFeature( parentFeature, propName, childFeature );
   }
@@ -294,13 +288,14 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor, java.lang.String, int)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   *      java.lang.String, int)
    */
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
     m_workspace.accept( fv, featurePath, depth );
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.Feature, java.lang.String)

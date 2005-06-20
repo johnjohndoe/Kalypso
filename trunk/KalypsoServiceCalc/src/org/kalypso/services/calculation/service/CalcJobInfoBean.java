@@ -47,8 +47,7 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 
 /**
  * <p>
- * Enthält die aktuellen Daten eines
- * {@link org.kalypso.services.calculation.job.ICalcJob}
+ * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.job.ICalcJob}
  * </p>
  * 
  * @author Belger
@@ -59,8 +58,7 @@ public class CalcJobInfoBean implements Serializable, ICalcMonitor
   private String m_id = null;
 
   /**
-   * Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service
-   * übergeben
+   * Textuelle Beschreibung des Jobs, beim Erzeugen des Jobs an den Service übergeben
    */
   private String m_description;
 
@@ -74,8 +72,7 @@ public class CalcJobInfoBean implements Serializable, ICalcMonitor
   private int m_progress = -1;
 
   /**
-   * Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die
-   * Fehlermeldung
+   * Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung
    */
   private String m_message = "Warte auf Ausführung...";
 
@@ -85,8 +82,8 @@ public class CalcJobInfoBean implements Serializable, ICalcMonitor
   private String[] m_currentResults = new String[0];
 
   /**
-   * Wird vom Client nach erfolgter Berechnung dargestellt. Dient dazu, dem
-   * Benutzer ggfls. Hinweise auf Logdateien im Fehlerfall o.ä. zu geben.
+   * Wird vom Client nach erfolgter Berechnung dargestellt. Dient dazu, dem Benutzer ggfls. Hinweise auf Logdateien im
+   * Fehlerfall o.ä. zu geben.
    */
   private String m_finishText = "";
 
@@ -97,8 +94,8 @@ public class CalcJobInfoBean implements Serializable, ICalcMonitor
   // nur für wscompile
   }
 
-  public CalcJobInfoBean( final String id, final String description, final String type,
-      final int state, final int progress, final String finishText )
+  public CalcJobInfoBean( final String id, final String description, final String type, final int state,
+      final int progress, final String finishText )
   {
     m_id = id;
     m_description = description;
@@ -214,8 +211,7 @@ public class CalcJobInfoBean implements Serializable, ICalcMonitor
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcMonitor#setFinishInfo(int,
-   *      java.lang.String)
+   * @see org.kalypso.services.calculation.job.ICalcMonitor#setFinishInfo(int, java.lang.String)
    */
   public void setFinishInfo( final int status, final String text )
   {

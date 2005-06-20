@@ -38,11 +38,11 @@ public class GmlConvertFactoryTest extends TestCase
     registry.registerTypeHandler( new RangeSetTypeHandler() );
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
   }
-  
+
   public void testConvertXml() throws IOException, JAXBException, GmlConvertException
   {
     final File tmpdir = FileUtilities.createNewTempDir( getClass().getName() );
-    
+
     FileInputStream istFis = null;
     FileInputStream sollFis = null;
 
@@ -75,7 +75,7 @@ public class GmlConvertFactoryTest extends TestCase
       FileUtilities.deleteRecursive( tmpdir );
     }
   }
-  
+
   private File checkFile( final String filename, final File dir )
   {
     final File file = new File( dir, filename );

@@ -62,8 +62,7 @@ public class CalcJobHelper
     return null;
   }
 
-  public static CalcJobClientBean[] getMergedBeans( CalcJobClientBean[] initialBeans,
-      CalcJobClientBean[] beansToAdd )
+  public static CalcJobClientBean[] getMergedBeans( CalcJobClientBean[] initialBeans, CalcJobClientBean[] beansToAdd )
   {
     final Hashtable result = new Hashtable();
     for( int i = 0; i < initialBeans.length; i++ )
@@ -79,8 +78,8 @@ public class CalcJobHelper
     return (CalcJobClientBean[])result.values().toArray( new CalcJobClientBean[result.size()] );
   }
 
-  public static CalcJobClientBean[] createBeansForNewBaseDir( CalcJobClientBean[] beans,
-      File baseDirOrg, File baseDirNew )
+  public static CalcJobClientBean[] createBeansForNewBaseDir( CalcJobClientBean[] beans, File baseDirOrg,
+      File baseDirNew )
   {
     CalcJobClientBean[] result = new CalcJobClientBean[beans.length];
     for( int i = 0; i < beans.length; i++ )

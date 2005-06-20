@@ -1,4 +1,4 @@
-///*--------------- Kalypso-Header --------------------------------------------------------------------
+// /*--------------- Kalypso-Header --------------------------------------------------------------------
 //
 // This file is part of kalypso.
 // Copyright (C) 2004, 2005 by:
@@ -23,12 +23,12 @@
 //
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 // Contact:
 //
@@ -43,19 +43,19 @@
 ///**
 // * maps the DWD-ombrometer-ID to PSI-ID for the rainfall runoff model implementation
 // * "weisse elster".
-// * 
+// *
 // * @author doemming
 // */
 //public class DWD_PSI_Mapper
 //{
-//  //  "kalypso-ocs:psicompact://HN.5_WE.01OM...104710"
+//  // "kalypso-ocs:psicompact://HN.5_WE.01OM...104710"
 //
 //  /**
 //   * prefix href to psi database <br>
 //   * as this is linking inside the repository the prefix of "kalypso-ocs:" must
 //   * not occur. <br>
 //   * e.g. <br>
-//   * 
+//   *
 //   * the link from client :"kalypso-ocs:psicompact://HN.5_WE.01OM...104710" <br>
 //   * will result as this link: "psicompact://HN.5_WE.01OM...104710"
 //   */
@@ -73,7 +73,7 @@
 //    // Plauen
 //    if( "4426".equals( dwdID ) )
 //      return PSIPrefix + "HN.5_WE.01OM...433060";
-//    //  Carlsfeld
+//    // Carlsfeld
 //    if( "4435".equals( dwdID ) )
 //      return PSIPrefix + "HN.4_MU.01OM...420130";
 //    // Leipzig-Schkeuditz

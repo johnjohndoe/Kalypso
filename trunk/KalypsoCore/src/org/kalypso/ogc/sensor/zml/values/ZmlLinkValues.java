@@ -65,8 +65,7 @@ import org.kalypso.zml.AxisType.ValueLinkType;
 public class ZmlLinkValues implements IZmlValues
 {
   /**
-   * value of the href link that specifies that the zml values are stored in the
-   * data element
+   * value of the href link that specifies that the zml values are stored in the data element
    */
   public final static String DATA_REF = "#data";
 
@@ -88,15 +87,13 @@ public class ZmlLinkValues implements IZmlValues
    * @param context
    *          context into which original file was loaded
    * @param data
-   *          [optional] contains the values in a block format within CDATA tags
-   *          if the values are linked ZML-internally. This will be used if Href
-   *          is not specified, is empty, or contains "#data"
+   *          [optional] contains the values in a block format within CDATA tags if the values are linked
+   *          ZML-internally. This will be used if Href is not specified, is empty, or contains "#data"
    * @throws MalformedURLException
    * @throws IOException
    */
-  public ZmlLinkValues( final ValueLinkType vl, final IParser parser,
-      final URL context, final String data ) throws MalformedURLException,
-      IOException
+  public ZmlLinkValues( final ValueLinkType vl, final IParser parser, final URL context, final String data )
+      throws MalformedURLException, IOException
   {
     m_parser = parser;
 
@@ -108,8 +105,7 @@ public class ZmlLinkValues implements IZmlValues
 
     // if the Href is not specified, is empty, or contains "#data" we
     // use the data element provided.
-    if( vl.getHref() == null || vl.getHref().length() == 0
-        || vl.getHref().equalsIgnoreCase( DATA_REF ) )
+    if( vl.getHref() == null || vl.getHref().length() == 0 || vl.getHref().equalsIgnoreCase( DATA_REF ) )
       reader = new StringReader( data );
     else
     {
@@ -120,8 +116,7 @@ public class ZmlLinkValues implements IZmlValues
     if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
       m_csv = new CSV( vl.getSeparator(), vl.getLine(), true );
     else
-      m_csv = new RegexCSV( Pattern.compile( vl.getRegexp() ), vl.getLine(),
-          true );
+      m_csv = new RegexCSV( Pattern.compile( vl.getRegexp() ), vl.getLine(), true );
 
     m_csv.fetch( reader );
   }
@@ -151,8 +146,7 @@ public class ZmlLinkValues implements IZmlValues
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
    */
   public void setElement( int index, Object element ) throws SensorException
   {
@@ -173,7 +167,7 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
    */
-  public int getCount( )
+  public int getCount()
   {
     return m_csv.getLines();
   }
@@ -183,7 +177,7 @@ public class ZmlLinkValues implements IZmlValues
    */
   public int indexOf( final Object obj ) throws SensorException
   {
-    Integer iobj = (Integer) m_helper.get( obj );
+    Integer iobj = (Integer)m_helper.get( obj );
     if( iobj == null )
     {
       // tricky: go through the items serially to find it

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.net.URL;
@@ -56,23 +56,21 @@ import org.kalypso.util.runtime.IVariableArguments;
 public class ForecastFilter extends AbstractObservationFilter
 {
   private IObservation[] m_obsArray = null;
-  
-  public void initFilter( Object conf, IObservation obs, final URL context )
-      throws SensorException
+
+  public void initFilter( Object conf, IObservation obs, final URL context ) throws SensorException
   {
     super.initFilter( conf, obs, context );
-    
-    m_obsArray = (IObservation[]) conf;
+
+    m_obsArray = (IObservation[])conf;
   }
-  
-  public ITuppleModel getValues( IVariableArguments args )
-      throws SensorException
+
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
     final ITuppleModel models[] = new ITuppleModel[m_obsArray.length];
-    
+
     for( int i = 0; i < models.length; i++ )
       models[i] = m_obsArray[i].getValues( args );
-    
+
     return new ForecastTuppleModel( models );
   }
 }

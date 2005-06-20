@@ -66,7 +66,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 public class DefaultCalcResultEater implements ICalcResultPacker
 {
   private final Vector m_files = new Vector();
-  
+
   private final ModelspecData m_modelspec;
 
   /** Should be synchronized */
@@ -74,8 +74,7 @@ public class DefaultCalcResultEater implements ICalcResultPacker
 
   private final Map m_clientOutputMap;
 
-  public DefaultCalcResultEater( final ModelspecData modelspec,
-      final CalcJobClientBean[] clientOutput )
+  public DefaultCalcResultEater( final ModelspecData modelspec, final CalcJobClientBean[] clientOutput )
   {
     m_modelspec = modelspec;
 
@@ -91,12 +90,10 @@ public class DefaultCalcResultEater implements ICalcResultPacker
    * @param id
    *          Die ID für die Bean
    * @param file
-   *          Diese Datei oder dieses Verzeichnis werden zurück an den Server
-   *          gegeben.
+   *          Diese Datei oder dieses Verzeichnis werden zurück an den Server gegeben.
    * 
    * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
-   *      java.io.File)
+   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
    */
   public void addResult( final String id, final File file ) throws CalcJobServiceException
   {
@@ -126,35 +123,35 @@ public class DefaultCalcResultEater implements ICalcResultPacker
   }
 
   /**
-   * @throws CalcJobServiceException 
+   * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.job.ICalcResultPacker#packCurrentResults()
    */
   public DataHandler packCurrentResults() throws CalcJobServiceException
   {
-    
+
     ZipOutputStream zos = null;
     try
     {
       final File zipFile = File.createTempFile( "CalcJobResult_", ".zip" );
       zipFile.deleteOnExit();
       addFile( zipFile );
-      
+
       zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipFile ) ) );
       final ZipFileVisitor zipper = new ZipFileVisitor( zos );
 
       for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
       {
         final CalcResult result = (CalcResult)iter.next();
-        
+
         final File file = result.getFile();
         final String path = result.getPath();
-        
+
         zipper.setBasePattern( file.getAbsolutePath() );
         zipper.setBaseReplace( path );
-        
+
         FileUtilities.accept( file, zipper, true );
       }
-      
+
       zos.close();
 
       return new DataHandler( new FileDataSource( zipFile ) );
@@ -168,15 +165,14 @@ public class DefaultCalcResultEater implements ICalcResultPacker
       IOUtils.closeQuietly( zos );
     }
   }
-  
+
   public void addFile( final File file )
   {
     m_files.add( file );
   }
 
   /**
-   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird
-   * auch der Inhalt rekursiv gelöscht.
+   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird auch der Inhalt rekursiv gelöscht.
    */
   public void disposeFiles()
   {

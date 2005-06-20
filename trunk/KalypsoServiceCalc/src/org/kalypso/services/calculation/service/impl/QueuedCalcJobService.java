@@ -67,15 +67,14 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 
 /**
- * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation.
- * All jobs go in one fifo-queue. Support parallel processing of jobs. 
+ * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
+ * in one fifo-queue. Support parallel processing of jobs.
  * 
  * @author Belger
  */
 public class QueuedCalcJobService implements ICalculationService
 {
-  private static final Logger LOGGER = Logger.getLogger( QueuedCalcJobService.class
-      .getName() );
+  private static final Logger LOGGER = Logger.getLogger( QueuedCalcJobService.class.getName() );
 
   /** Vector of {@link CalcJobThread}s */
   private final Vector m_threads = new Vector();
@@ -96,21 +95,21 @@ public class QueuedCalcJobService implements ICalculationService
 
   private final IUrlCatalog m_catalog;
 
-  public QueuedCalcJobService( final ICalcJobFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod ) throws RemoteException
+  public QueuedCalcJobService( final ICalcJobFactory factory, final IUrlCatalog catalog, final int maxThreads,
+      final long schedulingPeriod ) throws RemoteException
   {
     m_calcJobFactory = factory;
     m_catalog = catalog;
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
-    
+
     try
     {
       m_unmarshaller = new ObjectFactory().createUnmarshaller();
     }
     catch( final JAXBException e )
     {
-      throw new RemoteException(
-          "Unmarshaller für Modellspezifikation konnte nicht erzeugt werden.", e );
+      throw new RemoteException( "Unmarshaller für Modellspezifikation konnte nicht erzeugt werden.", e );
     }
   }
 
@@ -227,13 +226,12 @@ public class QueuedCalcJobService implements ICalculationService
   }
 
   /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#startJob(java.lang.String,
-   *      java.lang.String, javax.activation.DataHandler,
+   * @see org.kalypso.services.calculation.service.ICalculationService#startJob(java.lang.String, java.lang.String,
+   *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public final CalcJobInfoBean startJob( final String typeID, final String description,
-      final DataHandler zipHandler, final CalcJobClientBean[] input,
-      final CalcJobClientBean[] output ) throws CalcJobServiceException
+  public final CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler,
+      final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
     CalcJobThread cjt = null;
     synchronized( m_threads )
@@ -255,8 +253,7 @@ public class QueuedCalcJobService implements ICalculationService
 
       final ICalcJob job = m_calcJobFactory.createJob( typeID );
 
-      cjt = new CalcJobThread( "" + id, description, typeID, job, modelspec, zipHandler, input,
-          output );
+      cjt = new CalcJobThread( "" + id, description, typeID, job, modelspec, zipHandler, input, output );
 
       if( id == m_threads.size() )
         m_threads.add( cjt );
@@ -322,8 +319,8 @@ public class QueuedCalcJobService implements ICalculationService
   }
 
   /**
-   * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann
-   * alle restlichen Jobs zerstören und insbesondere alle Dateien löschen
+   * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann alle restlichen Jobs zerstören und
+   * insbesondere alle Dateien löschen
    * 
    * @see java.lang.Object#finalize()
    */
@@ -389,8 +386,7 @@ public class QueuedCalcJobService implements ICalculationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getDeliveringResults(java.lang.String)
    */
-  public CalcJobServerBean[] getDeliveringResults( final String typeID )
-      throws CalcJobServiceException
+  public CalcJobServerBean[] getDeliveringResults( final String typeID ) throws CalcJobServiceException
   {
     return getModelspec( typeID ).getOutput();
   }
@@ -398,12 +394,12 @@ public class QueuedCalcJobService implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
    */
-  public DataHandler getSchema( final String namespace ) 
+  public DataHandler getSchema( final String namespace )
   {
     final URL url = m_catalog.getURL( namespace );
     if( url == null )
       return null;
-    
+
     return new DataHandler( new URLDataSource( url ) );
   }
 
@@ -417,14 +413,14 @@ public class QueuedCalcJobService implements ICalculationService
       final URL url = m_catalog.getURL( namespace );
       if( url == null )
         throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, null );
-      
+
       final URLConnection connection = url.openConnection();
       return connection.getLastModified();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       throw new CalcJobServiceException( "Unknown schema namespace: " + namespace, e );
     }
   }
@@ -439,7 +435,7 @@ public class QueuedCalcJobService implements ICalculationService
     int count = 0;
     for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
       namespaces[count++] = (String)mapIt.next();
-    
+
     return namespaces;
   }
 }

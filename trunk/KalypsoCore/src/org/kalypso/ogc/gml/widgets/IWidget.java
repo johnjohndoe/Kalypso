@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
@@ -49,7 +49,7 @@ import org.kalypso.util.command.ICommandTarget;
 /**
  * @author bce
  */
-public interface IWidget 
+public interface IWidget
 {
   public void rightReleased( final Point p );
 

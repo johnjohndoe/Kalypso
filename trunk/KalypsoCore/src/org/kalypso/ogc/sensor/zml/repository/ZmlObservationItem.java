@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.File;
@@ -83,6 +83,7 @@ public class ZmlObservationItem extends FileItem
 
   /**
    * Helper, lazy loading.
+   * 
    * @return observation object read from the file
    * 
    * @throws SensorException

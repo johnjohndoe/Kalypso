@@ -69,8 +69,10 @@ public class ModifyFeatureCommand implements ICommand
 
   /**
    * @param workspace
-   * @param features features to modify
-   * @param map propertyname/value map of properties to modify
+   * @param features
+   *          features to modify
+   * @param map
+   *          propertyname/value map of properties to modify
    */
   public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature features[], final Map map )
   {
@@ -151,7 +153,8 @@ public class ModifyFeatureCommand implements ICommand
       for( Iterator iter = m_oldMap[i].entrySet().iterator(); iter.hasNext(); )
       {
         final Map.Entry entry = (Entry)iter.next();
-        final FeatureProperty property = FeatureFactory.createFeatureProperty( (String)entry.getKey(), entry.getValue() );
+        final FeatureProperty property = FeatureFactory
+            .createFeatureProperty( (String)entry.getKey(), entry.getValue() );
         m_features[i].setProperty( property );
       }
     }

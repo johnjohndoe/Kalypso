@@ -36,15 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
- * The Wechmann Function. Performs conversion from W to Q and from Q to W
- * according to the Wechmann parameters.
+ * The Wechmann Function. Performs conversion from W to Q and from Q to W according to the Wechmann parameters.
  * <p>
  * The Wechmann Function is defined as follows:
  * 
@@ -67,7 +66,7 @@ public class WechmannFunction
 {
   private WechmannFunction()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
@@ -75,15 +74,16 @@ public class WechmannFunction
    * @param W
    * @return Q
    * @see WechmannFunction#computeQ(double, double, double, double)
-   * 
+   *  
    */
-  public static final double computeQ( final WechmannParams wp, final double W ) 
+  public static final double computeQ( final WechmannParams wp, final double W )
   {
     return computeQ( wp.getLNK1(), W, wp.getW1(), wp.getK2() );
   }
-  
+
   /**
    * Computes the Q using the following function:
+   * 
    * <pre>
    * Q = exp( ln( K1 ) + ln( W - W1 ) * K2 )
    * </pre>
@@ -93,9 +93,9 @@ public class WechmannFunction
    * @param W1
    * @param K2
    * @return Q
-   * 
+   *  
    */
-  public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) 
+  public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 )
   {
     if( W - W1 <= 0 )
     {
@@ -103,7 +103,7 @@ public class WechmannFunction
       // throw new WechmannException( "Log 0 not valid (W - W1 <= 0)" );
       return 0;
     }
-    
+
     return Math.exp( LNK1 + Math.log( W - W1 ) * K2 );
   }
 
@@ -119,27 +119,31 @@ public class WechmannFunction
   {
     return computeW( wp.getW1(), Q, wp.getLNK1(), wp.getK2() );
   }
-  
+
   /**
    * Computes the W using the following function:
+   * 
    * <pre>
    *               ln( Q ) - ln( K1 )
    * W = W1 + exp( ------------------ )
    *                       K2
    * </pre>
+   * 
    * @param W1
    * @param Q
    * @param LNK1
    * @param K2
    * @return W
    * 
-   * @throws WQException when K2 = 0
+   * @throws WQException
+   *           when K2 = 0
    */
-  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 ) throws WQException
+  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 )
+      throws WQException
   {
     if( K2 == 0 )
       throw new WQException( "Divide by 0 (K2 = 0)" );
-    
+
     return W1 + Math.exp( ( Math.log( Q ) - LNK1 ) / K2 );
   }
 }
