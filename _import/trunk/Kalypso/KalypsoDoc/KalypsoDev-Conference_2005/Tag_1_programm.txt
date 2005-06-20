@@ -8,7 +8,6 @@ Sonntag
 -------
 - Source-Code Formatierung
 - Programm bis
-- Jeder stellt seine Tätigkeit vor.
 
 Montag
 ------

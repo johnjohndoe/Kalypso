@@ -9,7 +9,7 @@
 
 
 	- Übersicht über das ganze kalypso-projekt
-	- Welche Projekte mach die TUHH, (Flows ??)
+	- Welche Projekte macht die TUHH, (Flows ??)
 	- Was haben die anderen (z.B.nadja) eigentlich gemacht 
 	- Überblick (Code und Zuständigkeiten, Code-Projekte) 
 	- Entstehung von Kalypso -> was ist der aktueller Stand von Kalypso
