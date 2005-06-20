@@ -83,8 +83,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author doemming
  */
-public class ImportRasterSelectionWizardPage extends WizardPage implements FocusListener,
-    ISelectionProvider
+public class ImportRasterSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
@@ -108,7 +107,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
   IPath m_targetPath = null;
 
   File m_sourceFile = null;
-  
+
   IProject selectedProject;
 
   private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
@@ -341,11 +340,11 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
       }
     } );
   }
-  
+
   KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource",
-        fileResourceExtensions, selectedProject );
+    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource", fileResourceExtensions,
+        selectedProject );
   }
 
   String chooseFile( File selectedFile, String[] filterExtensions )
@@ -395,8 +394,7 @@ public class ImportRasterSelectionWizardPage extends WizardPage implements Focus
 
     if( selectedCoordinateSystemName != null )
     {
-      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName(
-          selectedCoordinateSystemName );
+      selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
         error.append( "Koordinatensystem existiert nicht\n" );

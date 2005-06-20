@@ -72,10 +72,15 @@ import org.kalypso.eclipse.core.resources.ProjectUtilities;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * @author doemming
+ * 
+ * ExportRasterSelectionWizardPage
+ * <p>
+ * 
+ * created by
+ * 
+ * @author Nadja Peiler (19.06.2005)
  */
-public class ExportRasterSelectionWizardPage extends WizardPage implements FocusListener,
-    ISelectionProvider
+public class ExportRasterSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
@@ -192,8 +197,8 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
 
   KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource",
-        fileResourceExtensions, selectedProject );
+    return new KalypsoResourceSelectionDialog( getShell(), selectedProject, "Select resource", fileResourceExtensions,
+        selectedProject );
   }
 
   public void createControlTarget( Composite parent )
@@ -375,7 +380,7 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   {
     if( m_sourcePath != null && !m_sourcePath.equals( m_textFileSource.getText() ) )
     {
-      m_sourcePath = new Path(m_textFileSource.getText());
+      m_sourcePath = new Path( m_textFileSource.getText() );
     }
     if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
     {
@@ -399,7 +404,6 @@ public class ExportRasterSelectionWizardPage extends WizardPage implements Focus
   {
     return new RasterExportSelection( m_sourcePath, selectedProject, m_targetFile, m_format );
   }
-  
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
