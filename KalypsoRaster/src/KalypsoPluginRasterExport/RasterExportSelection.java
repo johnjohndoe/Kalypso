@@ -61,8 +61,7 @@ public class RasterExportSelection implements ISelection
    * 
    * @author doemming
    */
-  public RasterExportSelection( IPath pathSource, IProject selectedProject, File fileTarget,
-      String format )
+  public RasterExportSelection( IPath pathSource, IProject selectedProject, File fileTarget, String format )
   {
     m_pathSource = pathSource;
     m_selectedProject = selectedProject;
@@ -85,11 +84,11 @@ public class RasterExportSelection implements ISelection
 
   public File getSourceFile()
   {
-    return new File( m_selectedProject.getLocation() + "/"
-        + m_pathSource.removeFirstSegments( 1 ).toString() );
+    return new File( m_selectedProject.getLocation() + "/" + m_pathSource.removeFirstSegments( 1 ).toString() );
   }
-  
-  public IProject getProject(){
+
+  public IProject getProject()
+  {
     return m_selectedProject;
   }
 

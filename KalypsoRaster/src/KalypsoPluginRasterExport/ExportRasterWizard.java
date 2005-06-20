@@ -80,8 +80,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
   public void init( IWorkbench workbench, IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
-    final List selectedResources = IDE
-        .computeSelectedResources( currentSelection );
+    final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
       m_selection = new StructuredSelection( selectedResources );
@@ -109,8 +108,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
    */
   public boolean performFinish()
   {
-    final RasterExportSelection selection = (RasterExportSelection)m_page1
-        .getSelection();
+    final RasterExportSelection selection = (RasterExportSelection)m_page1.getSelection();
     final File fileSource = selection.getSourceFile();
     final File fileTarget = selection.getFileTarget();
     final String format = selection.getTargetFormat();
@@ -146,8 +144,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
             catch( Exception e )
             {
               e.printStackTrace();
-              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e
-                  .getMessage(), e );
+              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e.getMessage(), e );
             }
             finally
             {
@@ -162,8 +159,7 @@ public class ExportRasterWizard extends Wizard implements IImportWizard
       }
       else
       {
-        MessageDialog.openConfirm( this.getShell(), "Information",
-            "Export-Function not implemented" );
+        MessageDialog.openConfirm( this.getShell(), "Information", "Export-Function not implemented" );
         return false;
       }
     }

@@ -86,8 +86,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
   {
     m_selection = currentSelection;
     m_workbench = workbench;
-    final List selectedResources = IDE
-        .computeSelectedResources( currentSelection );
+    final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
       m_selection = new StructuredSelection( selectedResources );
@@ -123,8 +122,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
    */
   public boolean performFinish()
   {
-    final RasterImportSelection selection = (RasterImportSelection)m_page1
-        .getSelection();
+    final RasterImportSelection selection = (RasterImportSelection)m_page1.getSelection();
     final File fileSource = selection.getFileSource();
     final File fileTarget = selection.getTargetFile();
     final IProject targetProject = selection.getProject();
@@ -142,8 +140,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
             try
             {
               monitor.beginTask( "Lese Rasterdaten", 100 );
-              RectifiedGridCoverage rasterGrid = GridUtils.importGridArc(
-                  fileSource, cs );
+              RectifiedGridCoverage rasterGrid = GridUtils.importGridArc( fileSource, cs );
               monitor.worked( 50 );
               if( monitor.isCanceled() )
               {
@@ -166,8 +163,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
             catch( Exception e )
             {
               e.printStackTrace();
-              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e
-                  .getMessage(), e );
+              return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e.getMessage(), e );
             }
             finally
             {
@@ -182,8 +178,7 @@ public class ImportRasterWizard extends Wizard implements IImportWizard
       }
       else
       {
-        MessageDialog.openConfirm( this.getShell(), "Information",
-            "Import-Function not implemented" );
+        MessageDialog.openConfirm( this.getShell(), "Information", "Import-Function not implemented" );
         return false;
       }
     }
