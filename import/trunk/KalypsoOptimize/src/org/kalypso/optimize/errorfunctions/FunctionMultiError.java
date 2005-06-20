@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.ArrayList;
@@ -53,8 +53,7 @@ public class FunctionMultiError extends IErrorFunktion
 {
   private final List m_functions;
 
-  public FunctionMultiError( TreeMap measuredTS, Date startCompare, Date endCompare,
-      double errorDivisor )
+  public FunctionMultiError( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
   {
     super( measuredTS, startCompare, endCompare, errorDivisor );
     m_functions = new ArrayList();
@@ -91,7 +90,7 @@ public class FunctionMultiError extends IErrorFunktion
           c++;
         }
         else
-          System.out.println("errorfunction "+function.toString()+" is invalid");
+          System.out.println( "errorfunction " + function.toString() + " is invalid" );
       }
       catch( Exception e )
       {

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
 import java.net.MalformedURLException;
@@ -51,6 +51,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * IOptimizingJob
+ * 
  * @author doemmig
  */
 public interface IOptimizingJob
@@ -81,8 +82,8 @@ public interface IOptimizingJob
   public TreeMap getCalcedTimeSeries() throws MalformedURLException, SensorException;
 
   /**
-   * inform job, if last calculation got the best results (till last run)</br>
-   * e.g. to implement: keep best results and clear the rest
+   * inform job, if last calculation got the best results (till last run)</br> e.g. to implement: keep best results and
+   * clear the rest
    * 
    * @param wasBest
    */

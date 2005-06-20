@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
 import java.io.IOException;
@@ -58,8 +58,7 @@ import org.kalypso.optimizer.Parameter;
 
 /**
  * 
- * this class handles the comunication between optimizer routine (SCE) and
- * calcjob routine
+ * this class handles the comunication between optimizer routine (SCE) and calcjob routine
  * 
  * @author doemming
  */
@@ -95,16 +94,15 @@ public class SceIOHandler
 
   private double m_bestEvaluation = -1;
 
-  public SceIOHandler( Logger logger, AutoCalibration calibration, IOptimizingJob job )
-      throws MalformedURLException, SensorException
+  public SceIOHandler( Logger logger, AutoCalibration calibration, IOptimizingJob job ) throws MalformedURLException,
+      SensorException
   {
     m_logger = logger;
     //    calibration.getPegel().getFile()
     TreeMap measuersTS = job.getMeasuredTimeSeries();
     m_errorFunction = ErrorFunctionFactory.createErrorFunktion( measuersTS, calibration );
     final List parameterList = calibration.getParameterlist().getParameter();
-    final Parameter[] parameters = (Parameter[])parameterList.toArray( new Parameter[parameterList
-        .size()] );
+    final Parameter[] parameters = (Parameter[])parameterList.toArray( new Parameter[parameterList.size()] );
     m_parameterConf = parameters;
     m_job = job;
 
@@ -173,8 +171,8 @@ public class SceIOHandler
         }
         m_calculationCounter++;
         answer = Double.toString( evaluation ) + "\n";
-        m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is "
-            + evaluation + " (best is " + m_bestEvaluation + ")" );
+        m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is " + evaluation + " (best is "
+            + m_bestEvaluation + ")" );
       }
       catch( Exception e )
       {
@@ -212,8 +210,7 @@ public class SceIOHandler
     m_job.calculate();
   }
 
-  public void handleStreams( StringBuffer outBuffer, StringBuffer errBuffer, Writer inputWriter )
-      throws IOException
+  public void handleStreams( StringBuffer outBuffer, StringBuffer errBuffer, Writer inputWriter ) throws IOException
   {
     String[] out = getLines( outBuffer );
     String[] err = getLines( errBuffer );

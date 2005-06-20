@@ -36,14 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.transform;
 
 import org.kalypso.optimizer.Parameter;
 
 /**
  * data transfer object of a parameter optimization configuration
+ * 
  * @author doemming
  */
 
@@ -54,7 +55,7 @@ public class ParameterOptimizeContext
   public final static String MODE_OFFSET = "offset";
 
   public final static String MODE_DIRECT = "direct";
-  
+
   public final static String MODE_INITIAL = "setInitial";
 
   private final double m_upperBound;
@@ -69,8 +70,8 @@ public class ParameterOptimizeContext
 
   private final String[] m_xPaths;
 
-  public ParameterOptimizeContext( double initialValue, double syntecticValue, double lowerBound,
-      double upperBound, String mode, String[] xPaths )
+  public ParameterOptimizeContext( double initialValue, double syntecticValue, double lowerBound, double upperBound,
+      String mode, String[] xPaths )
   {
     m_initialValue = initialValue;
     m_synteticValue = syntecticValue;
@@ -87,7 +88,7 @@ public class ParameterOptimizeContext
     m_lowerBound = parameter.getLowerBound();
     m_upperBound = parameter.getUpperBound();
     m_mode = parameter.getMode();
-    m_xPaths = (String[])parameter.getXpath().toArray(new String[parameter.getXpath().size()]);
+    m_xPaths = (String[])parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
   }
 
   public double getUpperBound()

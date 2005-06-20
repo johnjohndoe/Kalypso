@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
 import java.io.File;
@@ -127,8 +127,8 @@ public class SceJob
   /**
    * prepare SCE configuration file "scein.dat"
    */
-  private void makeinputFiles() throws TransformerException, ParserConfigurationException,
-      SAXException, IOException, JAXBException
+  private void makeinputFiles() throws TransformerException, ParserConfigurationException, SAXException, IOException,
+      JAXBException
   {
     //prepare scein.dat
 

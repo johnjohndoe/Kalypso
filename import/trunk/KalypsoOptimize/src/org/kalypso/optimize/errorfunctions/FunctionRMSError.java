@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
@@ -49,13 +49,14 @@ import java.util.TreeMap;
  */
 public class FunctionRMSError extends IErrorFunktion
 {
-  
+
   public FunctionRMSError( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
   {
     super( measuredTS, startCompare, endCompare, errorDivisor );
-    
+
   }
-  public double calculateError( TreeMap calced)
+
+  public double calculateError( TreeMap calced )
   {
     double error = 0;
     double c = 0;
@@ -74,10 +75,10 @@ public class FunctionRMSError extends IErrorFunktion
         }
         catch( Exception e )
         {
-          e.printStackTrace();  
+          e.printStackTrace();
         }
       }
     }
-    return Math.sqrt( error / c )/m_errorDivisor;
+    return Math.sqrt( error / c ) / m_errorDivisor;
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
@@ -49,12 +49,13 @@ import java.util.TreeMap;
  */
 public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
 {
-  public FunctionRMSEPeakAndLowFlow( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor,double min, double max  )
+  public FunctionRMSEPeakAndLowFlow( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor,
+      double min, double max )
   {
     super( measuredTS, startCompare, endCompare, errorDivisor );
     m_min = min;
     m_max = max;
-    
+
   }
 
   public final static double UNBOUND = -1;
@@ -88,8 +89,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
         final double valueMeasured = ( (Double)m_measuredTS.get( dateKey ) ).doubleValue();
         try
         {
-          if( ( m_min == UNBOUND && valueMeasured <= m_max )
-              || ( m_max == UNBOUND && valueMeasured >= m_min )
+          if( ( m_min == UNBOUND && valueMeasured <= m_max ) || ( m_max == UNBOUND && valueMeasured >= m_min )
               || ( m_max != UNBOUND && m_min == UNBOUND && m_min <= valueMeasured && valueMeasured <= m_max ) )
           {
             // valid intervall
@@ -117,6 +117,6 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
     }
     errorAll += Math.sqrt( error / c );
     cAll++;
-    return errorAll /cAll/m_errorDivisor;
+    return errorAll / cAll / m_errorDivisor;
   }
 }

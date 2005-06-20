@@ -62,8 +62,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Utilities to transform parameters of a data model. (for example to optimize
- * the model)
+ * Utilities to transform parameters of a data model. (for example to optimize the model)
  * 
  * @author doemming
  */
@@ -74,22 +73,20 @@ public class OptimizeModelUtils
   // do not instanciate
   }
 
-  public static void initializeModel( Document doc, ParameterOptimizeContext[] contexts )
-      throws TransformerException
+  public static void initializeModel( Document doc, ParameterOptimizeContext[] contexts ) throws TransformerException
   {
     for( int i = 0; i < contexts.length; i++ )
       initializeModell( doc, contexts[i] );
   }
 
-  public static void initializeModell( Document doc, ParameterOptimizeContext calContext )
-      throws TransformerException
+  public static void initializeModell( Document doc, ParameterOptimizeContext calContext ) throws TransformerException
   {
     String value = Double.toString( calContext.getInitialValue() );
     setParameter( calContext.getxPaths(), value, doc );
   }
 
-  public static void transformModel( Document doc, double[] values,
-      ParameterOptimizeContext[] contexts ) throws TransformerException
+  public static void transformModel( Document doc, double[] values, ParameterOptimizeContext[] contexts )
+      throws TransformerException
   {
     for( int i = 0; i < contexts.length; i++ )
       transformModel( doc, values[i], contexts[i] );
@@ -125,8 +122,7 @@ public class OptimizeModelUtils
   //    }
   //  }
 
-  public static void setParameter( String[] querys, String value, Document myDom )
-      throws TransformerException
+  public static void setParameter( String[] querys, String value, Document myDom ) throws TransformerException
   {
     for( int n = 0; n < querys.length; n++ )
     {
@@ -140,8 +136,7 @@ public class OptimizeModelUtils
     }
   }
 
-  public static void setParameter_Factor( String[] querys, double value, Document myDom )
-      throws TransformerException
+  public static void setParameter_Factor( String[] querys, double value, Document myDom ) throws TransformerException
   {
     for( int n = 0; n < querys.length; n++ )
     {
@@ -159,8 +154,7 @@ public class OptimizeModelUtils
     }
   }
 
-  public static void setParameter_Offset( String[] querys, double value, Document myDom )
-      throws TransformerException
+  public static void setParameter_Offset( String[] querys, double value, Document myDom ) throws TransformerException
   {
     for( int n = 0; n < querys.length; n++ )
     {
@@ -180,8 +174,7 @@ public class OptimizeModelUtils
 
   // TODO
   //method returns nodeList to a given query
-  public static NodeList getXPath( String xPathQuery, Document domNode )
-      throws TransformerException
+  public static NodeList getXPath( String xPathQuery, Document domNode ) throws TransformerException
   {
     NodeList nl = XPathAPI.selectNodeList( domNode, xPathQuery );
     //    System.out.println( nl.getLength() + " <- " + xPathQuery );
@@ -214,8 +207,7 @@ public class OptimizeModelUtils
   }
 
   //method writes a document(node) to a file
-  public static void toFile( File file, Node node ) throws TransformerException,
-      FileNotFoundException
+  public static void toFile( File file, Node node ) throws TransformerException, FileNotFoundException
   {
     Transformer t = TransformerFactory.newInstance().newTransformer();
     DOMSource src = new DOMSource( node );

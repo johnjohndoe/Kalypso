@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
@@ -60,9 +60,8 @@ public abstract class IErrorFunktion
    * abstract error funktion class
    * 
    * @param errorDivisor
-   *          calculated errors can be weighted with this divisor, this makes it
-   *          possible to compare different errorfuntions, good idea is to start
-   *          with 1.0d and update it later
+   *          calculated errors can be weighted with this divisor, this makes it possible to compare different
+   *          errorfuntions, good idea is to start with 1.0d and update it later
    */
   public IErrorFunktion( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
   {
@@ -76,7 +75,7 @@ public abstract class IErrorFunktion
 
   public double updateErrorDivisor( TreeMap calcedTS )
   {
-    m_errorDivisor=calculateError(calcedTS);
+    m_errorDivisor = calculateError( calcedTS );
     return m_errorDivisor;
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
@@ -50,8 +50,7 @@ import java.util.TreeMap;
 public class FunctionVolumeError extends IErrorFunktion
 {
 
-  public FunctionVolumeError( TreeMap measuredTS, Date startCompare, Date endCompare,
-      double errorDivisor )
+  public FunctionVolumeError( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
   {
     super( measuredTS, startCompare, endCompare, errorDivisor );
   }
@@ -79,6 +78,6 @@ public class FunctionVolumeError extends IErrorFunktion
         }
       }
     }
-    return Math.abs( error / c / m_errorDivisor);
+    return Math.abs( error / c / m_errorDivisor );
   }
 }
