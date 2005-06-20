@@ -65,9 +65,8 @@ import java.io.Serializable;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * A sequence of decimals numbers which when written on a width are a sequence
- * of coordinate positions. The width is derived from the CRS or coordinate
- * dimension of the container.
+ * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
+ * derived from the CRS or coordinate dimension of the container.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -174,8 +173,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   /**
-   * returns the position as a array the first field contains the x- the second
-   * field the y-value etc.
+   * returns the position as a array the first field contains the x- the second field the y-value etc.
    */
   public double[] getAsArray()
   {
@@ -184,8 +182,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   /**
-   * translate the point by the submitted values. the <code>dz</code>- value
-   * will be ignored.
+   * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
   public void translate( double[] d )
   {
@@ -196,8 +193,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   /**
-   * compares if all field of other are equal to the corresponding fields of
-   * this position
+   * compares if all field of other are equal to the corresponding fields of this position
    */
   public boolean equals( Object other )
   {

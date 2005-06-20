@@ -15,8 +15,7 @@ public abstract class AbstractObservationTableAction extends AbstractAction
 {
   private final ObservationTable m_table;
 
-  public AbstractObservationTableAction( final ObservationTable table,
-      final String name, final String toolTip )
+  public AbstractObservationTableAction( final ObservationTable table, final String name, final String toolTip )
   {
     super( name );
     m_table = table;
@@ -24,7 +23,7 @@ public abstract class AbstractObservationTableAction extends AbstractAction
     putValue( SHORT_DESCRIPTION, toolTip );
   }
 
-  public ObservationTable getTable( )
+  public ObservationTable getTable()
   {
     return m_table;
   }

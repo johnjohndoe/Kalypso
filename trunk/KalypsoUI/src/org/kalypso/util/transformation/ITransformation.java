@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
@@ -55,10 +55,13 @@ public interface ITransformation
   /**
    * Performs the transformation.
    * 
-   * @param msgWriter write short descriptions or summary of the real problem in this writer. The contents are held in memory.
-   * @param logWriter write full descriptions of the problem in this writer. The contents are written to a file.
+   * @param msgWriter
+   *          write short descriptions or summary of the real problem in this writer. The contents are held in memory.
+   * @param logWriter
+   *          write full descriptions of the problem in this writer. The contents are written to a file.
    * @param monitor
    * @throws TransformationException
    */
-  void transform( final BufferedWriter msgWriter, final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException;
+  void transform( final BufferedWriter msgWriter, final BufferedWriter logWriter, final IProgressMonitor monitor )
+      throws TransformationException;
 }

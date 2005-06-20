@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Miscellaneous
@@ -65,9 +65,8 @@ import java.awt.geom.Dimension2D;
 import java.io.Serializable;
 
 /**
- * Implement float and double version of {@link Dimension2D}. This class is
- * only temporary; it will disaspear if <em>JavaSoft</em> implements
- * <code>Dimension2D.Float</code> and <code>Dimension2D.Double</code>.
+ * Implement float and double version of {@link Dimension2D}. This class is only temporary; it will disaspear if
+ * <em>JavaSoft</em> implements <code>Dimension2D.Float</code> and <code>Dimension2D.Double</code>.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -81,9 +80,8 @@ public final class XDimension2D
   {}
 
   /**
-   * Implement float version of {@link Dimension2D}. This class is temporary;
-   * it will disaspear if <em>JavaSoft</em> implements
-   * <code>Dimension2D.Float</code> and <code>Dimension2D.Double</code>.
+   * Implement float version of {@link Dimension2D}. This class is temporary; it will disaspear if <em>JavaSoft</em>
+   * implements <code>Dimension2D.Float</code> and <code>Dimension2D.Double</code>.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -151,8 +149,8 @@ public final class XDimension2D
     }
 
     /**
-     * Retourne la dimension sous forme de chaîne de caractères. La chaîne sera
-     * de la forme "<code>Dimension2D[45,76]</code>".
+     * Retourne la dimension sous forme de chaîne de caractères. La chaîne sera de la forme "
+     * <code>Dimension2D[45,76]</code>".
      */
     public String toString()
     {
@@ -161,9 +159,8 @@ public final class XDimension2D
   }
 
   /**
-   * Implement double version of {@link Dimension2D}. This class is temporary;
-   * it will disaspear if <em>JavaSoft</em> implements
-   * <code>Dimension2D.Float</code> and <code>Dimension2D.Double</code>.
+   * Implement double version of {@link Dimension2D}. This class is temporary; it will disaspear if <em>JavaSoft</em>
+   * implements <code>Dimension2D.Float</code> and <code>Dimension2D.Double</code>.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -231,8 +228,8 @@ public final class XDimension2D
     }
 
     /**
-     * Retourne la dimension sous forme de chaîne de caractères. La chaîne sera
-     * de la forme "<code>Dimension2D[45,76]</code>".
+     * Retourne la dimension sous forme de chaîne de caractères. La chaîne sera de la forme "
+     * <code>Dimension2D[45,76]</code>".
      */
     public String toString()
     {

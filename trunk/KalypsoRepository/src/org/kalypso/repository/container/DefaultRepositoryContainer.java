@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.container;
 
 import java.util.Arrays;
@@ -49,7 +49,6 @@ import java.util.Vector;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-
 
 /**
  * Default implementation.
@@ -71,11 +70,11 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   {
     m_reps.addAll( Arrays.asList( repositories ) );
   }
-  
-  public void dispose( )
+
+  public void dispose()
   {
     for( final Iterator it = m_reps.iterator(); it.hasNext(); )
-      ((IRepository) it.next()).dispose();
+      ( (IRepository)it.next() ).dispose();
 
     m_reps.clear();
     m_listeners.clear();
@@ -83,7 +82,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
 
   public void addRepository( final IRepository rep )
   {
-     m_reps.add( rep );
+    m_reps.add( rep );
 
     fireRepositoryChanged();
   }
@@ -93,7 +92,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
     {
       IRepositoryContainerListener element = (IRepositoryContainerListener)iter.next();
-      
+
       element.onRepositoryContainerChanged();
     }
   }
@@ -101,9 +100,9 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   public void removeRepository( IRepository rep )
   {
     m_reps.remove( rep );
-    
+
     rep.dispose();
-    
+
     fireRepositoryChanged();
   }
 
@@ -147,7 +146,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
 
       if( rep.getIdentifier().equals( id ) )
         return rep;
-      
+
       try
       {
         return rep.findItem( id );
@@ -157,7 +156,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
         // ignored, try with next repository
       }
     }
-    
+
     throw new NoSuchElementException( "Item not found: " + id );
   }
 }

@@ -29,17 +29,17 @@ public class SplitSort implements FeatureList
 
   private final FeatureTypeProperty m_parentFeatureTypeProperty;
 
-  public SplitSort( Feature parentFeature, FeatureTypeProperty parentFTP)
+  public SplitSort( Feature parentFeature, FeatureTypeProperty parentFTP )
   {
     m_parentFeature = parentFeature;
-    m_parentFeatureTypeProperty=parentFTP;
+    m_parentFeatureTypeProperty = parentFTP;
     //
   }
 
-  public SplitSort( final Feature parentFeature, FeatureTypeProperty parentFTP,final GM_Envelope env )
+  public SplitSort( final Feature parentFeature, FeatureTypeProperty parentFTP, final GM_Envelope env )
   {
     m_parentFeature = parentFeature;
-    m_parentFeatureTypeProperty=parentFTP;
+    m_parentFeatureTypeProperty = parentFTP;
     myRootContainer = new SplitSortContainer( null, env );
   }
 
@@ -73,8 +73,8 @@ public class SplitSort implements FeatureList
       double maxYroot = envRoot.getMax().getY();
       double minXroot = envRoot.getMin().getX();
       double minYroot = envRoot.getMin().getY();
-      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY : minYroot,
-          maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY : maxYroot );
+      GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY
+          : minYroot, maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY : maxYroot );
 
       SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv );
       myRootContainer.setParent( newRootContainer );
@@ -389,8 +389,8 @@ public class SplitSort implements FeatureList
    */
   public Feature[] toFeatures()
   {
-    
-       return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
+
+    return (Feature[])m_objects.toArray( new Feature[m_objects.size()] );
   }
 
   /**

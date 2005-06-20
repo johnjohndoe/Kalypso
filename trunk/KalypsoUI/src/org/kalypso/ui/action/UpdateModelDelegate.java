@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import java.io.File;
@@ -91,9 +91,8 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
       final IProject project = ModelActionHelper.chooseOneProject( m_window );
       final File serverProject = ModelActionHelper.checkIsSeverMirrored( serverRoot, project );
 
-      if( !MessageDialog.openConfirm( m_window.getShell(), "Modell aktualisieren",
-          "Soll das Projekt '" + project.getName()
-              + "' aktualisiert werden?\nLokale Änderungen gehen dadurch verloren." ) )
+      if( !MessageDialog.openConfirm( m_window.getShell(), "Modell aktualisieren", "Soll das Projekt '"
+          + project.getName() + "' aktualisiert werden?\nLokale Änderungen gehen dadurch verloren." ) )
         return;
 
       final Job job = new Job( "Modelle aktualisieren" )
@@ -130,7 +129,8 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
     }
     catch( final CoreException ce )
     {
-      ErrorDialog.openError( m_window.getShell(), "Modell aktualisieren", "Modell konnte nicht aktualisiert werden", ce.getStatus() );
+      ErrorDialog.openError( m_window.getShell(), "Modell aktualisieren", "Modell konnte nicht aktualisiert werden", ce
+          .getStatus() );
     }
   }
 

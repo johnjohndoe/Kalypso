@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools.shape;
 
 import java.io.BufferedWriter;
@@ -127,8 +127,8 @@ public class Shp2MySQL
         outFile = outFile.substring( pos + 1 );
       }
 
-      BufferedWriter fos = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( outDir
-          + "/" + outFile ), "ISO-8859-1" ) );
+      BufferedWriter fos = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( outDir + "/" + outFile ),
+          "ISO-8859-1" ) );
 
       ShapeFile sf = new ShapeFile( (String)fileList.get( i ) );
 
@@ -275,34 +275,28 @@ public class Shp2MySQL
    * prints out helping application-information.
    * 
    * @param n
-   *          an integer parameter, which determines which help-information
-   *          should be given out.
+   *          an integer parameter, which determines which help-information should be given out.
    */
   private static void usage( int n )
   {
     switch( n )
     {
     case 0:
-      System.out
-          .println( "usage: java -classpath .;deegree.jar de.tools.Shp2MySQL "
-              + "                          [-f shapefile -d sourcedirectory]\n"
-              + "                          [--version] [--help]\n" + "\n" + "arguments:\n"
-              + "    -f shapefile  reads the input shapefile. must be set\n"
-              + "                  if -d is not set.\n"
-              + "    -d inputdir   name of the directory that contains the.\n"
-              + "                  source shapefiles. must be set if -f is\n"
-              + "                  not set.\n" + "\n" + "information options:\n"
-              + "    --help      shows this help.\n"
-              + "    --version   shows the version and exits.\n" );
+      System.out.println( "usage: java -classpath .;deegree.jar de.tools.Shp2MySQL "
+          + "                          [-f shapefile -d sourcedirectory]\n"
+          + "                          [--version] [--help]\n" + "\n" + "arguments:\n"
+          + "    -f shapefile  reads the input shapefile. must be set\n" + "                  if -d is not set.\n"
+          + "    -d inputdir   name of the directory that contains the.\n"
+          + "                  source shapefiles. must be set if -f is\n" + "                  not set.\n" + "\n"
+          + "information options:\n" + "    --help      shows this help.\n"
+          + "    --version   shows the version and exits.\n" );
       break;
     case 1:
-      System.out.println( "Try 'java -classpath .;deegree.jar de.tools.Shp2MySQL --help'\n"
-          + "for more information." );
+      System.out.println( "Try 'java -classpath .;deegree.jar de.tools.Shp2MySQL --help'\n" + "for more information." );
       break;
 
     default:
-      System.out.println( "Unknown usage: \n"
-          + "Try 'java -classpath .;deegree.jar de.tools.Shp2MySQL --help'\n"
+      System.out.println( "Unknown usage: \n" + "Try 'java -classpath .;deegree.jar de.tools.Shp2MySQL --help'\n"
           + "for more information." );
       break;
     }

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -73,9 +73,8 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_SurfacePatch interface from package
- * jago.model. the class is abstract because it should be specialized by derived
- * classes <code>GM_Polygon</code> for example
+ * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
+ * should be specialized by derived classes <code>GM_Polygon</code> for example
  * 
  * ------------------------------------------------------------
  * 
@@ -113,9 +112,8 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * 
    * @throws GM_Exception
    */
-  protected GM_SurfacePatch_Impl( GM_SurfaceInterpolation interpolation,
-      GM_Position[] exteriorRing, GM_Position[][] interiorRings, CS_CoordinateSystem crs )
-      throws GM_Exception
+  protected GM_SurfacePatch_Impl( GM_SurfaceInterpolation interpolation, GM_Position[] exteriorRing,
+      GM_Position[][] interiorRings, CS_CoordinateSystem crs ) throws GM_Exception
   {
     this.crs = crs;
 
@@ -160,8 +158,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   /**
-   * returns true if the calculated parameters of the GM_Object are valid and
-   * false if they must be recalculated
+   * returns true if the calculated parameters of the GM_Object are valid and false if they must be recalculated
    */
   protected boolean isValid()
   {
@@ -197,10 +194,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   /**
-   * The interpolation determines the surface interpolation mechanism used for
-   * this GM_SurfacePatch. This mechanism uses the control points and control
-   * parameters defined in the various subclasses to determine the position of
-   * this GM_ SurfacePatch.
+   * The interpolation determines the surface interpolation mechanism used for this GM_SurfacePatch. This mechanism uses
+   * the control points and control parameters defined in the various subclasses to determine the position of this GM_
+   * SurfacePatch.
    */
   public GM_SurfaceInterpolation getInterpolation()
   {
@@ -236,8 +232,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   /**
-   * returns the length of all boundaries of the surface in a reference system
-   * appropriate for measuring distances.
+   * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
   public double getPerimeter()
   {
@@ -328,8 +323,8 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   /**
-   * The operation "centroid" shall return the mathematical centroid for this
-   * GM_Object. The result is not guaranteed to be on the object.
+   * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
+   * be on the object.
    */
   public GM_Point getCentroid()
   {
@@ -341,11 +336,9 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   /**
-   * The operation "area" shall return the area of this GM_GenericSurface. The
-   * area of a 2 dimensional geometric object shall be a numeric measure of its
-   * surface area Since area is an accumulation (integral) of the product of two
-   * distances, its return value shall be in a unit of measure appropriate for
-   * measuring distances squared.
+   * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
+   * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
+   * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
   public double getArea()
   {
@@ -357,8 +350,7 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   }
 
   /**
-   * calculates the centroid and area of the surface patch. this method is only
-   * valid for the two-dimensional case.
+   * calculates the centroid and area of the surface patch. this method is only valid for the two-dimensional case.
    */
   private void calculateCentroidArea()
   {

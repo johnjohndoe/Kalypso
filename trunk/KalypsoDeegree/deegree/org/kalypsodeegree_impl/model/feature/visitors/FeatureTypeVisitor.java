@@ -5,8 +5,12 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * <p>Decorater over any FeatureVisitor, but only visits features of a given type.</p>
- * <p>Comparisaon is by name of the given type</p>
+ * <p>
+ * Decorater over any FeatureVisitor, but only visits features of a given type.
+ * </p>
+ * <p>
+ * Comparisaon is by name of the given type
+ * </p>
  * 
  * @author belger
  */
@@ -30,7 +34,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
     m_typename = typename;
     m_acceptIfSubstituting = acceptIfSubstituting;
   }
-  
+
   public void setVisitor( FeatureVisitor visitor )
   {
     m_visitor = visitor;
@@ -43,15 +47,16 @@ public class FeatureTypeVisitor implements FeatureVisitor
   {
     if( matchesType( f ) )
       m_visitor.visit( f );
-    
+
     return true;
   }
-  
+
   public boolean matchesType( final Feature f )
   {
     final FeatureType featureType = f.getFeatureType();
 
     final String substName = featureType.getNamespace() + ":" + m_typename;
-    return ( m_typename.equals( featureType.getName() ) || ( m_acceptIfSubstituting && substName.equals( featureType.getSubstitutionGroup() ) ) );
+    return ( m_typename.equals( featureType.getName() ) || ( m_acceptIfSubstituting && substName.equals( featureType
+        .getSubstitutionGroup() ) ) );
   }
 }

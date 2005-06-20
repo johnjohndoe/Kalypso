@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.graphics.displayelements;
 
@@ -65,8 +65,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * Basic interface of all display elements that are related to a geometry.
- * Usually this will be the case.
+ * Basic interface of all display elements that are related to a geometry. Usually this will be the case.
  * <p>
  * ------------------------------------------------------------------------
  * </p>
@@ -78,9 +77,8 @@ public interface GeometryDisplayElement extends DisplayElement
 {
 
   /**
-   * Overwrites the default placement of the <tt>DisplayElement</tt>. This
-   * method is used by the <tt>PlacementOptimizer</tt> to minimize the
-   * overlapping of labels, for example.
+   * Overwrites the default placement of the <tt>DisplayElement</tt>. This method is used by the
+   * <tt>PlacementOptimizer</tt> to minimize the overlapping of labels, for example.
    * <p>
    * 
    * @param o
@@ -89,16 +87,14 @@ public interface GeometryDisplayElement extends DisplayElement
   void setPlacement( Object o );
 
   /**
-   * sets the geometry that determines the position the DisplayElement will be
-   * rendered to
+   * sets the geometry that determines the position the DisplayElement will be rendered to
    * 
    * @geometry geometry the <tt>DisplayElement</tt> is based on
    */
   void setGeometry( GM_Object geometry );
 
   /**
-   * returns the geometry that determines the position the DisplayElement will
-   * be rendered to
+   * returns the geometry that determines the position the DisplayElement will be rendered to
    */
   GM_Object getGeometry();
 
@@ -116,8 +112,7 @@ public interface GeometryDisplayElement extends DisplayElement
   Symbolizer getSymbolizer();
 
   /**
-   * sets the rule that determines how the geometry will be rendered when it's
-   * highlighted
+   * sets the rule that determines how the geometry will be rendered when it's highlighted
    * 
    * @param rule
    *          symbolizer defining rendering style
@@ -125,14 +120,12 @@ public interface GeometryDisplayElement extends DisplayElement
   void setHighlightSymbolizer( Symbolizer rule );
 
   /**
-   * returns the symbolizer that determines how the geometry will be rendered if
-   * it's highlighted
+   * returns the symbolizer that determines how the geometry will be rendered if it's highlighted
    */
   Symbolizer getHighlightSymbolizer();
 
   /**
-   * sets the rule that determines how the geometry will be rendered when it's
-   * selected
+   * sets the rule that determines how the geometry will be rendered when it's selected
    * 
    * @param rule
    *          symbolizer defining rendering style
@@ -140,8 +133,7 @@ public interface GeometryDisplayElement extends DisplayElement
   void setSelectedSymbolizer( Symbolizer rule );
 
   /**
-   * returns the symbolizer that determines how the geometry will be rendered if
-   * it's selected
+   * returns the symbolizer that determines how the geometry will be rendered if it's selected
    */
   Symbolizer getSelectedSymbolizer();
 }

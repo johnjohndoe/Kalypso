@@ -53,8 +53,7 @@ import java.util.TimerTask;
 import org.kalypsodeegree.tools.Cache;
 
 /**
- * This class provides a cache for feature collections created by the wms filter
- * services.
+ * This class provides a cache for feature collections created by the wms filter services.
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -99,10 +98,8 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * gets an entry from the cache. The entry that shall be returned will be
-   * identified by the submitted identifier. If no entry for a submitted
-   * identifier can be found within the cache the method shall return
-   * <tt>null</tt>.
+   * gets an entry from the cache. The entry that shall be returned will be identified by the submitted identifier. If
+   * no entry for a submitted identifier can be found within the cache the method shall return <tt>null</tt>.
    *  
    */
   public Object get( Object identifier )
@@ -125,8 +122,7 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * pushes a new entry to the cache. Each entry is marked by an unique
-   * identifier
+   * pushes a new entry to the cache. Each entry is marked by an unique identifier
    *  
    */
   public void push( Object identifier, Object data )
@@ -147,8 +143,7 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * removes the feature collection from the cache that hasn't been called for
-   * the longest time.
+   * removes the feature collection from the cache that hasn't been called for the longest time.
    */
   protected Object deleteOldest()
   {
@@ -187,8 +182,7 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * returns the maximal time a feature collection is stored within the cache
-   * without being called
+   * returns the maximal time a feature collection is stored within the cache without being called
    */
   public int getMaxLifeTime()
   {
@@ -196,8 +190,7 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * sets the maximal time a feature collection is stored within the cache
-   * without being called
+   * sets the maximal time a feature collection is stored within the cache without being called
    */
   public void setMaxLifeTime( int maxLifeTime )
   {
@@ -205,8 +198,7 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * returns the time interval the internal thread is looking for feature
-   * collection that exeeds the max life time
+   * returns the time interval the internal thread is looking for feature collection that exeeds the max life time
    */
   public int getUpdateInterval()
   {
@@ -214,8 +206,7 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * sets the time interval the internal thread is looking for feature
-   * collection that exeeds the max life time
+   * sets the time interval the internal thread is looking for feature collection that exeeds the max life time
    */
   public void setUpdateInterval( int updateInterval )
   {
@@ -232,9 +223,8 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * sets the maximal number of objects that will be stored within the cache. Is
-   * the cache if completly filled and a new object shall be added the object
-   * that hasn't been called for the longest time will be removed.
+   * sets the maximal number of objects that will be stored within the cache. Is the cache if completly filled and a new
+   * object shall be added the object that hasn't been called for the longest time will be removed.
    */
   public void setMaxEntries( int maxCacheSize )
   {
@@ -254,10 +244,9 @@ public class Cache_Impl extends TimerTask implements Cache
   }
 
   /**
-   * removes an entry from the cache. The entry that shall be removed will be
-   * identified by the submitted identifier. The removed entry will be returned.
-   * If no entry for a submitted identifier can be found within the cache the
-   * method shall return <tt>null</tt>.
+   * removes an entry from the cache. The entry that shall be removed will be identified by the submitted identifier.
+   * The removed entry will be returned. If no entry for a submitted identifier can be found within the cache the method
+   * shall return <tt>null</tt>.
    *  
    */
   public Object remove( Object identifier )

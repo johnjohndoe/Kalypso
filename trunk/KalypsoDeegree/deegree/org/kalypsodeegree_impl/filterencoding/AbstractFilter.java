@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.Filter;
@@ -67,9 +67,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Abstract superclass representing <Filter>elements (as defined in the Filter
- * DTD). A <Filter>element either consists of (one or more) FeatureId-elements
- * or one operation-element. This is reflected in the two implementations
+ * Abstract superclass representing <Filter>elements (as defined in the Filter DTD). A <Filter>element either consists
+ * of (one or more) FeatureId-elements or one operation-element. This is reflected in the two implementations
  * FeatureFilter and ComplexFilter.
  * 
  * @author Markus Schneider
@@ -79,9 +78,8 @@ public abstract class AbstractFilter implements Filter
 {
 
   /**
-   * Given a DOM-fragment, a corresponding Filter-object is built. This method
-   * recursively calls other buildFromDOM () - methods to validate the structure
-   * of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Filter-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -118,8 +116,7 @@ public abstract class AbstractFilter implements Filter
         {
           Element fid = (Element)children.item( i );
           if( !fid.getLocalName().equals( "FeatureId" ) )
-            throw new FilterConstructionException( "Unexpected Element encountered: "
-                + fid.getLocalName() );
+            throw new FilterConstructionException( "Unexpected Element encountered: " + fid.getLocalName() );
           fFilter.addFeatureId( FeatureId.buildFromDOM( fid ) );
         }
       }
@@ -136,8 +133,7 @@ public abstract class AbstractFilter implements Filter
         {
           Element operator = (Element)children.item( i );
           if( justOne )
-            throw new FilterConstructionException( "Unexpected element encountered: "
-                + operator.getLocalName() );
+            throw new FilterConstructionException( "Unexpected element encountered: " + operator.getLocalName() );
           ComplexFilter cFilter = new ComplexFilter( AbstractOperation.buildFromDOM( operator ) );
           filter = cFilter;
           justOne = true;

@@ -113,8 +113,8 @@ public class RangeSetFeatureDialog implements IFeatureDialog
     {
       getShell().setText( "RangeSet properties" );
 
-      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
-          | SWT.V_SCROLL | SWT.BORDER );
+      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL
+          | SWT.BORDER );
 
       GridData gridData = new GridData( GridData.FILL_BOTH );
       gridData.grabExcessHorizontalSpace = true;

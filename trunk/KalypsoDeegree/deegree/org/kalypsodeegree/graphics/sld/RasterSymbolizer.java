@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 import java.util.TreeMap;
@@ -73,13 +73,13 @@ import java.util.TreeMap;
  */
 public interface RasterSymbolizer extends Symbolizer
 {
-	TreeMap getColorMap();
-	
-	void setColorMap(TreeMap colorMap);
-  
+  TreeMap getColorMap();
+
+  void setColorMap( TreeMap colorMap );
+
   int getMode();
-  
-  void setMode(int mode);
-  
+
+  void setMode( int mode );
+
   TreeMap getIntervalMap();
 }

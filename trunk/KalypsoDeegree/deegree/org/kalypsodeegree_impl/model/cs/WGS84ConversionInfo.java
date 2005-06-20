@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // Miscellaneous
@@ -67,10 +67,9 @@ import org.kalypsodeegree_impl.model.pt.Matrix;
 import org.kalypsodeegree_impl.model.resources.Utilities;
 
 /**
- * Parameters for a geographic transformation into WGS84. The Bursa Wolf
- * parameters should be applied to geocentric coordinates, where the X axis
- * points towards the Greenwich Prime Meridian, the Y axis points East, and the
- * Z axis points North.
+ * Parameters for a geographic transformation into WGS84. The Bursa Wolf parameters should be applied to geocentric
+ * coordinates, where the X axis points towards the Greenwich Prime Meridian, the Y axis points East, and the Z axis
+ * points North.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -116,8 +115,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
   {}
 
   /**
-   * Returns an affine maps that can be used to define this Bursa Wolf
-   * transformation. The formula is as follows:
+   * Returns an affine maps that can be used to define this Bursa Wolf transformation. The formula is as follows:
    * 
    * <blockquote>
    * 
@@ -132,8 +130,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
    * 
    * </blockquote>
    * 
-   * This affine transform can be applied on <strong>geocentric </strong>
-   * coordinates.
+   * This affine transform can be applied on <strong>geocentric </strong> coordinates.
    */
   public Matrix getAffineTransform()
   {
@@ -143,12 +140,28 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
     final double S = 1 + ppm / 1E+6;
     final double RS = ( Math.PI / ( 180 * 3600 ) ) * S;
     return new Matrix( 4, 4, new double[]
-    { S, -ez * RS, +ey * RS, dx, +ez * RS, S, -ex * RS, dy, -ey * RS, +ex * RS, S, dz, 0, 0, 0, 1 } );
+    {
+        S,
+        -ez * RS,
+        +ey * RS,
+        dx,
+        +ez * RS,
+        S,
+        -ex * RS,
+        dy,
+        -ey * RS,
+        +ex * RS,
+        S,
+        dz,
+        0,
+        0,
+        0,
+        1 } );
   }
 
   /**
-   * Returns a hash value for this object. This value need not remain consistent
-   * between different implementations of the same class.
+   * Returns a hash value for this object. This value need not remain consistent between different implementations of
+   * the same class.
    */
   public int hashCode()
   {
@@ -205,8 +218,7 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
   }
 
   /**
-   * Returns the Well Know Text (WKT) for this object. The WKT is part of
-   * OpenGIS's specification and looks like
+   * Returns the Well Know Text (WKT) for this object. The WKT is part of OpenGIS's specification and looks like
    * <code>TOWGS84[dx, dy, dz, ex, ey, ez, ppm]</code>.
    */
   public String toString()

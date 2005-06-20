@@ -14,15 +14,13 @@ public class CoverageCreationException extends java.lang.Exception
 {
 
   /**
-   * Creates a new instance of <code>CoverageCreationException</code> without
-   * detail message.
+   * Creates a new instance of <code>CoverageCreationException</code> without detail message.
    */
   public CoverageCreationException()
   {}
 
   /**
-   * Constructs an instance of <code>CoverageCreationException</code> with the
-   * specified detail message.
+   * Constructs an instance of <code>CoverageCreationException</code> with the specified detail message.
    * 
    * @param msg
    *          the detail message.

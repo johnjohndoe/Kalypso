@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import java.util.logging.Logger;
@@ -62,7 +62,7 @@ import org.kalypso.ui.calcwizard.CalcWizardDialog;
 public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
 {
   protected final Logger m_logger = Logger.getLogger( this.getClass().getName() );
-  
+
   private IWorkbenchWindow m_window;
 
   /**
@@ -70,7 +70,7 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-    // nix passiert 
+  // nix passiert
   }
 
   /**
@@ -86,8 +86,7 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
    */
   public void run( final IAction action )
   {
-    final ISelection selection = m_window.getSelectionService().getSelection(
-        IPageLayout.ID_RES_NAV );
+    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     final IProject[] projects = ProjectUtilities.findeProjectsFromSelection( selection );
 
@@ -97,7 +96,7 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
           "Bitte wählen Sie genau ein Projekt im Navigator aus" );
       return;
     }
-    
+
     final CalcWizard wizard = new CalcWizard( projects[0] );
     final WizardDialog dialog = new CalcWizardDialog( m_window.getShell(), wizard );
     dialog.open();

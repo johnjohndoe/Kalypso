@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
 import java.awt.geom.AffineTransform;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteObject;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import javax.media.jai.ParameterList;
@@ -80,42 +81,32 @@ import org.opengis.ct.CT_Parameter;
 import org.opengis.pt.PT_Matrix;
 
 /**
- * Creates math transforms. <code>MathTransformFactory</code> is a low level
- * factory that is used to create {@link MathTransform}objects. Many high level
- * GIS applications will never need to use a <code>MathTransformFactory</code>
- * directly; they can use a {@link CoordinateTransformationFactory}instead.
- * However, the <code>MathTransformFactory</code> class is specified here,
- * since it can be used directly by applications that wish to transform other
- * types of coordinates (e.g. color coordinates, or image pixel coordinates).
+ * Creates math transforms. <code>MathTransformFactory</code> is a low level factory that is used to create
+ * {@link MathTransform}objects. Many high level GIS applications will never need to use a
+ * <code>MathTransformFactory</code> directly; they can use a {@link CoordinateTransformationFactory}instead.
+ * However, the <code>MathTransformFactory</code> class is specified here, since it can be used directly by
+ * applications that wish to transform other types of coordinates (e.g. color coordinates, or image pixel coordinates).
  * <br>
  * <br>
- * A math transform is an object that actually does the work of applying
- * formulae to coordinate values. The math transform does not know or care how
- * the coordinates relate to positions in the real world. This lack of semantics
- * makes implementing <code>MathTransformFactory</code> significantly easier
- * than it would be otherwise.
+ * A math transform is an object that actually does the work of applying formulae to coordinate values. The math
+ * transform does not know or care how the coordinates relate to positions in the real world. This lack of semantics
+ * makes implementing <code>MathTransformFactory</code> significantly easier than it would be otherwise.
  * 
- * For example <code>MathTransformFactory</code> can create affine math
- * transforms. The affine transform applies a matrix to the coordinates without
- * knowing how what it is doing relates to the real world. So if the matrix
- * scales <var>Z </var> values by a factor of 1000, then it could be converting
- * meters into millimeters, or it could be converting kilometers into meters.
+ * For example <code>MathTransformFactory</code> can create affine math transforms. The affine transform applies a
+ * matrix to the coordinates without knowing how what it is doing relates to the real world. So if the matrix scales
+ * <var>Z </var> values by a factor of 1000, then it could be converting meters into millimeters, or it could be
+ * converting kilometers into meters. <br>
  * <br>
- * <br>
- * Because math transforms have low semantic value (but high mathematical
- * value), programmers who do not have much knowledge of how GIS applications
- * use coordinate systems, or how those coordinate systems relate to the real
- * world can implement <code>MathTransformFactory</code>.
+ * Because math transforms have low semantic value (but high mathematical value), programmers who do not have much
+ * knowledge of how GIS applications use coordinate systems, or how those coordinate systems relate to the real world
+ * can implement <code>MathTransformFactory</code>.
  * 
- * The low semantic content of math transforms also means that they will be
- * useful in applications that have nothing to do with GIS coordinates. For
- * example, a math transform could be used to map color coordinates between
- * different color spaces, such as converting (red, green, blue) colors into
- * (hue, light, saturation) colors. <br>
+ * The low semantic content of math transforms also means that they will be useful in applications that have nothing to
+ * do with GIS coordinates. For example, a math transform could be used to map color coordinates between different color
+ * spaces, such as converting (red, green, blue) colors into (hue, light, saturation) colors. <br>
  * <br>
- * Since a math transform does not know what its source and target coordinate
- * systems mean, it is not necessary or desirable for a math transform object to
- * keep information on its source and target coordinate systems.
+ * Since a math transform does not know what its source and target coordinate systems mean, it is not necessary or
+ * desirable for a math transform object to keep information on its source and target coordinate systems.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -126,14 +117,12 @@ import org.opengis.pt.PT_Matrix;
 public class MathTransformFactory
 {
   /**
-   * The default math transform factory. This factory will be constructed only
-   * when first needed.
+   * The default math transform factory. This factory will be constructed only when first needed.
    */
   private static MathTransformFactory DEFAULT;
 
   /**
-   * A pool of math transform. This pool is used in order to returns instance of
-   * existing math transforms when possible.
+   * A pool of math transform. This pool is used in order to returns instance of existing math transforms when possible.
    */
   static final WeakHashSet pool = new WeakHashSet();
 
@@ -158,7 +147,9 @@ public class MathTransformFactory
     if( DEFAULT == null )
     {
       DEFAULT = new MathTransformFactory( new MathTransformProvider[]
-      { new MercatorProjection.Provider(), new LambertConformalProjection.Provider(),
+      {
+          new MercatorProjection.Provider(),
+          new LambertConformalProjection.Provider(),
           new StereographicProjection.Provider(), // Automatic
           new StereographicProjection.Provider( true ), // Polar
           new StereographicProjection.Provider( false ), // Oblique
@@ -216,8 +207,7 @@ public class MathTransformFactory
   public MathTransform createAffineTransform( final Matrix matrix )
   {
     /*
-     * If the user is requesting a 2D transform, delegate to the highly
-     * optimized java.awt.geom.AffineTransform class.
+     * If the user is requesting a 2D transform, delegate to the highly optimized java.awt.geom.AffineTransform class.
      */
     if( matrix.getNumRow() == 3 && matrix.isAffine() ) // Affine transform are
     // square.
@@ -225,15 +215,13 @@ public class MathTransformFactory
       return createAffineTransform( matrix.toAffineTransform2D() );
     }
     /*
-     * General case (slower). May not be a real affine transform. We accept it
-     * anyway...
+     * General case (slower). May not be a real affine transform. We accept it anyway...
      */
     return (MathTransform)pool.intern( new MatrixTransform( matrix ) );
   }
 
   /**
-   * Returns the underlying matrix for the specified transform, or
-   * <code>null</code> if the matrix is unavailable.
+   * Returns the underlying matrix for the specified transform, or <code>null</code> if the matrix is unavailable.
    */
   private static Matrix getMatrix( final MathTransform transform )
   {
@@ -245,9 +233,8 @@ public class MathTransformFactory
   }
 
   /**
-   * Tests if one math transform is the inverse of the other. This
-   * implementation can't detect every case. It just detect the case when
-   * <code>tr2</code> is an instance of {@link AbstractMathTransform.Inverse}.
+   * Tests if one math transform is the inverse of the other. This implementation can't detect every case. It just
+   * detect the case when <code>tr2</code> is an instance of {@link AbstractMathTransform.Inverse}.
    */
   private static boolean areInverse( final MathTransform tr1, final MathTransform tr2 )
   {
@@ -264,12 +251,10 @@ public class MathTransformFactory
   }
 
   /**
-   * Creates a transform by concatenating two existing transforms. A
-   * concatenated transform acts in the same way as applying two transforms, one
-   * after the other. The dimension of the output space of the first transform
-   * must match the dimension of the input space in the second transform. If you
-   * wish to concatenate more than two transforms, then you can repeatedly use
-   * this method.
+   * Creates a transform by concatenating two existing transforms. A concatenated transform acts in the same way as
+   * applying two transforms, one after the other. The dimension of the output space of the first transform must match
+   * the dimension of the input space in the second transform. If you wish to concatenate more than two transforms, then
+   * you can repeatedly use this method.
    * 
    * @param tr1
    *          The first transform to apply to points.
@@ -285,8 +270,7 @@ public class MathTransformFactory
     if( tr2.isIdentity() )
       return tr1;
     /*
-     * If both transforms use matrix, then we can create a single transform
-     * using the concatened matrix.
+     * If both transforms use matrix, then we can create a single transform using the concatened matrix.
      */
     final Matrix matrix1 = getMatrix( tr1 );
     if( matrix1 != null )
@@ -302,17 +286,15 @@ public class MathTransformFactory
       }
     }
     /*
-     * If one transform is the inverse of the other, returns the identity
-     * transform.
+     * If one transform is the inverse of the other, returns the identity transform.
      */
     if( areInverse( tr1, tr2 ) || areInverse( tr2, tr1 ) )
     {
       return createIdentityTransform( tr1.getDimSource() );
     }
     /*
-     * If one or both math transform are instance of {@link ConcatenedTransform},
-     * then maybe it is possible to efficiently concatenate <code> tr1 </code>
-     * or <code> tr2 </code> with one of step transforms. Try that...
+     * If one or both math transform are instance of {@link ConcatenedTransform}, then maybe it is possible to
+     * efficiently concatenate <code> tr1 </code> or <code> tr2 </code> with one of step transforms. Try that...
      */
     if( tr1 instanceof ConcatenedTransform )
     {
@@ -327,12 +309,10 @@ public class MathTransformFactory
       tr2 = ctr.transform2;
     }
     /*
-     * The returned transform will implements {@link MathTransform2D}if source
-     * and target dimensions are equal to 2.{@link MathTransform}
-     * implementations are available in two version: direct and non-direct. The
-     * "non-direct" version use an intermediate buffer when performing
-     * transformations; they are slower and consume more memory. They are used
-     * only as a fallback when a "direct" version can't be created.
+     * The returned transform will implements {@link MathTransform2D}if source and target dimensions are equal to 2.
+     * {@link MathTransform}implementations are available in two version: direct and non-direct. The "non-direct"
+     * version use an intermediate buffer when performing transformations; they are slower and consume more memory. They
+     * are used only as a fallback when a "direct" version can't be created.
      */
     final MathTransform transform;
     final int dimSource = tr1.getDimSource();
@@ -341,8 +321,7 @@ public class MathTransformFactory
     {
       if( tr1 instanceof MathTransform2D && tr2 instanceof MathTransform2D )
       {
-        transform = new ConcatenedTransformDirect2D( this, (MathTransform2D)tr1,
-            (MathTransform2D)tr2 );
+        transform = new ConcatenedTransformDirect2D( this, (MathTransform2D)tr1, (MathTransform2D)tr2 );
       }
       else
         transform = new ConcatenedTransform2D( this, tr1, tr2 );
@@ -357,21 +336,18 @@ public class MathTransformFactory
   }
 
   /**
-   * Creates a transform which passes through a subset of ordinates to another
-   * transform. This allows transforms to operate on a subset of ordinates. For
-   * example, if you have ( <var>latitidue </var>, <var>longitude </var>,
-   * <var>height </var>) coordinates, then you may wish to convert the height
-   * values from feet to meters without affecting the latitude and longitude
-   * values.
+   * Creates a transform which passes through a subset of ordinates to another transform. This allows transforms to
+   * operate on a subset of ordinates. For example, if you have ( <var>latitidue </var>, <var>longitude </var>,
+   * <var>height </var>) coordinates, then you may wish to convert the height values from feet to meters without
+   * affecting the latitude and longitude values.
    * 
    * @param firstAffectedOrdinate
    *          Index of the first affected ordinate.
    * @param subTransform
    *          The sub transform.
    * @param numTrailingOrdinates
-   *          Number of trailing ordinates to pass through. Affected ordinates
-   *          will range from <code>firstAffectedOrdinate</code> inclusive to
-   *          <code>dimTarget-numTrailingOrdinates</code> exclusive.
+   *          Number of trailing ordinates to pass through. Affected ordinates will range from
+   *          <code>firstAffectedOrdinate</code> inclusive to <code>dimTarget-numTrailingOrdinates</code> exclusive.
    * @return A pass through transform with the following dimensions: <br>
    * 
    * <pre>
@@ -379,8 +355,8 @@ public class MathTransformFactory
    * Target: firstAffectedOrdinate + subTransform.getDimTarget() + numTrailingOrdinates</pre>
    *  
    */
-  public MathTransform createPassThroughTransform( final int firstAffectedOrdinate,
-      final MathTransform subTransform, final int numTrailingOrdinates )
+  public MathTransform createPassThroughTransform( final int firstAffectedOrdinate, final MathTransform subTransform,
+      final int numTrailingOrdinates )
   {
     if( firstAffectedOrdinate < 0 )
     {
@@ -412,43 +388,38 @@ public class MathTransformFactory
     // Optimize the "Pass through case": this is done
     // right into PassThroughTransform's constructor.
     //
-    return (MathTransform)pool.intern( new PassThroughTransform( firstAffectedOrdinate,
-        subTransform, numTrailingOrdinates ) );
+    return (MathTransform)pool.intern( new PassThroughTransform( firstAffectedOrdinate, subTransform,
+        numTrailingOrdinates ) );
   }
 
   /**
-   * Creates a transform which retains only a portion of an other transform. For
-   * example if the source coordinate system has ( <var>longitude </var>,
-   * <var>latitude </var>, <var>height </var>) values, then a sub-transform may
-   * be used to keep only the ( <var>longitude </var>, <var>latitude </var>)
-   * part. In most cases, the created sub-transform is non-invertible since it
-   * loose informations. <br>
+   * Creates a transform which retains only a portion of an other transform. For example if the source coordinate system
+   * has ( <var>longitude </var>, <var>latitude </var>, <var>height </var>) values, then a sub-transform may be used to
+   * keep only the ( <var>longitude </var>, <var>latitude </var>) part. In most cases, the created sub-transform is
+   * non-invertible since it loose informations. <br>
    * <br>
-   * This transform is a special case of a non-square matrix transform with less
-   * rows than columns. However, using a <code>createSubMathTransfom(...)</code>
-   * method makes it easier to optimize some common cases.
+   * This transform is a special case of a non-square matrix transform with less rows than columns. However, using a
+   * <code>createSubMathTransfom(...)</code> method makes it easier to optimize some common cases.
    * 
    * @param transform
    *          The transform.
    * @param lower
    *          Index of the first ordinate to keep.
    * @param upper
-   *          Index of the first ordinate. Must be greater than
-   *          <code>lower</code>.
+   *          Index of the first ordinate. Must be greater than <code>lower</code>.
    */
-  public MathTransform createSubMathTransform( final int lower, final int upper,
-      final MathTransform transform )
+  public MathTransform createSubMathTransform( final int lower, final int upper, final MathTransform transform )
   {
     if( lower < 0 || lower >= upper )
     {
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2,
-          "lower", new Integer( lower ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, "lower",
+          new Integer( lower ) ) );
     }
     final int dimTarget = transform.getDimTarget();
     if( upper > dimTarget )
     {
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2,
-          "upper", new Integer( upper ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, "upper",
+          new Integer( upper ) ) );
     }
     if( lower == 0 && upper == dimTarget )
     {
@@ -487,16 +458,13 @@ public class MathTransformFactory
   }
 
   /**
-   * Creates a transform from a classification name and parameters. The client
-   * must ensure that all the linear parameters are expressed in meters, and all
-   * the angular parameters are expressed in degrees. Also, they must supply
-   * "semi_major" and "semi_minor" parameters for cartographic projection
-   * transforms.
+   * Creates a transform from a classification name and parameters. The client must ensure that all the linear
+   * parameters are expressed in meters, and all the angular parameters are expressed in degrees. Also, they must supply
+   * "semi_major" and "semi_minor" parameters for cartographic projection transforms.
    * 
    * @param classification
-   *          The classification name of the transform (e.g.
-   *          "Transverse_Mercator"). Leading and trailing spaces are ignored,
-   *          and comparaison is case-insensitive.
+   *          The classification name of the transform (e.g. "Transverse_Mercator"). Leading and trailing spaces are
+   *          ignored, and comparaison is case-insensitive.
    * @param parameters
    *          The parameter values in standard units.
    * @return The parameterized transform.
@@ -506,8 +474,8 @@ public class MathTransformFactory
    *           if a parameter was required but not found.
    *  
    */
-  public MathTransform createParameterizedTransform( String classification,
-      final ParameterList parameters ) throws NoSuchElementException, MissingParameterException
+  public MathTransform createParameterizedTransform( String classification, final ParameterList parameters )
+      throws NoSuchElementException, MissingParameterException
   {
     final MathTransform transform;
     classification = classification.trim();
@@ -535,15 +503,15 @@ public class MathTransformFactory
    * @throws MissingParameterException
    *           if a parameter was required but not found.
    */
-  public MathTransform createParameterizedTransform( final Projection projection )
-      throws NoSuchElementException, MissingParameterException
+  public MathTransform createParameterizedTransform( final Projection projection ) throws NoSuchElementException,
+      MissingParameterException
   {
     return createParameterizedTransform( projection.getClassName(), projection.getParameters() );
   }
 
   /**
-   * Returns the classification names of every available transforms. The
-   * returned array may have a zero length, but will never be null.
+   * Returns the classification names of every available transforms. The returned array may have a zero length, but will
+   * never be null.
    *  
    */
   public String[] getAvailableTransforms()
@@ -561,36 +529,31 @@ public class MathTransformFactory
   }
 
   /**
-   * Returns the provider for the specified classification. This provider may be
-   * used to query parameter list for a classification name (e.g.
-   * <code>getMathTransformProvider("Transverse_Mercator").getParameterList()</code>),
-   * or the transform name in a given locale (e.g.
+   * Returns the provider for the specified classification. This provider may be used to query parameter list for a
+   * classification name (e.g. <code>getMathTransformProvider("Transverse_Mercator").getParameterList()</code>), or
+   * the transform name in a given locale (e.g.
    * <code>getMathTransformProvider("Transverse_Mercator").getName({@link Locale#FRENCH})</code>)
    * 
    * @param classification
-   *          The classification name of the transform (e.g.
-   *          "Transverse_Mercator"). It should be one of the name returned by
-   *          {@link #getAvailableTransforms}. Leading and trailing spaces are
-   *          ignored. Comparisons are case-insensitive.
+   *          The classification name of the transform (e.g. "Transverse_Mercator"). It should be one of the name
+   *          returned by {@link #getAvailableTransforms}. Leading and trailing spaces are ignored. Comparisons are
+   *          case-insensitive.
    * @return The provider for a math transform.
    * @throws NoSuchElementException
-   *           if there is no provider registered with the specified
-   *           classification name.
+   *           if there is no provider registered with the specified classification name.
    */
-  public MathTransformProvider getMathTransformProvider( String classification )
-      throws NoSuchElementException
+  public MathTransformProvider getMathTransformProvider( String classification ) throws NoSuchElementException
   {
     classification = classification.trim();
     for( int i = 0; i < providers.length; i++ )
       if( classification.equalsIgnoreCase( providers[i].getClassName().trim() ) )
         return providers[i];
-    throw new NoSuchElementException( Resources.format(
-        ResourceKeys.ERROR_NO_TRANSFORM_FOR_CLASSIFICATION_$1, classification ) );
+    throw new NoSuchElementException( Resources.format( ResourceKeys.ERROR_NO_TRANSFORM_FOR_CLASSIFICATION_$1,
+        classification ) );
   }
 
   /**
-   * Create a provider for affine transforms of the specified dimension. Created
-   * affine transforms will have a size of
+   * Create a provider for affine transforms of the specified dimension. Created affine transforms will have a size of
    * <code>numRow&nbsp;&times;&nbsp;numCol</code>.<br>
    * <br>
    * <table align="center" border='1' cellpadding='3' bgcolor="F4F8FF">
@@ -611,17 +574,13 @@ public class MathTransformFactory
    * <td>Element of matrix</td>
    * </tr>
    * </table> <br>
-   * For the element parameters, <code>&lt;r&gt;</code> and
-   * <code>&lt;c&gt;</code> should be substituted by printed decimal numbers.
-   * The values of <var>r </var> should be from 0 to <code>(num_row-1)</code>,
-   * and the values of <var>c </var> should be from 0 to
-   * <code>(num_col-1)</code>. Any undefined matrix elements are assumed to
-   * be zero for <code>(r!=c)</code>, and one for <code>(r==c)</code>.
-   * This corresponds to the identity transformation when the number of rows and
-   * columns are the same. The number of columns corresponds to one more than
-   * the dimension of the source coordinates and the number of rows corresponds
-   * to one more than the dimension of target coordinates. The extra dimension
-   * in the matrix is used to let the affine map do a translation.
+   * For the element parameters, <code>&lt;r&gt;</code> and <code>&lt;c&gt;</code> should be substituted by printed
+   * decimal numbers. The values of <var>r </var> should be from 0 to <code>(num_row-1)</code>, and the values of
+   * <var>c </var> should be from 0 to <code>(num_col-1)</code>. Any undefined matrix elements are assumed to be zero
+   * for <code>(r!=c)</code>, and one for <code>(r==c)</code>. This corresponds to the identity transformation
+   * when the number of rows and columns are the same. The number of columns corresponds to one more than the dimension
+   * of the source coordinates and the number of rows corresponds to one more than the dimension of target coordinates.
+   * The extra dimension in the matrix is used to let the affine map do a translation.
    * 
    * @param numRow
    *          The number of matrix's rows.
@@ -629,8 +588,7 @@ public class MathTransformFactory
    *          The number of matrix's columns.
    * @return The provider for an affine transform.
    * @throws IllegalArgumentException
-   *           if <code>numRow</code> or <code>numCol</code> is not a
-   *           positive number.
+   *           if <code>numRow</code> or <code>numCol</code> is not a positive number.
    */
   public MathTransformProvider getAffineTransformProvider( final int numRow, final int numCol )
       throws IllegalArgumentException
@@ -639,11 +597,9 @@ public class MathTransformFactory
   }
 
   /**
-   * Returns an OpenGIS interface for this transform factory. The returned
-   * object is suitable for RMI use.
+   * Returns an OpenGIS interface for this transform factory. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -657,10 +613,9 @@ public class MathTransformFactory
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link MathTransformFactory}for use with OpenGIS. This wrapper is a
-   * good place to check for non-implemented OpenGIS methods (just check for
-   * methods throwing {@link UnsupportedOperationException}). This class is
-   * suitable for RMI use.
+   * Wrap a {@link MathTransformFactory}for use with OpenGIS. This wrapper is a good place to check for non-implemented
+   * OpenGIS methods (just check for methods throwing {@link UnsupportedOperationException}). This class is suitable
+   * for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -685,8 +640,7 @@ public class MathTransformFactory
      */
     public CT_MathTransform createAffineTransform( final PT_Matrix matrix ) throws RemoteException
     {
-      return adapters.export( MathTransformFactory.this.createAffineTransform( adapters.PT
-          .wrap( matrix ) ) );
+      return adapters.export( MathTransformFactory.this.createAffineTransform( adapters.PT.wrap( matrix ) ) );
     }
 
     /**
@@ -695,29 +649,28 @@ public class MathTransformFactory
     public CT_MathTransform createConcatenatedTransform( final CT_MathTransform transform1,
         final CT_MathTransform transform2 ) throws RemoteException
     {
-      return adapters.export( MathTransformFactory.this.createConcatenatedTransform( adapters
-          .wrap( transform1 ), adapters.wrap( transform2 ) ) );
+      return adapters.export( MathTransformFactory.this.createConcatenatedTransform( adapters.wrap( transform1 ),
+          adapters.wrap( transform2 ) ) );
     }
 
     /**
-     * Creates a transform which passes through a subset of ordinates to another
-     * transform.
+     * Creates a transform which passes through a subset of ordinates to another transform.
      */
     public CT_MathTransform createPassThroughTransform( final int firstAffectedOrdinate,
         final CT_MathTransform subTransform ) throws RemoteException
     {
-      return adapters.export( MathTransformFactory.this.createPassThroughTransform(
-          firstAffectedOrdinate, adapters.wrap( subTransform ), 0 ) );
+      return adapters.export( MathTransformFactory.this.createPassThroughTransform( firstAffectedOrdinate, adapters
+          .wrap( subTransform ), 0 ) );
     }
 
     /**
      * Creates a transform from a classification name and parameters.
      */
-    public CT_MathTransform createParameterizedTransform( final String classification,
-        final CT_Parameter[] parameters ) throws RemoteException
+    public CT_MathTransform createParameterizedTransform( final String classification, final CT_Parameter[] parameters )
+        throws RemoteException
     {
-      return adapters.export( MathTransformFactory.this.createParameterizedTransform(
-          classification, adapters.wrap( parameters ) ) );
+      return adapters.export( MathTransformFactory.this.createParameterizedTransform( classification, adapters
+          .wrap( parameters ) ) );
     }
 
     /**

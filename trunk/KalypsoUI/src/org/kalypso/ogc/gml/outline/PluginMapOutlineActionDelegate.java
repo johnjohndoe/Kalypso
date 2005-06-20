@@ -59,8 +59,8 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
   private final PluginMapOutlineAction m_innerAction;
 
   public PluginMapOutlineActionDelegate( final String text, final ImageDescriptor image, final String tooltipText,
-      final GisMapOutlineViewer selectionProvider, IConfigurationElement configurationElement, IListManipulator listManipulator )
-      throws CoreException
+      final GisMapOutlineViewer selectionProvider, IConfigurationElement configurationElement,
+      IListManipulator listManipulator ) throws CoreException
   {
     super( text, image, tooltipText, selectionProvider, null );
     m_configurationElement = configurationElement;
@@ -88,7 +88,7 @@ public class PluginMapOutlineActionDelegate extends AbstractOutlineAction
    */
   protected void refresh()
   {
-    //
+  //
   }
 
 }

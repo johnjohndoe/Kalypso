@@ -52,7 +52,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 public class ZoomInWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
 
-  private IWidget m_widget=null;
+  private IWidget m_widget = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)

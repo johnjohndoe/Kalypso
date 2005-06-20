@@ -21,11 +21,11 @@ public class SetAllAction extends AbstractObservationTableAction
     final ObservationTable table = getTable();
     final int col = table.getSelectedColumn();
     final int row = table.getSelectedRow();
-    final Object value = table.getValueAt(row, col);
+    final Object value = table.getValueAt( row, col );
 
     for( int i = 0; i < row; i++ )
       table.setValueAt( value, i, col );
-    
+
     for( int i = row + 1; i < table.getRowCount(); i++ )
       table.setValueAt( value, i, col );
   }

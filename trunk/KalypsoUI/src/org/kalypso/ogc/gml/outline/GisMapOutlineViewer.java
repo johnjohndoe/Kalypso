@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -61,6 +60,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author belger
@@ -100,7 +100,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
 
     m_viewer.setInput( m_mapModel );
     m_viewer.refresh();
-    
+
     // Refresh check state
     onModellChange( null );
   }
@@ -131,7 +131,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
       m_mapModel.removeModellListener( this );
 
     m_mapModel = modell;
-    
+
     m_labelProvider.setMapModell( modell );
 
     if( m_mapModel != null )
@@ -203,23 +203,22 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   {
     final TableTreeItem ti = (TableTreeItem)e.item;
     final Object data = ti.getData();
-//    if( data instanceof IKalypsoTheme )
-//    {
-//      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
-//      {
-//        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
-//            null );
-//        m_mapModel.activateTheme( (IKalypsoTheme)data );
-//        // todo: maybe create MultiCommand (eg. activate and enable )
-//      }
-//    }
+    //    if( data instanceof IKalypsoTheme )
+    //    {
+    //      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
+    //      {
+    //        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
+    //            null );
+    //        m_mapModel.activateTheme( (IKalypsoTheme)data );
+    //        // todo: maybe create MultiCommand (eg. activate and enable )
+    //      }
+    //    }
 
     if( ( e.detail & SWT.CHECK ) != 0 )
     {
       if( data instanceof IKalypsoTheme )
       {
-        final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme)data, ti
-            .getChecked() );
+        final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme)data, ti.getChecked() );
         m_commandTarget.postCommand( command, null );
       }
     }
@@ -280,8 +279,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   }
 
   /**
-   * Adds a listener for double-clicks in this viewer. Has no effect if an
-   * identical listener is already registered.
+   * Adds a listener for double-clicks in this viewer. Has no effect if an identical listener is already registered.
    * 
    * @param listener
    *          a double-click listener
@@ -292,8 +290,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   }
 
   /**
-   * Removes the given double-click listener from this viewer. Has no affect if
-   * an identical listener is not registered.
+   * Removes the given double-click listener from this viewer. Has no affect if an identical listener is not registered.
    * 
    * @param listener
    *          a double-click listener

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.createpages;
 
 import java.text.SimpleDateFormat;
@@ -64,8 +64,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Die Implementierung erzeugt eine völlig neue Rechenvariante im
- * Prognoseverzeichnis
+ * Die Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
  * 
  * @author belger
  */
@@ -87,8 +86,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private Text m_edit;
 
-  public AddNewCalcCaseChoice( final String label, final IProject project,
-      final AddCalcCasePage page )
+  public AddNewCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
   {
     m_label = label;
     m_project = project;
@@ -140,10 +138,10 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
   protected void setName( final String text )
   {
     m_name = text;
-    
+
     validateChoice();
   }
-  
+
   public void validateChoice()
   {
     final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );
@@ -170,15 +168,15 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
     final IFolder prognoseFolder = nature.getPrognoseFolder();
     if( m_name.length() == 0 )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Geben Sie einen Namen für die Vorhersage ein", null ) );
+      throw new CoreException( KalypsoGisPlugin
+          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein", null ) );
     final IFolder calcCaseFolder = prognoseFolder.getFolder( m_name );
     if( calcCaseFolder.exists() )
       throw new CoreException( KalypsoGisPlugin.createErrorStatus(
           "Eine Vorhersage mit diesem Namen existiert bereits: " + m_name, null ) );
 
     FolderUtilities.mkdirs( calcCaseFolder );
-    
+
     nature.createCalculationCaseInFolder( calcCaseFolder, monitor );
 
     return calcCaseFolder;
@@ -230,12 +228,12 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
     final IFolder prognoseFolder = nature.getPrognoseFolder();
     final IResource[] resources = prognoseFolder.exists() ? prognoseFolder.members() : new IResource[] {};
-    
+
     int count = 0;
     while( true )
     {
-      final String newName = count == 0 ? dateString : ( dateString  + "_#" + count );
-      
+      final String newName = count == 0 ? dateString : ( dateString + "_#" + count );
+
       boolean bFound = false;
       for( int i = 0; i < resources.length; i++ )
       {

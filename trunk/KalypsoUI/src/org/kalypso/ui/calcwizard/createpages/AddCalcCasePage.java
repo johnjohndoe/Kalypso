@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.createpages;
 
 import java.util.Collection;
@@ -93,22 +93,22 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     super( pagename, title, image );
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
   public void dispose()
   {
     m_choiceListener.clear();
-  
+
     super.dispose();
   }
-  
+
   public void addChoice( final IAddCalcCaseChoice choice )
   {
     m_choices.add( choice );
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -125,7 +125,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     m_chooserViewer = new ComboViewer( panel, SWT.READ_ONLY | SWT.DROP_DOWN );
     m_chooserViewer.getControl().setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    m_chooserViewer.setContentProvider( new ArrayContentProvider( ) );
+    m_chooserViewer.setContentProvider( new ArrayContentProvider() );
     m_chooserViewer.setInput( m_choices );
 
     final Group choiceGroup = new Group( panel, SWT.NONE );
@@ -134,7 +134,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     choiceGroup.setLayout( choiceLayout );
 
     for( final Iterator iter = m_choices.iterator(); iter.hasNext(); )
-      ((IAddCalcCaseChoice)iter.next()).createControl( choiceGroup );
+      ( (IAddCalcCaseChoice)iter.next() ).createControl( choiceGroup );
 
     m_chooserViewer.addPostSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -147,7 +147,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
           setChoice( choice );
           choiceLayout.topControl = choice.getControl();
           choiceGroup.setText( choice.toString() );
-  
+
           choiceGroup.layout( true );
         }
       }
@@ -165,13 +165,13 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
     if( m_choice != choice )
     {
       m_choice = choice;
-  
+
       m_choice.validateChoice();
-      
+
       fireChoiceChanged( choice );
     }
   }
-  
+
   public IFolder getCurrentCalcCase()
   {
     return m_currentCalcCase;
@@ -218,16 +218,16 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
       }
     } );
   }
-  
+
   public void update( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Seite wird aktualisiert", m_choices.size() );
     for( Iterator iter = m_choices.iterator(); iter.hasNext(); )
     {
-      ((IAddCalcCaseChoice)iter.next()).refresh( new NullProgressMonitor() );
+      ( (IAddCalcCaseChoice)iter.next() ).refresh( new NullProgressMonitor() );
       monitor.worked( 1 );
     }
-    
+
     monitor.done();
   }
 
@@ -240,23 +240,23 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     return m_calcCases;
   }
-  
+
   public void addChoiceListener( final IChoiceListener l )
   {
     m_choiceListener.add( l );
   }
-  
+
   public void removeChoiceListener( final IChoiceListener l )
   {
     m_choiceListener.remove( l );
   }
-  
+
   public void fireChoiceChanged( final IAddCalcCaseChoice newChoice )
   {
-    for( final  Iterator iter = m_choiceListener.iterator(); iter.hasNext(); )
-      ((IChoiceListener)iter.next()).onChoiceChanged( newChoice );
+    for( final Iterator iter = m_choiceListener.iterator(); iter.hasNext(); )
+      ( (IChoiceListener)iter.next() ).onChoiceChanged( newChoice );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.IWizardPage#getPreviousPage()
    */
@@ -264,12 +264,12 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
   {
     return super.getPreviousPage();
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.IWizardPage#setPreviousPage(org.eclipse.jface.wizard.IWizardPage)
    */
   public void setPreviousPage( IWizardPage page )
   {
-    super.setPreviousPage(page);
+    super.setPreviousPage( page );
   }
 }

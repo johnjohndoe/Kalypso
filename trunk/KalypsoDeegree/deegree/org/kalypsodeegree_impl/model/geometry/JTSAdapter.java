@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -86,8 +86,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
- * Adapter between deegree- <tt>GM_Object</tt> s and JTS-
- * <tt>Geometry<tt> objects.
+ * Adapter between deegree- <tt>GM_Object</tt> s and JTS- <tt>Geometry<tt> objects.
  * <p>
  * Please note that the generated deegree-objects use null as
  * <tt>CS_CoordinateSystem</tt>!
@@ -106,8 +105,7 @@ public class JTSAdapter
       pm, 0 );
 
   /**
-   * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt>
-   * object.
+   * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.
    * <p>
    * Currently, the following conversions are supported:
    * <ul>
@@ -161,15 +159,13 @@ public class JTSAdapter
     }
     else
     {
-      throw new GM_Exception( "JTSAdapter.export does not support type '"
-          + gmObject.getClass().getName() + "'!" );
+      throw new GM_Exception( "JTSAdapter.export does not support type '" + gmObject.getClass().getName() + "'!" );
     }
     return geometry;
   }
 
   /**
-   * Converts a JTS- <tt>Geometry</tt> object to a corresponding
-   * <tt>GM_Object</tt>.
+   * Converts a JTS- <tt>Geometry</tt> object to a corresponding <tt>GM_Object</tt>.
    * <p>
    * Currently, the following conversions are supported:
    * <ul>
@@ -223,8 +219,7 @@ public class JTSAdapter
     }
     else
     {
-      throw new GM_Exception( "JTSAdapter.wrap does not support type '"
-          + geometry.getClass().getName() + "'!" );
+      throw new GM_Exception( "JTSAdapter.wrap does not support type '" + geometry.getClass().getName() + "'!" );
     }
     return gmObject;
   }
@@ -361,8 +356,7 @@ public class JTSAdapter
   /**
    * Converts a <tt>GM_MultiSurface</tt> to a <tt>MultiPolygon</tt>.
    * <p>
-   * Currently, the contained <tt>GM_Surface</tt> _must_ have exactly one
-   * patch!
+   * Currently, the contained <tt>GM_Surface</tt> _must_ have exactly one patch!
    * <p>
    * 
    * @param msurface
@@ -495,8 +489,7 @@ public class JTSAdapter
     {
       interiorRings[i] = createGMPositions( polygon.getInteriorRingN( i ) );
     }
-    GM_SurfacePatch patch = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), exteriorRing,
-        interiorRings, null );
+    GM_SurfacePatch patch = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), exteriorRing, interiorRings, null );
 
     return new GM_Surface_Impl( patch );
   }

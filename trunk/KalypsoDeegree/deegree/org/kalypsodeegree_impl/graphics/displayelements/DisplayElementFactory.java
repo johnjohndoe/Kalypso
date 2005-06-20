@@ -181,7 +181,8 @@ public class DisplayElementFactory
 
                   for( int u = 0; u < symbolizers.length; u++ )
                   {
-                    DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u], workspace );
+                    DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizers[u],
+                        workspace );
 
                     if( displayElement != null )
                     {
@@ -206,15 +207,16 @@ public class DisplayElementFactory
   }
 
   /**
-   * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or
-   * raster and <tt>Symbolizer</tt>.
+   * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or raster and <tt>Symbolizer</tt>.
    * <p>
    * 
-   * @param o contains the geometry or raster information (Feature or raster)
-   * @param symbolizer contains the drawing (style) information and selects the
-   *          geometry property of the <tt>Feature</tt> to be drawn
-   * @throws IncompatibleGeometryTypeException if the selected geometry of the
-   *           <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
+   * @param o
+   *          contains the geometry or raster information (Feature or raster)
+   * @param symbolizer
+   *          contains the drawing (style) information and selects the geometry property of the <tt>Feature</tt> to be
+   *          drawn
+   * @throws IncompatibleGeometryTypeException
+   *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
   public static DisplayElement buildDisplayElement( Object o, Symbolizer symbolizer, GMLWorkspace workspace )
@@ -281,13 +283,13 @@ public class DisplayElementFactory
   }
 
   /**
-   * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or
-   * Raster and a default <tt>Symbolizer</tt>.
+   * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or Raster and a default <tt>Symbolizer</tt>.
    * <p>
    * 
-   * @param o contains the geometry or raster information (Feature or raster)
-   * @throws IncompatibleGeometryTypeException if the selected geometry of the
-   *           <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
+   * @param o
+   *          contains the geometry or raster information (Feature or raster)
+   * @throws IncompatibleGeometryTypeException
+   *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
   public static DisplayElement buildDisplayElement( Object o ) throws IncompatibleGeometryTypeException
@@ -341,11 +343,11 @@ public class DisplayElementFactory
   }
 
   /**
-   * Creates a <tt>PointDisplayElement</tt> using the given geometry and style
-   * information.
+   * Creates a <tt>PointDisplayElement</tt> using the given geometry and style information.
    * <p>
    * 
-   * @param feature associated <tt>Feature<tt>
+   * @param feature
+   *          associated <tt>Feature<tt>
    * @param geom geometry information
    * @param sym style information
    * @return constructed <tt>PointDisplayElement</tt>
@@ -390,23 +392,23 @@ public class DisplayElementFactory
       return null;
     if( geom instanceof GM_Point )
       return (GM_Point)geom;
-	  return geom.getCentroid();
+    return geom.getCentroid();
   }
 
   /**
-   * Creates a <tt>LineStringDisplayElement</tt> using the given geometry and
-   * style information.
+   * Creates a <tt>LineStringDisplayElement</tt> using the given geometry and style information.
    * <p>
    * 
-   * @param feature associated <tt>Feature<tt>
+   * @param feature
+   *          associated <tt>Feature<tt>
    * @param geom geometry information
    * @param sym style information
    * @throws IncompatibleGeometryTypeException if the geometry property is not
    *         a <tt>GM_Curve</tt> or a <tt>GM_MultiCurve</tt>
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( Feature feature, GM_Object geom, LineSymbolizer sym )
-      throws IncompatibleGeometryTypeException
+  public static LineStringDisplayElement buildLineStringDisplayElement( Feature feature, GM_Object geom,
+      LineSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     LineStringDisplayElement displayElement = null;
     if( geom == null )
@@ -429,19 +431,19 @@ public class DisplayElementFactory
   }
 
   /**
-   * Creates a <tt>PolygonDisplayElement</tt> using the given geometry and
-   * style information.
+   * Creates a <tt>PolygonDisplayElement</tt> using the given geometry and style information.
    * <p>
    * 
-   * @param feature associated <tt>Feature<tt>
+   * @param feature
+   *          associated <tt>Feature<tt>
    * @param gmObject geometry information
    * @param sym style information
    * @throws IncompatibleGeometryTypeException if the geometry property is not
    *         a <tt>GM_Surface</tt> or a <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static PolygonDisplayElement buildPolygonDisplayElement( Feature feature, GM_Object gmObject, PolygonSymbolizer sym )
-      throws IncompatibleGeometryTypeException
+  public static PolygonDisplayElement buildPolygonDisplayElement( Feature feature, GM_Object gmObject,
+      PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
   {
     PolygonDisplayElement displayElement = null;
 
@@ -463,16 +465,17 @@ public class DisplayElementFactory
   }
 
   /**
-   * Creates a <tt>LabelDisplayElement</tt> using the given geometry and style
-   * information.
+   * Creates a <tt>LabelDisplayElement</tt> using the given geometry and style information.
    * <p>
    * 
-   * @param feature <tt>Feature</tt> to be used (necessary for evaluation of
-   *          the label expression)
-   * @param gmObject geometry information
-   * @param sym style information
-   * @throws IncompatibleGeometryTypeException if the geometry property is not a
-   *           <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or
+   * @param feature
+   *          <tt>Feature</tt> to be used (necessary for evaluation of the label expression)
+   * @param gmObject
+   *          geometry information
+   * @param sym
+   *          style information
+   * @throws IncompatibleGeometryTypeException
+   *           if the geometry property is not a <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or
    *           <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
@@ -482,8 +485,8 @@ public class DisplayElementFactory
 
     LabelDisplayElement displayElement = null;
 
-    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface || gmObject instanceof GM_Curve
-        || gmObject instanceof GM_MultiCurve )
+    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface
+        || gmObject instanceof GM_Curve || gmObject instanceof GM_MultiCurve )
     {
       displayElement = new LabelDisplayElement_Impl( feature, gmObject, sym );
     }
@@ -497,12 +500,13 @@ public class DisplayElementFactory
   }
 
   /**
-   * Creates a <tt>RasterDisplayElement</tt> from the submitted image. The
-   * submitted <tt>GM_Envelope</tt> holds the bounding box of the imgae/raster
-   * data.
+   * Creates a <tt>RasterDisplayElement</tt> from the submitted image. The submitted <tt>GM_Envelope</tt> holds the
+   * bounding box of the imgae/raster data.
    * 
-   * @param feature grid coverage as feature
-   * @param sym raster symbolizer
+   * @param feature
+   *          grid coverage as feature
+   * @param sym
+   *          raster symbolizer
    * 
    * @return RasterDisplayElement
    */

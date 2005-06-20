@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import java.net.URL;
@@ -50,22 +50,20 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.ui.calcwizard.Arguments;
 
 /**
- * Provides some convenience methods for dealing with the stuff in Kalypso
- * Wizards.
+ * Provides some convenience methods for dealing with the stuff in Kalypso Wizards.
  * 
  * @author schlienger
  */
 public class KalypsoWizardHelper
 {
-  private KalypsoWizardHelper( )
+  private KalypsoWizardHelper()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
-   * Parses the properties by fetching all timeserieX elements out (X being
-   * whatever, as long as different from element to element). A
-   * TimeserieFeatureProps is created for each of these elements.
+   * Parses the properties by fetching all timeserieX elements out (X being whatever, as long as different from element
+   * to element). A TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
    * 
@@ -77,28 +75,23 @@ public class KalypsoWizardHelper
    * @param props
    * @return array of TimeserieFeatureProps
    */
-  public static TimeserieFeatureProps[] parseTimeserieFeatureProps(
-      final Arguments props )
+  public static TimeserieFeatureProps[] parseTimeserieFeatureProps( final Arguments props )
   {
     final ArrayList l = new ArrayList();
 
-    
     for( final Iterator names = props.keySet().iterator(); names.hasNext(); )
     {
-      final String pName = (String) names.next();
+      final String pName = (String)names.next();
 
-      if( pName
-          .startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
-        l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString(
-            (String) props.get( pName ), '#' ) ) );
+      if( pName.startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
+        l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString( (String)props.get( pName ), '#' ) ) );
     }
 
-    return (TimeserieFeatureProps[]) l.toArray( new TimeserieFeatureProps[0] );
+    return (TimeserieFeatureProps[])l.toArray( new TimeserieFeatureProps[0] );
   }
 
   /**
-   * Updates the diagram template for the given TimeserieFeatureProps and
-   * features
+   * Updates the diagram template for the given TimeserieFeatureProps and features
    * 
    * @param view
    * @param links
@@ -106,16 +99,16 @@ public class KalypsoWizardHelper
    * @param ignoreExceptions
    * @param ignoreType
    */
-  public static void updateZMLView(
-      final ObsView view, final TSLinkWithName[] links,
-      final URL context, final boolean ignoreExceptions, final String ignoreType )
+  public static void updateZMLView( final ObsView view, final TSLinkWithName[] links, final URL context,
+      final boolean ignoreExceptions, final String ignoreType )
   {
     view.removeAllItems();
 
     for( int i = 0; i < links.length; i++ )
     {
       final TSLinkWithName link = links[i];
-      view.loadObservation( context, link.href, ignoreExceptions, ignoreType, link.name, new ObsView.ItemData( true, link.color ) );
+      view.loadObservation( context, link.href, ignoreExceptions, ignoreType, link.name, new ObsView.ItemData( true,
+          link.color ) );
     }
   }
 }

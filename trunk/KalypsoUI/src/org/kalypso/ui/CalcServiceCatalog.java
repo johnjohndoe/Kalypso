@@ -54,15 +54,13 @@ import org.kalypso.services.proxy.ICalculationService;
 public class CalcServiceCatalog extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
-   *      java.util.Map)
+   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {
     try
     {
-      final Map calcServices = KalypsoGisPlugin.getDefault()
-          .getCalculationServiceProxies();
+      final Map calcServices = KalypsoGisPlugin.getDefault().getCalculationServiceProxies();
       for( final Iterator mapIt = calcServices.entrySet().iterator(); mapIt.hasNext(); )
       {
         final Map.Entry entry = (Entry)mapIt.next();
@@ -72,8 +70,7 @@ public class CalcServiceCatalog extends AbstractUrlCatalog
         final String[] namespaces = calcService.getSupportedSchemata();
         for( int j = 0; j < namespaces.length; j++ )
         {
-          final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://" + name + "/"
-              + namespaces[j] );
+          final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://" + name + "/" + namespaces[j] );
           catalog.put( namespaces[j], url );
         }
       }

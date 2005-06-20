@@ -28,18 +28,15 @@ public class FeatureDialog implements IFeatureDialog
 
   private final FeatureTypeProperty m_ftp;
 
-  private ICommandTarget m_target = new JobExclusiveCommandTarget(
-      new DefaultCommandManager(), null );
+  private ICommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private final GMLWorkspace m_workspace;
 
   /**
-   * FeatureDialog that shows a property of a feature to edit, usually the
-   * property is type of FeatureAssociationType and maxOccurs is greater than 1,
-   * so ist a table inside
+   * FeatureDialog that shows a property of a feature to edit, usually the property is type of FeatureAssociationType
+   * and maxOccurs is greater than 1, so ist a table inside
    */
-  public FeatureDialog( final GMLWorkspace workspace, final Feature feature,
-      final FeatureTypeProperty ftp )
+  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
     m_workspace = workspace;
     m_feature = feature;
@@ -63,11 +60,9 @@ public class FeatureDialog implements IFeatureDialog
   {
     final FeatureviewType fvType;
     if( m_ftp != null )
-      fvType = FeatureviewHelper.createFeatureviewFromFeatureTypeProperty(
-          m_feature.getFeatureType(), m_ftp );
+      fvType = FeatureviewHelper.createFeatureviewFromFeatureTypeProperty( m_feature.getFeatureType(), m_ftp );
     else
-      fvType = FeatureviewHelper.createFeatureviewFromFeatureType( m_feature
-          .getFeatureType() );
+      fvType = FeatureviewHelper.createFeatureviewFromFeatureType( m_feature.getFeatureType() );
 
     //    final GMLWorkspace workspace = new GMLWorkspace_Impl( new FeatureType[] {
     // m_feature.getFeatureType() }, m_feature, null, null, null,
@@ -78,12 +73,10 @@ public class FeatureDialog implements IFeatureDialog
     else
       commwork = new CommandableWorkspace( m_workspace );
 
-    final FeatureComposite composite = new FeatureComposite( commwork,
-        m_feature, new FeatureviewType[]
-        { fvType } );
+    final FeatureComposite composite = new FeatureComposite( commwork, m_feature, new FeatureviewType[]
+    { fvType } );
 
-    final FeatureviewDialog dialog = new FeatureviewDialog( commwork, m_target,
-        shell, composite );
+    final FeatureviewDialog dialog = new FeatureviewDialog( commwork, m_target, shell, composite );
     final int result = dialog.open();
 
     if( result == Window.OK )

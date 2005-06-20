@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.util.ArrayList;
@@ -69,8 +69,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * class to manage the object pool. this is part of the combination of the
- * object pool pattern an the singelton pattern.
+ * class to manage the object pool. this is part of the combination of the object pool pattern an the singelton pattern.
  * <p>
  * ----------------------------------------------------------
  * </p>
@@ -126,9 +125,8 @@ public abstract class ObjectPool extends TimerTask
   }
 
   /**
-   * clears the complete pool. objects in used while the clear() method has been
-   * called won't be put back to the pool if released back through the
-   * <tt>releaseObject</tt> method.
+   * clears the complete pool. objects in used while the clear() method has been called won't be put back to the pool if
+   * released back through the <tt>releaseObject</tt> method.
    */
   public void clear()
   {
@@ -176,8 +174,7 @@ public abstract class ObjectPool extends TimerTask
   }
 
   /**
-   * this method will be called when the submitted object will be removed from
-   * the pool
+   * this method will be called when the submitted object will be removed from the pool
    */
   public abstract void onObjectKill( Object o );
 
@@ -313,8 +310,7 @@ public abstract class ObjectPool extends TimerTask
     }
     catch( Exception e )
     {
-      System.out.println( "ObjectPool Cleaner "
-          + StringExtend.stackTraceToString( e.getStackTrace() ) );
+      System.out.println( "ObjectPool Cleaner " + StringExtend.stackTraceToString( e.getStackTrace() ) );
     }
 
   }

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,16 +57,15 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.graphics.sld;
 
 /**
- * Used to position a label relative to a point or a line string. For a point,
- * you can specify the anchor point of the label and a linear displacement from
- * the point (so that you can also plot a graphic symbol at the point). For a
- * line-string placement, you can specify a perpendicular offset (so you can
- * draw a stroke on the line). MORE PARAMETERS ARE PROBABLY NEEDED HERE.
+ * Used to position a label relative to a point or a line string. For a point, you can specify the anchor point of the
+ * label and a linear displacement from the point (so that you can also plot a graphic symbol at the point). For a
+ * line-string placement, you can specify a perpendicular offset (so you can draw a stroke on the line). MORE PARAMETERS
+ * ARE PROBABLY NEEDED HERE.
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -78,10 +77,8 @@ public interface LabelPlacement
 {
 
   /**
-   * For a PointPlacement, the anchor point of the label and a linear
-   * displacement from the point can be specified, to allow a graphic symbol to
-   * be plotted directly at the point. This might be useful to label a city, for
-   * example.
+   * For a PointPlacement, the anchor point of the label and a linear displacement from the point can be specified, to
+   * allow a graphic symbol to be plotted directly at the point. This might be useful to label a city, for example.
    * 
    * @return the pointplacement for the label
    */
@@ -96,9 +93,8 @@ public interface LabelPlacement
   void setPointPlacement( PointPlacement pointPlacement );
 
   /**
-   * For a LinePlacement, a perpendicular offset can be specified, to allow the
-   * line itself to be plotted also. This might be useful for labelling a road
-   * or a river, for example.
+   * For a LinePlacement, a perpendicular offset can be specified, to allow the line itself to be plotted also. This
+   * might be useful for labelling a road or a river, for example.
    * 
    * @return the lineplacement for the label
    */

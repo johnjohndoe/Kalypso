@@ -68,8 +68,8 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * 
- * the interface describes a property entry of a feature type. the name of the
- * property must be equal to the name of the corresponding feature property.
+ * the interface describes a property entry of a feature type. the name of the property must be equal to the name of the
+ * corresponding feature property.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -85,13 +85,12 @@ public class FeatureTypeProperty_Impl extends AbstractFeatureType implements Fea
   private final boolean m_nullable;
 
   /**
-   * initializes a FeatureTypeProperty with its name its associated type and a
-   * boolean variable that says if the propetry maybe <tt>null</tt>
+   * initializes a FeatureTypeProperty with its name its associated type and a boolean variable that says if the
+   * propetry maybe <tt>null</tt>
    */
-  protected FeatureTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
-      Map annotationMap )
+  protected FeatureTypeProperty_Impl( String name, String namespace, String type, boolean nullable, Map annotationMap )
   {
-    super(name,namespace,annotationMap);
+    super( name, namespace, annotationMap );
     m_type = type;
     m_nullable = nullable;
   }
@@ -126,13 +125,8 @@ public class FeatureTypeProperty_Impl extends AbstractFeatureType implements Fea
    */
   public boolean isGeometryProperty()
   {
-    return m_type.startsWith( "org.kalypsodeegree.model.geometry." )
-        && !m_type.endsWith( "Envelope" );
+    return m_type.startsWith( "org.kalypsodeegree.model.geometry." ) && !m_type.endsWith( "Envelope" );
   }
-
-  
-  
-
 
   /**
    * 

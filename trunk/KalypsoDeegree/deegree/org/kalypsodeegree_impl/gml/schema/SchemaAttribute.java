@@ -11,8 +11,8 @@ import org.w3c.dom.Node;
  */
 public class SchemaAttribute
 {
-  protected final static Logger LOGGER = Logger.getLogger( SchemaAttribute.class.getName() ); 
-  
+  protected final static Logger LOGGER = Logger.getLogger( SchemaAttribute.class.getName() );
+
   GMLSchema m_Schema = null;
 
   String m_NS = null;
@@ -31,7 +31,7 @@ public class SchemaAttribute
     // -> check if you have registred all needed types (TypeRegistry)
     if( atributeNode == null )
       LOGGER.severe( "You get an exeption here ?\n-> check if you have registred all needed types (TypeRegistry)" );
-    
+
     m_NS = atributeNode.getNamespaceURI();
 
     m_Name = atributeNode.getLocalName(); // ref

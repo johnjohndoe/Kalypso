@@ -36,8 +36,7 @@ public class HyperBoundingBox
   private HyperPoint pMin;
 
   /**
-   * Konstruktor HyperBoundingBox. Erzeugt eine BoundingBox im Hyperraum für die
-   * übergebenen Punkte.
+   * Konstruktor HyperBoundingBox. Erzeugt eine BoundingBox im Hyperraum für die übergebenen Punkte.
    * 
    * @param pMin -
    *          Minimum Punkt im Hyperraum
@@ -64,8 +63,7 @@ public class HyperBoundingBox
    */
   public static HyperBoundingBox getNullHyperBoundingBox( int dimension )
   {
-    return new HyperBoundingBox( HyperPoint.getNullHyperPoint( dimension ), HyperPoint
-        .getNullHyperPoint( dimension ) );
+    return new HyperBoundingBox( HyperPoint.getNullHyperPoint( dimension ), HyperPoint.getNullHyperPoint( dimension ) );
   }
 
   /**
@@ -111,8 +109,7 @@ public class HyperBoundingBox
 
     for( int i = 0; i < getDimension(); i++ )
     {
-      if( ( pMin.getCoord( i ) > box.getPMax().getCoord( i ) )
-          || ( pMax.getCoord( i ) < box.getPMin().getCoord( i ) ) )
+      if( ( pMin.getCoord( i ) > box.getPMax().getCoord( i ) ) || ( pMax.getCoord( i ) < box.getPMin().getCoord( i ) ) )
       {
         intersect = false;
         break;
@@ -135,8 +132,7 @@ public class HyperBoundingBox
 
     for( int i = 0; i < getDimension(); i++ )
     {
-      if( ( pMin.getCoord( i ) > box.getPMin().getCoord( i ) )
-          || ( pMax.getCoord( i ) < box.getPMax().getCoord( i ) ) )
+      if( ( pMin.getCoord( i ) > box.getPMin().getCoord( i ) ) || ( pMax.getCoord( i ) < box.getPMax().getCoord( i ) ) )
       {
         contains = false;
         break;
@@ -212,8 +208,8 @@ public class HyperBoundingBox
   }
 
   /**
-   * Berechnet das minimale Abstandsquadrat der HyperBoundingBox zum HyperPoint.
-   * Nach Roussopoulos Nick: Nearest Neighbor Queries - MINDIST
+   * Berechnet das minimale Abstandsquadrat der HyperBoundingBox zum HyperPoint. Nach Roussopoulos Nick: Nearest
+   * Neighbor Queries - MINDIST
    * 
    * @param point
    *          für Abstandberechnung.
@@ -249,8 +245,7 @@ public class HyperBoundingBox
   }
 
   /**
-   * Erstellt eine tiefe Kopie der HyperBoundingBox. - in Verbindung mit clone()
-   * bei HyperPoint
+   * Erstellt eine tiefe Kopie der HyperBoundingBox. - in Verbindung mit clone() bei HyperPoint
    * 
    * @return Object geklonte HyperBoundingBox
    */

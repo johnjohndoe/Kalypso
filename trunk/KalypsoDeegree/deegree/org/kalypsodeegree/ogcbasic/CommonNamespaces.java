@@ -42,11 +42,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -60,7 +60,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.ogcbasic;
 
 /**
@@ -77,9 +77,9 @@ package org.kalypsodeegree.ogcbasic;
 public interface CommonNamespaces
 {
   public static final String XSINS = "http://www.w3.org/2001/XMLSchema-instance";
-  
+
   public static final String XLINKNS = "http://www.w3.org/1999/xlink";
-  
+
   public static final String GMLNS = "http://www.opengis.net/gml";
 
   public static final String WFSNS = "http://www.opengis.net/wfs";
@@ -96,9 +96,12 @@ public interface CommonNamespaces
 
   public static final String DGCNTXTNS = "http://www.deegree.org/context";
 }
-/*******************************************************************************
- * Changes to this class. What the people have been up to: $Log:
- * CommonNamespaces.java,v $ Revision 1.2 2004/05/07 12:04:12 poth no message
+/***********************************************************************************************************************
+ * Changes to this class. What the people have been up to: $Log$
+ * Changes to this class. What the people have been up to: Revision 1.5  2005/06/20 14:07:49  belger
+ * Changes to this class. What the people have been up to: Formatierung
+ * Changes to this class. What the people have been up to: Revision 1.2 2004/05/07
+ * 12:04:12 poth no message
  * 
  * Revision 1.1 2004/04/07 11:43:55 poth no message
  * 
@@ -106,4 +109,4 @@ public interface CommonNamespaces
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

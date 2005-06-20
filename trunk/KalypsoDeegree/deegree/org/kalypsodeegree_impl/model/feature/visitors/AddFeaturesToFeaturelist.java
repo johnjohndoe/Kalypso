@@ -11,12 +11,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Fügt neue Features in eine
- * {@link org.kalypsodeegree.model.feature.FeatureList}ein. Dabei wird für
- * jedes besuchte Feature ein neues (Default) Feature erzeugt in welches Werte
- * aus dem besuchten Feature via
- * {@link org.kalypsodeegree_impl.model.feature.FeatureHelper#copyProperties(Feature, Feature, Properties)}
- * übertragen werden.
+ * Fügt neue Features in eine {@link org.kalypsodeegree.model.feature.FeatureList}ein. Dabei wird für jedes besuchte
+ * Feature ein neues (Default) Feature erzeugt in welches Werte aus dem besuchten Feature via
+ * {@link org.kalypsodeegree_impl.model.feature.FeatureHelper#copyProperties(Feature, Feature, Properties)}übertragen
+ * werden.
  * 
  * @author bce
  */
@@ -42,18 +40,17 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   /**
    * @param fid
-   *          Anhand dieses Pattern werden die neuen FeatureIds erzeugt. Es wird
-   *          ein Pattern-Replace mit folgenden Variablen erzeugt:
-   * <ul>
-   * <li>fromID</li>
-   * <li>toID</li>
-   * <li>fID</li>
-   * <li>count</li>
-   * </ul>
+   *          Anhand dieses Pattern werden die neuen FeatureIds erzeugt. Es wird ein Pattern-Replace mit folgenden
+   *          Variablen erzeugt:
+   *          <ul>
+   *          <li>fromID</li>
+   *          <li>toID</li>
+   *          <li>fID</li>
+   *          <li>count</li>
+   *          </ul>
    */
-  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap,
-      final FeatureType featureType, final String fromID, final String toID,
-      final String handleExisting, final String fid )
+  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final FeatureType featureType,
+      final String fromID, final String toID, final String handleExisting, final String fid )
   {
     m_list = list;
     m_featureType = featureType;
@@ -61,7 +58,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     m_fromID = fromID;
     m_handleExisting = handleExisting;
     m_fid = fid;
-    
+
     // create index for toID
     final IndexFeaturesVisitor visitor = new IndexFeaturesVisitor( toID );
     m_list.accept( visitor );
@@ -83,20 +80,21 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     final String fid = createID( existingFeature, fromID );
 
     final Feature newFeature;
-    if( existingFeature == null || "overwrite".equals( m_handleExisting ))
+    if( existingFeature == null || "overwrite".equals( m_handleExisting ) )
       newFeature = FeatureFactory.createDefaultFeature( fid, m_featureType, false );
     else if( "change".equals( m_handleExisting ) )
       newFeature = existingFeature;
     else if( "nothing".equals( m_handleExisting ) )
-        return true;
+      return true;
     else
-      throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
+      throw new IllegalArgumentException(
+          "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
 
     FeatureHelper.copyProperties( f, newFeature, m_propertyMap );
-    
+
     if( newFeature != existingFeature )
       m_list.add( newFeature );
-    
+
     // den fid-hash aktuell halten
     m_fidHash.put( newFeature.getId(), newFeature );
 
@@ -106,14 +104,14 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
   private String createID( final Feature feature, final Object fromID )
   {
     final String oldFid = feature == null ? "<none>" : feature.getId();
-    
-    String fidhelp = m_fid; 
-    fidhelp = fidhelp.replaceAll( "\\Q${fromID}\\E" , fromID == null ? "<null>" : fromID.toString() );
-//    fidhelp = fidhelp.replaceAll( "\\Q${toID}\\E" , toID );
+
+    String fidhelp = m_fid;
+    fidhelp = fidhelp.replaceAll( "\\Q${fromID}\\E", fromID == null ? "<null>" : fromID.toString() );
+    //    fidhelp = fidhelp.replaceAll( "\\Q${toID}\\E" , toID );
     fidhelp = fidhelp.replaceAll( "\\Q${fID}\\E", oldFid );
     if( fidhelp.indexOf( REPLACE_COUNT ) == -1 )
       fidhelp += REPLACE_COUNT;
-    
+
     int count = -1;
     while( true )
     {

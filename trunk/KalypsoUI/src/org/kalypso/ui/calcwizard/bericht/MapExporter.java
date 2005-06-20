@@ -52,7 +52,8 @@ import org.kalypsodeegree.model.feature.Feature;
 public class MapExporter extends AbstractBerichtExporter
 {
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
+   *      java.io.OutputStream)
    */
   public IStatus export( final Feature feature, final OutputStream os )
   {
@@ -62,7 +63,7 @@ public class MapExporter extends AbstractBerichtExporter
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#getExtension()
    */
-  public String getExtension( )
+  public String getExtension()
   {
     return ".jpg";
   }

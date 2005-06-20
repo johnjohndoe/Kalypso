@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 import java.awt.image.BufferedImage;
@@ -74,8 +74,7 @@ import com.sun.media.jai.codec.TIFFEncodeParam;
 
 /**
  * 
- * This class offers three methods to encode a <tt>BuffererImage</tt> to a
- * gif-, jpeg- or png-image.
+ * This class offers three methods to encode a <tt>BuffererImage</tt> to a gif-, jpeg- or png-image.
  * 
  * <p>
  * -----------------------------------------------------
@@ -113,8 +112,7 @@ public final class Encoders
   {
     BMPEncodeParam encodeParam = new BMPEncodeParam();
 
-    com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder( "BMP", out,
-        encodeParam );
+    com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder( "BMP", out, encodeParam );
 
     encoder.encode( img );
     out.close();
@@ -132,8 +130,7 @@ public final class Encoders
   {
     PNGEncodeParam encodeParam = PNGEncodeParam.getDefaultEncodeParam( img );
 
-    com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder( "PNG", out,
-        encodeParam );
+    com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder( "PNG", out, encodeParam );
 
     encoder.encode( img );
     out.close();
@@ -147,13 +144,11 @@ public final class Encoders
    * 
    * @throws Exception
    */
-  public static synchronized void encodeTiff( OutputStream out, BufferedImage img )
-      throws Exception
+  public static synchronized void encodeTiff( OutputStream out, BufferedImage img ) throws Exception
   {
     TIFFEncodeParam encodeParam = new TIFFEncodeParam();
 
-    com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder( "TIFF", out,
-        encodeParam );
+    com.sun.media.jai.codec.ImageEncoder encoder = ImageCodec.createImageEncoder( "TIFF", out, encodeParam );
 
     encoder.encode( img );
     out.close();
@@ -167,8 +162,7 @@ public final class Encoders
    * 
    * @throws Exception
    */
-  public static synchronized void encodeJpeg( OutputStream out, BufferedImage img )
-      throws Exception
+  public static synchronized void encodeJpeg( OutputStream out, BufferedImage img ) throws Exception
   {
 
     // encode JPEG
@@ -189,8 +183,7 @@ public final class Encoders
    * 
    * @throws Exception
    */
-  public static synchronized void encodeJpeg( OutputStream out, BufferedImage img, float quality )
-      throws Exception
+  public static synchronized void encodeJpeg( OutputStream out, BufferedImage img, float quality ) throws Exception
   {
 
     // encode JPEG

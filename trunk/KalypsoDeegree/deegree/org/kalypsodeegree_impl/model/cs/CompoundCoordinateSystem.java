@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -74,10 +74,9 @@ import org.opengis.cs.CS_CompoundCoordinateSystem;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * An aggregate of two coordinate systems. One of these is usually a two
- * dimensional coordinate system such as a geographic or a projected coordinate
- * system with a horizontal datum. The other is one-dimensional coordinate
- * system with a vertical datum.
+ * An aggregate of two coordinate systems. One of these is usually a two dimensional coordinate system such as a
+ * geographic or a projected coordinate system with a horizontal datum. The other is one-dimensional coordinate system
+ * with a vertical datum.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -93,9 +92,8 @@ public class CompoundCoordinateSystem extends CoordinateSystem
   private static final long serialVersionUID = -488997059924367289L;
 
   /**
-   * A default three-dimensional coordinate system for use with geographic
-   * coordinates with heights above the ellipsoid. The head coordinate system is
-   * {@link GeographicCoordinateSystem#WGS84}and the tail coordinate system is
+   * A default three-dimensional coordinate system for use with geographic coordinates with heights above the ellipsoid.
+   * The head coordinate system is {@link GeographicCoordinateSystem#WGS84}and the tail coordinate system is
    * {@link VerticalCoordinateSystem#ELLIPSOIDAL}.
    */
   public static final CompoundCoordinateSystem WGS84 = (CompoundCoordinateSystem)pool
@@ -123,8 +121,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
    *          Coordinate system to use for later ordinates.
    *  
    */
-  public CompoundCoordinateSystem( final String name, final CoordinateSystem head,
-      final CoordinateSystem tail )
+  public CompoundCoordinateSystem( final String name, final CoordinateSystem head, final CoordinateSystem tail )
   {
     super( name );
     this.head = head;
@@ -144,8 +141,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
    * @param tail
    *          Coordinate system to use for later ordinates.
    */
-  CompoundCoordinateSystem( final Map properties, final CoordinateSystem head,
-      final CoordinateSystem tail )
+  CompoundCoordinateSystem( final Map properties, final CoordinateSystem head, final CoordinateSystem tail )
   {
     super( properties );
     this.head = head;
@@ -184,8 +180,8 @@ public class CompoundCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Gets axis details for dimension within coordinate system. Each dimension in
-   * the coordinate system has a corresponding axis.
+   * Gets axis details for dimension within coordinate system. Each dimension in the coordinate system has a
+   * corresponding axis.
    * 
    * @see org.opengis.cs.CS_CompoundCoordinateSystem#getAxis(int)
    */
@@ -204,13 +200,12 @@ public class CompoundCoordinateSystem extends CoordinateSystem
         return tail.getAxis( dim );
       }
     }
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Gets units for dimension within coordinate system. Each dimension in the
-   * coordinate system has corresponding units.
+   * Gets units for dimension within coordinate system. Each dimension in the coordinate system has corresponding units.
    * 
    * @see org.opengis.cs.CS_CompoundCoordinateSystem#getUnits(int)
    */
@@ -229,8 +224,8 @@ public class CompoundCoordinateSystem extends CoordinateSystem
         return head.getUnits( dim );
       }
     }
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
@@ -260,11 +255,10 @@ public class CompoundCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -310,11 +304,9 @@ public class CompoundCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this compound coordinate system. The
-   * returned object is suitable for RMI use.
+   * Returns an OpenGIS interface for this compound coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -328,8 +320,7 @@ public class CompoundCoordinateSystem extends CoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link CompoundCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link CompoundCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

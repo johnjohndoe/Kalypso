@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.loaders;
 
 import java.io.OutputStreamWriter;
@@ -72,15 +72,15 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final String source, URL context,
-      IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
       final URL url = m_urlResolver.resolveURL( context, source );
-      
+
       monitor.beginTask( "Zml laden aus: " + url, IProgressMonitor.UNKNOWN );
 
       final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
@@ -104,39 +104,37 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
+   *      java.lang.Object)
    */
-  public void save( final String source, URL context, IProgressMonitor monitor,
-      Object data ) throws LoaderException
+  public void save( final String source, URL context, IProgressMonitor monitor, Object data ) throws LoaderException
   {
     try
     {
-      if(data==null)
+      if( data == null )
         return;
       final URL url = m_urlResolver.resolveURL( context, source );
-      
+
       monitor.beginTask( "ZML speichern in: " + url, IProgressMonitor.UNKNOWN );
 
       final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file == null )
-        throw new IllegalArgumentException(
-            "Datei konnte nicht gefunden werden: " + url );
+        throw new IllegalArgumentException( "Datei konnte nicht gefunden werden: " + url );
 
-      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation) data,
-          null );
-      
+      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation)data, null );
+
       // set contents of ZML-file
-      final SetContentHelper helper = new SetContentHelper(  )
+      final SetContentHelper helper = new SetContentHelper()
       {
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
           final Marshaller marshaller = ZmlFactory.getMarshaller();
           marshaller.setProperty( Marshaller.JAXB_ENCODING, getCharset() );
-          
+
           marshaller.marshal( xmlObs, writer );
         }
       };
-      helper.setFileContents(file, false, true, new NullProgressMonitor());
+      helper.setFileContents( file, false, true, new NullProgressMonitor() );
     }
     catch( Throwable e ) // generic exception caught for simplicity
     {
@@ -151,7 +149,7 @@ public class ZmlLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return "ZML";
   }

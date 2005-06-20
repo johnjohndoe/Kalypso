@@ -83,8 +83,8 @@ public class CalcJobHandler
 {
   private final ModeldataType m_modelspec;
 
-  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL,
-      KalypsoGisPlugin.getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
+  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin
+      .getId(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
 
   private String m_jobID = null;
 
@@ -96,11 +96,9 @@ public class CalcJobHandler
     m_calcService = calcService;
   }
 
-  public IStatus runJob( final IFolder calcCaseFolder, final IProgressMonitor monitor )
-      throws CoreException
+  public IStatus runJob( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung wird durchgeführt für Variante: " + calcCaseFolder.getName(),
-        5000 );
+    monitor.beginTask( "Berechnung wird durchgeführt für Variante: " + calcCaseFolder.getName(), 5000 );
     try
     {
       // Daten zum Service schieben
@@ -185,22 +183,24 @@ public class CalcJobHandler
         project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
         final String finishText = jobBean.getFinishText();
         final String message = finishText == null ? "" : finishText;
-        return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(),
-            0, message, System.getProperty("line.separator"), null );
+        return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0,
+            message, System.getProperty( "line.separator" ), null );
 
       case ICalcServiceConstants.CANCELED:
         throw m_cancelException;
 
       case ICalcServiceConstants.ERROR:
       {
-        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null ); 
+        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(),
+            0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
         throw new CoreException( status );
       }
 
       default:
       {
         // darf eigentlich nie vorkommen
-        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null ); 
+        final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoGisPlugin.getId(),
+            0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
         throw new CoreException( status );
       }
       }
@@ -208,8 +208,7 @@ public class CalcJobHandler
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Rechendienstes", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aufruf des Rechendienstes", e ) );
     }
     catch( final CoreException e )
     {
@@ -217,8 +216,7 @@ public class CalcJobHandler
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Zurückladen der Ergebnisse", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Zurückladen der Ergebnisse", e ) );
     }
     finally
     {
@@ -237,8 +235,7 @@ public class CalcJobHandler
     }
   }
 
-  private void clearResults( final IFolder calcCaseFolder, final IProgressMonitor monitor )
-      throws CoreException
+  private void clearResults( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -253,8 +250,7 @@ public class CalcJobHandler
 
         final boolean relToCalc = clearType.isRelativeToCalcCase();
         final String path = clearType.getPath();
-        final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project
-            .findMember( path );
+        final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project.findMember( path );
         if( resource != null )
           resource.delete( false, new SubProgressMonitor( monitor, 1 ) );
       }
@@ -265,8 +261,7 @@ public class CalcJobHandler
     }
   }
 
-  private String startCalcJob( final IFolder calcCaseFolder, final IProgressMonitor monitor )
-      throws CoreException
+  private String startCalcJob( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -282,22 +277,18 @@ public class CalcJobHandler
       final DataSource jarSource = new FileDataSource( zipFile );
       final DataHandler jarHandler = new DataHandler( jarSource );
 
-      final CalcJobInfoBean bean = m_calcService.startJob( m_modelspec.getTypeID(), "Description",
-          jarHandler, input, output );
+      final CalcJobInfoBean bean = m_calcService.startJob( m_modelspec.getTypeID(), "Description", jarHandler, input,
+          output );
       return bean.getId();
     }
     catch( final ServerException se )
     {
-      throw new CoreException(
-          KalypsoGisPlugin
-              .createErrorStatus(
-                  "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes.",
-                  se ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes.", se ) );
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Eingangsdaten konnten nicht erzeugt werden.", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Eingangsdaten konnten nicht erzeugt werden.", e ) );
     }
     finally
     {
@@ -316,8 +307,7 @@ public class CalcJobHandler
 
       final String outpath = ot.getPath();
       final boolean relCalcCase = ot.isRelativeToCalcCase();
-      final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath
-          : outpath;
+      final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath : outpath;
 
       output[count++] = new CalcJobClientBean( ot.getId(), path );
     }
@@ -325,9 +315,8 @@ public class CalcJobHandler
     return output;
   }
 
-  private CalcJobClientBean[] zipData( final IFolder calcCaseFolder,
-      final IProgressMonitor monitor, final List inputList, final File zipFile )
-      throws FileNotFoundException, CoreException, IOException
+  private CalcJobClientBean[] zipData( final IFolder calcCaseFolder, final IProgressMonitor monitor,
+      final List inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
   {
     ZipResourceVisitor zipper = null;
     try
@@ -343,31 +332,27 @@ public class CalcJobHandler
         final String inputPath = input.getPath();
 
         // alles relativ zum Projekt auflösen!
-        final IContainer baseresource = input.isRelativeToCalcCase() ? (IContainer)calcCaseFolder
-            : (IContainer)project;
+        final IContainer baseresource = input.isRelativeToCalcCase() ? (IContainer)calcCaseFolder : (IContainer)project;
         final IResource inputResource = baseresource.findMember( inputPath );
         if( inputResource == null )
         {
           if( input.isOptional() )
             continue;
 
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Konnte Input-Resource nicht finden: " + inputPath
-                  + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Konnte Input-Resource nicht finden: "
+              + inputPath + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
         }
 
         final IPath projectRelativePath = inputResource.getProjectRelativePath();
         inputResource.accept( zipper );
 
-        final CalcJobClientBean calcJobDataBean = new CalcJobClientBean( input.getId(),
-            projectRelativePath.toString() );
+        final CalcJobClientBean calcJobDataBean = new CalcJobClientBean( input.getId(), projectRelativePath.toString() );
         inputBeanList.add( calcJobDataBean );
 
         monitor.worked( 1 );
       }
 
-      return (CalcJobClientBean[])inputBeanList
-          .toArray( new CalcJobClientBean[inputBeanList.size()] );
+      return (CalcJobClientBean[])inputBeanList.toArray( new CalcJobClientBean[inputBeanList.size()] );
     }
     finally
     {

@@ -16,8 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * This is a XML-schema convenient class for generating GML-FeatureType elements
- * from a XML schema
+ * This is a XML-schema convenient class for generating GML-FeatureType elements from a XML schema
  * 
  * @author doemming
  */
@@ -70,23 +69,22 @@ public class GMLSchema
     final NodeList nl = m_schemaDoc.getElementsByTagNameNS( XMLHelper.XMLSCHEMA_NS, "import" );
     for( int i = 0; i < nl.getLength(); i++ )
     {
-        final Node namespaceNode = XMLHelper.getAttributeNode( nl.item( i ), "namespace" );
-        final String namespace = namespaceNode.getNodeValue();
-        final Node locationNode = XMLHelper.getAttributeNode( nl.item( i ), "schemaLocation" );
-        final String location = locationNode.getNodeValue();
+      final Node namespaceNode = XMLHelper.getAttributeNode( nl.item( i ), "namespace" );
+      final String namespace = namespaceNode.getNodeValue();
+      final Node locationNode = XMLHelper.getAttributeNode( nl.item( i ), "schemaLocation" );
+      final String location = locationNode.getNodeValue();
 
-        GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
-        if( schema == null )
-        {
-          final URL url = new URL( getUrl(), location );
-          schema = GMLSchemaCatalog.getSchema( url );
-        }
+      GMLSchema schema = GMLSchemaCatalog.getSchema( namespace );
+      if( schema == null )
+      {
+        final URL url = new URL( getUrl(), location );
+        schema = GMLSchemaCatalog.getSchema( url );
+      }
 
-        if( schema == null )
-          throw new GMLException( "Could not load schema: namespace='" + namespace
-              + "', location='" + location + "'" );
+      if( schema == null )
+        throw new GMLException( "Could not load schema: namespace='" + namespace + "', location='" + location + "'" );
 
-        m_importedSchemas.put( namespace, schema );
+      m_importedSchemas.put( namespace, schema );
     }
   }
 
@@ -137,8 +135,7 @@ public class GMLSchema
     // set target namespace
     try
     {
-      m_targetNS = XMLHelper
-          .getAttributeValue( m_schemaDoc.getDocumentElement(), "targetNamespace" );
+      m_targetNS = XMLHelper.getAttributeValue( m_schemaDoc.getDocumentElement(), "targetNamespace" );
     }
     catch( Exception e )
     {
@@ -172,8 +169,7 @@ public class GMLSchema
 
   public Node getContentNode( String type )
   {
-    NodeList nl = getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema",
-        "complexType" );
+    NodeList nl = getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema", "complexType" );
     nl = XMLHelper.reduceByAttribute( nl, "name", type );
     if( nl.getLength() > 0 ) // complexType ?
       return nl.item( 0 );

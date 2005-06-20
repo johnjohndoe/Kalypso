@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLComplexProperty;
@@ -72,9 +72,8 @@ import org.w3c.dom.NodeList;
 
 /**
  * 
- * The class represents a complex feature property. A complex property may be a
- * GMLFeature (that may has complex properties too) or a GMLFeatureCollection. A
- * GMLGeometry isn't taken as complex.
+ * The class represents a complex feature property. A complex property may be a GMLFeature (that may has complex
+ * properties too) or a GMLFeatureCollection. A GMLGeometry isn't taken as complex.
  * 
  * <p>
  * ----------------------------------------------------------
@@ -97,8 +96,7 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
   }
 
   /**
-   * factory method to create a GMLGeoProperty. the property that will be return
-   * doesn't contain a value.
+   * factory method to create a GMLGeoProperty. the property that will be return doesn't contain a value.
    */
   public static GMLComplexProperty createGMLComplexProperty( Document doc, String propName )
   {
@@ -113,11 +111,10 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
   }
 
   /**
-   * factory method to create a GMLGeoProperty. the property that will be return
-   * doesn't contain a value.
+   * factory method to create a GMLGeoProperty. the property that will be return doesn't contain a value.
    */
-  public static GMLComplexProperty createGMLComplexProperty( Document doc, String propertyName,
-      GMLFeature complex ) throws GMLException
+  public static GMLComplexProperty createGMLComplexProperty( Document doc, String propertyName, GMLFeature complex )
+      throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLComplexProperty(Document, String, GMLFeature)" );
 
@@ -179,14 +176,12 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
   }
 
   /**
-   * will be overwritten by this class in a way that an exception will be thrown
-   * if the method is called. Because it doesn't make any sense to set the value
-   * of a geo property as a String.
+   * will be overwritten by this class in a way that an exception will be thrown if the method is called. Because it
+   * doesn't make any sense to set the value of a geo property as a String.
    */
   public void setPropertyValue( String value )
   {
-    throw new NoSuchMethodError( "It doesn't make any sense to set the value "
-        + "of a geo property as a String" );
+    throw new NoSuchMethodError( "It doesn't make any sense to set the value " + "of a geo property as a String" );
   }
 
   public String toString()
@@ -199,23 +194,18 @@ public class GMLComplexProperty_Impl extends GMLProperty_Impl implements GMLComp
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/04/14 20:55:50  belger
- * *** empty log message ***
- *
- * Revision 1.5  2005/03/08 11:01:03  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:31
- * doemming *** empty log message *** Revision 1.6 2004/03/01 07:45:47 poth no
- * message
+ * Revision 1.7  2005/06/20 14:07:45  belger
+ * Formatierung
+ * Revision 1.6 2005/04/14 20:55:50 belger *** empty log message ***
+ * 
+ * Revision 1.5 2005/03/08 11:01:03 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:31 doemming ***
+ * empty log message *** Revision 1.6 2004/03/01 07:45:47 poth no message
  * 
  * Revision 1.5 2003/04/23 15:44:39 poth no message
  * 

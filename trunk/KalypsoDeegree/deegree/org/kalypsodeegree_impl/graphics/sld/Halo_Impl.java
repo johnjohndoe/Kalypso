@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -70,9 +70,8 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * Incarnation of a sld:Halo-element. A Halo is a type of Fill that is applied
- * to the backgrounds of font glyphs. The use of halos greatly improves the
- * readability of text labels.
+ * Incarnation of a sld:Halo-element. A Halo is a type of Fill that is applied to the backgrounds of font glyphs. The
+ * use of halos greatly improves the readability of text labels.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -92,8 +91,7 @@ public class Halo_Impl implements Halo, Marshallable
    * <p>
    * 
    * @param radius
-   *          radius to be used for the halo, use null for a rectangle styled
-   *          halo
+   *          radius to be used for the halo, use null for a rectangle styled halo
    * @param fill
    *          defines the fill style, use null for default style
    * @param stroke
@@ -107,10 +105,9 @@ public class Halo_Impl implements Halo, Marshallable
   }
 
   /**
-   * A Fill allows area geometries to be filled. There are two types of fills:
-   * solid-color and repeated GraphicFill. In general, if a Fill element is
-   * omitted in its containing element, no fill will be rendered. The default is
-   * a solid 50%-gray (color "#808080") opaque fill.
+   * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
+   * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
+   * 50%-gray (color "#808080") opaque fill.
    * <p>
    * 
    * @return the underlying <tt>Fill</tt> -object or null
@@ -133,16 +130,13 @@ public class Halo_Impl implements Halo, Marshallable
   }
 
   /**
-   * The Radius element gives the absolute size of a halo radius in pixels
-   * encoded as a floating-point number. The radius is taken from the outside
-   * edge of a font glyph to extend the area of coverage of the glyph (and the
-   * inside edge of holes in the glyphs). The halo of a text label is considered
-   * to be a single shape. The default radius is one pixel. Negative values are
-   * not allowed.
+   * The Radius element gives the absolute size of a halo radius in pixels encoded as a floating-point number. The
+   * radius is taken from the outside edge of a font glyph to extend the area of coverage of the glyph (and the inside
+   * edge of holes in the glyphs). The halo of a text label is considered to be a single shape. The default radius is
+   * one pixel. Negative values are not allowed.
    * <p>
    * 
-   * @return the radius definition as <tt>ParameterValueType</tt>, or null if
-   *         it has not been specified
+   * @return the radius definition as <tt>ParameterValueType</tt>, or null if it has not been specified
    */
   public ParameterValueType getRadius()
   {
@@ -154,8 +148,7 @@ public class Halo_Impl implements Halo, Marshallable
    * <p>
    * 
    * @param radius
-   *          radius to be used for the halo, use null for a rectangle styled
-   *          halo
+   *          radius to be used for the halo, use null for a rectangle styled halo
    */
   public void setRadius( ParameterValueType radius )
   {
@@ -163,17 +156,14 @@ public class Halo_Impl implements Halo, Marshallable
   }
 
   /**
-   * The Radius element gives the absolute size of a halo radius in pixels
-   * encoded as a floating-point number. The radius is taken from the outside
-   * edge of a font glyph to extend the area of coverage of the glyph (and the
-   * inside edge of holes in the glyphs). The halo of a text label is considered
-   * to be a single shape. The default radius is one pixel. Negative values are
-   * not allowed.
+   * The Radius element gives the absolute size of a halo radius in pixels encoded as a floating-point number. The
+   * radius is taken from the outside edge of a font glyph to extend the area of coverage of the glyph (and the inside
+   * edge of holes in the glyphs). The halo of a text label is considered to be a single shape. The default radius is
+   * one pixel. Negative values are not allowed.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the radius value, or -1 if it has not been specified
    * @throws FilterEvaluationException
    *           if the evaluation fails

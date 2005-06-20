@@ -56,8 +56,7 @@ public interface IUserService extends Remote, IKalypsoService
    * Returns the rights of the given user
    * 
    * @param username
-   *          name of the user who has already authenticated himself against the
-   *          operating system
+   *          name of the user who has already authenticated himself against the operating system
    * 
    * @return list of rights
    * @throws RemoteException
@@ -68,32 +67,30 @@ public interface IUserService extends Remote, IKalypsoService
    * Returns the rights of the given user
    * 
    * @param username
-   *          name of the user who is willing to authenticate himself. He might
-   *          have logged in the operating system, but must still log into some
-   *          other entity.
+   *          name of the user who is willing to authenticate himself. He might have logged in the operating system, but
+   *          must still log into some other entity.
    * @param password
    *          TODO encode password, make this call secure
    * @return list of rights
    * @throws RemoteException
    */
-  public String[] getRights( final String username, final String password )
-      throws RemoteException;
-  
+  public String[] getRights( final String username, final String password ) throws RemoteException;
+
   /**
    * @return whether user should be asked to enter its login information or not
    */
   public boolean isAskForLogin() throws RemoteException;
-  
+
   /**
    * @return whether user should be asked for scenario or not
    */
   public boolean isAskForScenario() throws RemoteException;
-  
+
   /**
-   * @return list of scenarios that must be managed by clients 
+   * @return list of scenarios that must be managed by clients
    */
   public String[] getScenarios() throws RemoteException;
-  
+
   /**
    * @return list of description for each scenario
    */

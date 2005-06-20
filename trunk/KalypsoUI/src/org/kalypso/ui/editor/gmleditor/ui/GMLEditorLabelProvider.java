@@ -73,8 +73,7 @@ public class GMLEditorLabelProvider extends LabelProvider
 
   protected RuntimeException unknownElement( Object element )
   {
-    return new RuntimeException( "Unknown type of element in tree of type "
-        + element.getClass().getName() );
+    return new RuntimeException( "Unknown type of element in tree of type " + element.getClass().getName() );
   }
 
 }

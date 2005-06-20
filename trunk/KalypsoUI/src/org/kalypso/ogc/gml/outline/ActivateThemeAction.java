@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -52,8 +52,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  */
 public class ActivateThemeAction extends AbstractOutlineAction
 {
-  public ActivateThemeAction( final String text, final ImageDescriptor image,
-      final String tooltipText, final GisMapOutlineViewer outlineViewer )
+  public ActivateThemeAction( final String text, final ImageDescriptor image, final String tooltipText,
+      final GisMapOutlineViewer outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
 
@@ -66,7 +66,7 @@ public class ActivateThemeAction extends AbstractOutlineAction
   public void run()
   {
     final Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
-    
+
     if( o instanceof IKalypsoTheme )
     {
       final IMapModell mapModell = getOutlineviewer().getMapModell();
@@ -89,7 +89,7 @@ public class ActivateThemeAction extends AbstractOutlineAction
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
     if( s.getFirstElement() instanceof IKalypsoTheme )
-      bEnable = true;    
+      bEnable = true;
     setEnabled( bEnable );
   }
 }

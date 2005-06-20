@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.table;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -63,8 +63,7 @@ public class ExportTableOptionsPage extends WizardPage
 
   private Button m_radioAll;
 
-  public ExportTableOptionsPage( final String pageName, final String title,
-      final ImageDescriptor titleImage )
+  public ExportTableOptionsPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
   }
@@ -77,8 +76,7 @@ public class ExportTableOptionsPage extends WizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
-    panel.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL
-        | GridData.HORIZONTAL_ALIGN_FILL ) );
+    panel.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL ) );
     panel.setFont( parent.getFont() );
 
     createExportOptionsGroup( panel );
@@ -111,8 +109,7 @@ public class ExportTableOptionsPage extends WizardPage
   }
 
   /**
-   * Hook method for restoring widget values to the values that they held last
-   * time this wizard was used to completion.
+   * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
   protected void restoreWidgetValues()
   {

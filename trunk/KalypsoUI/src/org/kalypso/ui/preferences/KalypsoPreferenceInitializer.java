@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -56,14 +56,15 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
   public void initializeDefaultPreferences()
   {
     // location of the server configuration for the clients
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS, "http://SERVER_NAME:8080/KalypsoConf/kalypso-client.ini");
-    
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS,
+        "http://SERVER_NAME:8080/KalypsoConf/kalypso-client.ini" );
+
     // size of the image export for the observation chart
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_WIDTH, 600 );
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_HEIGHT, 500 );
-    
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS,"EPSG:31469" );
-    
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault(IKalypsoPreferences.LANGUAGE, "de");
+
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31469" );
+
+    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.LANGUAGE, "de" );
   }
 }

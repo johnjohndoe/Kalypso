@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
@@ -133,10 +133,9 @@ import org.xml.sax.SAXException;
 /**
  * Factory class for all mapped SLD-elements.
  * <p>
- * TODO: Default values for omitted elements (such as fill color) should better
- * not be used in the construction of the corresponding objects (Fill), but
- * marked as left out (to make it possible to differentiate between explicitly
- * given values and default values).
+ * TODO: Default values for omitted elements (such as fill color) should better not be used in the construction of the
+ * corresponding objects (Fill), but marked as left out (to make it possible to differentiate between explicitly given
+ * values and default values).
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -151,15 +150,13 @@ public class SLDFactory
   private static String xlnNS = "http://www.w3.org/1999/xlink";
 
   /**
-   * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given
-   * XML-representation.
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given XML-representation.
    * <p>
    * 
    * @param s
    *          contains the XML document
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the XML document is
-   *           encountered
+   *           if a syntactic or semantic error in the XML document is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    */
   public static StyledLayerDescriptor createSLD( String s ) throws XMLParsingException
@@ -176,8 +173,7 @@ public class SLDFactory
    * @param reader
    *          provides the XML document
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the XML document is
-   *           encountered
+   *           if a syntactic or semantic error in the XML document is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    */
   public static StyledLayerDescriptor createSLD( Reader reader ) throws XMLParsingException
@@ -191,20 +187,18 @@ public class SLDFactory
     }
     catch( IOException e )
     {
-      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: "
-          + e.getMessage() );
+      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: " + e.getMessage() );
     }
     catch( SAXException e )
     {
-      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: "
-          + e.getMessage() );
+      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: " + e.getMessage() );
     }
 
     return sld;
   }
 
-  public static StyledLayerDescriptor createStyledLayerDescriptor( String name, String title,
-      String version, String abstract_, Layer[] layers )
+  public static StyledLayerDescriptor createStyledLayerDescriptor( String name, String title, String version,
+      String abstract_, Layer[] layers )
   {
     return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
   }
@@ -214,10 +208,9 @@ public class SLDFactory
     return new StyledLayerDescriptor_Impl( layers, version );
   }
 
-  
   /**
-   * Creates a <tt>TextSymbolizer</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'TextSymbolizer'- <tt>Element</tt>.
+   * Creates a <tt>TextSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'TextSymbolizer'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
@@ -227,8 +220,7 @@ public class SLDFactory
    * @param max
    *          scale-constraint to be used
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>TextSymbolizer</tt> -instance
    */
   private static TextSymbolizer createTextSymbolizer( Element element, double min, double max )
@@ -287,15 +279,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>Halo</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Halo'- <tt>Element</tt>.
+   * Creates a <tt>Halo</tt> -instance according to the contents of the DOM-subtree starting at the given 'Halo'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Halo'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Halo</tt> -instance
    */
   private static Halo createHalo( Element element ) throws XMLParsingException
@@ -331,15 +322,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>LabelPlacement</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'LabelPlacement'- <tt>Element</tt>.
+   * Creates a <tt>LabelPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'LabelPlacement'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'LabelPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LabelPlacement</tt> -instance
    */
   private static LabelPlacement createLabelPlacement( Element element ) throws XMLParsingException
@@ -394,15 +384,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>PointPlacement</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'PointPlacement'- <tt>Element</tt>.
+   * Creates a <tt>PointPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'PointPlacement'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'PointPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PointPlacement</tt> -instance
    */
   private static PointPlacement createPointPlacement( Element element ) throws XMLParsingException
@@ -425,10 +414,8 @@ public class SLDFactory
     {
       anchorPoint = new ParameterValueType[2];
 
-      Element apXElement = XMLTools.getChildByName( "AnchorPointX", CommonNamespaces.SLDNS,
-          apElement );
-      Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS,
-          apElement );
+      Element apXElement = XMLTools.getChildByName( "AnchorPointX", CommonNamespaces.SLDNS, apElement );
+      Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS, apElement );
 
       if( ( apXElement == null ) || ( apYElement == null ) )
       {
@@ -448,10 +435,8 @@ public class SLDFactory
     {
       displacement = new ParameterValueType[2];
 
-      Element dXElement = XMLTools.getChildByName( "DisplacementX", CommonNamespaces.SLDNS,
-          dElement );
-      Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS,
-          dElement );
+      Element dXElement = XMLTools.getChildByName( "DisplacementX", CommonNamespaces.SLDNS, dElement );
+      Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS, dElement );
 
       if( ( dXElement == null ) || ( dYElement == null ) )
       {
@@ -476,15 +461,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>LinePlacement</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'LinePlacement'- <tt>Element</tt>.
+   * Creates a <tt>LinePlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'LinePlacement'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'LinePlacement'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LinePlacement</tt> -instance
    */
   private static LinePlacement createLinePlacement( Element element ) throws XMLParsingException
@@ -492,8 +476,7 @@ public class SLDFactory
 
     // optional: <PerpendicularOffset>
     ParameterValueType pOffset = null;
-    Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset",
-        CommonNamespaces.SLDNS, element );
+    Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset", CommonNamespaces.SLDNS, element );
 
     if( pOffsetElement != null )
     {
@@ -511,8 +494,7 @@ public class SLDFactory
 
     // optional: <LineWidth> (this is deegree-specific)
     ParameterValueType lineWidth = null;
-    Element lineWidthElement = XMLTools.getChildByName( "LineWidth", CommonNamespaces.SLDNS,
-        element );
+    Element lineWidthElement = XMLTools.getChildByName( "LineWidth", CommonNamespaces.SLDNS, element );
 
     if( lineWidthElement != null )
     {
@@ -523,23 +505,21 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>Font</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Font'- <tt>Element</tt>.
+   * Creates a <tt>Font</tt> -instance according to the contents of the DOM-subtree starting at the given 'Font'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Font'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Font</tt> -instance
    */
   private static Font createFont( Element element ) throws XMLParsingException
   {
 
     // optional: <CssParameter>s
-    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS,
-        element );
+    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS, element );
     HashMap cssParams = new HashMap( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -552,20 +532,17 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>ParameterValueType</tt> -instance according to the contents
-   * of the DOM-subtree starting at the given <tt>Element</tt>.
+   * Creates a <tt>ParameterValueType</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given <tt>Element</tt>.
    * <p>
    * 
    * @param element
-   *          the <tt>Element</tt> (must be of the type
-   *          sld:ParameterValueType)
+   *          the <tt>Element</tt> (must be of the type sld:ParameterValueType)
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>ParameterValueType</tt> -instance
    */
-  private static ParameterValueType createParameterValueType( Element element )
-      throws XMLParsingException
+  private static ParameterValueType createParameterValueType( Element element ) throws XMLParsingException
   {
     // mix of text nodes and <wfs:Expression>-elements
     ArrayList componentList = new ArrayList();
@@ -599,20 +576,17 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the
-   * contents of the DOM-subtree starting at the given 'StyledLayerDescriptor'-
-   * <tt>Element</tt>.
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'StyledLayerDescriptor'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'StyledLayerDescriptor'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    */
-  public static StyledLayerDescriptor createStyledLayerDescriptor( Element element )
-      throws XMLParsingException
+  public static StyledLayerDescriptor createStyledLayerDescriptor( Element element ) throws XMLParsingException
   {
     // optional: <Name>
     String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
@@ -659,15 +633,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>NamedStyle</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'NamedStyle'- <tt>Element</tt>.
+   * Creates a <tt>NamedStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'NamedStyle'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'NamedStyle'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>NamedStyle</tt> -instance
    */
   private static NamedStyle createNamedStyle( Element element ) throws XMLParsingException
@@ -687,15 +660,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>RemoteOWS</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'RemoteOWS'- <tt>Element</tt>.
+   * Creates a <tt>RemoteOWS</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'RemoteOWS'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'RemoteOWS'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>RemoteOWS</tt> -instance
    */
   private static RemoteOWS createRemoteOWS( Element element ) throws XMLParsingException
@@ -710,8 +682,7 @@ public class SLDFactory
     }
 
     // required: <OnlineResource>
-    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource",
-        CommonNamespaces.SLDNS, element );
+    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS, element );
     String href = XMLTools.getRequiredAttrValue( "xlink:href", onlineResourceElement );
     URL url = null;
 
@@ -729,15 +700,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>NamedLayer</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'UserLayer'- <tt>Element</tt>.
+   * Creates a <tt>NamedLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'UserLayer'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'NamedLayer'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>NamedLayer</tt> -instance
    */
   private static NamedLayer createNamedLayer( Element element ) throws XMLParsingException
@@ -747,8 +717,7 @@ public class SLDFactory
 
     // optional: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
-    Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints",
-        CommonNamespaces.SLDNS, element );
+    Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints", CommonNamespaces.SLDNS, element );
 
     if( lfcElement != null )
     {
@@ -792,22 +761,21 @@ public class SLDFactory
   /**
    *  
    */
-  public static NamedLayer createNamedLayer( String name,
-      LayerFeatureConstraints layerFeatureConstraints, Style[] styles )
+  public static NamedLayer createNamedLayer( String name, LayerFeatureConstraints layerFeatureConstraints,
+      Style[] styles )
   {
     return new NamedLayer_Impl( name, layerFeatureConstraints, styles );
   }
 
   /**
-   * Creates a <tt>UserLayer</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'UserLayer'- <tt>Element</tt>.
+   * Creates a <tt>UserLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'UserLayer'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'UserLayer'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>UserLayer</tt> -instance
    */
   private static UserLayer createUserLayer( Element element ) throws XMLParsingException
@@ -817,8 +785,7 @@ public class SLDFactory
 
     // optional: <RemoteOWS>
     RemoteOWS remoteOWS = null;
-    Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", CommonNamespaces.SLDNS,
-        element );
+    Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", CommonNamespaces.SLDNS, element );
 
     if( remoteOWSElement != null )
     {
@@ -827,13 +794,11 @@ public class SLDFactory
 
     // required: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
-    Element lfcElement = XMLTools.getRequiredChildByName( "LayerFeatureConstraints",
-        CommonNamespaces.SLDNS, element );
+    Element lfcElement = XMLTools.getRequiredChildByName( "LayerFeatureConstraints", CommonNamespaces.SLDNS, element );
     lfc = createLayerFeatureConstraints( lfcElement );
 
     // optional: <UserStyle>(s)
-    ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", CommonNamespaces.SLDNS,
-        element );
+    ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", CommonNamespaces.SLDNS, element );
     UserStyle[] styles = new UserStyle[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -845,24 +810,20 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>FeatureTypeConstraint</tt> -instance according to the
-   * contents of the DOM-subtree starting at the given 'FeatureTypeConstraint'-
-   * <tt>Element</tt>.
+   * Creates a <tt>FeatureTypeConstraint</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'FeatureTypeConstraint'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'FeatureTypeConstraint'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>FeatureTypeConstraint</tt> -instance
    */
-  private static FeatureTypeConstraint createFeatureTypeConstraint( Element element )
-      throws XMLParsingException
+  private static FeatureTypeConstraint createFeatureTypeConstraint( Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    String name = XMLTools
-        .getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS, element, null );
+    String name = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS, element, null );
 
     // optional: <Filter>
     Filter filter = null;
@@ -874,8 +835,7 @@ public class SLDFactory
     }
 
     // optional: <Extent>(s)
-    ElementList nodelist = XMLTools.getChildElementsByName( "Extent", CommonNamespaces.SLDNS,
-        element );
+    ElementList nodelist = XMLTools.getChildElementsByName( "Extent", CommonNamespaces.SLDNS, element );
     Extent[] extents = new Extent[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -887,15 +847,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates an <tt>Extent</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Extent'- <tt>Element</tt>.
+   * Creates an <tt>Extent</tt> -instance according to the contents of the DOM-subtree starting at the given 'Extent'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Extent'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Extent</tt> -instance
    */
   private static Extent createExtent( Element element ) throws XMLParsingException
@@ -909,24 +868,20 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>LayerFeatureConstraints</tt> -instance according to the
-   * contents of the DOM-subtree starting at the given
-   * 'LayerFeatureConstraints'- <tt>Element</tt>.
+   * Creates a <tt>LayerFeatureConstraints</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'LayerFeatureConstraints'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'LayerFeatureConstraints'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LayerFeatureConstraints</tt> -instance
    */
-  public static LayerFeatureConstraints createLayerFeatureConstraints( Element element )
-      throws XMLParsingException
+  public static LayerFeatureConstraints createLayerFeatureConstraints( Element element ) throws XMLParsingException
   {
     // required: <FeatureTypeConstraint>(s)
-    ElementList nodelist = XMLTools.getChildElementsByName( "FeatureTypeConstraint",
-        CommonNamespaces.SLDNS, element );
+    ElementList nodelist = XMLTools.getChildElementsByName( "FeatureTypeConstraint", CommonNamespaces.SLDNS, element );
     FeatureTypeConstraint[] ftcs = new FeatureTypeConstraint[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -938,15 +893,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>UserStyle</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'UserStyle'- <tt>Element</tt>.
+   * Creates a <tt>UserStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'UserStyle'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'UserStyle'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>UserStyle</tt> -instance
    */
   private static UserStyle createUserStyle( Element element ) throws XMLParsingException
@@ -959,8 +913,7 @@ public class SLDFactory
     String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS, element, null );
 
     // optional: <IsDefault>
-    String defaultString = XMLTools.getStringValue( "IsDefault", CommonNamespaces.SLDNS, element,
-        null );
+    String defaultString = XMLTools.getStringValue( "IsDefault", CommonNamespaces.SLDNS, element, null );
     boolean isDefault = false;
 
     if( defaultString != null )
@@ -972,8 +925,7 @@ public class SLDFactory
     }
 
     // required: <FeatureTypeStyle> (s)
-    ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", CommonNamespaces.SLDNS,
-        element );
+    ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", CommonNamespaces.SLDNS, element );
     FeatureTypeStyle[] styles = new FeatureTypeStyle[nl.getLength()];
 
     if( styles.length == 0 )
@@ -991,9 +943,8 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>FeatureTypeStyle</tt> -instance according to the contents
-   * of the DOM-subtree starting at the given 'FeatureTypeStyle'-
-   * <tt>Element</tt>.
+   * Creates a <tt>FeatureTypeStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'FeatureTypeStyle'- <tt>Element</tt>.
    * <p>
    * TODO: The ElseFilter currently does not work correctly with FeatureFilters.
    * <p>
@@ -1001,12 +952,10 @@ public class SLDFactory
    * @param element
    *          the 'FeatureTypeStyle'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>FeatureTypeStyle</tt> -instance
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( Element element )
-      throws XMLParsingException
+  public static FeatureTypeStyle createFeatureTypeStyle( Element element ) throws XMLParsingException
   {
     // optional: <Name>
     String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS, element, null );
@@ -1015,8 +964,7 @@ public class SLDFactory
     // optional: <Abstract>
     String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS, element, null );
     // optional: <FeatureTypeName>
-    String featureTypeName = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS,
-        element, null );
+    String featureTypeName = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS, element, null );
 
     // optional: several <Rule> / <SemanticTypeIdentifier>
     NodeList nodelist = element.getChildNodes();
@@ -1073,8 +1021,7 @@ public class SLDFactory
     else if( filters.size() == 1 )
     {
       elseFilter = new ComplexFilter( OperationDefines.NOT );
-      ArrayList arguments = ( (LogicalOperation)( (ComplexFilter)elseFilter ).getOperation() )
-          .getArguments();
+      ArrayList arguments = ( (LogicalOperation)( (ComplexFilter)elseFilter ).getOperation() ).getArguments();
       ComplexFilter complexFilter = (ComplexFilter)filters.get( 0 );
       arguments.add( complexFilter.getOperation() );
       // several Rules with Filters exist -> elseFilter = NOT (Filter1 OR
@@ -1099,23 +1046,20 @@ public class SLDFactory
     }
 
     Rule[] rules = (Rule[])ruleList.toArray( new Rule[ruleList.size()] );
-    String[] typeIdentifiers = (String[])typeIdentifierList.toArray( new String[typeIdentifierList
-        .size()] );
+    String[] typeIdentifiers = (String[])typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
 
-    return new FeatureTypeStyle_Impl( name, title, abstract_, featureTypeName, typeIdentifiers,
-        rules );
+    return new FeatureTypeStyle_Impl( name, title, abstract_, featureTypeName, typeIdentifiers, rules );
   }
 
   /**
-   * Creates a <tt>Rule</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Rule'- <tt>Element</tt>.
+   * Creates a <tt>Rule</tt> -instance according to the contents of the DOM-subtree starting at the given 'Rule'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Rule'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Rule</tt> -instance
    */
   private static Rule createRule( Element element ) throws XMLParsingException
@@ -1129,8 +1073,7 @@ public class SLDFactory
 
     // optional: <LegendGraphic>
     LegendGraphic legendGraphic = null;
-    Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic",
-        CommonNamespaces.SLDNS, element );
+    Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic", CommonNamespaces.SLDNS, element );
 
     if( legendGraphicElement != null )
     {
@@ -1147,8 +1090,7 @@ public class SLDFactory
     }
 
     // optional: <ElseFilter>
-    Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", CommonNamespaces.SLDNS,
-        element );
+    Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", CommonNamespaces.SLDNS, element );
     if( elseFilterElement != null )
     {
       isAnElseFilter = true;
@@ -1161,11 +1103,9 @@ public class SLDFactory
     }
 
     // optional: <MinScaleDenominator>
-    double min = XMLTools.getDoubleValue( "MinScaleDenominator", CommonNamespaces.SLDNS, element,
-        0.0 );
+    double min = XMLTools.getDoubleValue( "MinScaleDenominator", CommonNamespaces.SLDNS, element, 0.0 );
     // optional: <MaxScaleDenominator>
-    double max = XMLTools.getDoubleValue( "MaxScaleDenominator", CommonNamespaces.SLDNS, element,
-        9E99 );
+    double max = XMLTools.getDoubleValue( "MaxScaleDenominator", CommonNamespaces.SLDNS, element, 9E99 );
 
     // optional: different Symbolizer-elements
     NodeList symbolizerNL = element.getChildNodes();
@@ -1205,19 +1145,17 @@ public class SLDFactory
         {
           symbolizerList.add( createRasterSymbolizer( symbolizerElement ) );
         }
-      }           
+      }
     }
 
-    Symbolizer[] symbolizers = (Symbolizer[])symbolizerList.toArray( new Symbolizer[symbolizerList
-        .size()] );
+    Symbolizer[] symbolizers = (Symbolizer[])symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
 
-    return new Rule_Impl( symbolizers, name, title, abstract_, legendGraphic, filter,
-        isAnElseFilter, min, max );
+    return new Rule_Impl( symbolizers, name, title, abstract_, legendGraphic, filter, isAnElseFilter, min, max );
   }
 
   /**
-   * Creates a <tt>PointSymbolizer</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'PointSymbolizer'- <tt>Element</tt>.
+   * Creates a <tt>PointSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'PointSymbolizer'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
@@ -1227,8 +1165,7 @@ public class SLDFactory
    * @param max
    *          scale-constraint to be used
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PointSymbolizer</tt> -instance
    */
   private static PointSymbolizer createPointSymbolizer( Element element, double min, double max )
@@ -1257,8 +1194,8 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>LineSymbolizer</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'LineSymbolizer'- <tt>Element</tt>.
+   * Creates a <tt>LineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'LineSymbolizer'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
@@ -1268,8 +1205,7 @@ public class SLDFactory
    * @param max
    *          scale-constraint to be used
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LineSymbolizer</tt> -instance
    */
   private static LineSymbolizer createLineSymbolizer( Element element, double min, double max )
@@ -1298,9 +1234,8 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>PolygonSymbolizer</tt> -instance according to the contents
-   * of the DOM-subtree starting at the given 'PolygonSymbolizer'-
-   * <tt>Element</tt>.
+   * Creates a <tt>PolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'PolygonSymbolizer'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
@@ -1310,8 +1245,7 @@ public class SLDFactory
    * @param max
    *          scale-constraint to be used
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PolygonSymbolizer</tt> -instance
    */
   private static PolygonSymbolizer createPolygonSymbolizer( Element element, double min, double max )
@@ -1348,8 +1282,8 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>Geometry</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Geometry'- <tt>Element</tt>.
+   * Creates a <tt>Geometry</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'Geometry'- <tt>Element</tt>.
    * <p>
    * FIXME: Add support for 'Function'-Elements.
    * <p>
@@ -1357,8 +1291,7 @@ public class SLDFactory
    * @param element
    *          the 'Geometry'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Geometry</tt> -instance
    */
   private static Geometry createGeometry( Element element ) throws XMLParsingException
@@ -1387,23 +1320,21 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>Fill</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Fill'- <tt>Element</tt>.
+   * Creates a <tt>Fill</tt> -instance according to the contents of the DOM-subtree starting at the given 'Fill'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Fill'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Fill</tt> -instance
    */
   private static Fill createFill( Element element ) throws XMLParsingException
   {
     // optional: <GraphicFill>
     GraphicFill graphicFill = null;
-    Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS,
-        element );
+    Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS, element );
 
     if( graphicFillElement != null )
     {
@@ -1411,8 +1342,7 @@ public class SLDFactory
     }
 
     // optional: <CssParameter>s
-    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS,
-        element );
+    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS, element );
     HashMap cssParams = new HashMap( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -1425,46 +1355,40 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>LegendGraphic</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'LegendGraphic'-element.
+   * Creates a <tt>LegendGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'LegendGraphic'-element.
    * <p>
    * 
    * @param element
    *          the 'LegendGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Graphic</tt> -instance
    */
   private static LegendGraphic createLegendGraphic( Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS,
-        element );
+    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS, element );
     Graphic graphic = createGraphic( graphicElement );
 
     return new LegendGraphic_Impl( graphic );
   }
 
   /**
-   * Creates an <tt>ExternalGraphic</tt> -instance according to the contents
-   * of the DOM-subtree starting at the given 'ExternalGraphic'-
-   * <tt>Element</tt>.
+   * Creates an <tt>ExternalGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'ExternalGraphic'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'ExternalGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>ExternalGraphic</tt> -instance
    */
-  private static ExternalGraphic createExternalGraphic( Element element )
-      throws XMLParsingException
+  private static ExternalGraphic createExternalGraphic( Element element ) throws XMLParsingException
   {
     // required: <OnlineResource>
-    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource",
-        CommonNamespaces.SLDNS, element );
+    Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS, element );
 
     // required: href-Attribute (in <OnlineResource>)
     String href = XMLTools.getRequiredAttrValue( "href", xlnNS, onlineResourceElement );
@@ -1487,15 +1411,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>Mark</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Mark'- <tt>Element</tt>.
+   * Creates a <tt>Mark</tt> -instance according to the contents of the DOM-subtree starting at the given 'Mark'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Mark'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Mark</tt> -instance
    */
   private static Mark createMark( Element element ) throws XMLParsingException
@@ -1526,15 +1449,14 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>Stroke</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Stroke'- <tt>Element</tt>.
+   * Creates a <tt>Stroke</tt> -instance according to the contents of the DOM-subtree starting at the given 'Stroke'-
+   * <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'Stroke'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Stroke</tt> -instance
    */
   private static Stroke createStroke( Element element ) throws XMLParsingException
@@ -1559,8 +1481,7 @@ public class SLDFactory
     }
 
     // optional: <CssParameter>s
-    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS,
-        element );
+    ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS, element );
     HashMap cssParams = new HashMap( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -1573,59 +1494,54 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>GraphicFill</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'GraphicFill'- <tt>Element</tt>.
+   * Creates a <tt>GraphicFill</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'GraphicFill'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'GraphicFill'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>GraphicFill</tt> -instance
    */
   private static GraphicFill createGraphicFill( Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS,
-        element );
+    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS, element );
     Graphic graphic = createGraphic( graphicElement );
 
     return new GraphicFill_Impl( graphic );
   }
 
   /**
-   * Creates a <tt>GraphicStroke</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'GraphicStroke'- <tt>Element</tt>.
+   * Creates a <tt>GraphicStroke</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'GraphicStroke'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'GraphicStroke'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>GraphicStroke</tt> -instance
    */
   private static GraphicStroke createGraphicStroke( Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS,
-        element );
+    Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS, element );
     Graphic graphic = createGraphic( graphicElement );
 
     return new GraphicStroke_Impl( graphic );
   }
 
   /**
-   * Creates a <tt>Graphic</tt> -instance according to the contents of the
-   * DOM-subtree starting at the given 'Graphic'-element.
+   * Creates a <tt>Graphic</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'Graphic'-element.
    * <p>
    * 
    * @param element
    *          the 'Graphic'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Graphic</tt> -instance
    */
   private static Graphic createGraphic( Element element ) throws XMLParsingException
@@ -1679,22 +1595,20 @@ public class SLDFactory
       }
     }
 
-    Object[] marksAndExtGraphics = marksAndExtGraphicsList
-        .toArray( new Object[marksAndExtGraphicsList.size()] );
+    Object[] marksAndExtGraphics = marksAndExtGraphicsList.toArray( new Object[marksAndExtGraphicsList.size()] );
 
     return new Graphic_Impl( marksAndExtGraphics, opacity, size, rotation );
   }
 
   /**
-   * Creates a <tt>CssParameter</tt> -instance according to the contents of
-   * the DOM-subtree starting at the given 'CssParameter'- <tt>Element</tt>.
+   * Creates a <tt>CssParameter</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * 'CssParameter'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
    *          the 'CssParamter'- <tt>Element</tt>
    * @throws XMLParsingException
-   *           if a syntactic or semantic error in the DOM-subtree is
-   *           encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>CssParameter</tt> -instance
    */
   private static CssParameter createCssParameter( Element element ) throws XMLParsingException
@@ -1705,7 +1619,7 @@ public class SLDFactory
 
     return ( new CssParameter_Impl( name, pvt ) );
   }
-  
+
   private static RasterSymbolizer createRasterSymbolizer( Element element )
   {
     try
@@ -1724,11 +1638,11 @@ public class SLDFactory
       return null;
     }
   }
-  
-  /*private static Geometry createGeometry(net.opengis.sld.GeometryType geometryType){
-    List propertyNames = geometryType.getPropertyName().getContent();
-    return new Geometry_Impl((String)propertyNames.get(0),null);
-  }*/
+
+  /*
+   * private static Geometry createGeometry(net.opengis.sld.GeometryType geometryType){ List propertyNames =
+   * geometryType.getPropertyName().getContent(); return new Geometry_Impl((String)propertyNames.get(0),null); }
+   */
 
   private static TreeMap createColorMap( net.opengis.sld.ColorMapType colorMapType )
   {
@@ -1736,8 +1650,7 @@ public class SLDFactory
     List colorMapEntries = colorMapType.getColorMapEntry();
     for( int i = 0; i < colorMapEntries.size(); i++ )
     {
-      net.opengis.sld.ColorMapEntry colorMapEntry = (net.opengis.sld.ColorMapEntry)colorMapEntries
-          .get( i );
+      net.opengis.sld.ColorMapEntry colorMapEntry = (net.opengis.sld.ColorMapEntry)colorMapEntries.get( i );
       Color color = null;
       if( colorMapEntry.getColor() != null )
       {

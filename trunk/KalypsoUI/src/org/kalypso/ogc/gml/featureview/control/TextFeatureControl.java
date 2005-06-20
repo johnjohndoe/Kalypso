@@ -69,7 +69,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   private final Color m_errorColor = Display.getCurrent().getSystemColor( SWT.COLOR_RED );
 
   private Text m_text = null;
-  
+
   private String m_currentValue;
 
   private boolean m_isValid = false;
@@ -84,8 +84,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
-   *      int)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
   public Control createControl( final Composite parent, final int style )
   {

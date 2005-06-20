@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.resources;
 
 import java.io.File;
@@ -58,14 +58,14 @@ import org.eclipse.core.runtime.IPath;
 public class FileFilterVisitor implements IResourceVisitor
 {
   private final FileFilter m_filter;
-  
+
   private final Collection m_foundFiles = new ArrayList();
 
   public FileFilterVisitor( final FileFilter filter )
   {
     m_filter = filter;
   }
-  
+
   public IFile[] getFiles()
   {
     return (IFile[])m_foundFiles.toArray( new IFile[m_foundFiles.size()] );
@@ -84,7 +84,7 @@ public class FileFilterVisitor implements IResourceVisitor
       if( m_filter.accept( fileFile ) )
         m_foundFiles.add( file );
     }
-    
+
     return true;
   }
 

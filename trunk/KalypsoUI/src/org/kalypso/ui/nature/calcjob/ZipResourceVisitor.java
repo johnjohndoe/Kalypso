@@ -62,7 +62,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class ZipResourceVisitor implements IResourceVisitor
 {
   private final ZipOutputStream m_zos;
-  
+
   private final Set m_entries = new HashSet();
 
   public ZipResourceVisitor( final File zipfile ) throws FileNotFoundException

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -56,23 +56,23 @@ import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 public class CalcWizardDialog extends WizardDialog
 {
   public final static int NEW_PROGNOSE_ID = IDialogConstants.CLIENT_ID + 1;
-  
+
   public CalcWizardDialog( final Shell parentShell, final CalcWizard newWizard )
   {
     super( parentShell, newWizard );
-    
+
     final Point size = parentShell.getSize();
-    setMinimumPageSize( (int)( size.x * 0.8 ), (int)( size.y *  0.66 ) );
+    setMinimumPageSize( (int)( size.x * 0.8 ), (int)( size.y * 0.66 ) );
   }
-  
+
   protected void nextPressed()
   {
-    if( !((CalcWizard)getWizard()).doNext( getCurrentPage() ) )
+    if( !( (CalcWizard)getWizard() ).doNext( getCurrentPage() ) )
       return;
-    
+
     super.nextPressed();
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardDialog#buttonPressed(int)
    */
@@ -83,20 +83,20 @@ public class CalcWizardDialog extends WizardDialog
       final CalcWizard wizard = (CalcWizard)getWizard();
       wizard.restart();
     }
-    
+
     super.buttonPressed( buttonId );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
    */
   protected void createButtonsForButtonBar( Composite parent )
   {
     createButton( parent, NEW_PROGNOSE_ID, "Neue Vorhersage anlegen", false );
-    
+
     super.createButtonsForButtonBar( parent );
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardDialog#updateButtons()
    */
@@ -105,7 +105,7 @@ public class CalcWizardDialog extends WizardDialog
     super.updateButtons();
 
     final Button backButton = getButton( IDialogConstants.BACK_ID );
-    final Button newPrognoseButton = getButton(  NEW_PROGNOSE_ID );
+    final Button newPrognoseButton = getButton( NEW_PROGNOSE_ID );
     final Button finishedButton = getButton( IDialogConstants.FINISH_ID );
     final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
 
@@ -113,7 +113,7 @@ public class CalcWizardDialog extends WizardDialog
     final IWizard wizard = getWizard();
     if( wizard instanceof CalcWizard )
     {
-      if( ((CalcWizard)wizard).isButtonsLocked() )
+      if( ( (CalcWizard)wizard ).isButtonsLocked() )
       {
         backButton.setEnabled( false );
         getButton( IDialogConstants.NEXT_ID ).setEnabled( false );
@@ -121,19 +121,19 @@ public class CalcWizardDialog extends WizardDialog
         finishedButton.setEnabled( false );
         getButton( IDialogConstants.HELP_ID ).setEnabled( false );
         newPrognoseButton.setEnabled( false );
-        
+
         return;
       }
 
       // der cancel button reaktiviert sich nicht von alleine
       cancelButton.setEnabled( true );
     }
-    
+
     final IWizardPage currentPage = getCurrentPage();
     final IWizardPage previousPage = currentPage.getPreviousPage();
-    
+
     backButton.setEnabled( previousPage != null && previousPage instanceof IModelWizardPage );
     newPrognoseButton.setEnabled( currentPage instanceof IModelWizardPage );
   }
-  
+
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -45,8 +45,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
@@ -55,8 +55,8 @@ import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
  */
 public class OpenStyleDialogAction extends AbstractOutlineAction
 {
-  public OpenStyleDialogAction( final String text, final ImageDescriptor image,
-      final String tooltipText, final GisMapOutlineViewer outlineViewer )
+  public OpenStyleDialogAction( final String text, final ImageDescriptor image, final String tooltipText,
+      final GisMapOutlineViewer outlineViewer )
   {
     super( text, image, tooltipText, outlineViewer, null );
 
@@ -69,13 +69,12 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
   public void run()
   {
     StyleEditorViewPart part = null;
-    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();    
+    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
     Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
 
     try
     {
-      part = (StyleEditorViewPart)window.getActivePage().showView(
-          "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+      part = (StyleEditorViewPart)window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
 
       if( part != null )
         part.setSelectionChangedProvider( getOutlineviewer() );
@@ -83,10 +82,10 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
       // if UserStyle selected path that on to styleeditor
       if( o instanceof ThemeStyleTreeObject )
       {
-        final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();                   
+        final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();
 
         if( part != null && theme instanceof IKalypsoFeatureTheme )
-        {                 
+        {
           KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
           part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme)theme );
         }
@@ -117,7 +116,7 @@ public class OpenStyleDialogAction extends AbstractOutlineAction
     final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
     if( s.getFirstElement() instanceof ThemeStyleTreeObject )
-      bEnable = true;    
+      bEnable = true;
     setEnabled( bEnable );
   }
 }

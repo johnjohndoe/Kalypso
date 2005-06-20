@@ -13,8 +13,7 @@ public class SetSelectedAction extends AbstractObservationTableAction
 {
   public SetSelectedAction( ObservationTable table )
   {
-    super( table, "Selektierte Werte setzen",
-        "Setzt die selektierten Werte auf den aktiven Wert" );
+    super( table, "Selektierte Werte setzen", "Setzt die selektierten Werte auf den aktiven Wert" );
   }
 
   public void internalActionPerformed( ActionEvent e )

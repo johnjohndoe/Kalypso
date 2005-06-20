@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.ogcbasic;
 
 /**
- * specifies the data structur of a address and the access to its components
- * based on ISO 19115
+ * specifies the data structur of a address and the access to its components based on ISO 19115
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -80,8 +79,7 @@ public interface ContactAddress
   String getAddressType();
 
   /**
-   * returns the address. usally this is the street and number of a building. It
-   * also can be a p.o. box
+   * returns the address. usally this is the street and number of a building. It also can be a p.o. box
    */
   String getAddress();
 
@@ -91,8 +89,8 @@ public interface ContactAddress
   String getCity();
 
   /**
-   * returns the name of the state or province of the address. If no state or
-   * province is known or nessecary <tt>null</tt> will be returned.
+   * returns the name of the state or province of the address. If no state or province is known or nessecary
+   * <tt>null</tt> will be returned.
    */
   String getStateOrProvince();
 
@@ -102,8 +100,7 @@ public interface ContactAddress
   String getPostCode();
 
   /**
-   * returns the name of the country. this should be the complete name and not
-   * an abbreviation.
+   * returns the name of the country. this should be the complete name and not an abbreviation.
    */
   String getCountry();
 

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -72,16 +72,14 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_MultiCurve interface from package
- * jago.model.
+ * default implementation of the GM_MultiCurve interface from package jago.model.
  * 
  * ------------------------------------------------------------
  * 
  * @version 12.6.2001
  * @author Andreas Poth
  */
-final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve,
-    Serializable
+final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 2730942874409216686L;
@@ -138,9 +136,8 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * inserts a GM_Curve in the aggregation. all elements with an index equal or
-   * larger index will be moved. if index is larger then getSize() - 1 or
-   * smaller then 0 or gmc equals null an exception will be thrown.
+   * inserts a GM_Curve in the aggregation. all elements with an index equal or larger index will be moved. if index is
+   * larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
    * 
    * @param gmc
    *          GM_Curve to insert.
@@ -153,10 +150,8 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * sets the submitted GM_Curve at the submitted index. the element at the
-   * position <code>index</code> will be removed. if index is larger then
-   * getSize() - 1 or smaller then 0 or gmc equals null an exception will be
-   * thrown.
+   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be
+   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
    * 
    * @param gmc
    *          GM_Curve to set.
@@ -179,8 +174,8 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * removes the GM_Curve at the submitted index from the aggregation. if index
-   * is larger then getSize() - 1 or smaller then 0 an exception will be thrown.
+   * removes the GM_Curve at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
+   * then 0 an exception will be thrown.
    * 
    * @return the removed GM_Curve
    */
@@ -317,11 +312,10 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * The operation "dimension" shall return the inherent dimension of this
-   * GM_Object, which shall be less than or equal to the coordinate dimension.
-   * The dimension of a collection of geometric objects shall be the largest
-   * dimension of any of its pieces. Points are 0-dimensional, curves are
-   * 1-dimensional, surfaces are 2-dimensional, and solids are 3-dimensional.
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   public int getDimension()
   {
@@ -329,9 +323,8 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * The operation "coordinateDimension" shall return the dimension of the
-   * coordinates that define this GM_Object, which must be the same as the
-   * coordinate dimension of the coordinate reference system for this GM_Object.
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   public int getCoordinateDimension()
   {

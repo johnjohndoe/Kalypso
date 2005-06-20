@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import org.bce.eclipse.core.runtime.HandleDoneJobChangeAdapter;
@@ -79,15 +79,17 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
   {
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
+    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
+        "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
     if( calcCasesToCalc == null )
       return;
-    
+
     for( int i = 0; i < calcCasesToCalc.length; i++ )
     {
       final IFolder folder = calcCasesToCalc[i];
       final Job calcJob = new CalcCaseJob( folder );
-      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Berechnung durchführen: " + folder.getName(), "Berechnung beendet: " ) );
+      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Berechnung durchführen: "
+          + folder.getName(), "Berechnung beendet: " ) );
       calcJob.schedule();
     }
   }
@@ -98,9 +100,9 @@ public class StartCalculationActionDelegate implements IWorkbenchWindowActionDel
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // mir doch egal!
-    
-    // wir nehmen immer die selektion des navigators, nicht die hier gesetzte
+  // mir doch egal!
+
+  // wir nehmen immer die selektion des navigators, nicht die hier gesetzte
   }
 
 }

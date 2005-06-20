@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -113,8 +113,8 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    * @param axis1
    *          Details of 1st ordinates in created coordinate system.
    */
-  public HorizontalCoordinateSystem( final String name, final HorizontalDatum datum,
-      final AxisInfo axis0, final AxisInfo axis1 )
+  public HorizontalCoordinateSystem( final String name, final HorizontalDatum datum, final AxisInfo axis0,
+      final AxisInfo axis1 )
   {
     super( name );
     this.datum = datum;
@@ -138,8 +138,8 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
    * @param axis1
    *          Details of 1st ordinates in created coordinate system.
    */
-  HorizontalCoordinateSystem( final Map properties, final HorizontalDatum datum,
-      final AxisInfo axis0, final AxisInfo axis1 )
+  HorizontalCoordinateSystem( final Map properties, final HorizontalDatum datum, final AxisInfo axis0,
+      final AxisInfo axis1 )
   {
     super( properties );
     this.datum = datum;
@@ -193,19 +193,17 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
     case 1:
       return axis1;
     default:
-      throw new IndexOutOfBoundsException( Resources.format(
-          ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+      throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+          dimension ) ) );
     }
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -218,8 +216,7 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
     if( super.equivalents( cs ) )
     {
       final HorizontalCoordinateSystem that = (HorizontalCoordinateSystem)cs;
-      return Utilities.equals( this.datum, that.datum )
-          && Utilities.equals( this.axis0, that.axis0 )
+      return Utilities.equals( this.datum, that.datum ) && Utilities.equals( this.axis0, that.axis0 )
           && Utilities.equals( this.axis1, that.axis1 );
     }
     return false;
@@ -240,11 +237,9 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this horizontal coordinate system. The
-   * returned object is suitable for RMI use.
+   * Returns an OpenGIS interface for this horizontal coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   Object toOpenGIS( final Object adapters )
   {
@@ -258,8 +253,7 @@ public abstract class HorizontalCoordinateSystem extends CoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link HorizontalCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link HorizontalCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

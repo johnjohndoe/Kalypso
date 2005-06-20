@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
@@ -75,9 +75,8 @@ import org.kalypsodeegree_impl.tools.Debug;
 public class FilterTools
 {
   /**
-   * Traverses the <tt>Filter</tt> -tree and returns the first BBOX-Operation
-   * that is found and a <tt>Filter</tt> that is equal to the given one minus
-   * the BBOX-Operation.
+   * Traverses the <tt>Filter</tt> -tree and returns the first BBOX-Operation that is found and a <tt>Filter</tt>
+   * that is equal to the given one minus the BBOX-Operation.
    * <p>
    * 
    * @param filter

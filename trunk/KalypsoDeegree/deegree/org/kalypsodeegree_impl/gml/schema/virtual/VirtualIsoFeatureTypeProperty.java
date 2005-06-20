@@ -58,8 +58,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implements
-    VirtualFeatureTypeProperty
+public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
 
   private final static String DECORATED_NS = "http://www.opengis.net/gml";
@@ -110,12 +109,11 @@ public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implement
     {
       // do nothing
     }
-    return GeometryFactory.createGM_MultiCurve( (GM_Curve[])result.toArray( new GM_Curve[result
-        .size()] ) );
+    return GeometryFactory.createGM_MultiCurve( (GM_Curve[])result.toArray( new GM_Curve[result.size()] ) );
   }
 
-  private void createIsoFrom4( GM_Position pos0, GM_Position pos1, GM_Position pos2,
-      GM_Position pos3, CS_CoordinateSystem cs, List result, int level )
+  private void createIsoFrom4( GM_Position pos0, GM_Position pos1, GM_Position pos2, GM_Position pos3,
+      CS_CoordinateSystem cs, List result, int level )
   {
     level--;
     // points
@@ -150,8 +148,7 @@ public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implement
     }
   }
 
-  private List createISOFrom3( GM_Position p1, GM_Position p2, GM_Position p3, List result,
-      CS_CoordinateSystem cs )
+  private List createISOFrom3( GM_Position p1, GM_Position p2, GM_Position p3, List result, CS_CoordinateSystem cs )
   {
 
     // check isos ?

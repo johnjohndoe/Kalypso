@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.table;
 
 import org.kalypso.metadoc.Document;
@@ -53,8 +53,7 @@ public class ExportTableBerichtWizard extends ExportBerichtWizard
 {
   private ExportTableOptionsPage m_optionPage;
 
-  public ExportTableBerichtWizard(
-      final IExportableDocument document2export, final Document doc )
+  public ExportTableBerichtWizard( final IExportableDocument document2export, final Document doc )
   {
     super( document2export, doc );
   }
@@ -62,20 +61,19 @@ public class ExportTableBerichtWizard extends ExportBerichtWizard
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
-  public void addPages( )
+  public void addPages()
   {
     super.addPages();
 
-    m_optionPage = new ExportTableOptionsPage( "optionPage", "Export Otionen",
-        ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+    m_optionPage = new ExportTableOptionsPage( "optionPage", "Export Otionen", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
 
     addPage( m_optionPage );
   }
 
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     if( m_document2export instanceof IExportableTableDocument )
-      ((IExportableTableDocument) m_document2export).setOnlySelectedRows( m_optionPage.getOnlySelected() );
+      ( (IExportableTableDocument)m_document2export ).setOnlySelectedRows( m_optionPage.getOnlySelected() );
 
     m_optionPage.saveWidgetValues();
 

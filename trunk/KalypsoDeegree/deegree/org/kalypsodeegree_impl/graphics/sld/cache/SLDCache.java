@@ -161,8 +161,7 @@ public class SLDCache
     }
 
     /**
-     * @see org.kalypso.util.serializer.ISerializer#write(java.lang.Object,
-     *      java.io.OutputStream)
+     * @see org.kalypso.util.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
      */
     public void write( Object object, OutputStream os ) throws InvocationTargetException
     {

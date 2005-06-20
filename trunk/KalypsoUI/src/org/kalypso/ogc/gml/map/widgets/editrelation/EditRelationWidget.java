@@ -87,8 +87,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Widget where the user can create relations between selected features. only
- * features from the workspace of the active featuretheme can be selected <br>
+ * Widget where the user can create relations between selected features. only features from the workspace of the active
+ * featuretheme can be selected <br>
  * Constraints from gml-application schemas are supported.
  * 
  * TODO use check icons that indicate mixed child status <br>
@@ -151,7 +151,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
+    final GM_Point point = GeometryFactory
+        .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
 
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
@@ -227,7 +228,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
+    final GM_Point point = GeometryFactory
+        .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
     final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
     m_fitProblems.setLength( 0 );
@@ -351,7 +353,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       if( relation instanceof HeavyRelationType )
       {
         final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
-        command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(), heavyRealtion.getLink2(), m_targetFE );
+        command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(), heavyRealtion
+            .getLink2(), m_targetFE );
       }
       else
       {
@@ -364,12 +367,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       {
         final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
 
-        FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, heavyRealtion );
+        FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace,
+            heavyRealtion );
         visitor.visit( m_srcFE );
         Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( m_targetFE );
         if( bodyFeatureFor.length > 0 )
-          command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(), bodyFeatureFor[0], heavyRealtion
-              .getLink2().getName(), m_targetFE );
+          command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(),
+              bodyFeatureFor[0], heavyRealtion.getLink2().getName(), m_targetFE );
         else
           command = null;
       }

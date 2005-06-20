@@ -92,7 +92,7 @@ public class ExcelLikeTableCursor extends TableCursor
    * allow editing with interactive mouse (e.g. toggle checkbox)
    */
   final MouseListener m_cellEditorMouseListener = new MouseAdapter()
-  {    
+  {
     /**
      * 
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
@@ -156,7 +156,7 @@ public class ExcelLikeTableCursor extends TableCursor
 
     public void editorValueChanged( boolean oldValidState, boolean newValidState )
     {
-      // nothing TODO change color of something ?
+    // nothing TODO change color of something ?
     }
   };
 
@@ -241,7 +241,8 @@ public class ExcelLikeTableCursor extends TableCursor
       }
       // handle F2 to start editing
       if( e.keyCode == SWT.F2
-          || ( " -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0 || ( e.character >= '0' && e.character <= 'z' ) || ( e.character >= 'A' && e.character <= 'Z' ) ) )
+          || ( " -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0
+              || ( e.character >= '0' && e.character <= 'z' ) || ( e.character >= 'A' && e.character <= 'Z' ) ) )
       {
         startEditing( e );
         return;

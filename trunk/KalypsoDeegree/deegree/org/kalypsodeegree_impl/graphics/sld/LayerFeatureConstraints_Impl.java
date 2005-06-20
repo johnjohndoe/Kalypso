@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
@@ -68,9 +68,8 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * The LayerFeatureConstraints element is optional in a NamedLayer and allows
- * the user to specify constraints on what features of what feature types are to
- * be selected by the named-layer reference. It is essentially a filter that
+ * The LayerFeatureConstraints element is optional in a NamedLayer and allows the user to specify constraints on what
+ * features of what feature types are to be selected by the named-layer reference. It is essentially a filter that
  * allows the selection of fewer features than are present in the named layer.
  * <p>
  * ----------------------------------------------------------------------
@@ -93,15 +92,15 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
   }
 
   /**
-   * A FeatureTypeConstraint element is used to identify a feature type by a
-   * well-known name, using the FeatureTypeName element.
+   * A FeatureTypeConstraint element is used to identify a feature type by a well-known name, using the FeatureTypeName
+   * element.
    * 
    * @return the FeatureTypeConstraints as Array
    */
   public FeatureTypeConstraint[] getFeatureTypeConstraint()
   {
-    return (FeatureTypeConstraint[])featureTypeConstraint
-        .toArray( new FeatureTypeConstraint[featureTypeConstraint.size()] );
+    return (FeatureTypeConstraint[])featureTypeConstraint.toArray( new FeatureTypeConstraint[featureTypeConstraint
+        .size()] );
   }
 
   /**

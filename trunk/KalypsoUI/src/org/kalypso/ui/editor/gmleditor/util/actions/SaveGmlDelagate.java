@@ -71,11 +71,10 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
 
     final Shell shell = getEditor().getSite().getShell();
 
-    if( !MessageDialog.openConfirm( shell, "Themen speichern",
-        "Sollen die Daten des Baums gespeichert werden?" ) )
+    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des Baums gespeichert werden?" ) )
       return;
 
-    final GMLEditorTreeView treeViewer = ((GMLEditor)getEditor()).getTreeView();
+    final GMLEditorTreeView treeViewer = ( (GMLEditor)getEditor() ).getTreeView();
     if( treeViewer != null )
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -85,7 +84,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
           treeViewer.saveData( monitor );
-          refreshAction(action);
+          refreshAction( action );
         }
       };
 
@@ -105,7 +104,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
         e.printStackTrace();
       }
     }
-    
+
   }
 
   protected void refreshAction( IAction action )
@@ -128,6 +127,5 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
     if( action != null )
       getAction().setEnabled( bEnabled );
   }
-
 
 }

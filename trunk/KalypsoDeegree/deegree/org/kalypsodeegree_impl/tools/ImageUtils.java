@@ -41,11 +41,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -59,7 +59,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.awt.image.BufferedImage;
@@ -93,8 +93,8 @@ public class ImageUtils
    * 
    * @param url
    * 
-   * @return @throws
-   *         IOException
+   * @return
+   * @throws IOException
    */
   public static BufferedImage loadImage( URL url ) throws IOException
   {
@@ -112,8 +112,8 @@ public class ImageUtils
    * 
    * @param fileName
    * 
-   * @return @throws
-   *         IOException
+   * @return
+   * @throws IOException
    */
   public static BufferedImage loadImage( String fileName ) throws IOException
   {
@@ -125,10 +125,13 @@ public class ImageUtils
     return img;
   }
 }
-/*******************************************************************************
- * Changes to this class. What the people have been up to: $Log:
- * ImageUtils.java,v $ Revision 1.1 2004/04/02 06:41:56 poth no message
+/***********************************************************************************************************************
+ * Changes to this class. What the people have been up to: $Log$
+ * Changes to this class. What the people have been up to: Revision 1.4  2005/06/20 14:07:45  belger
+ * Changes to this class. What the people have been up to: Formatierung
+ * Changes to this class. What the people have been up to: Revision 1.1 2004/04/02 06:41:56
+ * poth no message
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
 import org.eclipse.core.resources.IStorage;
@@ -63,11 +63,9 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    * @param storage
    *          template storage on which this pseudo template is based
    * @param fileExtension
-   *          name of the file extension that this template should have once
-   *          saved
+   *          name of the file extension that this template should have once saved
    */
-  public PseudoTemplateEditorInput( final TemplateStorage storage,
-      final String fileExtension )
+  public PseudoTemplateEditorInput( final TemplateStorage storage, final String fileExtension )
   {
     m_storage = storage;
     m_fileExtension = fileExtension;
@@ -76,7 +74,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
-  public IStorage getStorage( ) 
+  public IStorage getStorage()
   {
     return m_storage;
   }
@@ -84,7 +82,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
-  public boolean exists( )
+  public boolean exists()
   {
     return false;
   }
@@ -92,7 +90,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
    */
-  public ImageDescriptor getImageDescriptor( )
+  public ImageDescriptor getImageDescriptor()
   {
     return null;
   }
@@ -100,16 +98,15 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getName()
    */
-  public String getName( )
+  public String getName()
   {
-    return "Vorlage für "
-        + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
+    return "Vorlage für " + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
   }
 
   /**
    * @see org.eclipse.ui.IEditorInput#getPersistable()
    */
-  public IPersistableElement getPersistable( )
+  public IPersistableElement getPersistable()
   {
     return null;
   }
@@ -117,7 +114,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IEditorInput#getToolTipText()
    */
-  public String getToolTipText( )
+  public String getToolTipText()
   {
     return m_storage.getHref();
   }
@@ -131,8 +128,8 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   }
 
   /**
-   * Call is delegated to Object class since we always want new pseudo templates
-   * even if the underlying file is the same one.
+   * Call is delegated to Object class since we always want new pseudo templates even if the underlying file is the same
+   * one.
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */

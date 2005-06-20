@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,15 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
 /**
  * 
- * Defining the boundary of a surface. The surface boundary is defined as ring
- * surounding the exterior boundary of the surface and the rings surounding each
- * interior ring of the surface.
+ * Defining the boundary of a surface. The surface boundary is defined as ring surounding the exterior boundary of the
+ * surface and the rings surounding each interior ring of the surface.
  * 
  * <p>
  * -----------------------------------------------------
@@ -84,16 +83,14 @@ public interface GM_SurfaceBoundary extends GM_PrimitiveBoundary
   /* #GM_Ring lnkGM_Ring; */
 
   /*
-   * as GM_SurfaceBoundary::exterior[0,1] : GM_Ring;
-   * GM_SurfaceBoundary::interior[0..*] : GM_Ring;
+   * as GM_SurfaceBoundary::exterior[0,1] : GM_Ring; GM_SurfaceBoundary::interior[0..*] : GM_Ring;
    */
 
   /*
-   * A GM_SurfaceBoundary consists of some number of GM_Rings, corresponding to
-   * the various components of its boundary. In the normal 2D case, one of these
-   * rings is distinguished as being the exterior boundary. In a general
-   * manifold this is not always possible, in which case all boundaries shall be
-   * listed as interior boundaries, and the exterior will be empty.
+   * A GM_SurfaceBoundary consists of some number of GM_Rings, corresponding to the various components of its boundary.
+   * In the normal 2D case, one of these rings is distinguished as being the exterior boundary. In a general manifold
+   * this is not always possible, in which case all boundaries shall be listed as interior boundaries, and the exterior
+   * will be empty.
    */
 
   /*

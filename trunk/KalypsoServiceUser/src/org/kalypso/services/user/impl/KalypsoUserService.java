@@ -58,9 +58,8 @@ import org.kalypso.users.UserRightsException;
 /**
  * User Rights Service.
  * <p>
- * 17.12.2004 - schlienger - removed the dependency to PSICompact by using the
- * concept of a configurable IUserRightsProvider. It is configured in the
- * service properties.
+ * 17.12.2004 - schlienger - removed the dependency to PSICompact by using the concept of a configurable
+ * IUserRightsProvider. It is configured in the service properties.
  * </p>
  * 
  * @author belger
@@ -69,12 +68,10 @@ public class KalypsoUserService implements IUserService
 {
   private IUserRightsProvider m_rightsProvider = null;
 
-  private final Logger m_logger = Logger.getLogger( KalypsoUserService.class
-      .getName() );
+  private final Logger m_logger = Logger.getLogger( KalypsoUserService.class.getName() );
 
   /**
-   * name of the property that contains the classname of the instance of
-   * IUserRigthsProvider
+   * name of the property that contains the classname of the instance of IUserRigthsProvider
    */
   private static final String PROP_PROVIDER = "PROVIDER";
 
@@ -94,18 +91,16 @@ public class KalypsoUserService implements IUserService
 
   private String[] m_scenarioDescriptions;
 
-  public KalypsoUserService( ) throws RemoteException
+  public KalypsoUserService() throws RemoteException
   {
     try
     {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir()
-          + "/IUserService%g.log", 10000000, 1, true ) );
+      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IUserService%g.log", 10000000, 1, true ) );
     }
     catch( Exception e ) // generic Exception caught for simplicity
     {
       e.printStackTrace();
-      System.out
-          .println( "Logger für User-Service konnte nicht erzeugt werden" );
+      System.out.println( "Logger für User-Service konnte nicht erzeugt werden" );
     }
 
     m_logger.info( "Initialisiere UserService" );
@@ -118,10 +113,9 @@ public class KalypsoUserService implements IUserService
    * 
    * @throws RemoteException
    */
-  private final void init( ) throws RemoteException
+  private final void init() throws RemoteException
   {
-    final File conf = new File( ServiceConfig.getConfDir(),
-        "IUserService/userService.properties" );
+    final File conf = new File( ServiceConfig.getConfDir(), "IUserService/userService.properties" );
 
     InputStream stream = null;
     try
@@ -133,18 +127,18 @@ public class KalypsoUserService implements IUserService
 
       // try to instanciate our commiter
       final String className = props.getProperty( PROP_PROVIDER );
-      m_rightsProvider = (IUserRightsProvider) ClassUtilities.newInstance(
-          className, IUserRightsProvider.class, getClass().getClassLoader() );
+      m_rightsProvider = (IUserRightsProvider)ClassUtilities.newInstance( className, IUserRightsProvider.class,
+          getClass().getClassLoader() );
       m_rightsProvider.init( props );
-      
+
       final String iu = props.getProperty( PROP_IMPERSONATE_USER, "false" );
       m_impersonateUser = Boolean.valueOf( iu ).booleanValue();
       final String cs = props.getProperty( PROP_CHOOSE_SCENARIO, "false" );
       m_chooseScenario = Boolean.valueOf( cs ).booleanValue();
       final String sl = props.getProperty( PROP_SCENARIO_LIST, "" );
-      m_scenarios = sl.split(";");
+      m_scenarios = sl.split( ";" );
       final String sdl = props.getProperty( PROP_SCENARIO_DESC_LIST, "" );
-      m_scenarioDescriptions = sdl.split(";");
+      m_scenarioDescriptions = sdl.split( ";" );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
@@ -161,12 +155,12 @@ public class KalypsoUserService implements IUserService
   /**
    * @see java.lang.Object#finalize()
    */
-  protected void finalize( ) throws Throwable
+  protected void finalize() throws Throwable
   {
     if( m_rightsProvider != null )
       m_rightsProvider.dispose();
   }
-  
+
   /**
    * @see org.kalypso.services.user.IUserService#getRights(java.lang.String)
    */
@@ -190,17 +184,15 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.IKalypsoService#getServiceVersion()
    */
-  public int getServiceVersion( )
+  public int getServiceVersion()
   {
     return 0;
   }
 
   /**
-   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String)
    */
-  public String[] getRights( String username, String password )
-      throws RemoteException
+  public String[] getRights( String username, String password ) throws RemoteException
   {
     if( m_rightsProvider == null )
       return null;
@@ -221,7 +213,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#isAskForLogin()
    */
-  public boolean isAskForLogin( )
+  public boolean isAskForLogin()
   {
     return m_impersonateUser;
   }
@@ -229,7 +221,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#isAskForScenario()
    */
-  public boolean isAskForScenario( )
+  public boolean isAskForScenario()
   {
     return m_chooseScenario;
   }
@@ -237,7 +229,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#getScenarios()
    */
-  public String[] getScenarios( )
+  public String[] getScenarios()
   {
     return m_scenarios;
   }
@@ -245,7 +237,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#getScenarioDescriptions()
    */
-  public String[] getScenarioDescriptions( ) throws RemoteException
+  public String[] getScenarioDescriptions() throws RemoteException
   {
     return m_scenarioDescriptions;
   }

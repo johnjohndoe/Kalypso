@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
 import java.net.URL;
@@ -50,7 +50,9 @@ import org.kalypso.ui.calcwizard.Arguments;
 public abstract class AbstractBerichtExporter implements IBerichtExporter
 {
   private Arguments m_arguments = new Arguments();
+
   private static final String ARG_NAME = "name";
+
   private URL m_context = null;
 
   /**
@@ -65,19 +67,19 @@ public abstract class AbstractBerichtExporter implements IBerichtExporter
   /**
    * @return Returns the context.
    */
-  protected URL getContext( )
+  protected URL getContext()
   {
     return m_context;
   }
-  
+
   /**
    * @return Returns the arguments.
    */
-  protected Arguments getArguments( )
+  protected Arguments getArguments()
   {
     return m_arguments;
   }
-  
+
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#toString()
    */

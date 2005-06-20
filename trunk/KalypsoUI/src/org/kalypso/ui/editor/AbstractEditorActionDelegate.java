@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor;
 
 import org.eclipse.jface.action.IAction;
@@ -51,13 +51,13 @@ import org.eclipse.ui.IEditorPart;
  * 
  * @author schlienger
  */
-public abstract class AbstractEditorActionDelegate implements
-    IEditorActionDelegate
+public abstract class AbstractEditorActionDelegate implements IEditorActionDelegate
 {
   private IEditorPart m_editor;
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IEditorPart)
    */
   public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
@@ -65,13 +65,14 @@ public abstract class AbstractEditorActionDelegate implements
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // 
+  // 
   }
-  
+
   /**
    * @return shell
    */
@@ -79,7 +80,7 @@ public abstract class AbstractEditorActionDelegate implements
   {
     return m_editor.getSite().getShell();
   }
-  
+
   /**
    * @return editor
    */

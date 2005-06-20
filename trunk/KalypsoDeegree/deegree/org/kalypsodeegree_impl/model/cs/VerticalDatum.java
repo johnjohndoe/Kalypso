@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -82,12 +82,11 @@ public class VerticalDatum extends Datum
   private static final long serialVersionUID = 1663224345779675117L;
 
   /**
-   * Default vertical datum for ellipsoidal heights. Ellipsoidal heights are
-   * measured along the normal to the ellipsoid used in the definition of
-   * horizontal datum.
+   * Default vertical datum for ellipsoidal heights. Ellipsoidal heights are measured along the normal to the ellipsoid
+   * used in the definition of horizontal datum.
    */
-  public static final VerticalDatum ELLIPSOIDAL = (VerticalDatum)pool.intern( new VerticalDatum(
-      "Ellipsoidal", DatumType.ELLIPSOIDAL ) );
+  public static final VerticalDatum ELLIPSOIDAL = (VerticalDatum)pool.intern( new VerticalDatum( "Ellipsoidal",
+      DatumType.ELLIPSOIDAL ) );
 
   /**
    * Creates a vertical datum from an enumerated type value.
@@ -119,8 +118,8 @@ public class VerticalDatum extends Datum
   /**
    * Gets the type of the datum as an enumerated code.
    * 
-   * Note: return type will be changed to {@link DatumType.Vertical}when we
-   * will be able to use generic types (with JDK 1.5).
+   * Note: return type will be changed to {@link DatumType.Vertical}when we will be able to use generic types (with JDK
+   * 1.5).
    * 
    * @see org.opengis.cs.CS_VerticalDatum#getDatumType()
    */
@@ -139,11 +138,9 @@ public class VerticalDatum extends Datum
   }
 
   /**
-   * Returns an OpenGIS interface for this datum. The returned object is
-   * suitable for RMI use.
+   * Returns an OpenGIS interface for this datum. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -157,8 +154,7 @@ public class VerticalDatum extends Datum
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link VerticalDatum}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link VerticalDatum}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

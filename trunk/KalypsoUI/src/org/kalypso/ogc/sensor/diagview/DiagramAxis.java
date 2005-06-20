@@ -43,8 +43,8 @@ package org.kalypso.ogc.sensor.diagview;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
 /**
- * This class overrides equals and hashcode. Two instance of DiagramAxis are
- * considered to be equal if they have the same id.
+ * This class overrides equals and hashcode. Two instance of DiagramAxis are considered to be equal if they have the
+ * same id.
  * 
  * @author schlienger
  */
@@ -88,30 +88,20 @@ public class DiagramAxis
     // for Object types it's not a problem since value is null)
     // So as soon as solution is found, maybe replace the code
     // here that currently simply checks for == 0
-    this(
-        axis.getId(),
-        axis.getDatatype(),
-        axis.getLabel(),
-        axis.getUnit(),
-        axis.getDirection(),
-        axis.getPosition(),
-        axis.isInverted(),
-        axis.getLowerMargin() == 0 ? null : new Double( axis.getLowerMargin() ),
-        axis.getUpperMargin() == 0 ? null : new Double( axis.getUpperMargin() ) );
+    this( axis.getId(), axis.getDatatype(), axis.getLabel(), axis.getUnit(), axis.getDirection(), axis.getPosition(),
+        axis.isInverted(), axis.getLowerMargin() == 0 ? null : new Double( axis.getLowerMargin() ), axis
+            .getUpperMargin() == 0 ? null : new Double( axis.getUpperMargin() ) );
   }
 
-  public DiagramAxis( final String id, final String dataType,
-      final String label, final String unit, final String direction,
-      final String position, final boolean isInverted )
+  public DiagramAxis( final String id, final String dataType, final String label, final String unit,
+      final String direction, final String position, final boolean isInverted )
   {
-    this( id, dataType, label, unit, direction, position, isInverted, null,
-        null );
+    this( id, dataType, label, unit, direction, position, isInverted, null, null );
   }
 
-  public DiagramAxis( final String id, final String dataType,
-      final String label, final String unit, final String direction,
-      final String position, final boolean isInverted,
-      final Double lowerMargin, final Double upperMargin )
+  public DiagramAxis( final String id, final String dataType, final String label, final String unit,
+      final String direction, final String position, final boolean isInverted, final Double lowerMargin,
+      final Double upperMargin )
   {
     m_id = id;
     m_dataType = dataType;
@@ -124,37 +114,37 @@ public class DiagramAxis
     m_upperMargin = upperMargin;
   }
 
-  public String getLabel( )
+  public String getLabel()
   {
     return m_label;
   }
 
-  public String getUnit( )
+  public String getUnit()
   {
     return m_unit;
   }
 
-  public String getDirection( )
+  public String getDirection()
   {
     return m_direction;
   }
 
-  public String getPosition( )
+  public String getPosition()
   {
     return m_position;
   }
 
-  public boolean isInverted( )
+  public boolean isInverted()
   {
     return m_isInverted;
   }
 
-  public String getDataType( )
+  public String getDataType()
   {
     return m_dataType;
   }
 
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_id;
   }
@@ -162,7 +152,7 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return toFullString();
   }
@@ -172,10 +162,10 @@ public class DiagramAxis
    */
   public boolean equals( final Object obj )
   {
-    if( !(obj instanceof DiagramAxis) )
+    if( !( obj instanceof DiagramAxis ) )
       return false;
 
-    final DiagramAxis other = (DiagramAxis) obj;
+    final DiagramAxis other = (DiagramAxis)obj;
 
     return m_id.equals( other.getIdentifier() );
   }
@@ -183,7 +173,7 @@ public class DiagramAxis
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode( )
+  public int hashCode()
   {
     return m_id.hashCode();
   }
@@ -191,7 +181,7 @@ public class DiagramAxis
   /**
    * @return complete Label of this axis (concatenates the label and the unit)
    */
-  public String toFullString( )
+  public String toFullString()
   {
     if( m_unit.length() > 0 )
       return m_label + " [" + m_unit + "]";
@@ -202,10 +192,9 @@ public class DiagramAxis
   /**
    * The lower margin is expressed in percent of the whole axis range.
    * 
-   * @return the lower margin in percent (for instance 0.07 for 7%) or null if
-   *         not set
+   * @return the lower margin in percent (for instance 0.07 for 7%) or null if not set
    */
-  public Double getLowerMargin( )
+  public Double getLowerMargin()
   {
     return m_lowerMargin;
   }
@@ -213,10 +202,9 @@ public class DiagramAxis
   /**
    * The upper margin is expressed in percent of the whole axis range.
    * 
-   * @return the upper margin in percent (for instance 0.07 for 7%) or null if
-   *         not set
+   * @return the upper margin in percent (for instance 0.07 for 7%) or null if not set
    */
-  public Double getUpperMaring( )
+  public Double getUpperMaring()
   {
     return m_upperMargin;
   }

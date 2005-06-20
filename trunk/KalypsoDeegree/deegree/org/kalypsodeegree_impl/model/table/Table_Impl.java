@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.table;
 
 import java.util.ArrayList;
@@ -95,8 +95,7 @@ public class Table_Impl implements Table
    * @param columnTypes
    * @throws TableException
    */
-  public Table_Impl( String tableName, String[] columnNames, String[] columnTypes )
-      throws TableException
+  public Table_Impl( String tableName, String[] columnNames, String[] columnTypes ) throws TableException
   {
     setTableName( tableName );
 
@@ -164,16 +163,15 @@ public class Table_Impl implements Table
    * @param initialCapacity
    * @throws TableException
    */
-  public Table_Impl( String tableName, String[] columnNames, String[] columnTypes,
-      int initialCapacity ) throws TableException
+  public Table_Impl( String tableName, String[] columnNames, String[] columnTypes, int initialCapacity )
+      throws TableException
   {
     this( tableName, columnNames, columnTypes );
     rows.ensureCapacity( initialCapacity );
   }
 
   /**
-   * returns the name of the table. If the table hasn't a name an empty string
-   * ("") will be returned.
+   * returns the name of the table. If the table hasn't a name an empty string ("") will be returned.
    */
   public String getTableName()
   {
@@ -189,8 +187,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * returns the value of the table field indexed by <tt>row</tt> and
-   * <tt>col</tt>
+   * returns the value of the table field indexed by <tt>row</tt> and <tt>col</tt>
    */
   public Object getValueAt( int row, int col )
   {
@@ -223,8 +220,7 @@ public class Table_Impl implements Table
   {
     if( this.getColumnCount() != data.length )
     {
-      throw new TableException( "submitted row doesn't have the same length"
-          + " as the table has columns." );
+      throw new TableException( "submitted row doesn't have the same length" + " as the table has columns." );
     }
     ArrayList tmp = (ArrayList)rows.get( row );
 
@@ -241,8 +237,7 @@ public class Table_Impl implements Table
   {
     if( this.getColumnCount() != data.length )
     {
-      throw new TableException( "submitted row doesn't have the same length"
-          + " as the table has columns." );
+      throw new TableException( "submitted row doesn't have the same length" + " as the table has columns." );
     }
     ArrayList tmp = new ArrayList( data.length );
     for( int i = 0; i < data.length; i++ )
@@ -261,8 +256,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * adds a new column to the table. for this a computional expensive operation
-   * this method should be used with care.
+   * adds a new column to the table. for this a computional expensive operation this method should be used with care.
    */
   public void addColumn( String name, String type )
   {
@@ -295,8 +289,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * returns the names of all table columns. If a column hasn't a name a empty
-   * String ("") will be returned.
+   * returns the names of all table columns. If a column hasn't a name a empty String ("") will be returned.
    */
   public String[] getColumnNames()
   {
@@ -304,8 +297,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * returns the name of the specified column. If a column hasn't a name a empty
-   * String ("") will be returned.
+   * returns the name of the specified column. If a column hasn't a name a empty String ("") will be returned.
    */
   public String getColumnName( int col )
   {
@@ -313,8 +305,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * returns the names of all column types. For each column a type (name of a
-   * java class) has to be defined.
+   * returns the names of all column types. For each column a type (name of a java class) has to be defined.
    */
   public String[] getColumnTypes()
   {
@@ -322,8 +313,8 @@ public class Table_Impl implements Table
   }
 
   /**
-   * returns the name of the type of the specifies column. For each column a
-   * type (name of a java class) has to be defined.
+   * returns the name of the type of the specifies column. For each column a type (name of a java class) has to be
+   * defined.
    */
   public String getColumnType( int col )
   {
@@ -375,8 +366,7 @@ public class Table_Impl implements Table
   }
 
   /**
-   * export the table as a instance of <tt>javax.swing.table.TableModel</tt>.
-   * The instance will be created using the
+   * export the table as a instance of <tt>javax.swing.table.TableModel</tt>. The instance will be created using the
    * <tt>javax.swing.table.DefaultTableModel</tt>
    */
   public javax.swing.table.TableModel exportAsJDKTableModel()
@@ -385,8 +375,8 @@ public class Table_Impl implements Table
   }
 
   /**
-   * returns the index of the submitted columns name. If no column with that
-   * name if present -1 will be returned. the test is not case sensitive
+   * returns the index of the submitted columns name. If no column with that name if present -1 will be returned. the
+   * test is not case sensitive
    *  
    */
   public int getColumnIndex( String columnName )

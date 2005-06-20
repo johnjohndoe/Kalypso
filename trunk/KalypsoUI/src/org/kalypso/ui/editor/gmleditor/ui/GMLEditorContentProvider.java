@@ -16,15 +16,15 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
 
   public void inputChanged( Viewer m_viewer, Object oldInput, Object newInput )
   {
-    // nichts tun
+  // nichts tun
   }
-  
+
   /**
    * @see ITreeContentProvider#getChildren(Object)
    */
   public Object[] getChildren( Object parentElement )
   {
-      return ((IModel)parentElement).getChildren();
+    return ( (IModel)parentElement ).getChildren();
   }
 
   /**
@@ -40,7 +40,7 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
    */
   public boolean hasChildren( Object element )
   {
-    return ((IModel)element).hasChildren();
+    return ( (IModel)element ).hasChildren();
   }
 
   /**
@@ -51,13 +51,12 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
     return getChildren( inputElement );
   }
 
-
   /**
    * @see org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener#onChange(org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent)
    */
   public void onChange( GMLDocumentEvent event )
   {
-//    System.out.println("document has changed, contentprovided!!!");
+  //    System.out.println("document has changed, contentprovided!!!");
   }
 
 }

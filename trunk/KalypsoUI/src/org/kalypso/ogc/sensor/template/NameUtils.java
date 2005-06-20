@@ -17,10 +17,10 @@ public class NameUtils
   public static final String TOKEN_OBSNAME = "%obsname%";
 
   public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%";
-  
+
   private NameUtils()
   {
-    // utility class
+  // utility class
   }
 
   /**
@@ -38,8 +38,7 @@ public class NameUtils
    * </dl>
    *  
    */
-  public static String replaceTokens( final String formatString,
-      final IObservation obs, final IAxis axis )
+  public static String replaceTokens( final String formatString, final IObservation obs, final IAxis axis )
   {
     String result = formatString;
     result = result.replaceAll( TOKEN_OBSNAME, obs.getName() );
@@ -58,12 +57,10 @@ public class NameUtils
       final int stop = result.indexOf( '%', start + 1 );
       if( stop != -1 )
       {
-        final String metaname = result.substring(
-            start + "%metadata-".length(), stop );
+        final String metaname = result.substring( start + "%metadata-".length(), stop );
         final StringBuffer sb = new StringBuffer( result );
 
-        final String metaval = obs.getMetadataList().getProperty( metaname,
-            "<Metavalue '" + metaname + "' not found>" );
+        final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" );
         sb.replace( start, stop + 1, metaval );
 
         result = sb.toString();
@@ -75,19 +72,19 @@ public class NameUtils
     return result;
   }
 
-//  /**
-//   * Remove the tokens so that name is clean.
-//   * 
-//   * @param name
-//   */
-//  public static String removeTokens( final String name )
-//  {
-//    String res = name.replaceAll( TOKEN_AXISNAME, "" );
-//    res = res.replaceAll( TOKEN_AXISTYPE, "" );
-//    res = res.replaceAll( TOKEN_AXISUNIT, "" );
-//    res = res.replaceAll( TOKEN_OBSNAME, "" );
-//
-//    return res;
-//  }
-//
+  //  /**
+  //   * Remove the tokens so that name is clean.
+  //   *
+  //   * @param name
+  //   */
+  //  public static String removeTokens( final String name )
+  //  {
+  //    String res = name.replaceAll( TOKEN_AXISNAME, "" );
+  //    res = res.replaceAll( TOKEN_AXISTYPE, "" );
+  //    res = res.replaceAll( TOKEN_AXISUNIT, "" );
+  //    res = res.replaceAll( TOKEN_OBSNAME, "" );
+  //
+  //    return res;
+  //  }
+  //
 }

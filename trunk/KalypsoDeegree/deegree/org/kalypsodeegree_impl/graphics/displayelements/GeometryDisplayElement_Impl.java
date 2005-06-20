@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.io.Serializable;
@@ -68,8 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * Basic interface of all display elements that are related to a geometry.
- * Usually this will be the case.
+ * Basic interface of all display elements that are related to a geometry. Usually this will be the case.
  * <p>
  * ------------------------------------------------------------------------
  * </p>
@@ -77,8 +76,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implements
-    GeometryDisplayElement, Serializable
+abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implements GeometryDisplayElement, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 465725117946501686L;
@@ -141,9 +139,8 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * Overwrites the default placement of the <tt>DisplayElement</tt>. This
-   * method is used by the <tt>PlacementOptimizer</tt> to minimize the
-   * overlapping of labels, for example.
+   * Overwrites the default placement of the <tt>DisplayElement</tt>. This method is used by the
+   * <tt>PlacementOptimizer</tt> to minimize the overlapping of labels, for example.
    * <p>
    * 
    * @param o
@@ -155,8 +152,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * sets the geometry that determines the position the DisplayElement will be
-   * rendered to
+   * sets the geometry that determines the position the DisplayElement will be rendered to
    */
   public void setGeometry( GM_Object geometry )
   {
@@ -164,8 +160,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * returns the geometry that determines the position the DisplayElement will
-   * be rendered to
+   * returns the geometry that determines the position the DisplayElement will be rendered to
    */
   public GM_Object getGeometry()
   {
@@ -189,8 +184,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * sets the rule that determines how the geometry will be rendered when it's
-   * highlighted
+   * sets the rule that determines how the geometry will be rendered when it's highlighted
    * 
    * @param rule
    *          symbolizer defining rendering style
@@ -201,8 +195,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * returns the symbolizer that determines how the geometry will be rendered if
-   * it's highlighted
+   * returns the symbolizer that determines how the geometry will be rendered if it's highlighted
    */
   public Symbolizer getHighlightSymbolizer()
   {
@@ -210,8 +203,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * sets the rule that determines how the geometry will be rendered when it's
-   * selected
+   * sets the rule that determines how the geometry will be rendered when it's selected
    * 
    * @param rule
    *          symbolizer defining rendering style
@@ -222,8 +214,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * returns the symbolizer that determines how the geometry will be rendered if
-   * it's selected
+   * returns the symbolizer that determines how the geometry will be rendered if it's selected
    */
   public Symbolizer getSelectedSymbolizer()
   {
@@ -231,13 +222,11 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   }
 
   /**
-   * Returns if the <tt>DisplayElement</tt> should be painted at the current
-   * scale or not.
+   * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
   public boolean doesScaleConstraintApply( double scale )
   {
-    return symbolizer.getMinScaleDenominator() <= scale
-        && symbolizer.getMaxScaleDenominator() > scale;
+    return symbolizer.getMinScaleDenominator() <= scale && symbolizer.getMaxScaleDenominator() > scale;
   }
 
 }

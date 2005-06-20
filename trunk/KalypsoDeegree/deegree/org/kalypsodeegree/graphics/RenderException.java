@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 /**
@@ -69,15 +69,13 @@ package org.kalypsodeegree.graphics;
 public class RenderException extends java.lang.Exception
 {
   /**
-   * Creates a new instance of <code>RenderException</code> without detail
-   * message.
+   * Creates a new instance of <code>RenderException</code> without detail message.
    */
   public RenderException()
   {}
 
   /**
-   * Constructs an instance of <code>RenderException</code> with the specified
-   * detail message.
+   * Constructs an instance of <code>RenderException</code> with the specified detail message.
    * 
    * @param msg
    *          the detail message.

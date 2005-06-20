@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // Coordinates
@@ -75,8 +75,8 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Provides transformation services between ellipsoidal and cartographic
- * projections. Ellipsoidal height values remain unchanged.
+ * Provides transformation services between ellipsoidal and cartographic projections. Ellipsoidal height values remain
+ * unchanged.
  * 
  * 
  * @version 1.0
@@ -101,15 +101,14 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   private final String classification;
 
   /**
-   * Indique si le modèle terrestre est sphérique. La valeur <code>true</code>
-   * indique que le modèle est sphérique, c'est-à-dire que les champs {@link #a}
-   * et {@link #b}ont la même valeur.
+   * Indique si le modèle terrestre est sphérique. La valeur <code>true</code> indique que le modèle est sphérique,
+   * c'est-à-dire que les champs {@link #a}et {@link #b}ont la même valeur.
    */
   protected final boolean isSpherical;
 
   /**
-   * Excentricité de l'ellipse. L'excentricité est 0 si l'ellipsoïde est
-   * sphérique, c'est-à-dire si {@link #isSpherical}est <code>true</code>.
+   * Excentricité de l'ellipse. L'excentricité est 0 si l'ellipsoïde est sphérique, c'est-à-dire si {@link #isSpherical}
+   * est <code>true</code>.
    */
   protected final double e;
 
@@ -119,29 +118,27 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   protected final double es;
 
   /**
-   * Longueur de l'axe majeur de la terre, en mètres. Sa valeur par défaut
-   * dépend de l'éllipsoïde par défaut (par exemple "WGS 1984").
+   * Longueur de l'axe majeur de la terre, en mètres. Sa valeur par défaut dépend de l'éllipsoïde par défaut (par
+   * exemple "WGS 1984").
    */
   protected final double a;
 
   /**
-   * Longueur de l'axe mineur de la terre, en mètres. Sa valeur par défaut
-   * dépend de l'éllipsoïde par défaut (par exemple "WGS 1984").
+   * Longueur de l'axe mineur de la terre, en mètres. Sa valeur par défaut dépend de l'éllipsoïde par défaut (par
+   * exemple "WGS 1984").
    */
   protected final double b;
 
   /**
-   * Central longitude in <u>radians </u>. Default value is 0, the Greenwich
-   * meridian. <strong>Consider this field as final </strong>. It is not final
-   * only because {@link TransverseMercatorProjection}need to modify it at
+   * Central longitude in <u>radians </u>. Default value is 0, the Greenwich meridian. <strong>Consider this field as
+   * final </strong>. It is not final only because {@link TransverseMercatorProjection}need to modify it at
    * construction time.
    */
   protected double centralMeridian;
 
   /**
-   * Central latitude in <u>radians </u>. Default value is 0, the equator.
-   * <strong>Consider this field as final </strong>. It is not final only
-   * because some class need to modify it at construction time.
+   * Central latitude in <u>radians </u>. Default value is 0, the equator. <strong>Consider this field as final
+   * </strong>. It is not final only because some class need to modify it at construction time.
    */
   protected double centralLatitude;
 
@@ -158,8 +155,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
    * Construct a new map projection from the suplied parameters.
    * 
    * @param parameters
-   *          The parameter values in standard units. The following parameter
-   *          are recognized:
+   *          The parameter values in standard units. The following parameter are recognized:
    *          <ul>
    *          <li>"semi_major" (default to WGS 1984)</li>
    *          <li>"semi_minor" (default to WGS 1984)</li>
@@ -207,10 +203,9 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Convertit en radians une longitude exprimée en degrés. Au passage, cette
-   * méthode vérifiera si la longitude est bien dans les limites permises
-   * (±180°). Cette méthode est utile pour vérifier la validité des paramètres
-   * de la projection, comme {@link #setCentralLongitude}.
+   * Convertit en radians une longitude exprimée en degrés. Au passage, cette méthode vérifiera si la longitude est bien
+   * dans les limites permises (±180°). Cette méthode est utile pour vérifier la validité des paramètres de la
+   * projection, comme {@link #setCentralLongitude}.
    * 
    * @param x
    *          Longitude à vérifier, en degrés.
@@ -227,14 +222,13 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     {
       return Math.toRadians( x );
     }
-    throw new IllegalArgumentException( Resources.format(
-        ResourceKeys.ERROR_LONGITUDE_OUT_OF_RANGE_$1, new Longitude( x ) ) );
+    throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_LONGITUDE_OUT_OF_RANGE_$1, new Longitude(
+        x ) ) );
   }
 
   /**
-   * Convertit en radians une latitude exprimée en degrés. Au passage, cette
-   * méthode vérifiera si la latitude est bien dans les limites permises (±90°).
-   * Cette méthode est utile pour vérifier la validité des paramètres de la
+   * Convertit en radians une latitude exprimée en degrés. Au passage, cette méthode vérifiera si la latitude est bien
+   * dans les limites permises (±90°). Cette méthode est utile pour vérifier la validité des paramètres de la
    * projection, comme {@link #setCentralLongitude}.
    * 
    * @param y
@@ -252,45 +246,36 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     {
       return Math.toRadians( y );
     }
-    throw new IllegalArgumentException( Resources.format(
-        ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1, new Latitude( y ) ) );
+    throw new IllegalArgumentException( Resources
+        .format( ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1, new Latitude( y ) ) );
   }
 
   /**
-   * Check if the transform of <code>point</code> is close enough to
-   * <code>target</code>. "Close enough" means that the two points are
-   * separated by a distance shorter than {@link #MAX_ERROR}. This method is
-   * used for // assertions with JDK 1.4.
+   * Check if the transform of <code>point</code> is close enough to <code>target</code>. "Close enough" means that
+   * the two points are separated by a distance shorter than {@link #MAX_ERROR}. This method is used for // assertions
+   * with JDK 1.4.
    * 
    * @param point
    *          Point to transform, in degrees if <code>inverse</code> is false.
    * @param target
    *          Point to compare to, in metres if <code>inverse</code> is false.
    * @param inverse
-   *          <code>true</code> for an inverse transform instead of a direct
-   *          one.
+   *          <code>true</code> for an inverse transform instead of a direct one.
    * @return <code>true</code> if the two points are close enough.
    * @throws TransformException
    *           if a transformation failed.
    */
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- private boolean
-   * checkTransform(Point2D point, final Point2D target, final boolean inverse) {
-   * if (!(point instanceof CheckPoint)) try { point = new CheckPoint(point);
-   * final double distance; if (inverse) { point = inverseTransform(point,
-   * point); final double y1 = Math.toRadians(point .getY()); final double y2 =
-   * Math.toRadians(target.getY()); final double dx =
-   * Math.toRadians(Math.abs(target.getX()-point.getX()) % 360); double rho =
-   * Math.sin(y1)*Math.sin(y2) + Math.cos(y1)*Math.cos(y2)*Math.cos(dx); if
-   * (rho>+1) {// assert rho <=+(1+EPS) : rho; rho=+1;} if (rho <-1) {// assert
-   * rho>=-(1+EPS) : rho; rho=-1;} distance = Math.acos(rho)*a; // Computed
-   * orthodromic distance (spherical model) in metres. } else { point =
-   * transform(point, point); distance = point.distance(target); } if
-   * (!(distance <= MAX_ERROR)) // Do not accept NaN as valid value. { throw new //
-   * assertionError(distance); } } catch (TransformException exception) { final //
-   * assertionError error = new //
-   * assertionError(exception.getLocalizedMessage());
-   * error.initCause(exception); throw error; } return true; }
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- private boolean checkTransform(Point2D point, final Point2D target, final
+   * boolean inverse) { if (!(point instanceof CheckPoint)) try { point = new CheckPoint(point); final double distance;
+   * if (inverse) { point = inverseTransform(point, point); final double y1 = Math.toRadians(point .getY()); final
+   * double y2 = Math.toRadians(target.getY()); final double dx = Math.toRadians(Math.abs(target.getX()-point.getX()) %
+   * 360); double rho = Math.sin(y1)*Math.sin(y2) + Math.cos(y1)*Math.cos(y2)*Math.cos(dx); if (rho>+1) {// assert rho
+   * <=+(1+EPS) : rho; rho=+1;} if (rho <-1) {// assert rho>=-(1+EPS) : rho; rho=-1;} distance = Math.acos(rho)*a; //
+   * Computed orthodromic distance (spherical model) in metres. } else { point = transform(point, point); distance =
+   * point.distance(target); } if (!(distance <= MAX_ERROR)) // Do not accept NaN as valid value. { throw new //
+   * assertionError(distance); } } catch (TransformException exception) { final // assertionError error = new //
+   * assertionError(exception.getLocalizedMessage()); error.initCause(exception); throw error; } return true; }
    *///----- END OF JDK 1.4 DEPENDENCIES ----
   //////////////////////////////////////////////////////////////////////
   //// ////
@@ -298,40 +283,32 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   //// ////
   //////////////////////////////////////////////////////////////////////
   /**
-   * Transforms the specified coordinate and stores the result in
-   * <code>ptDst</code>. This method is guaranteed to be invoked with values
-   * of <var>x </var> in the range <code>[-PI..PI]</code> and values of <var>y
-   * </var> in the range <code>[-PI/2..PI/2]</code>.
+   * Transforms the specified coordinate and stores the result in <code>ptDst</code>. This method is guaranteed to be
+   * invoked with values of <var>x </var> in the range <code>[-PI..PI]</code> and values of <var>y </var> in the range
+   * <code>[-PI/2..PI/2]</code>.
    * 
    * @param x
    *          The longitude of the coordinate, in <strong>radians </strong>.
    * @param y
    *          The latitude of the coordinate, in <strong>radians </strong>.
    * @param ptDst
-   *          the specified coordinate point that stores the result of
-   *          transforming <code>ptSrc</code>, or <code>null</code>.
-   *          Ordinates will be in metres.
-   * @return the coordinate point after transforming <code>ptSrc</code> and
-   *         stroring the result in <code>ptDst</code>.
+   *          the specified coordinate point that stores the result of transforming <code>ptSrc</code>, or
+   *          <code>null</code>. Ordinates will be in metres.
+   * @return the coordinate point after transforming <code>ptSrc</code> and stroring the result in <code>ptDst</code>.
    * @throws TransformException
    *           if the point can't be transformed.
    */
-  protected abstract Point2D transform( double x, double y, final Point2D ptDst )
-      throws TransformException;
+  protected abstract Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException;
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    * 
    * @param ptSrc
-   *          the specified coordinate point to be transformed. Ordinates must
-   *          be in degrees.
+   *          the specified coordinate point to be transformed. Ordinates must be in degrees.
    * @param ptDst
-   *          the specified coordinate point that stores the result of
-   *          transforming <code>ptSrc</code>, or <code>null</code>.
-   *          Ordinates will be in metres.
-   * @return the coordinate point after transforming <code>ptSrc</code> and
-   *         stroring the result in <code>ptDst</code>.
+   *          the specified coordinate point that stores the result of transforming <code>ptSrc</code>, or
+   *          <code>null</code>. Ordinates will be in metres.
+   * @return the coordinate point after transforming <code>ptSrc</code> and stroring the result in <code>ptDst</code>.
    * @throws TransformException
    *           if the point can't be transformed.
    */
@@ -341,40 +318,35 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     final double y = ptSrc.getY();
     if( !( x >= Longitude.MIN_VALUE && x <= Longitude.MAX_VALUE ) )
     {
-      throw new TransformException( Resources.format( ResourceKeys.ERROR_LONGITUDE_OUT_OF_RANGE_$1,
-          new Longitude( x ) ) );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_LONGITUDE_OUT_OF_RANGE_$1, new Longitude( x ) ) );
     }
     if( !( y >= Latitude.MIN_VALUE && y <= Latitude.MAX_VALUE ) )
     {
-      throw new TransformException( Resources.format( ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1,
-          new Latitude( y ) ) );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1, new Latitude( y ) ) );
     }
     ptDst = transform( Math.toRadians( x ), Math.toRadians( y ), ptDst );
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert checkTransform(ptDst,
-     * (ptSrc!=ptDst) ? ptSrc : new Point2D.Double(x,y), true);
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert checkTransform(ptDst, (ptSrc!=ptDst) ? ptSrc : new
+     * Point2D.Double(x,y), true);
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     return ptDst;
   }
 
   /**
-   * Transforms a list of coordinate point ordinal values. Ordinates must be (
-   * <var>longitude </var>, <var>latitude </var>) pairs in degrees.
+   * Transforms a list of coordinate point ordinal values. Ordinates must be ( <var>longitude </var>, <var>latitude
+   * </var>) pairs in degrees.
    * 
    * @throws TransformException
-   *           if a point can't be transformed. This method try to transform
-   *           every points even if some of them can't be transformed.
-   *           Non-transformable points will have value {@link Double#NaN}. If
-   *           more than one point can't be transformed, then this exception may
-   *           be about an arbitrary point.
+   *           if a point can't be transformed. This method try to transform every points even if some of them can't be
+   *           transformed. Non-transformable points will have value {@link Double#NaN}. If more than one point can't
+   *           be transformed, then this exception may be about an arbitrary point.
    */
-  public final void transform( final double[] src, int srcOffset, final double[] dest,
-      int dstOffset, int numPts ) throws TransformException
+  public final void transform( final double[] src, int srcOffset, final double[] dest, int dstOffset, int numPts )
+      throws TransformException
   {
     /*
-     * Vérifie s'il faudra parcourir le tableau en sens inverse. Ce sera le cas
-     * si les tableaux source et destination se chevauchent et que la
-     * destination est après la source.
+     * Vérifie s'il faudra parcourir le tableau en sens inverse. Ce sera le cas si les tableaux source et destination se
+     * chevauchent et que la destination est après la source.
      */
     final boolean reverse = ( src == dest && srcOffset < dstOffset && srcOffset + ( 2 * numPts ) > dstOffset );
     if( reverse )
@@ -414,18 +386,16 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Transforms a list of coordinate point ordinal values. Ordinates must be (
-   * <var>longitude </var>, <var>latitude </var>) pairs in degrees.
+   * Transforms a list of coordinate point ordinal values. Ordinates must be ( <var>longitude </var>, <var>latitude
+   * </var>) pairs in degrees.
    * 
    * @throws TransformException
-   *           if a point can't be transformed. This method try to transform
-   *           every points even if some of them can't be transformed.
-   *           Non-transformable points will have value {@link Float#NaN}. If
-   *           more than one point can't be transformed, then this exception may
-   *           be about an arbitrary point.
+   *           if a point can't be transformed. This method try to transform every points even if some of them can't be
+   *           transformed. Non-transformable points will have value {@link Float#NaN}. If more than one point can't be
+   *           transformed, then this exception may be about an arbitrary point.
    */
-  public final void transform( final float[] src, int srcOffset, final float[] dest, int dstOffset,
-      int numPts ) throws TransformException
+  public final void transform( final float[] src, int srcOffset, final float[] dest, int dstOffset, int numPts )
+      throws TransformException
   {
     final boolean reverse = ( src == dest && srcOffset < dstOffset && srcOffset + ( numPts << 1 ) > dstOffset );
     if( reverse )
@@ -465,18 +435,14 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Transforme la forme géométrique <code>shape</code> spécifiée. Cette
-   * projection peut remplacer certaines lignes droites par des courbes. Tous
-   * les points de la forme géométrique seront copiés. Cette méthode n'est donc
-   * pas à conseiller si <code>shape</code> est volumineux, par exemple s'il
-   * représente une bathymétrie entière.
+   * Transforme la forme géométrique <code>shape</code> spécifiée. Cette projection peut remplacer certaines lignes
+   * droites par des courbes. Tous les points de la forme géométrique seront copiés. Cette méthode n'est donc pas à
+   * conseiller si <code>shape</code> est volumineux, par exemple s'il représente une bathymétrie entière.
    * 
    * @param shape
-   *          Forme géométrique à transformer. Les coordonnées des points de
-   *          cette forme doivent être exprimées en degrés de latitudes et de
-   *          longitudes.
-   * @return Forme géométrique transformée. Les coordonnées des points de cette
-   *         forme seront exprimées en mètres.
+   *          Forme géométrique à transformer. Les coordonnées des points de cette forme doivent être exprimées en
+   *          degrés de latitudes et de longitudes.
+   * @return Forme géométrique transformée. Les coordonnées des points de cette forme seront exprimées en mètres.
    * @throws TransformException
    *           si une transformation a échouée.
    */
@@ -492,46 +458,37 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   //////////////////////////////////////////////////////////////////////
 
   /**
-   * Transforms the specified coordinate and stores the result in
-   * <code>ptDst</code>. This method shall returns <var>x </var> values in
-   * the range <code>[-PI..PI]</code> and <var>y </var> values in the range
-   * <code>[-PI/2..PI/2]</code>. It will be checked by the caller, so this
-   * method doesn't need to performs this check.
+   * Transforms the specified coordinate and stores the result in <code>ptDst</code>. This method shall returns
+   * <var>x </var> values in the range <code>[-PI..PI]</code> and <var>y </var> values in the range
+   * <code>[-PI/2..PI/2]</code>. It will be checked by the caller, so this method doesn't need to performs this
+   * check.
    * 
    * @param x
    *          The longitude of the coordinate, in metres.
    * @param y
    *          The latitude of the coordinate, in metres.
    * @param ptDst
-   *          the specified coordinate point that stores the result of
-   *          transforming <code>ptSrc</code>, or <code>null</code>.
-   *          Ordinates will be in <strong>radians </strong>.
-   * @return the coordinate point after transforming <code>ptSrc</code> and
-   *         stroring the result in <code>ptDst</code>.
+   *          the specified coordinate point that stores the result of transforming <code>ptSrc</code>, or
+   *          <code>null</code>. Ordinates will be in <strong>radians </strong>.
+   * @return the coordinate point after transforming <code>ptSrc</code> and stroring the result in <code>ptDst</code>.
    * @throws TransformException
    *           if the point can't be transformed.
    */
-  protected abstract Point2D inverseTransform( double x, double y, final Point2D ptDst )
-      throws TransformException;
+  protected abstract Point2D inverseTransform( double x, double y, final Point2D ptDst ) throws TransformException;
 
   /**
-   * Inverse transforms the specified <code>ptSrc</code> and stores the result
-   * in <code>ptDst</code>.
+   * Inverse transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    * 
    * @param ptSrc
-   *          the specified coordinate point to be transformed. Ordinates must
-   *          be in metres.
+   *          the specified coordinate point to be transformed. Ordinates must be in metres.
    * @param ptDst
-   *          the specified coordinate point that stores the result of
-   *          transforming <code>ptSrc</code>, or <code>null</code>.
-   *          Ordinates will be in degrees.
-   * @return the coordinate point after transforming <code>ptSrc</code> and
-   *         stroring the result in <code>ptDst</code>.
+   *          the specified coordinate point that stores the result of transforming <code>ptSrc</code>, or
+   *          <code>null</code>. Ordinates will be in degrees.
+   * @return the coordinate point after transforming <code>ptSrc</code> and stroring the result in <code>ptDst</code>.
    * @throws TransformException
    *           if the point can't be transformed.
    */
-  public final Point2D inverseTransform( final Point2D ptSrc, Point2D ptDst )
-      throws TransformException
+  public final Point2D inverseTransform( final Point2D ptSrc, Point2D ptDst ) throws TransformException
   {
     final double x0 = ptSrc.getX();
     final double y0 = ptDst.getY();
@@ -541,39 +498,34 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     ptDst.setLocation( x, y );
     if( !( x >= Longitude.MIN_VALUE && x <= Longitude.MAX_VALUE ) )
     {
-      throw new TransformException( Resources.format( ResourceKeys.ERROR_LONGITUDE_OUT_OF_RANGE_$1,
-          new Longitude( x ) ) );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_LONGITUDE_OUT_OF_RANGE_$1, new Longitude( x ) ) );
     }
     if( !( y >= Latitude.MIN_VALUE && y <= Latitude.MAX_VALUE ) )
     {
-      throw new TransformException( Resources.format( ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1,
-          new Latitude( y ) ) );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_LATITUDE_OUT_OF_RANGE_$1, new Latitude( y ) ) );
     }
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert checkTransform(ptDst,
-     * (ptSrc!=ptDst) ? ptSrc : new Point2D.Double(x0, y0), false);
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert checkTransform(ptDst, (ptSrc!=ptDst) ? ptSrc : new
+     * Point2D.Double(x0, y0), false);
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     return ptDst;
   }
 
   /**
-   * Inverse transforms a list of coordinate point ordinal values. Ordinates
-   * must be ( <var>x </var>, <var>y </var>) pairs in metres.
+   * Inverse transforms a list of coordinate point ordinal values. Ordinates must be ( <var>x </var>, <var>y </var>)
+   * pairs in metres.
    * 
    * @throws TransformException
-   *           if a point can't be transformed. This method try to transform
-   *           every points even if some of them can't be transformed.
-   *           Non-transformable points will have value {@link Double#NaN}. If
-   *           more than one point can't be transformed, then this exception may
-   *           be about an arbitrary point.
+   *           if a point can't be transformed. This method try to transform every points even if some of them can't be
+   *           transformed. Non-transformable points will have value {@link Double#NaN}. If more than one point can't
+   *           be transformed, then this exception may be about an arbitrary point.
    */
-  public final void inverseTransform( final double[] src, int srcOffset, final double[] dest,
-      int dstOffset, int numPts ) throws TransformException
+  public final void inverseTransform( final double[] src, int srcOffset, final double[] dest, int dstOffset, int numPts )
+      throws TransformException
   {
     /*
-     * Vérifie s'il faudra parcourir le tableau en sens inverse. Ce sera le cas
-     * si les tableaux source et destination se chevauchent et que la
-     * destination est après la source.
+     * Vérifie s'il faudra parcourir le tableau en sens inverse. Ce sera le cas si les tableaux source et destination se
+     * chevauchent et que la destination est après la source.
      */
     final boolean reverse = ( src == dest && srcOffset < dstOffset && srcOffset + ( numPts << 1 ) > dstOffset );
     if( reverse )
@@ -613,18 +565,16 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Inverse transforms a list of coordinate point ordinal values. Ordinates
-   * must be ( <var>x </var>, <var>y </var>) pairs in metres.
+   * Inverse transforms a list of coordinate point ordinal values. Ordinates must be ( <var>x </var>, <var>y </var>)
+   * pairs in metres.
    * 
    * @throws TransformException
-   *           if a point can't be transformed. This method try to transform
-   *           every points even if some of them can't be transformed.
-   *           Non-transformable points will have value {@link Float#NaN}. If
-   *           more than one point can't be transformed, then this exception may
-   *           be about an arbitrary point.
+   *           if a point can't be transformed. This method try to transform every points even if some of them can't be
+   *           transformed. Non-transformable points will have value {@link Float#NaN}. If more than one point can't be
+   *           transformed, then this exception may be about an arbitrary point.
    */
-  public final void inverseTransform( final float[] src, int srcOffset, final float[] dest,
-      int dstOffset, int numPts ) throws TransformException
+  public final void inverseTransform( final float[] src, int srcOffset, final float[] dest, int dstOffset, int numPts )
+      throws TransformException
   {
     final boolean reverse = ( src == dest && srcOffset < dstOffset && srcOffset + ( numPts << 1 ) > dstOffset );
     if( reverse )
@@ -679,8 +629,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     for( int i = 0; i < 16; i++ )
     {
       final double con = e * Math.sin( phi );
-      final double dphi = ( Math.PI / 2 ) - 2.0
-          * Math.atan( ts * Math.pow( ( 1 - con ) / ( 1 + con ), eccnth ) ) - phi;
+      final double dphi = ( Math.PI / 2 ) - 2.0 * Math.atan( ts * Math.pow( ( 1 - con ) / ( 1 + con ), eccnth ) ) - phi;
       phi += dphi;
       if( Math.abs( dphi ) <= TOL )
         return phi;
@@ -689,10 +638,9 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Compute function <code>f(s,c,es) = c/sqrt(1 - s²*es)</code> needed for
-   * the true scale latitude (Snyder, p. 47), where <var>s </var> and <var>c
-   * </var> are the sine and cosine of the true scale latitude, and {@link #es}
-   * the eccentricity squared.
+   * Compute function <code>f(s,c,es) = c/sqrt(1 - s²*es)</code> needed for the true scale latitude (Snyder, p. 47),
+   * where <var>s </var> and <var>c </var> are the sine and cosine of the true scale latitude, and {@link #es}the
+   * eccentricity squared.
    */
   final double msfn( final double s, final double c )
   {
@@ -700,8 +648,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Compute function (15-9) from Snyder equivalent to negative of function
-   * (7-7).
+   * Compute function (15-9) from Snyder equivalent to negative of function (7-7).
    */
   final double tsfn( final double phi, double sinphi )
   {
@@ -709,8 +656,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     /*
      * NOTE: change sign to get the equivalent of Snyder (7-7).
      */
-    return Math.tan( 0.5 * ( ( Math.PI / 2d ) - phi ) )
-        / Math.pow( ( 1 - sinphi ) / ( 1 + sinphi ), 0.5 * e );
+    return Math.tan( 0.5 * ( ( Math.PI / 2d ) - phi ) ) / Math.pow( ( 1 - sinphi ) / ( 1 + sinphi ), 0.5 * e );
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -730,8 +676,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Returns <code>false</code> since map projections are not identity
-   * transforms.
+   * Returns <code>false</code> since map projections are not identity transforms.
    */
   public final boolean isIdentity()
   {
@@ -762,18 +707,15 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
       final MapProjection that = (MapProjection)object;
       return Double.doubleToLongBits( this.a ) == Double.doubleToLongBits( that.a )
           && Double.doubleToLongBits( this.b ) == Double.doubleToLongBits( that.b )
-          && Double.doubleToLongBits( this.centralMeridian ) == Double
-              .doubleToLongBits( that.centralMeridian )
-          && Double.doubleToLongBits( this.centralLatitude ) == Double
-              .doubleToLongBits( that.centralLatitude );
+          && Double.doubleToLongBits( this.centralMeridian ) == Double.doubleToLongBits( that.centralMeridian )
+          && Double.doubleToLongBits( this.centralLatitude ) == Double.doubleToLongBits( that.centralLatitude );
     }
     return false;
   }
 
   /**
-   * Retourne une chaîne de caractères représentant cette projection
-   * cartographique. Cette chaîne de caractères contiendra entre autres le nom
-   * de la projection, les coordonnées du centre et celles de l'origine.
+   * Retourne une chaîne de caractères représentant cette projection cartographique. Cette chaîne de caractères
+   * contiendra entre autres le nom de la projection, les coordonnées du centre et celles de l'origine.
    */
   public final String toString()
   {
@@ -784,8 +726,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   }
 
   /**
-   * Implémentation de la partie entre crochets de la chaîne retournée par
-   * {@link #toString()}.
+   * Implémentation de la partie entre crochets de la chaîne retournée par {@link #toString()}.
    */
   void toString( final StringBuffer buffer )
   {
@@ -813,14 +754,14 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
       return MapProjection.this.inverseTransform( source, dest );
     }
 
-    public void transform( final double[] source, final int srcOffset, final double[] dest,
-        final int dstOffset, final int length ) throws TransformException
+    public void transform( final double[] source, final int srcOffset, final double[] dest, final int dstOffset,
+        final int length ) throws TransformException
     {
       MapProjection.this.inverseTransform( source, srcOffset, dest, dstOffset, length );
     }
 
-    public void transform( final float[] source, final int srcOffset, final float[] dest,
-        final int dstOffset, final int length ) throws TransformException
+    public void transform( final float[] source, final int srcOffset, final float[] dest, final int dstOffset,
+        final int length ) throws TransformException
     {
       MapProjection.this.inverseTransform( source, srcOffset, dest, dstOffset, length );
     }
@@ -845,8 +786,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
      * @param classname
      *          The classification name.
      * @param nameKey
-     *          Resources key for a human readable name. This is used for
-     *          {@link #getName}implementation.
+     *          Resources key for a human readable name. This is used for {@link #getName}implementation.
      */
     protected Provider( final String classname, final int nameKey )
     {
@@ -862,11 +802,9 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
     }
 
     /**
-     * Create a new map projection. NOTE: The returns type should be
-     * {@link MathTransform}, but as of JDK 1.4-beta3, it force class loading
-     * for all projection classes (MercatorProjection, etc.) before than
-     * necessary. Changing the returns type to Object is a trick to avoid too
-     * early class loading...
+     * Create a new map projection. NOTE: The returns type should be {@link MathTransform}, but as of JDK 1.4-beta3, it
+     * force class loading for all projection classes (MercatorProjection, etc.) before than necessary. Changing the
+     * returns type to Object is a trick to avoid too early class loading...
      */
     protected abstract Object create( final Projection parameters );
   }

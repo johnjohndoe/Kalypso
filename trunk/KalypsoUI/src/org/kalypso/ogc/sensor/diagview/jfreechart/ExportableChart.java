@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.io.OutputStream;
@@ -54,11 +54,15 @@ import org.kalypso.ui.metadoc.IExportableDocument;
 public class ExportableChart implements IExportableDocument
 {
   public final static String EXT_JPEG = ".jpg";
+
   public final static String EXT_PNG = ".png";
-  
+
   private final JFreeChart m_chart;
+
   private final String m_fileExt;
+
   private final int m_width;
+
   private final int m_height;
 
   public ExportableChart( final JFreeChart chart, final String fileExt, final int width, final int height )
@@ -85,7 +89,7 @@ public class ExportableChart implements IExportableDocument
   /**
    * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
    */
-  public String getDocumentExtension( )
+  public String getDocumentExtension()
   {
     return m_fileExt;
   }

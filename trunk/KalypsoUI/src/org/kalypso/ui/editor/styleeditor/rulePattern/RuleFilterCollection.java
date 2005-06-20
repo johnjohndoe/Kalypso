@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.09.2004
  *  
@@ -54,9 +54,8 @@ import org.kalypsodeegree.graphics.sld.Rule;
  *  
  */
 /*
- * This class is fed with rules. It identifies whether it is a normal rule or
- * the rule belongs to a pattern. It collects the rules and returns the number
- * of rule items (-> number of tabitems to be displayed) as a list of Rule and
+ * This class is fed with rules. It identifies whether it is a normal rule or the rule belongs to a pattern. It collects
+ * the rules and returns the number of rule items (-> number of tabitems to be displayed) as a list of Rule and
  * RuleCollection Objects.
  */
 

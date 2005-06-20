@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.jface.dialogs;
 
 import java.text.DateFormat;
@@ -64,7 +64,7 @@ public class TypeBasedInputValidator implements IInputValidator
   {
     m_val = createValidator( type );
   }
-  
+
   /**
    * @param type
    * @return validator
@@ -73,7 +73,7 @@ public class TypeBasedInputValidator implements IInputValidator
   {
     if( Date.class.isAssignableFrom( type ) )
       return new DateValidator();
-    
+
     return new PseudoValidator();
   }
 
@@ -92,7 +92,7 @@ public class TypeBasedInputValidator implements IInputValidator
   {
     return m_val.validate( newText );
   }
-  
+
   /**
    * @param text
    * @return the real value behind the given text
@@ -101,8 +101,7 @@ public class TypeBasedInputValidator implements IInputValidator
   {
     return m_val.toValue( text );
   }
-  
-  
+
   /**
    * Validator
    * 
@@ -114,13 +113,13 @@ public class TypeBasedInputValidator implements IInputValidator
      * @return a default value
      */
     public String defaultValue();
-    
+
     /**
      * @param value
      * @return error message or null if ok
      */
     public String validate( final String value );
-    
+
     /**
      * @param text
      * @return real value behind the given text
@@ -146,7 +145,7 @@ public class TypeBasedInputValidator implements IInputValidator
     /**
      * @see org.kalypso.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#defaultValue()
      */
-    public String defaultValue( )
+    public String defaultValue()
     {
       return "";
     }
@@ -159,7 +158,7 @@ public class TypeBasedInputValidator implements IInputValidator
       return text;
     }
   }
-  
+
   /**
    * DateValidator that validates using the default locale DateFormat.
    * 
@@ -168,7 +167,7 @@ public class TypeBasedInputValidator implements IInputValidator
   private static class DateValidator implements Validator
   {
     private static final DateFormat DF = DateFormat.getDateTimeInstance();
-    
+
     /**
      * @see org.kalypso.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#validate(java.lang.String)
      */
@@ -177,7 +176,7 @@ public class TypeBasedInputValidator implements IInputValidator
       try
       {
         DF.parse( value );
-        
+
         return null;
       }
       catch( ParseException e )
@@ -189,7 +188,7 @@ public class TypeBasedInputValidator implements IInputValidator
     /**
      * @see org.kalypso.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#defaultValue()
      */
-    public String defaultValue( )
+    public String defaultValue()
     {
       return DF.format( new Date() );
     }
@@ -207,7 +206,7 @@ public class TypeBasedInputValidator implements IInputValidator
       {
         // should not be the case
         e.printStackTrace();
-        
+
         return null;
       }
     }

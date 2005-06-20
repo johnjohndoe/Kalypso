@@ -36,15 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -62,6 +57,11 @@ import org.kalypso.ui.editor.styleeditor.panels.StrokeDasharrayPanel;
 import org.kalypso.ui.editor.styleeditor.panels.StrokeDashoffsetPanel;
 import org.kalypso.ui.editor.styleeditor.panels.StrokeLinecapComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.StrokeLinejoinComboPanel;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
@@ -71,8 +71,7 @@ import org.kalypso.ui.editor.styleeditor.panels.StrokeLinejoinComboPanel;
 public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  public LineSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle )
+  public LineSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -95,8 +94,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 
     // Stroke ColorChooser
     ColorChooserPanel strokeColorChooserPanel = null;
-    strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR,
-        stroke.getStroke( null ) );
+    strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR, stroke
+        .getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -108,8 +107,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Width Slider
-    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH,
-        0, 10, 1, SliderPanel.INTEGER, stroke.getWidth( null ) );
+    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
+        SliderPanel.INTEGER, stroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -121,8 +120,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Opacity Slider
-    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, stroke.getOpacity( null ) );
+    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1,
+        SliderPanel.DECIMAL, stroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -134,8 +133,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Linejoin ComboPanel
-    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_LINEJOIN, stroke.getLineJoin( null ) );
+    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINEJOIN,
+        stroke.getLineJoin( null ) );
     stroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
@@ -148,8 +147,8 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Linecap ComboPanel
-    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_LINECAP, stroke.getLineCap( null ) );
+    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINECAP,
+        stroke.getLineCap( null ) );
     stroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {

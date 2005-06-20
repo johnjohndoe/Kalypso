@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.factory;
 
 /**
- * Abstract implementation of the <code>IRepositoryFactory</code> to permit
- * subclasses to inherit from this common functionality.
+ * Abstract implementation of the <code>IRepositoryFactory</code> to permit subclasses to inherit from this common
+ * functionality.
  * <p>
  * This class provides support for setting the configuration and readonly parameters.
  * 
@@ -51,13 +51,12 @@ package org.kalypso.repository.factory;
 public abstract class AbstractRepositoryFactory implements IRepositoryFactory
 {
   private String m_configuration;
-  
+
   private boolean m_readOnly;
 
   private String m_name;
 
-  
-  public String getRepositoryName( )
+  public String getRepositoryName()
   {
     return m_name;
   }
@@ -66,22 +65,22 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
   {
     m_name = name;
   }
-  
+
   public String getConfiguration()
   {
     return m_configuration;
   }
-  
+
   public void setConfiguration( final String configuration )
   {
     m_configuration = configuration;
   }
-  
+
   public void setReadOnly( final boolean ro )
   {
     m_readOnly = ro;
   }
-  
+
   public boolean isReadOnly()
   {
     return m_readOnly;

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.propertySource;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -54,6 +54,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 public class ObservationPropertySource implements IPropertySource
 {
   private final IObservation m_observation;
+
   private IPropertyDescriptor[] m_descriptors = null;
 
   public ObservationPropertySource( final IObservation obs )
@@ -74,22 +75,22 @@ public class ObservationPropertySource implements IPropertySource
    */
   public IPropertyDescriptor[] getPropertyDescriptors()
   {
-    if( m_descriptors == null && m_observation!=null)
+    if( m_descriptors == null && m_observation != null )
     {
       MetadataList md = m_observation.getMetadataList();
-      
-      m_descriptors = new IPropertyDescriptor[ md.size() ];
-      
+
+      m_descriptors = new IPropertyDescriptor[md.size()];
+
       Object[] keys = md.keySet().toArray();
       //Arrays.sort( keys );
-      
+
       for( int i = 0; i < keys.length; i++ )
       {
         String key = keys[i].toString();
-        m_descriptors[i] = new TextPropertyDescriptor( key , key );
+        m_descriptors[i] = new TextPropertyDescriptor( key, key );
       }
     }
-    
+
     return m_descriptors;
   }
 
@@ -115,7 +116,7 @@ public class ObservationPropertySource implements IPropertySource
    */
   public void resetPropertyValue( Object id )
   {
-    // not relevant
+  // not relevant
   }
 
   /**
@@ -123,6 +124,6 @@ public class ObservationPropertySource implements IPropertySource
    */
   public void setPropertyValue( Object id, Object value )
   {
-    // not relevant
+  // not relevant
   }
 }

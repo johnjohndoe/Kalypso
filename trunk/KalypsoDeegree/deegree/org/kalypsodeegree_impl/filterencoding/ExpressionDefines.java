@@ -63,11 +63,10 @@ package org.kalypsodeegree_impl.filterencoding;
 import java.util.HashMap;
 
 /**
- * Defines codes and constants for easy coping with the different kinds of
- * Expressions (both XML-Entities & JavaObjects).
+ * Defines codes and constants for easy coping with the different kinds of Expressions (both XML-Entities &
+ * JavaObjects).
  * 
- * Change: the static, lazily initialized members where NOT thread safe.
- * Better: use the class in a non static way  
+ * Change: the static, lazily initialized members where NOT thread safe. Better: use the class in a non static way
  * 
  * @author Markus Schneider
  * @version 06.08.2002
@@ -98,26 +97,26 @@ public class ExpressionDefines
 
   /** used to associate ids (Integers) with the expressions */
   private static HashMap ids = new HashMap();
-  
+
   public ExpressionDefines()
   {
-      addExpression( EXPRESSION, "Expression" );
-      addExpression( PROPERTYNAME, "PropertyName" );
-      addExpression( LITERAL, "Literal" );
-      addExpression( FUNCTION, "Function" );
-      addExpression( ADD, "Add" );
-      addExpression( SUB, "Sub" );
-      addExpression( MUL, "Mul" );
-      addExpression( DIV, "Div" );
+    addExpression( EXPRESSION, "Expression" );
+    addExpression( PROPERTYNAME, "PropertyName" );
+    addExpression( LITERAL, "Literal" );
+    addExpression( FUNCTION, "Function" );
+    addExpression( ADD, "Add" );
+    addExpression( SUB, "Sub" );
+    addExpression( MUL, "Mul" );
+    addExpression( DIV, "Div" );
   }
-  
+
   private void addExpression( final int id, final String name )
   {
     final ExpressionInfo expressionInfo = new ExpressionInfo( id, name );
     names.put( name.toLowerCase(), expressionInfo );
     ids.put( new Integer( id ), expressionInfo );
   }
-  
+
   /**
    * Returns the id of an expression for a given name.
    * 
@@ -157,4 +156,3 @@ public class ExpressionDefines
     }
   }
 }
-

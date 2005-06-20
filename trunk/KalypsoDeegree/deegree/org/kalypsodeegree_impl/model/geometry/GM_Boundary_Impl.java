@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -66,10 +66,8 @@ import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_Boundary interface. The class is abstract
- * because there isn't a boundary without a geometry type. Concrete
- * implementations are <tt>GM_CurveBoundary</tt> or
- * <tt>GM_SurfaceBoundary</tt> for example.
+ * default implementation of the GM_Boundary interface. The class is abstract because there isn't a boundary without a
+ * geometry type. Concrete implementations are <tt>GM_CurveBoundary</tt> or <tt>GM_SurfaceBoundary</tt> for example.
  * 
  * <p>
  * ------------------------------------------------------------

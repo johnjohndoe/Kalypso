@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import org.eclipse.core.resources.IFile;
@@ -50,9 +50,8 @@ import org.eclipse.ui.IEditorInput;
 public interface IDefaultTemplateLauncher
 {
   /**
-   * Dieser 'Dateiname' dient zur Anzeige im Auswahldialog. Der Prefix (vor dem
-   * Punkt) bestimmt den Anzeigenamen, die Extension das Icon = Icon des
-   * DefaultEditors für diese Endung.
+   * Dieser 'Dateiname' dient zur Anzeige im Auswahldialog. Der Prefix (vor dem Punkt) bestimmt den Anzeigenamen, die
+   * Extension das Icon = Icon des DefaultEditors für diese Endung.
    * 
    * @return filename
    */

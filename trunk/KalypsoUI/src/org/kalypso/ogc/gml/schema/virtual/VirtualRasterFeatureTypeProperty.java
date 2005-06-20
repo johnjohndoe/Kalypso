@@ -58,19 +58,17 @@ import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
  * VirtualRasterFeatureTypeProperty
  * <p>
  * 
- * created by @author Nadja Peiler (27.05.2005)
+ * created by
  * 
- * Diese VirtualProperty sollte unter KalypsoDeegree liegen,
- * sie benötigt aber das lokal eingestellte Koordinatensystem 
- * und wurde deshalb in KalypsoUI abgelegt
- * Bessere Lösung für das Raster wäre die Property RectifiedGridDomain
- * des Rasters als GeometryProperty zu definieren, dies ist momentan nicht 
- * möglich bzw. mit großen Veränderungen verbunden
+ * @author Nadja Peiler (27.05.2005)
  * 
+ * Diese VirtualProperty sollte unter KalypsoDeegree liegen, sie benötigt aber das lokal eingestellte Koordinatensystem
+ * und wurde deshalb in KalypsoUI abgelegt Bessere Lösung für das Raster wäre die Property RectifiedGridDomain des
+ * Rasters als GeometryProperty zu definieren, dies ist momentan nicht möglich bzw. mit großen Veränderungen verbunden
+ *  
  */
 
-public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType
-    implements VirtualFeatureTypeProperty
+public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
   private final FeatureTypeProperty m_ftp;
 
@@ -94,14 +92,12 @@ public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType
   {
     if( m_value != null )
       return m_value;
-    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature
-        .getProperty( "rectifiedGridDomain" );
+    RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
     if( rgDomain == null )
       return null;
     try
     {
-      m_value = rgDomain.getGM_Surface( KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem() );
+      m_value = rgDomain.getGM_Surface( KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
       return m_value;
     }
     catch( Exception e )

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.graphics;
 
@@ -87,33 +87,31 @@ public interface Selector
   void removeTheme( Theme theme );
 
   /**
-   * selects all features (display elements) that are located within the
-   * submitted bounding box.
+   * selects all features (display elements) that are located within the submitted bounding box.
    * 
    * @return ids of the selected features (display elements)
    */
   String[] select( GM_Envelope boundingbox );
 
   /**
-   * selects all features (display elements) that intersects the submitted
-   * point. if a feature is already selected it remains selected.
+   * selects all features (display elements) that intersects the submitted point. if a feature is already selected it
+   * remains selected.
    * 
    * @return ids of the selected features (display elements)
    */
   String[] select( GM_Position position );
 
   /**
-   * selects all features (display elements) that are located within the circle
-   * described by the position and the radius. if a feature is already selected
-   * it remains selected.
+   * selects all features (display elements) that are located within the circle described by the position and the
+   * radius. if a feature is already selected it remains selected.
    * 
    * @return ids of the selected features (display elements)
    */
   String[] select( GM_Position position, double radius );
 
   /**
-   * selects all features (display elements) that are specified by the submitted
-   * ids. if a feature is already selected it remains selected.
+   * selects all features (display elements) that are specified by the submitted ids. if a feature is already selected
+   * it remains selected.
    * 
    * @return ids of the selected features (display elements)
    */

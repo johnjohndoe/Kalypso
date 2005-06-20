@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -77,22 +77,18 @@ import org.opengis.cs.CS_Unit;
 import org.opengis.pt.PT_Envelope;
 
 /**
- * Base class for all coordinate systems. A coordinate system is a mathematical
- * space, where the elements of the space are called positions. Each position is
- * described by a list of numbers. The length of the list corresponds to the
- * dimension of the coordinate system. So in a 2D coordinate system each
- * position is described by a list containing 2 numbers. <br>
+ * Base class for all coordinate systems. A coordinate system is a mathematical space, where the elements of the space
+ * are called positions. Each position is described by a list of numbers. The length of the list corresponds to the
+ * dimension of the coordinate system. So in a 2D coordinate system each position is described by a list containing 2
+ * numbers. <br>
  * <br>
- * However, in a coordinate system, not all lists of numbers correspond to a
- * position - some lists may be outside the domain of the coordinate system. For
- * example, in a 2D Lat/Lon coordinate system, the list (91,91) does not
- * correspond to a position. <br>
+ * However, in a coordinate system, not all lists of numbers correspond to a position - some lists may be outside the
+ * domain of the coordinate system. For example, in a 2D Lat/Lon coordinate system, the list (91,91) does not correspond
+ * to a position. <br>
  * <br>
- * Some coordinate systems also have a mapping from the mathematical space into
- * locations in the real world. So in a Lat/Lon coordinate system, the
- * mathematical position (lat, long) corresponds to a location on the surface of
- * the Earth. This mapping from the mathematical space into real-world locations
- * is called a Datum.
+ * Some coordinate systems also have a mapping from the mathematical space into locations in the real world. So in a
+ * Lat/Lon coordinate system, the mathematical position (lat, long) corresponds to a location on the surface of the
+ * Earth. This mapping from the mathematical space into real-world locations is called a Datum.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -130,9 +126,8 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   }
 
   /**
-   * Make sure there is no axis among the same direction (e.g. two north axis,
-   * or a east and a west axis). This methods may be invoked from subclasses
-   * constructors.
+   * Make sure there is no axis among the same direction (e.g. two north axis, or a east and a west axis). This methods
+   * may be invoked from subclasses constructors.
    * 
    * @param type
    *          The datum type, or <code>null</code> if unknow.
@@ -147,9 +142,8 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
       AxisOrientation check = getAxis( i ).orientation;
       if( type != null && !type.isCompatibleOrientation( check ) )
       {
-        throw new IllegalArgumentException( Resources.format(
-            ResourceKeys.ERROR_ILLEGAL_AXIS_ORIENTATION_$2, check.getName( null ), Utilities
-                .getShortClassName( this ) ) );
+        throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_AXIS_ORIENTATION_$2, check
+            .getName( null ), Utilities.getShortClassName( this ) ) );
       }
       check = check.absolute();
       if( !check.equals( AxisOrientation.OTHER ) )
@@ -160,8 +154,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
           {
             final String nameI = getAxis( i ).orientation.getName( null );
             final String nameJ = getAxis( j ).orientation.getName( null );
-            throw new IllegalArgumentException( Resources.format(
-                ResourceKeys.ERROR_COLINEAR_AXIS_$2, nameI, nameJ ) );
+            throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_COLINEAR_AXIS_$2, nameI, nameJ ) );
           }
         }
       }
@@ -176,8 +169,8 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   public abstract int getDimension();
 
   /**
-   * Gets axis details for dimension within coordinate system. Each dimension in
-   * the coordinate system has a corresponding axis.
+   * Gets axis details for dimension within coordinate system. Each dimension in the coordinate system has a
+   * corresponding axis.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -187,8 +180,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   public abstract AxisInfo getAxis( int dimension );
 
   /**
-   * Gets units for dimension within coordinate system. Each dimension in the
-   * coordinate system has corresponding units.
+   * Gets units for dimension within coordinate system. Each dimension in the coordinate system has corresponding units.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -198,8 +190,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   public abstract Unit getUnits( int dimension );
 
   /**
-   * If all dimensions use the same units, returns this units. Otherwise,
-   * returns <code>null</code>.
+   * If all dimensions use the same units, returns this units. Otherwise, returns <code>null</code>.
    */
   final Unit getUnits()
   {
@@ -224,13 +215,11 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   }
 
   /**
-   * Gets default envelope of coordinate system. Coordinate systems which are
-   * bounded should return the minimum bounding box of their domain. Unbounded
-   * coordinate systems should return a box which is as large as is likely to be
-   * used. For example, a (lon,lat) geographic coordinate system in degrees
-   * should return a box from (-180,-90) to (180,90), and a geocentric
-   * coordinate system could return a box from (-r,-r,-r) to (+r,+r,+r) where r
-   * is the approximate radius of the Earth. <br>
+   * Gets default envelope of coordinate system. Coordinate systems which are bounded should return the minimum bounding
+   * box of their domain. Unbounded coordinate systems should return a box which is as large as is likely to be used.
+   * For example, a (lon,lat) geographic coordinate system in degrees should return a box from (-180,-90) to (180,90),
+   * and a geocentric coordinate system could return a box from (-r,-r,-r) to (+r,+r,+r) where r is the approximate
+   * radius of the Earth. <br>
    * <br>
    * The default implementation returns an envelope with infinite bounds.
    * 
@@ -248,14 +237,11 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The <code>equivalents</code> method is less strict than
-   * <code>equals</code> in that it doesn't compare names, alias, authority
-   * codes or others similar informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The <code>equivalents</code> method is less strict than <code>equals</code> in
+   * that it doesn't compare names, alias, authority codes or others similar informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -277,11 +263,9 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   }
 
   /**
-   * Returns an OpenGIS interface for this coordinate system. The returned
-   * object is suitable for RMI use.
+   * Returns an OpenGIS interface for this coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   Object toOpenGIS( final Object adapters )
   {
@@ -295,8 +279,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link CoordinateSystem}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link CoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -324,7 +307,7 @@ public abstract class CoordinateSystem extends Info implements Dimensioned
     /**
      * Gets axis details for dimension within coordinate system.
      */
-    public CS_AxisInfo getAxis( final int dimension ) 
+    public CS_AxisInfo getAxis( final int dimension )
     {
       return adapters.export( CoordinateSystem.this.getAxis( dimension ) );
     }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.wizard;
 
 import java.awt.Rectangle;
@@ -75,15 +75,23 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class ExportMapOptionsPage extends WizardPage implements IExportableDocument
 {
   private final static String STORE_WIDTH_ID = "ExportMapWizardPage.STORE_WIDTH_ID"; //$NON-NLS-1$
+
   private final static String STORE_HEIGHT_ID = "ExportMapWizardPage.STORE_HEIGHT_ID"; //$NON-NLS-1$
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 100;
+
   private Text m_widthtext;
+
   private Text m_heighttext;
+
   private final int m_width;
+
   private final int m_height;
+
   private final MapPanel m_panel;
+
   private boolean m_result;
+
   private String m_destinationFormat;
 
   public ExportMapOptionsPage( final MapPanel panel, final String pageName, final String title,
@@ -104,8 +112,7 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
-    panel.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL
-        | GridData.HORIZONTAL_ALIGN_FILL ) );
+    panel.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL ) );
     panel.setFont( parent.getFont() );
 
     createExportOptionsGroup( panel );
@@ -129,14 +136,16 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
     final Color red = parent.getDisplay().getSystemColor( SWT.COLOR_RED );
     final Color black = parent.getDisplay().getSystemColor( SWT.COLOR_BLACK );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( black, red );
-    
-    final ModifyListener updateModifyListener = new ModifyListener() {
+
+    final ModifyListener updateModifyListener = new ModifyListener()
+    {
       public void modifyText( ModifyEvent e )
       {
         updatePageCompletion();
-      }};
+      }
+    };
 
-      final Label widthlabel = new Label( optionsGroup, SWT.NONE );
+    final Label widthlabel = new Label( optionsGroup, SWT.NONE );
     widthlabel.setText( "Breite:" );
 
     m_widthtext = new Text( optionsGroup, SWT.BORDER );
@@ -148,7 +157,7 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
     final GridData widthdata = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     widthdata.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_widthtext.setLayoutData( widthdata );
-    
+
     final Label heightlabel = new Label( optionsGroup, SWT.NONE );
     heightlabel.setText( "Höhe:" );
 
@@ -157,7 +166,7 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
     m_heighttext.setFont( font );
     m_heighttext.addModifyListener( doubleModifyListener );
     m_heighttext.addModifyListener( updateModifyListener );
-    
+
     final GridData heightdata = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     heightdata.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_heighttext.setLayoutData( heightdata );
@@ -186,10 +195,9 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
       return -1;
     }
   }
-  
+
   /**
-   * Hook method for restoring widget values to the values that they held last
-   * time this wizard was used to completion.
+   * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
   protected void restoreWidgetValues()
   {
@@ -199,8 +207,8 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
       try
       {
         // Lieber die aktuelle Kartengrösse als die gespeicherten Werte
-//        m_widthtext.setText( "" + settings.getInt( STORE_WIDTH_ID ) );
-//        m_heighttext.setText( "" + settings.getInt( STORE_HEIGHT_ID ) );
+        //        m_widthtext.setText( "" + settings.getInt( STORE_WIDTH_ID ) );
+        //        m_heighttext.setText( "" + settings.getInt( STORE_HEIGHT_ID ) );
       }
       catch( final Exception e )
       {
@@ -235,7 +243,7 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
   {
     final int width = getWidth();
     final int height = getHeight();
-    
+
     if( width == -1 || height == -1 )
     {
       setMessage( "Geben Sie Höhe und Breite als ganze Zahlen ein." );
@@ -245,9 +253,9 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
 
     return true;
   }
-  
+
   /**
-   * @throws IOException 
+   * @throws IOException
    * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
    */
   public void exportDocument( final OutputStream outs ) throws IOException
@@ -258,17 +266,17 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
     final GM_Envelope boundingBox = m_panel.getBoundingBox();
 
     final Rectangle bounds = new Rectangle( m_width, m_height );
-    final BufferedImage image = MapModellHelper.createImageFromModell( transform,
-        boundingBox, bounds, bounds.width, bounds.height, mapModell, -1 );
+    final BufferedImage image = MapModellHelper.createImageFromModell( transform, boundingBox, bounds, bounds.width,
+        bounds.height, mapModell, -1 );
 
     m_result = ImageIO.write( image, m_destinationFormat, outs );
   }
-  
+
   public void setDestinationFormat( final String destinationFormat )
   {
     m_destinationFormat = destinationFormat;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#setDescription(java.lang.String)
    */
@@ -284,10 +292,10 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
   {
     return ".csv";
   }
-  
+
   public boolean isResult()
   {
     return m_result;
   }
-  
+
 }

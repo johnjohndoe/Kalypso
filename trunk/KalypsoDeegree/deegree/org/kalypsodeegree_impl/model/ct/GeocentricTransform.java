@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies (SEAGIS)
@@ -72,9 +72,8 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Transforms three dimensional geographic points to geocentric coordinate
- * points. Input points must be longitudes, latitudes and heights above the
- * ellipsoid.
+ * Transforms three dimensional geographic points to geocentric coordinate points. Input points must be longitudes,
+ * latitudes and heights above the ellipsoid.
  * 
  * @version 1.00
  * @author Frank Warmerdam
@@ -128,8 +127,8 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   private final double ep2;
 
   /**
-   * <code>true</code> if geographic coordinates include an ellipsoidal height
-   * (i.e. are 3-D), or <code>false</code> if they are strictly 2-D.
+   * <code>true</code> if geographic coordinates include an ellipsoidal height (i.e. are 3-D), or <code>false</code>
+   * if they are strictly 2-D.
    */
   private final boolean hasHeight;
 
@@ -144,14 +143,12 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
    * @param ellipsoid
    *          The ellipsoid.
    * @param hasHeight
-   *          <code>true</code> if geographic coordinates include an
-   *          ellipsoidal height (i.e. are 3-D), or <code>false</code> if they
-   *          are strictly 2-D.
+   *          <code>true</code> if geographic coordinates include an ellipsoidal height (i.e. are 3-D), or
+   *          <code>false</code> if they are strictly 2-D.
    */
   protected GeocentricTransform( final Ellipsoid ellipsoid, final boolean hasHeight )
   {
-    this( ellipsoid.getSemiMajorAxis(), ellipsoid.getSemiMinorAxis(), ellipsoid.getAxisUnit(),
-        hasHeight );
+    this( ellipsoid.getSemiMajorAxis(), ellipsoid.getSemiMinorAxis(), ellipsoid.getAxisUnit(), hasHeight );
   }
 
   /**
@@ -164,9 +161,8 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
    * @param units
    *          The axis units.
    * @param hasHeight
-   *          <code>true</code> if geographic coordinates include an
-   *          ellipsoidal height (i.e. are 3-D), or <code>false</code> if they
-   *          are strictly 2-D.
+   *          <code>true</code> if geographic coordinates include an ellipsoidal height (i.e. are 3-D), or
+   *          <code>false</code> if they are strictly 2-D.
    */
   protected GeocentricTransform( final double semiMajor, final double semiMinor, final Unit units,
       final boolean hasHeight )
@@ -183,8 +179,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Check an argument value. The argument must be greater than 0 and finite,
-   * otherwise an exception is thrown.
+   * Check an argument value. The argument must be greater than 0 and finite, otherwise an exception is thrown.
    * 
    * @param name
    *          The argument name.
@@ -198,14 +193,14 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   {
     if( !( value >= 0 && value <= max ) ) // Use '!' in order to trap NaN
     {
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2,
-          name, new Double( value ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, name, new Double(
+          value ) ) );
     }
   }
 
   /**
-   * Converts geodetic coordinates (longitude, latitude, height) to geocentric
-   * coordinates (x, y, z) according to the current ellipsoid parameters.
+   * Converts geodetic coordinates (longitude, latitude, height) to geocentric coordinates (x, y, z) according to the
+   * current ellipsoid parameters.
    */
   public void transform( double[] srcPts, int srcOff, double[] dstPts, int dstOff, int numPts )
   {
@@ -213,11 +208,11 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Implementation of geodetic to geocentric conversion. This implementation
-   * allows the caller to use height in computation.
+   * Implementation of geodetic to geocentric conversion. This implementation allows the caller to use height in
+   * computation.
    */
-  private void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff,
-      int numPts, boolean hasHeight )
+  private void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff, int numPts,
+      boolean hasHeight )
   {
     int step = 0;
     final int dimSource = getDimSource();
@@ -249,11 +244,10 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Converts geodetic coordinates (longitude, latitude, height) to geocentric
-   * coordinates (x, y, z) according to the current ellipsoid parameters.
+   * Converts geodetic coordinates (longitude, latitude, height) to geocentric coordinates (x, y, z) according to the
+   * current ellipsoid parameters.
    */
-  public void transform( final float[] srcPts, int srcOff, final float[] dstPts, int dstOff,
-      int numPts )
+  public void transform( final float[] srcPts, int srcOff, final float[] dstPts, int dstOff, int numPts )
   {
     int step = 0;
     final int dimSource = getDimSource();
@@ -285,13 +279,12 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Converts geocentric coordinates (x, y, z) to geodetic coordinates
-   * (longitude, latitude, height), according to the current ellipsoid
-   * parameters. The method used here is derived from "An Improved Algorithm for
-   * Geocentric to Geodetic Coordinate Conversion", by Ralph Toms, Feb 1996.
+   * Converts geocentric coordinates (x, y, z) to geodetic coordinates (longitude, latitude, height), according to the
+   * current ellipsoid parameters. The method used here is derived from "An Improved Algorithm for Geocentric to
+   * Geodetic Coordinate Conversion", by Ralph Toms, Feb 1996.
    */
-  protected final void inverseTransform( final double[] srcPts, int srcOff, final double[] dstPts,
-      int dstOff, int numPts )
+  protected final void inverseTransform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff,
+      int numPts )
   {
     int step = 0;
     final int dimSource = getDimSource();
@@ -360,11 +353,9 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
           dstPts[dstOff++] = height;
         }
         /*
-         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // If // assertion are
-         * enabled, then transform the // result and compare it with the input
-         * array. double distance; // assert (distance=checkTransform(new
-         * double[] {x,y,z, longitude, latitude, height})) < MAX_ERROR :
-         * distance;
+         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // If // assertion are enabled, then transform the // result and
+         * compare it with the input array. double distance; // assert (distance=checkTransform(new double[] {x,y,z,
+         * longitude, latitude, height})) < MAX_ERROR : distance;
          *///----- END OF JDK 1.4 DEPENDENCIES ---
       }
       srcOff += step;
@@ -373,21 +364,18 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Converts geocentric coordinates (x, y, z) to geodetic coordinates
-   * (longitude, latitude, height), according to the current ellipsoid
-   * parameters. The method used here is derived from "An Improved Algorithm for
-   * Geocentric to Geodetic Coordinate Conversion", by Ralph Toms, Feb 1996.
+   * Converts geocentric coordinates (x, y, z) to geodetic coordinates (longitude, latitude, height), according to the
+   * current ellipsoid parameters. The method used here is derived from "An Improved Algorithm for Geocentric to
+   * Geodetic Coordinate Conversion", by Ralph Toms, Feb 1996.
    */
-  protected final void inverseTransform( final float[] srcPts, int srcOff, final float[] dstPts,
-      int dstOff, int numPts )
+  protected final void inverseTransform( final float[] srcPts, int srcOff, final float[] dstPts, int dstOff, int numPts )
   {
     int step = 0;
     final int dimSource = getDimSource();
     final boolean hasHeight = ( dimSource >= 3 );
     boolean computeHeight = hasHeight;
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert computeHeight=true; //
-     * Intentional side effect
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert computeHeight=true; // Intentional side effect
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     if( srcPts == dstPts && srcOff < dstOff && srcOff + numPts * dimSource > dstOff )
     {
@@ -451,11 +439,9 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
           dstPts[dstOff++] = (float)height;
         }
         /*
-         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // If // assertion are
-         * enabled, then transform the // result and compare it with the input
-         * array. double distance; // assert (distance=checkTransform(new
-         * double[] {x,y,z, longitude, latitude, height})) < MAX_ERROR :
-         * distance;
+         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // If // assertion are enabled, then transform the // result and
+         * compare it with the input array. double distance; // assert (distance=checkTransform(new double[] {x,y,z,
+         * longitude, latitude, height})) < MAX_ERROR : distance;
          *///----- END OF JDK 1.4 DEPENDENCIES ---
       }
       srcOff += step;
@@ -480,8 +466,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Tests whether this transform does not move any points. This method returns
-   * always <code>false</code>.
+   * Tests whether this transform does not move any points. This method returns always <code>false</code>.
    */
   public final boolean isIdentity()
   {
@@ -505,9 +490,8 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   {
     final long code = Double.doubleToLongBits( a )
         + 37
-        * ( Double.doubleToLongBits( b ) + 37 * ( Double.doubleToLongBits( a2 ) + 37 * ( Double
-            .doubleToLongBits( b2 ) + 37 * ( Double.doubleToLongBits( e2 ) + 37 * ( Double
-            .doubleToLongBits( ep2 ) ) ) ) ) );
+        * ( Double.doubleToLongBits( b ) + 37 * ( Double.doubleToLongBits( a2 ) + 37 * ( Double.doubleToLongBits( b2 ) + 37 * ( Double
+            .doubleToLongBits( e2 ) + 37 * ( Double.doubleToLongBits( ep2 ) ) ) ) ) );
     return (int)code ^ (int)( code >>> 32 );
   }
 
@@ -540,9 +524,8 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Returns the WKT for this math transform with the specified classification
-   * name. The classification name should be "Ellipsoid_To_Geocentric" or
-   * "Geocentric_To_Ellipsoid".
+   * Returns the WKT for this math transform with the specified classification name. The classification name should be
+   * "Ellipsoid_To_Geocentric" or "Geocentric_To_Ellipsoid".
    */
   final String toString( final String classification )
   {
@@ -566,14 +549,14 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
       GeocentricTransform.this.super();
     }
 
-    public void transform( final double[] source, final int srcOffset, final double[] dest,
-        final int dstOffset, final int length ) throws TransformException
+    public void transform( final double[] source, final int srcOffset, final double[] dest, final int dstOffset,
+        final int length ) throws TransformException
     {
       GeocentricTransform.this.inverseTransform( source, srcOffset, dest, dstOffset, length );
     }
 
-    public void transform( final float[] source, final int srcOffset, final float[] dest,
-        final int dstOffset, final int length ) throws TransformException
+    public void transform( final float[] source, final int srcOffset, final float[] dest, final int dstOffset,
+        final int length ) throws TransformException
     {
       GeocentricTransform.this.inverseTransform( source, srcOffset, dest, dstOffset, length );
     }
@@ -595,12 +578,10 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
     /**
      * The range of values for the dimension.
      */
-    private static final Range DIM_RANGE = new Range( Integer.class, new Integer( 2 ), new Integer(
-        3 ) );
+    private static final Range DIM_RANGE = new Range( Integer.class, new Integer( 2 ), new Integer( 3 ) );
 
     /**
-     * <code>false</code> for the direct transform, or <code>true</code> for
-     * the inverse transform.
+     * <code>false</code> for the direct transform, or <code>true</code> for the inverse transform.
      */
     private final boolean inverse;
 
@@ -608,8 +589,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
      * Create a provider.
      * 
      * @param inverse
-     *          <code>false</code> for the direct transform, or
-     *          <code>true</code> for the inverse transform.
+     *          <code>false</code> for the direct transform, or <code>true</code> for the inverse transform.
      */
     public Provider( final boolean inverse )
     {
@@ -644,8 +624,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
         // by our SEAGIS implementation. It is NOT an OpenGIS
         // one. We can't require clients to know it.
       }
-      GeocentricTransform transform = new GeocentricTransform( semiMajor, semiMinor, Unit.METRE,
-          dimGeographic != 2 );
+      GeocentricTransform transform = new GeocentricTransform( semiMajor, semiMinor, Unit.METRE, dimGeographic != 2 );
       return ( inverse ) ? transform.inverse() : transform;
     }
   }

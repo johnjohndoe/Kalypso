@@ -116,8 +116,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
-      throws CoreException
+  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
   {
     final DiagView template = (DiagView)getView();
     if( template == null )

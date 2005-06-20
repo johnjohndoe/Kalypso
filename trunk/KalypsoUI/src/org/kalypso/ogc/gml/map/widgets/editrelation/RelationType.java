@@ -78,9 +78,9 @@ public class RelationType implements IRelationType
 
   public String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode )
   {
-    
-   boolean exists = workspace.isExistingRelation(f1,f2,m_link.getName());
-    
+
+    boolean exists = workspace.isExistingRelation( f1, f2, m_link.getName() );
+
     if( !isAddMode )
       return exists ? null : "diese Relation existiert nicht";
     // add mode:
@@ -144,8 +144,7 @@ public class RelationType implements IRelationType
     case 1:
       return property != null ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
     default: // minOccurs should not be validated here.
-      return ( (List)property ).size() > 0 ? null : ftLabel + "." + linkLabel
-          + " ist nicht gesetzt";
+      return ( (List)property ).size() > 0 ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
     }
   }
 

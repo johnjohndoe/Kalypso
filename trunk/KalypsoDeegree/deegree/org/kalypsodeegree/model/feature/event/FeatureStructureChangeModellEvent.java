@@ -44,8 +44,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class FeatureStructureChangeModellEvent extends ModellEvent implements
-    IGMLWorkspaceModellEvent
+public class FeatureStructureChangeModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
 {
 
   private final GMLWorkspace m_workspace;
@@ -64,8 +63,7 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements
    * 
    * @author doemming
    */
-  public FeatureStructureChangeModellEvent( GMLWorkspace workspace, Feature parentFeature,
-      int changeType )
+  public FeatureStructureChangeModellEvent( GMLWorkspace workspace, Feature parentFeature, int changeType )
   {
     super( workspace, FEATURE_CHANGE );
     m_workspace = workspace;

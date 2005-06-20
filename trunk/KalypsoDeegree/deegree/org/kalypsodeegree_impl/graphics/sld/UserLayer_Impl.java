@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
@@ -68,15 +68,12 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * In addition to using named layers, it is also useful to be able to define
- * custom user-defined layers for rendering.
+ * In addition to using named layers, it is also useful to be able to define custom user-defined layers for rendering.
  * <p>
  * </p>
- * Since a layer is defined as a collection of potentially mixed-type features,
- * the UserLayer element must provide the means to identify the features to be
- * used. All features to be rendered are assumed to be fetched from a Web
- * Feature Server (WFS) or a Web Coverage Service (WCS, in which case the term
- * features is used loosely).
+ * Since a layer is defined as a collection of potentially mixed-type features, the UserLayer element must provide the
+ * means to identify the features to be used. All features to be rendered are assumed to be fetched from a Web Feature
+ * Server (WFS) or a Web Coverage Service (WCS, in which case the term features is used loosely).
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -91,16 +88,15 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
   /**
    * constructor initializing the class with the <UserLayer>
    */
-  UserLayer_Impl( String name, LayerFeatureConstraints layerFeatureConstraints, Style[] userStyles,
-      RemoteOWS remoteOWS )
+  UserLayer_Impl( String name, LayerFeatureConstraints layerFeatureConstraints, Style[] userStyles, RemoteOWS remoteOWS )
   {
     super( name, layerFeatureConstraints, userStyles );
     setRemoteOWS( remoteOWS );
   }
 
   /**
-   * the method returns a remote web service that enables the access to data
-   * that are not stored on same server as the WMS.
+   * the method returns a remote web service that enables the access to data that are not stored on same server as the
+   * WMS.
    * 
    * @return the RemoteOWS
    */

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.Expression;
@@ -70,8 +70,8 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <PropertyIsCOMP>-element (as defined in
- * Filter DTD). COMP can be one of the following:
+ * Encapsulates the information of a <PropertyIsCOMP>-element (as defined in Filter DTD). COMP can be one of the
+ * following:
  * <ul>
  * <li>EqualTo</li>
  * <li>LessThan</li>
@@ -104,9 +104,8 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -170,9 +169,8 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   }
 
   /**
-   * Calculates the <tt>ComparisonOperation</tt>'s logical value based on the
-   * certain property values of the given <tt>Feature</tt>. TODO: Improve
-   * datatype handling.
+   * Calculates the <tt>ComparisonOperation</tt>'s logical value based on the certain property values of the given
+   * <tt>Feature</tt>. TODO: Improve datatype handling.
    * 
    * @param feature
    *          that determines the property values
@@ -235,11 +233,9 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
       case OperationDefines.PROPERTYISGREATERTHAN:
       case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
       case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
-        throw new FilterEvaluationException( "'" + getOperatorName() + "' can not be applied to "
-            + "String values!" );
+        throw new FilterEvaluationException( "'" + getOperatorName() + "' can not be applied to " + "String values!" );
       default:
-        throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName()
-            + "'!" );
+        throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
       }
     }// compare Doubles
     else if( ( value1 instanceof Number ) && ( value2 instanceof Number ) )
@@ -260,14 +256,13 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
       case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
         return d1 >= d2;
       default:
-        throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName()
-            + "'!" );
+        throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
       }
     }
     else
     {
-      throw new FilterEvaluationException( "Can not apply operation '" + getOperatorName()
-          + "' to " + "different datatypes!" );
+      throw new FilterEvaluationException( "Can not apply operation '" + getOperatorName() + "' to "
+          + "different datatypes!" );
     }
   }
 }

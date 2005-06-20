@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
 import java.text.DateFormat;
@@ -61,9 +61,8 @@ public final class ObservationViewHelper
   }
 
   /**
-   * Makes a DateRangeArgument using the properties of the repository into which
-   * the item belongs. If the property is not defined, it returns a default one
-   * with the last seven days.
+   * Makes a DateRangeArgument using the properties of the repository into which the item belongs. If the property is
+   * not defined, it returns a default one with the last seven days.
    * 
    * @param item
    * @return new instance of DateRangeArgument
@@ -74,18 +73,16 @@ public final class ObservationViewHelper
 
     if( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) != null )
     {
-      final boolean useRange = Boolean.valueOf(
-          item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) ).booleanValue();
+      final boolean useRange = Boolean.valueOf( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) )
+          .booleanValue();
 
       if( useRange )
       {
         try
         {
-          final Date dateFrom = df.parse( item.getRepository().getProperty(
-              DateRangeInputControl.DATE_FROM ) );
+          final Date dateFrom = df.parse( item.getRepository().getProperty( DateRangeInputControl.DATE_FROM ) );
 
-          final Date dateTo = df.parse( item.getRepository().getProperty(
-              DateRangeInputControl.DATE_TO ) );
+          final Date dateTo = df.parse( item.getRepository().getProperty( DateRangeInputControl.DATE_TO ) );
 
           return new DateRangeArgument( dateFrom, dateTo );
         }
@@ -99,7 +96,7 @@ public final class ObservationViewHelper
 
       return DateRangeArgument.createFromPastDays( Integer.valueOf( strDays ).intValue() );
     }
-    
+
     return DateRangeArgument.createFromPastDays( 7 );
   }
 }

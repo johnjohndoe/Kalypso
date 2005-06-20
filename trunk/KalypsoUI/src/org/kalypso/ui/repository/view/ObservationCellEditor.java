@@ -70,14 +70,14 @@ public class ObservationCellEditor extends DialogCellEditor
     final String id = (String)getValue();
     if( id != null )
       dlg.setSelectedObservation( id );
-    
+
     int ret = dlg.open();
     if( ret == Window.OK )
     {
       setValue( dlg.getSelectedObservation() );
       return getValue();
     }
-    
+
     return null;
-  }    
+  }
 }

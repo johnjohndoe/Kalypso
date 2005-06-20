@@ -21,11 +21,11 @@ public abstract class FeatureListsVisitor implements FeatureVisitor
     for( int i = 0; i < properties.length; i++ )
     {
       final Object p = properties[i];
-      
+
       if( p instanceof FeatureList )
         visitList( (FeatureList)p );
     }
-    
+
     return true;
   }
 

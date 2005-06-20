@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Miscellaneous
@@ -86,24 +86,20 @@ public final class Colors
   {}
 
   /**
-   * Copy <code>colors</code> into array <code>ARGB</code> from index
-   * <code>lower</code> inclusive to index <code>upper</code> exclusive. If
-   * <code>upper-lower</code> is not equals to the length of
-   * <code>colors</code> array, then colors will be interpolated.
+   * Copy <code>colors</code> into array <code>ARGB</code> from index <code>lower</code> inclusive to index
+   * <code>upper</code> exclusive. If <code>upper-lower</code> is not equals to the length of <code>colors</code>
+   * array, then colors will be interpolated.
    * 
    * @param colors
    *          Colors to copy into the <code>ARGB</code> array.
    * @param ARGB
    *          Array of integer to write ARGB values to.
    * @param lower
-   *          Index (inclusive) of the first element of <code>ARGB</code> to
-   *          change.
+   *          Index (inclusive) of the first element of <code>ARGB</code> to change.
    * @param upper
-   *          Index (exclusive) of the last element of <code>ARGB</code> to
-   *          change.
+   *          Index (exclusive) of the last element of <code>ARGB</code> to change.
    */
-  public static void expand( final Color[] colors, final int[] ARGB, final int lower,
-      final int upper )
+  public static void expand( final Color[] colors, final int[] ARGB, final int lower, final int upper )
   {
     switch( colors.length )
     {
@@ -137,8 +133,7 @@ public final class Colors
       int G = C0.getGreen();
       int B = C0.getBlue();
       ARGB[i] = ( round( A + delta * ( C1.getAlpha() - A ) ) << 24 )
-          | ( round( R + delta * ( C1.getRed() - R ) ) << 16 )
-          | ( round( G + delta * ( C1.getGreen() - G ) ) << 8 )
+          | ( round( R + delta * ( C1.getRed() - R ) ) << 16 ) | ( round( G + delta * ( C1.getGreen() - G ) ) << 8 )
           | ( round( B + delta * ( C1.getBlue() - B ) ) << 0 );
     }
   }
@@ -152,12 +147,10 @@ public final class Colors
   }
 
   /**
-   * Returns an index color model for specified ARGB codes. If the specified
-   * array has not transparent color (i.e. all alpha values are 255), then the
-   * returned color model will be opaque. Otherwise, if the specified array has
-   * one and only one color with alpha value of 0, the returned color model will
-   * have only this transparent color. Otherwise, the returned color model will
-   * be translucide.
+   * Returns an index color model for specified ARGB codes. If the specified array has not transparent color (i.e. all
+   * alpha values are 255), then the returned color model will be opaque. Otherwise, if the specified array has one and
+   * only one color with alpha value of 0, the returned color model will have only this transparent color. Otherwise,
+   * the returned color model will be translucide.
    * 
    * @param ARGB
    *          An array of ARGB values.
@@ -181,15 +174,14 @@ public final class Colors
         break;
       }
     }
-    return new IndexColorModel( getBitCount( ARGB.length ), ARGB.length, ARGB, 0, hasAlpha,
-        transparent, getTransferType( ARGB.length ) );
+    return new IndexColorModel( getBitCount( ARGB.length ), ARGB.length, ARGB, 0, hasAlpha, transparent,
+        getTransferType( ARGB.length ) );
   }
 
   /**
-   * Returns a suggered bit count for an {@link IndexColorModel}of
-   * <code>mapSize</code> colors. This method returns 1, 2, 4, 8 or 16
-   * according the value of <code>mapSize</code>. It is guaranteed that the
-   * following relation is hold:
+   * Returns a suggered bit count for an {@link IndexColorModel}of <code>mapSize</code> colors. This method returns
+   * 1, 2, 4, 8 or 16 according the value of <code>mapSize</code>. It is guaranteed that the following relation is
+   * hold:
    * 
    * <center>
    * 
@@ -213,8 +205,7 @@ public final class Colors
   }
 
   /**
-   * Returns a suggered type for an {@link IndexColorModel}of
-   * <code>mapSize</code> colors. This method returns
+   * Returns a suggered type for an {@link IndexColorModel}of <code>mapSize</code> colors. This method returns
    * {@link DataBuffer#TYPE_BYTE}or {@link DataBuffer#TYPE_USHORT}.
    */
   private static int getTransferType( final int mapSize )

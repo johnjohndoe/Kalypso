@@ -78,8 +78,7 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 /**
  * @author belger
  */
-public class ButtonFeatureControl extends AbstractFeatureControl implements
-    ModellEventListener
+public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
   private Button m_button;
 
@@ -87,16 +86,15 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements
 
   private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final GMLWorkspace workspace,
-      final Feature feature, final FeatureTypeProperty ftp )
+  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
     super( workspace, feature, ftp );
 
     m_dialog = chooseDialog( workspace, feature, ftp );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace,
-      final Feature feature, final FeatureTypeProperty ftp )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature,
+      final FeatureTypeProperty ftp )
   {
     final String typename = ftp.getType();
     // TODO make extensionpoint for this
@@ -119,8 +117,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements
 
     if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
     {
-      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry()
-          .getTypeHandlerForClassName( typename );
+      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
 
       // TODO: TypeHandler should decide, what todo
       if( handler instanceof ObservationLinkHandler )
@@ -139,8 +136,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements
       final Feature linkedFeature;
       if( property instanceof String ) // link auf ein Feature mit FeatureID
       {
-        if(((String)property).length()<1)
-          return new NotImplementedFeatureDialog("hier ist kein Element verknüpft","<leer>");
+        if( ( (String)property ).length() < 1 )
+          return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
         linkedFeature = workspace.getFeature( (String)property );
       }
       else if( property instanceof Feature )
@@ -148,7 +145,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements
         linkedFeature = (Feature)property;
       }
       else
-        return new NotImplementedFeatureDialog("hier ist kein Element verknüpft","<leer>");        
+        return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
       return new FeatureDialog( workspace, linkedFeature );
     }
 
@@ -171,8 +168,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
-   *      int)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
   public Control createControl( final Composite parent, final int style )
   {

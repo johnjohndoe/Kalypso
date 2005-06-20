@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -78,19 +78,15 @@ import org.opengis.ct.CT_MathTransform;
 import org.opengis.ct.CT_TransformType;
 
 /**
- * Describes a coordinate transformation. A coordinate transformation class
- * establishes an association between a source and a target coordinate reference
- * system, and provides a {@link MathTransform}for transforming coordinates in
- * the source coordinate reference system to coordinates in the target
- * coordinate reference system. These coordinate systems can be ground or image
- * coordinates. In general mathematics, "transformation" is the general term for
- * mappings between coordinate systems (see tensor analysis). <br>
+ * Describes a coordinate transformation. A coordinate transformation class establishes an association between a source
+ * and a target coordinate reference system, and provides a {@link MathTransform}for transforming coordinates in the
+ * source coordinate reference system to coordinates in the target coordinate reference system. These coordinate systems
+ * can be ground or image coordinates. In general mathematics, "transformation" is the general term for mappings between
+ * coordinate systems (see tensor analysis). <br>
  * <br>
- * For a ground coordinate point, if the transformation depends only on
- * mathematically derived parameters (as in a cartographic projection), then
- * this is an ISO conversion. If the transformation depends on empirically
- * derived parameters (as in datum transformations), then this is an ISO
- * transformation.
+ * For a ground coordinate point, if the transformation depends only on mathematically derived parameters (as in a
+ * cartographic projection), then this is an ISO conversion. If the transformation depends on empirically derived
+ * parameters (as in datum transformations), then this is an ISO transformation.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -106,8 +102,7 @@ public class CoordinateTransformation extends Info
   private static final long serialVersionUID = -1850470924499685544L;
 
   /**
-   * OpenGIS object returned by {@link #cachedOpenGIS}. It may be a hard or a
-   * weak reference.
+   * OpenGIS object returned by {@link #cachedOpenGIS}. It may be a hard or a weak reference.
    */
   private transient Object proxy;
 
@@ -127,10 +122,8 @@ public class CoordinateTransformation extends Info
   private final TransformType type;
 
   /**
-   * The underlying math transform, or <code>null</code> if it doesn't has
-   * been constructed yet. If <code>null</code>, then subclass <strong>must
-   * </strong> initialize this field the first time {@link #getMathTransform}is
-   * invoked.
+   * The underlying math transform, or <code>null</code> if it doesn't has been constructed yet. If <code>null</code>,
+   * then subclass <strong>must </strong> initialize this field the first time {@link #getMathTransform}is invoked.
    */
   protected MathTransform transform;
 
@@ -143,8 +136,7 @@ public class CoordinateTransformation extends Info
    * Construct a coordinate transformation.
    * 
    * @param name
-   *          The coordinate transformation name, or <code>null</code> for an
-   *          automatically generated name.
+   *          The coordinate transformation name, or <code>null</code> for an automatically generated name.
    * @param sourceCS
    *          The source coordinate system.
    * @param targetCS
@@ -152,14 +144,12 @@ public class CoordinateTransformation extends Info
    * @param type
    *          The transform type.
    * @param transform
-   *          The math transform. This argument is allowed to be
-   *          <code>null</code> only if this constructor is invoked from
-   *          within a subclass constructor. In this case, the subclass
-   *          <strong>must </strong> construct a math transform no later than
-   *          the first time {@link #getMathTransform}is invoked.
+   *          The math transform. This argument is allowed to be <code>null</code> only if this constructor is invoked
+   *          from within a subclass constructor. In this case, the subclass <strong>must </strong> construct a math
+   *          transform no later than the first time {@link #getMathTransform}is invoked.
    */
-  public CoordinateTransformation( final String name, final CoordinateSystem sourceCS,
-      final CoordinateSystem targetCS, final TransformType type, final MathTransform transform )
+  public CoordinateTransformation( final String name, final CoordinateSystem sourceCS, final CoordinateSystem targetCS,
+      final TransformType type, final MathTransform transform )
   {
     super( ( name != null ) ? name : "" );
     this.sourceCS = sourceCS;
@@ -221,8 +211,7 @@ public class CoordinateTransformation extends Info
   }
 
   /**
-   * Gets the semantic type of transform. For example, a datum transformation or
-   * a coordinate conversion.
+   * Gets the semantic type of transform. For example, a datum transformation or a coordinate conversion.
    * 
    * @see org.opengis.ct.CT_CoordinateTransformation#getTransformType()
    */
@@ -232,8 +221,8 @@ public class CoordinateTransformation extends Info
   }
 
   /**
-   * Gets the math transform. The math transform will transform positions in the
-   * source coordinate system into positions in the target coordinate system.
+   * Gets the math transform. The math transform will transform positions in the source coordinate system into positions
+   * in the target coordinate system.
    * 
    * @see org.opengis.ct.CT_CoordinateTransformation#getMathTransform()
    */
@@ -258,9 +247,8 @@ public class CoordinateTransformation extends Info
   }
 
   /**
-   * The inverse coordinate transformation. This class override {@link #getName}
-   * in order to delegate part of the call to the underlying direct
-   * transformation.
+   * The inverse coordinate transformation. This class override {@link #getName}in order to delegate part of the call
+   * to the underlying direct transformation.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -270,11 +258,10 @@ public class CoordinateTransformation extends Info
     /**
      * Construct a coordinate transformation.
      */
-    public Inverse( final CoordinateTransformation transform )
-        throws NoninvertibleTransformException
+    public Inverse( final CoordinateTransformation transform ) throws NoninvertibleTransformException
     {
-      super( null, transform.getTargetCS(), transform.getSourceCS(), transform.getTransformType(),
-          transform.getMathTransform().inverse() );
+      super( null, transform.getTargetCS(), transform.getSourceCS(), transform.getTransformType(), transform
+          .getMathTransform().inverse() );
       this.inverse = transform;
     }
 
@@ -283,8 +270,7 @@ public class CoordinateTransformation extends Info
      */
     public String getName( final Locale locale )
     {
-      return Resources.getResources( locale ).getString( ResourceKeys.INVERSE_$1,
-          this.inverse.getName( locale ) );
+      return Resources.getResources( locale ).getString( ResourceKeys.INVERSE_$1, this.inverse.getName( locale ) );
     }
   }
 
@@ -303,10 +289,9 @@ public class CoordinateTransformation extends Info
   }
 
   /**
-   * Compares the specified object with this coordinate transformation for
-   * equality. The default implementation compare name, transform type, source
-   * and target coordinate systems. It doesn't compare the math transform, since
-   * it should be equivalents if the above mentionned parameters are equal.
+   * Compares the specified object with this coordinate transformation for equality. The default implementation compare
+   * name, transform type, source and target coordinate systems. It doesn't compare the math transform, since it should
+   * be equivalents if the above mentionned parameters are equal.
    */
   public boolean equals( final Object object )
   {
@@ -323,15 +308,13 @@ public class CoordinateTransformation extends Info
   }
 
   /**
-   * Returns an OpenGIS interface for this math transform. The returned object
-   * is suitable for RMI use.
+   * Returns an OpenGIS interface for this math transform. The returned object is suitable for RMI use.
    * 
-   * Note 1: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note 1: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS
+   * interface.
    * 
-   * Note 2: We do NOT want this method to override Info.toOpenGIS(), since the
-   * returned object do not implements CS_Info. The package-private access do
-   * the trick.
+   * Note 2: We do NOT want this method to override Info.toOpenGIS(), since the returned object do not implements
+   * CS_Info. The package-private access do the trick.
    */
   Object toOpenGIS( final Object adapters )
   {
@@ -339,9 +322,8 @@ public class CoordinateTransformation extends Info
   }
 
   /**
-   * Returns an OpenGIS interface for this info. This method first look in the
-   * cache. If no interface was previously cached, then this method create a new
-   * adapter and cache the result.
+   * Returns an OpenGIS interface for this info. This method first look in the cache. If no interface was previously
+   * cached, then this method create a new adapter and cache the result.
    * 
    * @param adapters
    *          The originating {@link Adapters}.
@@ -371,10 +353,9 @@ public class CoordinateTransformation extends Info
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link CoordinateTransformation}for use with OpenGIS. This wrapper
-   * is a good place to check for non-implemented OpenGIS methods (just check
-   * for methods throwing {@link UnsupportedOperationException}). This class is
-   * suitable for RMI use.
+   * Wrap a {@link CoordinateTransformation}for use with OpenGIS. This wrapper is a good place to check for
+   * non-implemented OpenGIS methods (just check for methods throwing {@link UnsupportedOperationException}). This
+   * class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

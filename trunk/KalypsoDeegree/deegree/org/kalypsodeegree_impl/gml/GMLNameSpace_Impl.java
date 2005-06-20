@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLNameSpace;
@@ -101,8 +101,7 @@ public class GMLNameSpace_Impl implements GMLNameSpace
   /**
    * returns the name of the name space.
    * <p>
-   * if the name space is 'xmlns:gml="http://www.opengis.net/gml"', 'xmlns' will
-   * be returned
+   * if the name space is 'xmlns:gml="http://www.opengis.net/gml"', 'xmlns' will be returned
    */
   public String getNameSpaceName()
   {
@@ -123,8 +122,7 @@ public class GMLNameSpace_Impl implements GMLNameSpace
   /**
    * returns the name of the sub space.
    * <p>
-   * if the name space is 'xmlns:gml="http://www.opengis.net/gml"', 'gml' will
-   * be returned
+   * if the name space is 'xmlns:gml="http://www.opengis.net/gml"', 'gml' will be returned
    * 
    * @return null, if no subspace is given
    */
@@ -147,8 +145,7 @@ public class GMLNameSpace_Impl implements GMLNameSpace
   /**
    * returns the value of the name space.
    * <p>
-   * if the name space is 'xmlns:gml="http://www.opengis.net/gml"',
-   * 'http://www.opengis.net/gml' will be returned
+   * if the name space is 'xmlns:gml="http://www.opengis.net/gml"', 'http://www.opengis.net/gml' will be returned
    */
   public String getNameSpaceValue()
   {
@@ -167,7 +164,7 @@ public class GMLNameSpace_Impl implements GMLNameSpace
    */
   public void setNameSpaceValue( String nameSpaceValue )
   {
-    // TODO?
+  // TODO?
   }
 
   /**
@@ -186,25 +183,21 @@ public class GMLNameSpace_Impl implements GMLNameSpace
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.8  2005/04/19 14:48:43  belger
- * *** empty log message ***
- *
- * Revision 1.7  2005/03/08 11:01:03  doemming
- * *** empty log message ***
- *
- * Revision 1.6  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2004/11/22 01:29:50  doemming
- * *** empty log message ***
- * Revision 1.4 2004/11/17 14:48:41 belger ***
- * empty log message ***
+ * Revision 1.9  2005/06/20 14:07:45  belger
+ * Formatierung
+ * Revision 1.8 2005/04/19 14:48:43 belger *** empty log message ***
+ * 
+ * Revision 1.7 2005/03/08 11:01:03 doemming *** empty log message ***
+ * 
+ * Revision 1.6 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2004/11/22 01:29:50 doemming *** empty log message *** Revision 1.4 2004/11/17 14:48:41 belger *** empty
+ * log message ***
  * 
  * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
  * 
- * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision
- * 1.3 2004/08/31 13:03:30 doemming *** empty log message *** Revision 1.4
- * 2004/03/02 07:38:14 poth no message
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * empty log message *** Revision 1.4 2004/03/02 07:38:14 poth no message
  * 
  * Revision 1.3 2004/01/03 13:46:45 poth no message
  * 

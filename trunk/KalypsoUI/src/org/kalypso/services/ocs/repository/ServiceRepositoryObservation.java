@@ -85,11 +85,9 @@ public class ServiceRepositoryObservation implements IObservation
 
   private IObservation m_obs = null;
 
-  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter(
-      this );
+  private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
-  public ServiceRepositoryObservation( final IObservationService srv,
-      final ObservationBean ob )
+  public ServiceRepositoryObservation( final IObservationService srv, final ObservationBean ob )
   {
     m_srv = srv;
     m_ob = ob;
@@ -103,8 +101,7 @@ public class ServiceRepositoryObservation implements IObservation
    * 
    * @throws SensorException
    */
-  private IObservation getRemote( final IVariableArguments args )
-      throws SensorException
+  private IObservation getRemote( final IVariableArguments args ) throws SensorException
   {
     if( args == null && m_obs != null )
       return m_obs;
@@ -119,8 +116,7 @@ public class ServiceRepositoryObservation implements IObservation
    * 
    * @return IObservation loaded from the server
    */
-  private IObservation loadFromServer( final IVariableArguments args )
-      throws SensorException
+  private IObservation loadFromServer( final IVariableArguments args ) throws SensorException
   {
     String href = m_ob.getId();
     if( args instanceof DateRangeArgument )
@@ -133,8 +129,7 @@ public class ServiceRepositoryObservation implements IObservation
       final DataBean db = m_srv.readData( href );
 
       ins = db.getDataHandler().getInputStream();
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "",
-          null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
       ins.close();
 
       m_srv.clearTempData( db.getId() );
@@ -219,8 +214,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public synchronized ITuppleModel getValues( final IVariableArguments args )
-      throws SensorException
+  public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
@@ -255,8 +249,7 @@ public class ServiceRepositoryObservation implements IObservation
 
       final FileOutputStream stream = new FileOutputStream( tmpFile );
       final Marshaller marshaller = ZmlFactory.getMarshaller();
-      final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING )
-          .toString();
+      final String enc = marshaller.getProperty( Marshaller.JAXB_ENCODING ).toString();
       fw = new OutputStreamWriter( stream, enc );
 
       marshaller.marshal( obst, fw );
@@ -281,31 +274,29 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   /**
-   * Sets the given values to the server side observation defined by the given
-   * href.
+   * Sets the given values to the server side observation defined by the given href.
    */
-  public static void setValuesFor( final ITuppleModel values,
-      final String href, final IObservationService srv ) throws SensorException
+  public static void setValuesFor( final ITuppleModel values, final String href, final IObservationService srv )
+      throws SensorException
   {
-    final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation(
-        srv, new ObservationBean( href, "", null ) );
+    final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( srv, new ObservationBean( href, "",
+        null ) );
 
     srvObs.setValues( values );
   }
 
   /**
-   * Reads the file as a ZML-File and sets the values of the parsed observation
-   * to the server one defined by the given href.
+   * Reads the file as a ZML-File and sets the values of the parsed observation to the server one defined by the given
+   * href.
    */
-  public static void setValuesFor( final IFile file, final String href,
-      final IObservationService srv ) throws SensorException
+  public static void setValuesFor( final IFile file, final String href, final IObservationService srv )
+      throws SensorException
   {
     InputStreamReader in = null;
     try
     {
       in = new InputStreamReader( file.getContents(), file.getCharset() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "",
-          null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "", null );
       in.close();
 
       setValuesFor( obs.getValues( null ), href, srv );

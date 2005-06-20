@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 /**
@@ -75,15 +75,14 @@ public interface GridRange
 {
 
   /**
-   * The valid minimum inclusive grid coordinate. The sequence contains a
-   * minimum value for each dimension of the grid coverage. The lowest valid
-   * grid coordinate is zero.
+   * The valid minimum inclusive grid coordinate. The sequence contains a minimum value for each dimension of the grid
+   * coverage. The lowest valid grid coordinate is zero.
    */
   double[] getLow();
 
   /**
-   * The valid maximum exclusive grid coordinate. The sequence contains a
-   * maximum value for each dimension of the grid coverage.
+   * The valid maximum exclusive grid coordinate. The sequence contains a maximum value for each dimension of the grid
+   * coverage.
    */
   double[] getHigh();
 }

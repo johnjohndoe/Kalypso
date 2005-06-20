@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
 import org.kalypsodeegree.model.feature.Feature;
@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ILayerTableModelListener
 {
-  public void onRowsChanged( final Feature fe);
+  public void onRowsChanged( final Feature fe );
 
   public void onColumnsChanged();
 }

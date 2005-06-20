@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import java.io.FileFilter;
@@ -126,8 +126,7 @@ public class ViewEditorLauncherHelper
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getActiveWorkbenchWindow().getShell();
 
-    final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell,
-        new WorkbenchLabelProvider() );
+    final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, new WorkbenchLabelProvider() );
     dialog.setElements( allTemplates.toArray() );
     dialog.setBlockOnOpen( true );
     dialog.setEmptyListMessage( "Es konnten keine Ansichten für diesen Dateityp ermittelt werden." );
@@ -155,8 +154,7 @@ public class ViewEditorLauncherHelper
         IEditorInput input = null;
         IEditorDescriptor editorDescription = null;
 
-        final IDefaultTemplateLauncher defaultTemplate = (IDefaultTemplateLauncher)defaultTemplateMap
-            .get( template );
+        final IDefaultTemplateLauncher defaultTemplate = (IDefaultTemplateLauncher)defaultTemplateMap.get( template );
         if( defaultTemplate != null )
         {
           editorDescription = defaultTemplate.getEditor();

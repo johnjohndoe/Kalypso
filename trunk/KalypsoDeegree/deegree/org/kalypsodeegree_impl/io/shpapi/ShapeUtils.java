@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -85,8 +85,7 @@ public class ShapeUtils
 
   /**
    * readPoint(byte[] b, int off) <BR>
-   * Reads a point record. A point record is a double representing the x value
-   * and a double representing a y value.
+   * Reads a point record. A point record is a double representing the x value and a double representing a y value.
    * 
    * @param b
    *          the raw data buffer
@@ -108,8 +107,7 @@ public class ShapeUtils
 
   /**
    * method: readBox(byte[] b, int off) <BR>
-   * Reads a bounding box record. A bounding box is four double representing, in
-   * order, xmin, ymin, xmax, ymax.
+   * Reads a bounding box record. A bounding box is four double representing, in order, xmin, ymin, xmax, ymax.
    * 
    * @param b
    *          the raw data buffer
@@ -136,8 +134,8 @@ public class ShapeUtils
 
   /**
    * method: writePoint(byte[] b, int off, ESRIPoint point) <BR>
-   * Writes the given point to the given buffer at the given location. The point
-   * is written as a double representing x followed by a double representing y.
+   * Writes the given point to the given buffer at the given location. The point is written as a double representing x
+   * followed by a double representing y.
    * 
    * @param b
    *          the data buffer
@@ -160,9 +158,8 @@ public class ShapeUtils
 
   /**
    * method: writeBox(byte[] b, int off, ESRIBoundingBox box) <BR>
-   * Writes the given bounding box to the given buffer at the given location.
-   * The bounding box is written as four doubles representing, in order, xmin,
-   * ymin, xmax, ymax.
+   * Writes the given bounding box to the given buffer at the given location. The bounding box is written as four
+   * doubles representing, in order, xmin, ymin, xmax, ymax.
    * 
    * @param b
    *          the data buffer

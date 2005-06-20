@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 import java.net.URL;
@@ -67,8 +67,7 @@ import org.kalypsodeegree.tools.ParameterList;
 
 /**
  * 
- * Interface for describing a coverage layer with a multi level resolution
- * splitted into several <tt>Tile</tt>s.
+ * Interface for describing a coverage layer with a multi level resolution splitted into several <tt>Tile</tt>s.
  * 
  * <p>
  * ----------------------------------------------------------------------
@@ -82,8 +81,8 @@ public interface CVDescriptor
 {
 
   /**
-   * returns a description of the coverage layer as defined in the capabilities
-   * section of the OGC WCS sppecification 0.7
+   * returns a description of the coverage layer as defined in the capabilities section of the OGC WCS sppecification
+   * 0.7
    */
   CoverageLayer getCoverageLayer();
 
@@ -98,8 +97,8 @@ public interface CVDescriptor
   Level getLevel();
 
   /**
-   * returns a list of properties assigned to the <tt>Level</tt>. The
-   * properties may be overwritten by the embeded <tt>Level</tt>s.
+   * returns a list of properties assigned to the <tt>Level</tt>. The properties may be overwritten by the embeded
+   * <tt>Level</tt>s.
    */
   ParameterList getProperties();
 
@@ -110,4 +109,3 @@ public interface CVDescriptor
   ArrayList getRanges();
 
 }
-

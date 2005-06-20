@@ -53,7 +53,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   Collection m_listeners = new ArrayList();
 
-  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureModifierFactory factory, final int selectionID )
+  public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
+      final IFeatureModifierFactory factory, final int selectionID )
   {
     super( workspace, ftp );
 
@@ -63,8 +64,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
-   *      int)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
   public Control createControl( final Composite parent, final int style )
   {
@@ -172,7 +172,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public void collectChanges( final Collection c )
   {
-    // TODO!
+  // TODO!
   }
 
   /**
@@ -206,7 +206,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   {
     if( modellEvent != null )
     {
-      if( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
+      if( modellEvent instanceof IGMLWorkspaceModellEvent
+          && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == m_kft.getWorkspace() )
       {
         final Event event = new Event();
         final Control control = m_viewer.getControl();

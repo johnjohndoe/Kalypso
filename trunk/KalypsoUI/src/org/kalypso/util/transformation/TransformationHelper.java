@@ -36,14 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
@@ -70,28 +70,24 @@ import org.kalypso.model.xml.TransformationType;
 public class TransformationHelper
 {
   /**
-   * Creates a 'real' {@link ITransformation}from a
-   * {@link TransformationType XML-TransformationType}.
+   * Creates a 'real' {@link ITransformation}from a {@link TransformationType XML-TransformationType}.
    * 
    * @param trans
    * @return transformation
    * @throws TransformationException
    */
-  public static ITransformation createTransformation(
-      final TransformationType trans ) throws TransformationException
+  public static ITransformation createTransformation( final TransformationType trans ) throws TransformationException
   {
     try
     {
-      final ITransformation transformation = (ITransformation) ClassUtilities
-          .newInstance( trans.getClassName(), ITransformation.class,
-              TransformationHelper.class.getClassLoader() );
+      final ITransformation transformation = (ITransformation)ClassUtilities.newInstance( trans.getClassName(),
+          ITransformation.class, TransformationHelper.class.getClassLoader() );
 
       final Properties props = new Properties();
       final List arguments = trans.getArgument();
       for( Iterator argIter = arguments.iterator(); argIter.hasNext(); )
       {
-        final TransformationType.ArgumentType argument = (TransformationType.ArgumentType) argIter
-            .next();
+        final TransformationType.ArgumentType argument = (TransformationType.ArgumentType)argIter.next();
         props.setProperty( argument.getName(), argument.getValue() );
       }
 
@@ -101,8 +97,7 @@ public class TransformationHelper
     }
     catch( final ClassUtilityException e )
     {
-      throw new TransformationException( "Could not create Transformation: "
-          + trans.getClassName(), e );
+      throw new TransformationException( "Could not create Transformation: " + trans.getClassName(), e );
     }
   }
 
@@ -115,16 +110,15 @@ public class TransformationHelper
    * @return result of transformation
    * @throws TransformationException
    */
-  public static LogStatusWrapper doTranformations( final IFolder folder,
-      final TransformationList trans, final IProgressMonitor monitor )
-      throws TransformationException
+  public static LogStatusWrapper doTranformations( final IFolder folder, final TransformationList trans,
+      final IProgressMonitor monitor ) throws TransformationException
   {
     final List transList = trans.getTransformation();
 
     final String logFileName = trans.getLogFile();
 
     final IFile logFile = folder.getFile( logFileName );
-    
+
     String charset = null;
     try
     {
@@ -134,7 +128,7 @@ public class TransformationHelper
     {
       // ignored
     }
-    
+
     if( charset == null )
       charset = "utf-8";
 
@@ -149,22 +143,19 @@ public class TransformationHelper
       // to the real log file)
       tmpFile = File.createTempFile( logFileName, ".log" );
 
-      logWriter = new BufferedWriter( new OutputStreamWriter(
-          new FileOutputStream( tmpFile ), charset ) );
+      logWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( tmpFile ), charset ) );
 
       monitor.beginTask( "Transformationen durchführen", transList.size() + 1 );
 
       for( final Iterator iter = transList.iterator(); iter.hasNext(); )
       {
-        final TransformationType element = (TransformationType) iter.next();
-        final ITransformation ccTrans = TransformationHelper
-            .createTransformation( element );
+        final TransformationType element = (TransformationType)iter.next();
+        final ITransformation ccTrans = TransformationHelper.createTransformation( element );
 
         // perform transformation using:
         // - msgWriter: a short list of messages that sum up the problems
         // - logWriter: a complete description of the problem
-        ccTrans.transform( bufWriter, logWriter, new SubProgressMonitor(
-            monitor, 1 ) );
+        ccTrans.transform( bufWriter, logWriter, new SubProgressMonitor( monitor, 1 ) );
 
         monitor.worked( 1 );
       }
@@ -186,8 +177,7 @@ public class TransformationHelper
     // copy temp file into real log file
     try
     {
-      FileUtilities.copyFile( charset, tmpFile, logFile, new SubProgressMonitor(
-          monitor, 1 ) );
+      FileUtilities.copyFile( charset, tmpFile, logFile, new SubProgressMonitor( monitor, 1 ) );
     }
     catch( CoreException e )
     {

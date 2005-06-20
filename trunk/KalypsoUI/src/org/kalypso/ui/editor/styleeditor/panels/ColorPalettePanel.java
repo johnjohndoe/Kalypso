@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -45,6 +45,7 @@
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
@@ -148,8 +149,8 @@ public class ColorPalettePanel
 
     comboBox = new ColorPaletteComboBox( palleteParentComposite );
     comboBox.setSelection( colorPaletteSelection );
-    final ColorPalette colorPallete = new ColorPalette( palleteParentComposite, getColorArray(),
-        COLOR_SIZE, COLOR_BORDER, getRuleCollection() );
+    final ColorPalette colorPallete = new ColorPalette( palleteParentComposite, getColorArray(), COLOR_SIZE,
+        COLOR_BORDER, getRuleCollection() );
 
     comboBox.addPanelListener( new PanelListener()
     {

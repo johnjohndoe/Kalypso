@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -72,8 +72,7 @@ public class BoundaryExpression extends Expression_Impl
     }
     catch( NumberFormatException e )
     {
-      throw new FilterEvaluationException( "BoundaryExpression:  can only be applied to numerical "
-          + "expressions!" );
+      throw new FilterEvaluationException( "BoundaryExpression:  can only be applied to numerical " + "expressions!" );
     }
     return returnValue;
   }

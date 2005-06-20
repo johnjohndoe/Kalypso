@@ -250,9 +250,9 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
    */
   public void perform()
   {
-    //    if( myWidget != null )
-    //      return myWidget.performIntern();
-    //    return null;
+  //    if( myWidget != null )
+  //      return myWidget.performIntern();
+  //    return null;
   }
 
   /**

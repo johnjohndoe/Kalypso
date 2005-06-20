@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,25 +57,21 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.legend;
 
 import java.awt.image.BufferedImage;
 
 /**
- * The interface describes the basic legend element. a legend element may has a
- * label that can be set to eight positions relative to the legend graphic. A
- * <tt>LegendElement</tt> can be activated or deactivated. It depends on the
- * using application what effect this behavior will have. It depends on
- * implementing classes how a <tt>LegendElement</tt> is realized. E.g. as
- * 'simple' image or maybe as composition of <tt>Component</tt>s.
+ * The interface describes the basic legend element. a legend element may has a label that can be set to eight positions
+ * relative to the legend graphic. A <tt>LegendElement</tt> can be activated or deactivated. It depends on the using
+ * application what effect this behavior will have. It depends on implementing classes how a <tt>LegendElement</tt> is
+ * realized. E.g. as 'simple' image or maybe as composition of <tt>Component</tt>s.
  * <p>
- * <tt>LegendElement</tt> s can be collected in a
- * <tt>LegendElementCollection</tt> which also is a <tt>LegendElement</tt>
- * to group elements or to create more complex elements.
+ * <tt>LegendElement</tt> s can be collected in a <tt>LegendElementCollection</tt> which also is a
+ * <tt>LegendElement</tt> to group elements or to create more complex elements.
  * <p>
- * Each <tt>LegendElement</tt> is able to paint itself as
- * <tt>BufferedImage</tt>
+ * Each <tt>LegendElement</tt> is able to paint itself as <tt>BufferedImage</tt>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
@@ -110,34 +106,30 @@ public interface LegendElement
   void setLabel( String label );
 
   /**
-   * returns the label set to <tt>LegendElement</tt>. If no label is set, the
-   * method returns <tt>null</tt>
+   * returns the label set to <tt>LegendElement</tt>. If no label is set, the method returns <tt>null</tt>
    * 
    * @return label of the <tt>LegendElement</tt> or <tt>null</tt>
    */
   String getLabel();
 
   /**
-   * sets the orientation of the label of the <tt>LegendElement</tt>. A label
-   * can have an orientation from -90° to 90° expressed in radians, where 0° is
-   * horizontal
+   * sets the orientation of the label of the <tt>LegendElement</tt>. A label can have an orientation from -90° to
+   * 90° expressed in radians, where 0° is horizontal
    * 
    * @param orientation
    */
   void setLabelOrientation( double orientation );
 
   /**
-   * returns the current orientation of the label of the <tt>LegendElement</tt>
-   * in radians. If the element hasn't a label <tt>Double.NEGATIVE_INFINITY</tt>
-   * will be returned.
+   * returns the current orientation of the label of the <tt>LegendElement</tt> in radians. If the element hasn't a
+   * label <tt>Double.NEGATIVE_INFINITY</tt> will be returned.
    * 
    * @return orientation of the label of the <tt>LegendElement</tt> in radians
    */
   double getLabelOrientation();
 
   /**
-   * sets the placement of the label relative to the legend symbol. Possible
-   * values are:
+   * sets the placement of the label relative to the legend symbol. Possible values are:
    * <ul>
    * <li>LP_TOPCENTER
    * <li>LP_TOPLEFT
@@ -166,9 +158,8 @@ public interface LegendElement
   void setLabelPlacement( int lablePosition );
 
   /**
-   * returns the placement of the label relative to the legend symbol. If the
-   * element hasn't a label <tt>LegendElement.LP_NOLABEL</tt> will be
-   * returned. Otherwise possible values are:
+   * returns the placement of the label relative to the legend symbol. If the element hasn't a label
+   * <tt>LegendElement.LP_NOLABEL</tt> will be returned. Otherwise possible values are:
    * <ul>
    * <li>LP_TOPCENTER
    * <li>LP_TOPLEFT

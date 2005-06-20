@@ -72,7 +72,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
   private IObservation m_observation;
-  
+
   private int m_loadedStatus;
 
   private final IPoolableObjectType m_key;
@@ -103,13 +103,12 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * Remove the observation and inform listeners that theme changed
    * 
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     m_loadedStatus = STATUS_LOADING;
-    
+
     if( key == m_key )
       setObservation( null );
   }
@@ -117,13 +116,13 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * Set the loaded observation and inform listeners that this theme has changed
    * 
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     m_loadedStatus = newValue == null ? STATUS_ERROR : STATUS_LOADED;
-  
+
     setObservation( (IObservation)newValue );
   }
 
@@ -139,7 +138,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   public void fireChanged()
   {
     for( final Iterator it = m_listeners.iterator(); it.hasNext(); )
-      ((IObsProviderListener)it.next()).obsProviderChanged();
+      ( (IObsProviderListener)it.next() ).obsProviderChanged();
   }
 
   public boolean isLoading()
@@ -160,7 +159,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
    */
   public void removeListener( final IObsProviderListener l )
   {
-     m_listeners.remove( l );
+    m_listeners.remove( l );
   }
 
   /**

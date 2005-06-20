@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import org.kalypso.ogc.gml.command.JMSelector;
@@ -46,12 +46,12 @@ public class ToggleSelectWidget extends AbstractSelectWidget
 {
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public ToggleSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
-    
+
   }
 
   protected int getSelectionMode()

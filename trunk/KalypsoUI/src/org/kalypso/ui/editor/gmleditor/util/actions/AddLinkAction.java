@@ -75,8 +75,8 @@ public class AddLinkAction extends Action
 
   private Shell m_shell;
 
-  public AddLinkAction( FeatureType type, CommandableWorkspace workspace,
-      Feature parentFeature, String propertyName, int i, Shell shell )
+  public AddLinkAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature, String propertyName,
+      int i, Shell shell )
   {
     super( type.getName() + " Link" );
     m_propertyName = propertyName;
@@ -106,8 +106,7 @@ public class AddLinkAction extends Action
           if( result.equals( features[i].getId() ) )
           {
             Feature linkFeature = features[i];
-            command = new AddRelationCommand( m_workspace, m_parentFeature, m_propertyName, pos,
-                linkFeature );
+            command = new AddRelationCommand( m_workspace, m_parentFeature, m_propertyName, pos, linkFeature );
             break;
           }
         }
@@ -118,14 +117,14 @@ public class AddLinkAction extends Action
     {
       if( command != null )
         m_workspace.postCommand( command );
-        //m_commandTarget.postCommand( command, null );
+      //m_commandTarget.postCommand( command, null );
       return;
     }
     catch( final Exception e )
     {
       final String msg = e.getMessage();
-      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0,
-          msg == null ? "" : msg, null );
+      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, msg == null ? "" : msg,
+          null );
       ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
       e.printStackTrace();
     }

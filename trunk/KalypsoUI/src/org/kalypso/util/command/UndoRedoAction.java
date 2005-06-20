@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -60,11 +60,9 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
    * @param bUndo
    *          falls true is die Undo-Action, sonst die Redo-Action
    */
-  public UndoRedoAction( final ICommandManager commandManager, final ISchedulingRule rule,
-      final boolean bUndo )
+  public UndoRedoAction( final ICommandManager commandManager, final ISchedulingRule rule, final boolean bUndo )
   {
-    super( bUndo ? "Undo" : "Redo", null, bUndo ? "letzte Action Rückgängig machen"
-        : "letztes Undo wiederherstellen" );
+    super( bUndo ? "Undo" : "Redo", null, bUndo ? "letzte Action Rückgängig machen" : "letztes Undo wiederherstellen" );
 
     m_commandManager = commandManager;
     m_rule = rule;
@@ -87,8 +85,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   public void run()
   {
     if( ( m_isUndo && m_commandManager.canUndo() ) || ( !m_isUndo && m_commandManager.canRedo() ) )
-      new CommandJob( null, m_commandManager, m_rule, null, m_isUndo ? CommandJob.UNDO
-          : CommandJob.REDO );
+      new CommandJob( null, m_commandManager, m_rule, null, m_isUndo ? CommandJob.UNDO : CommandJob.REDO );
   }
 
   public void dispose()
@@ -104,8 +101,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
     if( cm != null )
     {
       enabled = m_isUndo ? cm.canUndo() : cm.canRedo();
-      text = m_isUndo ? ( "Undo: " + cm.getUndoDescription() ) : ( "Redo: " + cm
-          .getRedoDescription() );
+      text = m_isUndo ? ( "Undo: " + cm.getUndoDescription() ) : ( "Redo: " + cm.getRedoDescription() );
     }
 
     setEnabled( enabled );

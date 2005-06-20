@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -133,8 +133,7 @@ public class SHPPolyLine extends SHPGeometry
       if( j < numParts - 1 )
       {
         // ... usually out of ESRI shape Record
-        nextFirstPointNo = ByteUtils.readLEInt( recBuffer, ShapeConst.PARTS_START
-            + ( ( j + 1 ) * 4 ) );
+        nextFirstPointNo = ByteUtils.readLEInt( recBuffer, ShapeConst.PARTS_START + ( ( j + 1 ) * 4 ) );
       }
       //... for the last part as total number of points
       else if( j == numParts - 1 )

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.feature;
 
@@ -65,8 +65,8 @@ import java.util.Map;
 
 /**
  * 
- * the interface describes a property entry of a feature type. the name of the
- * property must be equal to the name of the corresponding feature property.
+ * the interface describes a property entry of a feature type. the name of the property must be equal to the name of the
+ * corresponding feature property.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -78,8 +78,8 @@ import java.util.Map;
 
 public interface FeatureTypeProperty
 {
-  
-   /**
+
+  /**
    * returns the name of the property
    */
   public String getName();
@@ -89,13 +89,15 @@ public interface FeatureTypeProperty
    */
   public String getType();
 
-  public Annotation getAnnotation(String lang);
+  public Annotation getAnnotation( String lang );
+
   /**
    * returns true if the property value is allowed to be null
    */
   public boolean isNullable();
-  
+
   public String getNamespace();
+
   public boolean isGeometryProperty();
 
   public Map getAnnotationMap();

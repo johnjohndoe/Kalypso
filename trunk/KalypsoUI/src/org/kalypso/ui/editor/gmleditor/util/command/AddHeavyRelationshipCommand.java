@@ -72,9 +72,8 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    *  
    */
-  public AddHeavyRelationshipCommand( GMLWorkspace workspace, Feature srcFE,
-      FeatureAssociationTypeProperty linkFT1, FeatureAssociationTypeProperty linkFT2,
-      Feature targetFE )
+  public AddHeavyRelationshipCommand( GMLWorkspace workspace, Feature srcFE, FeatureAssociationTypeProperty linkFT1,
+      FeatureAssociationTypeProperty linkFT2, Feature targetFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;

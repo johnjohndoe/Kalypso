@@ -114,8 +114,7 @@ public class RTree
   }
 
   /**
-   * Sucht alle Einträge, deren HyperBoundingBoxes mit der übergebenen
-   * überlappen.
+   * Sucht alle Einträge, deren HyperBoundingBoxes mit der übergebenen überlappen.
    * 
    * @param box
    *          für Überlappung
@@ -415,8 +414,7 @@ public class RTree
       {
         if( i != j )
         {
-          double d = ( node.getHyperBoundingBox( i ) ).unionBoundingBox(
-              node.getHyperBoundingBox( j ) ).getArea()
+          double d = ( node.getHyperBoundingBox( i ) ).unionBoundingBox( node.getHyperBoundingBox( j ) ).getArea()
               - node.getHyperBoundingBox( i ).getArea() - node.getHyperBoundingBox( j ).getArea();
 
           if( d > max )
@@ -699,8 +697,7 @@ public class RTree
         if( node instanceof LeafNode )
         {
           for( int i = 0; i < node.getUsedSpace(); i++ )
-            this.insert( ( (LeafNode)node ).getData( i ), ( (LeafNode)node )
-                .getHyperBoundingBox( i ) );
+            this.insert( ( (LeafNode)node ).getData( i ), ( (LeafNode)node ).getHyperBoundingBox( i ) );
         }
         else
         {
@@ -790,8 +787,7 @@ public class RTree
         if( node instanceof LeafNode )
         {
           for( int i = 0; i < node.getUsedSpace(); i++ )
-            this.insert( ( (LeafNode)node ).getData( i ), ( (LeafNode)node )
-                .getHyperBoundingBox( i ) );
+            this.insert( ( (LeafNode)node ).getData( i ), ( (LeafNode)node ).getHyperBoundingBox( i ) );
         }
         else
         {
@@ -903,8 +899,7 @@ public class RTree
           {
             v.addElement( node );
           }
-          else if( node.getHyperBoundingBox( i ).equals( box )
-              && ( ( (LeafNode)node ).data[i] == objID ) )
+          else if( node.getHyperBoundingBox( i ).equals( box ) && ( ( (LeafNode)node ).data[i] == objID ) )
           {
             v.addElement( node );
           }

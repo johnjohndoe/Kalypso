@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // Geometry
@@ -72,8 +72,7 @@ import org.kalypsodeegree_impl.model.pt.Matrix;
  * @version 1.0
  * @author Martin Desruisseaux
  */
-final class ConcatenedTransformDirect2D extends ConcatenedTransformDirect implements
-    MathTransform2D
+final class ConcatenedTransformDirect2D extends ConcatenedTransformDirect implements MathTransform2D
 {
   /**
    * Serial number for interoperability with different versions.
@@ -81,22 +80,22 @@ final class ConcatenedTransformDirect2D extends ConcatenedTransformDirect implem
   private static final long serialVersionUID = 6009454091075588885L;
 
   /**
-   * The first math transform. This field is identical to
-   * {@link ConcatenedTransform#transform1}. Only the type is different.
+   * The first math transform. This field is identical to {@link ConcatenedTransform#transform1}. Only the type is
+   * different.
    */
   private final MathTransform2D transform1;
 
   /**
-   * The second math transform. This field is identical to
-   * {@link ConcatenedTransform#transform1}. Only the type is different.
+   * The second math transform. This field is identical to {@link ConcatenedTransform#transform1}. Only the type is
+   * different.
    */
   private final MathTransform2D transform2;
 
   /**
    * Construct a concatenated transform.
    */
-  public ConcatenedTransformDirect2D( final MathTransformFactory provider,
-      final MathTransform2D transform1, final MathTransform2D transform2 )
+  public ConcatenedTransformDirect2D( final MathTransformFactory provider, final MathTransform2D transform1,
+      final MathTransform2D transform2 )
   {
     super( provider, transform1, transform2 );
     this.transform1 = transform1;
@@ -112,8 +111,7 @@ final class ConcatenedTransformDirect2D extends ConcatenedTransformDirect implem
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    */
   public Point2D transform( final Point2D ptSrc, Point2D ptDst ) throws TransformException
   {

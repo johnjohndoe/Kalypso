@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 import org.kalypsodeegree.tools.ParameterList;
@@ -75,26 +75,23 @@ public interface Level
 {
 
   /**
-   * returns the minimum valid scale of the <tt>Level</tt> and the embeded
-   * <tt>Levels</tt>
+   * returns the minimum valid scale of the <tt>Level</tt> and the embeded <tt>Levels</tt>
    */
   double getMinScale();
 
   /**
-   * returns the maximum valid scale of the <tt>Level</tt> and the embeded
-   * <tt>Levels</tt>
+   * returns the maximum valid scale of the <tt>Level</tt> and the embeded <tt>Levels</tt>
    */
   double getMaxScale();
 
   /**
-   * returns a list of properties assigned to the <tt>Level</tt>. The
-   * properties may be overwritten by the embeded <tt>Level</tt>s.
+   * returns a list of properties assigned to the <tt>Level</tt>. The properties may be overwritten by the embeded
+   * <tt>Level</tt>s.
    */
   ParameterList getProperties();
 
   /**
-   * returns the Tiles assigned to a <tt>Level</tt> if the <tt>Level</tt> is
-   * of TILE type.
+   * returns the Tiles assigned to a <tt>Level</tt> if the <tt>Level</tt> is of TILE type.
    */
   Tile[] getTiles();
 

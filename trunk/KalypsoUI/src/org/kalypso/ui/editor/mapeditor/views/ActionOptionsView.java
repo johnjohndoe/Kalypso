@@ -67,12 +67,11 @@ import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
- * ActionOptionsView is a view on the selected widget of an active map view. It
- * provides a panel where the selected widgets can place GUI elements for their
- * options.
+ * ActionOptionsView is a view on the selected widget of an active map view. It provides a panel where the selected
+ * widgets can place GUI elements for their options.
  */
-public class ActionOptionsView extends ViewPart implements IWindowListener, IPageListener,
-    IPartListener, IWidgetChangeListener
+public class ActionOptionsView extends ViewPart implements IWindowListener, IPageListener, IPartListener,
+    IWidgetChangeListener
 {
   /**
    * top level composite of view
@@ -102,8 +101,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
 
   /*
    * 
-   * @author doemming
-   * TODO update view when model changes (on selected modellevents)
+   * @author doemming TODO update view when model changes (on selected modellevents)
    */
   public ActionOptionsView()
   {

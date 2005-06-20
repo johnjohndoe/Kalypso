@@ -1,4 +1,3 @@
-
 package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.ArrayList;

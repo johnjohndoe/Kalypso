@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.StringReader;
@@ -319,8 +319,8 @@ public class GMLAdapter
    * @param o
    *          curve geometry
    * 
-   * @return @throws
-   *         GM_Exception
+   * @return
+   * @throws GM_Exception
    */
   private static StringBuffer createCurve( GM_Curve o ) throws RemoteException, GM_Exception
   {
@@ -375,8 +375,8 @@ public class GMLAdapter
 
   /**
    * @param sur
-   * @return @throws
-   *         RemoteException
+   * @return
+   * @throws RemoteException
    * @throws GM_Exception
    */
   private static StringBuffer createSurface( GM_Surface sur ) throws RemoteException, GM_Exception
@@ -471,8 +471,8 @@ public class GMLAdapter
 
   /**
    * @param mp
-   * @return @throws
-   *         RemoteException
+   * @return
+   * @throws RemoteException
    */
   private static StringBuffer createMultiPoint( GM_MultiPoint mp ) throws RemoteException
   {
@@ -519,12 +519,11 @@ public class GMLAdapter
 
   /**
    * @param mp
-   * @return @throws
-   *         RemoteException
+   * @return
+   * @throws RemoteException
    * @throws GM_Exception
    */
-  private static StringBuffer createMultiCurve( GM_MultiCurve mp ) throws RemoteException,
-      GM_Exception
+  private static StringBuffer createMultiCurve( GM_MultiCurve mp ) throws RemoteException, GM_Exception
   {
     Debug.debugMethodBegin( "GMLAdapter", "createMultiCurves" );
 
@@ -586,12 +585,11 @@ public class GMLAdapter
 
   /**
    * @param mp
-   * @return @throws
-   *         RemoteException
+   * @return
+   * @throws RemoteException
    * @throws GM_Exception
    */
-  private static StringBuffer createMultiSurface( GM_MultiSurface mp ) throws RemoteException,
-      GM_Exception
+  private static StringBuffer createMultiSurface( GM_MultiSurface mp ) throws RemoteException, GM_Exception
   {
     Debug.debugMethodBegin( "GMLAdapter", "createMultiSurfaces" );
 
@@ -1048,8 +1046,8 @@ public class GMLAdapter
 
   /**
    * @param gmlBox
-   * @return @throws
-   *         GM_Exception
+   * @return
+   * @throws GM_Exception
    */
   private static GM_Surface wrap( GMLBox gmlBox ) throws GM_Exception
   {
@@ -1075,7 +1073,6 @@ public class GMLAdapter
     exteriorRing[2] = GeometryFactory.createGM_Position( x2, y2 );
     exteriorRing[3] = GeometryFactory.createGM_Position( x2, y1 );
     exteriorRing[4] = exteriorRing[0];
-    return GeometryFactory.createGM_Surface( exteriorRing, null,
-        new GM_SurfaceInterpolation_Impl(), crs );
+    return GeometryFactory.createGM_Surface( exteriorRing, null, new GM_SurfaceInterpolation_Impl(), crs );
   }
 }

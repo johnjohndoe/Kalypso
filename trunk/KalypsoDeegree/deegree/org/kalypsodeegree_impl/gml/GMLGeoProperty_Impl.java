@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLBox;
@@ -103,11 +103,9 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
   }
 
   /**
-   * factory method to create a GMLGeoProperty. the property that will be return
-   * doesn't contain a value.
+   * factory method to create a GMLGeoProperty. the property that will be return doesn't contain a value.
    */
-  public static GMLGeoProperty createGMLGeoProperty( Document doc, int geoType )
-      throws GMLException
+  public static GMLGeoProperty createGMLGeoProperty( Document doc, int geoType ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLProperty_Impl", "createGMLGeoProperty(Document, int)" );
 
@@ -148,8 +146,7 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
   }
 
   /**
-   * factory method to create a GMLGeoProperty. the property that will be return
-   * doesn't contain a value.
+   * factory method to create a GMLGeoProperty. the property that will be return doesn't contain a value.
    */
   public static GMLGeoProperty createGMLGeoProperty( GMLGeometry geom ) throws GMLException
   {
@@ -357,14 +354,12 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
   }
 
   /**
-   * will be overwritten by this class in a way that an exception will be thrown
-   * if the method is called. Because it doesn't make any sense to set the value
-   * of a geo property as a String.
+   * will be overwritten by this class in a way that an exception will be thrown if the method is called. Because it
+   * doesn't make any sense to set the value of a geo property as a String.
    */
   public void setPropertyValue( String value )
   {
-    throw new NoSuchMethodError( "It doesn't make any sense to set the value "
-        + "of a geo property as a String" );
+    throw new NoSuchMethodError( "It doesn't make any sense to set the value " + "of a geo property as a String" );
   }
 
   public String toString()
@@ -377,22 +372,18 @@ public class GMLGeoProperty_Impl extends GMLProperty_Impl implements GMLGeoPrope
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/03/08 11:01:03  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2005/02/28 13:34:14  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:30 doemming
- * *** empty log message *** Revision 1.7 2004/04/07 06:43:48 poth no message
+ * Revision 1.7  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.6 2005/03/08 11:01:03 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2005/02/28 13:34:14 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * empty log message *** Revision 1.7 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.6 2004/03/02 07:38:14 poth no message
  * 

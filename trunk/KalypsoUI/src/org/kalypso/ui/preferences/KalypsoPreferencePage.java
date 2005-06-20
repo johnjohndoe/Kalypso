@@ -49,18 +49,15 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * This class represents a preference page that is contributed to the
- * Preferences dialog. By subclassing <samp>FieldEditorPreferencePage </samp>,
- * we can use the field support built into JFace that allows us to create a page
- * that is small and knows how to save, restore and apply itself.
+ * This class represents a preference page that is contributed to the Preferences dialog. By subclassing
+ * <samp>FieldEditorPreferencePage </samp>, we can use the field support built into JFace that allows us to create a
+ * page that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the
- * preference store that belongs to the main plug-in class. That way,
- * preferences can be accessed directly via the preference store.
+ * This page is used to modify preferences only. They are stored in the preference store that belongs to the main
+ * plug-in class. That way, preferences can be accessed directly via the preference store.
  */
 
-public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
-    IWorkbenchPreferencePage
+public class KalypsoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
   public KalypsoPreferencePage()
   {
@@ -70,50 +67,44 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
   }
 
   /**
-   * Creates the field editors. Field editors are abstractions of the common GUI
-   * blocks needed to manipulate various types of preferences. Each field editor
-   * knows how to save and restore itself.
+   * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to manipulate various
+   * types of preferences. Each field editor knows how to save and restore itself.
    */
   public void createFieldEditors()
   {
     addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
         "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
-    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH,
-        "Breite des Exportbildes (Diagramm):", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT,
-        "Höhe des Exportbildes (Diagramm):", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH, "Breite des Exportbildes (Diagramm):",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT, "Höhe des Exportbildes (Diagramm):",
+        getFieldEditorParent() ) );
 
     addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen",
         getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:",
         getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT,
-        "Http-Proxy Port&nummer:", getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER,
-        "Http-Proxy &Benutzername:", getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PORT, "Http-Proxy Port&nummer:",
+        getFieldEditorParent() ) );
+    addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_USER, "Http-Proxy &Benutzername:",
+        getFieldEditorParent() ) );
 
     // set echo char because it is a password field
     final StringFieldEditor editor = new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_PASS,
         "Http-Proxy Pass&wort:", getFieldEditorParent() );
     editor.getTextControl( getFieldEditorParent() ).setEchoChar( '*' );
 
-    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS,
-        "Globales &Koordinatensystem:", getFieldEditorParent() ) );
-    addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1,
-        new String[][]
+    addField( new StringFieldEditor( IKalypsoPreferences.GLOBAL_CRS, "Globales &Koordinatensystem:",
+        getFieldEditorParent() ) );
+    addField( new RadioGroupFieldEditor( IKalypsoPreferences.LANGUAGE, "Sprachauswahl", 1, new String[][]
+    {
         {
-            {
-                "&Deutsch",
-                "de"
-            },
-            {
-                "&English",
+            "&Deutsch",
+            "de" },
+        {
+            "&English",
 
-                "en"
-            }
-        }, getFieldEditorParent() ) );
-
+            "en" } }, getFieldEditorParent() ) );
 
     //
     //    addField( new RadioGroupFieldEditor( P_CHOICE, "An example of a
@@ -129,7 +120,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements
    */
   public void init( IWorkbench workbench )
   {
-    // empty
+  // empty
   }
 
   /**

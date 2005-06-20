@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gp;
 
@@ -57,9 +55,8 @@ public interface GP_GridCoverageProcessor extends Remote
   String getMetadataValue( String name ) throws RemoteException;
 
   /**
-   * Retrieve a grid processing operation information. The operation information
-   * will contain the name of the operation as well as a list of its parameters.
-   * <br>
+   * Retrieve a grid processing operation information. The operation information will contain the name of the operation
+   * as well as a list of its parameters. <br>
    * <br>
    * 
    * @param index
@@ -71,8 +68,8 @@ public interface GP_GridCoverageProcessor extends Remote
   GP_Operation getOperation( int index ) throws RemoteException;
 
   /**
-   * Creates a {@link GP_GridAnalysis}interface from a grid coverage. This
-   * allows grid analysis functions to be performed on a grid coverage.
+   * Creates a {@link GP_GridAnalysis}interface from a grid coverage. This allows grid analysis functions to be
+   * performed on a grid coverage.
    * 
    * @param gridCoverage
    *          Grid coverage on which the analysis will be performed.
@@ -88,12 +85,10 @@ public interface GP_GridCoverageProcessor extends Remote
    * @param operationName
    *          Name of the operation to be applied to the grid coverage.
    * @param parameters
-   *          List of name value pairs for the parameters required for the
-   *          operation.
+   *          List of name value pairs for the parameters required for the operation.
    * @return the grid coverage which has been applied the process operation.
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  GC_GridCoverage doOperation( String operationName, GC_Parameter[] parameters )
-      throws RemoteException;
+  GC_GridCoverage doOperation( String operationName, GC_Parameter[] parameters ) throws RemoteException;
 }

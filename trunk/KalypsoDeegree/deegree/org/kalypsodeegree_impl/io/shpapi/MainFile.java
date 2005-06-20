@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -70,8 +70,7 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 /**
  * Class representing an ESRI Shape File.
  * <p>
- * Uses class ByteUtils modified from the original package
- * com.bbn.openmap.layer.shape <br>
+ * Uses class ByteUtils modified from the original package com.bbn.openmap.layer.shape <br>
  * Copyright (C) 1998 BBN Corporation 10 Moulton St. Cambridge, MA 02138 <br>
  * 
  * <P>
@@ -88,11 +87,9 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 14.12.1999 ap: method: getShapeTypeByRecNo(int RecNo) implemented <BR>
  * 21.12.1999 ap: method: openfiles(String url) removed <BR>
  * 21.12.1999 ap: all static final declarations replaced <BR>
- * 07.01.2000 ap: return types of the methods changed from WKBxxxx and Rectangle
- * <BR>
+ * 07.01.2000 ap: return types of the methods changed from WKBxxxx and Rectangle <BR>
  * to SHPxxxx <BR>
- * 07.01.2000 ap: method getRecordMBR modified - SHAPE_TYPE_MULTIPOINT added
- * <BR>
+ * 07.01.2000 ap: method getRecordMBR modified - SHAPE_TYPE_MULTIPOINT added <BR>
  * 13.01.2000 ap: method getByRecNo re-implemented <BR>
  * 21.03.2000 ap: method getByRecNo completed; multipoint is now supported <BR>
  * 16.08.2000 ap: method write(..) added <BR>
@@ -209,8 +206,7 @@ public class MainFile
 
   /**
    * method: getRecordMBR(int RecNo) <BR>
-   * returns the minimum bound rectangle of RecNo's Geometrie of the shape-file
-   * <BR>
+   * returns the minimum bound rectangle of RecNo's Geometrie of the shape-file <BR>
    */
   public SHPEnvelope getRecordMBR( int RecNo ) throws IOException
   {
@@ -242,11 +238,9 @@ public class MainFile
       int shpType = ByteUtils.readLEInt( recBuf, 0 );
 
       /*
-       * only for PolyLines, Polygons and MultiPoints minimum bounding
-       * rectangles are defined
+       * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
        */
-      if( ( shpType == ShapeConst.SHAPE_TYPE_POLYLINE )
-          || ( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
+      if( ( shpType == ShapeConst.SHAPE_TYPE_POLYLINE ) || ( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
           || ( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT ) )
       {
 
@@ -341,8 +335,7 @@ public class MainFile
 
   /**
    * method: getShapeType(int RecNo) <BR>
-   * returns the minimum bound rectangle of RecNo's Geometrie of the shape-file
-   * <BR>
+   * returns the minimum bound rectangle of RecNo's Geometrie of the shape-file <BR>
    */
   public int getShapeTypeByRecNo( int RecNo ) throws IOException
   {
@@ -370,7 +363,7 @@ public class MainFile
     recBuf = null;
     recBuf = new byte[len];
 
-    if( rafShp.read( recBuf, 0, len ) != -1  )//ck: && recBuf.length != 0)
+    if( rafShp.read( recBuf, 0, len ) != -1 )//ck: && recBuf.length != 0)
     {
 
       shpType = ByteUtils.readLEInt( recBuf, 0 );
@@ -392,8 +385,7 @@ public class MainFile
   }
 
   /**
-   * method: public void writeHeader(int filelength, byte shptype, SHPEnvelope
-   * mbr) <BR>
+   * method: public void writeHeader(int filelength, byte shptype, SHPEnvelope mbr) <BR>
    * writes a header to the shape and index file <BR>
    */
   public void writeHeader( int filelength, byte shptype, SHPEnvelope mbr ) throws IOException

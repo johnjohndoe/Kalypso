@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -71,24 +71,19 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_AxisOrientationEnum;
 
 /**
- * Orientation of axis. Some coordinate systems use non-standard orientations.
- * For example, the first axis in South African grids usually points West,
- * instead of East. This information is obviously relevant for algorithms
- * converting South African grid coordinates into Lat/Long. <br>
+ * Orientation of axis. Some coordinate systems use non-standard orientations. For example, the first axis in South
+ * African grids usually points West, instead of East. This information is obviously relevant for algorithms converting
+ * South African grid coordinates into Lat/Long. <br>
  * <br>
- * The <em>natural ordering</em> for axis orientations is defined as
- * (EAST-WEST), (NORTH-SOUTH), (UP-DOWN), (FUTURE-PAST) and OTHER, which is the
- * ordering for a ( <var>x </var>, <var>y </var>, <var>z </var>, <var>t </var>)
- * coordinate system. This means that when an array of
- * <code>AxisOrientation</code> s is sorted using
- * {@link java.util.Arrays#sort(Object[])}, EAST and WEST orientations will
- * appears first. NORTH and SOUTH will be next, followed by UP and DOWN, etc.
+ * The <em>natural ordering</em> for axis orientations is defined as (EAST-WEST), (NORTH-SOUTH), (UP-DOWN),
+ * (FUTURE-PAST) and OTHER, which is the ordering for a ( <var>x </var>, <var>y </var>, <var>z </var>, <var>t </var>)
+ * coordinate system. This means that when an array of <code>AxisOrientation</code> s is sorted using
+ * {@link java.util.Arrays#sort(Object[])}, EAST and WEST orientations will appears first. NORTH and SOUTH will be
+ * next, followed by UP and DOWN, etc.
  * 
- * Care should be exercised if <code>AxisOrientation</code> s are to be used
- * as keys in a sorted map or elements in a sorted set, as
- * <code>AxisOrientation</code>'s natural ordering is inconsistent with
- * equals. See {@link java.lang.Comparable},{@link java.util.SortedMap}or
- * {@link java.util.SortedSet}for more information.
+ * Care should be exercised if <code>AxisOrientation</code> s are to be used as keys in a sorted map or elements in a
+ * sorted set, as <code>AxisOrientation</code>'s natural ordering is inconsistent with equals. See
+ * {@link java.lang.Comparable},{@link java.util.SortedMap}or {@link java.util.SortedSet}for more information.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -108,71 +103,64 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   //       UPDATED.
 
   /**
-   * Unknown or unspecified axis orientation. This can be used for local or
-   * fitted coordinate systems.
+   * Unknown or unspecified axis orientation. This can be used for local or fitted coordinate systems.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_Other
    */
-  public static final AxisOrientation OTHER = new AxisOrientation( "OTHER",
-      CS_AxisOrientationEnum.CS_AO_Other, ResourceKeys.OTHER );
+  public static final AxisOrientation OTHER = new AxisOrientation( "OTHER", CS_AxisOrientationEnum.CS_AO_Other,
+      ResourceKeys.OTHER );
 
   /**
-   * Increasing ordinates values go North. This is usually used for Grid Y
-   * coordinates and Latitude.
+   * Increasing ordinates values go North. This is usually used for Grid Y coordinates and Latitude.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_North
    */
-  public static final AxisOrientation NORTH = new AxisOrientation( "NORTH",
-      CS_AxisOrientationEnum.CS_AO_North, ResourceKeys.NORTH );
+  public static final AxisOrientation NORTH = new AxisOrientation( "NORTH", CS_AxisOrientationEnum.CS_AO_North,
+      ResourceKeys.NORTH );
 
   /**
    * Increasing ordinates values go South.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_South
    */
-  public static final AxisOrientation SOUTH = new AxisOrientation( "SOUTH",
-      CS_AxisOrientationEnum.CS_AO_South, ResourceKeys.SOUTH );
+  public static final AxisOrientation SOUTH = new AxisOrientation( "SOUTH", CS_AxisOrientationEnum.CS_AO_South,
+      ResourceKeys.SOUTH );
 
   /**
-   * Increasing ordinates values go East. This is usually used for Grid X
-   * coordinates and Longitude.
+   * Increasing ordinates values go East. This is usually used for Grid X coordinates and Longitude.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_East
    */
-  public static final AxisOrientation EAST = new AxisOrientation( "EAST",
-      CS_AxisOrientationEnum.CS_AO_East, ResourceKeys.EAST );
+  public static final AxisOrientation EAST = new AxisOrientation( "EAST", CS_AxisOrientationEnum.CS_AO_East,
+      ResourceKeys.EAST );
 
   /**
    * Increasing ordinates values go West.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_West
    */
-  public static final AxisOrientation WEST = new AxisOrientation( "WEST",
-      CS_AxisOrientationEnum.CS_AO_West, ResourceKeys.WEST );
+  public static final AxisOrientation WEST = new AxisOrientation( "WEST", CS_AxisOrientationEnum.CS_AO_West,
+      ResourceKeys.WEST );
 
   /**
-   * Increasing ordinates values go up. This is used for vertical coordinate
-   * systems.
+   * Increasing ordinates values go up. This is used for vertical coordinate systems.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_Up
    */
-  public static final AxisOrientation UP = new AxisOrientation( "UP",
-      CS_AxisOrientationEnum.CS_AO_Up, ResourceKeys.UP );
+  public static final AxisOrientation UP = new AxisOrientation( "UP", CS_AxisOrientationEnum.CS_AO_Up, ResourceKeys.UP );
 
   /**
-   * Increasing ordinates values go down. This is used for vertical coordinate
-   * systems.
+   * Increasing ordinates values go down. This is used for vertical coordinate systems.
    * 
    * @see org.opengis.cs.CS_AxisOrientationEnum#CS_AO_Down
    */
-  public static final AxisOrientation DOWN = new AxisOrientation( "DOWN",
-      CS_AxisOrientationEnum.CS_AO_Down, ResourceKeys.DOWN );
+  public static final AxisOrientation DOWN = new AxisOrientation( "DOWN", CS_AxisOrientationEnum.CS_AO_Down,
+      ResourceKeys.DOWN );
 
   /**
    * Increasing time go toward future. This is used for temporal axis.
    */
-  public static final AxisOrientation FUTURE = new AxisOrientation( "FUTURE", 7,
-      ResourceKeys.FUTURE );
+  public static final AxisOrientation FUTURE = new AxisOrientation( "FUTURE", 7, ResourceKeys.FUTURE );
 
   /**
    * Increasing time go toward past. This is used for temporal axis.
@@ -180,8 +168,7 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   public static final AxisOrientation PAST = new AxisOrientation( "PAST", 8, ResourceKeys.PAST );
 
   /**
-   * The last paired value. Paired value are NORTH-SOUTH, EAST-WEST, UP-DOWN,
-   * FUTURE-PAST.
+   * The last paired value. Paired value are NORTH-SOUTH, EAST-WEST, UP-DOWN, FUTURE-PAST.
    */
   private static final int LAST_PAIRED_VALUE = 8;
 
@@ -189,7 +176,16 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
    * Axis orientations by value. Used to canonicalize after deserialization.
    */
   private static final AxisOrientation[] ENUMS =
-  { OTHER, NORTH, SOUTH, EAST, WEST, UP, DOWN, FUTURE, PAST };
+  {
+      OTHER,
+      NORTH,
+      SOUTH,
+      EAST,
+      WEST,
+      UP,
+      DOWN,
+      FUTURE,
+      PAST };
   static
   {
     for( int i = 0; i < ENUMS.length; i++ )
@@ -197,10 +193,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
       if( ENUMS[i].getValue() != i )
       {
         /*
-         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- //throw new //
-         * assertionError(ENUMS[i]); /*----- END OF JDK 1.4 DEPENDENCIES ---
-         * throw new Error(String.valueOf(ENUMS[i])); ------- END OF JDK 1.3
-         * FALLBACK -------
+         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- //throw new // assertionError(ENUMS[i]); /*----- END OF JDK 1.4
+         * DEPENDENCIES --- throw new Error(String.valueOf(ENUMS[i])); ------- END OF JDK 1.3 FALLBACK -------
          */
       }
     }
@@ -210,13 +204,16 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
    * The axis order. Used for {@link #compareTo}implementation.
    */
   private static final AxisOrientation[] ORDER =
-  { EAST, NORTH, UP, FUTURE };
+  {
+      EAST,
+      NORTH,
+      UP,
+      FUTURE };
 
   /**
-   * Resource key, used for building localized name. This key doesn't need to be
-   * serialized, since {@link #readResolve}canonicalize enums according their
-   * {@link EnumeratedParameter#getValue()}. Furthermore, its value is implementation-dependent (which
-   * is an other raison why it should not be serialized).
+   * Resource key, used for building localized name. This key doesn't need to be serialized, since {@link #readResolve}
+   * canonicalize enums according their {@link EnumeratedParameter#getValue()}. Furthermore, its value is
+   * implementation-dependent (which is an other raison why it should not be serialized).
    */
   private transient final int key;
 
@@ -230,8 +227,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Return the enum for the specified value. This method is provided for
-   * compatibility with {@link org.opengis.cs.CS_AxisOrientationEnum}.
+   * Return the enum for the specified value. This method is provided for compatibility with
+   * {@link org.opengis.cs.CS_AxisOrientationEnum}.
    * 
    * @param value
    *          The enum value.
@@ -247,8 +244,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Returns this enum's name in the specified locale. If no name is available
-   * for the specified locale, a default one will be used.
+   * Returns this enum's name in the specified locale. If no name is available for the specified locale, a default one
+   * will be used.
    * 
    * @param locale
    *          The locale, or <code>null</code> for the default locale.
@@ -260,9 +257,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Returns the opposite orientation of this axis. The opposite of North is
-   * South, and the opposite of South is North. The same apply to East-West,
-   * Up-Down and Future-Past. Other axis orientation are returned inchanged.
+   * Returns the opposite orientation of this axis. The opposite of North is South, and the opposite of South is North.
+   * The same apply to East-West, Up-Down and Future-Past. Other axis orientation are returned inchanged.
    */
   public AxisOrientation inverse()
   {
@@ -276,13 +272,11 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Returns the "absolute" orientation of this axis. This "absolute" operation
-   * is similar to the <code>Math.abs(int)</code> method in that "negative"
-   * orientation (<code>SOUTH</code>,<code>WEST</code>,
-   * <code>DOWN</code>,<code>PAST</code>) are changed for their positive
-   * counterpart (<code>NORTH</code>,<code>EAST</code>,<code>UP</code>,
-   * <code>FUTURE</code>). More specifically, the following conversion table
-   * is applied. <br>
+   * Returns the "absolute" orientation of this axis. This "absolute" operation is similar to the
+   * <code>Math.abs(int)</code> method in that "negative" orientation (<code>SOUTH</code>,<code>WEST</code>,
+   * <code>DOWN</code>,<code>PAST</code>) are changed for their positive counterpart (<code>NORTH</code>,
+   * <code>EAST</code>,<code>UP</code>,<code>FUTURE</code>). More specifically, the following conversion
+   * table is applied. <br>
    * &nbsp; <table align="center" cellpadding="3" border="1" bgcolor="F4F8FF">
    * <tr bgcolor="#B9DCFF">
    * <th>&nbsp;&nbsp;Orientation&nbsp;&nbsp;</th>
@@ -338,19 +332,15 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Compares this <code>AxisOrientation</code> with the specified
-   * orientation. The <em>natural ordering</em> is defined as (EAST-WEST),
-   * (NORTH-SOUTH), (UP-DOWN), (FUTURE-PAST) and OTHER, which is the ordering
-   * for a ( <var>x </var>, <var>y </var>, <var>z </var>, <var>t </var>)
-   * coordinate system. Two <code>AxisOrientation</code> that are among the
-   * same axis but with an opposite direction (e.g. EAST vs WEST) are considered
-   * equal by this method.
+   * Compares this <code>AxisOrientation</code> with the specified orientation. The <em>natural ordering</em> is
+   * defined as (EAST-WEST), (NORTH-SOUTH), (UP-DOWN), (FUTURE-PAST) and OTHER, which is the ordering for a ( <var>x
+   * </var>, <var>y </var>, <var>z </var>, <var>t </var>) coordinate system. Two <code>AxisOrientation</code> that are
+   * among the same axis but with an opposite direction (e.g. EAST vs WEST) are considered equal by this method.
    * 
    * @param ao
    *          An <code>AxisOrientation</code> object to be compared with.
    * @throws ClassCastException
-   *           if <code>ao</code> is not an <code>AxisOrientation</code>
-   *           object.
+   *           if <code>ao</code> is not an <code>AxisOrientation</code> object.
    */
   public int compareTo( final Object ao )
   {
@@ -365,8 +355,7 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Returns the order for this axis orientation (i.e. the index in the
-   * {@link #ORDER}table).
+   * Returns the order for this axis orientation (i.e. the index in the {@link #ORDER}table).
    */
   private int getOrder()
   {
@@ -378,9 +367,8 @@ public final class AxisOrientation extends EnumeratedParameter implements Compar
   }
 
   /**
-   * Use a single instance of {@link AxisOrientation}after deserialization. It
-   * allow client code to test <code>enum1==enum2</code> instead of
-   * <code>enum1.equals(enum2)</code>.
+   * Use a single instance of {@link AxisOrientation}after deserialization. It allow client code to test
+   * <code>enum1==enum2</code> instead of <code>enum1.equals(enum2)</code>.
    * 
    * @return A single instance of this enum.
    */

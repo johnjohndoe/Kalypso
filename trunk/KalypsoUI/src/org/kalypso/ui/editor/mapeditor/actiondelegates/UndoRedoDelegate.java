@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -49,12 +48,12 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.util.command.CommandJob;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
  */
-public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
-    ModellEventListener
+public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements ModellEventListener
 {
   private final boolean m_undo;
 
@@ -83,15 +82,14 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
         final CommandableWorkspace workspace = theme.getWorkspace();
 
         if( ( m_undo && workspace.canUndo() ) || ( !m_undo && workspace.canRedo() ) )
-          new CommandJob( null, workspace, theme.getSchedulingRule(), null,
-              m_undo ? CommandJob.UNDO : CommandJob.REDO );
+          new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
       }
     }
 
-    refreshAction(null);
+    refreshAction( null );
   }
 
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;
 

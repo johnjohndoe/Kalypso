@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.pt;
 
@@ -26,15 +23,13 @@ import java.util.Arrays;
 public class PT_Matrix implements Cloneable, Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with CSS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with CSS 1.00.
    */
   private static final long serialVersionUID = -6922782355222269340L;
 
   /**
-   * Elements of the matrix. The elements should be stored in a rectangular two
-   * dimensional array. So in Java, all <code>double[]</code> elements of the
-   * outer array must have the same size. In COM, this is represented as a 2D
+   * Elements of the matrix. The elements should be stored in a rectangular two dimensional array. So in Java, all
+   * <code>double[]</code> elements of the outer array must have the same size. In COM, this is represented as a 2D
    * SAFEARRAY.
    */
   public double[][] elt;
@@ -46,8 +41,8 @@ public class PT_Matrix implements Cloneable, Serializable
   {}
 
   /**
-   * Returns a hash value for this coordinate. This value need not remain
-   * consistent between different implementations of the same class.
+   * Returns a hash value for this coordinate. This value need not remain consistent between different implementations
+   * of the same class.
    */
   public int hashCode()
   {
@@ -90,9 +85,8 @@ public class PT_Matrix implements Cloneable, Serializable
               if( !Arrays.equals( row1, row2 ) )
                 return false;
               /*
-               * NOTE: The 'Arrays.equals(double[],double[])' method does not
-               * exists in JDK 1.1. If compatibility with JDK 1.1 is wanted, use
-               * the code below instead.
+               * NOTE: The 'Arrays.equals(double[],double[])' method does not exists in JDK 1.1. If compatibility with
+               * JDK 1.1 is wanted, use the code below instead.
                */
             }
             else if( row1 != row2 )
@@ -138,9 +132,8 @@ public class PT_Matrix implements Cloneable, Serializable
   }
 
   /**
-   * Returns a string representation of this matrix. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string representation of this matrix. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

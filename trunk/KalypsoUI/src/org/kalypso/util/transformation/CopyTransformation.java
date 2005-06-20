@@ -36,20 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
-
 
 /**
  * @author doemming
  */
 public class CopyTransformation extends CopyOrMoveTransformation
 {
-  
+
   public CopyTransformation()
   {
-    super(CopyOrMoveTransformation.MODE_COPY);
+    super( CopyOrMoveTransformation.MODE_COPY );
   }
-    
+
 }

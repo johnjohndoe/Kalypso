@@ -46,24 +46,21 @@ public interface IColorMapEntryViewer
 {
 
   /**
-   * Update the table to reflect the fact that a colorMapEntry was added to the
-   * colorMapEntryMap
+   * Update the table to reflect the fact that a colorMapEntry was added to the colorMapEntryMap
    * 
    * @param colorMapEntry
    */
   public void addColorMapEntry( ColorMapEntry colorMapEntry );
 
   /**
-   * Update the table to reflect the fact that a colorMapEntry was removed from
-   * the colorMapEntryMap
+   * Update the table to reflect the fact that a colorMapEntry was removed from the colorMapEntryMap
    * 
    * @param colorMapEntry
    */
   public void removeColorMapEntry( ColorMapEntry colorMapEntry );
 
   /**
-   * Update the table to reflect the fact that one of the colorMapEntries was
-   * modified
+   * Update the table to reflect the fact that one of the colorMapEntries was modified
    * 
    * @param colorMapEntry
    */

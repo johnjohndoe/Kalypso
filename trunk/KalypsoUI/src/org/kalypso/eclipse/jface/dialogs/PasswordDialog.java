@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.jface.dialogs;
 
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -51,18 +51,17 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class PasswordDialog extends InputDialog
 {
-  public PasswordDialog( final Shell parentShell, final String dialogTitle,
-      final String dialogMessage )
+  public PasswordDialog( final Shell parentShell, final String dialogTitle, final String dialogMessage )
   {
     super( parentShell, dialogTitle, dialogMessage, "", new PasswordValidator() );
   }
 
   protected Control createDialogArea( Composite parent )
   {
-    final Control composite = super.createDialogArea(parent);
-    
+    final Control composite = super.createDialogArea( parent );
+
     getText().setEchoChar( '*' );
-    
+
     return composite;
   }
 

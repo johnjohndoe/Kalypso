@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.swt.custom;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -63,8 +63,7 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * @author Belger
  */
-public class OldExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener,
-    MouseListener
+public class OldExcelLikeTableCursor extends TableCursor implements SelectionListener, KeyListener, MouseListener
 {
   protected final TableViewer m_viewer;
 
@@ -132,7 +131,7 @@ public class OldExcelLikeTableCursor extends TableCursor implements SelectionLis
     final TableItem tableRow = getRow();
     if( tableRow == null )
       return;
-    
+
     final Object element = tableRow.getData();
 
     if( !checkCanModify( tableRow, column ) )

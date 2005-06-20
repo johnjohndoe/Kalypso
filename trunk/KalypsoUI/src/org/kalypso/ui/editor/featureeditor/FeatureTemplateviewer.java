@@ -168,8 +168,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return Status.OK_STATUS;
   }
 
-  public final void loadInput( final Reader reader, final URL context,
-      final IProgressMonitor monitor, Properties props ) throws CoreException
+  public final void loadInput( final Reader reader, final URL context, final IProgressMonitor monitor, Properties props )
+      throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
     try
@@ -204,8 +204,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen der Vorlage",
-          e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen der Vorlage", e ) );
     }
     finally
     {
@@ -238,11 +237,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue,
-      final IStatus status )
+  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     // Daten sind jetzt da!
     if( KeyComparator.getInstance().compare( m_key, key ) == 0 )
@@ -250,8 +248,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
@@ -261,17 +258,17 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public Composite createControls( final Composite parent, final int style )
   {
-    m_creator = new ScrolledCompositeCreator(  )
+    m_creator = new ScrolledCompositeCreator()
     {
       protected Control createContents( final Composite scrollParent, final int contentStyle )
       {
         final Composite panel = new Composite( scrollParent, contentStyle );
         panel.setLayout( new GridLayout() );
-        panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );        
+        panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return panel;
       }
     };
-   
+
     m_creator.createControl( parent, style, SWT.NONE );
 
     m_panel = (Composite)m_creator.getContentControl();
@@ -284,7 +281,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
     }
-
 
     return m_creator.getScrolledComposite();
   }
@@ -319,8 +315,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         final Feature feature = (Feature)featureFromPath;
 
         m_featureComposite.setFeature( m_workspace, feature );
-        final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature
-            .getFeatureType() );
+        final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         m_featureComposite.setFeature( m_workspace, feature );
         m_featureComposite.updateControl();

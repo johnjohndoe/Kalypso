@@ -75,22 +75,19 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt>
- * (geometry), a <tt>ParameterValueType</tt> (caption) and a
- * <tt>TextSymbolizer</tt> (style).
+ * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt> (geometry), a <tt>ParameterValueType</tt>
+ * (caption) and a <tt>TextSymbolizer</tt> (style).
  * <p>
- * The graphical (say: screen) representations of this <tt>DisplayElement</tt>
- * are <tt>Label</tt> -instances. These are generated either when the
- * <tt>paint</tt> -method is called or assigned externally using the
- * <tt>setLabels</tt>- or <tt>addLabels</tt> -methods.
+ * The graphical (say: screen) representations of this <tt>DisplayElement</tt> are <tt>Label</tt> -instances. These
+ * are generated either when the <tt>paint</tt> -method is called or assigned externally using the <tt>setLabels</tt>-
+ * or <tt>addLabels</tt> -methods.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implements
-    LabelDisplayElement, Serializable
+public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implements LabelDisplayElement, Serializable
 {
 
   /** Use serialVersionUID for interoperability. */
@@ -136,9 +133,8 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   }
 
   /**
-   * Renders the <tt>DisplayElement</tt> to the submitted graphic context. If
-   * the <tt>Label</tt> -represenations have been assigned externally, these
-   * labels are used, else <tt>Label</tt> -instances are created automatically
+   * Renders the <tt>DisplayElement</tt> to the submitted graphic context. If the <tt>Label</tt> -represenations
+   * have been assigned externally, these labels are used, else <tt>Label</tt> -instances are created automatically
    * using the <tt>LabelFactory</tt>.
    * <p>
    * 
@@ -180,13 +176,11 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   }
 
   /**
-   * Returns whether the <tt>DisplayElement</tt> should be painted at the
-   * current scale or not.
+   * Returns whether the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
   public boolean doesScaleConstraintApply( double scale )
   {
-    return ( symbolizer.getMinScaleDenominator() <= scale )
-        && ( symbolizer.getMaxScaleDenominator() > scale );
+    return ( symbolizer.getMinScaleDenominator() <= scale ) && ( symbolizer.getMaxScaleDenominator() > scale );
   }
 
   /**

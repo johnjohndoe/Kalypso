@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
 import java.net.URL;
@@ -50,7 +50,7 @@ public class PoolableObjectType implements IPoolableObjectType
   private final String m_type;
 
   private final URL m_context;
-  
+
   private final String m_source;
 
   private final boolean m_ignoreExceptions;
@@ -66,14 +66,18 @@ public class PoolableObjectType implements IPoolableObjectType
   {
     this( type, source, context, false );
   }
-  
+
   /**
    * Constructor.
    * 
-   * @param type type of object to load
-   * @param source location of the object
-   * @param context context into which object is loaded
-   * @param ignoreExceptions when true, exceptions occuring during load process are ignored, object won't get pooled
+   * @param type
+   *          type of object to load
+   * @param source
+   *          location of the object
+   * @param context
+   *          context into which object is loaded
+   * @param ignoreExceptions
+   *          when true, exceptions occuring during load process are ignored, object won't get pooled
    */
   public PoolableObjectType( final String type, final String source, final URL context, final boolean ignoreExceptions )
   {
@@ -110,11 +114,11 @@ public class PoolableObjectType implements IPoolableObjectType
   /**
    * @return Returns the ignoreExceptions.
    */
-  public boolean isIgnoreExceptions( )
+  public boolean isIgnoreExceptions()
   {
     return m_ignoreExceptions;
   }
-  
+
   public boolean equals( Object obj )
   {
     if( !( obj instanceof IPoolableObjectType ) )
@@ -125,10 +129,10 @@ public class PoolableObjectType implements IPoolableObjectType
       return false;
     if( !getLocation().equals( other.getLocation() ) )
       return false;
-    
+
     if( getContext() == null && other.getContext() == null )
       return true;
-    
+
     if( ( getContext() != null && !getContext().equals( other.getContext() ) ) )
       return false;
 
@@ -145,7 +149,6 @@ public class PoolableObjectType implements IPoolableObjectType
    */
   public String toString()
   {
-      return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= "
-          + getContext();
+    return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= " + getContext();
   }
 }

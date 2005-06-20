@@ -43,12 +43,12 @@ package org.kalypso.ogc.gml.command;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.util.command.ICommand;
 
 /**
  * Setzt die selektierten Features innerhalb eines Workspace

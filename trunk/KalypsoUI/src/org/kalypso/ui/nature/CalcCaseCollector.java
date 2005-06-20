@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.nature;
 
 import java.util.ArrayList;
@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IResourceVisitor;
 
 /**
  * Collects CalcCases in the Workspace
+ * 
  * @author tgu
  */
 public class CalcCaseCollector implements IResourceVisitor
@@ -60,8 +61,7 @@ public class CalcCaseCollector implements IResourceVisitor
    */
   public boolean visit( final IResource resource )
   {
-    if( resource.getType() == IResource.FOLDER
-        && ModelNature.isCalcCalseFolder( (IFolder)resource ) )
+    if( resource.getType() == IResource.FOLDER && ModelNature.isCalcCalseFolder( (IFolder)resource ) )
     {
       m_calcCases.add( resource );
       return false;

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
@@ -65,33 +65,29 @@ public class CopyOrMoveDirTransformation extends AbstractTransformation
   /** Eingabedatei: Absoluter Pfad im Workspace auf ein Verzeichnis */
   public final static String PROP_INPUT = "input";
 
-  /** Ausgabedatei: Absoluter Pfad im Workspace auf ein Verzeichnis  */
+  /** Ausgabedatei: Absoluter Pfad im Workspace auf ein Verzeichnis */
   public final static String PROP_OUTPUT = "output";
 
   /** ignore error */
   public final static String PROP_IGNOREERROR = "ignoreError";
 
-//  /** Auch Unterverzeichnisse kopieren? 
-//   * Muss 'true' oder 'false' sein
-//   * Optional, default ist 'false'.
-//   * */
-//  public final static String PROP_RECURSE = "recurseSubFolders";
+  //  /** Auch Unterverzeichnisse kopieren?
+  //   * Muss 'true' oder 'false' sein
+  //   * Optional, default ist 'false'.
+  //   * */
+  //  public final static String PROP_RECURSE = "recurseSubFolders";
 
-  /** 
-   * Ursprüngliche Dateien löschen? 
-   * Muss 'true' oder 'false' sein
-   * Optional, default ist 'false'.
+  /**
+   * Ursprüngliche Dateien löschen? Muss 'true' oder 'false' sein Optional, default ist 'false'.
    */
   public final static String PROP_DELETE_OLD = "deleteOld";
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
-   *      java.io.BufferedWriter, java.io.BufferedWriter,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
-      final BufferedWriter logWriter, final IProgressMonitor monitor )
-      throws TransformationException
+      final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
     monitor.beginTask( "Transform", 3000 );
 
@@ -102,8 +98,8 @@ public class CopyOrMoveDirTransformation extends AbstractTransformation
     try
     {
       final boolean deleteOld = Boolean.valueOf( properties.getProperty( PROP_DELETE_OLD, "false" ) ).booleanValue();
-//      final boolean recurse = Boolean.valueOf( properties.getProperty( PROP_RECURSE, "false" ) ).booleanValue();
-      
+      //      final boolean recurse = Boolean.valueOf( properties.getProperty( PROP_RECURSE, "false" ) ).booleanValue();
+
       if( input == null )
         throw new TransformationException( "Parameter 'input' nicht gesetzt" );
       if( output == null || output.length() == 0 )

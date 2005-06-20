@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Utilities
@@ -74,18 +74,14 @@ import java.util.MissingResourceException;
 import java.util.NoSuchElementException;
 
 /**
- * {link java.util.ResourceBundle} implementation using integers instead of
- * strings for resource keys. Because it doesn't use strings, this
- * implementation avoid adding all those string constants to <code>.class</code>
- * files and runtime images. Developpers still have meaningful labels in their
- * code (e.g. <code>DIMENSION_MISMATCH</code>) through a set of constants
- * defined in interfaces. This approach furthermore give the benefict of
- * compile-time safety. Because integer constants are inlined right into class
- * files at compile time, the declarative interface is never loaded at run time.
+ * {link java.util.ResourceBundle} implementation using integers instead of strings for resource keys. Because it
+ * doesn't use strings, this implementation avoid adding all those string constants to <code>.class</code> files and
+ * runtime images. Developpers still have meaningful labels in their code (e.g. <code>DIMENSION_MISMATCH</code>)
+ * through a set of constants defined in interfaces. This approach furthermore give the benefict of compile-time safety.
+ * Because integer constants are inlined right into class files at compile time, the declarative interface is never
+ * loaded at run time. <br>
  * <br>
- * <br>
- * This class also provides facilities for string formatting using
- * {@link MessageFormat}.
+ * This class also provides facilities for string formatting using {@link MessageFormat}.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -93,40 +89,35 @@ import java.util.NoSuchElementException;
 public class ResourceBundle extends java.util.ResourceBundle
 {
   /**
-   * Maximal string length for text inserted into an other text. This parameter
-   * is used by {@link #summarize}. Resource strings are never cut to this
-   * length. However, text replacing "{0}" in a string like "Parameter name is
-   * {0}." will be cut to this length.
+   * Maximal string length for text inserted into an other text. This parameter is used by {@link #summarize}. Resource
+   * strings are never cut to this length. However, text replacing "{0}" in a string like "Parameter name is {0}." will
+   * be cut to this length.
    */
   private static final int MAX_STRING_LENGTH = 80;
 
   /**
-   * The resource name of the binary file containing resources. It is usually a
-   * file name, but may also be the name of an entry in a JAR file.
+   * The resource name of the binary file containing resources. It is usually a file name, but may also be the name of
+   * an entry in a JAR file.
    */
   private final String filename;
 
   /**
-   * The array of resources. Keys are array index. For example the value for key
-   * "14" is <code>values[14]</code>. This array will be loaded only when
-   * first needed. We should not load it at construction time, because some
-   * <code>ResourceBundle</code> objects will never ask for values. This is
-   * case especially for ancestor classes of <code>Resources_fr_CA</code>,
-   * <code>Resources_en</code>,<code>Resources_de</code>, etc., which
-   * will be used only if a key has not been found in the subclasse.
+   * The array of resources. Keys are array index. For example the value for key "14" is <code>values[14]</code>.
+   * This array will be loaded only when first needed. We should not load it at construction time, because some
+   * <code>ResourceBundle</code> objects will never ask for values. This is case especially for ancestor classes of
+   * <code>Resources_fr_CA</code>,<code>Resources_en</code>,<code>Resources_de</code>, etc., which will be
+   * used only if a key has not been found in the subclasse.
    */
   protected String[] values;
 
   /**
-   * The object to use for formatting messages. This object will be constructed
-   * only when first needed.
+   * The object to use for formatting messages. This object will be constructed only when first needed.
    */
   private transient MessageFormat format;
 
   /**
-   * The key of the last resource requested. If the same resource is requested
-   * many consecutive time, knowing this fact allows to avoid invoking the
-   * costly {@link MessageFormat#applyPattern}method.
+   * The key of the last resource requested. If the same resource is requested many consecutive time, knowing this fact
+   * allows to avoid invoking the costly {@link MessageFormat#applyPattern}method.
    */
   private transient int lastKey;
 
@@ -134,8 +125,7 @@ public class ResourceBundle extends java.util.ResourceBundle
    * Construct a new resource bundle.
    * 
    * @param filename
-   *          The resource name containing resources. It is usually a filename,
-   *          but may also be an entry in a JAR file.
+   *          The resource name containing resources. It is usually a filename, but may also be an entry in a JAR file.
    */
   protected ResourceBundle( final String filename )
   {
@@ -143,8 +133,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Returns the name of the logger to use. Default implementation returns the
-   * package name.
+   * Returns the name of the logger to use. Default implementation returns the package name.
    */
   protected String getLoggerName()
   {
@@ -154,9 +143,8 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * List resources to the specified stream. If a resource has more than one
-   * line, only the first line will be written. This method is used mostly for
-   * debugging purpose.
+   * List resources to the specified stream. If a resource has more than one line, only the first line will be written.
+   * This method is used mostly for debugging purpose.
    * 
    * @param out
    *          The destination stream.
@@ -170,9 +158,8 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * List resources to the specified stream. If a resource has more than one
-   * line, only the first line will be written. This method is used mostly for
-   * debugging purpose.
+   * List resources to the specified stream. If a resource has more than one line, only the first line will be written.
+   * This method is used mostly for debugging purpose.
    * 
    * @param out
    *          The destination stream.
@@ -207,13 +194,11 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Ensure that resource values are loaded. If they are not, load them
-   * immediately.
+   * Ensure that resource values are loaded. If they are not, load them immediately.
    * 
    * @param key
-   *          Key for the requested resource, or <code>null</code> if all
-   *          resources are requested. This key is used mostly for constructing
-   *          messages.
+   *          Key for the requested resource, or <code>null</code> if all resources are requested. This key is used
+   *          mostly for constructing messages.
    * @throws MissingResourceException
    *           if this method failed to load resources.
    */
@@ -224,16 +209,14 @@ public class ResourceBundle extends java.util.ResourceBundle
       return;
     }
     /*
-     * Prepare a log record. We will wait for succesfull loading before to post
-     * this record. If loading fail, the record will be changed into an error
-     * record.
+     * Prepare a log record. We will wait for succesfull loading before to post this record. If loading fail, the record
+     * will be changed into an error record.
      */
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // final Logger logger; // final
-     * LogRecord record; // logger = Logger.getLogger(getLoggerName()); //
-     * record = new LogRecord(Level.FINE, "Loaded resources for {0}."); //
-     * record.setSourceClassName (getClass().getName()); //
-     * record.setSourceMethodName((key!=null) ? "getObject" : "getKeys");
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // final Logger logger; // final LogRecord record; // logger =
+     * Logger.getLogger(getLoggerName()); // record = new LogRecord(Level.FINE, "Loaded resources for {0}."); //
+     * record.setSourceClassName (getClass().getName()); // record.setSourceMethodName((key!=null) ? "getObject" :
+     * "getKeys");
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     try
     {
@@ -253,21 +236,19 @@ public class ResourceBundle extends java.util.ResourceBundle
       input.close();
 
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- String language =
-       * getLocale().getDisplayName(Locale.UK); if (language==null ||
-       * language.length()==0) { language=" <default>"; }
-       * record.setParameters(new String[]{language}); logger.log(record);
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- String language = getLocale().getDisplayName(Locale.UK); if
+       * (language==null || language.length()==0) { language=" <default>"; } record.setParameters(new
+       * String[]{language}); logger.log(record);
        *///----- END OF JDK 1.4 DEPENDENCIES ---
     }
     catch( IOException exception )
     {
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- record.setLevel
-       * (Level.WARNING); record.setMessage(exception.getLocalizedMessage());
-       * record.setThrown (exception); logger.log(record);
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- record.setLevel (Level.WARNING);
+       * record.setMessage(exception.getLocalizedMessage()); record.setThrown (exception); logger.log(record);
        *///----- END OF JDK 1.4 DEPENDENCIES ---
-      final MissingResourceException error = new MissingResourceException( exception
-          .getLocalizedMessage(), getClass().getName(), key );
+      final MissingResourceException error = new MissingResourceException( exception.getLocalizedMessage(), getClass()
+          .getName(), key );
       /*
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- error.initCause(exception);
        *///----- END OF JDK 1.4 DEPENDENCIES ---
@@ -312,8 +293,8 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Gets an object for the given key from this resource bundle. Returns null if
-   * this resource bundle does not contain an object for the given key.
+   * Gets an object for the given key from this resource bundle. Returns null if this resource bundle does not contain
+   * an object for the given key.
    * 
    * @param key
    *          the key for the desired object
@@ -337,26 +318,21 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Make sure that the <code>text</code> string is no longer than
-   * <code>maxLength</code> characters. If <code>text</code> is not longer,
-   * it is returned unchanged (except for trailing blancks, which are removed).
-   * If <code>text</code> is longer, it will be cut somewhere in the middle.
-   * This method try to cut between two words and replace the missing words with
-   * "(...)". For example, the following string:
+   * Make sure that the <code>text</code> string is no longer than <code>maxLength</code> characters. If
+   * <code>text</code> is not longer, it is returned unchanged (except for trailing blancks, which are removed). If
+   * <code>text</code> is longer, it will be cut somewhere in the middle. This method try to cut between two words and
+   * replace the missing words with "(...)". For example, the following string:
    * 
-   * <blockquote>"This sentence given as an example is way too long to be
-   * included in a message." </blockquote>
+   * <blockquote>"This sentence given as an example is way too long to be included in a message." </blockquote>
    * 
    * May be "summarized" by something like this:
    * 
-   * <blockquote>"This sentence given (...) included in a message."
-   * </blockquote>
+   * <blockquote>"This sentence given (...) included in a message." </blockquote>
    * 
    * @param text
    *          The sentence to summarize if it is too long.
    * @param maxLength
-   *          The maximal length allowed for <code>text</code>. If
-   *          <code>text</code> is longer, it will summarized.
+   *          The maximal length allowed for <code>text</code>. If <code>text</code> is longer, it will summarized.
    * @return A sentence not longer than <code>text</code>.
    */
   private static String summarize( String text, int maxLength )
@@ -366,18 +342,17 @@ public class ResourceBundle extends java.util.ResourceBundle
     if( length <= maxLength )
       return text;
     /*
-     * Compute maximum length for one half of the string. Take in account the
-     * space needed for inserting the " (...) " string.
+     * Compute maximum length for one half of the string. Take in account the space needed for inserting the " (...) "
+     * string.
      */
     maxLength = ( maxLength - 7 ) >> 1;
     if( maxLength <= 0 )
       return text;
     /*
-     * We will remove characters from 'break1' to 'break2', both exclusive. We
-     * try to adjust 'break1' and 'break2' in such a way that first and last
-     * removed characters will be spaces or punctuation characters. Constants
-     * 'lower' and 'upper' are limit values. If we don't find values for
-     * 'break1' and 'break2' inside those limits, we will give it up.
+     * We will remove characters from 'break1' to 'break2', both exclusive. We try to adjust 'break1' and 'break2' in
+     * such a way that first and last removed characters will be spaces or punctuation characters. Constants 'lower' and
+     * 'upper' are limit values. If we don't find values for 'break1' and 'break2' inside those limits, we will give it
+     * up.
      */
     int break1 = maxLength;
     int break2 = length - maxLength;
@@ -403,13 +378,10 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Returns <code>arguments</code> as an array. If <code>arguments</code>
-   * is already an array, this array or a copy of this array will be returned.
-   * If <code>arguments</code> is not an array, it will be wrapped in an array
-   * of length 1. In all case, all array's elements will be checked for
-   * {@link String}objects. Any strings of length greater than
-   * {@link #MAX_STRING_LENGTH}will be reduced using the {@link #summarize}
-   * method.
+   * Returns <code>arguments</code> as an array. If <code>arguments</code> is already an array, this array or a copy
+   * of this array will be returned. If <code>arguments</code> is not an array, it will be wrapped in an array of
+   * length 1. In all case, all array's elements will be checked for {@link String}objects. Any strings of length
+   * greater than {@link #MAX_STRING_LENGTH}will be reduced using the {@link #summarize}method.
    * 
    * @param arguments
    *          The object to check.
@@ -430,9 +402,8 @@ public class ResourceBundle extends java.util.ResourceBundle
     for( int i = 0; i < array.length; i++ )
     {
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ----- if (array[i] instanceof
-       * CharSequence) /*----- END OF JDK 1.4 DEPENDENCIES ---- if (array[i]
-       * instanceof String) ------- END OF JDK 1.3 FALLBACK --------
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ----- if (array[i] instanceof CharSequence) /*----- END OF JDK 1.4
+       * DEPENDENCIES ---- if (array[i] instanceof String) ------- END OF JDK 1.3 FALLBACK --------
        */
       {
         final String s0 = array[i].toString();
@@ -452,8 +423,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Gets a string for the given key and append "..." to it. This is method is
-   * typically used for creating menu label.
+   * Gets a string for the given key and append "..." to it. This is method is typically used for creating menu label.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -467,8 +437,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Gets a string for the given key and append ": " to it. This is method is
-   * typically used for creating menu label.
+   * Gets a string for the given key and append ": " to it. This is method is typically used for creating menu label.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -482,8 +451,7 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Gets a string for the given key from this resource bundle or one of its
-   * parents.
+   * Gets a string for the given key from this resource bundle or one of its parents.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -497,9 +465,8 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Gets a string for the given key and format it with the specified argument.
-   * The message if formatted using {@link MessageFormat}. Calling his method
-   * is approximatively equivalent to calling:
+   * Gets a string for the given key and format it with the specified argument. The message if formatted using
+   * {@link MessageFormat}. Calling his method is approximatively equivalent to calling:
    * 
    * <blockquote>
    * 
@@ -511,40 +478,33 @@ public class ResourceBundle extends java.util.ResourceBundle
    * 
    * </blockquote>
    * 
-   * If <code>arg0</code> is not already an array, it will be wrapped into an
-   * array of length 1. Using {@link MessageFormat}, all occurence of "{0}",
-   * "{1}", "{2}" in the resource string will be replaced by
-   * <code>arg0[0]</code>,<code>arg0[1]</code>,<code>arg0[2]</code>,
-   * etc.
+   * If <code>arg0</code> is not already an array, it will be wrapped into an array of length 1. Using
+   * {@link MessageFormat}, all occurence of "{0}", "{1}", "{2}" in the resource string will be replaced by
+   * <code>arg0[0]</code>,<code>arg0[1]</code>,<code>arg0[2]</code>, etc.
    * 
    * @param keyID
    *          The key for the desired string.
    * @param arg0
-   *          A single object or an array of objects to be formatted and
-   *          substituted.
+   *          A single object or an array of objects to be formatted and substituted.
    * @return The string for the given key.
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    * 
    * @see MessageFormat
    */
-  public final synchronized String getString( final int keyID, final Object arg0 )
-      throws MissingResourceException
+  public final synchronized String getString( final int keyID, final Object arg0 ) throws MissingResourceException
   {
     final Object object = getObject( String.valueOf( keyID ) );
     final Object[] arguments = toArray( arg0 );
     if( format == null )
     {
       /*
-       * Construct a new {@link MessageFormat}for formatting the arguments.
-       * There is two possible {@link Locale}we could use: default locale or
-       * resource bundle locale. If the default locale use the same language
-       * than this <code> ResourceBundle </code> locale, then we will use the
-       * default locale. This allow formatting dates and numbers with user
-       * conventions (e.g. French Canada) even if the <code> ResourceBundle
-       * </code> locale is different (e.g. standard French). However, if
-       * languages don't match, then we will use <code> ResourceBundle </code>
-       * locale for better coherence.
+       * Construct a new {@link MessageFormat}for formatting the arguments. There is two possible {@link Locale}we
+       * could use: default locale or resource bundle locale. If the default locale use the same language than this
+       * <code> ResourceBundle </code> locale, then we will use the default locale. This allow formatting dates and
+       * numbers with user conventions (e.g. French Canada) even if the <code> ResourceBundle </code> locale is
+       * different (e.g. standard French). However, if languages don't match, then we will use <code> ResourceBundle
+       * </code> locale for better coherence.
        */
       Locale locale = Locale.getDefault();
       final Locale resourceLocale = getLocale();
@@ -562,8 +522,8 @@ public class ResourceBundle extends java.util.ResourceBundle
     else if( keyID != lastKey )
     {
       /*
-       * Method {@link MessageFormat#applyPattern}is costly! We will avoid
-       * calling it again if {@link #format}already has the right pattern.
+       * Method {@link MessageFormat#applyPattern}is costly! We will avoid calling it again if {@link #format}already
+       * has the right pattern.
        */
       format.applyPattern( object.toString() );
       lastKey = keyID;
@@ -572,8 +532,8 @@ public class ResourceBundle extends java.util.ResourceBundle
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>, etc.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>, etc.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -589,12 +549,14 @@ public class ResourceBundle extends java.util.ResourceBundle
       throws MissingResourceException
   {
     return getString( keyID, new Object[]
-    { arg0, arg1 } );
+    {
+        arg0,
+        arg1 } );
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>, etc.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>, etc.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -608,16 +570,19 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1,
-      final Object arg2 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2 )
+      throws MissingResourceException
   {
     return getString( keyID, new Object[]
-    { arg0, arg1, arg2 } );
+    {
+        arg0,
+        arg1,
+        arg2 } );
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>, etc.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>, etc.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -633,16 +598,20 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1,
-      final Object arg2, final Object arg3 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2,
+      final Object arg3 ) throws MissingResourceException
   {
     return getString( keyID, new Object[]
-    { arg0, arg1, arg2, arg3 } );
+    {
+        arg0,
+        arg1,
+        arg2,
+        arg3 } );
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>, etc.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>, etc.
    * 
    * @param keyID
    *          The key for the desired string.
@@ -660,11 +629,16 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public final String getString( final int keyID, final Object arg0, final Object arg1,
-      final Object arg2, final Object arg3, final Object arg4 ) throws MissingResourceException
+  public final String getString( final int keyID, final Object arg0, final Object arg1, final Object arg2,
+      final Object arg3, final Object arg4 ) throws MissingResourceException
   {
     return getString( keyID, new Object[]
-    { arg0, arg1, arg2, arg3, arg4 } );
+    {
+        arg0,
+        arg1,
+        arg2,
+        arg3,
+        arg4 } );
   }
 
   /**
@@ -677,9 +651,8 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @return The log record.
    */
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord
-   * getLogRecord(final Level level, final int key) // {return
-   * getLogRecord(level, key, null);}
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key) //
+   * {return getLogRecord(level, key, null);}
    *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Get a localized log record.
@@ -693,11 +666,10 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @return The log record.
    */
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord
-   * getLogRecord(final Level level, final int key, final Object arg0) // { //
-   * final LogRecord record = new LogRecord(level, String.valueOf(key)); //
-   * record.setResourceBundle(this); // if (arg0!=null) // { //
-   * record.setParameters(toArray(arg0)); // } // return record; // }
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key, final
+   * Object arg0) // { // final LogRecord record = new LogRecord(level, String.valueOf(key)); //
+   * record.setResourceBundle(this); // if (arg0!=null) // { // record.setParameters(toArray(arg0)); // } // return
+   * record; // }
    *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Get a localized log record.
@@ -713,10 +685,8 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @return The log record.
    */
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord
-   * getLogRecord(final Level level, final int key, final Object arg0, final
-   * Object arg1) // {return getLogRecord(level, key, new Object[]{arg0,
-   * arg1});}
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key, final
+   * Object arg0, final Object arg1) // {return getLogRecord(level, key, new Object[]{arg0, arg1});}
    *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
    * Get a localized log record.
@@ -734,14 +704,12 @@ public class ResourceBundle extends java.util.ResourceBundle
    * @return The log record.
    */
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord
-   * getLogRecord(final Level level, final int key, final Object arg0, final
-   * Object arg1, final Object arg2) // {return getLogRecord(level, key, new
-   * Object[]{arg0, arg1, arg2});}
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // public LogRecord getLogRecord(final Level level, final int key, final
+   * Object arg0, final Object arg1, final Object arg2) // {return getLogRecord(level, key, new Object[]{arg0, arg1,
+   * arg2});}
    *///----- END OF JDK 1.4 DEPENDENCIES ---
   /**
-   * Returns a string representation of this object. This method is for
-   * debugging purpose only.
+   * Returns a string representation of this object. This method is for debugging purpose only.
    */
   public synchronized String toString()
   {

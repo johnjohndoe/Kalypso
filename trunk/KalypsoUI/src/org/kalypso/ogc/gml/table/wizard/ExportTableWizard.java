@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.wizard;
 
 import java.io.File;
@@ -66,8 +66,9 @@ import org.kalypso.util.io.CSV;
  */
 public class ExportTableWizard extends Wizard
 {
-  private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage(
-      "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT );
+  private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage( "tableExport", "Tabelle exportieren",
+      ImageProvider.IMAGE_ICON_GTT );
+
   private final SaveFileWizardPage m_filePage;
 
   private final LayerTableViewer m_layerTable;
@@ -76,16 +77,16 @@ public class ExportTableWizard extends Wizard
   {
     final Map formats = new HashMap();
     formats.put( "Comma Separated Values (CSV)", "csv" );
-    
-    m_filePage = new SaveFileWizardPage(
-        "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT, "Export Ziel", formats );
-    
+
+    m_filePage = new SaveFileWizardPage( "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT,
+        "Export Ziel", formats );
+
     final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
     if( section == null )
       section = workbenchSettings.addNewSection( "ExportTableWizard" );//$NON-NLS-1$
     setDialogSettings( section );
-    
+
     setWindowTitle( "Export" );
 
     m_layerTable = layerTable;
@@ -97,7 +98,7 @@ public class ExportTableWizard extends Wizard
   public void addPages()
   {
     super.addPages();
-    
+
     addPage( m_filePage );
     addPage( m_optionPage );
   }
@@ -106,7 +107,7 @@ public class ExportTableWizard extends Wizard
   {
     final SaveFileWizardPage filePage = m_filePage;
     final ExportTableOptionsPage optionPage = m_optionPage;
-    
+
     final LayerTableViewer layerTable = m_layerTable;
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
@@ -120,7 +121,7 @@ public class ExportTableWizard extends Wizard
 
           final String[][] csv = layerTable.exportTable( onlySelected );
           final PrintWriter pw = new PrintWriter( new FileWriter( destinationFile ) );
-          CSV.writeCSV(csv, pw);
+          CSV.writeCSV( csv, pw );
           pw.close();
         }
         catch( final IOException e )
@@ -133,7 +134,7 @@ public class ExportTableWizard extends Wizard
     try
     {
       getContainer().run( false, false, runnable );
-      
+
       m_filePage.saveWidgetValues();
       m_optionPage.saveWidgetValues();
     }

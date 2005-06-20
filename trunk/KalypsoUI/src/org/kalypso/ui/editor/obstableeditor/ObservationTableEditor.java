@@ -69,33 +69,31 @@ public class ObservationTableEditor extends AbstractObservationEditor
   protected final ObservationTable m_table;
 
   /**
-   * Constructor: the ObservationTable is already created here because
-   * of the listening functionality that needs to be set up before
-   * the template gets loaded.
+   * Constructor: the ObservationTable is already created here because of the listening functionality that needs to be
+   * set up before the template gets loaded.
    * <p>
-   * Doing this stuff in createPartControl would prove inadequate, because
-   * the order in which createPartControl and loadIntern are called is
-   * not guaranteed to be always the same.
+   * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and
+   * loadIntern are called is not guaranteed to be always the same.
    */
-  public ObservationTableEditor( )
+  public ObservationTableEditor()
   {
     super( new TableView() );
-    
-    m_table = new ObservationTable( (TableView) getView() );
+
+    m_table = new ObservationTable( (TableView)getView() );
   }
-  
+
   /**
    * @return Returns the observation table model
    */
-  public ObservationTableModel getModel( )
+  public ObservationTableModel getModel()
   {
-    return (ObservationTableModel) m_table.getModel();
+    return (ObservationTableModel)m_table.getModel();
   }
 
   /**
    * @return Returns the table.
    */
-  public ObservationTable getTable( )
+  public ObservationTable getTable()
   {
     return m_table;
   }
@@ -108,8 +106,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
     super.createPartControl( parent );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
-        | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     final JScrollPane pane = new JScrollPane( m_table );
     vFrame.add( pane );
@@ -120,10 +117,10 @@ public class ObservationTableEditor extends AbstractObservationEditor
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     m_table.dispose();
-    
+
     super.dispose();
   }
 
@@ -131,10 +128,9 @@ public class ObservationTableEditor extends AbstractObservationEditor
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  protected void doSaveInternal( IProgressMonitor monitor,
-      IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
   {
-    final TableView template = (TableView) getView();
+    final TableView template = (TableView)getView();
     if( template == null )
       return;
 
@@ -142,8 +138,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
     {
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
-        final ObstableviewType type = TableViewUtils
-            .buildTableTemplateXML( template );
+        final ObstableviewType type = TableViewUtils.buildTableTemplateXML( template );
 
         TableViewUtils.saveTableTemplateXML( type, writer );
       }

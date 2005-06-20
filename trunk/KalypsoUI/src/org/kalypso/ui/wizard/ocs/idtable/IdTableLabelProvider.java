@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.ocs.idtable;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -52,8 +52,7 @@ import org.eclipse.swt.graphics.Image;
 public class IdTableLabelProvider implements ITableLabelProvider
 {
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
@@ -61,21 +60,20 @@ public class IdTableLabelProvider implements ITableLabelProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   public String getColumnText( Object element, int columnIndex )
   {
-    final IdStruct ids = (IdStruct) element;
+    final IdStruct ids = (IdStruct)element;
 
     switch( columnIndex )
     {
-      case 0:
-        return ids.getFile().getName();
-      case 1:
-        return ids.getId();
-      default:
-        return "";
+    case 0:
+      return ids.getFile().getName();
+    case 1:
+      return ids.getId();
+    default:
+      return "";
     }
   }
 
@@ -84,20 +82,19 @@ public class IdTableLabelProvider implements ITableLabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-    // empty
+  // empty
   }
 
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    //  empty
+  //  empty
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   public boolean isLabelProperty( Object element, String property )
   {
@@ -109,6 +106,6 @@ public class IdTableLabelProvider implements ITableLabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-    //  empty
+  //  empty
   }
 }

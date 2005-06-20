@@ -44,6 +44,7 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public interface IKalypsoDataImportWizard extends IWorkbenchWizard {
-  public void setOutlineViewer(GisMapOutlineViewer outlineviewer);
-  }
+public interface IKalypsoDataImportWizard extends IWorkbenchWizard
+{
+  public void setOutlineViewer( GisMapOutlineViewer outlineviewer );
+}

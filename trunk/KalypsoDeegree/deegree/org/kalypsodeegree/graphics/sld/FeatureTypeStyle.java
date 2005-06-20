@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,20 +57,17 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 /**
- * The FeatureTypeStyle defines the styling that is to be applied to a single
- * feature type of a layer). This element may also be externally re-used outside
- * of the scope of WMSes and layers.
+ * The FeatureTypeStyle defines the styling that is to be applied to a single feature type of a layer). This element may
+ * also be externally re-used outside of the scope of WMSes and layers.
  * <p>
  * </p>
- * The FeatureTypeStyle element identifies that explicit separation in SLD
- * between the handling of layers and the handling of features of specific
- * feature types. The layer concept is unique to WMS and SLD, but features are
- * used more generally, such as in WFS and GML, so this explicit separation is
- * important.
+ * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
+ * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
+ * more generally, such as in WFS and GML, so this explicit separation is important.
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -82,18 +79,16 @@ public interface FeatureTypeStyle
 {
 
   /**
-   * The Name element does not have an explicit use at present, though it
-   * conceivably might be used to reference a feature style in some
-   * feature-style library.
+   * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
+   * feature style in some feature-style library.
    * 
    * @return name
    */
   String getName();
 
   /**
-   * The Name element does not have an explicit use at present, though it
-   * conceivably might be used to reference a feature style in some
-   * feature-style library. Sets the <Name>
+   * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
+   * feature style in some feature-style library. Sets the <Name>
    * 
    * @param name
    *          the name
@@ -146,18 +141,14 @@ public interface FeatureTypeStyle
   void setFeatureTypeName( String featureTypeName );
 
   /**
-   * The SemanticTypeIdentifier is experimental and is intended to be used to
-   * identify what the feature style is suitable to be used for using community-
-   * controlled name(s). For example, a single style may be suitable to use with
-   * many different feature types. The syntax of the SemanticTypeIdentifier
-   * string is undefined, but the strings generic:line, generic:polygon,
-   * generic:point, generic:text, generic:raster, and generic:any are reserved
-   * to indicate that a FeatureTypeStyle may be used with any feature type with
-   * the corresponding default geometry type (i.e., no feature properties are
-   * referenced in the feature-type style).
+   * The SemanticTypeIdentifier is experimental and is intended to be used to identify what the feature style is
+   * suitable to be used for using community- controlled name(s). For example, a single style may be suitable to use
+   * with many different feature types. The syntax of the SemanticTypeIdentifier string is undefined, but the strings
+   * generic:line, generic:polygon, generic:point, generic:text, generic:raster, and generic:any are reserved to
+   * indicate that a FeatureTypeStyle may be used with any feature type with the corresponding default geometry type
+   * (i.e., no feature properties are referenced in the feature-type style).
    * 
-   * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as
-   *         String-Array
+   * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
   String[] getSemanticTypeIdentifier();
 
@@ -186,9 +177,8 @@ public interface FeatureTypeStyle
   void removeSemanticTypeIdentifier( String semanticTypeIdentifier );
 
   /**
-   * Rules are used to group rendering instructions by feature-property
-   * conditions and map scales. Rule definitions are placed immediately inside
-   * of feature-style definitions.
+   * Rules are used to group rendering instructions by feature-property conditions and map scales. Rule definitions are
+   * placed immediately inside of feature-style definitions.
    * 
    * @return the rules of the FeatureTypeStyle as Array
    */

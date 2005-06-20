@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import java.io.File;
@@ -73,39 +73,33 @@ public class ModelActionHelper
   }
 
   /**
-   * Prüft, ob genau ein serverseitig-gespiegeltes Projekt ausgewählt wurde und
-   * gibt das Projekt zurück
+   * Prüft, ob genau ein serverseitig-gespiegeltes Projekt ausgewählt wurde und gibt das Projekt zurück
    * 
    * @param window
    * @return project
    * @throws CoreException
    */
-  public final static IProject chooseOneProject( final IWorkbenchWindow window )
-      throws CoreException
+  public final static IProject chooseOneProject( final IWorkbenchWindow window ) throws CoreException
   {
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     final IProject[] projects = ProjectUtilities.findeProjectsFromSelection( selection );
 
     if( projects == null || projects.length == 0 )
-      throw new CoreException( new StatusInfo( IStatus.WARNING,
-          "Kein Projekt im Navigator selektiert." ) );
+      throw new CoreException( new StatusInfo( IStatus.WARNING, "Kein Projekt im Navigator selektiert." ) );
 
     if( projects.length > 1 )
-      throw new CoreException( new StatusInfo( IStatus.WARNING,
-          "Mehr als ein Projekt im Navigator selektiert." ) );
+      throw new CoreException( new StatusInfo( IStatus.WARNING, "Mehr als ein Projekt im Navigator selektiert." ) );
 
     return projects[0];
   }
 
-  public static File checkIsSeverMirrored( final File serverRoot, final IProject project )
-      throws CoreException
+  public static File checkIsSeverMirrored( final File serverRoot, final IProject project ) throws CoreException
   {
     final File serverProject = new File( serverRoot, project.getName() );
     if( !serverProject.exists() )
       throw new CoreException(
-          new StatusInfo(
-              IStatus.WARNING,
+          new StatusInfo( IStatus.WARNING,
               "Sie haben kein Server-gespeichertes Projekt gewählt.\nNur Server-gespeicherte Projekt können aktualisiert werden." ) );
 
     return serverProject;

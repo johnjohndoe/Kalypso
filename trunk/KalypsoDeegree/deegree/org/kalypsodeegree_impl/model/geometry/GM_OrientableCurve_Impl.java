@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -67,9 +67,8 @@ import org.kalypsodeegree.model.geometry.GM_OrientableCurve;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementierung of the GM_OrientableSurface interface from package
- * jago.model. the implementation is abstract because only initialization of the
- * spatial reference system is unique to all orientated curves
+ * default implementierung of the GM_OrientableSurface interface from package jago.model. the implementation is abstract
+ * because only initialization of the spatial reference system is unique to all orientated curves
  * 
  * <p>
  * ------------------------------------------------------------
@@ -79,8 +78,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Andreas Poth
  *         <p>
  */
-abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl implements
-    GM_OrientableCurve, Serializable
+abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl implements GM_OrientableCurve, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -133652834691775077L;
@@ -105,8 +103,7 @@ abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl imple
    * 
    * @throws GM_Exception
    */
-  protected GM_OrientableCurve_Impl( CS_CoordinateSystem crs, char orientation )
-      throws GM_Exception
+  protected GM_OrientableCurve_Impl( CS_CoordinateSystem crs, char orientation ) throws GM_Exception
   {
     super( crs, orientation );
   }

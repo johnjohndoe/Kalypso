@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Geometry
@@ -67,12 +67,11 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Utility methods for affine transforms. This class provides a set of public
- * static methods working on any {@link AffineTransform}.<br>
+ * Utility methods for affine transforms. This class provides a set of public static methods working on any
+ * {@link AffineTransform}.<br>
  * <br>
- * Class <code>XAffineTransform</code> overrides all mutable methods of
- * {@link AffineTransform}in order to check for permission before to change the
- * transform's state. If {@link #checkPermission}is defined to always thrown an
+ * Class <code>XAffineTransform</code> overrides all mutable methods of {@link AffineTransform}in order to check for
+ * permission before to change the transform's state. If {@link #checkPermission}is defined to always thrown an
  * exception, then <code>XAffineTransform</code> is immutable.
  * 
  * @version 1.0
@@ -91,8 +90,8 @@ public abstract class XAffineTransform extends AffineTransform
   private static final double EPS = 1E-6;
 
   /**
-   * Constructs a new <code>XAffineTransform</code> that is a copy of the
-   * specified <code>AffineTransform</code> object.
+   * Constructs a new <code>XAffineTransform</code> that is a copy of the specified <code>AffineTransform</code>
+   * object.
    */
   protected XAffineTransform( final AffineTransform tr )
   {
@@ -100,8 +99,7 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Check if the caller is allowed to change this <code>XAffineTransform</code>
-   * 's state.
+   * Check if the caller is allowed to change this <code>XAffineTransform</code>'s state.
    */
   protected abstract void checkPermission();
 
@@ -241,21 +239,18 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Retourne un rectangle qui contient entièrement la transformation directe de
-   * <code>bounds</code>. Cette opération est l'équivalent de
-   * <code>createTransformedShape(bounds).getBounds2D()</code>.
+   * Retourne un rectangle qui contient entièrement la transformation directe de <code>bounds</code>. Cette opération
+   * est l'équivalent de <code>createTransformedShape(bounds).getBounds2D()</code>.
    * 
    * @param transform
    *          Transformation affine à utiliser.
    * @param bounds
    *          Rectangle à transformer. Ce rectangle ne sera pas modifié.
    * @param dest
-   *          Rectangle dans lequel placer le résultat. Si nul, un nouveau
-   *          rectangle sera créé.
+   *          Rectangle dans lequel placer le résultat. Si nul, un nouveau rectangle sera créé.
    * @return La transformation directe du rectangle <code>bounds</code>.
    */
-  public static Rectangle2D transform( final AffineTransform transform, final Rectangle2D bounds,
-      final Rectangle2D dest )
+  public static Rectangle2D transform( final AffineTransform transform, final Rectangle2D bounds, final Rectangle2D dest )
   {
     double xmin = Double.POSITIVE_INFINITY;
     double ymin = Double.POSITIVE_INFINITY;
@@ -285,23 +280,21 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Retourne un rectangle qui contient entièrement la transformation inverse de
-   * <code>bounds</code>. Cette opération est l'équivalent de
-   * <code>createInverse().createTransformedShape(bounds).getBounds2D()</code>.
+   * Retourne un rectangle qui contient entièrement la transformation inverse de <code>bounds</code>. Cette opération
+   * est l'équivalent de <code>createInverse().createTransformedShape(bounds).getBounds2D()</code>.
    * 
    * @param transform
    *          Transformation affine à utiliser.
    * @param bounds
    *          Rectangle à transformer. Ce rectangle ne sera pas modifié.
    * @param dest
-   *          Rectangle dans lequel placer le résultat. Si nul, un nouveau
-   *          rectangle sera créé.
+   *          Rectangle dans lequel placer le résultat. Si nul, un nouveau rectangle sera créé.
    * @return La transformation inverse du rectangle <code>bounds</code>.
    * @throws NoninvertibleTransformException
    *           si la transformation affine ne peut pas être inversée.
    */
-  public static Rectangle2D inverseTransform( final AffineTransform transform,
-      final Rectangle2D bounds, final Rectangle2D dest ) throws NoninvertibleTransformException
+  public static Rectangle2D inverseTransform( final AffineTransform transform, final Rectangle2D bounds,
+      final Rectangle2D dest ) throws NoninvertibleTransformException
   {
     double xmin = Double.POSITIVE_INFINITY;
     double ymin = Double.POSITIVE_INFINITY;
@@ -331,22 +324,20 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Calcule la transformation affine inverse d'un point sans prendre en compte
-   * la translation.
+   * Calcule la transformation affine inverse d'un point sans prendre en compte la translation.
    * 
    * @param transform
    *          Transformation affine à utiliser.
    * @param source
    *          Point à transformer. Ce rectangle ne sera pas modifié.
    * @param dest
-   *          Point dans lequel placer le résultat. Si nul, un nouveau point
-   *          sera créé.
+   *          Point dans lequel placer le résultat. Si nul, un nouveau point sera créé.
    * @return La transformation inverse du point <code>source</code>.
    * @throws NoninvertibleTransformException
    *           si la transformation affine ne peut pas être inversée.
    */
-  public static Point2D inverseDeltaTransform( final AffineTransform transform,
-      final Point2D source, final Point2D dest ) throws NoninvertibleTransformException
+  public static Point2D inverseDeltaTransform( final AffineTransform transform, final Point2D source, final Point2D dest )
+      throws NoninvertibleTransformException
   {
     final double m00 = transform.getScaleX();
     final double m11 = transform.getScaleY();
@@ -368,9 +359,8 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Retourne le facteur d'échelle <var>x </var> en annulant l'effet d'une
-   * éventuelle rotation. Ce facteur est calculé par <IMG src=" {@docRoot}
-   * /net/seas/map/layer/doc-files/equation1.gif">.
+   * Retourne le facteur d'échelle <var>x </var> en annulant l'effet d'une éventuelle rotation. Ce facteur est calculé
+   * par <IMG src=" {@docRoot}/net/seas/map/layer/doc-files/equation1.gif">.
    */
   public static double getScaleX0( final AffineTransform zoom )
   {
@@ -378,9 +368,8 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Retourne le facteur d'échelle <var>y </var> en annulant l'effet d'une
-   * éventuelle rotation. Ce facteur est calculé par <IMG src=" {@docRoot}
-   * /net/seas/map/layer/doc-files/equation2.gif">.
+   * Retourne le facteur d'échelle <var>y </var> en annulant l'effet d'une éventuelle rotation. Ce facteur est calculé
+   * par <IMG src=" {@docRoot}/net/seas/map/layer/doc-files/equation2.gif">.
    */
   public static double getScaleY0( final AffineTransform zoom )
   {
@@ -388,10 +377,8 @@ public abstract class XAffineTransform extends AffineTransform
   }
 
   /**
-   * Retourne une transformation affine représentant un zoom fait autour d'un
-   * point central ( <var>x </var>, <var>y </var>). Les transformations
-   * laisseront inchangées la coordonnée ( <var>x </var>, <var>y </var>)
-   * spécifiée.
+   * Retourne une transformation affine représentant un zoom fait autour d'un point central ( <var>x </var>, <var>y
+   * </var>). Les transformations laisseront inchangées la coordonnée ( <var>x </var>, <var>y </var>) spécifiée.
    * 
    * @param sx
    *          Echelle le long de l'axe des <var>x </var>.
@@ -401,21 +388,18 @@ public abstract class XAffineTransform extends AffineTransform
    *          Coordonnées <var>x </var> du point central.
    * @param y
    *          Coordonnées <var>y </var> du point central.
-   * @return Transformation affine d'un zoom qui laisse la coordonnée ( <var>x
-   *         </var>, <var>y </var>) inchangée.
+   * @return Transformation affine d'un zoom qui laisse la coordonnée ( <var>x </var>, <var>y </var>) inchangée.
    */
-  public static AffineTransform getScaleInstance( final double sx, final double sy, final double x,
-      final double y )
+  public static AffineTransform getScaleInstance( final double sx, final double sy, final double x, final double y )
   {
     return new AffineTransform( sx, 0, 0, sy, ( 1 - sx ) * x, ( 1 - sy ) * y );
   }
 
   /*
-   * Vérifie si les coéfficients de la matrice sont proches de valeurs entières.
-   * Si c'est le cas, ces coéfficients seront arrondis aux valeurs entières les
-   * plus proches. Cet arrondissement est utile par exemple pour accelérer les
-   * affichages d'images. Il est surtout efficace lorsque l'on sait qu'une
-   * matrice a des chances d'être proche de la matrice identitée.
+   * Vérifie si les coéfficients de la matrice sont proches de valeurs entières. Si c'est le cas, ces coéfficients
+   * seront arrondis aux valeurs entières les plus proches. Cet arrondissement est utile par exemple pour accelérer les
+   * affichages d'images. Il est surtout efficace lorsque l'on sait qu'une matrice a des chances d'être proche de la
+   * matrice identitée.
    */
   public static void round( final AffineTransform zoom )
   {

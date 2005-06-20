@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.tools;
 
 /**
@@ -83,15 +83,13 @@ public interface Cache
   public int getMaxEntries();
 
   /**
-   * sets the maximal time (milliseconds) an entry will be stored within the
-   * cache without being called. If an entry is called through the get-method
-   * the timestamp will be refreshed.
+   * sets the maximal time (milliseconds) an entry will be stored within the cache without being called. If an entry is
+   * called through the get-method the timestamp will be refreshed.
    */
   public void setMaxLifeTime( int maxLifeTime );
 
   /**
-   * sets the maximal time (milliseconds) an entry will be stored within the
-   * cache without being called.
+   * sets the maximal time (milliseconds) an entry will be stored within the cache without being called.
    */
   public int getMaxLifeTime();
 
@@ -106,24 +104,20 @@ public interface Cache
   public void clear();
 
   /**
-   * pushes a new entry to the cache. Each entry is marked by an unique
-   * identifier
+   * pushes a new entry to the cache. Each entry is marked by an unique identifier
    */
   public void push( Object identifier, Object data );
 
   /**
-   * gets an entry from the cache. The entry that shall be returned will be
-   * identified by the submitted identifier. If no entry for a submitted
-   * identifier can be found within the cache the method shall return
-   * <tt>null</tt>.
+   * gets an entry from the cache. The entry that shall be returned will be identified by the submitted identifier. If
+   * no entry for a submitted identifier can be found within the cache the method shall return <tt>null</tt>.
    */
   public Object get( Object identifier );
 
   /**
-   * removes an entry from the cache. The entry that shall be removed will be
-   * identified by the submitted identifier. The removed entry will be returned.
-   * If no entry for a submitted identifier can be found within the cache the
-   * method shall return <tt>null</tt>.
+   * removes an entry from the cache. The entry that shall be removed will be identified by the submitted identifier.
+   * The removed entry will be returned. If no entry for a submitted identifier can be found within the cache the method
+   * shall return <tt>null</tt>.
    */
   public Object remove( Object identifier );
 

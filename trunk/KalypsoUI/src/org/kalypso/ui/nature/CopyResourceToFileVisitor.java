@@ -57,8 +57,8 @@ import org.eclipse.core.runtime.IPath;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TODO an JH: bist Du sicher, dass diese Klasse überhauipt noch benutzt wird?
- * Ich glaube nämlich seit kurzem nicht mehr! Gernot
+ * TODO an JH: bist Du sicher, dass diese Klasse überhauipt noch benutzt wird? Ich glaube nämlich seit kurzem nicht
+ * mehr! Gernot
  * 
  * @author belger
  */
@@ -100,7 +100,8 @@ public class CopyResourceToFileVisitor implements IResourceVisitor
       targetpath.getParentFile().mkdirs();
 
       // daten kopieren
-      //TODO: JH, unschöner hack wegen zip zukünftig in modelspec encoding angeben und binaries entsprechend als stream kopieren
+      //TODO: JH, unschöner hack wegen zip zukünftig in modelspec encoding angeben und binaries entsprechend als stream
+      // kopieren
       final String zipSuffix = new String( "zip" );
       if( suffix.equals( zipSuffix ) )
       {
@@ -109,9 +110,9 @@ public class CopyResourceToFileVisitor implements IResourceVisitor
           System.out.println( "Datei ist ZIP" );
           final FileOutputStream outstream = new FileOutputStream( targetpath );
           final InputStream inputstream = inputfile.getContents();
-//          final InputStream inputstream = new InputStream(inputfile.getContents());
+          //          final InputStream inputstream = new InputStream(inputfile.getContents());
           CopyUtils.copy( inputstream, outstream );
-          
+
           // TODO an JH: das ist nicht sicher! wenns ne exception gibt, werden die Streams nicht
           // geschlossen! Besser immer in einem finally-block mit IOUtils.closeQuietly() schlieesen
           inputstream.close();
@@ -121,16 +122,15 @@ public class CopyResourceToFileVisitor implements IResourceVisitor
         catch( final Exception e )
         {
           e.printStackTrace();
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Fehler beim Kopieren einer Datei", e ) );
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Kopieren einer Datei", e ) );
         }
       }
       else
       {
         try
         {
-          final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(
-              targetpath ), inputfile.getCharset() );
+          final OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( targetpath ), inputfile
+              .getCharset() );
           final Reader r = new InputStreamReader( inputfile.getContents(), inputfile.getCharset() );
 
           // bean erzeugen
@@ -145,8 +145,7 @@ public class CopyResourceToFileVisitor implements IResourceVisitor
         catch( final Exception e )
         {
           e.printStackTrace();
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-              "Fehler beim Kopieren einer Datei", e ) );
+          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Kopieren einer Datei", e ) );
         }
       }
     }

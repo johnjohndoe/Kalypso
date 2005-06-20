@@ -103,8 +103,7 @@ import org.kalypsodeegree_impl.tools.StringExtend;
 import org.w3c.dom.Element;
 
 /**
- * class containing factory methods for creating GML-Objects from DOM-Elements
- * and GM_XXXX geometries.
+ * class containing factory methods for creating GML-Objects from DOM-Elements and GM_XXXX geometries.
  * 
  * <p>
  * ----------------------------------------------------------
@@ -119,7 +118,8 @@ public class GMLFactory
   /**
    * creates a GMLGeometry from a DOM Element
    * 
-   * @param element DOM Element containing a GMLGeometry
+   * @param element
+   *          DOM Element containing a GMLGeometry
    */
   public synchronized static GMLGeometry createGMLGeometry( Element element )
   {
@@ -172,7 +172,8 @@ public class GMLFactory
   /**
    * creates a GMLGeometry from a GM_Object
    * 
-   * @param geo geometry
+   * @param geo
+   *          geometry
    */
   public synchronized static GMLGeometry createGMLGeometry( GMLDocument doc, GM_Object geo ) throws GMLException
   {
@@ -214,7 +215,8 @@ public class GMLFactory
   /**
    * creates a GMLPoint from a GM_Point
    * 
-   * @param geo point
+   * @param geo
+   *          point
    */
   private static GMLPoint createGMLPoint( GM_Point geo, GMLDocument doc )
   {
@@ -223,7 +225,8 @@ public class GMLFactory
     Element coord = doc.getDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
 
     GMLCoordinates gmlCo = new GMLCoordinates_Impl( coord );
-    gmlCo.setCoordinates( geo.getX() + "," + geo.getY() + ( ( geo.getCoordinateDimension() == 3 ) ? "," + geo.getZ() : "" ) );
+    gmlCo.setCoordinates( geo.getX() + "," + geo.getY()
+        + ( ( geo.getCoordinateDimension() == 3 ) ? "," + geo.getZ() : "" ) );
     gmlCo.setCoordinateSeperator( ',' );
     gmlCo.setDecimalSeperator( '.' );
     gmlCo.setTupleSeperator( ' ' );
@@ -250,7 +253,8 @@ public class GMLFactory
   /**
    * creates a GMLLineString from a GM_Curve
    * 
-   * @param geo GM_Curve
+   * @param geo
+   *          GM_Curve
    */
   private static GMLLineString createGMLLineString( GM_Curve geo, GMLDocument doc ) throws GMLException
   {
@@ -306,7 +310,8 @@ public class GMLFactory
   /**
    * creates a GMLPolygon from a GM_Surface
    * 
-   * @param geo GM_Surface
+   * @param geo
+   *          GM_Surface
    */
   private static GMLPolygon createGMLPolygon( GM_Surface geo, GMLDocument doc ) throws GMLException
   {
@@ -438,7 +443,8 @@ public class GMLFactory
   /**
    * creates a GMLMultiPoint from a GM_MultiPoint
    * 
-   * @param geo GM_MultiPoint
+   * @param geo
+   *          GM_MultiPoint
    */
   private static GMLMultiPoint createGMLMultiPoint( GM_MultiPoint geo, GMLDocument doc ) throws GMLException
   {
@@ -477,7 +483,8 @@ public class GMLFactory
   /**
    * creates a GMLMultiLineString from a GM_MultiCurve
    * 
-   * @param geo GM_MultiCurve
+   * @param geo
+   *          GM_MultiCurve
    */
   private static GMLMultiLineString createGMLMultiLineString( GM_MultiCurve geo, GMLDocument doc ) throws GMLException
   {
@@ -516,7 +523,8 @@ public class GMLFactory
   /**
    * creates a GMLMultiPolygon from a GM_MultiSurface
    * 
-   * @param geo GM_MultiSurface
+   * @param geo
+   *          GM_MultiSurface
    */
   private static GMLMultiPolygon createGMLMultiPolygon( GM_MultiSurface geo, GMLDocument doc ) throws GMLException
   {
@@ -555,7 +563,8 @@ public class GMLFactory
   /**
    * creates a GMLFeature from a XML Element
    */
-  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature, URL context ) throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature, URL context )
+      throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -616,8 +625,8 @@ public class GMLFactory
     return gmlFeature;
   }
 
-  private static void addGMLProperties( final GMLDocument doc, URL context, final GMLFeature gmlFeature, final Object value, final FeatureTypeProperty ftp,
-      final int min ) throws GMLException
+  private static void addGMLProperties( final GMLDocument doc, URL context, final GMLFeature gmlFeature,
+      final Object value, final FeatureTypeProperty ftp, final int min ) throws GMLException
   {
 
     // marshalling
@@ -679,13 +688,12 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.17  2005/06/15 15:16:58  doemming
- * *** empty log message ***
- *
- * Revision 1.16  2005/06/05 22:43:54  doemming
- * *** empty log message ***
- * Revision 1.15 2005/05/03 11:38:52 belger *** empty
- * log message ***
+ * Revision 1.18  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.17 2005/06/15 15:16:58 doemming *** empty log message ***
+ * 
+ * Revision 1.16 2005/06/05 22:43:54 doemming *** empty log message *** Revision 1.15 2005/05/03 11:38:52 belger ***
+ * empty log message ***
  * 
  * Revision 1.14 2005/03/13 12:52:15 belger *** empty log message ***
  * 
@@ -693,20 +701,19 @@ public class GMLFactory
  * 
  * Revision 1.12 2005/03/04 15:05:04 doemming *** empty log message ***
  * 
- * Revision 1.11 2005/02/28 13:34:14 doemming *** empty log message *** Revision
- * 1.10 2005/02/15 17:52:53 belger *** empty log message ***
+ * Revision 1.11 2005/02/28 13:34:14 doemming *** empty log message *** Revision 1.10 2005/02/15 17:52:53 belger ***
+ * empty log message ***
  * 
- * Revision 1.9 2005/02/08 18:43:59 belger *** empty log message *** Revision
- * 1.8 2005/01/18 12:50:42 doemming *** empty log message ***
+ * Revision 1.9 2005/02/08 18:43:59 belger *** empty log message *** Revision 1.8 2005/01/18 12:50:42 doemming *** empty
+ * log message ***
  * 
  * Revision 1.7 2004/11/22 01:29:50 doemming *** empty log message ***
  * 
  * Revision 1.6 2004/10/07 19:28:24 doemming *** empty log message ***
  * 
- * Revision 1.5 2004/10/07 14:09:13 doemming *** empty log message *** Revision
- * 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3
- * 2004/08/31 13:03:31 doemming *** empty log message *** Revision 1.9
- * 2004/04/07 06:43:48 poth no message
+ * Revision 1.5 2004/10/07 14:09:13 doemming *** empty log message *** Revision 1.1 2004/09/02 23:56:58 doemming ***
+ * empty log message *** Revision 1.3 2004/08/31 13:03:31 doemming *** empty log message *** Revision 1.9 2004/04/07
+ * 06:43:48 poth no message
  * 
  * Revision 1.8 2004/03/29 10:37:13 poth no message
  * 
@@ -718,8 +725,7 @@ public class GMLFactory
  * 
  * Revision 1.4 2003/04/23 15:44:39 poth no message
  * 
- * Revision 1.3 2003/04/17 11:23:45 axel_schaefer wrong debug-end message in
- * createGMLGeometry(Element)
+ * Revision 1.3 2003/04/17 11:23:45 axel_schaefer wrong debug-end message in createGMLGeometry(Element)
  * 
  * Revision 1.2 2002/10/21 08:19:02 poth no message
  * 

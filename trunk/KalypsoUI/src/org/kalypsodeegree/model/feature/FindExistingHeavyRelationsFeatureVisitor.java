@@ -69,8 +69,7 @@ public class FindExistingHeavyRelationsFeatureVisitor implements FeatureVisitor
    * @param workspace
    *          workspace to query
    */
-  public FindExistingHeavyRelationsFeatureVisitor( GMLWorkspace workspace,
-      HeavyRelationType relation )
+  public FindExistingHeavyRelationsFeatureVisitor( GMLWorkspace workspace, HeavyRelationType relation )
   {
     m_workspace = workspace;
     m_relation = relation;

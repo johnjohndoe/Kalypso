@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
@@ -70,13 +70,10 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * A box defined by two positions. The two positions must have the same
- * dimension. Each of the ordinate values in the minimum point must be less than
- * or equal to the corresponding ordinate value in the maximum point. Please
- * note that these two points may be outside the valid domain of their
- * coordinate system. (Of course the points and envelope do not explicitly
- * reference a coordinate system, but their implicit coordinate system is
- * defined by their context.)
+ * A box defined by two positions. The two positions must have the same dimension. Each of the ordinate values in the
+ * minimum point must be less than or equal to the corresponding ordinate value in the maximum point. Please note that
+ * these two points may be outside the valid domain of their coordinate system. (Of course the points and envelope do
+ * not explicitly reference a coordinate system, but their implicit coordinate system is defined by their context.)
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -93,18 +90,18 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   private static final long serialVersionUID = -3228667532994790309L;
 
   /**
-   * Minimum and maximum ordinate values. The first half contains minimum
-   * ordinates, while the last half contains maximum ordinates.
+   * Minimum and maximum ordinate values. The first half contains minimum ordinates, while the last half contains
+   * maximum ordinates.
    */
   private final double[] ord;
 
   /**
-   * Check if ordinate values in the minimum point are less than or equal to the
-   * corresponding ordinate value in the maximum point.
+   * Check if ordinate values in the minimum point are less than or equal to the corresponding ordinate value in the
+   * maximum point.
    * 
    * @throws IllegalArgumentException
-   *           if an ordinate value in the minimum point is not less than or
-   *           equal to the corresponding ordinate value in the maximum point.
+   *           if an ordinate value in the minimum point is not less than or equal to the corresponding ordinate value
+   *           in the maximum point.
    */
   private void checkCoherence() throws IllegalArgumentException
   {
@@ -112,8 +109,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
     for( int i = 0; i < dimension; i++ )
       if( !( ord[i] <= ord[dimension + i] ) ) // Use '!' in order to catch
         // 'NaN'.
-        throw new IllegalArgumentException( Resources.format(
-            ResourceKeys.ERROR_ILLEGAL_ENVELOPE_ORDINATE_$1, new Integer( i ) ) );
+        throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ENVELOPE_ORDINATE_$1,
+            new Integer( i ) ) );
   }
 
   /**
@@ -125,8 +122,7 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Construct an empty envelope of the specified dimension. All ordinates are
-   * initialized to 0.
+   * Construct an empty envelope of the specified dimension. All ordinates are initialized to 0.
    */
   public Envelope( final int dimension )
   {
@@ -144,7 +140,9 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   public Envelope( final double min, final double max )
   {
     ord = new double[]
-    { min, max };
+    {
+        min,
+        max };
     checkCoherence();
   }
 
@@ -158,8 +156,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
    * @throws MismatchedDimensionException
    *           if the two positions don't have the same dimension.
    * @throws IllegalArgumentException
-   *           if an ordinate value in the minimum point is not less than or
-   *           equal to the corresponding ordinate value in the maximum point.
+   *           if an ordinate value in the minimum point is not less than or equal to the corresponding ordinate value
+   *           in the maximum point.
    */
   public Envelope( final double[] minCP, final double[] maxCP ) throws MismatchedDimensionException
   {
@@ -183,11 +181,10 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
    * @throws MismatchedDimensionException
    *           if the two positions don't have the same dimension.
    * @throws IllegalArgumentException
-   *           if an ordinate value in the minimum point is not less than or
-   *           equal to the corresponding ordinate value in the maximum point.
+   *           if an ordinate value in the minimum point is not less than or equal to the corresponding ordinate value
+   *           in the maximum point.
    */
-  public Envelope( final CoordinatePoint minCP, final CoordinatePoint maxCP )
-      throws MismatchedDimensionException
+  public Envelope( final CoordinatePoint minCP, final CoordinatePoint maxCP ) throws MismatchedDimensionException
   {
     this( minCP.ord, maxCP.ord );
   }
@@ -198,13 +195,17 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   public Envelope( final Rectangle2D rect )
   {
     ord = new double[]
-    { rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY() };
+    {
+        rect.getMinX(),
+        rect.getMinY(),
+        rect.getMaxX(),
+        rect.getMaxY() };
     checkCoherence();
   }
 
   /**
-   * Convenience method for checking the envelope's dimension validity. This
-   * method is usually call for argument checking.
+   * Convenience method for checking the envelope's dimension validity. This method is usually call for argument
+   * checking.
    * 
    * @param expectedDimension
    *          Expected dimension for this envelope.
@@ -221,8 +222,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Determines whether or not this envelope is empty. An envelope is non-empty
-   * only if it has a length greater that 0 along all dimensions.
+   * Determines whether or not this envelope is empty. An envelope is non-empty only if it has a length greater that 0
+   * along all dimensions.
    */
   public boolean isEmpty()
   {
@@ -270,8 +271,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns the envelope length along the specified dimension. This length is
-   * equals to the maximum ordinate minus the minimal ordinate.
+   * Returns the envelope length along the specified dimension. This length is equals to the maximum ordinate minus the
+   * minimal ordinate.
    */
   public double getLength( final int dimension )
   {
@@ -307,12 +308,10 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Adds a point to this envelope. The resulting envelope is the smallest
-   * envelope that contains both the original envelope and the specified point.
-   * After adding a point, a call to {@link #contains}with the added point as
-   * an argument will return <code>true</code>, except if one of the point's
-   * ordinates was {@link Double#NaN}(in which case the corresponding ordinate
-   * have been ignored).
+   * Adds a point to this envelope. The resulting envelope is the smallest envelope that contains both the original
+   * envelope and the specified point. After adding a point, a call to {@link #contains}with the added point as an
+   * argument will return <code>true</code>, except if one of the point's ordinates was {@link Double#NaN}(in which
+   * case the corresponding ordinate have been ignored).
    * 
    * @param point
    *          The point to add.
@@ -334,8 +333,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Adds an envelope object to this envelope. The resulting envelope is the
-   * union of the two <code>Envelope</code> objects.
+   * Adds an envelope object to this envelope. The resulting envelope is the union of the two <code>Envelope</code>
+   * objects.
    * 
    * @param envelope
    *          the <code>Envelope</code> to add to this envelope.
@@ -362,8 +361,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
    * 
    * @param point
    *          The point to text.
-   * @return <code>true</code> if the specified coordinates are inside the
-   *         boundary of this envelope; <code>false</code> otherwise.
+   * @return <code>true</code> if the specified coordinates are inside the boundary of this envelope;
+   *         <code>false</code> otherwise.
    * @throws MismatchedDimensionException
    *           if the specified point doesn't have the expected dimension.
    */
@@ -384,13 +383,13 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a new envelope representing the intersection of this
-   * <code>Envelope</code> with the specified <code>Envelope</code>.
+   * Returns a new envelope representing the intersection of this <code>Envelope</code> with the specified
+   * <code>Envelope</code>.
    * 
    * @param envelope
    *          The <code>Envelope</code> to intersect with this envelope.
-   * @return The largest envelope contained in both the specified
-   *         <code>Envelope</code> and in this <code>Envelope</code>.
+   * @return The largest envelope contained in both the specified <code>Envelope</code> and in this
+   *         <code>Envelope</code>.
    * @throws MismatchedDimensionException
    *           if the specified envelope doesn't have the expected dimension.
    */
@@ -416,11 +415,9 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a new envelope that encompass only some dimensions of this
-   * envelope. This method copy this envelope's ordinates into a new envelope,
-   * beginning at dimension <code>lower</code> and extending to dimension
-   * <code>upper-1</code>. Thus the dimension of the subenvelope is
-   * <code>upper-lower</code>.
+   * Returns a new envelope that encompass only some dimensions of this envelope. This method copy this envelope's
+   * ordinates into a new envelope, beginning at dimension <code>lower</code> and extending to dimension
+   * <code>upper-1</code>. Thus the dimension of the subenvelope is <code>upper-lower</code>.
    * 
    * @param lower
    *          The first dimension to copy, inclusive.
@@ -436,13 +433,13 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
     final int newDim = upper - lower;
     if( lower < 0 || lower > curDim )
     {
-      throw new IndexOutOfBoundsException( Resources.format(
-          ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, "lower", new Integer( lower ) ) );
+      throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, "lower",
+          new Integer( lower ) ) );
     }
     if( newDim < 0 || upper > curDim )
     {
-      throw new IndexOutOfBoundsException( Resources.format(
-          ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, "upper", new Integer( upper ) ) );
+      throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, "upper",
+          new Integer( upper ) ) );
     }
     final Envelope envelope = new Envelope( newDim );
     System.arraycopy( ord, lower, envelope.ord, 0, newDim );
@@ -451,9 +448,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a {@link Rectangle2D}with the same bounds as this
-   * <code>Envelope</code>. This is a convenience method for interoperability
-   * with Java2D.
+   * Returns a {@link Rectangle2D}with the same bounds as this <code>Envelope</code>. This is a convenience method
+   * for interoperability with Java2D.
    * 
    * @throws IllegalStateException
    *           if this envelope is not two-dimensional.
@@ -464,13 +460,13 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
     {
       return new XRectangle2D( ord[0], ord[1], ord[2] - ord[0], ord[3] - ord[1] );
     }
-    throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1,
-        new Integer( getDimension() ) ) );
+    throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1, new Integer(
+        getDimension() ) ) );
   }
 
   /**
-   * Returns a hash value for this envelope. This value need not remain
-   * consistent between different implementations of the same class.
+   * Returns a hash value for this envelope. This value need not remain consistent between different implementations of
+   * the same class.
    */
   public int hashCode()
   {
@@ -499,8 +495,8 @@ public class Envelope implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a string representation of this envelope. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes.
+   * Returns a string representation of this envelope. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes.
    */
   public String toString()
   {

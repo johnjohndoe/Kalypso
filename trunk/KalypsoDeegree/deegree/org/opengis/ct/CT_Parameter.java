@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.ct;
 
@@ -25,8 +22,7 @@ import java.io.Serializable;
 public class CT_Parameter implements Cloneable, Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with CSS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with CSS 1.00.
    */
   private static final long serialVersionUID = 5082873622308235995L;
 
@@ -41,8 +37,7 @@ public class CT_Parameter implements Cloneable, Serializable
   public double value;
 
   /**
-   * Construct an empty parameter. Caller must initialize {@link #name}and
-   * {@link #value}.
+   * Construct an empty parameter. Caller must initialize {@link #name}and {@link #value}.
    */
   public CT_Parameter()
   {}
@@ -62,8 +57,8 @@ public class CT_Parameter implements Cloneable, Serializable
   }
 
   /**
-   * Returns a hash value for this parameter. This value need not remain
-   * consistent between different implementations of the same class.
+   * Returns a hash value for this parameter. This value need not remain consistent between different implementations of
+   * the same class.
    */
   public int hashCode()
   {
@@ -106,9 +101,8 @@ public class CT_Parameter implements Cloneable, Serializable
   }
 
   /**
-   * Returns a string représentation of this parameter. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string représentation of this parameter. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

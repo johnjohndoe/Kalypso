@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,14 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 /**
- * Common superclass for a number of transformation-related exceptions. It may
- * be thrown by {@link MathTransform}when a coordinate can't be transformed. It
- * may also be thrown when a coordinate transformation can't be created or
- * inverted.
+ * Common superclass for a number of transformation-related exceptions. It may be thrown by {@link MathTransform}when a
+ * coordinate can't be transformed. It may also be thrown when a coordinate transformation can't be created or inverted.
  * 
  * @version 1.0
  * @author André Gosselin
@@ -97,9 +95,8 @@ public class TransformException extends Exception
   public TransformException( final String message, final Throwable cause )
   {
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ----- super(message, cause); /*----- END
-   * OF JDK 1.4 DEPENDENCIES ---- super(message); ------- END OF JDK 1.3
-   * FALLBACK --------
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ----- super(message, cause); /*----- END OF JDK 1.4 DEPENDENCIES ----
+   * super(message); ------- END OF JDK 1.3 FALLBACK --------
    */
   }
 }

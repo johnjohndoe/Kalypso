@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -64,8 +64,7 @@ public class BinaryComparisonData extends AbstractComparisonData
   {
     if( literal == null || literal.trim().length() == 0 || propertyName == null )
     {
-      throw new FilterDialogException( new FilterDialogError( null,
-          MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
+      throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
     }
     return true;
   }

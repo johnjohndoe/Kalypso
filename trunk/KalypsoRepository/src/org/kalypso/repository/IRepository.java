@@ -44,19 +44,17 @@ import java.io.Writer;
 import java.util.Properties;
 
 /**
- * Eingangspunkt zu einem Repository. Es liefert z.B. die ersten Items. Damit
- * kann eine Struktur aufgebaut werden.
+ * Eingangspunkt zu einem Repository. Es liefert z.B. die ersten Items. Damit kann eine Struktur aufgebaut werden.
  * 
  * @author schlienger
  */
 public interface IRepository extends IRepositoryItem
 {
   /**
-   * @return the classname of the factory that was used to create this
-   *         repository
+   * @return the classname of the factory that was used to create this repository
    */
-  public String getFactory( );
-  
+  public String getFactory();
+
   /**
    * @return the configuration string used to create the repository
    */
@@ -65,21 +63,20 @@ public interface IRepository extends IRepositoryItem
   /**
    * @return name of the repository
    */
-  public String getName( );
-  
+  public String getName();
+
   /**
    * @return some description
    */
   public String getDescription();
 
   /**
-   * Returns true when this repository is in readonly mode. What this really
-   * means, depends on the client implementation. Some repositories might only
-   * be viewed or browsed, while some others might be modified.
+   * Returns true when this repository is in readonly mode. What this really means, depends on the client
+   * implementation. Some repositories might only be viewed or browsed, while some others might be modified.
    * 
    * @return readonly flag
    */
-  public boolean isReadOnly( );
+  public boolean isReadOnly();
 
   /**
    * Finds the item that has the given id.
@@ -91,8 +88,7 @@ public interface IRepository extends IRepositoryItem
   public IRepositoryItem findItem( final String id ) throws RepositoryException;
 
   /**
-   * Sets a property for this repository. Properties can be used internally, by
-   * the repository itself, or by its items.
+   * Sets a property for this repository. Properties can be used internally, by the repository itself, or by its items.
    * 
    * @param name
    * @param value
@@ -108,8 +104,7 @@ public interface IRepository extends IRepositoryItem
   public String getProperty( final String name );
 
   /**
-   * Returns the value of the given property, or defaultValue if no value is set
-   * yet.
+   * Returns the value of the given property, or defaultValue if no value is set yet.
    * 
    * @param name
    * @param defaultValue
@@ -118,10 +113,9 @@ public interface IRepository extends IRepositoryItem
   public String getProperty( final String name, final String defaultValue );
 
   /**
-   * @return convenience method that returns the properties of this repository
-   *         in the form of a Properties object.
+   * @return convenience method that returns the properties of this repository in the form of a Properties object.
    */
-  public Properties getProperties( );
+  public Properties getProperties();
 
   /**
    * Convenience method for settings a whole set of properties.
@@ -135,13 +129,13 @@ public interface IRepository extends IRepositoryItem
    * 
    * @throws RepositoryException
    */
-  public void reload( ) throws RepositoryException;
-  
+  public void reload() throws RepositoryException;
+
   /**
    * Dumps the contents (structure and summary of items)
    */
   public void dumpStructure( final Writer writer ) throws RepositoryException;
-  
+
   /**
    * Clears potential resources
    */
@@ -151,5 +145,5 @@ public interface IRepository extends IRepositoryItem
 
   public void removeRepositoryListener( final IRepositoryListener l );
 
-  public void fireRepositoryStructureChanged( );
+  public void fireRepositoryStructureChanged();
 }

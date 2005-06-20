@@ -20,9 +20,9 @@ public class FindDataElementsVisitor implements IModelVisitor
 {
   /** Zum schnellen suchen */
   final Collection m_objecthash = new HashSet();
-  
-  final Collection m_elements = new ArrayList(); 
-  
+
+  final Collection m_elements = new ArrayList();
+
   public FindDataElementsVisitor( final Object[] fats )
   {
     m_objecthash.addAll( Arrays.asList( fats ) );
@@ -33,14 +33,14 @@ public class FindDataElementsVisitor implements IModelVisitor
    */
   public boolean visit( final Model model )
   {
-    if( model instanceof PropertyElement && m_objecthash.contains( ((PropertyElement)model).getProperty() ) )
+    if( model instanceof PropertyElement && m_objecthash.contains( ( (PropertyElement)model ).getProperty() ) )
       m_elements.add( model );
-    else if( model instanceof FeatureElement && m_objecthash.contains( ((FeatureElement)model).getFeature() ) )
+    else if( model instanceof FeatureElement && m_objecthash.contains( ( (FeatureElement)model ).getFeature() ) )
       m_elements.add( model );
 
     return true;
   }
-  
+
   public IModel[] getResults()
   {
     return (IModel[])m_elements.toArray( new IModel[m_elements.size()] );

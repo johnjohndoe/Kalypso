@@ -26,11 +26,11 @@ public interface ITypeHandler
    * @param object
    *          object to serialize, it must be instanceof {@link #getClassName()}.
    */
-  public void marshall( final Object object, final Node node, URL context )
-      throws TypeRegistryException;
+  public void marshall( final Object object, final Node node, URL context ) throws TypeRegistryException;
 
   /**
-   * creates an object of type {@link #getClassName()}from node. 
+   * creates an object of type {@link #getClassName()}from node.
+   * 
    * @param node
    *          unmnarshall this node to an object of type {@link #getClassName()}
    * @param context

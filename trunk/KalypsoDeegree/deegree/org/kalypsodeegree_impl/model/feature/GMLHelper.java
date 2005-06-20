@@ -31,8 +31,8 @@ public class GMLHelper
   }
 
   /**
-   * ueperprueft die koordinatensysteme der geometrien, fall null, dann wird das
-   * defaultCoordinatessystem angenommen (gesetzt).
+   * ueperprueft die koordinatensysteme der geometrien, fall null, dann wird das defaultCoordinatessystem angenommen
+   * (gesetzt).
    */
   public static void checkCrs( Feature fe, CS_CoordinateSystem defaultCS )
   {
@@ -57,7 +57,7 @@ public class GMLHelper
     final String substitutionGroup = ft.getNamespace() + ":" + ft.getName();
     if( substitutionGroup == null )
       return new FeatureType[0];
-    
+
     for( int i = 0; i < fts.length; i++ )
     {
       final String substiGroup = fts[i].getSubstitutionGroup();

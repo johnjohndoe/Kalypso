@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 import java.awt.Color;
@@ -66,10 +66,9 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * A Fill allows area geometries to be filled. There are two types of fills:
- * solid-color and repeated GraphicFill. In general, if a Fill element is
- * omitted in its containing element, no fill will be rendered. The default is a
- * solid 50%-gray (color "#808080") opaque fill.
+ * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
+ * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
+ * 50%-gray (color "#808080") opaque fill.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -88,8 +87,7 @@ public interface Fill extends Drawing
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -109,8 +107,7 @@ public interface Fill extends Drawing
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -118,9 +115,8 @@ public interface Fill extends Drawing
   double getOpacity( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * sets the value of the opacity's CssParameter 'opacity' as a value. Valid
-   * values ranges from 0 .. 1. If a value < 0 is passed it will be set too 0.
-   * If a value > 1 is passed it will be set too 1.
+   * sets the value of the opacity's CssParameter 'opacity' as a value. Valid values ranges from 0 .. 1. If a value < 0
+   * is passed it will be set too 0. If a value > 1 is passed it will be set too 1.
    * 
    * @param opacity
    *          opacity to be set

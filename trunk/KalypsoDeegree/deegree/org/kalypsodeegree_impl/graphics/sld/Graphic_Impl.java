@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Graphics2D;
@@ -74,23 +74,17 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * A Graphic is a "graphic symbol" with an inherent shape, color, and size.
- * Graphics can either be referenced from an external URL in a common format
- * (such as GIF or SVG) or may be derived from a Mark. Multiple external URLs
- * may be referenced with the semantic that they all provide the same graphic in
- * different formats. The "hot spot" to use for rendering at a point or the
- * start and finish handle points to use for rendering a graphic along a line
- * must either be inherent in the external format or are system- dependent. The
- * default size of an image format (such as GIF) is the inherent size of the
- * image. The default size of a format without an inherent size is 16 pixels in
- * height and the corresponding aspect in width. If a size is specified, the
- * height of the graphic will be scaled to that size and the corresponding
- * aspect will be used for the width. The default if neither an ExternalURL nor
- * a Mark is specified is to use the default Mark with a size of 6 pixels. The
- * size is in pixels and the rotation is in degrees clockwise, with 0 (default)
- * meaning no rotation. In the case that a Graphic is derived from a font-glyph
- * Mark, the Size specified here will be used for the final rendering. Allowed
- * CssParameters are "opacity", "size", and "rotation".
+ * A Graphic is a "graphic symbol" with an inherent shape, color, and size. Graphics can either be referenced from an
+ * external URL in a common format (such as GIF or SVG) or may be derived from a Mark. Multiple external URLs may be
+ * referenced with the semantic that they all provide the same graphic in different formats. The "hot spot" to use for
+ * rendering at a point or the start and finish handle points to use for rendering a graphic along a line must either be
+ * inherent in the external format or are system- dependent. The default size of an image format (such as GIF) is the
+ * inherent size of the image. The default size of a format without an inherent size is 16 pixels in height and the
+ * corresponding aspect in width. If a size is specified, the height of the graphic will be scaled to that size and the
+ * corresponding aspect will be used for the width. The default if neither an ExternalURL nor a Mark is specified is to
+ * use the default Mark with a size of 6 pixels. The size is in pixels and the rotation is in degrees clockwise, with 0
+ * (default) meaning no rotation. In the case that a Graphic is derived from a font-glyph Mark, the Size specified here
+ * will be used for the final rendering. Allowed CssParameters are "opacity", "size", and "rotation".
  * <p>
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
@@ -118,14 +112,12 @@ public class Graphic_Impl implements Graphic, Marshallable
    * @param opacity
    *          opacity that the resulting image will have
    * @param size
-   *          image height will be scaled to this value, respecting the
-   *          proportions
+   *          image height will be scaled to this value, respecting the proportions
    * @param rotation
-   *          image will be rotated clockwise for positive values, negative
-   *          values result in anti-clockwise rotation
+   *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
-  protected Graphic_Impl( Object[] marksAndExtGraphics, ParameterValueType opacity,
-      ParameterValueType size, ParameterValueType rotation )
+  protected Graphic_Impl( Object[] marksAndExtGraphics, ParameterValueType opacity, ParameterValueType size,
+      ParameterValueType rotation )
   {
     setMarksAndExtGraphics( marksAndExtGraphics );
     this.opacity = opacity;
@@ -134,21 +126,17 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Creates a new <tt>Graphic_Impl</tt> instance based on the default
-   * <tt>Mark</tt>: a square.
+   * Creates a new <tt>Graphic_Impl</tt> instance based on the default <tt>Mark</tt>: a square.
    * <p>
    * 
    * @param opacity
    *          opacity that the resulting image will have
    * @param size
-   *          image height will be scaled to this value, respecting the
-   *          proportions
+   *          image height will be scaled to this value, respecting the proportions
    * @param rotation
-   *          image will be rotated clockwise for positive values, negative
-   *          values result in anti-clockwise rotation
+   *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
-  protected Graphic_Impl( ParameterValueType opacity, ParameterValueType size,
-      ParameterValueType rotation )
+  protected Graphic_Impl( ParameterValueType opacity, ParameterValueType size, ParameterValueType rotation )
   {
     Mark[] marks = new Mark[1];
     marks[0] = new Mark_Impl( "square", null, null );
@@ -159,8 +147,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Creates a new <tt>Graphic_Impl</tt> instance based on the default
-   * <tt>Mark</tt>: a square.
+   * Creates a new <tt>Graphic_Impl</tt> instance based on the default <tt>Mark</tt>: a square.
    */
   protected Graphic_Impl()
   {
@@ -168,8 +155,8 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Returns an object-array that enables the access to the stored
-   * <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
+   * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
+   * -instances.
    * <p>
    * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
@@ -201,8 +188,8 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Adds an Object to an object-array that enables the access to the stored
-   * <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
+   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
+   * <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -214,8 +201,8 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Removes an Object from an object-array that enables the access to the
-   * stored <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
+   * Removes an Object from an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
+   * <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -231,8 +218,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -280,16 +266,13 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * The Size element gives the absolute size of the graphic in pixels encoded
-   * as a floating-point number. This element is also used in other contexts
-   * than graphic size and pixel units are still used even for font size. The
-   * default size for an object is context-dependent. Negative values are not
-   * allowed.
+   * The Size element gives the absolute size of the graphic in pixels encoded as a floating-point number. This element
+   * is also used in other contexts than graphic size and pixel units are still used even for font size. The default
+   * size for an object is context-dependent. Negative values are not allowed.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -308,8 +291,7 @@ public class Graphic_Impl implements Graphic, Marshallable
       }
       catch( NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'size' ('" + value
-            + "') has invalid format!" );
+        throw new FilterEvaluationException( "Given value for parameter 'size' ('" + value + "') has invalid format!" );
       }
 
       if( sizeVal <= 0.0 )
@@ -336,15 +318,13 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * The Rotation element gives the rotation of a graphic in the clockwise
-   * direction about its center point in radian, encoded as a floating- point
-   * number. Negative values mean counter-clockwise rotation. The default value
-   * is 0.0 (no rotation).
+   * The Rotation element gives the rotation of a graphic in the clockwise direction about its center point in radian,
+   * encoded as a floating- point number. Negative values mean counter-clockwise rotation. The default value is 0.0 (no
+   * rotation).
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -385,11 +365,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Returns a <tt>BufferedImage</tt> representing this object. The image
-   * respects the 'Opacity', 'Size' and 'Rotation' parameters. If the
-   * 'Size'-parameter is omitted, the height of the first
-   * <tt>ExternalGraphic</tt> is used. If there is none, the default value of
-   * 6 pixels is used.
+   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and
+   * 'Rotation' parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is
+   * used. If there is none, the default value of 6 pixels is used.
    * <p>
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
@@ -458,8 +436,8 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Sets a <tt>BufferedImage</tt> representing this object. The image
-   * respects the 'Opacity', 'Size' and 'Rotation' parameters.
+   * Sets a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
+   * parameters.
    * <p>
    * 
    * @param bufferedImage

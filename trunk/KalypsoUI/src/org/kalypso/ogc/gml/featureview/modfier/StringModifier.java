@@ -75,7 +75,7 @@ public class StringModifier implements IFeatureModifier
    */
   public void dispose()
   {
-    // nix zu tun
+  // nix zu tun
   }
 
   /**

@@ -50,42 +50,46 @@ public abstract class AbstractFeatureType
 {
 
   private final String m_name;
+
   private final String m_namespace;
+
   private final Map m_annotationMap;
 
   /*
    * 
-   *  @author huebsch
+   * @author huebsch
    */
-  public AbstractFeatureType(String name, String namespace,Map annotationMap)
+  public AbstractFeatureType( String name, String namespace, Map annotationMap )
   {
     super();
     m_name = name;
     m_namespace = namespace;
     m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;
-    m_annotationMap.put( Annotation.UNSUPPORTED_LANG_KEY, new Annotation( Annotation.UNSUPPORTED_LANG_KEY, m_name, "", m_namespace + ":"
-        + m_name ) );
+    m_annotationMap.put( Annotation.UNSUPPORTED_LANG_KEY, new Annotation( Annotation.UNSUPPORTED_LANG_KEY, m_name, "",
+        m_namespace + ":" + m_name ) );
   }
 
   public final Map getAnnotationMap()
   {
     return m_annotationMap;
   }
+
   public final String getName()
   {
     return m_name;
   }
-  public final  String getNamespace()
+
+  public final String getNamespace()
   {
     return m_namespace;
   }
-  
+
   public final Annotation getAnnotation( String lang )
   {
-    final Annotation annotation=(Annotation)m_annotationMap.get( lang );
-    if(annotation==null)
-      return (Annotation)m_annotationMap.get(Annotation.UNSUPPORTED_LANG_KEY);
+    final Annotation annotation = (Annotation)m_annotationMap.get( lang );
+    if( annotation == null )
+      return (Annotation)m_annotationMap.get( Annotation.UNSUPPORTED_LANG_KEY );
     return annotation;
-    
+
   }
 }

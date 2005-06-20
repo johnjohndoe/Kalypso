@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -52,23 +52,26 @@ import org.eclipse.swt.widgets.Text;
 public abstract class DialogCellEditor extends CellEditor
 {
   private Object m_value;
-/**
- * 
- */
+
+  /**
+   *  
+   */
   public DialogCellEditor()
   {
     super();
   }
-/**
- * 
- */
+
+  /**
+   *  
+   */
   public DialogCellEditor( final Composite parent )
   {
     super( parent );
   }
-/**
- * 
- */
+
+  /**
+   *  
+   */
   public DialogCellEditor( final Composite parent, int style )
   {
     super( parent, style );
@@ -89,7 +92,7 @@ public abstract class DialogCellEditor extends CellEditor
    * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
    */
   protected Object doGetValue()
-  {    
+  {
     return m_value;
   }
 

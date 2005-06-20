@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.createpages;
 
 import java.util.Collection;
@@ -68,15 +68,14 @@ import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Die Implementierung erzeugt eine völlig neue Rechenvariante im
- * Prognoseverzeichnis
+ * Die Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
  * 
  * @author belger
  */
 public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 {
   private Control m_control;
-  
+
   private IFolder m_folder;
 
   private final String m_label;
@@ -88,7 +87,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   private Collection m_oldCalcCases = new LinkedList();
 
   private final AddCalcCasePage m_page;
-  
+
   public ContinueOldCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
   {
     m_label = label;
@@ -107,7 +106,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
-    final ListViewer viewer = new ListViewer( panel, SWT.BORDER ); 
+    final ListViewer viewer = new ListViewer( panel, SWT.BORDER );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new WorkbenchLabelProvider() );
     viewer.setInput( m_oldCalcCases );
@@ -121,7 +120,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
         if( selection.isEmpty() )
           setFolder( null );
         else
-          setFolder( (IFolder)selection.getFirstElement() ); 
+          setFolder( (IFolder)selection.getFirstElement() );
       }
     } );
     m_viewer = viewer;
@@ -141,10 +140,10 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   protected void setFolder( final IFolder folder )
   {
     m_folder = folder;
-    
+
     validateChoice();
   }
-  
+
   public void refresh( final IProgressMonitor monitor ) throws CoreException
   {
     final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
@@ -157,7 +156,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final IFolder[] calcCases = calcCaseCollector.getCalcCases();
 
     final List usedCalcCases = m_page.getCalcCases();
-    
+
     m_oldCalcCases.clear();
 
     IFolder newSelect = null;
@@ -166,7 +165,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
       for( int i = 0; i < calcCases.length; i++ )
       {
         final IFolder folder = calcCases[i];
-        
+
         if( !usedCalcCases.contains( folder ) )
         {
           m_oldCalcCases.add( folder );
@@ -188,13 +187,13 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
           if( newSelectFinal == null )
             viewer.setSelection( StructuredSelection.EMPTY );
-          else  
+          else
             viewer.setSelection( new StructuredSelection( newSelectFinal ) );
         }
       } );
     }
-    
-//    m_page.getWizard().getContainer().updateButtons();
+
+    //    m_page.getWizard().getContainer().updateButtons();
   }
 
   /**
@@ -204,8 +203,9 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
   public IFolder perform( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_folder == null )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
-    
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Es muss eine vorhandene Berechnung ausgewählt werden", null ) );
+
     return m_folder;
   }
 

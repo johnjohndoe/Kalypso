@@ -58,10 +58,10 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     return m_viewer;
   }
 
-  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
-      throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception,
+      CoreException
   {
-    monitor.beginTask( "Vorlage wird geladen" , 1000 );
+    monitor.beginTask( "Vorlage wird geladen", 1000 );
     if( m_gmlReader != null )
     {
       m_gmlReader.dispose();
@@ -118,8 +118,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Laden der Vorlagendatei.", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Vorlagendatei.", e ) );
     }
     finally
     {

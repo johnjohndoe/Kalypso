@@ -99,6 +99,7 @@ public class ObservationImportSelection implements ISelection
   {
     return m_selectedAdapter;
   }
+
   public boolean isRetainMetadata()
   {
     return m_retainMetadata;

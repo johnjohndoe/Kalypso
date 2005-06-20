@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies (SEAGIS)
@@ -71,8 +71,7 @@ import org.kalypsodeegree_impl.model.cs.WGS84ConversionInfo;
 import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 
 /**
- * Transforms a three dimensional geographic points using abridged versions of
- * formulas derived by Molodenski.
+ * Transforms a three dimensional geographic points using abridged versions of formulas derived by Molodenski.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -105,8 +104,7 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   private final double f;
 
   /**
-   * Difference in the semi-major axes (a1 - a2) of the first and second
-   * ellipsoids.
+   * Difference in the semi-major axes (a1 - a2) of the first and second ellipsoids.
    */
   private final double da;
 
@@ -149,8 +147,7 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff,
-      int numPts )
+  public void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff, int numPts )
   {
     int step = 0;
     if( srcPts == dstPts && srcOff < dstOff && srcOff + numPts * getDimSource() > dstOff )
@@ -196,8 +193,7 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts,
-      final int dstOff, int numPts )
+  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts, final int dstOff, int numPts )
   {
     // TODO: Copy the implementation from 'transform(double[]...)'.
     try
@@ -219,8 +215,7 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   }
 
   /**
-   * Gets the dimension of output points, which is the same than
-   * {@link #getDimSource()}.
+   * Gets the dimension of output points, which is the same than {@link #getDimSource()}.
    */
   public final int getDimTarget()
   {
@@ -228,8 +223,7 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   }
 
   /**
-   * Tests whether this transform does not move any points. This method returns
-   * always <code>false</code>.
+   * Tests whether this transform does not move any points. This method returns always <code>false</code>.
    */
   public final boolean isIdentity()
   {
@@ -243,9 +237,8 @@ class AbridgedMolodenskiTransform extends AbstractMathTransform implements Seria
   {
     final long code = Double.doubleToLongBits( dx )
         + 37
-        * ( Double.doubleToLongBits( dy ) + 37 * ( Double.doubleToLongBits( dz ) + 37 * ( Double
-            .doubleToLongBits( a ) + 37 * ( Double.doubleToLongBits( b ) + 37 * ( Double
-            .doubleToLongBits( da ) + 37 * ( Double.doubleToLongBits( df ) ) ) ) ) ) );
+        * ( Double.doubleToLongBits( dy ) + 37 * ( Double.doubleToLongBits( dz ) + 37 * ( Double.doubleToLongBits( a ) + 37 * ( Double
+            .doubleToLongBits( b ) + 37 * ( Double.doubleToLongBits( da ) + 37 * ( Double.doubleToLongBits( df ) ) ) ) ) ) );
     return (int)code ^ (int)( code >>> 32 );
   }
 

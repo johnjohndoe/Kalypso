@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -52,12 +51,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author schlienger
  */
-public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
-    implements ModellEventListener
+public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage implements ModellEventListener
 {
   /** Der Titel der Seite */
   public static final String PROP_MAPTITLE = "mapTitle";
@@ -69,16 +68,15 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
   public final static String PROP_RIGHTSASH = "rightSash";
 
   /**
-   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine f?r jede Kurventyp.
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine f?r jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
   private SashForm m_sashForm = null;
 
-  public ObservationMapTableDiagWizardPage( )
+  public ObservationMapTableDiagWizardPage()
   {
-    super( "<ObservationMapTableDiagWizardPage>",SELECT_FROM_MAPVIEW );
+    super( "<ObservationMapTableDiagWizardPage>", SELECT_FROM_MAPVIEW );
   }
 
   /**
@@ -104,18 +102,15 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
 
       IStatus status;
       if( e instanceof CoreException )
-        status = ((CoreException) e).getStatus();
+        status = ( (CoreException)e ).getStatus();
       else
-        status = KalypsoGisPlugin
-            .createErrorStatus( e.getLocalizedMessage(), e );
+        status = KalypsoGisPlugin.createErrorStatus( e.getLocalizedMessage(), e );
 
-      ErrorDialog.openError( null, "Fehler",
-          "Fehler beim Erzeugen der Wizard-Seite", status );
+      ErrorDialog.openError( null, "Fehler", "Fehler beim Erzeugen der Wizard-Seite", status );
     }
   }
 
-  private void createRightPanel( final SashForm sashForm )
-      throws NumberFormatException
+  private void createRightPanel( final SashForm sashForm ) throws NumberFormatException
   {
     final Composite rightPanel = new Composite( sashForm, SWT.NONE );
 
@@ -129,14 +124,18 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     createTablePanel( rightSash );
     createDiagramPanel( rightSash );
 
-    final int mainWeight = Integer.parseInt( getArguments().getProperty(
-        PROP_MAINSASH, "50" ) );
-    final int rightWeight = Integer.parseInt( getArguments().getProperty(
-        PROP_RIGHTSASH, "50" ) );
+    final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
+    final int rightWeight = Integer.parseInt( getArguments().getProperty( PROP_RIGHTSASH, "50" ) );
 
-    sashForm.setWeights( new int[] { mainWeight, 100 - mainWeight } );
+    sashForm.setWeights( new int[]
+    {
+        mainWeight,
+        100 - mainWeight } );
 
-    rightSash.setWeights( new int[] { rightWeight, 100 - rightWeight } );
+    rightSash.setWeights( new int[]
+    {
+        rightWeight,
+        100 - rightWeight } );
 
     // die Karte soll immer maximiert sein
     rightSash.addControlListener( getControlAdapter() );
@@ -153,14 +152,12 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     diagramControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
   }
 
-  private void createMapPanel( final Composite parent ) throws Exception,
-      CoreException
+  private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
 
-    final Control mapControl = initMap( composite,
-        MapPanel.WIDGET_SINGLE_SELECT );
+    final Control mapControl = initMap( composite, MapPanel.WIDGET_SINGLE_SELECT );
     final GridData gridData = new GridData( GridData.FILL_BOTH );
     mapControl.setLayoutData( gridData );
   }

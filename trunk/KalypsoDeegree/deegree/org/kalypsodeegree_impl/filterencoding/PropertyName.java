@@ -68,8 +68,7 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <PropertyName>element as defined in the
- * FeatureId DTD.
+ * Encapsulates the information of a <PropertyName>element as defined in the FeatureId DTD.
  * 
  * @author Markus Schneider
  * @version 07.08.2002
@@ -104,8 +103,7 @@ public class PropertyName extends Expression_Impl
   }
 
   /**
-   * Returns the last two parts of the XPATH-Expression in the format
-   * TABLENAME.VALUE.
+   * Returns the last two parts of the XPATH-Expression in the format TABLENAME.VALUE.
    */
   public String getSQLFieldQualifier()
   {
@@ -142,10 +140,9 @@ public class PropertyName extends Expression_Impl
   }
 
   /**
-   * Returns the <tt>PropertyName</tt>'s value (to be used in the evaluation
-   * of a complexer <tt>Expression</tt>). If the value is a geometry, an
-   * instance of <tt>GM_Object</tt> is returned, if it appears to be
-   * numerical, a <tt>Double</tt>, else a <tt>String</tt>.
+   * Returns the <tt>PropertyName</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>).
+   * If the value is a geometry, an instance of <tt>GM_Object</tt> is returned, if it appears to be numerical, a
+   * <tt>Double</tt>, else a <tt>String</tt>.
    * <p>
    * TODO: Improve datatype handling.
    * <p>

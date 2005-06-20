@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
@@ -76,11 +76,10 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * A Stroke allows a string of line segments (or any linear geometry) to be
- * rendered. There are three basic types of strokes: solid Color, GraphicFill
- * (stipple), and repeated GraphicStroke. A repeated graphic is plotted linearly
- * and has its graphic symbol bended around the curves of the line string. The
- * default is a solid black line (Color "#000000").
+ * A Stroke allows a string of line segments (or any linear geometry) to be rendered. There are three basic types of
+ * strokes: solid Color, GraphicFill (stipple), and repeated GraphicStroke. A repeated graphic is plotted linearly and
+ * has its graphic symbol bended around the curves of the line string. The default is a solid black line (Color
+ * "#000000").
  * <p>
  * The supported CSS-Parameter names are:
  * <ul>
@@ -97,8 +96,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.graphics.sld.Stroke,
-    Marshallable
+public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.graphics.sld.Stroke, Marshallable
 {
   private GraphicStroke graphicStroke = null;
 
@@ -151,8 +149,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * extracts the color of the stroke if it is simple (nor Expression) to avoid
-   * new calculation for each call of getStroke(Feature feature)
+   * extracts the color of the stroke if it is simple (nor Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleColor() throws FilterEvaluationException
   {
@@ -173,8 +171,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value ('" + o[i]
-              + "') for CSS-Parameter 'stroke' " + "does not denote a valid color!" );
+          throw new FilterEvaluationException( "Given value ('" + o[i] + "') for CSS-Parameter 'stroke' "
+              + "does not denote a valid color!" );
         }
       }
     }
@@ -199,8 +197,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * extracts the opacity of the stroke if it is simple (no Expression) to avoid
-   * new calculation for each call of getStroke(Feature feature)
+   * extracts the opacity of the stroke if it is simple (no Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleOpacity() throws FilterEvaluationException
   {
@@ -216,22 +214,22 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('"
-              + o[0] + "') has invalid format!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('" + o[0]
+              + "') has invalid format!" );
         }
 
         if( ( smplOpacity < 0.0 ) || ( smplOpacity > 1.0 ) )
         {
-          throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '"
-              + o[0] + "') must be between 0.0 and 1.0!" );
+          throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + o[0]
+              + "') must be between 0.0 and 1.0!" );
         }
       }
     }
   }
 
   /**
-   * extracts the width of the stroke if it is simple (no Expression) to avoid
-   * new calculation for each call of getStroke(Feature feature)
+   * extracts the width of the stroke if it is simple (no Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleWidth() throws FilterEvaluationException
   {
@@ -252,16 +250,16 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         if( smplWidth <= 0.0 )
         {
-          throw new FilterEvaluationException( "Value for parameter 'stroke-width' (given: '"
-              + smplWidth + "') must be > 0.0!" );
+          throw new FilterEvaluationException( "Value for parameter 'stroke-width' (given: '" + smplWidth
+              + "') must be > 0.0!" );
         }
       }
     }
   }
 
   /**
-   * extracts the line join of the stroke if it is simple (no Expression) to
-   * avoid new calculation for each call of getStroke(Feature feature)
+   * extracts the line join of the stroke if it is simple (no Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleLineJoin() throws FilterEvaluationException
   {
@@ -286,17 +284,16 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         else
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-linejoin' ('"
-              + value + "') is unsupported. Supported values are: "
-              + "'mitre', 'round' or 'bevel'!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-linejoin' ('" + value
+              + "') is unsupported. Supported values are: " + "'mitre', 'round' or 'bevel'!" );
         }
       }
     }
   }
 
   /**
-   * extracts the line cap of the stroke if it is simple (no Expression) to
-   * avoid new calculation for each call of getStroke(Feature feature)
+   * extracts the line cap of the stroke if it is simple (no Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleLineCap() throws FilterEvaluationException
   {
@@ -321,17 +318,16 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         else
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-linecap' ('"
-              + value + "') is unsupported. Supported values are: "
-              + "'butt', 'round' or 'square'!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-linecap' ('" + value
+              + "') is unsupported. Supported values are: " + "'butt', 'round' or 'square'!" );
         }
       }
     }
   }
 
   /**
-   * extracts the dasharray of the stroke if it is simple (no Expression) to
-   * avoid new calculation for each call of getStroke(Feature feature)
+   * extracts the dasharray of the stroke if it is simple (no Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleDasharray() throws FilterEvaluationException
   {
@@ -365,9 +361,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
           }
           catch( NumberFormatException e )
           {
-            throw new FilterEvaluationException(
-                "List of values for parameter 'stroke-dashoffset' "
-                    + "contains an invalid token: '" + s + "'!" );
+            throw new FilterEvaluationException( "List of values for parameter 'stroke-dashoffset' "
+                + "contains an invalid token: '" + s + "'!" );
           }
         }
 
@@ -386,8 +381,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * extracts the dash offset of the stroke if it is simple (no Expression) to
-   * avoid new calculation for each call of getStroke(Feature feature)
+   * extracts the dash offset of the stroke if it is simple (no Expression) to avoid new calculation for each call of
+   * getStroke(Feature feature)
    */
   private void extractSimpleDashOffset() throws FilterEvaluationException
   {
@@ -404,16 +399,15 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-dashoffset' ('"
-              + value + "') has invalid format!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-dashoffset' ('" + value
+              + "') has invalid format!" );
         }
       }
     }
   }
 
   /**
-   * The GraphicStroke element both indicates that a repeated-linear-graphic
-   * stroke type will be used.
+   * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
    * <p>
    * 
    * @returns the underlying <tt>GraphicStroke</tt> instance (may be null)
@@ -424,8 +418,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * The GraphicStroke element both indicates that a repeated-linear-graphic
-   * stroke type will be used.
+   * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
    * 
    * @param graphicStroke
    *          the graphicStroke element
@@ -437,19 +430,15 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * The stroke CssParameter element gives the solid color that will be used for
-   * a stroke. The color value is RGB-encoded using two hexadecimal digits per
-   * primary-color component, in the order Red, Green, Blue, prefixed with a
-   * hash (#) sign. The hexadecimal digits between A and F may be in either
-   * uppercase or lowercase. For example, full red is encoded as #ff0000 (with
-   * no quotation marks). The default color is defined to be black (#000000) in
-   * the context of the LineSymbolizer, if the stroke CssParameter element is
-   * absent.
+   * The stroke CssParameter element gives the solid color that will be used for a stroke. The color value is
+   * RGB-encoded using two hexadecimal digits per primary-color component, in the order Red, Green, Blue, prefixed with
+   * a hash (#) sign. The hexadecimal digits between A and F may be in either uppercase or lowercase. For example, full
+   * red is encoded as #ff0000 (with no quotation marks). The default color is defined to be black (#000000) in the
+   * context of the LineSymbolizer, if the stroke CssParameter element is absent.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -473,8 +462,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value ('" + s
-              + "') for CSS-Parameter 'stroke' " + "does not denote a valid color!" );
+          throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'stroke' "
+              + "does not denote a valid color!" );
         }
       }
     }
@@ -495,23 +484,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   public void setStroke( Color stroke )
   {
     this.color = stroke;
-    CssParameter strokeColor = StyleFactory.createCssParameter( "stroke", StyleFactory
-        .getColorAsHex( stroke ) );
+    CssParameter strokeColor = StyleFactory.createCssParameter( "stroke", StyleFactory.getColorAsHex( stroke ) );
     cssParams.put( "stroke", strokeColor );
   }
 
   /**
-   * The stroke-opacity CssParameter element specifies the level of translucency
-   * to use when rendering the stroke. The value is encoded as a floating-point
-   * value (float) between 0.0 and 1.0 with 0.0 representing completely
-   * transparent and 1.0 representing completely opaque, with a linear scale of
-   * translucency for intermediate values. For example, 0.65 would represent 65%
-   * opacity. The default value is 1.0 (opaque).
+   * The stroke-opacity CssParameter element specifies the level of translucency to use when rendering the stroke. The
+   * value is encoded as a floating-point value (float) between 0.0 and 1.0 with 0.0 representing completely transparent
+   * and 1.0 representing completely opaque, with a linear scale of translucency for intermediate values. For example,
+   * 0.65 would represent 65% opacity. The default value is 1.0 (opaque).
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -535,14 +520,14 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('"
-              + value + "') has invalid format!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('" + value
+              + "') has invalid format!" );
         }
 
         if( ( opacity < 0.0 ) || ( opacity > 1.0 ) )
         {
-          throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '"
-              + value + "') must be between 0.0 and 1.0!" );
+          throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + value
+              + "') must be between 0.0 and 1.0!" );
         }
       }
     }
@@ -576,16 +561,14 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * The stroke-width CssParameter element gives the absolute width (thickness)
-   * of a stroke in pixels encoded as a float. (Arguably, more units could be
-   * provided for encoding sizes, such as millimeters or typesetter's points.)
-   * The default is 1.0. Fractional numbers are allowed (with a system-dependent
-   * interpretation) but negative numbers are not.
+   * The stroke-width CssParameter element gives the absolute width (thickness) of a stroke in pixels encoded as a
+   * float. (Arguably, more units could be provided for encoding sizes, such as millimeters or typesetter's points.) The
+   * default is 1.0. Fractional numbers are allowed (with a system-dependent interpretation) but negative numbers are
+   * not.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -609,14 +592,14 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-width' ('"
-              + value + "') has invalid format!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-width' ('" + value
+              + "') has invalid format!" );
         }
 
         if( width <= 0.0 )
         {
-          throw new FilterEvaluationException( "Value for parameter 'stroke-width' (given: '"
-              + value + "') must be greater than 0!" );
+          throw new FilterEvaluationException( "Value for parameter 'stroke-width' (given: '" + value
+              + "') must be greater than 0!" );
         }
       }
     }
@@ -644,15 +627,13 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * The stroke-linejoin CssParameter element encode enumerated values telling
-   * how line strings should be joined (between line segments). The values are
-   * represented as content strings. The allowed values for line join are mitre,
+   * The stroke-linejoin CssParameter element encode enumerated values telling how line strings should be joined
+   * (between line segments). The values are represented as content strings. The allowed values for line join are mitre,
    * round, and bevel.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -683,9 +664,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         else
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-linejoin' ('"
-              + value + "') is unsupported. Supported values are: "
-              + "'mitre', 'round' or 'bevel'!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-linejoin' ('" + value
+              + "') is unsupported. Supported values are: " + "'mitre', 'round' or 'bevel'!" );
         }
       }
     }
@@ -730,15 +710,13 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * Thestroke-linecap CssParameter element encode enumerated values telling how
-   * line strings should be capped (at the two ends of the line string). The
-   * values are represented as content strings. The allowed values for line cap
-   * are butt, round, and square. The default values are system-dependent.
+   * Thestroke-linecap CssParameter element encode enumerated values telling how line strings should be capped (at the
+   * two ends of the line string). The values are represented as content strings. The allowed values for line cap are
+   * butt, round, and square. The default values are system-dependent.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -770,9 +748,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         else
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-linecap' ('"
-              + value + "') is unsupported. Supported values are: "
-              + "'butt', 'round' or 'square'!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-linecap' ('" + value
+              + "') is unsupported. Supported values are: " + "'butt', 'round' or 'square'!" );
         }
       }
     }
@@ -817,22 +794,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * Evaluates the 'stroke-dasharray' parameter as defined in OGC 02-070. The
-   * stroke-dasharray CssParameter element encodes a dash pattern as a series of
-   * space separated floats. The first number gives the length in pixels of dash
-   * to draw, the second gives the amount of space to leave, and this pattern
-   * repeats. If an odd number of values is given, then the pattern is expanded
-   * by repeating it twice to give an even number of values. Decimal values have
-   * a system-dependent interpretation (usually depending on whether
-   * antialiasing is being used). The default is to draw an unbroken line.
+   * Evaluates the 'stroke-dasharray' parameter as defined in OGC 02-070. The stroke-dasharray CssParameter element
+   * encodes a dash pattern as a series of space separated floats. The first number gives the length in pixels of dash
+   * to draw, the second gives the amount of space to leave, and this pattern repeats. If an odd number of values is
+   * given, then the pattern is expanded by repeating it twice to give an even number of values. Decimal values have a
+   * system-dependent interpretation (usually depending on whether antialiasing is being used). The default is to draw
+   * an unbroken line.
    * <p>
    * 
    * @param feature
    *          the encoded pattern
    * @throws FilterEvaluationException
    *           if the eevaluation fails or the encoded pattern is erroneous
-   * @return the decoded pattern as an array of float-values (null if the
-   *         parameter was not specified)
+   * @return the decoded pattern as an array of float-values (null if the parameter was not specified)
    */
   public float[] getDashArray( Feature feature ) throws FilterEvaluationException
   {
@@ -916,13 +890,12 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * The stroke-dashoffset CssParameter element specifies the distance as a
-   * float into the stroke-dasharray pattern at which to start drawing.
+   * The stroke-dashoffset CssParameter element specifies the distance as a float into the stroke-dasharray pattern at
+   * which to start drawing.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -944,8 +917,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
         catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Given value for parameter 'stroke-dashoffset' ('"
-              + value + "') has invalid format!" );
+          throw new FilterEvaluationException( "Given value for parameter 'stroke-dashoffset' ('" + value
+              + "') has invalid format!" );
         }
       }
     }
@@ -958,8 +931,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * The stroke-dashoffset CssParameter element specifies the distance as a
-   * float into the stroke-dasharray pattern at which to start drawing.
+   * The stroke-dashoffset CssParameter element specifies the distance as a float into the stroke-dasharray pattern at
+   * which to start drawing.
    * <p>
    * 
    * @param dashOffset
@@ -970,8 +943,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     if( dashOffset < 0 )
       dashOffset = 0;
     smplDashOffset = dashOffset;
-    CssParameter strokeDashOff = StyleFactory.createCssParameter( "stroke-dashoffset", ""
-        + dashOffset );
+    CssParameter strokeDashOff = StyleFactory.createCssParameter( "stroke-dashoffset", "" + dashOffset );
     cssParams.put( "stroke-dashoffset", strokeDashOff );
   }
 

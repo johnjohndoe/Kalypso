@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -52,25 +52,27 @@ import org.kalypso.util.list.IListManipulator;
 public abstract class AbstractOutlineAction extends FullAction implements ISelectionChangedListener
 {
   private final GisMapOutlineViewer m_outlineViewer;
+
   private IListManipulator m_listManipulator;
 
-  public AbstractOutlineAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer selectionProvider, final IListManipulator listManip )
+  public AbstractOutlineAction( final String text, final ImageDescriptor image, final String tooltipText,
+      final GisMapOutlineViewer selectionProvider, final IListManipulator listManip )
   {
     super( text, image, tooltipText );
-    
+
     m_outlineViewer = selectionProvider;
     m_listManipulator = listManip;
-    
+
     m_outlineViewer.addSelectionChangedListener( this );
-    
+
     refresh();
   }
-  
+
   public void dispose()
   {
     m_outlineViewer.removeSelectionChangedListener( this );
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
@@ -78,12 +80,12 @@ public abstract class AbstractOutlineAction extends FullAction implements ISelec
   {
     refresh();
   }
-  
+
   protected IListManipulator getListManipulator()
   {
     return m_listManipulator;
   }
-  
+
   protected GisMapOutlineViewer getOutlineviewer()
   {
     return m_outlineViewer;

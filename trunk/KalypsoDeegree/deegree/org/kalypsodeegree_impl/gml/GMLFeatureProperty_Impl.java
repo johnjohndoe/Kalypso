@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLException;
@@ -94,8 +94,7 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
   }
 
   /**
-   * factory method to create a GMLFeatureProperty. the property that will be
-   * return doesn't contain a value.
+   * factory method to create a GMLFeatureProperty. the property that will be return doesn't contain a value.
    */
   public static GMLFeatureProperty createGMLFeatureProperty( Document doc, String propName )
   {
@@ -115,11 +114,10 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
   }
 
   /**
-   * factory method to create a GMLFeatureProperty. the property that will be
-   * return doesn't contain a value.
+   * factory method to create a GMLFeatureProperty. the property that will be return doesn't contain a value.
    */
-  public static GMLFeatureProperty createGMLFeatureProperty( Document doc, String propName,
-      GMLFeature feature ) throws GMLException
+  public static GMLFeatureProperty createGMLFeatureProperty( Document doc, String propName, GMLFeature feature )
+      throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLFeatureProperty(Document, GMLFeature)" );
 
@@ -159,14 +157,12 @@ public class GMLFeatureProperty_Impl extends GMLProperty_Impl implements GMLFeat
   }
 
   /**
-   * will be overwritten by this class in a way that an exception will be thrown
-   * if the method is called. Because it doesn't make any sense to set the value
-   * of a geo property as a String.
+   * will be overwritten by this class in a way that an exception will be thrown if the method is called. Because it
+   * doesn't make any sense to set the value of a geo property as a String.
    */
   public void setPropertyValue( String value )
   {
-    throw new NoSuchMethodError( "It doesn't make any sense to set the value "
-        + "of a feature property as a String" );
+    throw new NoSuchMethodError( "It doesn't make any sense to set the value " + "of a feature property as a String" );
   }
 
   public String toString()

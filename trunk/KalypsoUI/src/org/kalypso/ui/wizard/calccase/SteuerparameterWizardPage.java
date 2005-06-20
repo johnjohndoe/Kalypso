@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.calccase;
 
 import java.io.OutputStreamWriter;
@@ -97,8 +97,8 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private Composite m_panel;
 
-  public SteuerparameterWizardPage( final IProjectProvider pp,
-      final boolean overrideCanFlipToNextPage, final ImageDescriptor image )
+  public SteuerparameterWizardPage( final IProjectProvider pp, final boolean overrideCanFlipToNextPage,
+      final ImageDescriptor image )
   {
     super( "EditCalcCaseControlPage", "Steuerparameter", image );
 
@@ -120,8 +120,7 @@ public class SteuerparameterWizardPage extends WizardPage
     setControl( m_panel );
   }
 
-  public void saveChanges( final IFolder folder, final IProgressMonitor monitor )
-      throws CoreException
+  public void saveChanges( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Steuerparameter speichern", 2000 );
 
@@ -137,8 +136,8 @@ public class SteuerparameterWizardPage extends WizardPage
         fc.collectChanges( changes );
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        new ChangeFeaturesCommand( m_workspace, (FeatureChange[])changes
-            .toArray( new FeatureChange[changes.size()] ) ).process();
+        new ChangeFeaturesCommand( m_workspace, (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] ) )
+            .process();
       }
     } );
 
@@ -148,7 +147,7 @@ public class SteuerparameterWizardPage extends WizardPage
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
 
     final GMLWorkspace workspace = m_workspace;
-    final SetContentHelper thread = new SetContentHelper(  )
+    final SetContentHelper thread = new SetContentHelper()
     {
       public void write( final OutputStreamWriter w ) throws Throwable
       {
@@ -158,7 +157,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
     try
     {
-      thread.setFileContents(controlFile, false, false, new NullProgressMonitor());
+      thread.setFileContents( controlFile, false, false, new NullProgressMonitor() );
     }
     finally
     {
@@ -201,8 +200,8 @@ public class SteuerparameterWizardPage extends WizardPage
   }
 
   /**
-   * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden,
-   * wird diese geladen, sonst die default.
+   * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden, wird diese geladen, sonst die
+   * default.
    * 
    * @param currentCalcCase
    */
@@ -213,12 +212,14 @@ public class SteuerparameterWizardPage extends WizardPage
     final Composite panel = m_panel;
     if( panel != null && !panel.isDisposed() )
     {
-      m_panel.getDisplay().asyncExec( new Runnable( ) {
+      m_panel.getDisplay().asyncExec( new Runnable()
+      {
         public void run()
         {
           createFeatureControl( panel );
           panel.layout();
-        }} );
+        }
+      } );
     }
   }
 
@@ -245,7 +246,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       // ignore, m_workspace stays null, this will be handle later
       e.printStackTrace();
-      
+
       setErrorMessage( e.getLocalizedMessage() );
     }
 
@@ -257,14 +258,13 @@ public class SteuerparameterWizardPage extends WizardPage
 
     try
     {
-      final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/"
-          + ModelNature.CONTROL_VIEW_PATH );
+      final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH );
       m_featureComposite.addView( viewURL );
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      
+
       // ignore, its 'just' bad configured
     }
 
@@ -273,15 +273,14 @@ public class SteuerparameterWizardPage extends WizardPage
       setPageComplete( false );
       return;
     }
-    
+
     final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
     featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Button checkUpdate = new Button( m_panel, SWT.CHECK );
     checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     checkUpdate.setText( "Zeitreihen aktualisieren" );
-    checkUpdate
-        .setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
+    checkUpdate.setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
     checkUpdate.setSelection( m_update );
     m_checkUpdate = checkUpdate;
 
@@ -295,7 +294,7 @@ public class SteuerparameterWizardPage extends WizardPage
         setUpdate( checkUpdate.getSelection() );
       }
     } );
-    
+
     final FeatureComposite featureComposite = m_featureComposite;
     if( featureComposite != null )
     {

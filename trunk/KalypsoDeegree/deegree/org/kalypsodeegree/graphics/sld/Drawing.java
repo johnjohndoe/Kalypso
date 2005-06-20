@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,15 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 import java.util.HashMap;
 
 /**
- * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt>
- * defining the methods <tt>getGraphicFill()</tt> and
- * <tt>getCssParameters()</tt> that are common to both.
+ * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
+ * <tt>getGraphicFill()</tt> and <tt>getCssParameters()</tt> that are common to both.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -75,16 +74,16 @@ public interface Drawing
 {
 
   /**
-   * The GraphicFill element both indicates that a stipple-fill repeated graphic
-   * will be used and specifies the fill graphic.
+   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
+   * graphic.
    * 
    * @return the GraphicFill-Element
    */
   GraphicFill getGraphicFill();
 
   /**
-   * The GraphicFill element both indicates that a stipple-fill repeated graphic
-   * will be used and specifies the fill graphic.
+   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
+   * graphic.
    * 
    * @param graphicFill
    *          the GraphicFill-Element
@@ -92,20 +91,17 @@ public interface Drawing
   void setGraphicFill( GraphicFill graphicFill );
 
   /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter
-   * element.
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
    * <p>
    * </p>
-   * This method is for technical use. The user should access the specialized
-   * methods of the derived classes.
+   * This method is for technical use. The user should access the specialized methods of the derived classes.
    * 
    * @return the CssParameters
    */
   HashMap getCssParameters();
 
   /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter
-   * element.
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
    * <p>
    * </p>
    * This method sets CssParameters.
@@ -116,8 +112,7 @@ public interface Drawing
   void setCssParameters( HashMap cssParameters );
 
   /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter
-   * element.
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
    * <p>
    * </p>
    * This method adds a CssParameter to a given set of CssParameters.
@@ -131,8 +126,7 @@ public interface Drawing
   void addCssParameter( Object key, Object value );
 
   /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter
-   * element.
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
    * <p>
    * </p>
    * This method removes a CssParameter from a given set of CssParameters.

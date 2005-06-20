@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.createpages;
 
 import java.io.File;
@@ -73,8 +73,7 @@ import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
 /**
- * Diese Implementierung erzeugt einen völlig neuen Rechenfall im
- * Prognoseverzeichnis
+ * Diese Implementierung erzeugt einen völlig neuen Rechenfall im Prognoseverzeichnis
  * 
  * @author belger
  */
@@ -100,7 +99,8 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private final ModelSynchronizer m_synchronizer;
 
-  public CopyServerCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page, final ModelSynchronizer synchronizer )
+  public CopyServerCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page,
+      final ModelSynchronizer synchronizer )
   {
     m_label = label;
     m_project = project;
@@ -132,16 +132,16 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
         setName( edit.getText() );
       }
     } );
-    
+
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "auf dem Server vorliegende Hochwasser-Vorhersagen:" );
 
     final ListViewer viewer = new ListViewer( panel, SWT.BORDER );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new FileLabelProvider() );
-    
+
     viewer.setInput( m_serverDirs );
-    
+
     final GridData viewerData = new GridData( GridData.FILL_BOTH );
     viewerData.horizontalSpan = 2;
     viewer.getControl().setLayoutData( viewerData );
@@ -167,14 +167,14 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
   protected void setName( final String text )
   {
     m_name = text;
-    
+
     validateChoice();
   }
 
   protected void setDir( final File dir )
   {
     m_dir = dir;
-    
+
     validateChoice();
   }
 
@@ -222,8 +222,8 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
     final IFolder folder = nature.getPrognoseFolder();
 
     if( m_name.length() == 0 )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Geben Sie einen Namen für die Vorhersage ein", null ) );
+      throw new CoreException( KalypsoGisPlugin
+          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein", null ) );
 
     final IFolder calcCaseFolder = folder.getFolder( m_name );
     if( calcCaseFolder.exists() )
@@ -275,7 +275,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
       m_page.setMessage( null );
       m_page.setPageComplete( false );
     }
-    
+
     final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );
     if( status.getSeverity() == IStatus.OK )
     {

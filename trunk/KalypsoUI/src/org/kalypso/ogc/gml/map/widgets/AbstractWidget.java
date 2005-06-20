@@ -102,11 +102,12 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
     m_commandPoster.postCommand( command, runAfterCommand );
   }
-//  public void postViewCommand( ICommand command )
-//  {
-//    if( command != null )
-//      m_commandPoster.postCommand( command, null );
-//  }
+
+  //  public void postViewCommand( ICommand command )
+  //  {
+  //    if( command != null )
+  //      m_commandPoster.postCommand( command, null );
+  //  }
 
   //  /**
   //   * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
@@ -118,7 +119,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   //      m_commandPoster.postCommand( command, null );
   //  }
 
-//  protected abstract ICommand performIntern();
+  //  protected abstract ICommand performIntern();
 
   protected final GM_Position getPosition( Point pixelPoint )
   {
@@ -167,7 +168,8 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   {
 
     final GeoTransform gt = m_mapPanel.getProjection();
-    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt.getSourceY( y2 ) );
+    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt
+        .getSourceY( y2 ) );
   }
 
   /**
@@ -175,7 +177,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void clickPopup( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -183,7 +185,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void dragged( Point p )
   {
-    // not implemented by default
+  // not implemented by default
 
   }
 
@@ -193,7 +195,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public void finish()
   {
 
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -201,7 +203,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void leftClicked( Point p )
   {
-    // not implemented by default
+  // not implemented by default
 
   }
 
@@ -211,7 +213,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   public void leftPressed( Point p )
   {
 
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -219,7 +221,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void leftReleased( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -227,7 +229,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void middleClicked( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -235,7 +237,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void middlePressed( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -243,7 +245,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void middleReleased( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -251,7 +253,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void moved( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -259,7 +261,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void rightClicked( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -267,7 +269,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void rightPressed( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -275,7 +277,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void rightReleased( Point p )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   /**
@@ -283,15 +285,13 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
    */
   public void paint( Graphics g )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   protected final MapPanel getMapPanel()
   {
     return m_mapPanel;
   }
-
-  
 
   public ICommandTarget getCommandTarget()
   {
@@ -300,7 +300,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   public void onModellChange( final ModellEvent modellEvent )
   {
-    // not implemented by default
+  // not implemented by default
   }
 
   public IKalypsoTheme getActiveTheme()
@@ -327,7 +327,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
 
   protected void mouseFunctionChanged()
   {
-    // TODO
+  // TODO
   }
 
   protected final void setLeftMFunction( String leftMFunction )

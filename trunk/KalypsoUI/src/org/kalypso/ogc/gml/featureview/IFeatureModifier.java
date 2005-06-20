@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public interface IFeatureModifier extends ICellEditorValidator
 {
-  public void dispose( );
+  public void dispose();
 
   public String getLabel( final Feature f );
 
@@ -67,8 +67,7 @@ public interface IFeatureModifier extends ICellEditorValidator
   public Object getValue( final Feature f );
 
   /**
-   * macht aus dem (editierten) Objekt ein Object, welches dem Feature wieder als
-   * Property gesetzt werden kann
+   * macht aus dem (editierten) Objekt ein Object, welches dem Feature wieder als Property gesetzt werden kann
    * 
    * @param f
    * @param value
@@ -80,5 +79,5 @@ public interface IFeatureModifier extends ICellEditorValidator
 
   public String isValid( final Object value );
 
-  public FeatureTypeProperty getFeatureTypeProperty( );
+  public FeatureTypeProperty getFeatureTypeProperty();
 }

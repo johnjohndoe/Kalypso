@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import java.io.File;
@@ -100,8 +100,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
 
-      final ISelection selection = m_window.getSelectionService().getSelection(
-          IPageLayout.ID_RES_NAV );
+      final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
       final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
           "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
 
@@ -113,12 +112,12 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
         protected IStatus run( final IProgressMonitor monitor )
         {
           monitor.beginTask( "Rechenvarianten archivieren", calcCases.length * 1000 );
-          
+
           final Collection errorStati = new LinkedList();
           for( int i = 0; i < calcCases.length; i++ )
           {
             final IFolder folder = calcCases[i];
-            
+
             try
             {
               synchronizer.commitFolder( folder, new SubProgressMonitor( monitor, 1000 ) );

@@ -51,8 +51,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return (Feature)m_indexMap.get( id );
   }
 
-  public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature,
-      final URL context, final String schemaLocation, final String schemaNamespace, final Map nsMap )
+  public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature, final URL context,
+      final String schemaLocation, final String schemaNamespace, final Map nsMap )
   {
     m_featureTypes = featureTypes;
     m_context = context;
@@ -81,8 +81,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       return (Feature)linkValue;
     // must be a reference
     String linkID = (String)linkValue;
-    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature
-        .getFeatureType().getProperty( linkPropertyName );
+    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature.getFeatureType().getProperty(
+        linkPropertyName );
     FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
     for( int _ft = 0; _ft < linkFTs.length; _ft++ )
     {
@@ -126,8 +126,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       }
       // must be a reference
       String linkID = (String)linkValue;
-      FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature
-          .getFeatureType().getProperty( linkPropertyName );
+      FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature.getFeatureType().getProperty(
+          linkPropertyName );
       FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
       for( int _ft = 0; _ft < linkFTs.length; _ft++ )
       {
@@ -159,8 +159,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution
-   * gilt nicht
+   * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution gilt nicht
    */
   public Feature[] getFeatures( final FeatureType ft )
   {
@@ -212,8 +211,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.FeatureType, java.lang.String)
    */
-  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
-      String linkPropertyName )
+  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType, String linkPropertyName )
   {
     if( linkTargetfeature == null )
       return new Feature[0];
@@ -229,8 +227,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result.add( features[i] );
     }
 
-    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType,
-        getFeatureTypes() );
+    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
     for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {
       final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
@@ -381,8 +378,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * Holt den durch den FeaturePath angegebenen Typ Systax des FeaturePath:
-   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
-   * der featureTypeName optional ist
+   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der featureTypeName optional ist
    * 
    * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
@@ -439,8 +435,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */
-  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature )
-      throws Exception
+  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature ) throws Exception
   {
     final Object prop = parent.getProperty( propName );
 
@@ -466,14 +461,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, java.lang.String)
    */
-  public void addFeatureAsAggregation( Feature srcFE, String propName, int pos, String featureID )
-      throws Exception
+  public void addFeatureAsAggregation( Feature srcFE, String propName, int pos, String featureID ) throws Exception
   {
     if( srcFE.getFeatureType().isListProperty( propName ) )
     {
       int maxOccurs = srcFE.getFeatureType().getMaxOccurs( propName );
       final List list = (List)srcFE.getProperty( propName );
-      if( list.size() < maxOccurs || maxOccurs==FeatureType.UNBOUND_OCCURENCY )
+      if( list.size() < maxOccurs || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
         list.add( pos, featureID );
       else
         throw new Exception( "New Feature violates maxOccurs" );
@@ -491,8 +485,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsAggregationFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String)
    */
-  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName,
-      String childFeatureId )
+  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName, String childFeatureId )
   {
     final Object prop = parentFeature.getProperty( propName );
     if( parentFeature.getFeatureType().isListProperty( propName ) )
@@ -512,8 +505,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
-      Feature childFeature )
+  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName, Feature childFeature )
   {
     boolean ok = false;
     final Object prop = parentFeature.getProperty( propName );
@@ -550,7 +542,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor, java.lang.String, int)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   *      java.lang.String, int)
    */
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
@@ -559,10 +552,11 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       fv.visit( (Feature)featureFromPath );
     else if( featureFromPath instanceof FeatureList )
       accept( fv, (FeatureList)featureFromPath, depth );
-    else throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
+    else
+      throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
   }
 
-    /**
+  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
    */

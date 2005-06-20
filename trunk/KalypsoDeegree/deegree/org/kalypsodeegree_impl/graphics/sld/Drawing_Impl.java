@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.HashMap;
@@ -66,9 +66,8 @@ import org.kalypsodeegree.graphics.sld.Drawing;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 
 /**
- * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt>
- * defining the methods <tt>getGraphicFill()</tt> and
- * <tt>getCssParameters()</tt> that are common to both.
+ * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
+ * <tt>getGraphicFill()</tt> and <tt>getCssParameters()</tt> that are common to both.
  * <p>
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
@@ -91,8 +90,8 @@ public class Drawing_Impl implements Drawing
   }
 
   /**
-   * The GraphicFill element both indicates that a stipple-fill repeated graphic
-   * will be used and specifies the fill graphic.
+   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
+   * graphic.
    * 
    * @return the GraphicFill-Element
    */
@@ -102,8 +101,8 @@ public class Drawing_Impl implements Drawing
   }
 
   /**
-   * The GraphicFill element both indicates that a stipple-fill repeated graphic
-   * will be used and specifies the fill graphic.
+   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
+   * graphic.
    * 
    * @param graphicFill
    *          the GraphicFill-Element
@@ -114,12 +113,10 @@ public class Drawing_Impl implements Drawing
   }
 
   /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter
-   * element.
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
    * <p>
    * </p>
-   * This method is for technical use. The user should access the specialized
-   * methods of the derived classes.
+   * This method is for technical use. The user should access the specialized methods of the derived classes.
    * 
    * @return the CssParameters
    */
@@ -129,8 +126,7 @@ public class Drawing_Impl implements Drawing
   }
 
   /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter
-   * element.
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
    * <p>
    * </p>
    * This method sets CssParameters.
@@ -144,8 +140,8 @@ public class Drawing_Impl implements Drawing
   }
 
   /**
-   * Simple SVG/CSS2 styling parameters are given with the CssParameter element.
-   * This method adds a CssParameter to a given set of CssParameters.
+   * Simple SVG/CSS2 styling parameters are given with the CssParameter element. This method adds a CssParameter to a
+   * given set of CssParameters.
    * <p>
    * 
    * @param key

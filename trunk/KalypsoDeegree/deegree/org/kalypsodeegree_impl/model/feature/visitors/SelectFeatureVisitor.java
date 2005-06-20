@@ -23,7 +23,7 @@ public class SelectFeatureVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     f.select( m_selectionID );
-    
+
     return true;
   }
 }

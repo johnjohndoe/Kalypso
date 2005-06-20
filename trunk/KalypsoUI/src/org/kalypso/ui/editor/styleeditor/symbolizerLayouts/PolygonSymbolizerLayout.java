@@ -36,21 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -68,6 +61,13 @@ import org.kalypso.ui.editor.styleeditor.panels.StrokeDasharrayPanel;
 import org.kalypso.ui.editor.styleeditor.panels.StrokeDashoffsetPanel;
 import org.kalypso.ui.editor.styleeditor.panels.StrokeLinecapComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.StrokeLinejoinComboPanel;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -79,8 +79,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
 
   private Fill polygonFill = null;
 
-  public PolygonSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle )
+  public PolygonSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -107,22 +106,20 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       polygonFill = StyleFactory.createFill( java.awt.Color.WHITE, 0.0 );
       polygonSymbolizer.setFill( polygonFill );
     }
-    ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( fillGroup,
-        MessageBundle.STYLE_EDITOR_FILL_COLOR, polygonFill.getFill( null ) );
+    ColorChooserPanel fillColorChooserPanel = new ColorChooserPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_COLOR,
+        polygonFill.getFill( null ) );
     fillColorChooserPanel.addColorChooserListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
         Color color = ( (ColorChooserPanel)event.getSource() ).getColor();
-        getPolygonFill().setFill(
-            new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
+        getPolygonFill().setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
       }
     } );
 
-    SliderPanel fillOpacityPanel = new SliderPanel( fillGroup,
-        MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, polygonFill
-            .getOpacity( null ) );
+    SliderPanel fillOpacityPanel = new SliderPanel( fillGroup, MessageBundle.STYLE_EDITOR_FILL_OPACITY, 0, 1, 1,
+        SliderPanel.DECIMAL, polygonFill.getOpacity( null ) );
     fillOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -147,21 +144,20 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     strokeGroup.layout();
 
     final Stroke polygonStroke = polygonSymbolizer.getStroke();
-    ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_COLOR, polygonStroke.getStroke( null ) );
+    ColorChooserPanel strokeColorChooserPanel = new ColorChooserPanel( strokeGroup, MessageBundle.STYLE_EDITOR_COLOR,
+        polygonStroke.getStroke( null ) );
     strokeColorChooserPanel.addColorChooserListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
       {
         Color color = ( (ColorChooserPanel)event.getSource() ).getColor();
-        polygonStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color
-            .getBlue() ) );
+        polygonStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
         userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
       }
     } );
 
-    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH,
-        0, 10, 1, SliderPanel.INTEGER, polygonStroke.getWidth( null ) );
+    SliderPanel strokeWidthPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
+        SliderPanel.INTEGER, polygonStroke.getWidth( null ) );
     strokeWidthPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -172,9 +168,8 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       }
     } );
 
-    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1, SliderPanel.DECIMAL, polygonStroke
-            .getOpacity( null ) );
+    SliderPanel strokeOpacityPanel = new SliderPanel( strokeGroup, MessageBundle.STYLE_EDITOR_OPACITY, 0, 1, 1,
+        SliderPanel.DECIMAL, polygonStroke.getOpacity( null ) );
     strokeOpacityPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -186,8 +181,8 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Linejoin ComboPanel
-    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_LINEJOIN, polygonStroke.getLineJoin( null ) );
+    ComboPanel strokeLinejoinPanel = new StrokeLinejoinComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINEJOIN,
+        polygonStroke.getLineJoin( null ) );
     polygonStroke.setLineJoin( strokeLinejoinPanel.getSelection() );
     strokeLinejoinPanel.addPanelListener( new PanelListener()
     {
@@ -200,8 +195,8 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     } );
 
     // Stroke Linecap ComboPanel
-    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup,
-        MessageBundle.STYLE_EDITOR_LINECAP, polygonStroke.getLineCap( null ) );
+    ComboPanel strokeLinecapPanel = new StrokeLinecapComboPanel( strokeGroup, MessageBundle.STYLE_EDITOR_LINECAP,
+        polygonStroke.getLineCap( null ) );
     polygonStroke.setLineCap( strokeLinecapPanel.getSelection() );
     strokeLinecapPanel.addPanelListener( new PanelListener()
     {

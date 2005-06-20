@@ -59,8 +59,7 @@ public class AddRelationCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public AddRelationCommand( final GMLWorkspace workspace, Feature srcFE, String propertyName,
-      int pos, Feature destFE )
+  public AddRelationCommand( final GMLWorkspace workspace, Feature srcFE, String propertyName, int pos, Feature destFE )
   {
     m_workspace = workspace;
     m_parentFeature = srcFE;
@@ -83,8 +82,8 @@ public class AddRelationCommand implements ICommand
   public void process() throws Exception
   {
     m_workspace.addFeatureAsAggregation( m_parentFeature, m_propName, m_pos, m_linkFeature.getId() );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
-        m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -105,8 +104,8 @@ public class AddRelationCommand implements ICommand
 
     m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_propName, m_linkFeature.getId() );
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
-        m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**

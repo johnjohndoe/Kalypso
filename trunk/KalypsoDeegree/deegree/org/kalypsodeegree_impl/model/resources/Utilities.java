@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,11 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Collections
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * A set of miscellaneous methods.
@@ -72,10 +73,9 @@ import java.util.Arrays;
 public final class Utilities
 {
   /**
-   * An array of strings containing only white spaces. String length are equal
-   * to their index + 1 in the <code>spacesFactory</code> array. For example,
-   * <code>spacesFactory[4]</code> contains a string of length 5. Strings are
-   * constructed only when first needed.
+   * An array of strings containing only white spaces. String length are equal to their index + 1 in the
+   * <code>spacesFactory</code> array. For example, <code>spacesFactory[4]</code> contains a string of length 5.
+   * Strings are constructed only when first needed.
    */
   private static final String[] spacesFactory = new String[20];
 
@@ -86,9 +86,8 @@ public final class Utilities
   {}
 
   /**
-   * Determines whether the character is a superscript. Most superscripts have
-   * unicode value from \\u2070 to \\u207F inclusive. Superscripts are the
-   * following symbols:
+   * Determines whether the character is a superscript. Most superscripts have unicode value from \\u2070 to \\u207F
+   * inclusive. Superscripts are the following symbols:
    * 
    * <blockquote>
    * 
@@ -115,9 +114,8 @@ public final class Utilities
   }
 
   /**
-   * Determines whether the character is a subscript. Most subscripts have
-   * unicode value from \\u2080 ti \\u208E inclusive. Subscripts are the
-   * following symbols:
+   * Determines whether the character is a subscript. Most subscripts have unicode value from \\u2080 ti \\u208E
+   * inclusive. Subscripts are the following symbols:
    * 
    * <blockquote>
    * 
@@ -133,8 +131,8 @@ public final class Utilities
   }
 
   /**
-   * Converts the character argument to superscript. Only the following
-   * characters can be converted (other characters are left unchanged):
+   * Converts the character argument to superscript. Only the following characters can be converted (other characters
+   * are left unchanged):
    * 
    * <blockquote>
    * 
@@ -173,8 +171,8 @@ public final class Utilities
   }
 
   /**
-   * Converts the character argument to subscript. Only the following characters
-   * can be converted (other characters are left unchanged):
+   * Converts the character argument to subscript. Only the following characters can be converted (other characters are
+   * left unchanged):
    * 
    * <blockquote>
    * 
@@ -254,8 +252,8 @@ public final class Utilities
   }
 
   /**
-   * Returns a string of the specified length filled with white spaces. This
-   * method try to returns a pre-allocated string if possible.
+   * Returns a string of the specified length filled with white spaces. This method try to returns a pre-allocated
+   * string if possible.
    * 
    * @param length
    *          The string length. Negative values are clamp to 0.
@@ -293,9 +291,8 @@ public final class Utilities
   }
 
   /**
-   * Returns a short class name for the specified class. This method will ommit
-   * the package name. For exemple, it will returns "String" instead of
-   * "java.lang.String" for a {@link String}object.
+   * Returns a short class name for the specified class. This method will ommit the package name. For exemple, it will
+   * returns "String" instead of "java.lang.String" for a {@link String}object.
    * 
    * @param classe
    *          The object (may be <code>null</code>).
@@ -312,9 +309,8 @@ public final class Utilities
   }
 
   /**
-   * Returns a short class name for the specified object. This method will ommit
-   * the package name. For exemple, it will returns "String" instead of
-   * "java.lang.String" for a {@link String}object.
+   * Returns a short class name for the specified object. This method will ommit the package name. For exemple, it will
+   * returns "String" instead of "java.lang.String" for a {@link String}object.
    * 
    * @param object
    *          The object (may be <code>null</code>).
@@ -326,8 +322,7 @@ public final class Utilities
   }
 
   /**
-   * Convenience method for testing two objects for equality. One or both
-   * objects may be null.
+   * Convenience method for testing two objects for equality. One or both objects may be null.
    */
   public static boolean equals( final Object object1, final Object object2 )
   {
@@ -335,13 +330,12 @@ public final class Utilities
   }
 
   /**
-   * Invoked when an unexpected error occured. The action taken by this method
-   * is implementation dependent. On JRE 1.4, it may record the error in the
-   * logging. On JRE 1.3, it may just dump the stack trace on the error stream.
+   * Invoked when an unexpected error occured. The action taken by this method is implementation dependent. On JRE 1.4,
+   * it may record the error in the logging. On JRE 1.3, it may just dump the stack trace on the error stream.
    * 
    * @param paquet
-   *          The package where the error occured. This information may be used
-   *          to fetch an appropriate {@link Logger}for logging the error.
+   *          The package where the error occured. This information may be used to fetch an appropriate {@link Logger}
+   *          for logging the error.
    * @param classe
    *          The class name where the error occured.
    * @param method
@@ -349,19 +343,16 @@ public final class Utilities
    * @param error
    *          The error.
    */
-  public static void unexpectedException( final String paquet, final String classe,
-      final String method, final Throwable error )
+  public static void unexpectedException( final String paquet, final String classe, final String method,
+      final Throwable error )
   {
   /*
-   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // final StringBuffer buffer = new
-   * StringBuffer(getShortClassName(error)); // final String message =
-   * error.getLocalizedMessage(); // if (message!=null) // { // buffer.append(":
-   * "); // buffer.append(message); // } // final LogRecord record = new
-   * LogRecord(Level.WARNING, buffer.toString()); // record.setSourceClassName
-   * (classe); // record.setSourceMethodName(method); // record.setThrown
-   * (error); // Logger.getLogger(paquet).log(record); /*----- END OF JDK 1.4
-   * DEPENDENCIES ---- error.printStackTrace(); ------- END OF JDK 1.3 FALLBACK
-   * --------
+   * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // final StringBuffer buffer = new StringBuffer(getShortClassName(error)); //
+   * final String message = error.getLocalizedMessage(); // if (message!=null) // { // buffer.append(": "); //
+   * buffer.append(message); // } // final LogRecord record = new LogRecord(Level.WARNING, buffer.toString()); //
+   * record.setSourceClassName (classe); // record.setSourceMethodName(method); // record.setThrown (error); //
+   * Logger.getLogger(paquet).log(record); /*----- END OF JDK 1.4 DEPENDENCIES ---- error.printStackTrace(); ------- END
+   * OF JDK 1.3 FALLBACK --------
    */
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -54,11 +54,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * @author Belger
  */
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
-{    
+{
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
+   *      org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final String format )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
+      final String format )
   {
     final String type = ftp.getType();
 
@@ -78,7 +80,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
       return new StringModifier( ftp );
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
-    if( FeatureHelper.isGeometryType(type) )
+    if( FeatureHelper.isGeometryType( type ) )
       return new ButtonModifier( workspace, ftp );
     if( "FeatureAssociationType".equals( type ) )
       return new ButtonModifier( workspace, ftp );

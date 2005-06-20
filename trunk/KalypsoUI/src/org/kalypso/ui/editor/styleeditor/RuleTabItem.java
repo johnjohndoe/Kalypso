@@ -44,10 +44,6 @@
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -68,6 +64,10 @@ import org.kalypso.ui.editor.styleeditor.panels.LegendLabel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
@@ -119,8 +119,8 @@ public class RuleTabItem
 
     final TabFolder symbolizerTabFolder;
 
-    final TextInputPanel titleInputPanel = new TextInputPanel( composite,
-        MessageBundle.STYLE_EDITOR_TITLE, rule.getTitle() );
+    final TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rule
+        .getTitle() );
     titleInputPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )
@@ -129,8 +129,7 @@ public class RuleTabItem
         if( title == null || title.trim().length() == 0 )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-              MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
           titleInputPanel.setInputText( rule.getTitle() );
         }
@@ -138,8 +137,7 @@ public class RuleTabItem
         {
           rule.setTitle( title );
           tabItem.setText( title );
-          getUserStyle().fireModellEvent(
-              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
@@ -157,8 +155,7 @@ public class RuleTabItem
         if( min > max )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-              MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
           minDenominatorPanel.setDenominator( rule.getMinScaleDenominator() );
         }
@@ -170,8 +167,7 @@ public class RuleTabItem
           {
             symbolizers[counter2].setMinScaleDenominator( min );
           }
-          getUserStyle().fireModellEvent(
-              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
@@ -200,8 +196,7 @@ public class RuleTabItem
         if( min > max )
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-              MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
           maxDenominatorPanel.setDenominator( rule.getMaxScaleDenominator() );
         }
@@ -218,18 +213,16 @@ public class RuleTabItem
           {
             symbolizers[counter3].setMaxScaleDenominator( max );
           }
-          getUserStyle().fireModellEvent(
-              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
         }
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
 
-    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite,
-        MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType );
+    AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER,
+        m_featureType );
 
-    final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule
-        .getSymbolizers().length );
+    final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule.getSymbolizers().length );
 
     new LegendLabel( composite, m_userStyle, i );
 
@@ -251,8 +244,7 @@ public class RuleTabItem
             symbolizerTabFolder.getItem( index ).dispose();
             setFocusedSymbolizerItem( index );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireModellEvent(
-                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
           }
           drawSymbolizerTabItems( rule, symbolizerTabFolder );
           symbolizerTabFolder.setSelection( index - 1 );
@@ -279,8 +271,7 @@ public class RuleTabItem
             rule.setSymbolizers( newOrderedObjects );
             setFocusedSymbolizerItem( index + 1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireModellEvent(
-                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
             drawSymbolizerTabItems( rule, symbolizerTabFolder );
             symbolizerTabFolder.setSelection( index + 1 );
           }
@@ -304,8 +295,7 @@ public class RuleTabItem
             rule.setSymbolizers( newOrderedObjects );
             setFocusedSymbolizerItem( index - 1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireModellEvent(
-                new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+            getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
             drawSymbolizerTabItems( rule, symbolizerTabFolder );
             symbolizerTabFolder.setSelection( index - 1 );
           }
@@ -322,8 +312,7 @@ public class RuleTabItem
         if( symbolizer != null )
         {
           rule.addSymbolizer( symbolizer );
-          getUserStyle().fireModellEvent(
-              new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+          getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
           setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
           setFocusedSymbolizerItem( rule.getSymbolizers().length - 1 );
           editSymbolizerPanel.update( rule.getSymbolizers().length );
@@ -343,8 +332,7 @@ public class RuleTabItem
     {
       public void filterUpdated( FilterDialogEvent event )
       {
-        getUserStyle()
-            .fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
+        getUserStyle().fireModellEvent( new ModellEvent( getUserStyle(), ModellEvent.STYLE_CHANGE ) );
       }
     } );
     button.addSelectionListener( new SelectionListener()
@@ -391,8 +379,7 @@ public class RuleTabItem
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
       {
-        new SymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], m_userStyle,
-            m_featureType );
+        new SymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], m_userStyle, m_featureType );
       }
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 287 );

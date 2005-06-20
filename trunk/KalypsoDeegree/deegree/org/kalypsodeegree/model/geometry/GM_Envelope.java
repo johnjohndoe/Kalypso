@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,13 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
 /**
- * a boundingbox as child of a GM_Polygon isn't part of the iso19107 spec but it
- * simplifies the geometry handling within jago
+ * a boundingbox as child of a GM_Polygon isn't part of the iso19107 spec but it simplifies the geometry handling within
+ * jago
  *  
  */
 public interface GM_Envelope
@@ -105,14 +105,12 @@ public interface GM_Envelope
   boolean intersects( GM_Envelope bb );
 
   /**
-   * returns true if all positions of the submitted bounding box are within this
-   * bounding box
+   * returns true if all positions of the submitted bounding box are within this bounding box
    */
   boolean contains( GM_Envelope bb );
 
   /**
-   * returns a new GM_Envelope object representing the intersection of this
-   * GM_Envelope with the specified GM_Envelope.
+   * returns a new GM_Envelope object representing the intersection of this GM_Envelope with the specified GM_Envelope.
    */
   GM_Envelope createIntersection( GM_Envelope bb );
 

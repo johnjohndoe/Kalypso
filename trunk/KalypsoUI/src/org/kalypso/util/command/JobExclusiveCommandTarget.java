@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -48,8 +48,7 @@ import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
  * Implementation eines {@link org.kalypso.util.command.ICommandTarget}
  * </p>
  * <p>
- * Die Kommandos werden via {@link org.kalypso.util.command.CommandJob}
- * abgesetzt
+ * Die Kommandos werden via {@link org.kalypso.util.command.CommandJob}abgesetzt
  * </p>
  * 
  * @author gernot
@@ -57,8 +56,7 @@ import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManagerListener
 {
   /**
-   * Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander
-   * ausgeführt werden
+   * Jeder Editor hat sein eigenes Mutex, so dass Jobs schön hintereinander ausgeführt werden
    */
   private final ISchedulingRule m_mutexRule = new MutexSchedulingRule();
 
@@ -94,7 +92,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   {
     return m_commandManager == null ? false : m_commandManager.isDirty();
   }
-  
+
   public void resetDirty()
   {
     if( m_commandManager != null )
@@ -104,8 +102,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -121,7 +118,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     if( source != null && source == m_commandManager && source.isDirty() && m_dirtyRunnable != null )
       m_dirtyRunnable.run();
   }
-  
+
   public ISchedulingRule getSchedulingRule()
   {
     return m_mutexRule;
@@ -131,15 +128,15 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   {
     if( m_commandManager != null )
       m_commandManager.removeCommandManagerListener( this );
-    
+
     m_commandManager = manager;
-    
+
     undoAction.setCommandManager( manager );
     redoAction.setCommandManager( manager );
 
     if( m_commandManager != null )
       m_commandManager.addCommandManagerListener( this );
-    
+
     onCommandManagerChanged( manager );
   }
 }

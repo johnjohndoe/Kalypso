@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,12 +57,11 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.displayelements;
 
 /**
- * Indicates that a certain <tt>GM_Object</tt> -type has been encountered that
- * is invalid in this context.
+ * Indicates that a certain <tt>GM_Object</tt> -type has been encountered that is invalid in this context.
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -70,15 +69,13 @@ package org.kalypsodeegree.graphics.displayelements;
 public class IncompatibleGeometryTypeException extends java.lang.Exception
 {
   /**
-   * Creates a new instance of <tt>IncompatibleGeometryTypeException</tt>
-   * without detail message.
+   * Creates a new instance of <tt>IncompatibleGeometryTypeException</tt> without detail message.
    */
   public IncompatibleGeometryTypeException()
   {}
 
   /**
-   * Constructs an instance of <tt>IncompatibleGeometryTypeException</tt> with
-   * the specified detail message.
+   * Constructs an instance of <tt>IncompatibleGeometryTypeException</tt> with the specified detail message.
    * 
    * @param msg
    *          the detail message.

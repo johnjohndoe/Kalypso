@@ -62,8 +62,7 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
 
   public OcsExportWizardIdentifiersPage()
   {
-    super( "Zeitreihen Zuordnung", "Zeitreihen Zuordnung",
-        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    super( "Zeitreihen Zuordnung", "Zeitreihen Zuordnung", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
 
     setTitle( "Zeitreihen Zuordnung" );
     setDescription( "Überprüfen Sie die Zuordnung der Zeitreihen mit dem Server" );
@@ -88,7 +87,7 @@ public class OcsExportWizardIdentifiersPage extends WizardPage
 
   public IdStruct[] getResourcesToExport()
   {
-    return (IdStruct[])Arrays.castArray( ((IdTableContentProvider)m_tableViewer
-        .getContentProvider() ).getElements( m_tableViewer.getInput() ), new IdStruct[0] );
+    return (IdStruct[])Arrays.castArray( ( (IdTableContentProvider)m_tableViewer.getContentProvider() )
+        .getElements( m_tableViewer.getInput() ), new IdStruct[0] );
   }
 }

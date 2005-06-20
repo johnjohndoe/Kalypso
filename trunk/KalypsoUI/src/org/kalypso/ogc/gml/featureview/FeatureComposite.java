@@ -189,8 +189,7 @@ public class FeatureComposite implements IFeatureControl
   }
 
   /**
-   * Gibt zu einem TypNamen eine FeatureView zurück. Existiert keine solche wird
-   * ein Default erzeugt.
+   * Gibt zu einem TypNamen eine FeatureView zurück. Existiert keine solche wird ein Default erzeugt.
    * 
    * @param featureType
    * @return featureview
@@ -326,7 +325,8 @@ public class FeatureComposite implements IFeatureControl
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, (FeatureviewType[])m_viewMap.values().toArray( new FeatureviewType[0] ) );
+      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, (FeatureviewType[])m_viewMap.values().toArray(
+          new FeatureviewType[0] ) );
       fc.setFeature( workspace, feature );
 
       final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
@@ -343,8 +343,8 @@ public class FeatureComposite implements IFeatureControl
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), plugin
-          .getDefaultMapSelectionID() );
+      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(),
+          plugin.getDefaultMapSelectionID() );
       fc.setFeature( workspace, feature );
 
       final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( tableType.getStyle() ) );
@@ -359,11 +359,13 @@ public class FeatureComposite implements IFeatureControl
     return label;
   }
 
-  private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType )
+  private Composite createCompositeFromCompositeType( final Composite parent, final int style,
+      final CompositeType compositeType )
   {
     if( compositeType instanceof GroupType )
     {
-      final Group group = new org.eclipse.swt.widgets.Group( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+      final Group group = new org.eclipse.swt.widgets.Group( parent, style
+          | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
       group.setText( ( (GroupType)compositeType ).getText() );
       return group;
     }
@@ -447,8 +449,8 @@ public class FeatureComposite implements IFeatureControl
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     m_feature = feature;
-    m_workspace=workspace;
-    
+    m_workspace = workspace;
+
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
@@ -471,7 +473,8 @@ public class FeatureComposite implements IFeatureControl
           addView( (FeatureviewType)vIt.next() );
       }
       else
-        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() );
+        System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in "
+            + url.toString() );
     }
     catch( final JAXBException e )
     {

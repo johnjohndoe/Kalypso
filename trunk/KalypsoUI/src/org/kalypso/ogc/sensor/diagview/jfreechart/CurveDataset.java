@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.awt.Color;
@@ -51,22 +51,22 @@ import org.jfree.data.xy.AbstractIntervalXYDataset;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
- * TODO: inserted synchronized at some places because if pages are switched too fast in kalypso wizzard
- * then I presume that many swing ui threads are trying to update the chart, thus leading to
- * possible array out of bound exceptions because of concurrent accesses.
+ * TODO: inserted synchronized at some places because if pages are switched too fast in kalypso wizzard then I presume
+ * that many swing ui threads are trying to update the chart, thus leading to possible array out of bound exceptions
+ * because of concurrent accesses.
  * 
  * @author schlienger
  */
 class CurveDataset extends AbstractIntervalXYDataset
 {
   private final List m_curves = new ArrayList();
-  
+
   /** Map: curve -> color */
   private final Map m_colors = new HashMap();
 
-  public CurveDataset( )
+  public CurveDataset()
   {
-    // empty
+  // empty
   }
 
   public void addCurveSerie( final XYCurveSerie xyc, final Color color, final XYItemRenderer renderer )
@@ -77,11 +77,11 @@ class CurveDataset extends AbstractIntervalXYDataset
       m_colors.put( xyc, color );
 
       reconfigureRenderer( renderer );
-      
+
       fireDatasetChanged();
     }
   }
-  
+
   public void removeCurveSerie( final XYCurveSerie xyc )
   {
     synchronized( m_curves )
@@ -90,7 +90,7 @@ class CurveDataset extends AbstractIntervalXYDataset
       {
         m_curves.remove( xyc );
         m_colors.remove( xyc );
-        
+
         fireDatasetChanged();
       }
     }
@@ -99,7 +99,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.general.SeriesDataset#getSeriesCount()
    */
-  public int getSeriesCount( )
+  public int getSeriesCount()
   {
     synchronized( m_curves )
     {
@@ -114,7 +114,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     synchronized( m_curves )
     {
-      final String name = ((XYCurveSerie) m_curves.get( series )).getName();
+      final String name = ( (XYCurveSerie)m_curves.get( series ) ).getName();
       return name;
     }
   }
@@ -128,7 +128,7 @@ class CurveDataset extends AbstractIntervalXYDataset
     {
       try
       {
-        return ((XYCurveSerie) m_curves.get( series )).getItemCount();
+        return ( (XYCurveSerie)m_curves.get( series ) ).getItemCount();
       }
       catch( SensorException e )
       {
@@ -144,7 +144,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   public double getXValue( int series, int item )
   {
     final Number x = getX( series, item );
-    
+
     return x == null ? Double.NaN : x.doubleValue();
   }
 
@@ -157,7 +157,7 @@ class CurveDataset extends AbstractIntervalXYDataset
     {
       try
       {
-        final Number value = ((XYCurveSerie) m_curves.get( series )).getXValue( item );
+        final Number value = ( (XYCurveSerie)m_curves.get( series ) ).getXValue( item );
         return value;
       }
       catch( SensorException e )
@@ -174,7 +174,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   public double getYValue( int series, int item )
   {
     final Number y = getY( series, item );
-    
+
     return y == null ? Double.NaN : y.doubleValue();
   }
 
@@ -187,7 +187,7 @@ class CurveDataset extends AbstractIntervalXYDataset
     {
       try
       {
-        final Number value = ((XYCurveSerie) m_curves.get( series )).getYValue( item );
+        final Number value = ( (XYCurveSerie)m_curves.get( series ) ).getYValue( item );
         return value;
       }
       catch( SensorException e )
@@ -278,7 +278,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   {
     if( renderer == null )
       return;
-    
+
     for( int i = 0; i < m_curves.size(); i++ )
     {
       final Color color = (Color)m_colors.get( m_curves.get( i ) );

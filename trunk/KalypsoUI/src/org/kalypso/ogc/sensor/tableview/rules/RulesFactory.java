@@ -56,7 +56,7 @@ public class RulesFactory
 
   private RulesFactory()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
@@ -73,10 +73,9 @@ public class RulesFactory
     final String tt = rr.getTooltip();
     final String icon = rr.getIcon();
 
-    return new RenderingRule( mask, fg == null ? null : StringUtilities
-        .stringToColor( fg ), bg == null ? null : StringUtilities
-        .stringToColor( bg ), font == null ? null : StringUtilities
-        .stringToFont( font ), tt, KalypsoStatusUtils.getIconFor( icon ) );
+    return new RenderingRule( mask, fg == null ? null : StringUtilities.stringToColor( fg ), bg == null ? null
+        : StringUtilities.stringToColor( bg ), font == null ? null : StringUtilities.stringToFont( font ), tt,
+        KalypsoStatusUtils.getIconFor( icon ) );
   }
 
   /**
@@ -89,7 +88,8 @@ public class RulesFactory
     {
       DEFAULT_RULES = new Rules();
 
-      final int[] bits = {
+      final int[] bits =
+      {
           KalypsoStati.BIT_CHECK,
           KalypsoStati.BIT_REQUIRED,
           KalypsoStati.BIT_USER_MODIFIED,
@@ -98,12 +98,9 @@ public class RulesFactory
 
       for( int i = 0; i < bits.length; i++ )
       {
-        DEFAULT_RULES
-            .addRule( new RenderingRule( bits[i], KalypsoStatusUtils
-                .getForegroundFor( bits[i] ), KalypsoStatusUtils
-                .getBackgroundFor( bits[i] ), null, KalypsoStatusUtils
-                .getTooltipFor( bits[i] ), KalypsoStatusUtils
-                .getIconFor( bits[i] ) ) );
+        DEFAULT_RULES.addRule( new RenderingRule( bits[i], KalypsoStatusUtils.getForegroundFor( bits[i] ),
+            KalypsoStatusUtils.getBackgroundFor( bits[i] ), null, KalypsoStatusUtils.getTooltipFor( bits[i] ),
+            KalypsoStatusUtils.getIconFor( bits[i] ) ) );
       }
     }
 

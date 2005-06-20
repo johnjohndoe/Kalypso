@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,14 +57,13 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.displayelements;
 
 import java.awt.Graphics2D;
 
 /**
- * This is a label with style information and screen coordinates, ready to be
- * rendered to a view.
+ * This is a label with style information and screen coordinates, ready to be rendered to a view.
  * <p>
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -74,8 +73,7 @@ public interface Label
 {
 
   /**
-   * Renders the label (including halo and other style information) to the
-   * submitted <tt>Graphics2D</tt> context.
+   * Renders the label (including halo and other style information) to the submitted <tt>Graphics2D</tt> context.
    * <p>
    * 
    * @param g
@@ -84,8 +82,7 @@ public interface Label
   public void paint( Graphics2D g );
 
   /**
-   * Renders the label's boundaries to the submitted <tt>Graphics2D</tt>
-   * context. Immensely useful for testing.
+   * Renders the label's boundaries to the submitted <tt>Graphics2D</tt> context. Immensely useful for testing.
    * <p>
    * 
    * @param g

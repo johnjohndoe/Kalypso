@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.feature;
 
 import java.net.URL;
@@ -94,17 +94,17 @@ public class FeaturePage extends WizardPage
     m_featureComposite.setFeature( m_workspace, m_feature );
     final Control control = m_featureComposite.createControl( group, SWT.NONE );
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+
     setControl( group );
   }
 
-//  public void setFeature( final GMLWorkspace workspace, final Feature feature )
-//  {
-//    m_feature = feature;
-//    m_featureComposite.setFeature( workspace, feature );
-//    m_featureComposite.updateControl();
-//  }
-  
+  //  public void setFeature( final GMLWorkspace workspace, final Feature feature )
+  //  {
+  //    m_feature = feature;
+  //    m_featureComposite.setFeature( workspace, feature );
+  //    m_featureComposite.updateControl();
+  //  }
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */

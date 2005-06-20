@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // Miscellaneous
@@ -77,11 +77,10 @@ public class TemporalDatum extends Datum
   private static final long serialVersionUID = 6313740402733520130L;
 
   /**
-   * Default datum for Universal Time Clock (UTC). UTC is based on an atomic
-   * clock, while GMT is based on astronomical observations.
+   * Default datum for Universal Time Clock (UTC). UTC is based on an atomic clock, while GMT is based on astronomical
+   * observations.
    */
-  public static final TemporalDatum UTC = (TemporalDatum)pool.intern( new TemporalDatum( "UTC",
-      DatumType.UTC ) );
+  public static final TemporalDatum UTC = (TemporalDatum)pool.intern( new TemporalDatum( "UTC", DatumType.UTC ) );
 
   /**
    * Creates a temporal datum from an enumerated type value.
@@ -112,8 +111,8 @@ public class TemporalDatum extends Datum
   /**
    * Gets the type of the datum as an enumerated code.
    * 
-   * Note: return type will be changed to {@link DatumType.Temporal}when we
-   * will be able to use generic types (with JDK 1.5).
+   * Note: return type will be changed to {@link DatumType.Temporal}when we will be able to use generic types (with JDK
+   * 1.5).
    */
   public DatumType/* .Temporal */getDatumType()
   {

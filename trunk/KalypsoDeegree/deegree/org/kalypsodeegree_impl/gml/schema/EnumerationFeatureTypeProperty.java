@@ -18,11 +18,10 @@ public class EnumerationFeatureTypeProperty extends AbstractFeatureType implemen
 
   private final boolean m_isNullable;
 
-
-  public EnumerationFeatureTypeProperty( String name, String namespace, String type,
-      boolean isNullable, Object[] enumeration,Map annotation )
+  public EnumerationFeatureTypeProperty( String name, String namespace, String type, boolean isNullable,
+      Object[] enumeration, Map annotation )
   {
-    super(name,namespace,annotation);
+    super( name, namespace, annotation );
     m_type = type;
     m_isNullable = isNullable;
     m_enumeration = enumeration;
@@ -71,7 +70,6 @@ public class EnumerationFeatureTypeProperty extends AbstractFeatureType implemen
 
     return false;
   }
-
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()

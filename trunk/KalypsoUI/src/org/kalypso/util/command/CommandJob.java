@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
 import java.util.logging.Logger;
@@ -49,8 +49,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ui.KalypsoGisPlugin;
 
-/** Job to process / undo / redo a ICommand 
- * Wird sofort gestartet  
+/**
+ * Job to process / undo / redo a ICommand Wird sofort gestartet
  */
 public final class CommandJob extends Job
 {
@@ -70,8 +70,8 @@ public final class CommandJob extends Job
 
   private final TYPE m_type;
 
-  public CommandJob( final ICommand command, final ICommandManager commandManager,
-      final ISchedulingRule rule, final Runnable runnable, final TYPE type )
+  public CommandJob( final ICommand command, final ICommandManager commandManager, final ISchedulingRule rule,
+      final Runnable runnable, final TYPE type )
   {
     super( "Kalypso: " + getCommandDescription( commandManager, command, type ) );
 
@@ -110,24 +110,22 @@ public final class CommandJob extends Job
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       LOGGER.warning( "Failed " + m_type + ": " + description );
 
-      return new Status( IStatus.ERROR,
-          KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, "Fehler: " + m_type
-              + ": " + description, e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, "Fehler: "
+          + m_type + ": " + description, e );
     }
 
     if( description == null )
-      System.out.print(false);
-    
+      System.out.print( false );
+
     LOGGER.info( "Finished " + m_type + ": " + description );
 
     return Status.OK_STATUS;
   }
 
-  private static String getCommandDescription( final ICommandManager cm, final ICommand c,
-      final TYPE type )
+  private static String getCommandDescription( final ICommandManager cm, final ICommand c, final TYPE type )
   {
     if( type == POST )
       return c.getDescription();

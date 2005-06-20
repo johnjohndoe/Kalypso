@@ -96,8 +96,7 @@ public class DateRangeInputWizardPage extends WizardPage
     if( m_control != null )
     {
       if( m_control.isUseRange() )
-        return new DateRangeArgument( m_control.getDateFrom(), m_control
-            .getDateTo() );
+        return new DateRangeArgument( m_control.getDateFrom(), m_control.getDateTo() );
 
       return DateRangeArgument.createFromPastDays( m_control.getNumberOfDays() );
     }
@@ -121,8 +120,7 @@ public class DateRangeInputWizardPage extends WizardPage
     }
 
     // else inform user about invalid input
-    MessageDialog.openInformation( getShell(), "Fehlerhafte Eingabe",
-        "Prüfen Sie bitte Ihre Eingabe. " + err );
+    MessageDialog.openInformation( getShell(), "Fehlerhafte Eingabe", "Prüfen Sie bitte Ihre Eingabe. " + err );
 
     return null;
   }

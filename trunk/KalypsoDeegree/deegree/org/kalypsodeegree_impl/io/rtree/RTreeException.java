@@ -25,8 +25,8 @@ package org.kalypsodeegree_impl.io.rtree;
 
 /**
  * <p>
- * The common exception thrown by problems during the rtree methods. Thats the
- * exception a user of the package get if errors occure.
+ * The common exception thrown by problems during the rtree methods. Thats the exception a user of the package get if
+ * errors occure.
  * 
  * </p>
  * 

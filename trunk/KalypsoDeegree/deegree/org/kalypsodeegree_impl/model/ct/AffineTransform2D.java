@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
@@ -98,13 +98,12 @@ final class AffineTransform2D extends XAffineTransform implements MathTransform2
   }
 
   /**
-   * Throws an {@link UnsupportedOperationException}when a mutable method is
-   * invoked, since <code>AffineTransform2D</code> must be immutable.
+   * Throws an {@link UnsupportedOperationException}when a mutable method is invoked, since
+   * <code>AffineTransform2D</code> must be immutable.
    */
   protected void checkPermission()
   {
-    throw new UnsupportedOperationException( Resources
-        .format( ResourceKeys.ERROR_UNMODIFIABLE_AFFINE_TRANSFORM ) );
+    throw new UnsupportedOperationException( Resources.format( ResourceKeys.ERROR_UNMODIFIABLE_AFFINE_TRANSFORM ) );
   }
 
   /**
@@ -124,8 +123,7 @@ final class AffineTransform2D extends XAffineTransform implements MathTransform2
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    */
   public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst )
   {
@@ -138,8 +136,7 @@ final class AffineTransform2D extends XAffineTransform implements MathTransform2
   }
 
   /**
-   * Gets the derivative of this transform at a point. For an affine transform,
-   * the derivative is the same everywhere.
+   * Gets the derivative of this transform at a point. For an affine transform, the derivative is the same everywhere.
    */
   public Matrix derivative( final Point2D point )
   {
@@ -152,8 +149,7 @@ final class AffineTransform2D extends XAffineTransform implements MathTransform2
   }
 
   /**
-   * Gets the derivative of this transform at a point. For an affine transform,
-   * the derivative is the same everywhere.
+   * Gets the derivative of this transform at a point. For an affine transform, the derivative is the same everywhere.
    */
   public Matrix derivative( final CoordinatePoint point )
   {

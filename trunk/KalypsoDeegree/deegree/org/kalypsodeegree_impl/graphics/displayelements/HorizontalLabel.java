@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
@@ -77,8 +77,7 @@ import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * This is a horizontal label with style information and screen coordinates,
- * ready to be rendered to the view.
+ * This is a horizontal label with style information and screen coordinates, ready to be rendered to the view.
  * <p>
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -106,8 +105,8 @@ class HorizontalLabel implements Label
 
   private Feature feature;
 
-  HorizontalLabel( String caption, Font font, Color color, LineMetrics metrics, Feature feature,
-      Halo halo, int x, int y, int w, int h, double anchorPoint[], double[] displacement )
+  HorizontalLabel( String caption, Font font, Color color, LineMetrics metrics, Feature feature, Halo halo, int x,
+      int y, int w, int h, double anchorPoint[], double[] displacement )
   {
 
     this.caption = caption;
@@ -151,8 +150,7 @@ class HorizontalLabel implements Label
   }
 
   /**
-   * Renders the label (including halo) to the submitted <tt>Graphics2D</tt>
-   * context.
+   * Renders the label (including halo) to the submitted <tt>Graphics2D</tt> context.
    * <p>
    * 
    * @param g
@@ -229,8 +227,7 @@ class HorizontalLabel implements Label
     // radius specified -> draw circle
     if( radius > 0 )
     {
-      g.fillOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1,
-          radius << 1 );
+      g.fillOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
     }
     // radius unspecified -> draw rectangle
     else
@@ -267,18 +264,17 @@ class HorizontalLabel implements Label
         }
         else
         {
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke
-              .getLineJoin( feature ), 10.0f, dash, stroke.getDashOffset( feature ) );
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke
-              .getLineJoin( feature ), 1.0f, dash, 1.0f );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash,
+              stroke.getDashOffset( feature ) );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 1.0f, dash,
+              1.0f );
         }
         g.setStroke( bs );
 
         // radius specified -> draw circle
         if( radius > 0 )
         {
-          g.drawOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1,
-              radius << 1 );
+          g.drawOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
         }// radius unspecified -> draw rectangle
         else
         {

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.ByteArrayOutputStream;
@@ -80,8 +80,8 @@ import org.kalypsodeegree_impl.tools.TimeTools;
  * 
  * dBase-type dBase-type-ID java-type
  * 
- * character "C" String float "F" Float number "N" Double logical "L" String
- * memo "M" String date "D" Date binary "B" ByteArrayOutputStream
+ * character "C" String float "F" Float number "N" Double logical "L" String memo "M" String date "D" Date binary "B"
+ * ByteArrayOutputStream
  * 
  * 
  * <!---------------------------------------------------------------------------->
@@ -214,8 +214,7 @@ public class DBaseFile
   }
 
   /**
-   * method: initDBaseFile(); inits a DBF file. This is based on Pratap
-   * Pereira's Xbase.pm perl module
+   * method: initDBaseFile(); inits a DBF file. This is based on Pratap Pereira's Xbase.pm perl module
    *  
    */
   private void initDBaseFile() throws IOException
@@ -280,7 +279,6 @@ public class DBaseFile
       char[] c = new char[1];
       c[0] = (char)rafDbf.readByte();
 
-
       // skip four bytes
       rafDbf.skipBytes( 4 );
 
@@ -314,7 +312,7 @@ public class DBaseFile
   } // end of initDBaseFile
 
   /**
-   * 
+   *  
    */
   private FeatureType createFeatureType()
   {
@@ -338,8 +336,7 @@ public class DBaseFile
         {
           if( column.size < 10 )
           {
-            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Integer",
-                true );
+            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Integer", true );
           }
           else
           {
@@ -350,13 +347,11 @@ public class DBaseFile
         {
           if( column.size < 8 )
           {
-            ftp[i] = FeatureFactory
-                .createFeatureTypeProperty( column.name, "java.lang.Float", true );
+            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Float", true );
           }
           else
           {
-            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Double",
-                true );
+            ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.lang.Double", true );
           }
         }
       }
@@ -374,8 +369,7 @@ public class DBaseFile
       }
       else if( column.type.equalsIgnoreCase( "B" ) )
       {
-        ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name,
-            "java.io.ByteArrayOutputStream", true );
+        ftp[i] = FeatureFactory.createFeatureTypeProperty( column.name, "java.io.ByteArrayOutputStream", true );
       }
 
     }
@@ -388,8 +382,7 @@ public class DBaseFile
       ftName = fname.substring( index + 1 );
     }
 
-    ftp[ftp.length - 1] = FeatureFactory
-        .createFeatureTypeProperty( "GEOM", getGeometryType(), true );
+    ftp[ftp.length - 1] = FeatureFactory.createFeatureTypeProperty( "GEOM", getGeometryType(), true );
     return FeatureFactory.createFeatureType( ftName, ftp );
   }
 
@@ -480,11 +473,10 @@ public class DBaseFile
 
       // read data from cache if the requested part of the dbase file is
       // within it
-      if( ( pos >= startIndex )
-          && ( ( pos + column.position + column.size ) < ( startIndex + cacheSize ) ) )
+      if( ( pos >= startIndex ) && ( ( pos + column.position + column.size ) < ( startIndex + cacheSize ) ) )
       {
         pos = pos - startIndex;
-        
+
       }
       else
       {
@@ -496,15 +488,14 @@ public class DBaseFile
         pos = 0;
       }
       StringBuffer sb = new StringBuffer( column.size );
-//      System.out.println(column.size);
+      //      System.out.println(column.size);
       int i = 0;
       while( i < column.size )
       {
         int kk = (int)pos + column.position + i;
         /*
-         * if ( dataArray[kk] == -127 ) { sb.append( '?' ); } else if (
-         * dataArray[kk] == -108 ) { sb.append( '?' ); } else if ( dataArray[kk] ==
-         * -124 ) { sb.append( '?' ); } else
+         * if ( dataArray[kk] == -127 ) { sb.append( '?' ); } else if ( dataArray[kk] == -108 ) { sb.append( '?' ); }
+         * else if ( dataArray[kk] == -124 ) { sb.append( '?' ); } else
          */if( dataArray[kk] != 32 )
         {
           sb.append( (char)dataArray[kk] );
@@ -596,8 +587,7 @@ public class DBaseFile
 
   /**
    * method: public String[] getDataTypes(String[] fields) <BR>
-   * returns the datatype of each column of the database specified by fields
-   * <BR>
+   * returns the datatype of each column of the database specified by fields <BR>
    */
   public String[] getDataTypes( String[] fields ) throws DBaseException
   {
@@ -627,12 +617,10 @@ public class DBaseFile
   }
 
   /**
-   * returns a row of the dBase-file as Feature containing a place holder (field
-   * name = "GEOM") for a geometry.
+   * returns a row of the dBase-file as Feature containing a place holder (field name = "GEOM") for a geometry.
    * 
    * @param allowNull
-   *          if true, everything wich cannot read or parsed gets 'null' instead
-   *          of ""
+   *          if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
   public Feature getFRow( int rowNo, boolean allowNull ) throws DBaseException
   {
@@ -649,7 +637,7 @@ public class DBaseFile
       dbfCol column = (dbfCol)column_info.get( colHeader.get( i ) );
 
       String value = getColumn( column.name.trim() );
-//      System.out.print(value);
+      //      System.out.print(value);
       if( value != null )
       {
         // cast the value of the i'th column to corresponding datatype
@@ -703,8 +691,7 @@ public class DBaseFile
             fp[i] = null;
           else
             fp[i] = TimeTools.createCalendar(
-                value.substring( 0, 4 ) + "-" + value.substring( 4, 6 ) + "-"
-                    + value.substring( 6, 8 ) ).getTime();
+                value.substring( 0, 4 ) + "-" + value.substring( 4, 6 ) + "-" + value.substring( 6, 8 ) ).getTime();
         }
         else if( column.type.equalsIgnoreCase( "B" ) )
         {
@@ -808,8 +795,7 @@ public class DBaseFile
           row[i] = "";
         else
           row[i] = TimeTools.createCalendar(
-              value.substring( 0, 4 ) + "-" + value.substring( 4, 6 ) + "-"
-                  + value.substring( 6, 8 ) ).getTime();
+              value.substring( 0, 4 ) + "-" + value.substring( 4, 6 ) + "-" + value.substring( 6, 8 ) ).getTime();
       }
       else if( column.type.equalsIgnoreCase( "B" ) )
       {
@@ -821,7 +807,7 @@ public class DBaseFile
         }
         catch( IOException e )
         {
-//          System.out.println( e.toString() );
+          //          System.out.println( e.toString() );
         }
 
         row[i] = os;
@@ -846,8 +832,8 @@ public class DBaseFile
   }
 
   /**
-   * method: public void writeAllToFile() creates the dbase file and writes all
-   * data to it if the file specified by fname (s.o.) exists it will be deleted!
+   * method: public void writeAllToFile() creates the dbase file and writes all data to it if the file specified by
+   * fname (s.o.) exists it will be deleted!
    */
   public void writeAllToFile() throws IOException, DBaseException
   {
@@ -890,9 +876,8 @@ public class DBaseFile
   }
 
   /**
-   * method: public setRecord(ArrayList recData) writes a data record to byte
-   * array representing the data section of the dBase file. The method gets the
-   * data type of each field in recData from fieldDesc wich has been set at the
+   * method: public setRecord(ArrayList recData) writes a data record to byte array representing the data section of the
+   * dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set at the
    * constructor.
    */
   public void setRecord( ArrayList recData ) throws DBaseException
@@ -906,12 +891,10 @@ public class DBaseFile
   }
 
   /**
-   * method: public setRecord(int index, ArrayList recData) writes a data record
-   * to byte array representing the data section of the dBase file. The method
-   * gets the data type of each field in recData from fieldDesc wich has been
-   * set at the constructor. index specifies the location of the retrieved
-   * record in the datasection. if an invalid index is used an exception will be
-   * thrown
+   * method: public setRecord(int index, ArrayList recData) writes a data record to byte array representing the data
+   * section of the dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set
+   * at the constructor. index specifies the location of the retrieved record in the datasection. if an invalid index is
+   * used an exception will be thrown
    */
   public void setRecord( int index, ArrayList recData ) throws DBaseException
   {

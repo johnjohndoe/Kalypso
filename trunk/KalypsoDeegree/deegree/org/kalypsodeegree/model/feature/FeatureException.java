@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
 import org.kalypsodeegree_impl.tools.StringExtend;
@@ -72,8 +72,7 @@ public class FeatureException extends java.lang.Exception
   private String st = "org.kalypsodeegree.model.feature.FeatureException";
 
   /**
-   * Constructs an instance of <code>FeatureException</code> with the
-   * specified detail message.
+   * Constructs an instance of <code>FeatureException</code> with the specified detail message.
    * 
    * @param msg
    *          the detail message.
@@ -84,8 +83,7 @@ public class FeatureException extends java.lang.Exception
   }
 
   /**
-   * Constructs an instance of <code>FeatureException</code> with the
-   * specified detail message.
+   * Constructs an instance of <code>FeatureException</code> with the specified detail message.
    * 
    * @param msg
    *          the detail message.

@@ -4,8 +4,7 @@ public interface Table
 {
 
   /**
-   * returns the name of the table. If the table hasn't a name an empty string
-   * ("") will be returned.
+   * returns the name of the table. If the table hasn't a name an empty string ("") will be returned.
    */
   String getTableName();
 
@@ -15,8 +14,7 @@ public interface Table
   void setTableName( String tableName );
 
   /**
-   * returns the value of the table field indexed by <tt>row</tt> and
-   * <tt>col</tt>
+   * returns the value of the table field indexed by <tt>row</tt> and <tt>col</tt>
    */
   Object getValueAt( int row, int col );
 
@@ -56,32 +54,28 @@ public interface Table
   int getColumnCount();
 
   /**
-   * returns the names of all table columns. If a column hasn't a name a empty
-   * String ("") will be returned.
+   * returns the names of all table columns. If a column hasn't a name a empty String ("") will be returned.
    */
   String[] getColumnNames();
 
   /**
-   * returns the name of the specified column. If a column hasn't a name a empty
-   * String ("") will be returned.
+   * returns the name of the specified column. If a column hasn't a name a empty String ("") will be returned.
    */
   String getColumnName( int col );
 
   /**
-   * returns the names of all column types. For each column a type (name of a
-   * java class) has to be defined.
+   * returns the names of all column types. For each column a type (name of a java class) has to be defined.
    */
   String[] getColumnTypes();
 
   /**
-   * returns the name of the type of the specifies column. For each column a
-   * type (name of a java class) has to be defined.
+   * returns the name of the type of the specifies column. For each column a type (name of a java class) has to be
+   * defined.
    */
   String getColumnType( int col );
 
   /**
-   * sets the type of a column. the implementing class have to ensure that this
-   * is a valid operation
+   * sets the type of a column. the implementing class have to ensure that this is a valid operation
    */
   void setColumnType( int col, String type ) throws TableException;
 
@@ -96,8 +90,7 @@ public interface Table
   Object[] removeRow( int index );
 
   /**
-   * returns the index of the submitted columns name. If no column with that
-   * name if present -1 will be returned.
+   * returns the index of the submitted columns name. If no column with that name if present -1 will be returned.
    */
   int getColumnIndex( String columnName );
 

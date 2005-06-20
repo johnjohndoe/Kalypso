@@ -19,10 +19,8 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 /**
  * Eine gefilterte FeatureListe.
  * 
- * Die Liste zeigt nach aussen nur die Features, die einem bestimmten
- * FeatureType entsprechen. Andererseits ist die Liste aber durch die originale
- * Liste gebackupd, d.h. alle Änderungen dieser Liste ändern auch die
- * Originalliste.
+ * Die Liste zeigt nach aussen nur die Features, die einem bestimmten FeatureType entsprechen. Andererseits ist die
+ * Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste ändern auch die Originalliste.
  * 
  * @author belger
  */
@@ -34,8 +32,7 @@ public class FilteredFeatureList implements FeatureList
 
   private final CollectorVisitor m_collector = new CollectorVisitor();
 
-  public FilteredFeatureList( final FeatureList original, final String typename,
-      final boolean acceptIfSubstituting )
+  public FilteredFeatureList( final FeatureList original, final String typename, final boolean acceptIfSubstituting )
   {
     m_original = original;
     m_filterVisitor = new FeatureTypeVisitor( null, typename, acceptIfSubstituting );
@@ -379,7 +376,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public FeatureTypeProperty getParentFeatureTypeProperty()
   {
-    
+
     return m_original.getParentFeatureTypeProperty();
   }
 }

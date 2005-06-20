@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 public class FilterDialogError
@@ -45,8 +45,6 @@ public class FilterDialogError
   private FilterDialogTreeNode node = null;
 
   private String faultCode = null;
-
- 
 
   public FilterDialogError( FilterDialogTreeNode m_node, String m_faultCode )
   {

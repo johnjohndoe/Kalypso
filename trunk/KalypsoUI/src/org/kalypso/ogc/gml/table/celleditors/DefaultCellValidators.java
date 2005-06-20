@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -48,7 +48,9 @@ import org.eclipse.jface.viewers.ICellEditorValidator;
 public class DefaultCellValidators
 {
   public static final ICellEditorValidator DOUBLE_VALIDATOR = new DoubleCellValidator();
+
   public static final ICellEditorValidator INTEGER_VALIDATOR = new IntegerCellValidator();
+
   public static final ICellEditorValidator BOOLEAN_VALIDATOR = new BooleanCellValidator();
 
   public static final class BooleanCellValidator implements ICellEditorValidator
@@ -61,7 +63,7 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-          Boolean.valueOf(value.toString());
+          Boolean.valueOf( value.toString() );
         return null;
       }
       catch( final NumberFormatException nfe )
@@ -72,7 +74,6 @@ public class DefaultCellValidators
 
   }
 
-  
   public static final class DoubleCellValidator implements ICellEditorValidator
   {
     /**
@@ -83,8 +84,8 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-          Double.parseDouble(value.toString());
-        
+          Double.parseDouble( value.toString() );
+
         return null;
       }
       catch( final NumberFormatException nfe )
@@ -94,7 +95,7 @@ public class DefaultCellValidators
     }
 
   }
-  
+
   public static final class IntegerCellValidator implements ICellEditorValidator
   {
     /**
@@ -105,8 +106,8 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-          Integer.parseInt(value.toString());
-        
+          Integer.parseInt( value.toString() );
+
         return null;
       }
       catch( final NumberFormatException nfe )

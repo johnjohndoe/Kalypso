@@ -11,7 +11,6 @@ import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
-import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,8 +67,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
     Element e_gridEnvelope = ownerDocument.createElementNS( NSRGC, "rgc:GridEnvelope" );
     GridRange gridRange = gridDomain.getGridRange();
     double[] lows = gridRange.getLow();
-    String stringLows = new String( ( new Double( lows[0] ) ).intValue() + " "
-        + ( new Double( lows[1] ) ).intValue() );
+    String stringLows = new String( ( new Double( lows[0] ) ).intValue() + " " + ( new Double( lows[1] ) ).intValue() );
     double[] highs = gridRange.getHigh();
     String stringHighs = new String( ( new Double( highs[0] ) ).intValue() + " "
         + ( new Double( highs[1] ) ).intValue() );
@@ -133,8 +131,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
     Node node_rg = ( (Element)node ).getElementsByTagNameNS( NSRGC, "RectifiedGrid" ).item( 0 );
 
     Node node_limits = ( (Element)node_rg ).getElementsByTagNameNS( NSRGC, "limits" ).item( 0 );
-    Node node_gridEnv = ( (Element)node_limits ).getElementsByTagNameNS( NSRGC, "GridEnvelope" )
-        .item( 0 );
+    Node node_gridEnv = ( (Element)node_limits ).getElementsByTagNameNS( NSRGC, "GridEnvelope" ).item( 0 );
     Node n_low = ( (Element)node_gridEnv ).getElementsByTagNameNS( NSRGC, "low" ).item( 0 );
     String[] lows = n_low.getFirstChild().getNodeValue().trim().split( " " );
     double[] low = new double[lows.length];
@@ -162,8 +159,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
       System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );
       System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
 
-      NodeList nl_offSetVector = ( (Element)node_rg )
-          .getElementsByTagNameNS( NSRGC, "offsetVector" );
+      NodeList nl_offSetVector = ( (Element)node_rg ).getElementsByTagNameNS( NSRGC, "offsetVector" );
       Vector offSetVectors = new Vector();
       for( int i = 0; i < nl_offSetVector.getLength(); i++ )
       {
@@ -201,6 +197,5 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
   {
     return "rectifiedGridDomain";
   }
-
 
 }

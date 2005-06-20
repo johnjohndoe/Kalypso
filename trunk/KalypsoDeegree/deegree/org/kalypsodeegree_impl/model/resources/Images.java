@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Images and geometry (Java2D)
@@ -69,9 +69,8 @@ import javax.media.jai.ImageLayout;
 import javax.media.jai.JAI;
 
 /**
- * A set of static methods working on images. Some of those methods are useful,
- * but not really rigorous. This is why they do not appear in the "official"
- * package, but instead in this private one. <strong>Do not rely on this API!
+ * A set of static methods working on images. Some of those methods are useful, but not really rigorous. This is why
+ * they do not appear in the "official" package, but instead in this private one. <strong>Do not rely on this API!
  * </strong> It may change in incompatible way in any future version.
  * 
  * @version 1.0
@@ -80,8 +79,7 @@ import javax.media.jai.JAI;
 public final class Images
 {
   /**
-   * The default tile size. This default tile size can be overriden with a call
-   * to {@link JAI#setDefaultTileSize}.
+   * The default tile size. This default tile size can be overriden with a call to {@link JAI#setDefaultTileSize}.
    */
   private static final Dimension DEFAULT_TILE_SIZE = new Dimension( 512, 512 );
 
@@ -97,9 +95,8 @@ public final class Images
   {}
 
   /**
-   * Suggest an {@link ImageLayout}for the specified image. All parameters are
-   * initially set equal to those of the given {@link RenderedImage}, and then
-   * the tile size is updated according the image's size. This method never
+   * Suggest an {@link ImageLayout}for the specified image. All parameters are initially set equal to those of the
+   * given {@link RenderedImage}, and then the tile size is updated according the image's size. This method never
    * returns <code>null</code>.
    */
   public static ImageLayout getImageLayout( final RenderedImage image )
@@ -108,10 +105,9 @@ public final class Images
   }
 
   /**
-   * Returns an {@link ImageLayout}for the specified image. If
-   * <code>initToImage</code> is <code>true</code>, then All parameters are
-   * initially set equal to those of the given {@link RenderedImage}and the
-   * returned layout is never <code>null</code>.
+   * Returns an {@link ImageLayout}for the specified image. If <code>initToImage</code> is <code>true</code>, then
+   * All parameters are initially set equal to those of the given {@link RenderedImage}and the returned layout is never
+   * <code>null</code>.
    */
   private static ImageLayout getImageLayout( final RenderedImage image, final boolean initToImage )
   {
@@ -148,15 +144,14 @@ public final class Images
   }
 
   /**
-   * Suggest a set of {@link RenderingHints}for the specified image. The
-   * rendering hints may include the following parameters:
+   * Suggest a set of {@link RenderingHints}for the specified image. The rendering hints may include the following
+   * parameters:
    * 
    * <ul>
    * <li>{@link JAI#KEY_IMAGE_LAYOUT}with a proposed tile size.</li>
    * </ul>
    * 
-   * This method may returns <code>null</code> if no rendering hints is
-   * proposed.
+   * This method may returns <code>null</code> if no rendering hints is proposed.
    */
   public static RenderingHints getRenderingHints( final RenderedImage image )
   {
@@ -165,9 +160,8 @@ public final class Images
   }
 
   /**
-   * Suggest a tile size for the specified image size. On input,
-   * <code>size</code> is the image's size. On output, it is the tile size.
-   * This method returns <code>size</code> for convenience.
+   * Suggest a tile size for the specified image size. On input, <code>size</code> is the image's size. On output, it
+   * is the tile size. This method returns <code>size</code> for convenience.
    */
   public static Dimension toTileSize( final Dimension size )
   {
@@ -185,9 +179,8 @@ public final class Images
   }
 
   /**
-   * Suggest a tile size close to <code>tileSize</code> for the specified
-   * <code>imageSize</code>. If this method can't suggest a size, then it
-   * returns 0.
+   * Suggest a tile size close to <code>tileSize</code> for the specified <code>imageSize</code>. If this method
+   * can't suggest a size, then it returns 0.
    */
   private static int toTileSize( final int imageSize, final int tileSize )
   {

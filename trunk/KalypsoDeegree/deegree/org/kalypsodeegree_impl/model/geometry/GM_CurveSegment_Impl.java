@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -71,9 +71,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_CurveSegment interface from package
- * jago.model. the class is abstract because it should be specialized by derived
- * classes <code>GM_LineString</code> for example
+ * default implementation of the GM_CurveSegment interface from package jago.model. the class is abstract because it
+ * should be specialized by derived classes <code>GM_LineString</code> for example
  * 
  * <p>
  * ---------------------------------------------------------------------------
@@ -114,8 +113,8 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   }
 
   /**
-   * returns the first point of the curve. if the curve segment doesn't contain
-   * a point <code>null</code> will be returned
+   * returns the first point of the curve. if the curve segment doesn't contain a point <code>null</code> will be
+   * returned
    */
   public GM_Point getStartPoint()
   {
@@ -123,8 +122,8 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   }
 
   /**
-   * returns the last point of the curve. if the curve segment doesn't contain a
-   * point <code>null</code> will be returned
+   * returns the last point of the curve. if the curve segment doesn't contain a point <code>null</code> will be
+   * returned
    */
   public GM_Point getEndPoint()
   {
@@ -140,8 +139,7 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   }
 
   /**
-   * returns all positions of the segement as array of GM_Position. If the
-   * segment is empty null will be returned
+   * returns all positions of the segement as array of GM_Position. If the segment is empty null will be returned
    */
   public GM_Position[] getPositions()
   {
@@ -224,15 +222,13 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
    * </p>
    */
   public boolean contains( GM_Object gmo )
   {
-    throw new NoSuchMethodError( "the contains operation for curve segments "
-        + "isn't supported at the moment." );
+    throw new NoSuchMethodError( "the contains operation for curve segments " + "isn't supported at the moment." );
   }
 
   /**

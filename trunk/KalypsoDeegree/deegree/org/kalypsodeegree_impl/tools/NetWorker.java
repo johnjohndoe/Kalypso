@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.io.ByteArrayOutputStream;
@@ -95,8 +95,7 @@ public class NetWorker
   private String encoding = null;
 
   /**
-   * constructor for initializing a HTTP GET connection with UTF-8 as character
-   * encoding
+   * constructor for initializing a HTTP GET connection with UTF-8 as character encoding
    * 
    * @param url
    *          URL to the net resource containing the URI
@@ -111,8 +110,7 @@ public class NetWorker
   }
 
   /**
-   * constructor for initializing a HTTP GET connection with a user defined
-   * encoding
+   * constructor for initializing a HTTP GET connection with a user defined encoding
    * 
    * @param encoding
    *          desired character encoding
@@ -129,8 +127,7 @@ public class NetWorker
   }
 
   /**
-   * constructor for initializing a HTTP POST connection with UTF-8 as character
-   * encoding
+   * constructor for initializing a HTTP POST connection with UTF-8 as character encoding
    * 
    * @param url
    *          URL to the net resource (without URI parameters)
@@ -148,8 +145,7 @@ public class NetWorker
   }
 
   /**
-   * constructor for initializing a HTTP POST connection with a user defined
-   * encoding
+   * constructor for initializing a HTTP POST connection with a user defined encoding
    * 
    * @param encoding
    *          desired character encoding
@@ -169,9 +165,8 @@ public class NetWorker
   }
 
   /**
-   * returns the content type of the response from the connected net resource.
-   * this method shall be called after <tt>getInputStream</tt> or
-   * <tt>getDataAsByteArr</tt> has been called.
+   * returns the content type of the response from the connected net resource. this method shall be called after
+   * <tt>getInputStream</tt> or <tt>getDataAsByteArr</tt> has been called.
    */
   public String getContentType()
   {
@@ -179,8 +174,7 @@ public class NetWorker
   }
 
   /**
-   * sends the request that have been passed to the constructor without
-   * expecting to receive a response.
+   * sends the request that have been passed to the constructor without expecting to receive a response.
    */
   public void sendRequest() throws IOException
   {
@@ -286,8 +280,9 @@ public class NetWorker
   public static void configureProxy( final URLConnection connection )
   {
     final URL url = connection.getURL();
-    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url.getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
-    
+    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url
+        .getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
+
     if( authentication != null )
     {
       final String pw = authentication.getUserName() + ":" + authentication.getPassword();
@@ -296,10 +291,13 @@ public class NetWorker
       connection.addRequestProperty( "Proxy-Authorization", epw );
     }
   }
-  public static boolean requiresAuthentification(final URLConnection connection ){
+
+  public static boolean requiresAuthentification( final URLConnection connection )
+  {
     final URL url = connection.getURL();
-    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url.getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
-    if(authentication != null )
+    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url
+        .getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
+    if( authentication != null )
       return true;
     return false;
   }
@@ -308,9 +306,8 @@ public class NetWorker
    * performs the request and returns the result as a byte array.
    * 
    * @param expectedDataSize
-   *          size a the data in bytes expected to be returned from the net
-   *          resource. this value will be replaced if the resource is able to
-   *          return the available data size.
+   *          size a the data in bytes expected to be returned from the net resource. this value will be replaced if the
+   *          resource is able to return the available data size.
    * @return a byte array containing the content of the net resource
    * 
    * @throws IOException
@@ -348,10 +345,9 @@ public class NetWorker
   }
 
   /**
-   * Returns the original form of a <tt>URL</tt> as as <tt>String</tt>.
-   * Handles local filenames correctly, C:/foo is formatted as file:///C:/foo
-   * (and not as file:/C:/foo as returned by the toString () method of the <tt
-   * <URL</tt> object.
+   * Returns the original form of a <tt>URL</tt> as as <tt>String</tt>. Handles local filenames correctly, C:/foo
+   * is formatted as file:///C:/foo (and not as file:/C:/foo as returned by the toString () method of the <tt <URL</tt>
+   * object.
    * <p>
    * 
    * @param url

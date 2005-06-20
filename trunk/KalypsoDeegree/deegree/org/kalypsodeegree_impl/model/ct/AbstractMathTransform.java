@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -80,14 +80,12 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Provides a default implementations for most methods required by the
- * {@link MathTransform}interface. <code>AbstractMathTransform</code>
- * provides a convenient base class from which other transform classes can be
- * easily derived. In addition, <code>AbstractMathTransform</code> implements
- * methods required by the {@link MathTransform2D}interface, but <strong>does
- * not </strong> implements <code>MathTransform2D</code>. Subclasses must
- * declare <code>implements&nbsp;MathTransform2D</code> themself if they know
- * to maps two-dimensional coordinate systems.
+ * Provides a default implementations for most methods required by the {@link MathTransform}interface.
+ * <code>AbstractMathTransform</code> provides a convenient base class from which other transform classes can be
+ * easily derived. In addition, <code>AbstractMathTransform</code> implements methods required by the
+ * {@link MathTransform2D}interface, but <strong>does not </strong> implements <code>MathTransform2D</code>.
+ * Subclasses must declare <code>implements&nbsp;MathTransform2D</code> themself if they know to maps two-dimensional
+ * coordinate systems.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -95,37 +93,32 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 public abstract class AbstractMathTransform implements MathTransform
 {
   /**
-   * Returns a human readable name, if available. If no name is available in the
-   * specified locale, then this method returns a name in an arbitrary locale.
-   * If no name is available in any locale, then this method returns
-   * <code>null</code>. The default implementation always returns
-   * <code>null</code>.
+   * Returns a human readable name, if available. If no name is available in the specified locale, then this method
+   * returns a name in an arbitrary locale. If no name is available in any locale, then this method returns
+   * <code>null</code>. The default implementation always returns <code>null</code>.
    * 
    * @param locale
    *          The desired locale, or <code>null</code> for a default locale.
-   * @return The transform name localized in the specified locale if possible,
-   *         or <code>null</code> if no name is available in any locale.
+   * @return The transform name localized in the specified locale if possible, or <code>null</code> if no name is
+   *         available in any locale.
    */
   protected String getName( final Locale locale )
   {
     locale.getClass();
-    
+
     return null;
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>. The default implementation invokes
-   * {@link #transform(double[],int,double[],int,int)}using a temporary array
-   * of doubles.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>. The default
+   * implementation invokes {@link #transform(double[],int,double[],int,int)}using a temporary array of doubles.
    * 
    * @param ptSrc
    *          the specified coordinate point to be transformed.
    * @param ptDst
-   *          the specified coordinate point that stores the result of
-   *          transforming <code>ptSrc</code>, or <code>null</code>.
-   * @return the coordinate point after transforming <code>ptSrc</code> and
-   *         stroring the result in <code>ptDst</code>.
+   *          the specified coordinate point that stores the result of transforming <code>ptSrc</code>, or
+   *          <code>null</code>.
+   * @return the coordinate point after transforming <code>ptSrc</code> and stroring the result in <code>ptDst</code>.
    * @throws MismatchedDimensionException
    *           if this transform doesn't map two-dimensional coordinate systems.
    * @throws TransformException
@@ -140,7 +133,9 @@ public abstract class AbstractMathTransform implements MathTransform
       throw new MismatchedDimensionException();
     }
     final double[] ord = new double[]
-    { ptSrc.getX(), ptSrc.getY() };
+    {
+        ptSrc.getX(),
+        ptSrc.getY() };
     this.transform( ord, 0, ord, 0, 1 );
     if( ptDst != null )
     {
@@ -152,12 +147,10 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>. The default implementation invokes
-   * {@link #transform(double[],int,double[],int,int)}.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>. The default
+   * implementation invokes {@link #transform(double[],int,double[],int,int)}.
    */
-  public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst )
-      throws TransformException
+  public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst ) throws TransformException
   {
     final int pointDim = ptSrc.getDimension();
     final int sourceDim = getDimSource();
@@ -179,12 +172,11 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Transforms a list of coordinate point ordinal values. The default
-   * implementation invokes {@link #transform(double[],int,double[],int,int)}
-   * using a temporary array of doubles.
+   * Transforms a list of coordinate point ordinal values. The default implementation invokes
+   * {@link #transform(double[],int,double[],int,int)}using a temporary array of doubles.
    */
-  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
     final int dimSource = getDimSource();
     final int dimTarget = getDimTarget();
@@ -197,13 +189,12 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Transform the specified shape. The default implementation compute quadratic
-   * curves using three points for each shape's segments.
+   * Transform the specified shape. The default implementation compute quadratic curves using three points for each
+   * shape's segments.
    * 
    * @param shape
    *          Shape to transform.
-   * @return Transformed shape, or <code>shape</code> if this transform is the
-   *         identity transform.
+   * @return Transformed shape, or <code>shape</code> if this transform is the identity transform.
    * @throws IllegalStateException
    *           if this transform doesn't map 2D coordinate systems.
    * @throws TransformException
@@ -217,27 +208,22 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Transforme une forme géométrique. Cette méthode copie toujours les
-   * coordonnées transformées dans un nouvel objet. La plupart du temps, elle
-   * produira un objet {@link GeneralPath}. Elle peut aussi retourner des
-   * objets {@link java.awt.geom.Line2D}ou {@link java.awt.geom.QuadCurve2D} si une telle simplification
-   * est possible.
+   * Transforme une forme géométrique. Cette méthode copie toujours les coordonnées transformées dans un nouvel objet.
+   * La plupart du temps, elle produira un objet {@link GeneralPath}. Elle peut aussi retourner des objets
+   * {@link java.awt.geom.Line2D}ou {@link java.awt.geom.QuadCurve2D}si une telle simplification est possible.
    * 
    * @param shape
    *          Forme géométrique à transformer.
    * @param preTr
-   *          Transformation affine à appliquer <em>avant</em> de transformer
-   *          la forme <code>shape</code>, ou <code>null</code> pour ne pas
-   *          en appliquer. Cet argument sera surtout utile lors des
-   *          transformations inverses.
+   *          Transformation affine à appliquer <em>avant</em> de transformer la forme <code>shape</code>, ou
+   *          <code>null</code> pour ne pas en appliquer. Cet argument sera surtout utile lors des transformations
+   *          inverses.
    * @param postTr
-   *          Transformation affine à appliquer <em>après</em> avoir
-   *          transformée la forme <code>shape</code>, ou <code>null</code>
-   *          pour ne pas en appliquer. Cet argument sera surtout utile lors des
-   *          transformations directes.
+   *          Transformation affine à appliquer <em>après</em> avoir transformée la forme <code>shape</code>, ou
+   *          <code>null</code> pour ne pas en appliquer. Cet argument sera surtout utile lors des transformations
+   *          directes.
    * @param quadDir
-   *          Direction des courbes quadratiques ({@link Geometry#HORIZONTAL}
-   *          ou {@link Geometry#PARALLEL}).
+   *          Direction des courbes quadratiques ({@link Geometry#HORIZONTAL}ou {@link Geometry#PARALLEL}).
    * 
    * @return La forme géométrique transformée.
    * @throws MismatchedDimensionException
@@ -245,8 +231,8 @@ public abstract class AbstractMathTransform implements MathTransform
    * @throws TransformException
    *           Si une transformation a échoué.
    */
-  final Shape createTransformedShape( final Shape shape, final AffineTransform preTr,
-      final AffineTransform postTr, final int quadDir ) throws TransformException
+  final Shape createTransformedShape( final Shape shape, final AffineTransform preTr, final AffineTransform postTr,
+      final int quadDir ) throws TransformException
   {
     if( getDimSource() != 2 || getDimTarget() != 2 )
     {
@@ -272,9 +258,8 @@ public abstract class AbstractMathTransform implements MathTransform
       case PathIterator.SEG_CLOSE:
       {
         /*
-         * Ferme la forme géométrique, puis continue la boucle. On utilise une
-         * instruction 'continue' plutôt que 'break' car il ne faut pas exécuter
-         * le code qui suit ce 'switch'.
+         * Ferme la forme géométrique, puis continue la boucle. On utilise une instruction 'continue' plutôt que 'break'
+         * car il ne faut pas exécuter le code qui suit ce 'switch'.
          */
         path.closePath();
         continue;
@@ -282,10 +267,8 @@ public abstract class AbstractMathTransform implements MathTransform
       case PathIterator.SEG_MOVETO:
       {
         /*
-         * Mémorise les coordonnées spécifiées (avant et après les avoir
-         * projetées), puis continue la boucle. On utilise une instruction
-         * 'continue' plutôt que 'break' car il ne faut pas exécuter le code qui
-         * suit ce 'switch'.
+         * Mémorise les coordonnées spécifiées (avant et après les avoir projetées), puis continue la boucle. On utilise
+         * une instruction 'continue' plutôt que 'break' car il ne faut pas exécuter le code qui suit ce 'switch'.
          */
         ax = buffer[0];
         ay = buffer[1];
@@ -296,13 +279,11 @@ public abstract class AbstractMathTransform implements MathTransform
       case PathIterator.SEG_LINETO:
       {
         /*
-         * Place dans 'buffer[2,3]' les coordonnées d'un point qui se trouve sur
-         * la droite:
+         * Place dans 'buffer[2,3]' les coordonnées d'un point qui se trouve sur la droite:
          * 
          * x = 0.5*(x1+x2) y = 0.5*(y1+y2)
          * 
-         * Ce point sera traité après le 'switch', d'où l'utilisation d'un
-         * 'break' plutôt que 'continue'.
+         * Ce point sera traité après le 'switch', d'où l'utilisation d'un 'break' plutôt que 'continue'.
          */
         indexLastPt = 0;
         indexCtrlPt = 2;
@@ -313,13 +294,11 @@ public abstract class AbstractMathTransform implements MathTransform
       case PathIterator.SEG_QUADTO:
       {
         /*
-         * Place dans 'buffer[0,1]' les coordonnées d'un point qui se trouve sur
-         * la courbe:
+         * Place dans 'buffer[0,1]' les coordonnées d'un point qui se trouve sur la courbe:
          * 
          * x = 0.5*(ctrlx + 0.5*(x1+x2)) y = 0.5*(ctrly + 0.5*(y1+y2))
          * 
-         * Ce point sera traité après le 'switch', d'où l'utilisation d'un
-         * 'break' plutôt que 'continue'.
+         * Ce point sera traité après le 'switch', d'où l'utilisation d'un 'break' plutôt que 'continue'.
          */
         indexLastPt = 2;
         indexCtrlPt = 0;
@@ -330,23 +309,17 @@ public abstract class AbstractMathTransform implements MathTransform
       case PathIterator.SEG_CUBICTO:
       {
         /*
-         * Place dans 'buffer[0,1]' les coordonnées d'un point qui se trouve sur
-         * la courbe:
+         * Place dans 'buffer[0,1]' les coordonnées d'un point qui se trouve sur la courbe:
          * 
-         * x = 0.25*(1.5*(ctrlx1+ctrlx2) + 0.5*(x1+x2)); y =
-         * 0.25*(1.5*(ctrly1+ctrly2) + 0.5*(y1+y2));
+         * x = 0.25*(1.5*(ctrlx1+ctrlx2) + 0.5*(x1+x2)); y = 0.25*(1.5*(ctrly1+ctrly2) + 0.5*(y1+y2));
          * 
-         * Ce point sera traité après le 'switch', d'où l'utilisation d'un
-         * 'break' plutôt que 'continue'.
+         * Ce point sera traité après le 'switch', d'où l'utilisation d'un 'break' plutôt que 'continue'.
          * 
-         * NOTE: Le point calculé est bien sur la courbe, mais n'est pas
-         * nécessairement représentatif. Cet algorithme remplace les deux points
-         * de contrôles par un seul, ce qui se traduit par une perte de
-         * souplesse qui peut donner de mauvais résultats si la courbe cubique
-         * était bien tordue. Projeter une courbe cubique ne me semble pas être
-         * un problème simple, mais heureusement ce cas devrait être assez rare.
-         * Il se produira le plus souvent si on essaye de projeter un cercle ou
-         * une ellipse, auxquels cas l'algorithme actuel donnera quand même des
+         * NOTE: Le point calculé est bien sur la courbe, mais n'est pas nécessairement représentatif. Cet algorithme
+         * remplace les deux points de contrôles par un seul, ce qui se traduit par une perte de souplesse qui peut
+         * donner de mauvais résultats si la courbe cubique était bien tordue. Projeter une courbe cubique ne me semble
+         * pas être un problème simple, mais heureusement ce cas devrait être assez rare. Il se produira le plus souvent
+         * si on essaye de projeter un cercle ou une ellipse, auxquels cas l'algorithme actuel donnera quand même des
          * résultats tolérables.
          */
         indexLastPt = 4;
@@ -357,25 +330,21 @@ public abstract class AbstractMathTransform implements MathTransform
       }
       }
       /*
-       * Applique la transformation sur les points qui se trouve dans le buffer,
-       * puis ajoute ces points à la forme géométrique projetée comme une courbe
-       * quadratique.
+       * Applique la transformation sur les points qui se trouve dans le buffer, puis ajoute ces points à la forme
+       * géométrique projetée comme une courbe quadratique.
        */
       transform( buffer, 0, buffer, 0, 2 );
-      if( Geometry.parabolicControlPoint( px, py, buffer[indexCtrlPt], buffer[indexCtrlPt + 1],
-          buffer[indexLastPt], buffer[indexLastPt + 1], quadDir, ctrl ) != null )
+      if( Geometry.parabolicControlPoint( px, py, buffer[indexCtrlPt], buffer[indexCtrlPt + 1], buffer[indexLastPt],
+          buffer[indexLastPt + 1], quadDir, ctrl ) != null )
       {
-        path.quadTo( ctrl.x, ctrl.y, (float)( px = buffer[indexLastPt + 0] ),
-            (float)( py = buffer[indexLastPt + 1] ) );
+        path.quadTo( ctrl.x, ctrl.y, (float)( px = buffer[indexLastPt + 0] ), (float)( py = buffer[indexLastPt + 1] ) );
       }
       else
-        path.lineTo( (float)( px = buffer[indexLastPt + 0] ),
-            (float)( py = buffer[indexLastPt + 1] ) );
+        path.lineTo( (float)( px = buffer[indexLastPt + 0] ), (float)( py = buffer[indexLastPt + 1] ) );
     }
     /*
-     * La projection de la forme géométrique est terminée. Applique une
-     * transformation affine si c'était demandée, puis retourne une version si
-     * possible simplifiée de la forme géométrique.
+     * La projection de la forme géométrique est terminée. Applique une transformation affine si c'était demandée, puis
+     * retourne une version si possible simplifiée de la forme géométrique.
      */
     if( postTr != null )
     {
@@ -385,8 +354,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Gets the derivative of this transform at a point. The default
-   * implementation invokes {@link #derivative(CoordinatePoint)}.
+   * Gets the derivative of this transform at a point. The default implementation invokes
+   * {@link #derivative(CoordinatePoint)}.
    * 
    * @param point
    *          The coordinate point where to evaluate the derivative.
@@ -404,9 +373,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Gets the derivative of this transform at a point. The default
-   * implementation throws an {@link UnsupportedOperationException}
-   * <strong>(note: this default implementation may change in a future version)
+   * Gets the derivative of this transform at a point. The default implementation throws an
+   * {@link UnsupportedOperationException}<strong>(note: this default implementation may change in a future version)
    * </strong>.
    * 
    * @param point
@@ -421,17 +389,15 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Creates the inverse transform of this object. The default implementation
-   * returns <code>this</code> if this transform is an identity transform, and
-   * throws a {@link NoninvertibleTransformException}otherwise. Subclasses
+   * Creates the inverse transform of this object. The default implementation returns <code>this</code> if this
+   * transform is an identity transform, and throws a {@link NoninvertibleTransformException}otherwise. Subclasses
    * should override this method.
    */
   public MathTransform inverse() throws NoninvertibleTransformException
   {
     if( isIdentity() )
       return this;
-    throw new NoninvertibleTransformException( Resources
-        .format( ResourceKeys.ERROR_NONINVERTIBLE_TRANSFORM ) );
+    throw new NoninvertibleTransformException( Resources.format( ResourceKeys.ERROR_NONINVERTIBLE_TRANSFORM ) );
   }
 
   /**
@@ -443,9 +409,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Compares the specified object with this math transform for equality. The
-   * default implementation checks if <code>object</code> is an instance of
-   * the same class than <code>this</code>. Subclasses should override this
+   * Compares the specified object with this math transform for equality. The default implementation checks if
+   * <code>object</code> is an instance of the same class than <code>this</code>. Subclasses should override this
    * method in order to compare internal fields.
    */
   public boolean equals( final Object object )
@@ -456,8 +421,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Returns a string représentation of this transform. Subclasses should
-   * override this method in order to returns Well Know Text (WKT) instead.
+   * Returns a string représentation of this transform. Subclasses should override this method in order to returns Well
+   * Know Text (WKT) instead.
    */
   public String toString()
   {
@@ -471,8 +436,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Returns a string buffer initialized with "PARAM_MT" and a classification
-   * name. This is a convenience method for WKT formatting.
+   * Returns a string buffer initialized with "PARAM_MT" and a classification name. This is a convenience method for WKT
+   * formatting.
    */
   static StringBuffer paramMT( final String classification )
   {
@@ -483,9 +448,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Add the <code>", PARAMETER["<name>", <value>]"</code> string to the
-   * specified string buffer. This is a convenience method for constructing WKT
-   * for "PARAM_MT".
+   * Add the <code>", PARAMETER["<name>", <value>]"</code> string to the specified string buffer. This is a
+   * convenience method for constructing WKT for "PARAM_MT".
    */
   static void addParameter( final StringBuffer buffer, final String key, final double value )
   {
@@ -497,9 +461,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Add the <code>", PARAMETER["<name>", <value>]"</code> string to the
-   * specified string buffer. This is a convenience method for constructing WKT
-   * for "PARAM_MT".
+   * Add the <code>", PARAMETER["<name>", <value>]"</code> string to the specified string buffer. This is a
+   * convenience method for constructing WKT for "PARAM_MT".
    */
   static void addParameter( final StringBuffer buffer, final String key, final int value )
   {
@@ -511,11 +474,9 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Returns an OpenGIS interface for this math transform. The returned object
-   * is suitable for RMI use.
+   * Returns an OpenGIS interface for this math transform. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   Object toOpenGIS( final Object adapters )
   {
@@ -523,9 +484,8 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Invert the specified matrix in place. If the matrix can't be inverted
-   * because of a {@link SingularMatrixException}, then the exception is
-   * wrapped into a {@link NoninvertibleTransformException}.
+   * Invert the specified matrix in place. If the matrix can't be inverted because of a {@link SingularMatrixException},
+   * then the exception is wrapped into a {@link NoninvertibleTransformException}.
    */
   private static Matrix invert( final Matrix matrix ) throws NoninvertibleTransformException
   {
@@ -546,8 +506,7 @@ public abstract class AbstractMathTransform implements MathTransform
   }
 
   /**
-   * Default implementation for inverse math transform. This inner class is the
-   * inverse of the enclosing math transform.
+   * Default implementation for inverse math transform. This inner class is the inverse of the enclosing math transform.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -555,8 +514,8 @@ public abstract class AbstractMathTransform implements MathTransform
   protected abstract class Inverse extends AbstractMathTransform
   {
     /**
-     * Gets the dimension of input points. The default implementation returns
-     * the dimension of output points of the enclosing math transform.
+     * Gets the dimension of input points. The default implementation returns the dimension of output points of the
+     * enclosing math transform.
      */
     public int getDimSource()
     {
@@ -564,8 +523,8 @@ public abstract class AbstractMathTransform implements MathTransform
     }
 
     /**
-     * Gets the dimension of output points. The default implementation returns
-     * the dimension of input points of the enclosing math transform.
+     * Gets the dimension of output points. The default implementation returns the dimension of input points of the
+     * enclosing math transform.
      */
     public int getDimTarget()
     {
@@ -573,9 +532,8 @@ public abstract class AbstractMathTransform implements MathTransform
     }
 
     /**
-     * Gets the derivative of this transform at a point. The default
-     * implementation compute the inverse of the matrix returned by the
-     * enclosing math transform.
+     * Gets the derivative of this transform at a point. The default implementation compute the inverse of the matrix
+     * returned by the enclosing math transform.
      */
     public Matrix derivative( final Point2D point ) throws TransformException
     {
@@ -583,9 +541,8 @@ public abstract class AbstractMathTransform implements MathTransform
     }
 
     /**
-     * Gets the derivative of this transform at a point. The default
-     * implementation compute the inverse of the matrix returned by the
-     * enclosing math transform.
+     * Gets the derivative of this transform at a point. The default implementation compute the inverse of the matrix
+     * returned by the enclosing math transform.
      */
     public Matrix derivative( final CoordinatePoint point ) throws TransformException
     {
@@ -593,9 +550,8 @@ public abstract class AbstractMathTransform implements MathTransform
     }
 
     /**
-     * Returns the inverse of this math transform, which is the enclosing math
-     * transform. This method is declared final because some implementation
-     * assume that the inverse of <code>this</code> is always
+     * Returns the inverse of this math transform, which is the enclosing math transform. This method is declared final
+     * because some implementation assume that the inverse of <code>this</code> is always
      * <code>AbstractMathTransform.this</code>.
      */
     public final MathTransform inverse()
@@ -604,8 +560,8 @@ public abstract class AbstractMathTransform implements MathTransform
     }
 
     /**
-     * Tests whether this transform does not move any points. The default
-     * implementation delegate this tests to the enclosing math transform.
+     * Tests whether this transform does not move any points. The default implementation delegate this tests to the
+     * enclosing math transform.
      */
     public boolean isIdentity()
     {
@@ -621,10 +577,9 @@ public abstract class AbstractMathTransform implements MathTransform
     }
 
     /**
-     * Compares the specified object with this inverse math transform for
-     * equality. The default implementation tests if <code>object</code> in an
-     * instance of the same class than <code>this</code>, and then test their
-     * enclosing math transforms.
+     * Compares the specified object with this inverse math transform for equality. The default implementation tests if
+     * <code>object</code> in an instance of the same class than <code>this</code>, and then test their enclosing
+     * math transforms.
      */
     public boolean equals( final Object object )
     {

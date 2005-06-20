@@ -55,10 +55,10 @@ public class MultiDocumentServiceWrapper
   {
     public void exportDocument( final OutputStream outs ) throws Exception
     {
-      // ignore
+    // ignore
     }
 
-    public String getDocumentExtension( )
+    public String getDocumentExtension()
     {
       return ".dummy";
     }
@@ -70,25 +70,24 @@ public class MultiDocumentServiceWrapper
 
   private String m_username;
 
-  public MultiDocumentServiceWrapper( ) throws CoreException
+  public MultiDocumentServiceWrapper() throws CoreException
   {
     m_username = System.getProperty( "user.name" );
     m_wrapper = new MetadocServiceWrapper();
-    m_dummyDoc = m_wrapper.prepareDocument( m_dummyExportableDoc.getDocumentExtension(),
-        m_username );
+    m_dummyDoc = m_wrapper.prepareDocument( m_dummyExportableDoc.getDocumentExtension(), m_username );
   }
 
-  public IExportableDocument getDummyExportableDoc( )
+  public IExportableDocument getDummyExportableDoc()
   {
     return m_dummyExportableDoc;
   }
 
-  public Document getDummyDocument( )
+  public Document getDummyDocument()
   {
     return m_dummyDoc;
   }
 
-  public void dispose( )
+  public void dispose()
   {
     m_dummyDoc.dispose();
   }

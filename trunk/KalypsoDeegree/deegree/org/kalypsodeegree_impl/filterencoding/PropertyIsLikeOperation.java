@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -68,8 +68,7 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <PropertyIsLike>-element (as defined in
- * Filter DTD).
+ * Encapsulates the information of a <PropertyIsLike>-element (as defined in Filter DTD).
  * 
  * @author Markus Schneider
  * @version 10.08.2002
@@ -88,8 +87,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
 
   private char escapeChar;
 
-  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard,
-      char singleChar, char escapeChar )
+  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard, char singleChar,
+      char escapeChar )
   {
     super( OperationDefines.PROPERTYISLIKE );
     this.propertyName = propertyName;
@@ -130,12 +129,11 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *                   if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( Element element ) throws FilterConstructionException
   {
@@ -170,8 +168,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( escapeChar.length() != 1 )
       throw new FilterConstructionException( "escape-Attribute must be exactly one character!" );
 
-    return new PropertyIsLikeOperation( propertyName, literal, wildCard.charAt( 0 ), singleChar
-        .charAt( 0 ), escapeChar.charAt( 0 ) );
+    return new PropertyIsLikeOperation( propertyName, literal, wildCard.charAt( 0 ), singleChar.charAt( 0 ), escapeChar
+        .charAt( 0 ) );
   }
 
   /**
@@ -194,22 +192,21 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
-    sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( wildCard )
-        .append( "\" singleChar=\"" ).append( singleChar ).append( "\" escape=\"" ).append(
-            escapeChar ).append( "\">" ).append( propertyName.toXML() ).append( literal.toXML() );
+    sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( wildCard ).append(
+        "\" singleChar=\"" ).append( singleChar ).append( "\" escape=\"" ).append( escapeChar ).append( "\">" ).append(
+        propertyName.toXML() ).append( literal.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
 
   /**
-   * Calculates the <tt>PropertyIsLike</tt>'s logical value based on the
-   * certain property values of the given <tt>Feature</tt>.
+   * Calculates the <tt>PropertyIsLike</tt>'s logical value based on the certain property values of the given
+   * <tt>Feature</tt>.
    * <p>
    * 
    * @param feature
-   *                   that determines the property values
-   * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>
-   *                's value
+   *          that determines the property values
+   * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>'s value
    */
   public boolean evaluate( Feature feature )
   {

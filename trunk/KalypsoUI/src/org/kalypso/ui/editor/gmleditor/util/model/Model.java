@@ -9,23 +9,23 @@ public abstract class Model implements IModel
   private IModel m_parent;
 
   private String m_name;
-  
+
   private List m_children = new LinkedList();
-  
+
   protected Model( final IModel parent, final String name )
   {
     m_parent = parent;
     m_name = name;
-    
+
     if( parent != null )
       parent.addChild( this );
   }
-  
+
   public IModel getParent()
   {
     return m_parent;
   }
-  
+
   public String getName()
   {
     return m_name;
@@ -38,7 +38,7 @@ public abstract class Model implements IModel
   {
     return (IModel[])m_children.toArray( new IModel[m_children.size()] );
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.gmleditor.util.model.IModel#hasChildren()
    */
@@ -46,7 +46,7 @@ public abstract class Model implements IModel
   {
     return m_children.size() != 0;
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.gmleditor.util.model.IModel#addChild(org.kalypso.ui.editor.gmleditor.util.model.IModel)
    */
@@ -54,12 +54,12 @@ public abstract class Model implements IModel
   {
     m_children.add( model );
   }
-  
+
   public void removeChild( final IModel model )
   {
     m_children.remove( model );
   }
-  
+
   /** Durchläuft dieses Model und rekursiv alle seine Kinder (fallse es welche hat) */
   public void accept( final IModelVisitor visitor )
   {

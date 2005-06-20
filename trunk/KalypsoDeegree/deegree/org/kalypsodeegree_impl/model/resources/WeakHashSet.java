@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Collections
@@ -68,8 +68,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 /**
- * A set of object hold by weak references. This class is used to implements
- * caches.
+ * A set of object hold by weak references. This class is used to implements caches.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -90,8 +89,7 @@ public class WeakHashSet extends AbstractSet
     WeakElement next;
 
     /**
-     * Index for this element in {@link #table}. This index must be updated at
-     * every {@link #rehash}call.
+     * Index for this element in {@link #table}. This index must be updated at every {@link #rehash}call.
      */
     int index;
 
@@ -126,8 +124,7 @@ public class WeakHashSet extends AbstractSet
   private static final float LOAD_FACTOR = 0.75f;
 
   /**
-   * List of reference collected by the garbage collector. Those elements must
-   * be removed from {@link #table}.
+   * List of reference collected by the garbage collector. Those elements must be removed from {@link #table}.
    */
   private static final ReferenceQueue referenceQueue = new ReferenceQueue();
 
@@ -150,15 +147,13 @@ public class WeakHashSet extends AbstractSet
         }
         catch( Exception exception )
         {
-          Utilities.unexpectedException( "org.kalypsodeegree_impl.model", "WeakHashSet", "remove",
-              exception );
+          Utilities.unexpectedException( "org.kalypsodeegree_impl.model", "WeakHashSet", "remove", exception );
         }
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- catch (// assertionError
-       * exception) { Utilities.unexpectedException("org.kalypsodeegree_impl.model",
-       * "WeakHashSet", "remove", exception); // Do not kill the thread on //
-       * assertion failure, in order to // keep the same behaviour as if //
-       * assertions were turned off. }
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- catch (// assertionError exception) {
+       * Utilities.unexpectedException("org.kalypsodeegree_impl.model", "WeakHashSet", "remove", exception); // Do not
+       * kill the thread on // assertion failure, in order to // keep the same behaviour as if // assertions were turned
+       * off. }
        *///----- END OF JDK 1.4 DEPENDENCIES ---
     }
   };
@@ -179,23 +174,19 @@ public class WeakHashSet extends AbstractSet
   private int count;
 
   /**
-   * The next size value at which to resize. This value should be
-   * <code>{@link #table}.length*{@link #loadFactor}</code>.
+   * The next size value at which to resize. This value should be <code>{@link #table}.length*{@link #loadFactor}</code>.
    */
   private int threshold;
 
   /**
-   * The timestamp when {@link #table}was last rehashed. This information is
-   * used to avoir too early table reduction. When the garbage collector
-   * collected a lot of elements, we will wait at least 20 seconds before
-   * rehashing {@link #table}in order to avoir to many cycles "reduce",
-   * "expand", "reduce", "expand", etc.
+   * The timestamp when {@link #table}was last rehashed. This information is used to avoir too early table reduction.
+   * When the garbage collector collected a lot of elements, we will wait at least 20 seconds before rehashing
+   * {@link #table}in order to avoir to many cycles "reduce", "expand", "reduce", "expand", etc.
    */
   private long lastRehashTime;
 
   /**
-   * Number of millisecond to wait before to rehash the table for reducing its
-   * size.
+   * Number of millisecond to wait before to rehash the table for reducing its size.
    */
   private static final long HOLD_TIME = 20 * 1000L;
 
@@ -210,9 +201,8 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Invoked by {@link WeakElement}when an element has been collected by the
-   * garbage collector. This method will remove the weak reference from
-   * {@link #table}.
+   * Invoked by {@link WeakElement}when an element has been collected by the garbage collector. This method will remove
+   * the weak reference from {@link #table}.
    */
   private synchronized void remove( final WeakElement toRemove )
   {
@@ -254,9 +244,8 @@ public class WeakHashSet extends AbstractSet
      * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert valid();
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     /*
-     * If we reach this point, its mean that reference 'toRemove' has not been
-     * found. This situation may occurs if 'toRemove' has already been removed
-     * in a previous run of {@link #rehash}.
+     * If we reach this point, its mean that reference 'toRemove' has not been found. This situation may occurs if
+     * 'toRemove' has already been removed in a previous run of {@link #rehash}.
      */
   }
 
@@ -264,20 +253,18 @@ public class WeakHashSet extends AbstractSet
    * Rehash {@link #table}.
    * 
    * @param augmentation
-   *          <code>true</code> if this method is invoked for augmenting
-   *          {@link #table}, or <code>false</code> if it is invoked for
-   *          making the table smaller.
+   *          <code>true</code> if this method is invoked for augmenting {@link #table}, or <code>false</code> if
+   *          it is invoked for making the table smaller.
    */
   private void rehash( final boolean augmentation )
   {
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert Thread.holdsLock(this); //
-     * assert valid();
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert Thread.holdsLock(this); // assert valid();
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     final long currentTime = System.currentTimeMillis();
     final int capacity = Math.max( Math.round( count / ( LOAD_FACTOR / 2 ) ), count + MIN_CAPACITY );
-    if( augmentation ? ( capacity <= table.length ) : ( capacity >= table.length || currentTime
-        - lastRehashTime < HOLD_TIME ) )
+    if( augmentation ? ( capacity <= table.length )
+        : ( capacity >= table.length || currentTime - lastRehashTime < HOLD_TIME ) )
     {
       return;
     }
@@ -305,13 +292,10 @@ public class WeakHashSet extends AbstractSet
       }
     }
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- final Logger logger =
-     * Logger.getLogger("org.kalypsodeegree_impl.model"); final Level level =
-     * Level.FINEST; if (logger.isLoggable(level)) { final LogRecord record =
-     * new LogRecord(level, "Rehash from "+oldTable.length+" to "+table.length);
-     * record.setSourceMethodName(augmentation ? "intern" : "remove");
-     * record.setSourceClassName("WeakHashSet"); logger.log(record); } // assert
-     * valid();
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- final Logger logger = Logger.getLogger("org.kalypsodeegree_impl.model");
+     * final Level level = Level.FINEST; if (logger.isLoggable(level)) { final LogRecord record = new LogRecord(level,
+     * "Rehash from "+oldTable.length+" to "+table.length); record.setSourceMethodName(augmentation ? "intern" :
+     * "remove"); record.setSourceClassName("WeakHashSet"); logger.log(record); } // assert valid();
      *///----- END OF JDK 1.4 DEPENDENCIES ---
   }
 
@@ -328,15 +312,13 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Returns an object equals to the specified object, if present. If this set
-   * doesn't contains any object equals to <code>obj</code>, then this method
-   * returns <code>null</code>.
+   * Returns an object equals to the specified object, if present. If this set doesn't contains any object equals to
+   * <code>obj</code>, then this method returns <code>null</code>.
    */
   public synchronized final Object get( final Object obj )
   {
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert thread.isAlive() :
-     * thread; // assert valid() : count;
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert thread.isAlive() : thread; // assert valid() : count;
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     if( obj != null )
     {
@@ -356,14 +338,12 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Adds the specified element to this set if it is not already present. If
-   * this set already contains the specified element, the call leaves this set
-   * unchanged and returns <code>false</code>.
+   * Adds the specified element to this set if it is not already present. If this set already contains the specified
+   * element, the call leaves this set unchanged and returns <code>false</code>.
    * 
    * @param obj
    *          Element to be added to this set.
-   * @return <code>true</code> if this set did not already contain the
-   *         specified element.
+   * @return <code>true</code> if this set did not already contain the specified element.
    */
   public synchronized boolean add( final Object obj )
   {
@@ -371,10 +351,9 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Returns an object equals to <code>obj</code> if such an object already
-   * exist in this <code>WeakHashSet</code>. Otherwise, add <code>obj</code>
-   * to this <code>WeakHashSet</code>. This method is equivalents to the
-   * following code:
+   * Returns an object equals to <code>obj</code> if such an object already exist in this <code>WeakHashSet</code>.
+   * Otherwise, add <code>obj</code> to this <code>WeakHashSet</code>. This method is equivalents to the following
+   * code:
    * 
    * <blockquote>
    * 
@@ -393,14 +372,14 @@ public class WeakHashSet extends AbstractSet
   private Object intern0( final Object obj )
   {
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert Thread.holdsLock(this); //
-     * assert thread.isAlive() : thread; // assert valid() : count;
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert Thread.holdsLock(this); // assert thread.isAlive() : thread; //
+     * assert valid() : count;
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     if( obj != null )
     {
       /*
-       * Check if <code> obj </code> is already contained in this <code>
-       * WeakHashSet </code> . If yes, returns the element.
+       * Check if <code> obj </code> is already contained in this <code> WeakHashSet </code> . If yes, returns the
+       * element.
        */
       final int hash = hashCode( obj ) & 0x7FFFFFFF;
       int index = hash % table.length;
@@ -416,8 +395,7 @@ public class WeakHashSet extends AbstractSet
         // (it was a bug to remove element here as an "optimization")
       }
       /*
-       * Check if the table need to be rehashed, and add <code> obj </code> to
-       * the table.
+       * Check if the table need to be rehashed, and add <code> obj </code> to the table.
        */
       if( count >= threshold )
       {
@@ -434,10 +412,9 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Returns an object equals to <code>obj</code> if such an object already
-   * exist in this <code>WeakHashSet</code>. Otherwise, add <code>obj</code>
-   * to this <code>WeakHashSet</code>. This method is equivalents to the
-   * following code:
+   * Returns an object equals to <code>obj</code> if such an object already exist in this <code>WeakHashSet</code>.
+   * Otherwise, add <code>obj</code> to this <code>WeakHashSet</code>. This method is equivalents to the following
+   * code:
    * 
    * <blockquote>
    * 
@@ -459,8 +436,7 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Iteratively call {@link #intern(Object)}for an array of objects. This
-   * method is equivalents to the following code:
+   * Iteratively call {@link #intern(Object)}for an array of objects. This method is equivalents to the following code:
    * 
    * <blockquote>
    * 
@@ -498,10 +474,8 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Returns a view of this set as an array. Elements will be in an arbitrary
-   * order. Note that this array contains strong reference. Consequently, no
-   * object reclamation will occurs as long as a reference to this array is
-   * hold.
+   * Returns a view of this set as an array. Elements will be in an arbitrary order. Note that this array contains
+   * strong reference. Consequently, no object reclamation will occurs as long as a reference to this array is hold.
    */
   public synchronized final Object[] toArray()
   {
@@ -522,9 +496,8 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Returns an iterator over the elements contained in this collection. No
-   * element from this set will be garbage collected as long as a reference to
-   * the iterator is hold.
+   * Returns an iterator over the elements contained in this collection. No element from this set will be garbage
+   * collected as long as a reference to the iterator is hold.
    */
   public Iterator iterator()
   {
@@ -532,9 +505,8 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Returns a hash code value for the specified object. Default implementation
-   * returns {@link Object#hashCode}. Override to compute hash code in a
-   * different way.
+   * Returns a hash code value for the specified object. Default implementation returns {@link Object#hashCode}.
+   * Override to compute hash code in a different way.
    */
   protected int hashCode( final Object object )
   {
@@ -542,8 +514,7 @@ public class WeakHashSet extends AbstractSet
   }
 
   /**
-   * Check two objects for equality. This method should be overriden if
-   * {@link #hashCode(Object)}has been overriden.
+   * Check two objects for equality. This method should be overriden if {@link #hashCode(Object)}has been overriden.
    */
   protected boolean equals( final Object object1, final Object object2 )
   {

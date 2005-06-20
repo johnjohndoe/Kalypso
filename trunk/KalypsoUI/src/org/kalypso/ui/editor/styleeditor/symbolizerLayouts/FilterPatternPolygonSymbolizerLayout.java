@@ -36,18 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -59,6 +55,10 @@ import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
@@ -97,7 +97,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
     group.setLayout( compositeLayout );
     group.layout();
 
-    // get all colors for each rule of the pattern for this specific symbolizer    
+    // get all colors for each rule of the pattern for this specific symbolizer
     Color[] colors = new Color[getRuleCollection().size()];
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
@@ -122,7 +122,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
           ( (PolygonSymbolizer)symb ).getFill().setFill(
               new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
         }
-      }     
+      }
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
@@ -136,8 +136,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
             if( symb instanceof PolygonSymbolizer )
             {
               ( (PolygonSymbolizer)symb ).getFill().setFill(
-                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(),
-                      colorArray[i].getBlue() ) );
+                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
             }
           }
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );

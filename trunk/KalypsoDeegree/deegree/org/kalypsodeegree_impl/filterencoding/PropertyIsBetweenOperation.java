@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.Expression;
@@ -70,8 +70,7 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <PropertyIsBetween>-element (as defined in
- * Filter DTD).
+ * Encapsulates the information of a <PropertyIsBetween>-element (as defined in Filter DTD).
  * 
  * @author Markus Schneider
  * @version 07.08.2002
@@ -85,8 +84,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
 
   private Expression upperBoundary;
 
-  public PropertyIsBetweenOperation( PropertyName propertyName, Expression lowerBoundary,
-      Expression upperBoundary )
+  public PropertyIsBetweenOperation( PropertyName propertyName, Expression lowerBoundary, Expression upperBoundary )
   {
     super( OperationDefines.PROPERTYISBETWEEN );
     this.propertyName = propertyName;
@@ -95,12 +93,11 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *                   if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( Element element ) throws FilterConstructionException
   {
@@ -121,15 +118,13 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object (for the
-   * LowerBoundary-element) is built. This method recursively calls other
-   * buildFromDOM () - methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object (for the LowerBoundary-element) is built. This method
+   * recursively calls other buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *                   if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
-  private static Expression buildLowerBoundaryFromDOM( Element element )
-      throws FilterConstructionException
+  private static Expression buildLowerBoundaryFromDOM( Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'LowerBoundary'
@@ -148,15 +143,13 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object (for the
-   * UpperBoundary-element) is built. This method recursively calls other
-   * buildFromDOM () - methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object (for the UpperBoundary-element) is built. This method
+   * recursively calls other buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *                   if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
-  private static Expression buildUpperBoundaryFromDOM( Element element )
-      throws FilterConstructionException
+  private static Expression buildUpperBoundaryFromDOM( Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'UpperBoundary'
@@ -211,18 +204,17 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     sb.append( "</ogc:UpperBoundary>" );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
-  }  
+  }
 
   /**
-   * Calculates the <tt>PropertyIsBetween</tt> -Operation's logical value
-   * based on the certain property values of the given <tt>Feature</tt>.
-   * TODO: Improve datatype handling.
+   * Calculates the <tt>PropertyIsBetween</tt> -Operation's logical value based on the certain property values of the
+   * given <tt>Feature</tt>. TODO: Improve datatype handling.
    * 
    * @param feature
-   *                   that determines the property values
+   *          that determines the property values
    * @return true, if the <tt>Operation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *                   if the evaluation fails
+   *           if the evaluation fails
    */
   public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
@@ -232,8 +224,8 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     Object thisValue = propertyName.evaluate( feature );
 
     if( !( lowerValue instanceof Number && upperValue instanceof Number && thisValue instanceof Number ) )
-      throw new FilterEvaluationException(
-          "PropertyIsBetweenOperation can only be applied to numerical " + "expressions!" );
+      throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical "
+          + "expressions!" );
 
     double d1 = ( (Number)lowerValue ).doubleValue();
     double d2 = ( (Number)upperValue ).doubleValue();

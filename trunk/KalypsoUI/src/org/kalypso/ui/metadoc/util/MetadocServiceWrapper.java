@@ -65,15 +65,13 @@ public class MetadocServiceWrapper
   /**
    * @throws CoreException
    */
-  public MetadocServiceWrapper( ) throws CoreException
+  public MetadocServiceWrapper() throws CoreException
   {
     try
     {
-      final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault()
-          .getServiceProxyFactory();
-      m_service = (IMetaDocService) serviceProxyFactory.getAnyProxy(
-          "Kalypso_MetaDocService", ClassUtilities
-              .getOnlyClassName( IMetaDocService.class ) );
+      final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault().getServiceProxyFactory();
+      m_service = (IMetaDocService)serviceProxyFactory.getAnyProxy( "Kalypso_MetaDocService", ClassUtilities
+          .getOnlyClassName( IMetaDocService.class ) );
     }
     catch( final ServiceException e )
     {
@@ -90,19 +88,16 @@ public class MetadocServiceWrapper
    * @return the prepared document
    * @throws CoreException
    */
-  public Document prepareDocument( final String fileExtension,
-      final String username ) throws CoreException
+  public Document prepareDocument( final String fileExtension, final String username ) throws CoreException
   {
     try
     {
-      return new Document( fileExtension, m_service
-          .prepareNewDocument( username ) );
+      return new Document( fileExtension, m_service.prepareNewDocument( username ) );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aufruf des Berichtsablage-Dienstes", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aufruf des Berichtsablage-Dienstes", e ) );
     }
   }
 
@@ -110,14 +105,13 @@ public class MetadocServiceWrapper
   {
     try
     {
-      m_service.commitNewDocument( doc.getMetadata(), new DataHandler(
-          new FileDataSource( doc.getFile() ) ), doc.getFileExtension() );
+      m_service.commitNewDocument( doc.getMetadata(), new DataHandler( new FileDataSource( doc.getFile() ) ), doc
+          .getFileExtension() );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Berichtsablage gescheitert", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Berichtsablage gescheitert", e ) );
     }
   }
 }

@@ -93,8 +93,8 @@ public class FeatureviewHelper
     }
   }
 
-  private static void addDefaultFeatureControlTypeForProperty( final List controlList,
-      final FeatureType featureType, final FeatureTypeProperty ftp ) throws JAXBException
+  private static void addDefaultFeatureControlTypeForProperty( final List controlList, final FeatureType featureType,
+      final FeatureTypeProperty ftp ) throws JAXBException
   {
     ControlType type = null;
     boolean addLabel = true;
@@ -209,7 +209,7 @@ public class FeatureviewHelper
       addLabel = false;
 
     }
-    
+
     if( type == null )
     {
       final ButtonType button = FACTORY.createButton();
@@ -222,9 +222,8 @@ public class FeatureviewHelper
       type = button;
     }
 
-//    final String lang = Locale.getDefault().getLanguage();
-    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
-        IKalypsoPreferences.LANGUAGE );
+    //    final String lang = Locale.getDefault().getLanguage();
+    final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
     final Annotation annotation = ftp.getAnnotation( lang );
     final String text = annotation == null ? name : annotation.getLabel();
     final String tooltip = annotation == null ? null : annotation.getTooltip();

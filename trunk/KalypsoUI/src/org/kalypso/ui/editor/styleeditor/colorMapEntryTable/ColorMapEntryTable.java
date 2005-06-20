@@ -127,8 +127,7 @@ public class ColorMapEntryTable
     this.addChildControls( parent );
   }
 
-  public ColorMapEntryTable( Composite parent, KalypsoUserStyle userStyle,
-      RasterSymbolizer rasterSymbolizer )
+  public ColorMapEntryTable( Composite parent, KalypsoUserStyle userStyle, RasterSymbolizer rasterSymbolizer )
   {
     m_userStyle = userStyle;
     m_rasterSymbolizer = rasterSymbolizer;
@@ -176,8 +175,7 @@ public class ColorMapEntryTable
    */
   private void createTable( Composite parent )
   {
-    int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
-        | SWT.HIDE_SELECTION;
+    int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 
     table = new Table( parent, style );
 
@@ -265,8 +263,7 @@ public class ColorMapEntryTable
     {
       public void verifyText( VerifyEvent e )
       {
-        if( e.text.matches( fNON_NEGATIVE_INTEGER_FIELD )
-            || e.text.matches( fNON_NEGATIVE_FLOATING_POINT_FIELD ) )
+        if( e.text.matches( fNON_NEGATIVE_INTEGER_FIELD ) || e.text.matches( fNON_NEGATIVE_FLOATING_POINT_FIELD ) )
           e.doit = true;
       }
     } );
@@ -357,8 +354,8 @@ public class ColorMapEntryTable
       //	Remove the selection and refresh the table
       public void widgetSelected( SelectionEvent e )
       {
-        ColorMapEntry colorMapEntry = (ColorMapEntry)( (IStructuredSelection)tableViewer
-            .getSelection() ).getFirstElement();
+        ColorMapEntry colorMapEntry = (ColorMapEntry)( (IStructuredSelection)tableViewer.getSelection() )
+            .getFirstElement();
         if( colorMapEntry != null )
         {
           m_colorMapEntryList.removeColorMapEntry( colorMapEntry );
@@ -385,14 +382,11 @@ public class ColorMapEntryTable
 
     //  Create and configure the "Analyse" button
     /*
-     * Button analyse = new Button( parent, SWT.PUSH | SWT.CENTER );
-     * analyse.setText( "analyse" ); gridData = new GridData(
-     * GridData.HORIZONTAL_ALIGN_END ); gridData.widthHint = 50;
-     * analyse.setLayoutData( gridData );
+     * Button analyse = new Button( parent, SWT.PUSH | SWT.CENTER ); analyse.setText( "analyse" ); gridData = new
+     * GridData( GridData.HORIZONTAL_ALIGN_END ); gridData.widthHint = 50; analyse.setLayoutData( gridData );
      * 
-     * analyse.addSelectionListener( new SelectionAdapter() { // analyse the
-     * raster data public void widgetSelected( SelectionEvent e ) {
-     * System.out.println("Analyse"); } } );
+     * analyse.addSelectionListener( new SelectionAdapter() { // analyse the raster data public void widgetSelected(
+     * SelectionEvent e ) { System.out.println("Analyse"); } } );
      */
 
   }

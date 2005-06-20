@@ -64,8 +64,8 @@ public final class AddFeatureAction extends Action
 
   private Shell m_shell;
 
-  public AddFeatureAction( FeatureType type, CommandableWorkspace workspace,
-      Feature parentFeature, String propertyName, int i, Shell shell )
+  public AddFeatureAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature,
+      String propertyName, int i, Shell shell )
   {
     super( type.getName() );
     m_propertyName = propertyName;
@@ -81,8 +81,7 @@ public final class AddFeatureAction extends Action
    */
   public void run()
   {
-    AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_type,
-        m_parentFeature, m_propertyName, pos );
+    AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_type, m_parentFeature, m_propertyName, pos );
     try
     {
       m_workspace.postCommand( command );
@@ -92,8 +91,8 @@ public final class AddFeatureAction extends Action
     catch( final Exception e )
     {
       final String msg = e.getMessage();
-      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0,
-          msg == null ? "" : msg, null );
+      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, msg == null ? "" : msg,
+          null );
       ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
       e.printStackTrace();
     }

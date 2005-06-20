@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
@@ -56,10 +56,10 @@ public class ExportBerichtActionDelegate extends AbstractExportActionDelegate
    */
   public void run( IAction action )
   {
-    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
-    
+    final ObservationTableEditor editor = (ObservationTableEditor)getEditor();
+
     final ExportableObservationTable exportable = new ExportableObservationTable( editor.getTable() );
-    
+
     runExportAction( ExportTableBerichtWizard.class, exportable, editor.getSite().getShell() );
   }
 }

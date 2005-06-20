@@ -125,8 +125,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.LabelProvider#isLabelProperty(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.LabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   public boolean isLabelProperty( Object element, String property )
   {

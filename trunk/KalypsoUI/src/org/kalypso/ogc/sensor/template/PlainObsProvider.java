@@ -60,21 +60,20 @@ public final class PlainObsProvider implements IObsProvider
     m_obs = obs;
   }
 
-  public void dispose( )
+  public void dispose()
   {
-    // nix zu tun
+  // nix zu tun
   }
 
-  public IObservation getObservation( )
+  public IObservation getObservation()
   {
     return m_obs;
   }
 
   /**
-   * @return [optional] variable arguments that can be used when values are
-   *         fetched from the observation
+   * @return [optional] variable arguments that can be used when values are fetched from the observation
    */
-  public IVariableArguments getArguments( )
+  public IVariableArguments getArguments()
   {
     return m_args;
   }
@@ -84,7 +83,7 @@ public final class PlainObsProvider implements IObsProvider
    */
   public void addListener( final IObsProviderListener l )
   {
-    // obs kann sich nicht ändern
+  // obs kann sich nicht ändern
   }
 
   /**
@@ -92,7 +91,7 @@ public final class PlainObsProvider implements IObsProvider
    */
   public void removeListener( IObsProviderListener l )
   {
-    // obs kann sich nicht ändern
+  // obs kann sich nicht ändern
   }
 
   /**

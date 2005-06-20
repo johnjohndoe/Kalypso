@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.BasicStroke;
@@ -90,17 +90,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * The implements the basic legend element. a legend element may has a label
- * that can be set to eight positions relative to the legend graphic. A
- * <tt>LegendElement</tt> can be activated or deactivated. It depends on the
- * using application what effect this behavior will have.
+ * The implements the basic legend element. a legend element may has a label that can be set to eight positions relative
+ * to the legend graphic. A <tt>LegendElement</tt> can be activated or deactivated. It depends on the using
+ * application what effect this behavior will have.
  * <p>
- * <tt>LegendElement</tt> s can be collected in a
- * <tt>LegendElementCollection</tt> which also is a <tt>LegendElement</tt>
- * to group elements or to create more complex elements.
+ * <tt>LegendElement</tt> s can be collected in a <tt>LegendElementCollection</tt> which also is a
+ * <tt>LegendElement</tt> to group elements or to create more complex elements.
  * <p>
- * Each <tt>LegendElement</tt> is able to paint itself as
- * <tt>BufferedImage</tt>
+ * Each <tt>LegendElement</tt> is able to paint itself as <tt>BufferedImage</tt>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
@@ -163,8 +160,8 @@ public class LegendElement_Impl implements LegendElement
    * @param height
    *          the requested height of the legend symbol
    */
-  LegendElement_Impl( Rule[] rules, String label, double orientation, int labelPosition,
-      boolean active, int width, int height )
+  LegendElement_Impl( Rule[] rules, String label, double orientation, int labelPosition, boolean active, int width,
+      int height )
   {
     this();
     setRules( rules );
@@ -233,8 +230,7 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * returns the label set to <tt>LegendElement</tt>. If no label is set, the
-   * method returns <tt>null</tt>
+   * returns the label set to <tt>LegendElement</tt>. If no label is set, the method returns <tt>null</tt>
    * 
    * @return label of the <tt>LegendElement</tt> or <tt>null</tt>
    */
@@ -244,9 +240,8 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * sets the orientation of the label of the <tt>LegendElement</tt>. A label
-   * can have an orientation from -90° to 90° expressed in radians, where 0° is
-   * horizontal
+   * sets the orientation of the label of the <tt>LegendElement</tt>. A label can have an orientation from -90° to
+   * 90° expressed in radians, where 0° is horizontal
    * 
    * @param orientation
    */
@@ -256,9 +251,8 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * returns the current orientation of the label of the <tt>LegendElement</tt>
-   * in radians. If the element hasn't a label <tt>Double.NEGATIVE_INFINITY</tt>
-   * will be returned.
+   * returns the current orientation of the label of the <tt>LegendElement</tt> in radians. If the element hasn't a
+   * label <tt>Double.NEGATIVE_INFINITY</tt> will be returned.
    * 
    * @return orientation of the label of the <tt>LegendElement</tt> in radians
    */
@@ -268,8 +262,7 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * sets the placement of the label relative to the legend symbol. Possible
-   * values are:
+   * sets the placement of the label relative to the legend symbol. Possible values are:
    * <ul>
    * <li>LP_TOPCENTER
    * <li>LP_TOPLEFT
@@ -301,9 +294,8 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * returns the placement of the label relative to the legend symbol. If the
-   * element hasn't a label <tt>LegendElement.LP_NOLABEL</tt> will be
-   * returned. Otherwise possible values are:
+   * returns the placement of the label relative to the legend symbol. If the element hasn't a label
+   * <tt>LegendElement.LP_NOLABEL</tt> will be returned. Otherwise possible values are:
    * <ul>
    * <li>LP_TOPCENTER
    * <li>LP_TOPLEFT
@@ -373,8 +365,7 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * returns the buffer place between the legend symbol and the legend label in
-   * pixels
+   * returns the buffer place between the legend symbol and the legend label in pixels
    * 
    * @return the buffer as integer in pixels
    */
@@ -407,24 +398,21 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           is thrown, if the parsing of the sld failes.
    */
-  protected void drawPointLegend( Graphics g, PointSymbolizer c, int width, int height )
-      throws LegendException
+  protected void drawPointLegend( Graphics g, PointSymbolizer c, int width, int height ) throws LegendException
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "drawPointLegend()" );
     org.kalypsodeegree.graphics.sld.Graphic deegreegraphic = c.getGraphic();
     try
     {
-      BufferedImage buffi = ( (org.kalypsodeegree_impl.graphics.sld.Graphic_Impl)deegreegraphic )
-          .getAsImage( null );
+      BufferedImage buffi = ( (org.kalypsodeegree_impl.graphics.sld.Graphic_Impl)deegreegraphic ).getAsImage( null );
       int w = buffi.getWidth();
       int h = buffi.getHeight();
       g.drawImage( buffi, width / 2 - w / 2, height / 2 - h / 2, null );
     }
     catch( FilterEvaluationException feex )
     {
-      throw new LegendException(
-          "FilterEvaluationException occured during the creation of the legend:\n"
-              + "The legend for the PointSymbol can't be processed.\n" + feex.getMessage() );
+      throw new LegendException( "FilterEvaluationException occured during the creation of the legend:\n"
+          + "The legend for the PointSymbol can't be processed.\n" + feex.getMessage() );
     }
     Debug.debugMethodEnd();
   }
@@ -443,8 +431,7 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           is thrown, if the parsing of the sld failes.
    */
-  protected void drawLineStringLegend( Graphics2D g, LineSymbolizer ls, int width, int height )
-      throws LegendException
+  protected void drawLineStringLegend( Graphics2D g, LineSymbolizer ls, int width, int height ) throws LegendException
   {
     Debug.debugMethodBegin();
 
@@ -457,9 +444,8 @@ public class LegendElement_Impl implements LegendElement
     }
     catch( FilterEvaluationException feex )
     {
-      throw new LegendException(
-          "FilterEvaluationException occured during the creation of the legend:\n"
-              + "The legend for the LineSymbol can't be processed.\n" + feex.getMessage() );
+      throw new LegendException( "FilterEvaluationException occured during the creation of the legend:\n"
+          + "The legend for the LineSymbol can't be processed.\n" + feex.getMessage() );
     }
 
     // p1 = [0 | height]
@@ -467,9 +453,17 @@ public class LegendElement_Impl implements LegendElement
     // p3 = [width - width / 3 | height - height / 3]
     // p4 = [width | 0]
     int[] xPoints =
-    { 0, width / 3, width - width / 3, width };
+    {
+        0,
+        width / 3,
+        width - width / 3,
+        width };
     int[] yPoints =
-    { height, height / 3, height - height / 3, 0 };
+    {
+        height,
+        height / 3,
+        height - height / 3,
+        0 };
     int nPoints = 4;
 
     g.drawPolyline( xPoints, yPoints, nPoints );
@@ -490,8 +484,7 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           if the parsing of the sld failes.
    */
-  protected void drawPolygonLegend( Graphics2D g, PolygonSymbolizer ps, int width, int height )
-      throws LegendException
+  protected void drawPolygonLegend( Graphics2D g, PolygonSymbolizer ps, int width, int height ) throws LegendException
   {
     Debug.debugMethodBegin();
 
@@ -501,7 +494,12 @@ public class LegendElement_Impl implements LegendElement
     GM_Position p4 = GeometryFactory.createGM_Position( width, 0 );
 
     GM_Position[] pos =
-    { p1, p2, p3, p4, p1 };
+    {
+        p1,
+        p2,
+        p3,
+        p4,
+        p1 };
     GM_Surface surface = null;
     try
     {
@@ -522,10 +520,9 @@ public class LegendElement_Impl implements LegendElement
     }
     catch( IncompatibleGeometryTypeException igtex )
     {
-      throw new LegendException(
-          "IncompatibleGeometryTypeException occured during the creation of the legend:\n"
-              + "The legendsymbol for the Polygon can't be processed.\n"
-              + "Error in creating the PolygonDisplayElement.\n" + igtex.getMessage() );
+      throw new LegendException( "IncompatibleGeometryTypeException occured during the creation of the legend:\n"
+          + "The legendsymbol for the Polygon can't be processed.\n" + "Error in creating the PolygonDisplayElement.\n"
+          + igtex.getMessage() );
     }
 
     GM_Envelope envelope = GeometryFactory.createGM_Envelope( p1, p3 );
@@ -571,8 +568,7 @@ public class LegendElement_Impl implements LegendElement
    * @throws LegendException
    *           if the sld cannot be processed
    */
-  private BasicStroke getBasicStroke( org.kalypsodeegree.graphics.sld.Stroke sldstroke )
-      throws LegendException
+  private BasicStroke getBasicStroke( org.kalypsodeegree.graphics.sld.Stroke sldstroke ) throws LegendException
   {
     Debug.debugMethodBegin();
     BasicStroke bs = null;
@@ -593,23 +589,20 @@ public class LegendElement_Impl implements LegendElement
     }
     catch( FilterEvaluationException ex )
     {
-      throw new LegendException(
-          "FilterEvaluationException occured during the creation of the legend:\n"
-              + "The Stroke of the element can't be processed.\n" + ex.getMessage() );
+      throw new LegendException( "FilterEvaluationException occured during the creation of the legend:\n"
+          + "The Stroke of the element can't be processed.\n" + ex.getMessage() );
     }
     Debug.debugMethodEnd();
     return bs;
   }
 
   /**
-   * calculates the FontMetrics of the LegendLabel in pixels. It returns an
-   * 3-dimensional array containing [0] the width, [1] the ascent and [2] the
-   * descent.
+   * calculates the FontMetrics of the LegendLabel in pixels. It returns an 3-dimensional array containing [0] the
+   * width, [1] the ascent and [2] the descent.
    * 
    * @param label
    *          the label of the LegendElement
-   * @return the 3-dimensional INT-Array contains [0] the width of the string,
-   *         [1] the ascent and [2] the descent.
+   * @return the 3-dimensional INT-Array contains [0] the width of the string, [1] the ascent and [2] the descent.
    */
   protected int[] calculateFontMetrics( String label )
   {
@@ -643,11 +636,10 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * calculates the width and height of the resulting LegendSymbol depending on
-   * the LabelPlacement
+   * calculates the width and height of the resulting LegendSymbol depending on the LabelPlacement
    */
-  private BufferedImage calculateImage( int labelposition, int labelwidth, int ascent, int descent,
-      int legendwidth, int legendheight, int buffer )
+  private BufferedImage calculateImage( int labelposition, int labelwidth, int ascent, int descent, int legendwidth,
+      int legendheight, int buffer )
   {
     Debug.debugMethodBegin();
     // TODO labelposition
@@ -780,8 +772,8 @@ public class LegendElement_Impl implements LegendElement
       // calculates the fontmetrics and creates the bufferedimage
       // if getLabel() is null is checked in calculateFontMetrics!
       fontmetrics = calculateFontMetrics( getLabel() );
-      bi = calculateImage( getLabelPlacement(), fontmetrics[0], fontmetrics[1], fontmetrics[2],
-          getWidth(), getHeight(), getBufferBetweenLegendAndLabel() );
+      bi = calculateImage( getLabelPlacement(), fontmetrics[0], fontmetrics[1], fontmetrics[2], getWidth(),
+          getHeight(), getBufferBetweenLegendAndLabel() );
       g = bi.getGraphics();
       g.setColor( Color.WHITE );
       Rule[] myrules = getRules();
@@ -829,10 +821,12 @@ public class LegendElement_Impl implements LegendElement
   }
 }
 
-/*******************************************************************************
- * ****************************************************************************
- * Changes to this class. What the people have been up to: $Log:
- * LegendElement_Impl.java,v $ Revision 1.12 2004/07/09 07:17:19 poth no message
+/***********************************************************************************************************************
+ * **************************************************************************** Changes to this class. What the people
+ * have been up to: $Log$
+ * have been up to: Revision 1.11  2005/06/20 14:07:49  belger
+ * have been up to: Formatierung
+ * have been up to: Revision 1.12 2004/07/09 07:17:19 poth no message
  * 
  * Revision 1.11 2004/06/01 15:55:05 poth no message
  * 
@@ -840,4 +834,4 @@ public class LegendElement_Impl implements LegendElement
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

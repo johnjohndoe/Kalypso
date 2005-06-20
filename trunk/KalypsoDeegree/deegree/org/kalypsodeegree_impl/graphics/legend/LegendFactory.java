@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.image.BufferedImage;
@@ -110,14 +110,12 @@ public class LegendFactory
   }
 
   /**
-   * creates a <tt>LegendElement</tt> from a SLD <tt>Style</tt>. Depending
-   * on the <tt>Style</tt> the returned <tt>LegendElement</tt> may is a
-   * <tt>LegendElementCollection</tt>.
+   * creates a <tt>LegendElement</tt> from a SLD <tt>Style</tt>. Depending on the <tt>Style</tt> the returned
+   * <tt>LegendElement</tt> may is a <tt>LegendElementCollection</tt>.
    * 
    * @return <tt>LegendElement</tt>
    */
-  public LegendElement createLegendElement( Style style, int width, int height, String title )
-      throws LegendException
+  public LegendElement createLegendElement( Style style, int width, int height, String title ) throws LegendException
   {
     Debug.debugMethodBegin();
     setLegendTitle( title );
@@ -192,8 +190,7 @@ public class LegendFactory
   }
 
   /**
-   * creates a <tt>LegendElementCollection</tt> and fills it with the passed
-   * <tt>LegendElement</tt>s.
+   * creates a <tt>LegendElementCollection</tt> and fills it with the passed <tt>LegendElement</tt>s.
    * 
    * @return <tt>LegendElementCollection</tt>
    */
@@ -215,11 +212,10 @@ public class LegendFactory
    * @param sld
    * @param width
    * @param height
-   * @return @throws
-   *                LegendException
+   * @return
+   * @throws LegendException
    */
-  public BufferedImage[] createAllThumbnails( StyledLayerDescriptor sld, int width, int height )
-      throws LegendException
+  public BufferedImage[] createAllThumbnails( StyledLayerDescriptor sld, int width, int height ) throws LegendException
   {
     Debug.debugMethodBegin( this, "createAllThumbnails" );
 
@@ -297,16 +293,15 @@ public class LegendFactory
     }
     else
     {
-      return "no implementation for " + filter.getClass()
-          + " at org.kalypsodeegree_impl.graphics.legend.LegendFactory";
+      return "no implementation for " + filter.getClass() + " at org.kalypsodeegree_impl.graphics.legend.LegendFactory";
     }
   }
 
   /**
    * 
    * @param operation
-   * @return @throws
-   *                LegendException
+   * @return
+   * @throws LegendException
    */
   private String getPropertyNameFromOperation( Operation operation ) throws LegendException
   {
@@ -329,8 +324,7 @@ public class LegendFactory
       else
       {
         throw new LegendException( "LegendElement_Impl: An error occured "
-            + "during the parsing of the Filter in the SLD."
-            + "First Operation Expression is not of type Literal" );
+            + "during the parsing of the Filter in the SLD." + "First Operation Expression is not of type Literal" );
       }
       legendlabel += getOperationString( pCOMPo.getOperatorId() );
       // gets the Literal of the operation
@@ -342,8 +336,7 @@ public class LegendFactory
       else
       {
         throw new LegendException( "LegendElement_Impl: An error occured "
-            + "during the parsing of the Filter in the SLD."
-            + "Second Operation Expression is not of type Literal" );
+            + "during the parsing of the Filter in the SLD." + "Second Operation Expression is not of type Literal" );
       }
       // LOGICAL
     }
@@ -404,16 +397,15 @@ public class LegendFactory
 
       PropertyIsLikeOperation prilop = (PropertyIsLikeOperation)operation;
 
-      legendlabel = prilop.getPropertyName().getValue()
-          + getOperationString( prilop.getOperatorId() ) + prilop.getLiteral().getValue();
+      legendlabel = prilop.getPropertyName().getValue() + getOperationString( prilop.getOperatorId() )
+          + prilop.getLiteral().getValue();
       // LOGICAL
     }
     else if( operation instanceof PropertyIsBetweenOperation )
     {
       PropertyIsBetweenOperation propIsbetween = (PropertyIsBetweenOperation)operation;
-      legendlabel = propIsbetween.getPropertyName().getValue()
-          + getOperationString( propIsbetween.getOperatorId() ) + propIsbetween.getLowerBoundary()
-          + propIsbetween.getUpperBoundary();
+      legendlabel = propIsbetween.getPropertyName().getValue() + getOperationString( propIsbetween.getOperatorId() )
+          + propIsbetween.getLowerBoundary() + propIsbetween.getUpperBoundary();
     }
     else if( operation instanceof PropertyIsNullOperation )
     {
@@ -484,7 +476,7 @@ public class LegendFactory
    * sets the label of the <tt>LegendElement</tt>
    * 
    * @param label
-   *                   label of the <tt>LegendElement</tt>
+   *          label of the <tt>LegendElement</tt>
    */
   public void setLabel( String label )
   {
@@ -492,8 +484,7 @@ public class LegendFactory
   }
 
   /**
-   * returns the label set to <tt>LegendElement</tt>. If no label is set, the
-   * method returns <tt>null</tt>
+   * returns the label set to <tt>LegendElement</tt>. If no label is set, the method returns <tt>null</tt>
    * 
    * @return label of the <tt>LegendElement</tt> or <tt>null</tt>
    */
@@ -515,28 +506,28 @@ public class LegendFactory
     }
     catch( Exception e )
     {
-    //  
+      //  
     }
   }
 
   /**
-   * @return private String getLegendTitleFilterProperty() { return
-   *                legendtitlefilterproperty; }
+   * @return private String getLegendTitleFilterProperty() { return legendtitlefilterproperty; }
    */
 
   /**
    * @param string
    * 
-   * private void setLegendTitleFilterProperty(String string) {
-   * legendtitlefilterproperty = string; }
+   * private void setLegendTitleFilterProperty(String string) { legendtitlefilterproperty = string; }
    */
 
 }
 
-/*******************************************************************************
- * ****************************************************************************
- * Changes to this class. What the people have been up to: $Log:
- * LegendFactory.java,v $ Revision 1.19 2004/08/26 12:42:20 poth no message
+/***********************************************************************************************************************
+ * **************************************************************************** Changes to this class. What the people
+ * have been up to: $Log$
+ * have been up to: Revision 1.12  2005/06/20 14:07:49  belger
+ * have been up to: Formatierung
+ * have been up to: Revision 1.19 2004/08/26 12:42:20 poth no message
  * 
  * Revision 1.18 2004/08/10 11:45:57 poth no message
  * 
@@ -552,4 +543,4 @@ public class LegendFactory
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

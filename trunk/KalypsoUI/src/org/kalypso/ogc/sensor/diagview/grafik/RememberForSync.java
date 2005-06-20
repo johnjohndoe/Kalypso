@@ -28,8 +28,7 @@ import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 
 /**
- * RememberForSync: remembers which zml file belongs to which grafik dat file
- * for a given axis
+ * RememberForSync: remembers which zml file belongs to which grafik dat file for a given axis
  * 
  * @author schlienger
  */
@@ -53,22 +52,22 @@ final class RememberForSync
     m_modificationStamp = m_datFile.getModificationStamp();
   }
 
-  public IAxis getNumberAxis( )
+  public IAxis getNumberAxis()
   {
     return m_numberAxis;
   }
 
-  public IFile getZmlFile( )
+  public IFile getZmlFile()
   {
     return m_zmlFile;
   }
 
-  public IFile getDatFile( )
+  public IFile getDatFile()
   {
     return m_datFile;
   }
 
-  private boolean isInSync( ) throws CoreException
+  private boolean isInSync() throws CoreException
   {
     m_datFile.getParent().refreshLocal( 1, new NullProgressMonitor() );
 
@@ -77,13 +76,12 @@ final class RememberForSync
     return m_modificationStamp == m_datFile.getModificationStamp();
   }
 
-  public String toString( )
+  public String toString()
   {
-    return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-"
-        + m_zmlFile.getName() + " Axis:" + m_numberAxis;
+    return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-" + m_zmlFile.getName() + " Axis:" + m_numberAxis;
   }
 
-  public void synchronizeZml( ) throws Exception
+  public void synchronizeZml() throws Exception
   {
     if( isInSync() )
     {
@@ -97,8 +95,7 @@ final class RememberForSync
     Reader zmlReader = null;
     try
     {
-      datReader = new BufferedReader( new InputStreamReader( m_datFile
-          .getContents(), m_datFile.getCharset() ) );
+      datReader = new BufferedReader( new InputStreamReader( m_datFile.getContents(), m_datFile.getCharset() ) );
 
       final CSV csv = new CSV( "\t", 1, true );
       csv.setCommentedLineBeginString( "//" );
@@ -106,19 +103,17 @@ final class RememberForSync
       csv.fetch( datReader );
       IOUtils.closeQuietly( datReader );
 
-      zmlReader = new BufferedReader( new InputStreamReader( m_zmlFile
-          .getContents(), m_zmlFile.getCharset() ) );
+      zmlReader = new BufferedReader( new InputStreamReader( m_zmlFile.getContents(), m_zmlFile.getCharset() ) );
 
-      IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ),
-          m_zmlFile.getName(), ResourceUtilities.createURL( m_zmlFile ) );
+      IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ), m_zmlFile.getName(), ResourceUtilities
+          .createURL( m_zmlFile ) );
       IOUtils.closeQuietly( zmlReader );
 
       ITuppleModel values = obs.getValues( null );
 
       IAxis[] axes = obs.getAxisList();
 
-      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-          Date.class );
+      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
       final List axisList = Arrays.asList( axes );
       axisList.remove( dateAxis );
@@ -138,14 +133,12 @@ final class RememberForSync
       for( int l = 0; l < csv.getLines(); l++ )
       {
         Date date = GrafikLauncher.GRAFIK_DF.parse( csv.getItem( l, 0 ) );
-        double d = Double.parseDouble( csv.getItem( l, 1 )
-            .replaceAll( ",", "." ) ); // replace all ',' with '.' so that
-                                       // Double-parsing always works
+        double d = Double.parseDouble( csv.getItem( l, 1 ).replaceAll( ",", "." ) ); // replace all ',' with '.' so that
+        // Double-parsing always works
 
         /*
-         * Großes TODO: z.Z. werden durch das Grafiktool hinzugefügte oder
-         * gelöschte Werte nicht berücksichtigt. Ist auch die Frage ob man es
-         * überhaupt unterstützen sollte...
+         * Großes TODO: z.Z. werden durch das Grafiktool hinzugefügte oder gelöschte Werte nicht berücksichtigt. Ist
+         * auch die Frage ob man es überhaupt unterstützen sollte...
          */
         int ix = values.indexOf( date, dateAxis );
 
@@ -173,8 +166,7 @@ final class RememberForSync
         }
       };
 
-      helper.setFileContents( m_zmlFile, true, false,
-          new NullProgressMonitor(), m_zmlFile.getCharset() );
+      helper.setFileContents( m_zmlFile, true, false, new NullProgressMonitor(), m_zmlFile.getCharset() );
     }
     finally
     {

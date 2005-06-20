@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.calccase;
 
 import java.lang.reflect.InvocationTargetException;
@@ -93,8 +93,9 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenvariante", getSelection() );
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, false,
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+
     m_createControlPage.setUpdate( true );
 
     addPage( m_createFolderPage );
@@ -129,16 +130,13 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       {
         try
         {
-          monitor.beginTask( IDEWorkbenchMessages
-              .getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
-          final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent()
-              .getFullPath() );
+          monitor.beginTask( IDEWorkbenchMessages.getString( "WizardNewFolderCreationPage.progress" ), 5000 ); //$NON-NLS-1$
+          final ContainerGenerator generator = new ContainerGenerator( newFolderHandle.getParent().getFullPath() );
           generator.generateContainer( new SubProgressMonitor( monitor, 1000 ) );
           createFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
-          final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature(ModelNature.ID);
-          nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor(
-              monitor, 1000 ) );
+          final ModelNature nature = (ModelNature)newFolderHandle.getProject().getNature( ModelNature.ID );
+          nature.createCalculationCaseInFolder( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           if( controlPage.isUpdate() )
             nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
           else
@@ -178,10 +176,8 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
 
-        IDEWorkbenchPlugin
-            .log( MessageFormat
-                .format(
-                    "Exception in {0}.getNewFolder(): {1}", new Object[] { getClass().getName(), e.getTargetException() } ) );//$NON-NLS-1$
+        IDEWorkbenchPlugin.log( MessageFormat.format(
+            "Exception in {0}.getNewFolder(): {1}", new Object[] { getClass().getName(), e.getTargetException() } ) );//$NON-NLS-1$
         MessageDialog
             .openError(
                 getContainer().getShell(),
@@ -222,8 +218,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
    * 
    * TODO: move this code to FolderUtilities
    */
-  protected void createFolder( final IFolder folderHandle, final IProgressMonitor monitor )
-      throws CoreException
+  protected void createFolder( final IFolder folderHandle, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -242,8 +237,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     {
       // If the folder already existed locally, just refresh to get contents
       if( e.getStatus().getCode() == IResourceStatus.PATH_OCCUPIED )
-        folderHandle
-            .refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+        folderHandle.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
       else
         throw e;
     }
@@ -251,14 +245,14 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     if( monitor.isCanceled() )
       throw new OperationCanceledException();
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets.Composite)
    */
   public void createPageControls( final Composite pageContainer )
   {
-    // nichts tun, die Seiten sollen lazy initialisiert werden
-    // weil die Steuerparameter Seite erst aufgebaut werden kann,
-    // wenn das Projekt festliegt
+  // nichts tun, die Seiten sollen lazy initialisiert werden
+  // weil die Steuerparameter Seite erst aufgebaut werden kann,
+  // wenn das Projekt festliegt
   }
 }

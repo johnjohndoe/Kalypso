@@ -80,11 +80,11 @@ public class ShapeLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
-   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final String location, final URL context,
-      final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor )
+      throws LoaderException
   {
     try
     {
@@ -135,27 +135,22 @@ public class ShapeLoader extends AbstractLoader
       }
 
       if( sourceFile == null )
-        throw new LoaderException( "Could not load shape at source: "
-            + shpSource );
+        throw new LoaderException( "Could not load shape at source: " + shpSource );
 
       // Workspace laden
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters
-          .getDefault().export( csFac.getCSByName( sourceSrs ) );
+      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
+          csFac.getCSByName( sourceSrs ) );
 
-      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault()
-          .getCoordinatesSystem();
-      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile
-          .getAbsolutePath(), sourceCrs, new EclipseProgressMonitor( monitor ) );
-      final CommandableWorkspace workspace = new CommandableWorkspace(
-          gmlWorkspace );
+      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs,
+          new EclipseProgressMonitor( monitor ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       try
       {
-        workspace.accept( new TransformVisitor( targetCRS ), workspace
-            .getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-        workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
-            FeatureVisitor.DEPTH_INFINITE );
+        workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+        workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       }
       catch( final Throwable e1 )
       {
@@ -178,14 +173,13 @@ public class ShapeLoader extends AbstractLoader
     }
   }
 
-  public void save( final String source, final URL context,
-      final IProgressMonitor monitor, final Object data )
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
       throws LoaderException
   {
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace)data;
-      URL shpURL = m_urlResolver.resolveURL( context, source.split("#")[0] );
+      URL shpURL = m_urlResolver.resolveURL( context, source.split( "#" )[0] );
 
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       if( file != null )
@@ -195,20 +189,18 @@ public class ShapeLoader extends AbstractLoader
 
       }
       else
-        throw new LoaderException( "Die URL kann nicht beschrieben werden: "
-            + shpURL );
+        throw new LoaderException( "Die URL kann nicht beschrieben werden: " + shpURL );
     }
     catch( MalformedURLException e )
     {
       e.printStackTrace();
-      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n"
-          + e.getLocalizedMessage(), e );
+      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
     }
-    
+
   }
 }

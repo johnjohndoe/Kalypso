@@ -82,8 +82,8 @@ public class ExportMapWizard extends Wizard
       formats.put( string, string );
     }
 
-    m_filePage = new SaveFileWizardPage( "fileMapExport", "Karte exportieren",
-        ImageProvider.IMAGE_ICON_GMT, "", formats );
+    m_filePage = new SaveFileWizardPage( "fileMapExport", "Karte exportieren", ImageProvider.IMAGE_ICON_GMT, "",
+        formats );
 
     final MapPanel mapPanel = editor.getMapPanel();
     final int width = mapPanel.getWidth();
@@ -131,10 +131,8 @@ public class ExportMapWizard extends Wizard
 
           optionPage.exportDocument( os );
           if( optionPage.isResult() )
-            MessageDialog
-                .openInformation( getContainer().getShell(), "Export",
-                    "Export erfolgreich abgeschlossen. Karte wurde in Datei " + filepath
-                        + " abgelegt." );
+            MessageDialog.openInformation( getContainer().getShell(), "Export",
+                "Export erfolgreich abgeschlossen. Karte wurde in Datei " + filepath + " abgelegt." );
           else
             MessageDialog.openError( getContainer().getShell(), "Export",
                 "Fehler beim Export der Karte. Bild wurde nicht exportiert." );

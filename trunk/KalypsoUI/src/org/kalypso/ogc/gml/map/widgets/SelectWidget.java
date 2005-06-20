@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import org.kalypso.ogc.gml.command.JMSelector;
@@ -46,17 +46,17 @@ public class SelectWidget extends AbstractSelectWidget
 {
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public SelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
-    
+
   }
 
   protected int getSelectionMode()
   {
-     return JMSelector.MODE_SELECT;        
+    return JMSelector.MODE_SELECT;
   }
 
   /**
@@ -65,5 +65,5 @@ public class SelectWidget extends AbstractSelectWidget
   boolean allowOnlyOneSelectedFeature()
   {
     return false;
-  }  
+  }
 }

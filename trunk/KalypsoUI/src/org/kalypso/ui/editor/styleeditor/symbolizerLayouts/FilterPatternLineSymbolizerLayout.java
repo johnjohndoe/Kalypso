@@ -36,19 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -62,6 +57,11 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.SliderPanel;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author F.Lindemann
@@ -103,8 +103,8 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
     final LineSymbolizer lineSymbolizer = (LineSymbolizer)symbolizer;
     final Stroke stroke = lineSymbolizer.getStroke();
 
-    SliderPanel strokeWidthPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10,
-        1, SliderPanel.INTEGER, stroke.getWidth( null ) );
+    SliderPanel strokeWidthPanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_WIDTH, 0, 10, 1,
+        SliderPanel.INTEGER, stroke.getWidth( null ) );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
@@ -169,8 +169,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
             if( symb instanceof LineSymbolizer )
             {
               ( (LineSymbolizer)symb ).getStroke().setStroke(
-                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(),
-                      colorArray[i].getBlue() ) );
+                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
             }
           }
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );

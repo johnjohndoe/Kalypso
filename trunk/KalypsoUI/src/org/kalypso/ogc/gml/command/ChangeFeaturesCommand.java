@@ -121,14 +121,12 @@ public class ChangeFeaturesCommand implements ICommand
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      final FeatureProperty fp = FeatureFactory.createFeatureProperty( change.property,
-          change.newValue );
+      final FeatureProperty fp = FeatureFactory.createFeatureProperty( change.property, change.newValue );
       change.feature.setProperty( fp );
       changedFeaturesList.add( change.feature );
     }
 
     if( m_workspace != null )
-      m_workspace
-          .fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeaturesList ) );
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeaturesList ) );
   }
 }

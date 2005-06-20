@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor;
 
 import org.eclipse.core.resources.IFile;
@@ -80,16 +80,15 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 /**
  * @author bce
  */
-public abstract class AbstractEditorPart extends EditorPart implements
-    IResourceChangeListener, ICommandTarget
+public abstract class AbstractEditorPart extends EditorPart implements IResourceChangeListener, ICommandTarget
 {
   private final Runnable m_dirtyRunnable = new Runnable()
   {
-    public void run( )
+    public void run()
     {
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           fireDirty();
         }
@@ -97,15 +96,15 @@ public abstract class AbstractEditorPart extends EditorPart implements
     }
   };
 
-  protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
-      new DefaultCommandManager(), m_dirtyRunnable );
+  protected JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(),
+      m_dirtyRunnable );
 
-  public AbstractEditorPart( )
+  public AbstractEditorPart()
   {
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
 
@@ -119,19 +118,19 @@ public abstract class AbstractEditorPart extends EditorPart implements
   public final void doSave( final IProgressMonitor monitor )
   {
     // save only possible when input is a file
-    if( !(getEditorInput() instanceof FileEditorInput) )
+    if( !( getEditorInput() instanceof FileEditorInput ) )
     {
       // given user a chance to use save-as
-      MessageDialog.openInformation( getSite().getShell(), "Speichern", 
-        "Der Inhalt kann nicht direkt gespeichert werden weil noch\n" +
-      	"keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n" +
-      	"sich möglicherweise um eine 'virtuelle' Vorlage\n" +
-      	"Bitte benutzen Sie das 'Speichern als' Kommando." );
+      MessageDialog.openInformation( getSite().getShell(), "Speichern",
+          "Der Inhalt kann nicht direkt gespeichert werden weil noch\n"
+              + "keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n"
+              + "sich möglicherweise um eine 'virtuelle' Vorlage\n"
+              + "Bitte benutzen Sie das 'Speichern als' Kommando." );
 
       return;
     }
 
-    final IFileEditorInput input = (IFileEditorInput) getEditorInput();
+    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
     if( input != null )
     {
@@ -145,29 +144,27 @@ public abstract class AbstractEditorPart extends EditorPart implements
       {
         e.printStackTrace();
 
-        ErrorDialog.openError( getEditorSite().getShell(), "Fehler",
-            "Fehler beim Speichern der Ansicht", e.getStatus() );
+        ErrorDialog
+            .openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
       }
     }
   }
 
-  protected abstract void doSaveInternal( final IProgressMonitor monitor,
-      final IFileEditorInput input ) throws CoreException;
+  protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+      throws CoreException;
 
   /**
    * Returns the status line manager of this editor.
    * 
    * @return the status line manager of this editor
    */
-  private IStatusLineManager getStatusLineManager( )
+  private IStatusLineManager getStatusLineManager()
   {
-    final IEditorActionBarContributor contributor = getEditorSite()
-        .getActionBarContributor();
-    if( !(contributor instanceof EditorActionBarContributor) )
+    final IEditorActionBarContributor contributor = getEditorSite().getActionBarContributor();
+    if( !( contributor instanceof EditorActionBarContributor ) )
       return null;
 
-    final IActionBars actionBars = ((EditorActionBarContributor) contributor)
-        .getActionBars();
+    final IActionBars actionBars = ( (EditorActionBarContributor)contributor ).getActionBars();
     if( actionBars == null )
       return null;
 
@@ -177,7 +174,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
   /**
    * @see org.eclipse.ui.part.EditorPart#isDirty()
    */
-  public boolean isDirty( )
+  public boolean isDirty()
   {
     return m_commandTarget.isDirty();
   }
@@ -187,7 +184,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
    * 
    * @return the progress monitor related to this editor
    */
-  protected IProgressMonitor getProgressMonitor( )
+  protected IProgressMonitor getProgressMonitor()
   {
     IProgressMonitor pm = null;
 
@@ -201,16 +198,14 @@ public abstract class AbstractEditorPart extends EditorPart implements
   /**
    * @see org.eclipse.ui.part.EditorPart#doSaveAs()
    */
-  public void doSaveAs( )
+  public void doSaveAs()
   {
     final Shell shell = getSite().getShell();
     final IEditorInput input = getEditorInput();
 
     final SaveAsDialog dialog = new SaveAsDialog( shell );
 
-    final IFile original = (input instanceof IFileEditorInput) ? ((IFileEditorInput) input)
-        .getFile()
-        : null;
+    final IFile original = ( input instanceof IFileEditorInput ) ? ( (IFileEditorInput)input ).getFile() : null;
     if( original != null )
       dialog.setOriginalFile( original );
     else
@@ -243,8 +238,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
     {
       ce.printStackTrace();
 
-      ErrorDialog.openError( shell, "Fehler",
-          "Fehlern beim Speichern der Ansicht", ce.getStatus() );
+      ErrorDialog.openError( shell, "Fehler", "Fehlern beim Speichern der Ansicht", ce.getStatus() );
       return;
     }
 
@@ -252,8 +246,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
   }
 
   /**
-   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite,
-   *      org.eclipse.ui.IEditorInput)
+   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   public void init( final IEditorSite site, final IEditorInput input )
   {
@@ -265,7 +258,7 @@ public abstract class AbstractEditorPart extends EditorPart implements
   /**
    * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
    */
-  public boolean isSaveAsAllowed( )
+  public boolean isSaveAsAllowed()
   {
     return true;
   }
@@ -280,13 +273,13 @@ public abstract class AbstractEditorPart extends EditorPart implements
     load();
   }
 
-  protected final void load( )
+  protected final void load()
   {
     new Job( "Dokument laden" )
     {
       protected IStatus run( final IProgressMonitor monitor )
       {
-        final IStorageEditorInput input = (IStorageEditorInput) getEditorInput();
+        final IStorageEditorInput input = (IStorageEditorInput)getEditorInput();
 
         try
         {
@@ -304,15 +297,14 @@ public abstract class AbstractEditorPart extends EditorPart implements
           e.printStackTrace();
 
           monitor.done();
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-              "Fehler beim Laden der Ansicht", e );
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden der Ansicht", e );
         }
 
         m_commandTarget.resetDirty();
 
         getEditorSite().getShell().getDisplay().syncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
             setDocumentTitle( input.getName() );
           }
@@ -324,31 +316,30 @@ public abstract class AbstractEditorPart extends EditorPart implements
     }.schedule();
   }
 
-  protected abstract void loadInternal( final IProgressMonitor monitor,
-      final IStorageEditorInput input ) throws Exception, CoreException;
+  protected abstract void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
+      throws Exception, CoreException;
 
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
   public void resourceChanged( final IResourceChangeEvent event )
   {
-    if( !(getEditorInput() instanceof IFileEditorInput) )
+    if( !( getEditorInput() instanceof IFileEditorInput ) )
       return;
-    
-    final IFileEditorInput input = (IFileEditorInput) getEditorInput();
+
+    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
 
     if( event.getType() == IResourceChangeEvent.POST_CHANGE && input != null )
     {
-      final IResourceDelta delta = event.getDelta().findMember(
-          input.getFile().getFullPath() );
+      final IResourceDelta delta = event.getDelta().findMember( input.getFile().getFullPath() );
       if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
       {
         // TODO: ask user?
-//        if( !m_isSaving
-//            && MessageDialog.openQuestion( getSite().getShell(),
-//                "FeatureEditor",
-//                "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
-          load();
+        //        if( !m_isSaving
+        //            && MessageDialog.openQuestion( getSite().getShell(),
+        //                "FeatureEditor",
+        //                "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
+        load();
       }
     }
   }
@@ -359,10 +350,8 @@ public abstract class AbstractEditorPart extends EditorPart implements
   public void createPartControl( final Composite parent )
   {
     final IActionBars actionBars = getEditorSite().getActionBars();
-    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(),
-        m_commandTarget.undoAction );
-    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(),
-        m_commandTarget.redoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
     actionBars.updateActionBars();
   }
@@ -370,26 +359,25 @@ public abstract class AbstractEditorPart extends EditorPart implements
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus( )
+  public void setFocus()
   {
-    // nix
+  // nix
   }
 
-  public void fireDirty( )
+  public void fireDirty()
   {
     firePropertyChange( PROP_DIRTY );
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
   }
 
-  public JobExclusiveCommandTarget getCommandTarget( )
+  public JobExclusiveCommandTarget getCommandTarget()
   {
     return m_commandTarget;
   }

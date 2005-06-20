@@ -53,11 +53,11 @@ import org.kalypso.util.runtime.IVariableArguments;
 public abstract class ObsViewItem implements IObsProviderListener, IObservationListener, IViewable
 {
   private final ObsView m_view;
-  
+
   private final IObsProvider m_obsProvider;
 
   private IObservation m_observation;
-  
+
   private boolean m_shown = true;
 
   private String m_name = "";
@@ -71,7 +71,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     m_observation.addListener( this );
     obsProvider.addListener( this );
   }
-  
+
   public void dispose()
   {
     m_obsProvider.removeListener( this );
@@ -79,8 +79,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
       m_observation.removeListener( this );
     m_obsProvider.dispose();
   }
-  
-  public String getName( )
+
+  public String getName()
   {
     return m_name;
   }
@@ -88,7 +88,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return getName();
   }
@@ -96,16 +96,16 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   public void setName( String name )
   {
     m_name = name;
-    
+
     getView().refresh( this );
   }
-  
+
   public ObsView getView()
   {
     return m_view;
   }
-  
-  public boolean isShown( )
+
+  public boolean isShown()
   {
     return m_shown;
   }
@@ -119,7 +119,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
       getView().refresh( this );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProviderListener#obsProviderChanged()
    */
@@ -127,9 +127,9 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   {
     if( m_observation != null )
       m_observation.removeListener( this );
-    
+
     m_observation = m_obsProvider.getObservation();
-    
+
     if( m_observation != null )
       m_observation.addListener( this );
 
@@ -151,7 +151,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   {
     return m_obsProvider.getObservation();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */

@@ -1,37 +1,30 @@
 /*
- * Map and oceanographical data visualisation Copyright (C) 1998 University
- * Corporation for Atmospheric Research (Unidata) 1998 Bill Hibbard & al.
- * (VisAD) 1999 Pêches et Océans Canada 2000 Institut de Recherche pour le
+ * Map and oceanographical data visualisation Copyright (C) 1998 University Corporation for Atmospheric Research
+ * (Unidata) 1998 Bill Hibbard & al. (VisAD) 1999 Pêches et Océans Canada 2000 Institut de Recherche pour le
  * Développement
  * 
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Library General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option) any
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General
+ * Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any
  * later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
  * details (http://www.gnu.org/).
  * 
  * 
- * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite
- * Institut de Recherche pour le Développement / US-Espace
- * mailto:seasnet@teledetection.fr
+ * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite Institut de Recherche pour le Développement /
+ * US-Espace mailto:seasnet@teledetection.fr
  * 
- * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
- * mailto:osl@osl.gc.ca
+ * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne mailto:osl@osl.gc.ca
  * 
  * 
- * This package is inspired from the units package of VisAD. Unidata and Visad's
- * work is fully acknowledged here.
+ * This package is inspired from the units package of VisAD. Unidata and Visad's work is fully acknowledged here.
  * 
  * THIS IS A TEMPORARY CLASS
  * 
- * This is a placeholder for future <code> Unit </code> class. This skeleton
- * will be removed when the real classes from JSR-108: Units specification will
- * be publicly available.
+ * This is a placeholder for future <code> Unit </code> class. This skeleton will be removed when the real classes from
+ * JSR-108: Units specification will be publicly available.
  */
 package javax.units;
 
@@ -41,16 +34,13 @@ import java.io.Serializable;
 import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 
 /**
- * Représentation d'un préfix du système métrique. Un objet <code>Prefix</code>
- * peut par exemple représenter des "centi" (symbole "c") comme dans
- * "centimètres" (symbole "cm"). La description du paquet
- * <code>javax.units</code> donne une liste des préfix standards du système
- * SI.
+ * Représentation d'un préfix du système métrique. Un objet <code>Prefix</code> peut par exemple représenter des
+ * "centi" (symbole "c") comme dans "centimètres" (symbole "cm"). La description du paquet <code>javax.units</code>
+ * donne une liste des préfix standards du système SI.
  * 
  * <p>
- * <em>Note: this class has a natural ordering that is inconsistent with equals.</em>
- * La méthode {@link #compareTo}ne compare que le champ {@link #amount},
- * tandis que la méthode {@link #equals}compare tous les champs ({@link #name},
+ * <em>Note: this class has a natural ordering that is inconsistent with equals.</em> La méthode {@link #compareTo}ne
+ * compare que le champ {@link #amount}, tandis que la méthode {@link #equals}compare tous les champs ({@link #name},
  * {@link #symbol}et {@link #amount}).
  * </p>
  * 
@@ -60,44 +50,37 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 /* public */final class Prefix implements Comparable, Serializable
 {
   /**
-   * Banque des objets qui ont été précédemment créés et enregistrés par un
-   * appel à la méthode {@link #intern}.
+   * Banque des objets qui ont été précédemment créés et enregistrés par un appel à la méthode {@link #intern}.
    */
   static final WeakHashSet pool = new WeakHashSet();
 
   /**
-   * Nom neutre du préfix. Le système SI définit plusieurs noms de préfix, parmi
-   * lesquels on trouve "milli", "centi" et "kilo". Certaines unités (notamment
-   * des unités du type {ScaledUnit}) pourront combiner leurs noms avec
-   * un nom de préfix. Par exemple le préfix "centi" (symbole "c") pourra être
-   * combiné avec les unités "mètres" (symbole "m") pour former les
-   * "centimètres" (symbole "cm"). La chaîne <code>name</code> peut être vide,
-   * mais ne sera jamais nulle. Notez enfin que <code>name</code> est
-   * "language-neutral". Pour obtenir un nom dans la langue de l'utilisateur,
+   * Nom neutre du préfix. Le système SI définit plusieurs noms de préfix, parmi lesquels on trouve "milli", "centi" et
+   * "kilo". Certaines unités (notamment des unités du type {ScaledUnit}) pourront combiner leurs noms avec un nom de
+   * préfix. Par exemple le préfix "centi" (symbole "c") pourra être combiné avec les unités "mètres" (symbole "m") pour
+   * former les "centimètres" (symbole "cm"). La chaîne <code>name</code> peut être vide, mais ne sera jamais nulle.
+   * Notez enfin que <code>name</code> est "language-neutral". Pour obtenir un nom dans la langue de l'utilisateur,
    * utilisez la méthode {@link #getLocalizedName}.
    */
   public final String name;
 
   /**
-   * Symbole du préfix. La plupart des symboles de préfix n'ont qu'une seule
-   * lettre. Il s'agit la plupart du temps de la première lettre de
-   * <code>name</code>, parfois en majuscule. Les majuscules et minuscules
-   * sont significatifs et très importants. Par exemple le symbole "m" est pour
-   * "milli" tandis que le symbole "M" est pour "mega".
+   * Symbole du préfix. La plupart des symboles de préfix n'ont qu'une seule lettre. Il s'agit la plupart du temps de la
+   * première lettre de <code>name</code>, parfois en majuscule. Les majuscules et minuscules sont significatifs et
+   * très importants. Par exemple le symbole "m" est pour "milli" tandis que le symbole "M" est pour "mega".
    */
   public final String symbol;
 
   /**
-   * Quantité représenté par ce préfix. Pour les préfix SI, cette quantité est
-   * toujours une puissance de 10. Par exemple pour les "kilo" (symbole 'k'), la
-   * quantité <code>amount</code> est 1000. Cette quantité ne sera jamais
+   * Quantité représenté par ce préfix. Pour les préfix SI, cette quantité est toujours une puissance de 10. Par exemple
+   * pour les "kilo" (symbole 'k'), la quantité <code>amount</code> est 1000. Cette quantité ne sera jamais
    * <code>NaN</code> ni infinie.
    */
   public final double amount;
 
   /**
-   * Construit un préfix temporaire. Ce constructeur ne sert qu'à effectuer des
-   * recherches dans une liste de préfix par {@link PrefixSet}.
+   * Construit un préfix temporaire. Ce constructeur ne sert qu'à effectuer des recherches dans une liste de préfix par
+   * {@link PrefixSet}.
    */
   Prefix( final double amount )
   {
@@ -141,8 +124,8 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne le nom du préfix dans la langue de l'utilisateur. Par exemple le
-   * préfix "deci" est écrit "déci" en français.
+   * Retourne le nom du préfix dans la langue de l'utilisateur. Par exemple le préfix "deci" est écrit "déci" en
+   * français.
    */
   public String getLocalizedName()
   {
@@ -150,8 +133,7 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne le symbole du préfix. Cette méthode retourne systématiquement le
-   * champ {@link #symbol}.
+   * Retourne le symbole du préfix. Cette méthode retourne systématiquement le champ {@link #symbol}.
    */
   public String toString()
   {
@@ -159,12 +141,10 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Compare deux préfix. Cette méthode compare les quantités {@link #amount}de
-   * façon à permettre un classement des préfix en ordre croissant de quantité.
-   * Contrairement à la méthode {@link #equals},<code>compareTo</code> ne
-   * compare pas les noms et symboles des préfix. Ainsi, deux préfix
-   * représentant la même quantité mais avec des symboles différents seront
-   * considérés égaux par <code>compareTo</code>.
+   * Compare deux préfix. Cette méthode compare les quantités {@link #amount}de façon à permettre un classement des
+   * préfix en ordre croissant de quantité. Contrairement à la méthode {@link #equals},<code>compareTo</code> ne
+   * compare pas les noms et symboles des préfix. Ainsi, deux préfix représentant la même quantité mais avec des
+   * symboles différents seront considérés égaux par <code>compareTo</code>.
    */
   public int compareTo( final Object object )
   {
@@ -177,10 +157,9 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Indique si ce préfix est identique à l'objet spécifié. Cette méthode
-   * retourne <code>true</code> si <code>object</code> est aussi un objet
-   * <code>Prefix</code> et si les deux préfix ont les mêmes nom et symbole et
-   * représentent la même quantité {@link #amount}.
+   * Indique si ce préfix est identique à l'objet spécifié. Cette méthode retourne <code>true</code> si
+   * <code>object</code> est aussi un objet <code>Prefix</code> et si les deux préfix ont les mêmes nom et symbole
+   * et représentent la même quantité {@link #amount}.
    */
   public boolean equals( final Object object )
   {
@@ -205,18 +184,14 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne un exemplaire unique de ce préfix. Une banque de préfix,
-   * initialement vide, est maintenue de façon interne par la classe
-   * <code>Prefix</code>. Lorsque la méthode <code>intern</code> est
-   * appelée, elle recherchera un préfix égale à <code>this</code> au sens de
-   * la méthode {@link #equals}. Si un tel préfix est trouvé, il sera retourné.
-   * Sinon, le préfix <code>this</code> sera ajouté à la banque de données en
-   * utilisant une référence faible et cette méthode retournera
-   * <code>this</code>.<br>
+   * Retourne un exemplaire unique de ce préfix. Une banque de préfix, initialement vide, est maintenue de façon interne
+   * par la classe <code>Prefix</code>. Lorsque la méthode <code>intern</code> est appelée, elle recherchera un
+   * préfix égale à <code>this</code> au sens de la méthode {@link #equals}. Si un tel préfix est trouvé, il sera
+   * retourné. Sinon, le préfix <code>this</code> sera ajouté à la banque de données en utilisant une référence faible
+   * et cette méthode retournera <code>this</code>.<br>
    * <br>
-   * De cette méthode il s'ensuit que pour deux préfix <var>u </var> et <var>v
-   * </var>, la condition <code>u.intern()==v.intern()</code> sera vrai si et
-   * seulement si <code>u.equals(v)</code> est vrai.
+   * De cette méthode il s'ensuit que pour deux préfix <var>u </var> et <var>v </var>, la condition
+   * <code>u.intern()==v.intern()</code> sera vrai si et seulement si <code>u.equals(v)</code> est vrai.
    */
   private final Prefix intern()
   {
@@ -224,11 +199,10 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Après la lecture d'une unité, vérifie si ce préfix apparaît déjà dans la
-   * banque des préfix. Si oui, l'exemplaire de la banque sera retourné plutôt
-   * que de garder inutilement le préfix courant comme copie.
+   * Après la lecture d'une unité, vérifie si ce préfix apparaît déjà dans la banque des préfix. Si oui, l'exemplaire de
+   * la banque sera retourné plutôt que de garder inutilement le préfix courant comme copie.
    */
-  private Object readResolve() 
+  private Object readResolve()
   {
     return intern();
   }

@@ -5,7 +5,7 @@ import java.util.ListIterator;
 /**
  * Ein einfacher ListIterator auf einem Array.
  * 
- * Alle Methoden, die die Liste verändern führen zu einer {@link java.lang.UnsupportedOperationException}. 
+ * Alle Methoden, die die Liste verändern führen zu einer {@link java.lang.UnsupportedOperationException}.
  * 
  * @author belger
  */
@@ -13,6 +13,7 @@ public class ArrayIterator implements ListIterator
 {
 
   private int m_index;
+
   private final Object[] m_objects;
 
   public ArrayIterator( final int index, final Object[] objects )

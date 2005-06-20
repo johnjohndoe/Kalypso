@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.marker;
 
 import java.awt.Color;
@@ -61,8 +61,8 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final static String FORECAST_TT = TimeserieConstants.MD_VORHERSAGE;
 
-//  private final static Icon FORECAST_ICON = new ImageIcon(
-//      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
+  //  private final static Icon FORECAST_ICON = new ImageIcon(
+  //      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
 
   private final DateRangeArgument m_dra;
 
@@ -81,10 +81,10 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public boolean validates( final Object value )
   {
-    if( !(value instanceof Date) )
+    if( !( value instanceof Date ) )
       return false;
 
-    return m_dra.contains( (Date) value );
+    return m_dra.contains( (Date)value );
   }
 
   /**
@@ -112,12 +112,12 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public int compareTo( Object o )
   {
-    if( !(o instanceof ForecastLabelMarker) )
+    if( !( o instanceof ForecastLabelMarker ) )
       return -1;
 
-    return m_dra.compareTo( ((ForecastLabelMarker) o).m_dra );
+    return m_dra.compareTo( ( (ForecastLabelMarker)o ).m_dra );
   }
-  
+
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
@@ -125,11 +125,11 @@ public class ForecastLabelMarker implements ILabelMarker
   {
     return compareTo( obj ) == 0;
   }
-  
+
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode( )
+  public int hashCode()
   {
     return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).hashCode();
   }

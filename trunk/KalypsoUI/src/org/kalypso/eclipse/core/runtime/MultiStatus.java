@@ -9,9 +9,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * Yet another MultiStatus that is more directed to be used for error messages
- * that should be delivered to the user using the ErrorDialog. If no error
- * messages have been added to it, isOK() returns true.
+ * Yet another MultiStatus that is more directed to be used for error messages that should be delivered to the user
+ * using the ErrorDialog. If no error messages have been added to it, isOK() returns true.
  * 
  * @author schlienger
  */
@@ -27,7 +26,7 @@ public class MultiStatus extends Status
   /**
    * @see java.lang.Object#finalize()
    */
-  protected void finalize( ) throws Throwable
+  protected void finalize() throws Throwable
   {
     m_errorMessages.clear();
 
@@ -37,15 +36,15 @@ public class MultiStatus extends Status
   /**
    * @return true if at least one message is available
    */
-  public boolean hasMessages( )
+  public boolean hasMessages()
   {
     return m_errorMessages.size() > 0;
   }
-  
+
   /**
    * @see org.eclipse.core.runtime.Status#isOK()
    */
-  public boolean isOK( )
+  public boolean isOK()
   {
     return !hasMessages();
   }
@@ -53,7 +52,7 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
-  public boolean isMultiStatus( )
+  public boolean isMultiStatus()
   {
     return true;
   }
@@ -61,17 +60,15 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.MultiStatus#getChildren()
    */
-  public IStatus[] getChildren( )
+  public IStatus[] getChildren()
   {
     final IStatus[] stati = new IStatus[m_errorMessages.size()];
     int i = 0;
-    for( final Iterator it = m_errorMessages.entrySet().iterator(); it
-        .hasNext(); )
+    for( final Iterator it = m_errorMessages.entrySet().iterator(); it.hasNext(); )
     {
-      final Map.Entry entry = (Entry) it.next();
+      final Map.Entry entry = (Entry)it.next();
 
-      stati[i] = new Status( getSeverity(), getPlugin(), getCode(),
-          (String) entry.getKey(), (Throwable) entry.getValue() );
+      stati[i] = new Status( getSeverity(), getPlugin(), getCode(), (String)entry.getKey(), (Throwable)entry.getValue() );
 
       i++;
     }
@@ -82,14 +79,13 @@ public class MultiStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#getException()
    */
-  public Throwable getException( )
+  public Throwable getException()
   {
     return new Exception( "Siehe details" );
   }
 
   /**
-   * Adds a message to this multi status. Same effect as calling addMessage(
-   * message, null ).
+   * Adds a message to this multi status. Same effect as calling addMessage( message, null ).
    * 
    * @param message
    */

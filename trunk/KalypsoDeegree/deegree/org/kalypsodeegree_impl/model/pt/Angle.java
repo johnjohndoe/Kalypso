@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
@@ -71,9 +71,8 @@ import java.util.Locale;
 import org.kalypsodeegree_impl.model.resources.ClassChanger;
 
 /**
- * An angle in degrees. An angle is the amount of rotation needed to bring one
- * line or plane into coincidence with another, generally measured in degrees,
- * sexagesimal degrees or grads.
+ * An angle in degrees. An angle is the amount of rotation needed to bring one line or plane into coincidence with
+ * another, generally measured in degrees, sexagesimal degrees or grads.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -130,10 +129,9 @@ public class Angle implements Comparable, Serializable
   }
 
   /**
-   * Constructs a newly allocated <code>Angle</code> object that represents
-   * the angle value represented by the string. The string should represents an
-   * angle in either fractional degrees (e.g. 45.5°) or degrees with minutes and
-   * seconds (e.g. 45°30').
+   * Constructs a newly allocated <code>Angle</code> object that represents the angle value represented by the string.
+   * The string should represents an angle in either fractional degrees (e.g. 45.5°) or degrees with minutes and seconds
+   * (e.g. 45°30').
    * 
    * @param string
    *          A string to be converted to an <code>Angle</code>.
@@ -201,14 +199,14 @@ public class Angle implements Comparable, Serializable
   }
 
   /**
-   * Compares two <code>Angle</code> objects numerically. The comparaison is
-   * done as if by the {@link Double#compare(double,double)}method.
+   * Compares two <code>Angle</code> objects numerically. The comparaison is done as if by the
+   * {@link Double#compare(double,double)}method.
    */
   public int compareTo( final Object that )
   {
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- return Double.compare(this.theta,
-     * ((Angle)that).theta); ----- END OF JDK 1.4 DEPENDENCIES ---
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- return Double.compare(this.theta, ((Angle)that).theta); ----- END OF JDK
+     * 1.4 DEPENDENCIES ---
      */
     final double d1 = this.theta;
     final double d2 = ( (Angle)that ).theta;
@@ -238,8 +236,8 @@ public class Angle implements Comparable, Serializable
   }
 
   /**
-   * Returns a shared instance of {@link AngleFormat}. The return type is
-   * {@link Format}in order to avoid class loading before necessary.
+   * Returns a shared instance of {@link AngleFormat}. The return type is {@link Format}in order to avoid class
+   * loading before necessary.
    */
   private static synchronized Format getAngleFormat()
   {

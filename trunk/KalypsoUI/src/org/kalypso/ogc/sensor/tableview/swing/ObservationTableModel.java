@@ -71,11 +71,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable
- * benutzt werden.
+ * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable benutzt werden.
  * <p>
- * Changes made in the table are directly reflected into the observations
- * models.
+ * Changes made in the table are directly reflected into the observations models.
  * 
  * @author schlienger
  */
@@ -95,8 +93,7 @@ public class ObservationTableModel extends AbstractTableModel
   /** the shared axis is the axis which is common to all "value" columns */
   private IAxis m_sharedAxis = null;
 
-  private final static Logger m_logger = Logger
-      .getLogger( ObservationTableModel.class.getName() );
+  private final static Logger m_logger = Logger.getLogger( ObservationTableModel.class.getName() );
 
   /**
    * Adds a column at the end of the table.
@@ -109,8 +106,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * Adds a column to this tablemodel at the given position
    */
-  public void addColumn( final TableViewColumn col, int pos )
-      throws SensorException
+  public void addColumn( final TableViewColumn col, int pos ) throws SensorException
   {
     synchronized( m_columns )
     {
@@ -125,12 +121,10 @@ public class ObservationTableModel extends AbstractTableModel
       {
         // verify compatibility of the axes. We do not use IAxis.equals()
         // since the position is not relevant here
-        if( m_sharedAxis.getDataClass() != keyAxis.getDataClass()
-            || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
+        if( m_sharedAxis.getDataClass() != keyAxis.getDataClass() || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
             || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
         {
-          throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis
-              + " kompatibel." );
+          throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis + " kompatibel." );
         }
       }
 
@@ -169,8 +163,7 @@ public class ObservationTableModel extends AbstractTableModel
     fireTableStructureChanged();
   }
 
-  public void refreshColumn( final TableViewColumn column )
-      throws SensorException
+  public void refreshColumn( final TableViewColumn column ) throws SensorException
   {
     final int pos = removeColumn( column );
     addColumn( column, pos );
@@ -184,10 +177,8 @@ public class ObservationTableModel extends AbstractTableModel
   private IAxis getStatusAxis( final IObservation obs, final IAxis axis )
   {
     final IAxis[] obsAxes = obs.getAxisList();
-    final String statusAxisLabel = KalypsoStatusUtils
-        .getStatusAxisLabelFor( axis );
-    final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( obsAxes,
-        statusAxisLabel );
+    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisLabelFor( axis );
+    final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( obsAxes, statusAxisLabel );
 
     return statusAxis;
   }
@@ -205,8 +196,7 @@ public class ObservationTableModel extends AbstractTableModel
       if( columnIndex == 0 )
         return m_sharedAxis.getDataClass();
 
-      return ( (TableViewColumn)m_columns.get( columnIndex - 1 ) )
-          .getColumnClass();
+      return ( (TableViewColumn)m_columns.get( columnIndex - 1 ) ).getColumnClass();
     }
   }
 
@@ -263,10 +253,8 @@ public class ObservationTableModel extends AbstractTableModel
 
       try
       {
-        final TableViewColumn col = (TableViewColumn)m_columns
-            .get( columnIndex - 1 );
-        final ITuppleModel values = col.getObservation().getValues(
-            col.getArguments() );
+        final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
+        final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )
           return values.getElement( ix, col.getAxis() );
@@ -309,8 +297,7 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int,
-   *      int)
+   * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
    */
   public void setValueAt( Object aValue, int rowIndex, int columnIndex )
   {
@@ -324,13 +311,11 @@ public class ObservationTableModel extends AbstractTableModel
     if( columnIndex == 0 )
       return;
 
-    final TableViewColumn col = (TableViewColumn)m_columns
-        .get( columnIndex - 1 );
+    final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
 
     try
     {
-      final ITuppleModel values = col.getObservation().getValues(
-          col.getArguments() );
+      final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
       final Object key = m_sharedModel.toArray()[rowIndex];
       final int ix = values.indexOf( key, col.getKeyAxis() );
       if( ix != -1 )
@@ -339,8 +324,7 @@ public class ObservationTableModel extends AbstractTableModel
 
         col.setDirty( true );
 
-        final IAxis statusAxis = getStatusAxis( col.getObservation(), col
-            .getAxis() );
+        final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
         if( statusAxis != null )
           values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
       }
@@ -355,8 +339,7 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Sets the rules. Important: you should call this method if you want the
-   * rules rendering to be enabled.
+   * Sets the rules. Important: you should call this method if you want the rules rendering to be enabled.
    * 
    * @param rules
    */
@@ -378,14 +361,12 @@ public class ObservationTableModel extends AbstractTableModel
     final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
     try
     {
-      final ITuppleModel values = col.getObservation().getValues(
-          col.getArguments() );
+      final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
       final Object key = m_sharedModel.toArray()[row];
       final int ix = values.indexOf( key, col.getKeyAxis() );
       if( ix != -1 )
       {
-        final IAxis statusAxis = getStatusAxis( col.getObservation(), col
-            .getAxis() );
+        final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
         if( statusAxis != null )
         {
           final Number status = (Number)values.getElement( ix, statusAxis );
@@ -442,9 +423,8 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Returns the corresponding NumberFormat for the given column. The
-   * NumberFormat is type dependent. For instance, Water-level is displayed
-   * differently than Rainfall.
+   * Returns the corresponding NumberFormat for the given column. The NumberFormat is type dependent. For instance,
+   * Water-level is displayed differently than Rainfall.
    * 
    * @return adequate instance of NumberFormat
    * @see org.kalypso.ogc.sensor.timeseries.TimeserieUtils#getNumberFormatFor(String)
@@ -460,8 +440,7 @@ public class ObservationTableModel extends AbstractTableModel
 
   public IStatus saveDirtyObservations( final IProgressMonitor monitor )
   {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin
-        .getId(), 0, "Zeitreihen speichern" );
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
 
     final Map map = getMappedColumns();
 
@@ -486,7 +465,7 @@ public class ObservationTableModel extends AbstractTableModel
             try
             {
               KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
-              
+
               obsSaved = true;
             }
             catch( final LoaderException e )
@@ -511,8 +490,8 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Return a map from IObservation to TableViewColumn. Each IObservation is
-   * mapped to a list of TableViewColumns which are based on it.
+   * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
+   * are based on it.
    */
   public Map getMappedColumns()
   {

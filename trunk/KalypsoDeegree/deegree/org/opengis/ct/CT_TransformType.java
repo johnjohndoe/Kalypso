@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.ct;
 
@@ -25,8 +22,7 @@ import java.io.Serializable;
 public class CT_TransformType implements Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with CSS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with CSS 1.00.
    */
   private static final long serialVersionUID = -2351461390133617466L;
 
@@ -36,14 +32,12 @@ public class CT_TransformType implements Serializable
   public static final int CT_TT_Other = 0;
 
   /**
-   * Transform depends only on defined parameters. For example, a cartographic
-   * projection.
+   * Transform depends only on defined parameters. For example, a cartographic projection.
    */
   public static final int CT_TT_Conversion = 1;
 
   /**
-   * Transform depends only on empirically derived parameters. For example a
-   * datum transformation.
+   * Transform depends only on empirically derived parameters. For example a datum transformation.
    */
   public static final int CT_TT_Transformation = 2;
 
@@ -93,9 +87,8 @@ public class CT_TransformType implements Serializable
   }
 
   /**
-   * Returns a string représentation of this enum. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

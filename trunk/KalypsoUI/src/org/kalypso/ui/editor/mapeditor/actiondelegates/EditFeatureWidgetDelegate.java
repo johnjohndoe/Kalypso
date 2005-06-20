@@ -51,7 +51,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
  */
 public class EditFeatureWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  private IWidget m_widget=null;
+  private IWidget m_widget = null;
 
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
@@ -74,40 +74,39 @@ public class EditFeatureWidgetDelegate extends AbstractGisMapEditorActionDelegat
     editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
   }
 
-//  /**
-//   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshEnabled()
-//   */
-//  public void refreshEnabled()
-//  {
-//    boolean enabled = false;
-//    final GisMapEditor editor = (GisMapEditor)getEditor();
-//    IAction action = getAction();
-//    if( editor != null )
-//    {
-//      final MapPanel mapPanel = editor.getMapPanel();
-//      IMapModell mapModell = mapPanel.getMapModell();
-//      if( mapModell != null && mapModell.getThemeSize() > 0 )
-//        enabled = true;
-//    }
-//    action.setEnabled( enabled );
-//  }
+  //  /**
+  //   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshEnabled()
+  //   */
+  //  public void refreshEnabled()
+  //  {
+  //    boolean enabled = false;
+  //    final GisMapEditor editor = (GisMapEditor)getEditor();
+  //    IAction action = getAction();
+  //    if( editor != null )
+  //    {
+  //      final MapPanel mapPanel = editor.getMapPanel();
+  //      IMapModell mapModell = mapPanel.getMapModell();
+  //      if( mapModell != null && mapModell.getThemeSize() > 0 )
+  //        enabled = true;
+  //    }
+  //    action.setEnabled( enabled );
+  //  }
 
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   protected void refreshAction( IAction action )
   {
-  // nothing  
+  // nothing
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#getWidget()
    */
   public IWidget getWidget()
   {
     if( m_widget == null )
-      m_widget =new EditFeatureWidget( "edit feature", "" );
+      m_widget = new EditFeatureWidget( "edit feature", "" );
     return m_widget;
   }
 }
-

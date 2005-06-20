@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
 import java.io.File;
@@ -120,8 +120,7 @@ public class SaveStyleAction extends AbstractOutlineAction
       String filename = saveDialog.open();
       if( filename != null )
       {
-        Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld )
-            .exportAsXML() ) );
+        Document doc = XMLTools.parse( new StringReader( ( (StyledLayerDescriptor_Impl)sld ).exportAsXML() ) );
         final Source source = new DOMSource( doc );
         File file = null;
         if( filename.indexOf( "." ) == -1 )
@@ -132,7 +131,7 @@ public class SaveStyleAction extends AbstractOutlineAction
         if( iFile != null )
         {
           // TODO dialog, der einen IFile zurueckliefert, damit ein refresh durchgefuert wird
-          final SetContentHelper thread = new SetContentHelper(  )
+          final SetContentHelper thread = new SetContentHelper()
           {
             protected void write( final OutputStreamWriter writer ) throws Throwable
             {
@@ -143,8 +142,7 @@ public class SaveStyleAction extends AbstractOutlineAction
               t.transform( source, new StreamResult( writer ) );
             }
           };
-          thread.setFileContents( iFile, false,
-              true, new NullProgressMonitor() );
+          thread.setFileContents( iFile, false, true, new NullProgressMonitor() );
         }
         else if( file != null )
         {
@@ -153,7 +151,7 @@ public class SaveStyleAction extends AbstractOutlineAction
           Transformer t = TransformerFactory.newInstance().newTransformer();
           t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
           t.setOutputProperty( OutputKeys.INDENT, "yes" );
-          t.transform( source, result );          
+          t.transform( source, result );
         }
       }
     }

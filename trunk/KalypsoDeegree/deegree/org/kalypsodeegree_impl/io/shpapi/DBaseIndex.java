@@ -75,25 +75,21 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * <p>
- * A class for reading from and writing to DBase index files (*.ndx), maybe not
- * 100% xbase compatible!
+ * A class for reading from and writing to DBase index files (*.ndx), maybe not 100% xbase compatible!
  * </p>
  * 
  * <p>
- * The fileformat is described at
- * http://www.e-bachmann.dk/computing/databases/xbase/index.html
+ * The fileformat is described at http://www.e-bachmann.dk/computing/databases/xbase/index.html
  * </p>
  * 
  * <p>
- * This index is suitable for indexing both unique and non-unique columns.
- * Unique indexing is much faster than non-unique because it use a faster
- * algorithm.
+ * This index is suitable for indexing both unique and non-unique columns. Unique indexing is much faster than
+ * non-unique because it use a faster algorithm.
  * </p>
  * 
  * <p>
- * The index file is a B+tree (sometimes called a paged B-tree) that consist of
- * pages. There are two page types, leaves and non-leafs. The starting page (eg.
- * the page the search algorithm starts) is the root page.
+ * The index file is a B+tree (sometimes called a paged B-tree) that consist of pages. There are two page types, leaves
+ * and non-leafs. The starting page (eg. the page the search algorithm starts) is the root page.
  * </p>
  * 
  * <p>
@@ -116,11 +112,9 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * </p>
  * 
  * <p>
- * Above algorithm is implemented in two different methods, one for unique
- * indexes and one for non-unique indexes. Searching unique indexes is easier
- * because the algorithm is finished as soon as it has found a key, the
- * non-unique version of the algorithm has to find all keys present in the
- * index.
+ * Above algorithm is implemented in two different methods, one for unique indexes and one for non-unique indexes.
+ * Searching unique indexes is easier because the algorithm is finished as soon as it has found a key, the non-unique
+ * version of the algorithm has to find all keys present in the index.
  * <p>
  * 
  * <p>
@@ -146,15 +140,12 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * </p>
  * 
  * <p>
- * If a page that splits does not have a parent page then a new page is created.
- * This page is the new starting page
+ * If a page that splits does not have a parent page then a new page is created. This page is the new starting page
  * </p>
  * 
  * <p>
- * Handling different data types: The index can handle strings and numbers.
- * Numbers are always stored als IEEE doubles. The method addKey checks the
- * given key and throws an exception if the datatype of the key doesn't suit the
- * index
+ * Handling different data types: The index can handle strings and numbers. Numbers are always stored als IEEE doubles.
+ * The method addKey checks the given key and throws an exception if the datatype of the key doesn't suit the index
  * </p>
  * 
  * @author Reijer Copier, email: reijer.copier@idgis.nl
@@ -168,8 +159,7 @@ public class DBaseIndex
   protected RandomAccessFile file;
 
   //Attributes stored in the .ndx header
-  protected int startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength, noOfKeysPerPage,
-      keyType;
+  protected int startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength, noOfKeysPerPage, keyType;
 
   private boolean uniqueFlag;
 
@@ -214,8 +204,7 @@ public class DBaseIndex
       Page p;
 
       /**
-       * Compare the time stamp from this object to the time stamp of another
-       * object
+       * Compare the time stamp from this object to the time stamp of another object
        */
       public int compareTo( Object o )
       {
@@ -237,8 +226,7 @@ public class DBaseIndex
     }
 
     /**
-     * Remove an item from the cache (this method searches for the last used
-     * item)
+     * Remove an item from the cache (this method searches for the last used item)
      */
     void removeItem() throws IOException
     {
@@ -600,8 +588,7 @@ public class DBaseIndex
     }
 
     /**
-     * Add a node to this page, this method is only called if page is non-leaf
-     * page
+     * Add a node to this page, this method is only called if page is non-leaf page
      */
     void addNode( Comparable key, int left, int right, Stack searchStack ) throws IOException
     {
@@ -801,8 +788,8 @@ public class DBaseIndex
   /**
    * Used by createIndex()
    */
-  private DBaseIndex( String name, int startingPageNo, int numberOfPages, int sizeOfKeyRecord,
-      int keyLength, int noOfKeysPerPage, int keyType, boolean uniqueFlag, RandomAccessFile file )
+  private DBaseIndex( String name, int startingPageNo, int numberOfPages, int sizeOfKeyRecord, int keyLength,
+      int noOfKeysPerPage, int keyType, boolean uniqueFlag, RandomAccessFile file )
   {
     fileName = name;
     this.startingPageNo = startingPageNo;
@@ -882,13 +869,12 @@ public class DBaseIndex
   /**
    * Create a new index
    */
-  public static DBaseIndex createIndex( String name, String column, int keyLength,
-      boolean uniqueFlag, boolean numbers ) throws IOException
+  public static DBaseIndex createIndex( String name, String column, int keyLength, boolean uniqueFlag, boolean numbers )
+      throws IOException
   {
     RandomAccessFile file = new RandomAccessFile( name + ".ndx", "rw" );
 
-    int startingPageNo = 1, numberOfPages = 1, sizeOfKeyRecord, noOfKeysPerPage, keyType = numbers ? 1
-        : 0;
+    int startingPageNo = 1, numberOfPages = 1, sizeOfKeyRecord, noOfKeysPerPage, keyType = numbers ? 1 : 0;
 
     if( numbers )
       keyLength = 8;
@@ -934,8 +920,8 @@ public class DBaseIndex
     for( int i = 0; i < 820; i++ )
       file.write( 0 );
 
-    return new DBaseIndex( name, startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength,
-        noOfKeysPerPage, keyType, uniqueFlag, file );
+    return new DBaseIndex( name, startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength, noOfKeysPerPage, keyType,
+        uniqueFlag, file );
   }
 
   /**
@@ -962,14 +948,12 @@ public class DBaseIndex
     file.close();
   }
 
-  public int[] search( Comparable key ) throws IOException, KeyNotFoundException,
-      InvalidKeyTypeException
+  public int[] search( Comparable key ) throws IOException, KeyNotFoundException, InvalidKeyTypeException
   {
     if( key == null )
       throw new NullPointerException();
 
-    if( ( keyType == 0 && !( key instanceof String ) )
-        || ( keyType == 1 && !( key instanceof Number ) ) )
+    if( ( keyType == 0 && !( key instanceof String ) ) || ( keyType == 1 && !( key instanceof Number ) ) )
     {
       throw new InvalidKeyTypeException( key, this );
     }
@@ -1012,8 +996,7 @@ public class DBaseIndex
     if( key == null )
       throw new NullPointerException();
 
-    if( ( keyType == 0 && !( key instanceof String ) )
-        || ( keyType == 1 && !( key instanceof Number ) ) )
+    if( ( keyType == 0 && !( key instanceof String ) ) || ( keyType == 1 && !( key instanceof Number ) ) )
     {
       throw new InvalidKeyTypeException( key, this );
     }

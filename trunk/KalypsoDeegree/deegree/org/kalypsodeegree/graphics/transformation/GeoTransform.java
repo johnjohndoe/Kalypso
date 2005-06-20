@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,16 +57,15 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.transformation;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * <code>GeoTransformInterface</code> declares the methods which have to be
- * implemented by each class that executes a geographical coordinat
- * transformation.
+ * <code>GeoTransformInterface</code> declares the methods which have to be implemented by each class that executes a
+ * geographical coordinat transformation.
  * 
  * @author Andreas Poth poth@lat-lon.de
  * @version 28.12.2000

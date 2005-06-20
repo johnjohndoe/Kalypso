@@ -48,13 +48,15 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * class IRelationType
  * 
- * created by @author doemming (12.05.2005)
+ * created by
+ * 
+ * @author doemming (12.05.2005)
  */
 public interface IRelationType
 {
   public abstract boolean fitsTypes( FeatureType f1, FeatureType f2 );
 
-  public abstract String getFitProblems(GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode );
+  public abstract String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode );
 
   public abstract FeatureType getDestFT();
 

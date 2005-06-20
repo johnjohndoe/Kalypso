@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -74,10 +74,9 @@ import org.opengis.cs.CS_Ellipsoid;
 import org.opengis.cs.CS_LinearUnit;
 
 /**
- * The figure formed by the rotation of an ellipse about an axis. In this
- * context, the axis of rotation is always the minor axis. It is named geodetic
- * ellipsoid if the parameters are derived by the measurement of the shape and
- * the size of the Earth to approximate the geoid as close as possible.
+ * The figure formed by the rotation of an ellipse about an axis. In this context, the axis of rotation is always the
+ * minor axis. It is named geodetic ellipsoid if the parameters are derived by the measurement of the shape and the size
+ * of the Earth to approximate the geoid as close as possible.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -93,11 +92,11 @@ public class Ellipsoid extends Info
   private static final long serialVersionUID = -1047804526105439230L;
 
   /**
-   * WGS 1984 ellipsoid. This ellipsoid is used in GPS system and is the default
-   * for most <code>org.kalypsodeegree_impl.model</code> packages.
+   * WGS 1984 ellipsoid. This ellipsoid is used in GPS system and is the default for most
+   * <code>org.kalypsodeegree_impl.model</code> packages.
    */
-  public static final Ellipsoid WGS84 = (Ellipsoid)pool.intern( createFlattenedSphere( "WGS84",
-      6378137.0, 298.257223563, Unit.METRE ) );
+  public static final Ellipsoid WGS84 = (Ellipsoid)pool.intern( createFlattenedSphere( "WGS84", 6378137.0,
+      298.257223563, Unit.METRE ) );
 
   /**
    * The equatorial radius.
@@ -110,8 +109,7 @@ public class Ellipsoid extends Info
   private final double semiMinorAxis;
 
   /**
-   * The inverse of the flattening value, or {@link Double#POSITIVE_INFINITY}if
-   * the ellipsoid is a sphere.
+   * The inverse of the flattening value, or {@link Double#POSITIVE_INFINITY}if the ellipsoid is a sphere.
    *  
    */
   private final double inverseFlattening;
@@ -155,11 +153,9 @@ public class Ellipsoid extends Info
    *          The units of the semi-major and semi-minor axis values.
    *  
    */
-  public Ellipsoid( final String name, final double semiMajorAxis, final double semiMinorAxis,
-      final Unit unit )
+  public Ellipsoid( final String name, final double semiMajorAxis, final double semiMinorAxis, final Unit unit )
   {
-    this( name, semiMajorAxis, semiMinorAxis, semiMajorAxis / ( semiMajorAxis - semiMinorAxis ),
-        false, unit );
+    this( name, semiMajorAxis, semiMinorAxis, semiMajorAxis / ( semiMajorAxis - semiMinorAxis ), false, unit );
   }
 
   /**
@@ -220,8 +216,7 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Construct a new ellipsoid using the specified axis length and inverse
-   * flattening value.
+   * Construct a new ellipsoid using the specified axis length and inverse flattening value.
    * 
    * @param name
    *          Name of this ellipsoid.
@@ -236,13 +231,12 @@ public class Ellipsoid extends Info
   public static Ellipsoid createFlattenedSphere( final String name, final double semiMajorAxis,
       final double inverseFlattening, final Unit unit )
   {
-    return new Ellipsoid( name, semiMajorAxis, semiMajorAxis * ( 1 - 1 / inverseFlattening ),
-        inverseFlattening, true, unit );
+    return new Ellipsoid( name, semiMajorAxis, semiMajorAxis * ( 1 - 1 / inverseFlattening ), inverseFlattening, true,
+        unit );
   }
 
   /**
-   * Check the argument validity. Argument <code>value</code> should be
-   * greater than zero.
+   * Check the argument validity. Argument <code>value</code> should be greater than zero.
    * 
    * @param name
    *          Argument name.
@@ -252,18 +246,16 @@ public class Ellipsoid extends Info
    * @throws IllegalArgumentException
    *           if <code>value</code> is not greater than 0.
    */
-  private static double check( final String name, final double value )
-      throws IllegalArgumentException
+  private static double check( final String name, final double value ) throws IllegalArgumentException
   {
     if( value > 0 )
       return value;
-    throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2,
-        name, new Double( value ) ) );
+    throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARGUMENT_$2, name, new Double(
+        value ) ) );
   }
 
   /**
-   * Gets the equatorial radius. The returned length is expressed in this
-   * object's axis units.
+   * Gets the equatorial radius. The returned length is expressed in this object's axis units.
    * 
    * @see org.opengis.cs.CS_Ellipsoid#getSemiMajorAxis()
    */
@@ -273,8 +265,7 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Gets the polar radius. The returned length is expressed in this object's
-   * axis units.
+   * Gets the polar radius. The returned length is expressed in this object's axis units.
    * 
    * @see org.opengis.cs.CS_Ellipsoid#getSemiMinorAxis()
    */
@@ -284,9 +275,8 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * The ratio of the distance between the center and a focus of the ellipse to
-   * the length of its semimajor axis. The eccentricity can alternately be
-   * computed from the equation: <code>e=sqrt(2f-f²)</code>.
+   * The ratio of the distance between the center and a focus of the ellipse to the length of its semimajor axis. The
+   * eccentricity can alternately be computed from the equation: <code>e=sqrt(2f-f²)</code>.
    */
   public double getEccentricity()
   {
@@ -295,13 +285,11 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Returns the value of the inverse of the flattening constant. Flattening is
-   * a value used to indicate how closely an ellipsoid approaches a spherical
-   * shape. The inverse flattening is related to the equatorial/polar radius (
-   * <var>r <sub>e </sub> </var> and <var>r <sub>p </sub> </var> respectively)
-   * by the formula <code>ivf=r<sub>e</sub>/(r<sub>e</sub>-r<sub>p</sub>)</code>.
-   * For perfect spheres, this method returns {@link Double#POSITIVE_INFINITY}
-   * (which is the correct value).
+   * Returns the value of the inverse of the flattening constant. Flattening is a value used to indicate how closely an
+   * ellipsoid approaches a spherical shape. The inverse flattening is related to the equatorial/polar radius ( <var>r
+   * <sub>e </sub> </var> and <var>r <sub>p </sub> </var> respectively) by the formula
+   * <code>ivf=r<sub>e</sub>/(r<sub>e</sub>-r<sub>p</sub>)</code>. For perfect spheres, this method returns
+   * {@link Double#POSITIVE_INFINITY}(which is the correct value).
    * 
    * @see org.opengis.cs.CS_Ellipsoid#getInverseFlattening()
    */
@@ -311,11 +299,9 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Is the Inverse Flattening definitive for this ellipsoid? Some ellipsoids
-   * use the IVF as the defining value, and calculate the polar radius whenever
-   * asked. Other ellipsoids use the polar radius to calculate the IVF whenever
-   * asked. This distinction can be important to avoid floating-point rounding
-   * errors.
+   * Is the Inverse Flattening definitive for this ellipsoid? Some ellipsoids use the IVF as the defining value, and
+   * calculate the polar radius whenever asked. Other ellipsoids use the polar radius to calculate the IVF whenever
+   * asked. This distinction can be important to avoid floating-point rounding errors.
    */
   public boolean isIvfDefinitive()
   {
@@ -323,12 +309,10 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Returns an <em>estimation</em> of orthodromic distance between two
-   * geographic coordinates. The orthodromic distance is the shortest distance
-   * between two points on a sphere's surface. The orthodromic path is always on
-   * a great circle. An other possible distance measurement is the loxodromic
-   * distance, which is a longer distance on a path with a constant direction on
-   * the compas.
+   * Returns an <em>estimation</em> of orthodromic distance between two geographic coordinates. The orthodromic
+   * distance is the shortest distance between two points on a sphere's surface. The orthodromic path is always on a
+   * great circle. An other possible distance measurement is the loxodromic distance, which is a longer distance on a
+   * path with a constant direction on the compas.
    * 
    * @param P1
    *          Longitude and latitude of first point (in degrees).
@@ -342,12 +326,10 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Returns an <em>estimation</em> of orthodromic distance between two
-   * geographic coordinates. The orthodromic distance is the shortest distance
-   * between two points on a sphere's surface. The orthodromic path is always on
-   * a great circle. An other possible distance measurement is the loxodromic
-   * distance, which is a longer distance on a path with a constant direction on
-   * the compas.
+   * Returns an <em>estimation</em> of orthodromic distance between two geographic coordinates. The orthodromic
+   * distance is the shortest distance between two points on a sphere's surface. The orthodromic path is always on a
+   * great circle. An other possible distance measurement is the loxodromic distance, which is a longer distance on a
+   * path with a constant direction on the compas.
    * 
    * @param x1
    *          Longitude of first point (in degrees).
@@ -362,12 +344,10 @@ public class Ellipsoid extends Info
   public double orthodromicDistance( double x1, double y1, double x2, double y2 )
   {
     /*
-     * Le calcul de la distance orthodromique sur une surface ellipsoïdale est
-     * complexe, sujet à des erreurs d'arrondissements et sans solution à
-     * proximité des pôles. Nous utilisont plutôt un calcul basé sur une forme
-     * sphérique de la terre. Un programme en Fortran calculant les distances
-     * orthodromiques sur une surface ellipsoïdale peut être téléchargé à partir
-     * du site de NOAA:
+     * Le calcul de la distance orthodromique sur une surface ellipsoïdale est complexe, sujet à des erreurs
+     * d'arrondissements et sans solution à proximité des pôles. Nous utilisont plutôt un calcul basé sur une forme
+     * sphérique de la terre. Un programme en Fortran calculant les distances orthodromiques sur une surface
+     * ellipsoïdale peut être téléchargé à partir du site de NOAA:
      * 
      * ftp://ftp.ngs.noaa.gov/pub/pcsoft/for_inv.3d/source/
      */
@@ -377,15 +357,13 @@ public class Ellipsoid extends Info
     final double dx = Math.toRadians( Math.abs( x2 - x1 ) % 360 );
     double rho = Math.sin( y1 ) * Math.sin( y2 ) + Math.cos( y1 ) * Math.cos( y2 ) * Math.cos( dx );
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- assert Math.abs(rho) < 1.0000001 :
-     * rho;
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- assert Math.abs(rho) < 1.0000001 : rho;
      *///----- END OF JDK 1.4 DEPENDENCIES ----
     if( rho > +1 )
       rho = +1; // Catch rounding error.
     if( rho < -1 )
       rho = -1; // Catch rounging error.
-    return Math.acos( rho )
-        / XMath.hypot( Math.sin( y ) / getSemiMajorAxis(), Math.cos( y ) / getSemiMinorAxis() );
+    return Math.acos( rho ) / XMath.hypot( Math.sin( y ) / getSemiMajorAxis(), Math.cos( y ) / getSemiMinorAxis() );
     // 'hypot' calcule l'inverse du rayon **apparent** de la terre à la latitude
     // 'y'.
   }
@@ -409,12 +387,9 @@ public class Ellipsoid extends Info
     {
       final Ellipsoid that = (Ellipsoid)object;
       return this.ivfDefinitive == that.ivfDefinitive
-          && Double.doubleToLongBits( this.semiMajorAxis ) == Double
-              .doubleToLongBits( that.semiMajorAxis )
-          && Double.doubleToLongBits( this.semiMinorAxis ) == Double
-              .doubleToLongBits( that.semiMinorAxis )
-          && Double.doubleToLongBits( this.inverseFlattening ) == Double
-              .doubleToLongBits( that.inverseFlattening )
+          && Double.doubleToLongBits( this.semiMajorAxis ) == Double.doubleToLongBits( that.semiMajorAxis )
+          && Double.doubleToLongBits( this.semiMinorAxis ) == Double.doubleToLongBits( that.semiMinorAxis )
+          && Double.doubleToLongBits( this.inverseFlattening ) == Double.doubleToLongBits( that.inverseFlattening )
           && Utilities.equals( this.unit, that.unit );
     }
     return false;
@@ -442,11 +417,9 @@ public class Ellipsoid extends Info
   }
 
   /**
-   * Returns an OpenGIS interface for this ellipsoid. The returned object is
-   * suitable for RMI use.
+   * Returns an OpenGIS interface for this ellipsoid. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -460,8 +433,7 @@ public class Ellipsoid extends Info
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link Ellipsoid}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link Ellipsoid}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

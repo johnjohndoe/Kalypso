@@ -25,13 +25,13 @@ public class PopupMenu extends JPopupMenu
     prepareMenu();
   }
 
-  private void prepareMenu( )
+  private void prepareMenu()
   {
     add( new SetAllAction( m_table ) );
     add( new SetSelectedAction( m_table ) );
     add( new SetBottomAction( m_table ) );
     add( new SetTopAction( m_table ) );
     add( new Separator() );
-    add( new InterpolateSelectedAction( m_table) );
+    add( new InterpolateSelectedAction( m_table ) );
   }
 }

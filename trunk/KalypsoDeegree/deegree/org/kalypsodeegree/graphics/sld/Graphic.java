@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 import java.awt.image.BufferedImage;
@@ -66,23 +66,17 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * A Graphic is a "graphic symbol" with an inherent shape, color, and size.
- * Graphics can either be referenced from an external URL in a common format
- * (such as GIF or SVG) or may be derived from a Mark. Multiple external URLs
- * may be referenced with the semantic that they all provide the same graphic in
- * different formats. The "hot spot" to use for rendering at a point or the
- * start and finish handle points to use for rendering a graphic along a line
- * must either be inherent in the external format or are system- dependent. The
- * default size of an image format (such as GIF) is the inherent size of the
- * image. The default size of a format without an inherent size is 16 pixels in
- * height and the corresponding aspect in width. If a size is specified, the
- * height of the graphic will be scaled to that size and the corresponding
- * aspect will be used for the width. The default if neither an ExternalURL nor
- * a Mark is specified is to use the default Mark with a size of 6 pixels. The
- * size is in pixels and the rotation is in degrees clockwise, with 0 (default)
- * meaning no rotation. In the case that a Graphic is derived from a font-glyph
- * Mark, the Size specified here will be used for the final rendering. Allowed
- * CssParameters are "opacity", "size", and "rotation".
+ * A Graphic is a "graphic symbol" with an inherent shape, color, and size. Graphics can either be referenced from an
+ * external URL in a common format (such as GIF or SVG) or may be derived from a Mark. Multiple external URLs may be
+ * referenced with the semantic that they all provide the same graphic in different formats. The "hot spot" to use for
+ * rendering at a point or the start and finish handle points to use for rendering a graphic along a line must either be
+ * inherent in the external format or are system- dependent. The default size of an image format (such as GIF) is the
+ * inherent size of the image. The default size of a format without an inherent size is 16 pixels in height and the
+ * corresponding aspect in width. If a size is specified, the height of the graphic will be scaled to that size and the
+ * corresponding aspect will be used for the width. The default if neither an ExternalURL nor a Mark is specified is to
+ * use the default Mark with a size of 6 pixels. The size is in pixels and the rotation is in degrees clockwise, with 0
+ * (default) meaning no rotation. In the case that a Graphic is derived from a font-glyph Mark, the Size specified here
+ * will be used for the final rendering. Allowed CssParameters are "opacity", "size", and "rotation".
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -100,8 +94,8 @@ public interface Graphic
   public static final double ROTATION_DEFAULT = 0.0;
 
   /**
-   * Returns a <tt>BufferedImage</tt> representing this object. The image
-   * respects the 'Opacity', 'Size' and 'Rotation' parameters.
+   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and
+   * 'Rotation' parameters.
    * <p>
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
@@ -111,8 +105,8 @@ public interface Graphic
   BufferedImage getAsImage( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * Sets a <tt>BufferedImage</tt> representing this object. The image
-   * respects the 'Opacity', 'Size' and 'Rotation' parameters.
+   * Sets a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
+   * parameters.
    * <p>
    * 
    * @param bufferedImage
@@ -121,8 +115,8 @@ public interface Graphic
   void setAsImage( BufferedImage bufferedImage );
 
   /**
-   * Returns an object-array that enables the access to the stored
-   * <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
+   * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
+   * -instances.
    * <p>
    * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
@@ -138,8 +132,8 @@ public interface Graphic
   public void setMarksAndExtGraphics( Object[] object );
 
   /**
-   * Adds an Object to an object-array that enables the access to the stored
-   * <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
+   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
+   * <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -147,8 +141,8 @@ public interface Graphic
   public void addMarksAndExtGraphic( Object object );
 
   /**
-   * Removes an Object from an object-array that enables the access to the
-   * stored <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
+   * Removes an Object from an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
+   * <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -160,8 +154,7 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -178,16 +171,13 @@ public interface Graphic
   void setOpacity( double opacity );
 
   /**
-   * The Size element gives the absolute size of the graphic in pixels encoded
-   * as a floating-point number. This element is also used in other contexts
-   * than graphic size and pixel units are still used even for font size. The
-   * default size for an object is context-dependent. Negative values are not
-   * allowed.
+   * The Size element gives the absolute size of the graphic in pixels encoded as a floating-point number. This element
+   * is also used in other contexts than graphic size and pixel units are still used even for font size. The default
+   * size for an object is context-dependent. Negative values are not allowed.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid
@@ -203,15 +193,13 @@ public interface Graphic
   void setSize( double size );
 
   /**
-   * The Rotation element gives the rotation of a graphic in the clockwise
-   * direction about its center point in radian, encoded as a floating- point
-   * number. Negative values mean counter-clockwise rotation. The default value
-   * is 0.0 (no rotation).
+   * The Rotation element gives the rotation of a graphic in the clockwise direction about its center point in radian,
+   * encoded as a floating- point number. Negative values mean counter-clockwise rotation. The default value is 0.0 (no
+   * rotation).
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails or the value is invalid

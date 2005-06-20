@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.ui.editorinput;
 
 import org.eclipse.core.resources.IStorage;
@@ -46,8 +46,7 @@ import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
 
 /**
- * TODO: normally should also override equals() according to
- * interface specification... Check if this is possible here.
+ * TODO: normally should also override equals() according to interface specification... Check if this is possible here.
  * 
  * @author belger
  */

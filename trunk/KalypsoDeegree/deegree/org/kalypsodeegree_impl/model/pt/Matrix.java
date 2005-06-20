@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 // OpenGIS dependencies (SEAGIS)
@@ -73,8 +73,7 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * A two dimensional array of numbers. Row and column numbering begins with
- * zero.
+ * A two dimensional array of numbers. Row and column numbering begins with zero.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -86,8 +85,7 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
  * @see javax.media.jai.PerspectiveTransform
  * @see javax.media.j3d.Transform3D
  * @see <A HREF="http://math.nist.gov/javanumerics/jama/">Jama matrix </A>
- * @see <A HREF="http://jcp.org/jsr/detail/83.jsp">JSR-83 Multiarray package
- *      </A>
+ * @see <A HREF="http://jcp.org/jsr/detail/83.jsp">JSR-83 Multiarray package </A>
  */
 public class Matrix extends GMatrix
 {
@@ -97,8 +95,7 @@ public class Matrix extends GMatrix
   private static final long serialVersionUID = 3126899762163038129L;
 
   /**
-   * Construct a square identity matrix of size <code>size</code>
-   * &nbsp;&times;&nbsp; <code>size</code>.
+   * Construct a square identity matrix of size <code>size</code> &nbsp;&times;&nbsp; <code>size</code>.
    */
   public Matrix( final int size )
   {
@@ -106,9 +103,8 @@ public class Matrix extends GMatrix
   }
 
   /**
-   * Construct a matrix of size <code>numRow</code> &nbsp;&times;&nbsp;
-   * <code>numCol</code>. Elements on the diagonal <var>j==i </var> are set
-   * to 1.
+   * Construct a matrix of size <code>numRow</code> &nbsp;&times;&nbsp; <code>numCol</code>. Elements on the
+   * diagonal <var>j==i </var> are set to 1.
    */
   public Matrix( final int numRow, final int numCol )
   {
@@ -116,13 +112,11 @@ public class Matrix extends GMatrix
   }
 
   /**
-   * Constructs a <code>numRow</code> &nbsp;&times;&nbsp; <code>numCol</code>
-   * matrix initialized to the values in the <code>matrix</code> array. The
-   * array values are copied in one row at a time in row major fashion. The
-   * array should be exactly <code>numRow*numCol</code> in length. Note that
-   * because row and column numbering begins with zero, <code>row</code> and
-   * <code>numCol</code> will be one larger than the maximum possible matrix
-   * index values.
+   * Constructs a <code>numRow</code> &nbsp;&times;&nbsp; <code>numCol</code> matrix initialized to the values in
+   * the <code>matrix</code> array. The array values are copied in one row at a time in row major fashion. The array
+   * should be exactly <code>numRow*numCol</code> in length. Note that because row and column numbering begins with
+   * zero, <code>row</code> and <code>numCol</code> will be one larger than the maximum possible matrix index
+   * values.
    */
   public Matrix( final int numRow, final int numCol, final double[] matrix )
   {
@@ -139,8 +133,7 @@ public class Matrix extends GMatrix
    * @param matrix
    *          Array of rows. Each row must have the same length.
    * @throws IllegalArgumentException
-   *           if the specified matrix is not regular (i.e. if all rows doesn't
-   *           have the same length).
+   *           if the specified matrix is not regular (i.e. if all rows doesn't have the same length).
    */
   public Matrix( final double[][] matrix ) throws IllegalArgumentException
   {
@@ -151,16 +144,14 @@ public class Matrix extends GMatrix
     {
       if( matrix[j].length != numCol )
       {
-        throw new IllegalArgumentException( Resources
-            .format( ResourceKeys.ERROR_MATRIX_NOT_REGULAR ) );
+        throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_MATRIX_NOT_REGULAR ) );
       }
       setRow( j, matrix[j] );
     }
   }
 
   /**
-   * Constructs a new matrix and copies the initial values from the parameter
-   * matrix.
+   * Constructs a new matrix and copies the initial values from the parameter matrix.
    */
   public Matrix( final GMatrix matrix )
   {
@@ -173,17 +164,24 @@ public class Matrix extends GMatrix
   public Matrix( final AffineTransform transform )
   {
     super( 3, 3, new double[]
-    { transform.getScaleX(), transform.getShearX(), transform.getTranslateX(),
-        transform.getShearY(), transform.getScaleY(), transform.getTranslateY(), 0, 0, 1 } );
+    {
+        transform.getScaleX(),
+        transform.getShearX(),
+        transform.getTranslateX(),
+        transform.getShearY(),
+        transform.getScaleY(),
+        transform.getTranslateY(),
+        0,
+        0,
+        1 } );
     /*
      * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert isAffine();
      *///----- END OF JDK 1.4 DEPENDENCIES ---
   }
 
   /**
-   * Construct an affine transform mapping a source region to a destination
-   * region. The regions must have the same number of dimensions, but their axis
-   * order and axis orientation may be different.
+   * Construct an affine transform mapping a source region to a destination region. The regions must have the same
+   * number of dimensions, but their axis order and axis orientation may be different.
    * 
    * @param srcRegion
    *          The source region.
@@ -194,18 +192,17 @@ public class Matrix extends GMatrix
    * @param dstAxis
    *          Axis orientation for each dimension of the destination region.
    * @param validRegions
-   *          <code>true</code> if source and destination regions must be
-   *          taken in account. If <code>false</code>, then source and
-   *          destination regions will be ignored and may be null.
+   *          <code>true</code> if source and destination regions must be taken in account. If <code>false</code>,
+   *          then source and destination regions will be ignored and may be null.
    */
-  private Matrix( final Envelope srcRegion, final AxisOrientation[] srcAxis,
-      final Envelope dstRegion, final AxisOrientation[] dstAxis, final boolean validRegions )
+  private Matrix( final Envelope srcRegion, final AxisOrientation[] srcAxis, final Envelope dstRegion,
+      final AxisOrientation[] dstAxis, final boolean validRegions )
   {
     this( srcAxis.length + 1 );
     /*
      * Arguments check. NOTE: those exceptions are catched by
-     * 'org.kalypsodeegree_impl.model.ct.CoordinateTransformationFactory'. If exception
-     * type change, update the factory class.
+     * 'org.kalypsodeegree_impl.model.ct.CoordinateTransformationFactory'. If exception type change, update the factory
+     * class.
      */
     final int dimension = srcAxis.length;
     if( dstAxis.length != dimension )
@@ -218,12 +215,10 @@ public class Matrix extends GMatrix
       dstRegion.ensureDimensionMatch( dimension );
     }
     /*
-     * Map source axis to destination axis. If no axis is moved (for example if
-     * the user want to transform (NORTH,EAST) to (SOUTH,EAST)), then source and
-     * destination index will be equal. If some axis are moved (for example if
-     * the user want to transform (NORTH,EAST) to (EAST,NORTH)), then ordinates
-     * at index <code> srcIndex </code> will have to be moved at index <code>
-     * dstIndex </code> .
+     * Map source axis to destination axis. If no axis is moved (for example if the user want to transform (NORTH,EAST)
+     * to (SOUTH,EAST)), then source and destination index will be equal. If some axis are moved (for example if the
+     * user want to transform (NORTH,EAST) to (EAST,NORTH)), then ordinates at index <code> srcIndex </code> will have
+     * to be moved at index <code> dstIndex </code> .
      */
     setZero();
     for( int srcIndex = 0; srcIndex < dimension; srcIndex++ )
@@ -238,22 +233,20 @@ public class Matrix extends GMatrix
         {
           if( hasFound )
           {
-            throw new IllegalArgumentException( Resources
-                .format( ResourceKeys.ERROR_COLINEAR_AXIS_$2, srcAxe.getName( null ), dstAxe
-                    .getName( null ) ) );
+            throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_COLINEAR_AXIS_$2, srcAxe
+                .getName( null ), dstAxe.getName( null ) ) );
           }
           hasFound = true;
           /*
-           * Set the matrix elements. Some matrix elements will never be set.
-           * They will be left to zero, which is their wanted value.
+           * Set the matrix elements. Some matrix elements will never be set. They will be left to zero, which is their
+           * wanted value.
            */
           final boolean normal = srcAxe.equals( dstAxe );
           double scale = ( normal ) ? +1 : -1;
           double translate = 0;
           if( validRegions )
           {
-            translate = ( normal ) ? dstRegion.getMinimum( dstIndex ) : dstRegion
-                .getMaximum( dstIndex );
+            translate = ( normal ) ? dstRegion.getMinimum( dstIndex ) : dstRegion.getMaximum( dstIndex );
             scale *= dstRegion.getLength( dstIndex ) / srcRegion.getLength( srcIndex );
             translate -= srcRegion.getMinimum( srcIndex ) * scale;
           }
@@ -263,8 +256,8 @@ public class Matrix extends GMatrix
       }
       if( !hasFound )
       {
-        throw new IllegalArgumentException( Resources.format(
-            ResourceKeys.ERROR_NO_DESTINATION_AXIS_$1, srcAxis[srcIndex].getName( null ) ) );
+        throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NO_DESTINATION_AXIS_$1,
+            srcAxis[srcIndex].getName( null ) ) );
       }
     }
     setElement( dimension, dimension, 1 );
@@ -272,30 +265,27 @@ public class Matrix extends GMatrix
   }
 
   /**
-   * Construct an affine transform changing axis order and/or orientation. For
-   * example, the affine transform may convert (NORTH,WEST) coordinates into
-   * (EAST,NORTH). Axis orientation can be inversed only. For example, it is
-   * illegal to transform (NORTH,WEST) coordinates into (NORTH,DOWN).
+   * Construct an affine transform changing axis order and/or orientation. For example, the affine transform may convert
+   * (NORTH,WEST) coordinates into (EAST,NORTH). Axis orientation can be inversed only. For example, it is illegal to
+   * transform (NORTH,WEST) coordinates into (NORTH,DOWN).
    * 
    * @param srcAxis
    *          The set of axis orientation for source coordinate system.
    * @param dstAxis
    *          The set of axis orientation for destination coordinate system.
    * @throws MismatchedDimensionException
-   *           if <code>srcAxis</code> and <code>dstAxis</code> don't have
-   *           the same length.
+   *           if <code>srcAxis</code> and <code>dstAxis</code> don't have the same length.
    * @throws IllegalArgumentException
    *           if the affine transform can't be created for some other raison.
    */
-  public static Matrix createAffineTransform( final AxisOrientation[] srcAxis,
-      final AxisOrientation[] dstAxis )
+  public static Matrix createAffineTransform( final AxisOrientation[] srcAxis, final AxisOrientation[] dstAxis )
   {
     return new Matrix( null, srcAxis, null, dstAxis, false );
   }
 
   /**
-   * Construct an affine transform that maps a source region to a destination
-   * region. Axis order and orientation are left unchanged.
+   * Construct an affine transform that maps a source region to a destination region. Axis order and orientation are
+   * left unchanged.
    * 
    * @param srcRegion
    *          The source region.
@@ -324,11 +314,10 @@ public class Matrix extends GMatrix
   }
 
   /**
-   * Construct an affine transform mapping a source region to a destination
-   * region. Axis order and/or orientation can be changed during the process.
-   * For example, the affine transform may convert (NORTH,WEST) coordinates into
-   * (EAST,NORTH). Axis orientation can be inversed only. For example, it is
-   * illegal to transform (NORTH,WEST) coordinates into (NORTH,DOWN).
+   * Construct an affine transform mapping a source region to a destination region. Axis order and/or orientation can be
+   * changed during the process. For example, the affine transform may convert (NORTH,WEST) coordinates into
+   * (EAST,NORTH). Axis orientation can be inversed only. For example, it is illegal to transform (NORTH,WEST)
+   * coordinates into (NORTH,DOWN).
    * 
    * @param srcRegion
    *          The source region.
@@ -343,18 +332,16 @@ public class Matrix extends GMatrix
    * @throws IllegalArgumentException
    *           if the affine transform can't be created for some other raison.
    */
-  public static Matrix createAffineTransform( final Envelope srcRegion,
-      final AxisOrientation[] srcAxis, final Envelope dstRegion, final AxisOrientation[] dstAxis )
+  public static Matrix createAffineTransform( final Envelope srcRegion, final AxisOrientation[] srcAxis,
+      final Envelope dstRegion, final AxisOrientation[] dstAxis )
   {
     return new Matrix( srcRegion, srcAxis, dstRegion, dstAxis, true );
   }
 
   /**
-   * Retrieves the specifiable values in the transformation matrix into a
-   * 2-dimensional array of double precision values. The values are stored into
-   * the 2-dimensional array using the row index as the first subscript and the
-   * column index as the second. Values are copied; changes to the returned
-   * array will not change this matrix.
+   * Retrieves the specifiable values in the transformation matrix into a 2-dimensional array of double precision
+   * values. The values are stored into the 2-dimensional array using the row index as the first subscript and the
+   * column index as the second. Values are copied; changes to the returned array will not change this matrix.
    * 
    * @see org.opengis.pt.PT_Matrix#elt
    */
@@ -370,9 +357,8 @@ public class Matrix extends GMatrix
   }
 
   /**
-   * Returns <code>true</code> if this matrix is an affine transform. A
-   * transform is affine if the matrix is square and last row contains only
-   * zeros, except in the last column which contains 1.
+   * Returns <code>true</code> if this matrix is an affine transform. A transform is affine if the matrix is square
+   * and last row contains only zeros, except in the last column which contains 1.
    */
   public final boolean isAffine()
   {
@@ -408,8 +394,7 @@ public class Matrix extends GMatrix
   }
 
   /**
-   * Returns an affine transform for this matrix. This is a convenience method
-   * for interoperability with Java2D.
+   * Returns an affine transform for this matrix. This is a convenience method for interoperability with Java2D.
    * 
    * @throws IllegalStateException
    *           if this matrix is not 3x3, or if the last row is not [0 0 1].
@@ -419,21 +404,20 @@ public class Matrix extends GMatrix
     int check;
     if( ( check = getNumRow() ) != 3 || ( check = getNumCol() ) != 3 )
     {
-      throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1,
-          new Integer( check - 1 ) ) );
+      throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1, new Integer(
+          check - 1 ) ) );
     }
     if( isAffine() )
     {
-      return new AffineTransform( getElement( 0, 0 ), getElement( 1, 0 ), getElement( 0, 1 ),
-          getElement( 1, 1 ), getElement( 0, 2 ), getElement( 1, 2 ) );
+      return new AffineTransform( getElement( 0, 0 ), getElement( 1, 0 ), getElement( 0, 1 ), getElement( 1, 1 ),
+          getElement( 0, 2 ), getElement( 1, 2 ) );
     }
     throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_AN_AFFINE_TRANSFORM ) );
   }
 
   /**
-   * Returns a string representation of this matrix. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string representation of this matrix. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

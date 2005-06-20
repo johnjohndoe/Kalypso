@@ -98,8 +98,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   {
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    m_p1 = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell()
-        .getCoordinatesSystem() );
+    m_p1 = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     m_p2 = null;
     updateInfoText();
   }
@@ -132,8 +131,8 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     m_movePoint = p;
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell()
-        .getCoordinatesSystem() );
+    final GM_Point point = GeometryFactory
+        .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     if( m_p1 != null )
       m_p2 = point;
     updateInfoText();
@@ -147,8 +146,8 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     m_movePoint = null;
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell()
-        .getCoordinatesSystem() );
+    final GM_Point point = GeometryFactory
+        .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     if( m_p1 != null )
       m_p2 = point;
     updateInfoText();
@@ -216,7 +215,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     final Double y2 = m_p2 == null ? null : new Double( m_p2.getY() );
 
     final StringWriter stringWriter = new StringWriter();
-    
+
     try
     {
       final PrintWriter pw = new PrintWriter( stringWriter );

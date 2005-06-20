@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -48,9 +48,6 @@ import java.awt.Color;
 
 import javax.swing.event.EventListenerList;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.Font;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -65,6 +62,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -128,8 +128,7 @@ public class FontChooserPanel
     text.setLayoutData( textData );
     text.setText( "abc" );
     text.setFont( font );
-    text.setForeground( new org.eclipse.swt.graphics.Color( null, color.getRed(), color.getGreen(),
-        color.getBlue() ) );
+    text.setForeground( new org.eclipse.swt.graphics.Color( null, color.getRed(), color.getGreen(), color.getBlue() ) );
 
     Button fontChooserButton = new Button( composite, SWT.PUSH );
     FormData fontChooserButtonData = new FormData();
@@ -194,8 +193,7 @@ public class FontChooserPanel
     return local_font;
   }
 
-  public static org.eclipse.swt.graphics.Font convertDegreeToSWTFont( Font font )
-      throws FilterEvaluationException
+  public static org.eclipse.swt.graphics.Font convertDegreeToSWTFont( Font font ) throws FilterEvaluationException
   {
     int style = font.getStyle( null );
     int weight = font.getWeight( null );

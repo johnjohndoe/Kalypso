@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -81,11 +81,9 @@ import org.opengis.cs.CS_PrimeMeridian;
 import org.opengis.cs.CS_WGS84ConversionInfo;
 
 /**
- * A coordinate system based on latitude and longitude. Some geographic
- * coordinate systems are <var>latitude </var>/ <var>longiude </var>, and some
- * are <var>longitude </var>/ <var>latitude </var>. You can find out which this
- * is by examining the axes. You should also check the angular units, since not
- * all geographic coordinate systems use degrees.
+ * A coordinate system based on latitude and longitude. Some geographic coordinate systems are <var>latitude </var>/
+ * <var>longiude </var>, and some are <var>longitude </var>/ <var>latitude </var>. You can find out which this is by
+ * examining the axes. You should also check the angular units, since not all geographic coordinate systems use degrees.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -101,10 +99,9 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   private static final long serialVersionUID = -2024367470686889008L;
 
   /**
-   * A geographic coordinate system using WGS84 datum. This coordinate system
-   * use <var>longitude </var>/ <var>latitude </var> ordinates with longitude
-   * values increasing north and latitude values increasing east. Angular units
-   * are degrees and prime meridian is Greenwich.
+   * A geographic coordinate system using WGS84 datum. This coordinate system use <var>longitude </var>/ <var>latitude
+   * </var> ordinates with longitude values increasing north and latitude values increasing east. Angular units are
+   * degrees and prime meridian is Greenwich.
    */
   public static final GeographicCoordinateSystem WGS84 = (GeographicCoordinateSystem)pool
       .intern( new GeographicCoordinateSystem( "WGS84", HorizontalDatum.WGS84 ) );
@@ -120,10 +117,9 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   private final PrimeMeridian meridian;
 
   /**
-   * Creates a geographic coordinate system. This coordinate system will use
-   * <var>longitude </var>/ <var>latitude </var> ordinates with longitude values
-   * increasing east and latitude values increasing north. Angular units are
-   * degrees and prime meridian is Greenwich.
+   * Creates a geographic coordinate system. This coordinate system will use <var>longitude </var>/ <var>latitude </var>
+   * ordinates with longitude values increasing east and latitude values increasing north. Angular units are degrees and
+   * prime meridian is Greenwich.
    * 
    * @param name
    *          Name to give new object.
@@ -136,9 +132,8 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Creates a geographic coordinate system, which could be <var>latitude
-   * </var>/ <var>longiude </var> or <var>longitude </var>/ <var>latitude
-   * </var>.
+   * Creates a geographic coordinate system, which could be <var>latitude </var>/ <var>longiude </var> or <var>longitude
+   * </var>/ <var>latitude </var>.
    * 
    * @param name
    *          Name to give new object.
@@ -154,9 +149,8 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
    *          Details of 1st ordinates.
    *  
    */
-  public GeographicCoordinateSystem( final String name, final Unit unit,
-      final HorizontalDatum datum, final PrimeMeridian meridian, final AxisInfo axis0,
-      final AxisInfo axis1 )
+  public GeographicCoordinateSystem( final String name, final Unit unit, final HorizontalDatum datum,
+      final PrimeMeridian meridian, final AxisInfo axis0, final AxisInfo axis1 )
   {
     super( name, datum, axis0, axis1 );
     ensureNonNull( "unit", unit );
@@ -167,9 +161,8 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Creates a geographic coordinate system, which could be <var>latitude
-   * </var>/ <var>longiude </var> or <var>longitude </var>/ <var>latitude
-   * </var>.
+   * Creates a geographic coordinate system, which could be <var>latitude </var>/ <var>longiude </var> or <var>longitude
+   * </var>/ <var>latitude </var>.
    * 
    * @param properties
    *          The set of properties (see {@link Info}).
@@ -194,8 +187,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Gets units for dimension within coordinate system. This angular unit is the
-   * same for all axis.
+   * Gets units for dimension within coordinate system. This angular unit is the same for all axis.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -206,8 +198,8 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   {
     if( dimension >= 0 && dimension < getDimension() )
       return unit;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
@@ -259,13 +251,11 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Gets details on conversions to WGS84. Some geographic coordinate systems
-   * provide several transformations into WGS84, which are designed to provide
-   * good accuracy in different areas of interest. The first conversion should
+   * Gets details on conversions to WGS84. Some geographic coordinate systems provide several transformations into
+   * WGS84, which are designed to provide good accuracy in different areas of interest. The first conversion should
    * provide acceptable accuracy over the largest possible area of interest.
    * 
-   * @return A set of conversions info to WGS84. The default implementation
-   *         returns an empty set.
+   * @return A set of conversions info to WGS84. The default implementation returns an empty set.
    * 
    * @see org.opengis.cs.CS_GeographicCoordinateSystem#getNumConversionToWGS84()
    * @see org.opengis.cs.CS_GeographicCoordinateSystem#getWGS84ConversionInfo(int)
@@ -276,13 +266,11 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -295,8 +283,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
     if( super.equivalents( cs ) )
     {
       final GeographicCoordinateSystem that = (GeographicCoordinateSystem)cs;
-      return Utilities.equals( this.unit, that.unit )
-          && Utilities.equals( this.meridian, that.meridian );
+      return Utilities.equals( this.unit, that.unit ) && Utilities.equals( this.meridian, that.meridian );
     }
     return false;
   }
@@ -320,11 +307,9 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this geographic coordinate system. The
-   * returned object is suitable for RMI use.
+   * Returns an OpenGIS interface for this geographic coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -338,18 +323,15 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link GeographicCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link GeographicCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
    */
-  private final class Export extends HorizontalCoordinateSystem.Export implements
-      CS_GeographicCoordinateSystem
+  private final class Export extends HorizontalCoordinateSystem.Export implements CS_GeographicCoordinateSystem
   {
     /**
-     * Conversions infos. This array is constructed only the first time it is
-     * requested.
+     * Conversions infos. This array is constructed only the first time it is requested.
      */
     private transient WGS84ConversionInfo[] infos;
 

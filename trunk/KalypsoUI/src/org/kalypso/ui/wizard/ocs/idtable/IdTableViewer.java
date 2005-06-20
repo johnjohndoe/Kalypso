@@ -65,7 +65,8 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
 
     setContentProvider( new IdTableContentProvider() );
     setLabelProvider( new IdTableLabelProvider() );
-    setCellEditors( new CellEditor[] {
+    setCellEditors( new CellEditor[]
+    {
         null,
         new ObservationCellEditor( parent ) } );
     setCellModifier( this );
@@ -81,8 +82,7 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
   public boolean canModify( Object element, String property )
   {
@@ -90,8 +90,7 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
   public Object getValue( Object element, String property )
   {
@@ -102,8 +101,7 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object,
-   *      java.lang.String, java.lang.Object)
+   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
   public void modify( Object element, String property, Object value )
   {

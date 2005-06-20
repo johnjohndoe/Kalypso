@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
@@ -72,8 +72,7 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * The Font element identifies a font of a certain family, style, weight, size
- * and color.
+ * The Font element identifies a font of a certain family, style, weight, size and color.
  * <p>
  * The supported CSS-Parameter names are:
  * <ul>
@@ -108,8 +107,7 @@ public class Font_Impl implements Font, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) <tt>String</tt> value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -144,12 +142,11 @@ public class Font_Impl implements Font, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the specified style is not one of the
-   *           following: 'normal', 'italic' and 'oblique'
+   *           if the evaluation fails or the specified style is not one of the following: 'normal', 'italic' and
+   *           'oblique'
    */
   public int getStyle( Feature feature ) throws FilterEvaluationException
   {
@@ -175,8 +172,7 @@ public class Font_Impl implements Font, Marshallable
       return STYLE_OBLIQUE;
     }
 
-    throw new FilterEvaluationException( "Given value ('" + s
-        + "') for CssParameter 'font-style' is "
+    throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-style' is "
         + "invalid: allowed values are 'normal', 'italic' and 'oblique'." );
   }
 
@@ -194,17 +190,14 @@ public class Font_Impl implements Font, Marshallable
   }
 
   /**
-   * Returns the (evaluated) value of the font's CssParameter 'font-weight' as a
-   * <tt>ParameterValueType</tt>.
+   * Returns the (evaluated) value of the font's CssParameter 'font-weight' as a <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the specified weight is not one of the
-   *           following: 'normal' and 'bold'
+   *           if the evaluation fails or the specified weight is not one of the following: 'normal' and 'bold'
    */
   public int getWeight( Feature feature ) throws FilterEvaluationException
   {
@@ -226,8 +219,7 @@ public class Font_Impl implements Font, Marshallable
       return WEIGHT_BOLD;
     }
 
-    throw new FilterEvaluationException( "Given value ('" + s
-        + "') for CssParameter 'font-weight' is "
+    throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-weight' is "
         + "invalid: allowed values are 'normal' and 'bold'." );
   }
 
@@ -249,12 +241,11 @@ public class Font_Impl implements Font, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value does not denote a valid
-   *           number or the number is not greater or equal zero
+   *           if the evaluation fails or the value does not denote a valid number or the number is not greater or equal
+   *           zero
    */
   public int getSize( Feature feature ) throws FilterEvaluationException
   {
@@ -271,14 +262,13 @@ public class Font_Impl implements Font, Marshallable
       }
       catch( NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value ('" + s
-            + "') for CssParameter 'font-size' is " + "not a valid number." );
+        throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-size' is "
+            + "not a valid number." );
       }
 
       if( sizeInt <= 0 )
       {
-        throw new FilterEvaluationException(
-            "Value of CssParameter 'font-size' must be greater or " + "equal zero." );
+        throw new FilterEvaluationException( "Value of CssParameter 'font-size' must be greater or " + "equal zero." );
       }
     }
 
@@ -303,8 +293,7 @@ public class Font_Impl implements Font, Marshallable
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -324,8 +313,8 @@ public class Font_Impl implements Font, Marshallable
       }
       catch( NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value ('" + s
-            + "') for CSS-Parameter 'font-color' " + "does not denote a valid color!" );
+        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'font-color' "
+            + "does not denote a valid color!" );
       }
     }
 

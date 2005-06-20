@@ -69,10 +69,15 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  */
 public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 {
-public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs, final URL context, final boolean synchron )
+  public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs, final URL context,
+      final boolean synchron )
   {
-    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]{ view, xmlObs }, synchron );
+    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
+    {
+        view,
+        xmlObs }, synchron );
   }
+
   /**
    * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
    *      java.lang.Object)
@@ -98,14 +103,12 @@ public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs
         IAxis obsAxis;
         try
         {
-          obsAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tmap
-              .getObservationAxis() );
+          obsAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tmap.getObservationAxis() );
         }
         catch( final NoSuchElementException nse )
         {
           // If name doesn't match, we try to find it by type
-          obsAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), tmap
-              .getObservationAxis() );
+          obsAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), tmap.getObservationAxis() );
         }
 
         final DiagramAxis diagAxis = view.getDiagramAxis( tmap.getDiagramAxis() );
@@ -134,9 +137,10 @@ public DiagViewCurveXMLLoader( final DiagView view, final TypeObservation xmlObs
 
       // each curve gets its own provider as the curve disposes the provider,
       // when disposed
-      final IObsProvider provider = key == null ? (IObsProvider)new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
-      final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color,
-          (AxisMapping[])mappings.toArray( new AxisMapping[0] ) );
+      final IObsProvider provider = key == null ? (IObsProvider)new PlainObsProvider( obs, null )
+          : new PooledObsProvider( key, null );
+      final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, (AxisMapping[])mappings
+          .toArray( new AxisMapping[0] ) );
       curve.setShown( tcurve.isShown() );
 
       view.addItem( curve );

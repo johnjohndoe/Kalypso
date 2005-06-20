@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
@@ -67,8 +67,8 @@ public class ExportActionDelegate extends AbstractGisEditorActionDelegate
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
-    // nix tun, action immer aktiv!
+  // nix tun, action immer aktiv!
   }
 }

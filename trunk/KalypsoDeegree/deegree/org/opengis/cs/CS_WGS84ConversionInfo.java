@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.cs;
 
@@ -15,10 +12,9 @@ package org.opengis.cs;
 import java.io.Serializable;
 
 /**
- * Parameters for a geographic transformation into WGS84. The Bursa Wolf
- * parameters should be applied to geocentric coordinates, where the X axis
- * points towards the Greenwich Prime Meridian, the Y axis points East, and the
- * Z axis points North.
+ * Parameters for a geographic transformation into WGS84. The Bursa Wolf parameters should be applied to geocentric
+ * coordinates, where the X axis points towards the Greenwich Prime Meridian, the Y axis points East, and the Z axis
+ * points North.
  * 
  * @version 1.01
  * @since 1.00
@@ -28,8 +24,7 @@ import java.io.Serializable;
 public class CS_WGS84ConversionInfo implements Cloneable, Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with CSS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with CSS 1.00.
    */
   private static final long serialVersionUID = -8059158004784472940L;
 
@@ -64,15 +59,15 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
   {}
 
   /**
-   * Returns a hash value for this object. This value need not remain consistent
-   * between different implementations of the same class.
+   * Returns a hash value for this object. This value need not remain consistent between different implementations of
+   * the same class.
    */
   public int hashCode()
   {
-    final long code = ( Double.doubleToLongBits( dx ) << 0 )
-        ^ ( Double.doubleToLongBits( dy ) << 1 ) ^ ( Double.doubleToLongBits( dz ) << 2 )
-        ^ ( Double.doubleToLongBits( ex ) << 3 ) ^ ( Double.doubleToLongBits( ey ) << 4 )
-        ^ ( Double.doubleToLongBits( ez ) << 5 ) ^ ( Double.doubleToLongBits( ppm ) << 6 );
+    final long code = ( Double.doubleToLongBits( dx ) << 0 ) ^ ( Double.doubleToLongBits( dy ) << 1 )
+        ^ ( Double.doubleToLongBits( dz ) << 2 ) ^ ( Double.doubleToLongBits( ex ) << 3 )
+        ^ ( Double.doubleToLongBits( ey ) << 4 ) ^ ( Double.doubleToLongBits( ez ) << 5 )
+        ^ ( Double.doubleToLongBits( ppm ) << 6 );
     return (int)( code >>> 32 ) ^ (int)code;
   }
 
@@ -107,17 +102,15 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
           && Double.doubleToLongBits( this.ey ) == Double.doubleToLongBits( that.ey )
           && Double.doubleToLongBits( this.ez ) == Double.doubleToLongBits( that.ez )
           && Double.doubleToLongBits( this.ppm ) == Double.doubleToLongBits( that.ppm )
-          && ( areaOfUse == that.areaOfUse || ( areaOfUse != null && areaOfUse
-              .equals( that.areaOfUse ) ) );
+          && ( areaOfUse == that.areaOfUse || ( areaOfUse != null && areaOfUse.equals( that.areaOfUse ) ) );
     }
     else
       return false;
   }
 
   /**
-   * Returns a string représentation of this object. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string représentation of this object. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

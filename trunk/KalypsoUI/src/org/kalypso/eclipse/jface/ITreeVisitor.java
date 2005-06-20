@@ -45,5 +45,5 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 
 public interface ITreeVisitor
 {
-  public boolean visit( Object element,ITreeContentProvider contentprovider );
+  public boolean visit( Object element, ITreeContentProvider contentprovider );
 }

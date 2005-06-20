@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
 /**
@@ -54,7 +54,7 @@ public interface IKalypsoUIConstants
 
   /** Observation Table View identifier (value <code>org.kalypso.ogc.sensor.view.TableViewPart</code>) */
   public final static String ID_OBSTABLE_VIEW = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
-  
+
   /** Repository View identifier (value <code>org.kalypso.ui.repository.view.RepositoryExplorerPart</code>) */
   public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart";
 
@@ -62,9 +62,9 @@ public interface IKalypsoUIConstants
 
   public static final String REPOSITORY_PERSPECTIVE = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
 
-  /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd)*/
+  /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd) */
   public static final String PL_IMPORT = "dataimportwizard";
 
-  /** Constant for all Kalypso Calculation Services (Extenstion point schema org.kalypso.services.calculation.exsd)*/
+  /** Constant for all Kalypso Calculation Services (Extenstion point schema org.kalypso.services.calculation.exsd) */
   public static final String PL_CALCULATION_SERVICE = "calculationService";
 }

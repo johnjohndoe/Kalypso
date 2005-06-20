@@ -76,8 +76,7 @@ public class ModelSynchronizer
     m_resourceRoot = root;
     // Hack, weil getLocation für IProject's nicht funktioniert!
     // hoffentlich leitet alles von Resource ab
-    m_resourceRootFile = ( (Resource)m_resourceRoot ).getLocalManager()
-        .locationFor( m_resourceRoot ).toFile();
+    m_resourceRootFile = ( (Resource)m_resourceRoot ).getLocalManager().locationFor( m_resourceRoot ).toFile();
 
     m_serverRoot = serverRoot;
   }
@@ -100,13 +99,11 @@ public class ModelSynchronizer
       synchronizeProject( m_serverRoot, m_resourceRootFile, new SubProgressMonitor( monitor, 1000 ) );
 
       // local refreshen
-      m_resourceRoot
-          .refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
+      m_resourceRoot.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Aktualisieren der Daten", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aktualisieren der Daten", e ) );
     }
     finally
     {
@@ -114,14 +111,12 @@ public class ModelSynchronizer
     }
   }
 
-  private void synchronizeProject( final File from, final File to, final IProgressMonitor monitor )
-      throws IOException
+  private void synchronizeProject( final File from, final File to, final IProgressMonitor monitor ) throws IOException
   {
     monitor.beginTask( "Projekt synchronizieren", 1000 );
     try
     {
-      final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true,
-          ModelNature.CONTROL_NAME );
+      final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true, ModelNature.CONTROL_NAME );
       FileUtilities.accept( from, copyVisitor, true );
 
       final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from,
@@ -134,8 +129,7 @@ public class ModelSynchronizer
     }
   }
 
-  private void copyAll( final File from, final File to, final IProgressMonitor monitor )
-      throws IOException
+  private void copyAll( final File from, final File to, final IProgressMonitor monitor ) throws IOException
   {
     monitor.beginTask( "Dateien kopieren", 1000 );
 
@@ -151,24 +145,23 @@ public class ModelSynchronizer
   }
 
   /**
-   * Schreibt ein einzelnes Verzeichnis innerhalb des lokalen Projekts zurück
-   * zum server Das Verzeichnis darf Serverseitig noch nicht existieren
+   * Schreibt ein einzelnes Verzeichnis innerhalb des lokalen Projekts zurück zum server Das Verzeichnis darf
+   * Serverseitig noch nicht existieren
    * 
    * @param folder
    * @param monitor
    * 
    * @throws CoreException
    */
-  public void commitFolder( final IFolder folder, final IProgressMonitor monitor )
-      throws CoreException
+  public void commitFolder( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     final String projectRelativePath = folder.getProjectRelativePath().toString();
 
     final File serverDir = new File( m_serverRoot, projectRelativePath );
 
     if( serverDir.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Das Verzeichnis existiert bereits auf dem Server: " + projectRelativePath, null ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Das Verzeichnis existiert bereits auf dem Server: "
+          + projectRelativePath, null ) );
 
     final File localDir = new File( m_resourceRootFile, projectRelativePath );
     try
@@ -177,8 +170,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Zurückschreiben der Daten", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Zurückschreiben der Daten", e ) );
     }
   }
 
@@ -188,8 +180,8 @@ public class ModelSynchronizer
   }
 
   /**
-   * Lädt einen Remote Folder vom Server und legt in local ab überschreibt, ist
-   * lokal bereits etwas vorhanden, gibts ne Fehlermeldung
+   * Lädt einen Remote Folder vom Server und legt in local ab überschreibt, ist lokal bereits etwas vorhanden, gibts ne
+   * Fehlermeldung
    * 
    * @param dir
    * @param localName
@@ -197,28 +189,25 @@ public class ModelSynchronizer
    * 
    * @throws CoreException
    */
-  public void getFolder( final File dir, final String localName, final IProgressMonitor monitor )
-      throws CoreException
+  public void getFolder( final File dir, final String localName, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Verzeichnis vom Server laden", 2000 );
 
     final String relativePath = FileUtilities.getRelativePathTo( m_serverRoot, dir );
     final IFile file = m_resourceRoot.getFile( localName );
     if( file.exists() )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Verzeichnis exisitert lokal bereits: " + relativePath, null ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Verzeichnis exisitert lokal bereits: "
+          + relativePath, null ) );
 
     try
     {
       final File localDir = new File( m_resourceRootFile, localName );
       copyAll( dir, localDir, new SubProgressMonitor( monitor, 1000 ) );
-      file.getParent().refreshLocal( IResource.DEPTH_INFINITE,
-          new SubProgressMonitor( monitor, 1000 ) );
+      file.getParent().refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin
-          .createErrorStatus( "Fehler beim Laden der Daten", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Daten", e ) );
     }
 
   }
@@ -242,8 +231,7 @@ public class ModelSynchronizer
         e.printStackTrace();
       }
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Lock-Datei existiert für Benutzer: " + user, null ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Lock-Datei existiert für Benutzer: " + user, null ) );
     }
 
     try
@@ -256,8 +244,7 @@ public class ModelSynchronizer
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Konnte lock Datei nicht erzeugen", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Konnte lock Datei nicht erzeugen", e ) );
     }
     finally
     {

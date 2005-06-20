@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.optimizers;
 
 import java.awt.Graphics2D;
@@ -77,8 +77,7 @@ public class OptimizerChain extends AbstractOptimizer
   private ArrayList optimizers = new ArrayList();
 
   /**
-   * Constructs a new <tt>OptimizerChain</tt> that contains the submitted
-   * <tt>Optimizer</tt> instances.
+   * Constructs a new <tt>OptimizerChain</tt> that contains the submitted <tt>Optimizer</tt> instances.
    * <p>
    * 
    * @param optimizers
@@ -103,8 +102,7 @@ public class OptimizerChain extends AbstractOptimizer
   }
 
   /**
-   * Performs the optimization. Calls the optimize-method of all contained
-   * <tt>Optimizer</tt> instances subsequently.
+   * Performs the optimization. Calls the optimize-method of all contained <tt>Optimizer</tt> instances subsequently.
    * <p>
    * 
    * @param g

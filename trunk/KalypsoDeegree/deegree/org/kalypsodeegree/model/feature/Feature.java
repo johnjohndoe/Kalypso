@@ -1,11 +1,9 @@
 package org.kalypsodeegree.model.feature;
 
-
 /**
  * @author doemming
  * 
- * this class extends the deegree feature interface and implements methods to
- * handle properties that have maxOccurs > 1
+ * this class extends the deegree feature interface and implements methods to handle properties that have maxOccurs > 1
  */
 public interface Feature extends DeegreeFeature
 {
@@ -25,5 +23,5 @@ public interface Feature extends DeegreeFeature
   /** setzt die Selektion komplett */
   public void setSelection( final int selection );
 
-  public Object getVirtuelProperty( String propertyName,GMLWorkspace workspace );
+  public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace );
 }

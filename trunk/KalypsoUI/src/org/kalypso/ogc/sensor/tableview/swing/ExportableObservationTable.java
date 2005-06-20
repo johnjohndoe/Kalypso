@@ -67,7 +67,7 @@ public class ExportableObservationTable implements IExportableTableDocument
    */
   public void setOnlySelectedRows( final boolean flag )
   {
-    // ignored
+  // ignored
   }
 
   /**
@@ -75,8 +75,7 @@ public class ExportableObservationTable implements IExportableTableDocument
    */
   public void exportDocument( final OutputStream outs ) throws Exception
   {
-    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(
-        outs ) );
+    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( outs ) );
     try
     {
       TableUtils.dump( m_table, "\t", writer );

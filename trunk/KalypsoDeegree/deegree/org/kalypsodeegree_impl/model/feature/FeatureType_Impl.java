@@ -96,8 +96,8 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
 
   private FeatureTypeProperty[] m_virtualProperties = new FeatureTypeProperty[0];
 
-  public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties,
-      int[] minOccurs, int[] maxOccurs, String substitutionGroup, Map annotationMap )
+  public FeatureType_Impl( String name, String namespace, FeatureTypeProperty[] properties, int[] minOccurs,
+      int[] maxOccurs, String substitutionGroup, Map annotationMap )
   {
     super( name, namespace, annotationMap );
 

@@ -4,5 +4,5 @@ import java.util.EventListener;
 
 public interface IGMLDocumentListener extends EventListener
 {
-  public void onChange( GMLDocumentEvent event ); 
+  public void onChange( GMLDocumentEvent event );
 }

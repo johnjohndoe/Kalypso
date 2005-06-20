@@ -10,19 +10,16 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * mapping between xml-typenames and java-classnames for GML-geometry types and
- * XMLSCHEMA-simple types
+ * mapping between xml-typenames and java-classnames for GML-geometry types and XMLSCHEMA-simple types
  * 
  * @author doemming
  */
 public class Mapper
 {
-  private static final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat(
-      "yyyy-MM-dd'T'HH:mm:ss" );
+  private static final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
-  private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat(
-      "yyyy-MM-dd" );
-  
+  private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
+
   private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
 
   private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[]
@@ -61,7 +58,6 @@ public class Mapper
     }
   }
 
-
   public static String mapGMLSchemaType2JavaType( String name )
   {
     if( "GeometryPropertyType".equals( name ) )
@@ -87,24 +83,22 @@ public class Mapper
 
     if( "AbstractFeatureType".equals( name ) )
       return "org.kalypsodeegree.model.feature.Feature";
-    
-    if( "FeatureAssociationType".equals( name ) )
-        return "FeatureAssociationType";
 
+    if( "FeatureAssociationType".equals( name ) )
+      return "FeatureAssociationType";
 
     //    System.out.println( "add mapping for " + name + " in " +
     // Mapper.class.toString() );
     return null;
   }
 
-  public static String mapXMLSchemaType2JavaType( String name )
-      throws Exception
+  public static String mapXMLSchemaType2JavaType( String name ) throws Exception
   {
     if( "integer".equals( name ) )
       return "java.lang.Integer";
 
     if( "int".equals( name ) )
-        return "java.lang.Integer";
+      return "java.lang.Integer";
 
     if( "string".equals( name ) )
       return "java.lang.String";
@@ -136,10 +130,10 @@ public class Mapper
   public static String mapJavaValueToXml( final Object value )
   {
     if( value instanceof DateWithoutTime )
-      return XML_DATE_FORMAT.format( (DateWithoutTime) value );
+      return XML_DATE_FORMAT.format( (DateWithoutTime)value );
 
     if( value instanceof Date )
-      return XML_DATETIME_FORMAT.format( (Date) value );
+      return XML_DATETIME_FORMAT.format( (Date)value );
 
     if( value instanceof Number )
       // TODO: use a special (xml-conform) formatting?
@@ -152,8 +146,7 @@ public class Mapper
    * @param value
    * @throws Exception
    */
-  public static Object mapXMLValueToJava( String value, String type )
-      throws Exception
+  public static Object mapXMLValueToJava( String value, String type ) throws Exception
   {
     if( "java.lang.String".equals( type ) )
       return value;
@@ -165,7 +158,7 @@ public class Mapper
     {
       // shapefiles give string like "10.0"
       double doubleValue = Double.parseDouble( value );
-      Integer integer = new Integer( (int) doubleValue );
+      Integer integer = new Integer( (int)doubleValue );
       if( integer.intValue() != doubleValue )
         throw new Exception( "no valid int value :" + value );
       return integer;
@@ -174,7 +167,7 @@ public class Mapper
     {
       // shapefiles give strings like "10.0"
       double doubleValue = Double.parseDouble( value );
-      Long longValue = new Long( (long) doubleValue );
+      Long longValue = new Long( (long)doubleValue );
       if( longValue.longValue() != doubleValue )
         throw new Exception( "no valid long value :" + value );
       return longValue;
@@ -198,11 +191,11 @@ public class Mapper
   {
     // TODO: uses special values espacially for KalypsoLegendView
     // this is no good!
-    
+
     if( "java.util.Date".equals( type ) )
       return new Date( 0 );
     if( "DateWithoutTime.class.getName()".equals( type ) )
-      return new DateWithoutTime( );
+      return new DateWithoutTime();
     if( "java.lang.Boolean".equals( type ) )
       return Boolean.FALSE;
     if( "java.lang.Float".equals( type ) )
@@ -215,17 +208,17 @@ public class Mapper
       return new Double( 0.0 );
     if( "java.lang.Long".equals( type ) )
       return new Long( 0 );
-    
+
     if( !createGeometry )
       return null;
-    
+
     if( "org.kalypsodeegree.model.geometry.GM_Point".equals( type ) )
       return DEFAULT_POINT;
     if( "org.kalypsodeegree.model.geometry.GM_LineString".equals( type ) )
       return DEFAULT_LINESTRING;
     if( "org.kalypsodeegree.model.geometry.GM_Polygon".equals( type ) )
       return DEFAULT_POLYGONE;
-    
+
     return null;
   }
 }

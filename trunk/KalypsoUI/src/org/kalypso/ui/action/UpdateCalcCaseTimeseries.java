@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import org.eclipse.core.resources.IFolder;
@@ -66,7 +66,7 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-    // nix tun  
+  // nix tun
   }
 
   /**
@@ -85,15 +85,16 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     // Rechenfälle raussuchen
-    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
-    
+    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
+        "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
+
     if( calcCases == null )
       return;
-    
+
     // die Rechenfälle sollen nacheinander aktualisiert werden
     // parallelität macht hier keinen Sinn
-    final MutexSchedulingRule mutexRule = new MutexSchedulingRule(  );
-    
+    final MutexSchedulingRule mutexRule = new MutexSchedulingRule();
+
     // alle Rechenfälle aktualisieren
     for( int i = 0; i < calcCases.length; i++ )
     {
@@ -109,7 +110,7 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
           try
           {
             final ModelNature nature = (ModelNature)calcCase.getProject().getNature( ModelNature.ID );
-            
+
             nature.updateCalcCase( calcCase, monitor );
           }
           catch( final CoreException e )
@@ -129,10 +130,11 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // mir wurscht
+  // mir wurscht
   }
 }

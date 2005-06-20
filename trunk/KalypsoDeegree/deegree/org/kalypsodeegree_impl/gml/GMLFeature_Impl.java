@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import java.util.ArrayList;
@@ -93,9 +93,9 @@ public class GMLFeature_Impl implements GMLFeature
 
   public GMLFeature_Impl()
   {
-    // default
+  // default
   }
-  
+
   /**
    * Creates a new GMLFeature_Impl object.
    * 
@@ -191,8 +191,7 @@ public class GMLFeature_Impl implements GMLFeature
     }
 
     // create new description
-    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-        "gml:description" );
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:description" );
     Text text = element.getOwnerDocument().createTextNode( description );
     elem.appendChild( text );
     element.appendChild( elem );
@@ -207,7 +206,7 @@ public class GMLFeature_Impl implements GMLFeature
   {
     return element.getNodeName();
   }
-  
+
   /**
    * @see org.kalypsodeegree.gml.GMLFeature#getLocalName()
    */
@@ -215,7 +214,7 @@ public class GMLFeature_Impl implements GMLFeature
   {
     return element.getLocalName();
   }
-  
+
   /**
    * 
    * @see org.kalypsodeegree.gml.GMLFeature#getNamespaceURI()
@@ -297,19 +296,19 @@ public class GMLFeature_Impl implements GMLFeature
         {
           Element elem = (Element)nl.item( i );
 
-            if( isGeometryProperty( elem ) )
-            {
-              list.add( new GMLGeoProperty_Impl( elem ) );
-            }
-            else if( isComplexProperty( elem ) )
-            {
-              list.add( new GMLComplexProperty_Impl( elem ) );
-            }
-            else
-            {
-              list.add( new GMLProperty_Impl( elem ) );
-            }
-//          }
+          if( isGeometryProperty( elem ) )
+          {
+            list.add( new GMLGeoProperty_Impl( elem ) );
+          }
+          else if( isComplexProperty( elem ) )
+          {
+            list.add( new GMLComplexProperty_Impl( elem ) );
+          }
+          else
+          {
+            list.add( new GMLProperty_Impl( elem ) );
+          }
+          //          }
         }
       }
     }
@@ -320,8 +319,7 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * returns true if the submitted element contains just excatly one
-   * childelement that have to be a geometry
+   * returns true if the submitted element contains just excatly one childelement that have to be a geometry
    */
   private boolean isGeometryProperty( Element elem )
   {
@@ -340,9 +338,8 @@ public class GMLFeature_Impl implements GMLFeature
           String name = XMLTools.toLocalName( el.getNodeName() );
 
           if( name.equals( "Point" ) || name.equals( "LineString" ) || name.equals( "Polygon" )
-              || name.equals( "MultiPoint" ) || name.equals( "MultiLineString" )
-              || name.equals( "MultiPolygon" ) || name.equals( "Box" )
-              || name.equals( "MultiGeometry" ) )
+              || name.equals( "MultiPoint" ) || name.equals( "MultiLineString" ) || name.equals( "MultiPolygon" )
+              || name.equals( "Box" ) || name.equals( "MultiGeometry" ) )
           {
             flag = true;
           }
@@ -505,9 +502,8 @@ public class GMLFeature_Impl implements GMLFeature
   /**
    * adds a property to the feature.
    * <p>
-   * This method should throw an exection if the submitted node doesn't belong
-   * to the underlying Feature Type definition. At the moment validiation
-   * against the feature type.
+   * This method should throw an exection if the submitted node doesn't belong to the underlying Feature Type
+   * definition. At the moment validiation against the feature type.
    */
   public void addProperty( GMLProperty property ) throws GMLException
   {
@@ -515,8 +511,8 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * returns true if the submitted node represents a property. in a future
-   * release this check has to be performed against the schema
+   * returns true if the submitted node represents a property. in a future release this check has to be performed
+   * against the schema
    */
   protected boolean isProperty( Node node )
   {
@@ -540,8 +536,8 @@ public class GMLFeature_Impl implements GMLFeature
   }
 
   /**
-   * returns true if the submitted node represents a complex property. in a
-   * future release this check has to be performed against the schema
+   * returns true if the submitted node represents a complex property. in a future release this check has to be
+   * performed against the schema
    */
   protected boolean isComplexProperty( Node node )
   {
@@ -577,33 +573,25 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.10  2005/05/17 16:40:33  belger
- * *** empty log message ***
- *
- * Revision 1.9  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.8  2005/02/28 13:34:14  doemming
- * *** empty log message ***
- *
- * Revision 1.7  2005/02/08 18:43:59  belger
- * *** empty log message ***
- *
- * Revision 1.6  2005/02/03 18:37:42  belger
- * *** empty log message ***
- *
- * Revision 1.5  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2004/10/11 13:19:42  belger
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * Revision 1.11  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.10 2005/05/17 16:40:33 belger *** empty log message ***
+ * 
+ * Revision 1.9 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.8 2005/02/28 13:34:14 doemming *** empty log message ***
+ * 
+ * Revision 1.7 2005/02/08 18:43:59 belger *** empty log message ***
+ * 
+ * Revision 1.6 2005/02/03 18:37:42 belger *** empty log message ***
+ * 
+ * Revision 1.5 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2004/10/11 13:19:42 belger *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:30 doemming ***
  * empty log message *** Revision 1.14 2004/07/09 07:16:56 poth no message
  * 
  * Revision 1.13 2004/04/07 06:43:48 poth no message

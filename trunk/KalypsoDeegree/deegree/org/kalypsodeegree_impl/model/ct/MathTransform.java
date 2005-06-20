@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -75,13 +75,11 @@ import org.opengis.pt.PT_CoordinatePoint;
 import org.opengis.pt.PT_Matrix;
 
 /**
- * Transforms multi-dimensional coordinate points. This interface transforms
- * coordinate value for a point given in the source coordinate system to
- * coordinate value for the same point in the target coordinate system. In an
- * ISO conversion, the transformation is accurate to within the limitations of
- * the computer making the calculations. In an ISO transformation, where some of
- * the operational parameters are derived from observations, the transformation
- * is accurate to within the limitations of those observations.
+ * Transforms multi-dimensional coordinate points. This interface transforms coordinate value for a point given in the
+ * source coordinate system to coordinate value for the same point in the target coordinate system. In an ISO
+ * conversion, the transformation is accurate to within the limitations of the computer making the calculations. In an
+ * ISO transformation, where some of the operational parameters are derived from observations, the transformation is
+ * accurate to within the limitations of those observations.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -106,101 +104,84 @@ public interface MathTransform
   public abstract int getDimTarget();
 
   /*
-   * Gets flags classifying domain points within a convex hull. Conceptually,
-   * each of the (usually infinite) points inside the convex hull is tested
-   * against the source domain. The flags of all these tests are then combined.
-   * In practice, implementations of different transforms will use different
-   * short-cuts to avoid doing an infinite number of tests. <br><br> Convex
-   * hull are not yet implemented in the <code> org.kalypsodeegree_impl.model </code>
-   * package. Consequently, the default implementation for this method always
-   * throws a {@link UnsupportedOperationException}.
+   * Gets flags classifying domain points within a convex hull. Conceptually, each of the (usually infinite) points
+   * inside the convex hull is tested against the source domain. The flags of all these tests are then combined. In
+   * practice, implementations of different transforms will use different short-cuts to avoid doing an infinite number
+   * of tests. <br><br> Convex hull are not yet implemented in the <code> org.kalypsodeegree_impl.model </code>
+   * package. Consequently, the default implementation for this method always throws a
+   * {@link UnsupportedOperationException}.
    * 
-   * @param hull The convex hull. @return flags classifying domain points within
-   * the convex hull.
+   * @param hull The convex hull. @return flags classifying domain points within the convex hull.
    * 
    * @see org.opengis.ct.CT_MathTransform#getDomainFlags
    */
   //  public DomainFlags getDomainFlags(final ConvexHull hull)
   //  {throw new UnsupportedOperationException("Not implemented");}
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>. If <code>ptDst</code> is <code>null</code>, a
-   * new {@link CoordinatePoint}object is allocated and then the result of the
-   * transformation is stored in this object. In either case, <code>ptDst</code>,
-   * which contains the transformed point, is returned for convenience. If
-   * <code>ptSrc</code> and <code>ptDst</code> are the same object, the
-   * input point is correctly overwritten with the transformed point.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>. If <code>ptDst</code>
+   * is <code>null</code>, a new {@link CoordinatePoint}object is allocated and then the result of the
+   * transformation is stored in this object. In either case, <code>ptDst</code>, which contains the transformed
+   * point, is returned for convenience. If <code>ptSrc</code> and <code>ptDst</code> are the same object, the input
+   * point is correctly overwritten with the transformed point.
    * 
    * @param ptSrc
    *          the specified coordinate point to be transformed.
    * @param ptDst
-   *          the specified coordinate point that stores the result of
-   *          transforming <code>ptSrc</code>, or <code>null</code>.
-   * @return the coordinate point after transforming <code>ptSrc</code> and
-   *         storing the result in <code>ptDst</code>, or a newly created
-   *         point if <code>ptDst</code> was null.
+   *          the specified coordinate point that stores the result of transforming <code>ptSrc</code>, or
+   *          <code>null</code>.
+   * @return the coordinate point after transforming <code>ptSrc</code> and storing the result in <code>ptDst</code>,
+   *         or a newly created point if <code>ptDst</code> was null.
    * @throws TransformException
    *           if the point can't be transformed.
    *  
    */
-  public abstract CoordinatePoint transform( CoordinatePoint ptSrc, CoordinatePoint ptDst )
-      throws TransformException;
+  public abstract CoordinatePoint transform( CoordinatePoint ptSrc, CoordinatePoint ptDst ) throws TransformException;
 
   /**
-   * Transforms a list of coordinate point ordinal values. This method is
-   * provided for efficiently transforming many points. The supplied array of
-   * ordinal values will contain packed ordinal values. For example, if the
-   * source dimension is 3, then the ordinals will be packed in this order: (
-   * <var>x <sub>0 </sub> </var>, <var>y <sub>0 </sub> </var>, <var>z <sub>0
-   * </sub> </var>, <var>x <sub>1 </sub> </var>, <var>y <sub>1 </sub> </var>,
-   * <var>z <sub>1 </sub> </var> ...).
+   * Transforms a list of coordinate point ordinal values. This method is provided for efficiently transforming many
+   * points. The supplied array of ordinal values will contain packed ordinal values. For example, if the source
+   * dimension is 3, then the ordinals will be packed in this order: ( <var>x <sub>0 </sub> </var>, <var>y <sub>0 </sub>
+   * </var>, <var>z <sub>0 </sub> </var>, <var>x <sub>1 </sub> </var>, <var>y <sub>1 </sub> </var>, <var>z <sub>1 </sub>
+   * </var> ...).
    * 
-   * The size of the passed array must be an integer multiple of
-   * {@link #getDimSource}.
+   * The size of the passed array must be an integer multiple of {@link #getDimSource}.
    * 
    * @param srcPts
    *          the array containing the source point coordinates.
    * @param srcOff
-   *          the offset to the first point to be transformed in the source
-   *          array.
+   *          the offset to the first point to be transformed in the source array.
    * @param dstPts
-   *          the array into which the transformed point coordinates are
-   *          returned. May be the same than <code>srcPts</code>.
+   *          the array into which the transformed point coordinates are returned. May be the same than
+   *          <code>srcPts</code>.
    * @param dstOff
-   *          the offset to the location of the first transformed point that is
-   *          stored in the destination array.
+   *          the offset to the location of the first transformed point that is stored in the destination array.
    * @param numPts
    *          the number of point objects to be transformed.
    * @throws TransformException
    *           if a point can't be transformed.
    *  
    */
-  public abstract void transform( double[] srcPts, int srcOff, double[] dstPts, int dstOff,
-      int numPts ) throws TransformException;
+  public abstract void transform( double[] srcPts, int srcOff, double[] dstPts, int dstOff, int numPts )
+      throws TransformException;
 
   /**
-   * Transforms a list of coordinate point ordinal values. This method is
-   * provided for efficiently transforming many points. The supplied array of
-   * ordinal values will contain packed ordinal values. For example, if the
-   * source dimension is 3, then the ordinals will be packed in this order: (
-   * <var>x <sub>0 </sub> </var>, <var>y <sub>0 </sub> </var>, <var>z <sub>0
-   * </sub> </var>, <var>x <sub>1 </sub> </var>, <var>y <sub>1 </sub> </var>,
-   * <var>z <sub>1 </sub> </var> ...).
+   * Transforms a list of coordinate point ordinal values. This method is provided for efficiently transforming many
+   * points. The supplied array of ordinal values will contain packed ordinal values. For example, if the source
+   * dimension is 3, then the ordinals will be packed in this order: ( <var>x <sub>0 </sub> </var>, <var>y <sub>0 </sub>
+   * </var>, <var>z <sub>0 </sub> </var>, <var>x <sub>1 </sub> </var>, <var>y <sub>1 </sub> </var>, <var>z <sub>1 </sub>
+   * </var> ...).
    * 
-   * The size of the passed array must be an integer multiple of
-   * {@link #getDimSource}.
+   * The size of the passed array must be an integer multiple of {@link #getDimSource}.
    * 
    * @param srcPts
    *          the array containing the source point coordinates.
    * @param srcOff
-   *          the offset to the first point to be transformed in the source
-   *          array.
+   *          the offset to the first point to be transformed in the source array.
    * @param dstPts
-   *          the array into which the transformed point coordinates are
-   *          returned. May be the same than <code>srcPts</code>.
+   *          the array into which the transformed point coordinates are returned. May be the same than
+   *          <code>srcPts</code>.
    * @param dstOff
-   *          the offset to the location of the first transformed point that is
-   *          stored in the destination array.
+   *          the offset to the location of the first transformed point that is stored in the destination array.
    * @param numPts
    *          the number of point objects to be transformed.
    * @throws TransformException
@@ -210,23 +191,17 @@ public interface MathTransform
       throws TransformException;
 
   /**
-   * Gets the derivative of this transform at a point. The derivative is the
-   * matrix of the non-translating portion of the approximate affine map at the
-   * point. The matrix will have dimensions corresponding to the source and
-   * target coordinate systems. If the input dimension is <var>M </var>, and the
-   * output dimension is <var>N </var>, then the matrix will have size
-   * <code>N&times;M</code>. The elements of the matrix
-   * <code>{e<sub>n,m</sub> : n=0..(N-1)}</code> form a vector in the output
-   * space which is parallel to the displacement caused by a small change in the
-   * <var>m </var>'th ordinate in the input space. <br>
+   * Gets the derivative of this transform at a point. The derivative is the matrix of the non-translating portion of
+   * the approximate affine map at the point. The matrix will have dimensions corresponding to the source and target
+   * coordinate systems. If the input dimension is <var>M </var>, and the output dimension is <var>N </var>, then the
+   * matrix will have size <code>N&times;M</code>. The elements of the matrix
+   * <code>{e<sub>n,m</sub> : n=0..(N-1)}</code> form a vector in the output space which is parallel to the
+   * displacement caused by a small change in the <var>m </var>'th ordinate in the input space. <br>
    * <br>
-   * For example, if the input dimension is 4 and the output dimension is 3,
-   * then a small displacement
-   * <code>(x<sub>0</sub>,&nbsp;x<sub>1</sub>,&nbsp;x<sub>2</sub>,&nbsp;x<sub>3</sub>)</code>
-   * in the input space will result in a displacement
-   * <code>(y<sub>0</sub>,&nbsp;y<sub>1</sub>,&nbsp;y<sub>2</sub>)</code>
-   * in the output space computed as below (<code>e<sub>n,m</sub></code>
-   * are the matrix's elements):
+   * For example, if the input dimension is 4 and the output dimension is 3, then a small displacement
+   * <code>(x<sub>0</sub>,&nbsp;x<sub>1</sub>,&nbsp;x<sub>2</sub>,&nbsp;x<sub>3</sub>)</code> in the input
+   * space will result in a displacement <code>(y<sub>0</sub>,&nbsp;y<sub>1</sub>,&nbsp;y<sub>2</sub>)</code> in
+   * the output space computed as below (<code>e<sub>n,m</sub></code> are the matrix's elements):
    * 
    * <pre>
    * [ y<sub>0</sub> ]     [ e<sub>00</sub>  e<sub>01</sub>  e<sub>02</sub>  e<sub>03</sub> ] [ x<sub>0</sub> ]
@@ -236,17 +211,13 @@ public interface MathTransform
    * </pre>
    * 
    * @param point
-   *          The coordinate point where to evaluate the derivative. Null value
-   *          is accepted only if the derivative is the same everywhere. For
-   *          example affine transform accept null value since they produces
-   *          identical derivative no matter the coordinate value. But most map
-   *          projection will requires a non-null value.
-   * @return The derivative at the specified point (never <code>null</code>).
-   *         This method never returns an internal object: changing the matrix
-   *         will not change the state of this math transform.
+   *          The coordinate point where to evaluate the derivative. Null value is accepted only if the derivative is
+   *          the same everywhere. For example affine transform accept null value since they produces identical
+   *          derivative no matter the coordinate value. But most map projection will requires a non-null value.
+   * @return The derivative at the specified point (never <code>null</code>). This method never returns an internal
+   *         object: changing the matrix will not change the state of this math transform.
    * @throws NullPointerException
-   *           if the derivative dependents on coordinate and <code>point</code>
-   *           is <code>null</code>.
+   *           if the derivative dependents on coordinate and <code>point</code> is <code>null</code>.
    * @throws TransformException
    *           if the derivative can't be evaluated at the specified point.
    *  
@@ -254,13 +225,11 @@ public interface MathTransform
   public abstract Matrix derivative( final CoordinatePoint point ) throws TransformException;
 
   /**
-   * Creates the inverse transform of this object. The target of the inverse
-   * transform is the source of the original. The source of the inverse
-   * transform is the target of the original. Using the original transform
-   * followed by the inverse's transform will result in an identity map on the
-   * source coordinate space, when allowances for error are made. This method
-   * may fail if the transform is not one to one. However, all cartographic
-   * projections should succeed.
+   * Creates the inverse transform of this object. The target of the inverse transform is the source of the original.
+   * The source of the inverse transform is the target of the original. Using the original transform followed by the
+   * inverse's transform will result in an identity map on the source coordinate space, when allowances for error are
+   * made. This method may fail if the transform is not one to one. However, all cartographic projections should
+   * succeed.
    * 
    * @return The inverse transform.
    * @throws NoninvertibleTransformException
@@ -272,8 +241,8 @@ public interface MathTransform
   /**
    * Tests whether this transform does not move any points.
    * 
-   * @return <code>true</code> if this <code>MathTransform</code> is an
-   *         identity transform; <code>false</code> otherwise.
+   * @return <code>true</code> if this <code>MathTransform</code> is an identity transform; <code>false</code>
+   *         otherwise.
    *  
    */
   public abstract boolean isIdentity();
@@ -286,10 +255,8 @@ public interface MathTransform
 /////////////////////////////////////////////////////////////////////////
 
 /**
- * Wrap a {@link MathTransform}for use with OpenGIS. This wrapper is a good
- * place to check for non-implemented OpenGIS methods (just check for methods
- * throwing {@link UnsupportedOperationException}). This class is suitable for
- * RMI use.
+ * Wrap a {@link MathTransform}for use with OpenGIS. This wrapper is a good place to check for non-implemented OpenGIS
+ * methods (just check for methods throwing {@link UnsupportedOperationException}). This class is suitable for RMI use.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -319,14 +286,12 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
   }
 
   /**
-   * Returns the underlying transform of the specified
-   * <code>MathTransformExport</code>. If <code>object</code> is not an
-   * instance of <code>MathTransformExport</code>, then it is returned as is.
+   * Returns the underlying transform of the specified <code>MathTransformExport</code>. If <code>object</code> is
+   * not an instance of <code>MathTransformExport</code>, then it is returned as is.
    */
   public static Object unwrap( final Object object )
   {
-    return ( object instanceof MathTransformExport ) ? ( (MathTransformExport)object ).transform
-        : object;
+    return ( object instanceof MathTransformExport ) ? ( (MathTransformExport)object ).transform : object;
   }
 
   /**
@@ -414,8 +379,8 @@ final class MathTransformExport extends RemoteObject implements CT_MathTransform
     final int dimTarget = transform.getDimTarget();
     if( ( ord.length % dimSource ) != 0 )
     {
-      throw new IllegalArgumentException( Resources.format(
-          ResourceKeys.ERROR_ILLEGAL_ARRAY_LENGTH_FOR_DIMENSION_$1, new Integer( dimSource ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_ARRAY_LENGTH_FOR_DIMENSION_$1,
+          new Integer( dimSource ) ) );
     }
     final int count = ord.length / dimSource;
     final double[] dest = ( dimSource == dimTarget ) ? ord : new double[count * dimTarget];

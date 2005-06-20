@@ -96,8 +96,7 @@ public class DiagViewUtils
    * @param outs
    * @throws JAXBException
    */
-  public static void saveDiagramTemplateXML( final ObsdiagviewType xml, final OutputStream outs )
-      throws JAXBException
+  public static void saveDiagramTemplateXML( final ObsdiagviewType xml, final OutputStream outs ) throws JAXBException
   {
     try
     {
@@ -118,8 +117,7 @@ public class DiagViewUtils
    * @param writer
    * @throws JAXBException
    */
-  public static void saveDiagramTemplateXML( final ObsdiagviewType tpl, final Writer writer )
-      throws JAXBException
+  public static void saveDiagramTemplateXML( final ObsdiagviewType tpl, final Writer writer ) throws JAXBException
   {
     try
     {
@@ -140,8 +138,7 @@ public class DiagViewUtils
    * @return diagram template object parsed from the file
    * @throws JAXBException
    */
-  public static ObsdiagviewType loadDiagramTemplateXML( final InputStream ins )
-      throws JAXBException
+  public static ObsdiagviewType loadDiagramTemplateXML( final InputStream ins ) throws JAXBException
   {
     try
     {
@@ -179,11 +176,9 @@ public class DiagViewUtils
    * @return diagram template object parsed from the file
    * @throws JAXBException
    */
-  private static ObsdiagviewType loadDiagramTemplateXML( final InputSource ins )
-      throws JAXBException
+  private static ObsdiagviewType loadDiagramTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final ObsdiagviewType baseTemplate = (ObsdiagviewType)ODT_OF.createUnmarshaller().unmarshal(
-        ins );
+    final ObsdiagviewType baseTemplate = (ObsdiagviewType)ODT_OF.createUnmarshaller().unmarshal( ins );
 
     return baseTemplate;
   }
@@ -195,8 +190,7 @@ public class DiagViewUtils
    * @return xml binding object (ready for marshalling for instance)
    * @throws JAXBException
    */
-  public static ObsdiagviewType buildDiagramTemplateXML( final DiagView view )
-      throws JAXBException
+  public static ObsdiagviewType buildDiagramTemplateXML( final DiagView view ) throws JAXBException
   {
     final ObsdiagviewType xmlTemplate = ODT_OF.createObsdiagview();
 
@@ -208,7 +202,7 @@ public class DiagViewUtils
     xmlTemplate.setTitle( view.getTitle() );
 
     final List xmlAxes = xmlTemplate.getAxis();
-    
+
     final DiagramAxis[] diagramAxes = view.getDiagramAxes();
     for( int i = 0; i < diagramAxes.length; i++ )
     {
@@ -243,7 +237,7 @@ public class DiagViewUtils
 
       final List xmlCurves = xmlTheme.getCurve();
 
-      final Iterator itCurves = ((List)entry.getValue()).iterator();
+      final Iterator itCurves = ( (List)entry.getValue() ).iterator();
       while( itCurves.hasNext() )
       {
         final DiagViewCurve curve = (DiagViewCurve)itCurves.next();
@@ -294,8 +288,7 @@ public class DiagViewUtils
    * @param unit
    * @return diagram axis
    */
-  public static DiagramAxis createAxisFor( final String axisType, final String label,
-      final String unit )
+  public static DiagramAxis createAxisFor( final String axisType, final String label, final String unit )
   {
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
       return new DiagramAxis( axisType, "date", label, unit, DiagramAxis.DIRECTION_HORIZONTAL,
@@ -318,12 +311,12 @@ public class DiagViewUtils
           DiagramAxis.POSITION_RIGHT, false );
 
     // default axis
-    return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL,
-        DiagramAxis.POSITION_LEFT, false );
+    return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT,
+        false );
   }
 
-  public static void applyXMLTemplate( final DiagView view, final ObsdiagviewType xml,
-      final URL context, final boolean synchron, final MultiStatus status )
+  public static void applyXMLTemplate( final DiagView view, final ObsdiagviewType xml, final URL context,
+      final boolean synchron, final MultiStatus status )
   {
     view.removeAllItems();
 
@@ -346,13 +339,13 @@ public class DiagViewUtils
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation)it.next();
-      
+
       // check, if href is ok
       final String href = tobs.getHref();
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( href.indexOf( ExporterHelper.MSG_TOKEN_NOT_FOUND ) != -1 )
         continue;
-      
+
       final DiagViewCurveXMLLoader loader = new DiagViewCurveXMLLoader( view, tobs, context, synchron );
       status.add( loader.getResult() );
     }

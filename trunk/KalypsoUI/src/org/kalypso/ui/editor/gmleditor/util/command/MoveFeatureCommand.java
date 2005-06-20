@@ -70,8 +70,8 @@ public class MoveFeatureCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, String propName,
-      Object moveItem, int type )
+  public MoveFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, String propName, Object moveItem,
+      int type )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -134,8 +134,8 @@ public class MoveFeatureCommand implements ICommand
       }
       final List feList = new ArrayList();
       feList.add( m_parentFeature );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
-          m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
     }
   }
 
@@ -175,8 +175,8 @@ public class MoveFeatureCommand implements ICommand
 
       final List feList = new ArrayList();
       feList.add( m_parentFeature );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace,
-          m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
     }
   }
 }

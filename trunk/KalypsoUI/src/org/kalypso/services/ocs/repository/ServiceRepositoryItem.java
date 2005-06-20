@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.ocs.repository;
 
 import java.rmi.RemoteException;
@@ -63,8 +63,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
 
   private final IRepository m_rep;
 
-  public ServiceRepositoryItem( final IObservationService srv,
-      final ItemBean bean, final ServiceRepositoryItem parent,
+  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent,
       final IRepository rep )
   {
     m_rep = rep;
@@ -76,7 +75,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_bean.getName();
   }
@@ -84,7 +83,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( )
+  public IRepositoryItem getParent()
   {
     return m_parent;
   }
@@ -92,7 +91,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren() throws RepositoryException
   {
     try
     {
@@ -107,7 +106,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
     try
     {
@@ -154,7 +153,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return getName();
   }
@@ -162,7 +161,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_bean.getId();
   }
@@ -170,7 +169,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return m_rep;
   }

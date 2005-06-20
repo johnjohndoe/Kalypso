@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
@@ -71,10 +71,10 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private Collection m_modlistener = new ArrayList();
 
-//  public CheckboxFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
-//  {
-//    this( workspace, null, ftp );
-//  }
+  //  public CheckboxFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
+  //  {
+  //    this( workspace, null, ftp );
+  //  }
 
   public CheckboxFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
   {
@@ -95,14 +95,14 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
-   *      int)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
   public Control createControl( final Composite parent, final int style )
   {
     m_checkbox = new Button( parent, style | SWT.CHECK );
 
-    m_checkbox.addSelectionListener( new SelectionListener() {
+    m_checkbox.addSelectionListener( new SelectionListener()
+    {
 
       public void widgetSelected( SelectionEvent e )
       {
@@ -114,8 +114,9 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
       {
         fireChange( getChange() );
         fireModified();
-      }} );
-    
+      }
+    } );
+
     updateControl();
 
     return m_checkbox;
@@ -206,7 +207,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   {
     m_modlistener.remove( l );
   }
-  
+
   protected void fireModified()
   {
     for( final Iterator modIt = m_modlistener.iterator(); modIt.hasNext(); )

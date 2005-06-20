@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,13 +56,11 @@ import org.kalypso.ui.repository.view.ObservationChooser;
 /**
  * @author schlienger
  */
-public class ReloadAction extends AbstractRepositoryExplorerAction implements
-    ISelectionChangedListener
+public class ReloadAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
   public ReloadAction( final ObservationChooser explorer )
   {
-    super( explorer, "Aktualisieren",
-        ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD,
+    super( explorer, "Aktualisieren", ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD,
         "Aktualisiert den aktuellen Repository" );
 
     explorer.addSelectionChangedListener( this );
@@ -73,10 +71,9 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run( )
+  public void run()
   {
-    final IRepository rep = getExplorer().isRepository(
-        getExplorer().getSelection() );
+    final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
 
@@ -88,7 +85,7 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements
 
         // Important: clear the cache
         ObservationCache.clearCache();
-        
+
         try
         {
           rep.reload();
@@ -124,7 +121,7 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements
     setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     getExplorer().removeSelectionChangedListener( this );
   }

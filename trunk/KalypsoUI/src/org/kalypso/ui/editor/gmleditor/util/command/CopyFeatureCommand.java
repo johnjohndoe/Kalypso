@@ -40,9 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger

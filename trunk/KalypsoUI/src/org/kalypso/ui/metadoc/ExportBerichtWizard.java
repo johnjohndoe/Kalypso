@@ -79,16 +79,13 @@ public class ExportBerichtWizard extends Wizard
 
   protected final IExportableDocument m_document2export;
 
-  public ExportBerichtWizard( final IExportableDocument document2export,
-      final Document doc )
+  public ExportBerichtWizard( final IExportableDocument document2export, final Document doc )
   {
     m_document2export = document2export;
     m_docBean = doc;
 
-    final IDialogSettings workbenchSettings = UIPlugin.getDefault()
-        .getDialogSettings();
-    IDialogSettings section = workbenchSettings
-        .getSection( "ExportTableWizard" );//$NON-NLS-1$
+    final IDialogSettings workbenchSettings = UIPlugin.getDefault().getDialogSettings();
+    IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
     if( section == null )
       section = workbenchSettings.addNewSection( "ExportTableWizard" );//$NON-NLS-1$
     setDialogSettings( section );
@@ -103,14 +100,13 @@ public class ExportBerichtWizard extends Wizard
     int count = 0;
     for( final Iterator iter = metadata.entrySet().iterator(); iter.hasNext(); )
     {
-      final Map.Entry entry = (Entry) iter.next();
+      final Map.Entry entry = (Entry)iter.next();
 
       final String name = entry.getKey().toString();
 
       final String[] splits = entry.getValue().toString().split( ";" );
 
-      final String xmltype = splits.length == 0 ? String.class.getName()
-          : splits[0];
+      final String xmltype = splits.length == 0 ? String.class.getName() : splits[0];
 
       final String value = splits.length >= 2 ? splits[1] : null;
 
@@ -119,52 +115,46 @@ public class ExportBerichtWizard extends Wizard
       try
       {
         typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
-        realValue = value == null ? null : Mapper.mapXMLValueToJava( value,
-            typename );
+        realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
         typename = "java.lang.String";
       }
-      ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename,
-          false ) );
+      ftpColl.add( FeatureFactory.createFeatureTypeProperty( name, typename, false ) );
       fpColl.add( FeatureFactory.createFeatureProperty( name, realValue ) );
 
       ints[count++] = 1;
     }
 
-    final FeatureTypeProperty[] ftps = (FeatureTypeProperty[]) ftpColl
-        .toArray( new FeatureTypeProperty[ftpColl.size()] );
-    final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null,
-        ftps, ints, ints, null, new HashMap() );
+    final FeatureTypeProperty[] ftps = (FeatureTypeProperty[])ftpColl.toArray( new FeatureTypeProperty[ftpColl.size()] );
+    final FeatureType ft = FeatureFactory.createFeatureType( "docbean", null, ftps, ints, ints, null, new HashMap() );
 
-    m_feature = FeatureFactory
-        .createFeature( "0", ft, (FeatureProperty[]) fpColl
-            .toArray( new FeatureProperty[fpColl.size()] ) );
+    m_feature = FeatureFactory.createFeature( "0", ft, (FeatureProperty[])fpColl.toArray( new FeatureProperty[fpColl
+        .size()] ) );
   }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
-  public void addPages( )
+  public void addPages()
   {
     super.addPages();
 
-    m_featurePage = new FeaturePage( "featurePage", "Metadaten editieren",
-        ImageProvider.IMAGE_UTIL_BERICHT_WIZ, true, null, m_feature );
+    m_featurePage = new FeaturePage( "featurePage", "Metadaten editieren", ImageProvider.IMAGE_UTIL_BERICHT_WIZ, true,
+        null, m_feature );
 
     addPage( m_featurePage );
   }
 
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     final Document docBean = commitData();
 
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
-      public void run( IProgressMonitor monitor )
-          throws InvocationTargetException
+      public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
         FileOutputStream outs = null;
         try
@@ -190,7 +180,7 @@ public class ExportBerichtWizard extends Wizard
     return true;
   }
 
-  protected Document commitData( )
+  protected Document commitData()
   {
     final Collection changes = new ArrayList();
     m_featurePage.collectChanges( changes );
@@ -198,7 +188,7 @@ public class ExportBerichtWizard extends Wizard
     final Map metadata = docBean.getMetadata();
     for( final Iterator iter = changes.iterator(); iter.hasNext(); )
     {
-      final FeatureChange fc = (FeatureChange) iter.next();
+      final FeatureChange fc = (FeatureChange)iter.next();
 
       final Object newValue = Mapper.mapJavaValueToXml( fc.newValue );
       metadata.put( fc.property, newValue );

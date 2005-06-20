@@ -91,7 +91,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
    */
   public void collectChanges( Collection c )
   {
-      //no changes
+  //no changes
   }
 
   /**
@@ -120,8 +120,8 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
     {
       getShell().setText( "RectifiedGridDomain properties" );
 
-      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
-          | SWT.V_SCROLL | SWT.BORDER );
+      final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL
+          | SWT.BORDER );
 
       // don't forget this line!
       scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -145,8 +145,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       return scrolledComposite;
     }
 
-    private Composite createControl( Composite scrolledComposite, int style )
-        throws RemoteException, Exception
+    private Composite createControl( Composite scrolledComposite, int style ) throws RemoteException, Exception
     {
 
       Composite mainComposite = new Composite( scrolledComposite, style );
@@ -162,8 +161,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       GridLayout originLayout = new GridLayout();
       originLayout.numColumns = 2;
       originGroup.setLayout( originLayout );
-      originGroup
-          .setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
+      originGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
       originGroup.setText( "Origin" );
       Label cooLabel = new Label( originGroup, SWT.NONE );
       cooLabel.setText( "CoordinateSystem: " );
@@ -182,8 +180,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       GridLayout gridRangeLayout = new GridLayout();
       gridRangeLayout.numColumns = 2;
       gridRangeGroup.setLayout( gridRangeLayout );
-      gridRangeGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL
-          | GridData.FILL_BOTH ) );
+      gridRangeGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
       gridRangeGroup.setText( "GridRange" );
       Label colLabel = new Label( gridRangeGroup, SWT.NONE );
       colLabel.setText( "Number of columns: " );
@@ -198,8 +195,7 @@ public class RectifiedGridDomainFeatureDialog implements IFeatureDialog
       GridLayout offsetLayout = new GridLayout();
       offsetLayout.numColumns = 2;
       offsetGroup.setLayout( offsetLayout );
-      offsetGroup
-          .setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
+      offsetGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH ) );
       offsetGroup.setText( "Offset" );
       Label offsetXLabel = new Label( offsetGroup, SWT.NONE );
       offsetXLabel.setText( "Offset X: " );

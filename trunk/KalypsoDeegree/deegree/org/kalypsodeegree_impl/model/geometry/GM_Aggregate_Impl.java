@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -115,8 +115,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * merges this aggregation with another one
    * 
    * @exception GM_Exception
-   *              a GM_Exception will be thrown if the submitted isn't the same
-   *              type as the recieving one.
+   *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
   public void merge( GM_Aggregate aggregate ) throws GM_Exception
   {
@@ -144,9 +143,8 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   /**
-   * inserts a GM_Object in the aggregation. all elements with an index equal or
-   * larger index will be moved. if index is larger then getSize() - 1 or
-   * smaller then 0 or gmo equals null an exception will be thrown.
+   * inserts a GM_Object in the aggregation. all elements with an index equal or larger index will be moved. if index is
+   * larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
    * 
    * @param gmo
    *          GM_Object to insert.
@@ -162,8 +160,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     if( gmo == null )
     {
-      throw new GM_Exception( "gmo == null. it isn't possible to insert a value"
-          + " that equals null!" );
+      throw new GM_Exception( "gmo == null. it isn't possible to insert a value" + " that equals null!" );
     }
 
     aggregate.add( index, gmo );
@@ -172,10 +169,8 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   /**
-   * sets the submitted GM_Object at the submitted index. the element at the
-   * position <code>index</code> will be removed. if index is larger then
-   * getSize() - 1 or smaller then 0 or gmo equals null an exception will be
-   * thrown.
+   * sets the submitted GM_Object at the submitted index. the element at the position <code>index</code> will be
+   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
    * 
    * @param gmo
    *          GM_Object to set.
@@ -191,8 +186,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     if( gmo == null )
     {
-      throw new GM_Exception( "gmo == null. it isn't possible to set a value"
-          + " that equals null!" );
+      throw new GM_Exception( "gmo == null. it isn't possible to set a value" + " that equals null!" );
     }
 
     aggregate.set( index, gmo );
@@ -231,8 +225,8 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   /**
-   * removes the GM_Object at the submitted index from the aggregation. if index
-   * is larger then getSize() - 1 or smaller then 0 an exception will be thrown.
+   * removes the GM_Object at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
+   * then 0 an exception will be thrown.
    * 
    * @return the removed GM_Object
    */
@@ -266,8 +260,8 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   /**
-   * returns the GM_Object at the submitted index. if index is larger then
-   * getSize() - 1 or smaller then 0 an exception will be thrown.
+   * returns the GM_Object at the submitted index. if index is larger then getSize() - 1 or smaller then 0 an exception
+   * will be thrown.
    */
   public GM_Object getObjectAt( int index )
   {
@@ -329,8 +323,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   /**
-   * translate the point by the submitted values. the <code>dz</code>- value
-   * will be ignored.
+   * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
   public void translate( double[] d )
   {
@@ -389,11 +382,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    */
   public boolean intersects( GM_Object gmo )
   {

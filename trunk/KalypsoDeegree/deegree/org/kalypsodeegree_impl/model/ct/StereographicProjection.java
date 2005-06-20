@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
@@ -69,15 +69,12 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Projection stéréographique. Les directions à partir du point central sont
- * vrais, mais les aires et les longueurs deviennent de plus en plus déformées à
- * mesure que l'on s'éloigne du centre. Cette projection est utilisée pour
- * représenter des régions polaires. Elle peut être appropriée pour d'autres
- * régions ayant une forme circulaire. <br>
+ * Projection stéréographique. Les directions à partir du point central sont vrais, mais les aires et les longueurs
+ * deviennent de plus en plus déformées à mesure que l'on s'éloigne du centre. Cette projection est utilisée pour
+ * représenter des régions polaires. Elle peut être appropriée pour d'autres régions ayant une forme circulaire. <br>
  * <br>
  * 
- * Référence: John P. Snyder (Map Projections - A Working Manual, U.S.
- * Geological Survey Professional Paper 1395, 1987)
+ * Référence: John P. Snyder (Map Projections - A Working Manual, U.S. Geological Survey Professional Paper 1395, 1987)
  * 
  * @version 1.0
  * @author André Gosselin
@@ -86,8 +83,7 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 final class StereographicProjection extends PlanarProjection
 {
   /**
-   * Nombre maximal d'itérations permises lors du calcul de la projection
-   * inverse.
+   * Nombre maximal d'itérations permises lors du calcul de la projection inverse.
    */
   private static final int MAX_ITER = 10;
 
@@ -116,17 +112,14 @@ final class StereographicProjection extends PlanarProjection
   private static final int ELLIPSOIDAL_OBLIQUE = 7;
 
   /**
-   * Projection mode. It must be one of the following constants:
-   * {@link #SPHERICAL_NORTH},{@link #SPHERICAL_SOUTH},
-   * {@link #ELLIPSOIDAL_NORTH},{@link #ELLIPSOIDAL_SOUTH}.
-   * {@link #SPHERICAL_OBLIQUE},{@link #SPHERICAL_EQUATORIAL},
-   * {@link #ELLIPSOIDAL_OBLIQUE}or {@link #ELLIPSOIDAL_EQUATORIAL}.
+   * Projection mode. It must be one of the following constants: {@link #SPHERICAL_NORTH},{@link #SPHERICAL_SOUTH},
+   * {@link #ELLIPSOIDAL_NORTH},{@link #ELLIPSOIDAL_SOUTH}.{@link #SPHERICAL_OBLIQUE},
+   * {@link #SPHERICAL_EQUATORIAL},{@link #ELLIPSOIDAL_OBLIQUE}or {@link #ELLIPSOIDAL_EQUATORIAL}.
    */
   private final int mode;
 
   /**
-   * Global scale factor. Value <code>ak0</code> is equals to
-   * <code>{@link #a}*k0</code>.
+   * Global scale factor. Value <code>ak0</code> is equals to <code>{@link #a}*k0</code>.
    */
   private final double k0, ak0;
 
@@ -136,8 +129,7 @@ final class StereographicProjection extends PlanarProjection
   private final double sinphi0, cosphi0, chi1, sinChi1, cosChi1;
 
   /**
-   * Latitude of true scale, in radians. Used for {@link #toString}
-   * implementation.
+   * Latitude of true scale, in radians. Used for {@link #toString}implementation.
    */
   private final double latitudeTrueScale;
 
@@ -162,21 +154,20 @@ final class StereographicProjection extends PlanarProjection
    * @param polar
    *          <code>true</code> for polar projection.
    * @param auto
-   *          <code>true</code> if projection (polar vs oblique) can be
-   *          selected automatically.
+   *          <code>true</code> if projection (polar vs oblique) can be selected automatically.
    * @throws MissingParameterException
    *           if a mandatory parameter is missing.
    */
-  private StereographicProjection( final Projection parameters, final boolean polar,
-      final boolean auto ) throws MissingParameterException
+  private StereographicProjection( final Projection parameters, final boolean polar, final boolean auto )
+      throws MissingParameterException
   {
     //////////////////////////
     //   Fetch parameters //
     //////////////////////////
     super( parameters );
     final double defaultLatitude = parameters.getValue( "latitude_of_origin", polar ? 90 : 0 );
-    latitudeTrueScale = Math.abs( latitudeToRadians( parameters.getValue( "latitude_true_scale",
-        defaultLatitude ), true ) );
+    latitudeTrueScale = Math.abs( latitudeToRadians( parameters.getValue( "latitude_true_scale", defaultLatitude ),
+        true ) );
 
     //////////////////////////
     //  Compute constants //
@@ -235,9 +226,8 @@ final class StereographicProjection extends PlanarProjection
     {
       // Should not happen.
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new //
-       * assertionError(mode); /*----- END OF JDK 1.4 DEPENDENCIES --- throw new
-       * Error(String.valueOf(mode)); ------- END OF JDK 1.3 FALLBACK -------
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new // assertionError(mode); /*----- END OF JDK 1.4 DEPENDENCIES
+       * --- throw new Error(String.valueOf(mode)); ------- END OF JDK 1.3 FALLBACK -------
        */
     }
 
@@ -247,8 +237,7 @@ final class StereographicProjection extends PlanarProjection
       if( Math.abs( latitudeTrueScale - ( Math.PI / 2 ) ) >= EPS )
       {
         final double t = Math.sin( latitudeTrueScale );
-        k0 = ( Math.cos( latitudeTrueScale ) / ( Math.sqrt( 1 - es * t * t ) ) )
-            / tsfn( latitudeTrueScale, t );
+        k0 = ( Math.cos( latitudeTrueScale ) / ( Math.sqrt( 1 - es * t * t ) ) ) / tsfn( latitudeTrueScale, t );
       }
       else
       {
@@ -294,8 +283,7 @@ final class StereographicProjection extends PlanarProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
   protected Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException
   {
@@ -311,9 +299,8 @@ final class StereographicProjection extends PlanarProjection
     {
       // Should not happen.
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new //
-       * assertionError(mode); /*----- END OF JDK 1.4 DEPENDENCIES --- throw new
-       * Error(String.valueOf(mode)); ------- END OF JDK 1.3 FALLBACK -------
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new // assertionError(mode); /*----- END OF JDK 1.4 DEPENDENCIES
+       * --- throw new Error(String.valueOf(mode)); ------- END OF JDK 1.3 FALLBACK -------
        */
     }
     case ELLIPSOIDAL_NORTH:
@@ -334,8 +321,7 @@ final class StereographicProjection extends PlanarProjection
     {
       if( !( Math.abs( 1 + sinlat ) >= TOL ) )
       {
-        throw new TransformException( Resources
-            .format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
+        throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
       // (21-8)
       final double f = ak0 * coslat / ( 1 + sinlat );// == tan (pi/4 - phi/2)
@@ -347,8 +333,7 @@ final class StereographicProjection extends PlanarProjection
     {
       if( !( Math.abs( 1 - sinlat ) >= TOL ) )
       {
-        throw new TransformException( Resources
-            .format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
+        throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
       // (21-12)
       final double f = ak0 * coslat / ( 1 - sinlat );// == tan (pi/4 + phi/2)
@@ -361,8 +346,7 @@ final class StereographicProjection extends PlanarProjection
       double f = 1.0 + coslat * coslon;
       if( !( f >= TOL ) )
       {
-        throw new TransformException( Resources
-            .format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
+        throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
       f = ak0 / f;
       x = f * coslat * sinlon;
@@ -374,8 +358,7 @@ final class StereographicProjection extends PlanarProjection
       double f = 1.0 + sinphi0 * sinlat + cosphi0 * coslat * coslon; // (21-4)
       if( !( f >= TOL ) )
       {
-        throw new TransformException( Resources
-            .format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
+        throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
       f = ak0 / f;
       x = f * coslat * sinlon; // (21-2)
@@ -414,11 +397,9 @@ final class StereographicProjection extends PlanarProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
-  protected Point2D inverseTransform( double x, double y, final Point2D ptDst )
-      throws TransformException
+  protected Point2D inverseTransform( double x, double y, final Point2D ptDst ) throws TransformException
   {
     x /= a;
     y /= a;
@@ -429,9 +410,8 @@ final class StereographicProjection extends PlanarProjection
     {
       // Should not happen.
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new //
-       * assertionError(mode); /*----- END OF JDK 1.4 DEPENDENCIES --- throw new
-       * Error(String.valueOf(mode)); ------- END OF JDK 1.3 FALLBACK -------
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new // assertionError(mode); /*----- END OF JDK 1.4 DEPENDENCIES
+       * --- throw new Error(String.valueOf(mode)); ------- END OF JDK 1.3 FALLBACK -------
        */
     }
     case SPHERICAL_NORTH:
@@ -442,8 +422,7 @@ final class StereographicProjection extends PlanarProjection
     case SPHERICAL_SOUTH:
     {
       // (20-17) call atan2(x,y) to properly deal with y==0
-      x = ( Math.abs( x ) < TOL && Math.abs( y ) < TOL ) ? centralMeridian : Math.atan2( x, y )
-          + centralMeridian;
+      x = ( Math.abs( x ) < TOL && Math.abs( y ) < TOL ) ? centralMeridian : Math.atan2( x, y ) + centralMeridian;
       if( Math.abs( rho ) < TOL )
         y = centralLatitude;
       else
@@ -471,8 +450,7 @@ final class StereographicProjection extends PlanarProjection
         y = Math.asin( y * sinc / rho ); // (20-14) with phi1=0
         final double t = x * sinc;
         final double ct = rho * cosc;
-        x = ( Math.abs( t ) < TOL && Math.abs( ct ) < TOL ) ? centralMeridian : Math.atan2( t, ct )
-            + centralMeridian;
+        x = ( Math.abs( t ) < TOL && Math.abs( ct ) < TOL ) ? centralMeridian : Math.atan2( t, ct ) + centralMeridian;
       }
       break;
     }
@@ -491,8 +469,7 @@ final class StereographicProjection extends PlanarProjection
         final double ct = rho * cosphi0 * cosc - y * sinphi0 * sinc; // (20-15)
         final double t = x * sinc;
         y = Math.asin( cosc * sinphi0 + y * sinc * cosphi0 / rho );
-        x = ( Math.abs( ct ) < TOL && Math.abs( t ) < TOL ) ? centralMeridian : Math.atan2( t, ct )
-            + centralMeridian;
+        x = ( Math.abs( ct ) < TOL && Math.abs( t ) < TOL ) ? centralMeridian : Math.atan2( t, ct ) + centralMeridian;
       }
       break;
     }
@@ -512,8 +489,7 @@ final class StereographicProjection extends PlanarProjection
       for( int i = MAX_ITER; --i >= 0; )
       {
         final double esinphi = e * Math.sin( phi0 );
-        final double phi = ( Math.PI / 2 ) - 2.0
-            * Math.atan( t * Math.pow( ( 1 - esinphi ) / ( 1 + esinphi ), halfe ) );
+        final double phi = ( Math.PI / 2 ) - 2.0 * Math.atan( t * Math.pow( ( 1 - esinphi ) / ( 1 + esinphi ), halfe ) );
         if( Math.abs( phi - phi0 ) < TOL )
         {
           x = ( Math.abs( rho ) < TOL ) ? centralMeridian : Math.atan2( x, -y ) + centralMeridian;
@@ -533,8 +509,8 @@ final class StereographicProjection extends PlanarProjection
       final double ce = 2.0 * Math.atan2( rho * cosChi1, k0 );
       final double cosce = Math.cos( ce );
       final double since = Math.sin( ce );
-      final double chi = ( Math.abs( rho ) >= TOL ) ? Math.asin( cosce * sinChi1
-          + ( y * since * cosChi1 / rho ) ) : chi1;
+      final double chi = ( Math.abs( rho ) >= TOL ) ? Math.asin( cosce * sinChi1 + ( y * since * cosChi1 / rho ) )
+          : chi1;
       final double t = Math.tan( Math.PI / 4.0 + chi / 2.0 );
       /*
        * Compute lat using iterative technique.
@@ -544,13 +520,11 @@ final class StereographicProjection extends PlanarProjection
       for( int i = MAX_ITER; --i >= 0; )
       {
         final double esinphi = e * Math.sin( phi0 );
-        final double phi = 2.0
-            * Math.atan( t * Math.pow( ( 1 + esinphi ) / ( 1 - esinphi ), halfe ) )
-            - ( Math.PI / 2 );
+        final double phi = 2.0 * Math.atan( t * Math.pow( ( 1 + esinphi ) / ( 1 - esinphi ), halfe ) ) - ( Math.PI / 2 );
         if( Math.abs( phi - phi0 ) < TOL )
         {
-          x = ( Math.abs( rho ) < TOL ) ? centralMeridian : Math.atan2( x * since, rho * cosChi1
-              * cosce - y * sinChi1 * since )
+          x = ( Math.abs( rho ) < TOL ) ? centralMeridian : Math.atan2( x * since, rho * cosChi1 * cosce - y * sinChi1
+              * since )
               + centralMeridian;
           y = phi;
           break choice;
@@ -575,8 +549,7 @@ final class StereographicProjection extends PlanarProjection
   private double ssfn( double phi, double sinphi )
   {
     sinphi *= e;
-    return Math.tan( ( Math.PI / 4.0 ) + phi / 2.0 )
-        * Math.pow( ( 1 - sinphi ) / ( 1 + sinphi ), e / 2.0 );
+    return Math.tan( ( Math.PI / 4.0 ) + phi / 2.0 ) * Math.pow( ( 1 - sinphi ) / ( 1 + sinphi ), e / 2.0 );
   }
 
   /**
@@ -610,8 +583,7 @@ final class StereographicProjection extends PlanarProjection
   }
 
   /**
-   * Implémentation de la partie entre crochets de la chaîne retournée par
-   * {@link #toString()}.
+   * Implémentation de la partie entre crochets de la chaîne retournée par {@link #toString()}.
    */
   void toString( final StringBuffer buffer )
   {
@@ -628,20 +600,18 @@ final class StereographicProjection extends PlanarProjection
   static final class Provider extends MapProjection.Provider
   {
     /**
-     * <code>true</code> for polar stereographic, or <code>false</code> for
-     * equatorial and oblique stereographic.
+     * <code>true</code> for polar stereographic, or <code>false</code> for equatorial and oblique stereographic.
      */
     private final boolean polar;
 
     /**
-     * <code>true</code> if polar/oblique/equatorial stereographic can be
-     * automatically choosen.
+     * <code>true</code> if polar/oblique/equatorial stereographic can be automatically choosen.
      */
     private final boolean auto;
 
     /**
-     * Construct a new provider. The type (polar, oblique or equatorial) will be
-     * choosen automatically according the latitude or origin.
+     * Construct a new provider. The type (polar, oblique or equatorial) will be choosen automatically according the
+     * latitude or origin.
      */
     public Provider()
     {
@@ -655,13 +625,12 @@ final class StereographicProjection extends PlanarProjection
      * Construct an object for polar or oblique stereographic.
      * 
      * @param polar
-     *          <code>true</code> for polar stereographic, or
-     *          <code>false</code> for equatorial and oblique stereographic.
+     *          <code>true</code> for polar stereographic, or <code>false</code> for equatorial and oblique
+     *          stereographic.
      */
     public Provider( final boolean polar )
     {
-      super( polar ? "Polar_Stereographic" : "Oblique_Stereographic",
-          ResourceKeys.STEREOGRAPHIC_PROJECTION );
+      super( polar ? "Polar_Stereographic" : "Oblique_Stereographic", ResourceKeys.STEREOGRAPHIC_PROJECTION );
       put( "latitude_true_scale", polar ? 90.0 : 0.0, LATITUDE_RANGE );
       this.polar = polar;
       this.auto = false;

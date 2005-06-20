@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
@@ -70,19 +70,15 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Projection cylindrique de Mercator. Les parallèles et les méridients
- * apparaissent comme des lignes droites et se croisent à angles droits; cette
- * projection produit donc des cartes rectangulaires. L'échelle est vrai le long
- * de l'équateur (par défaut) ou le long de deux parallèles équidistants de
- * l'équateur. Cette projection est utilisée pour représenter des régions près
- * de l'équateur. Elle est aussi souvent utilisée pour la navigation maritime
- * parce que toutes les lignes droites sur la carte sont des lignes
- * <em>loxodromiques</em>, c'est-à-dire qu'un navire suivant cette ligne
- * garderait un azimuth constant sur son compas. <br>
+ * Projection cylindrique de Mercator. Les parallèles et les méridients apparaissent comme des lignes droites et se
+ * croisent à angles droits; cette projection produit donc des cartes rectangulaires. L'échelle est vrai le long de
+ * l'équateur (par défaut) ou le long de deux parallèles équidistants de l'équateur. Cette projection est utilisée pour
+ * représenter des régions près de l'équateur. Elle est aussi souvent utilisée pour la navigation maritime parce que
+ * toutes les lignes droites sur la carte sont des lignes <em>loxodromiques</em>, c'est-à-dire qu'un navire suivant
+ * cette ligne garderait un azimuth constant sur son compas. <br>
  * <br>
  * 
- * Référence: John P. Snyder (Map Projections - A Working Manual, U.S.
- * Geological Survey Professional Paper 1395, 1987)
+ * Référence: John P. Snyder (Map Projections - A Working Manual, U.S. Geological Survey Professional Paper 1395, 1987)
  * 
  * @version 1.0
  * @author André Gosselin
@@ -91,8 +87,7 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 final class MercatorProjection extends CylindricalProjection
 {
   /**
-   * Global scale factor. Value <code>ak0</code> is equals to
-   * <code>{@link #a}*k0</code>.
+   * Global scale factor. Value <code>ak0</code> is equals to <code>{@link #a}*k0</code>.
    */
   private final double ak0;
 
@@ -131,20 +126,18 @@ final class MercatorProjection extends CylindricalProjection
    */
   public String getName( final Locale locale )
   {
-    return Resources.getResources( locale )
-        .getString( ResourceKeys.CYLINDRICAL_MERCATOR_PROJECTION );
+    return Resources.getResources( locale ).getString( ResourceKeys.CYLINDRICAL_MERCATOR_PROJECTION );
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
   protected Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException
   {
     if( Math.abs( y ) > ( Math.PI / 2 - EPS ) )
     {
-      throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1,
-          new Latitude( Math.toDegrees( y ) ) ) );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1, new Latitude( Math
+          .toDegrees( y ) ) ) );
     }
     x = ( x - centralMeridian ) * ak0;
     if( isSpherical )
@@ -164,11 +157,9 @@ final class MercatorProjection extends CylindricalProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
-  protected Point2D inverseTransform( double x, double y, final Point2D ptDst )
-      throws TransformException
+  protected Point2D inverseTransform( double x, double y, final Point2D ptDst ) throws TransformException
   {
     x = x / ak0 + centralMeridian;
     y = Math.exp( -y / ak0 );

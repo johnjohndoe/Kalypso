@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -75,9 +75,9 @@ public abstract class ComboPanel
   protected String items[];
 
   protected int selection_index = -1;
-  
+
   protected int style = SWT.NULL;
-  
+
   protected int comboBox_width = 70;
 
   protected ComboPanel( Composite parent, String m_label )

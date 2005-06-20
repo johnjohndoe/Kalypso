@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -111,30 +111,26 @@ public class Projection extends Info
    * @param classification
    *          Classification string for projection (e.g. "Transverse_Mercator").
    * @param ellipsoid
-   *          Ellipsoid parameter. If non-null, then <code>"semi_major"</code>
-   *          and <code>"semi_minor"</code> parameters will be set according.
+   *          Ellipsoid parameter. If non-null, then <code>"semi_major"</code> and <code>"semi_minor"</code>
+   *          parameters will be set according.
    * @param centre
-   *          Central meridian and latitude of origin, in degrees. If non-null,
-   *          then <code>"central_meridian"</code> and
-   *          <code>"latitude_of_origin"</code> will be set according.
+   *          Central meridian and latitude of origin, in degrees. If non-null, then <code>"central_meridian"</code>
+   *          and <code>"latitude_of_origin"</code> will be set according.
    * @param translation
-   *          False easting and northing, in metres. If non-null, then
-   *          <code>"false_easting"</code> and <code>"false_northing"</code>
-   *          will be set according.
+   *          False easting and northing, in metres. If non-null, then <code>"false_easting"</code> and
+   *          <code>"false_northing"</code> will be set according.
    */
-  public Projection( final String name, final String classification, final Ellipsoid ellipsoid,
-      final Point2D centre, final Point2D translation, final double scaleFactor )
+  public Projection( final String name, final String classification, final Ellipsoid ellipsoid, final Point2D centre,
+      final Point2D translation, final double scaleFactor )
   {
     super( name );
     ensureNonNull( "classification", classification );
     this.classification = classification;
-    this.parameters = init( getParameterList( classification ), ellipsoid, centre, translation,
-        scaleFactor );
+    this.parameters = init( getParameterList( classification ), ellipsoid, centre, translation, scaleFactor );
   }
 
   /**
-   * Creates a projection. The set of parameters (<code>parameters</code>)
-   * may be queried with
+   * Creates a projection. The set of parameters (<code>parameters</code>) may be queried with
    * <code>{@link org.kalypsodeegree_impl.model.ct.MathTransformFactory#getMathTransformProvider
    *              MathTransformFactory.getMathTransformProvider}(classification).{@link
    *              MathTransformProvider#getParameterList getParameterList()}</code>.
@@ -175,14 +171,12 @@ public class Projection extends Info
   }
 
   /**
-   * Returns a parameter list for the specified classification. If there is no
-   * special parameter descriptor for the specified classification, then a
-   * default descriptor is used.
+   * Returns a parameter list for the specified classification. If there is no special parameter descriptor for the
+   * specified classification, then a default descriptor is used.
    */
   static ParameterList getParameterList( final String classification )
   {
-    return Naming.PROJECTIONS.getParameterList( classification,
-        MathTransformProvider.DEFAULT_PROJECTION_DESCRIPTOR );
+    return Naming.PROJECTIONS.getParameterList( classification, MathTransformProvider.DEFAULT_PROJECTION_DESCRIPTOR );
   }
 
   /**
@@ -191,28 +185,24 @@ public class Projection extends Info
    * @param parameters
    *          The parameters to initialize.
    * @param ellipsoid
-   *          Ellipsoid parameter. If non-null, then <code>"semi_major"</code>
-   *          and <code>"semi_minor"</code> parameters will be set according.
+   *          Ellipsoid parameter. If non-null, then <code>"semi_major"</code> and <code>"semi_minor"</code>
+   *          parameters will be set according.
    * @param centre
-   *          Central meridian and latitude of origin, in degrees. If non-null,
-   *          then <code>"central_meridian"</code> and
-   *          <code>"latitude_of_origin"</code> will be set according.
+   *          Central meridian and latitude of origin, in degrees. If non-null, then <code>"central_meridian"</code>
+   *          and <code>"latitude_of_origin"</code> will be set according.
    * @param translation
-   *          False easting and northing, in metres. If non-null, then
-   *          <code>"false_easting"</code> and <code>"false_northing"</code>
-   *          will be set according.
+   *          False easting and northing, in metres. If non-null, then <code>"false_easting"</code> and
+   *          <code>"false_northing"</code> will be set according.
    * @return <code>parameters</code> for convenience.
    */
-  static ParameterList init( final ParameterList parameters, final Ellipsoid ellipsoid,
-      final Point2D centre, final Point2D translation, final double scaleFactor )
+  static ParameterList init( final ParameterList parameters, final Ellipsoid ellipsoid, final Point2D centre,
+      final Point2D translation, final double scaleFactor )
   {
     if( ellipsoid != null )
     {
       final Unit axisUnit = ellipsoid.getAxisUnit();
-      parameters.setParameter( "semi_major", Unit.METRE.convert( ellipsoid.getSemiMajorAxis(),
-          axisUnit ) );
-      parameters.setParameter( "semi_minor", Unit.METRE.convert( ellipsoid.getSemiMinorAxis(),
-          axisUnit ) );
+      parameters.setParameter( "semi_major", Unit.METRE.convert( ellipsoid.getSemiMajorAxis(), axisUnit ) );
+      parameters.setParameter( "semi_minor", Unit.METRE.convert( ellipsoid.getSemiMinorAxis(), axisUnit ) );
     }
     if( centre != null )
     {
@@ -278,8 +268,8 @@ public class Projection extends Info
   }
 
   /**
-   * Convenience method for fetching a parameter value. Search is
-   * case-insensitive and ignore leading and trailing blanks.
+   * Convenience method for fetching a parameter value. Search is case-insensitive and ignore leading and trailing
+   * blanks.
    * 
    * @param name
    *          Parameter to look for.
@@ -293,16 +283,14 @@ public class Projection extends Info
   }
 
   /**
-   * Convenience method for fetching a parameter value. Search is
-   * case-insensitive and ignore leading and trailing blanks.
+   * Convenience method for fetching a parameter value. Search is case-insensitive and ignore leading and trailing
+   * blanks.
    * 
    * @param name
    *          Parameter to look for.
    * @param defaultValue
-   *          Default value to return if parameter <code>name</code> is not
-   *          found.
-   * @return The parameter value, or <code>defaultValue</code> if the
-   *         parameter <code>name</code> is not found.
+   *          Default value to return if parameter <code>name</code> is not found.
+   * @return The parameter value, or <code>defaultValue</code> if the parameter <code>name</code> is not found.
    */
   public double getValue( final String name, final double defaultValue )
   {
@@ -310,29 +298,25 @@ public class Projection extends Info
   }
 
   /**
-   * Convenience method for fetching a parameter value. Search is
-   * case-insensitive and ignore leading and trailing blanks.
+   * Convenience method for fetching a parameter value. Search is case-insensitive and ignore leading and trailing
+   * blanks.
    * 
    * @param parameters
    *          User-suplied parameters.
    * @param name
    *          Parameter to look for.
    * @param defaultValue
-   *          Default value to return if parameter <code>name</code> is not
-   *          found.
+   *          Default value to return if parameter <code>name</code> is not found.
    * @param required
-   *          <code>true</code> if the parameter is required (in which case
-   *          <code>defaultValue</code> is ignored), or <code>false</code>
-   *          otherwise.
-   * @return The parameter value, or <code>defaultValue</code> if the
-   *         parameter is not found and <code>required</code> is
-   *         <code>false</code>.
+   *          <code>true</code> if the parameter is required (in which case <code>defaultValue</code> is ignored),
+   *          or <code>false</code> otherwise.
+   * @return The parameter value, or <code>defaultValue</code> if the parameter is not found and <code>required</code>
+   *         is <code>false</code>.
    * @throws MissingParameterException
-   *           if <code>required</code> is <code>true</code> and parameter
-   *           <code>name</code> is not found.
+   *           if <code>required</code> is <code>true</code> and parameter <code>name</code> is not found.
    */
-  private static double getValue( final ParameterList parameters, String name,
-      final double defaultValue, final boolean required ) throws MissingParameterException
+  private static double getValue( final ParameterList parameters, String name, final double defaultValue,
+      final boolean required ) throws MissingParameterException
   {
     name = name.trim();
     RuntimeException cause = null;
@@ -369,8 +353,7 @@ public class Projection extends Info
       return defaultValue;
     final MissingParameterException exception = new MissingParameterException( null, name );
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- if (cause!=null) {
-     * exception.initCause(cause); }
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- if (cause!=null) { exception.initCause(cause); }
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     throw exception;
   }
@@ -411,11 +394,9 @@ public class Projection extends Info
   }
 
   /**
-   * Returns an OpenGIS interface for this projection. The returned object is
-   * suitable for RMI use.
+   * Returns an OpenGIS interface for this projection. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -429,8 +410,7 @@ public class Projection extends Info
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link Projection}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link Projection}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -438,8 +418,7 @@ public class Projection extends Info
   private final class Export extends Info.Export implements CS_Projection
   {
     /**
-     * The set of parameters. This array is constructed only the first time it
-     * is needed.
+     * The set of parameters. This array is constructed only the first time it is needed.
      */
     private transient CS_ProjectionParameter[] parameters;
 

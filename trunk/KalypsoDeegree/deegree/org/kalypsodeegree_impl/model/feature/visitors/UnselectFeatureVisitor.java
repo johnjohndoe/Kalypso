@@ -23,7 +23,7 @@ public class UnselectFeatureVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     f.unselect( m_selectionID );
-    
+
     return true;
   }
 }

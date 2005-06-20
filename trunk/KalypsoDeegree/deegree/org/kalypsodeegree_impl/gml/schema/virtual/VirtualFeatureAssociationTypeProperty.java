@@ -69,7 +69,7 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType i
    */
   public VirtualFeatureAssociationTypeProperty( FeatureAssociationTypeProperty ftp )
   {
-    super("link_" + ftp.getName(),"virtual",new HashMap());
+    super( "link_" + ftp.getName(), "virtual", new HashMap() );
     m_linkName = ftp.getName();
     m_type = GM_LineString.class.getName();
   }
@@ -107,15 +107,14 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType i
       final GM_Object srcGeo = feature.getDefaultGeometryProperty();
       if( srcGeo == null )
         return null;
-      final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor(
-          workspace, m_linkName, 2 );
+      final GetGeomDestinationFeatureVisitor visitor = new GetGeomDestinationFeatureVisitor( workspace, m_linkName, 2 );
       visitor.visit( feature );
       final GM_Object[] destGeo = visitor.getGeometryDestinations();
       final List curves = new ArrayList();
       for( int i = 0; i < destGeo.length; i++ )
-        curves.add(GeometryUtilities.createArrowLineString(srcGeo.getCentroid(),destGeo[i].getCentroid(),0.8,0.01) );
-      return GeometryFactory.createGM_MultiCurve( (GM_Curve[])curves.toArray( new GM_Curve[curves
-          .size()] ) );
+        curves
+            .add( GeometryUtilities.createArrowLineString( srcGeo.getCentroid(), destGeo[i].getCentroid(), 0.8, 0.01 ) );
+      return GeometryFactory.createGM_MultiCurve( (GM_Curve[])curves.toArray( new GM_Curve[curves.size()] ) );
     }
     catch( GM_Exception e )
     {

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -67,18 +67,15 @@ import com.braju.format.Format;
 
 /**
  * Class representing a record of the data section of a dBase III/IV file <BR>
- * at the moment only the daata types character ("C") and numeric ("N") are
- * supported
+ * at the moment only the daata types character ("C") and numeric ("N") are supported
  * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 28.04.00 ap: constructor declared and implemented <BR>
- * 28.04.00 ap: method setRecord(ArrayList recData) declared and implemented
- * <BR>
+ * 28.04.00 ap: method setRecord(ArrayList recData) declared and implemented <BR>
  * 28.04.00 ap: method getDataSection() declared and implemented <BR>
  * 03.05.00 ap: method setRecord(ArrayList recData) modified <BR>
- * 03.05.00 ap: method setRecord(int index, ArrayList recData) declared and
- * implemented <BR>
+ * 03.05.00 ap: method setRecord(int index, ArrayList recData) declared and implemented <BR>
  * 03.05.00 ap: method getDataSection() modified <BR>
  * 
  * 
@@ -124,9 +121,8 @@ public class DBFDataSection
   }
 
   /**
-   * method: public setRecord(ArrayList recData) writes a data record to byte
-   * array representing the data section of the dBase file. The method gets the
-   * data type of each field in recData from fieldDesc wich has been set at the
+   * method: public setRecord(ArrayList recData) writes a data record to byte array representing the data section of the
+   * dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set at the
    * constructor.
    */
   public void setRecord( ArrayList recData ) throws DBaseException
@@ -137,12 +133,10 @@ public class DBFDataSection
   }
 
   /**
-   * method: public setRecord(int index, ArrayList recData) writes a data record
-   * to byte array representing the data section of the dBase file. The method
-   * gets the data type of each field in recData from fieldDesc wich has been
-   * set at the constructor. index specifies the location of the retrieved
-   * record in the datasection. if an invalid index is used an exception will be
-   * thrown
+   * method: public setRecord(int index, ArrayList recData) writes a data record to byte array representing the data
+   * section of the dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set
+   * at the constructor. index specifies the location of the retrieved record in the datasection. if an invalid index is
+   * used an exception will be thrown
    */
   public void setRecord( int index, ArrayList recData ) throws DBaseException
   {
@@ -185,8 +179,7 @@ public class DBFDataSection
           b = ( (String)recdata ).getBytes();
         }
         if( b.length > fddata[16] )
-          throw new DBaseException( "string contains too many characters "
-              + (String)recdata );
+          throw new DBaseException( "string contains too many characters " + (String)recdata );
         for( int j = 0; j < b.length; j++ )
           datasec.data[offset + j] = b[j];
         for( int j = b.length; j < fddata[16]; j++ )
@@ -208,19 +201,19 @@ public class DBFDataSection
           // todo: performance: would be probably to create the format-string only once
           // create format:
           final int decimalcount = fddata[17];
-          
+
           String pattern;
           if( decimalcount == 0 )
             pattern = "%" + fieldLength + "d";
           else
-            pattern = "%" + fieldLength + "." + decimalcount +  "f";
-          
-          final String format = Format.sprintf( pattern, new Object[] { recdata } );
+            pattern = "%" + fieldLength + "." + decimalcount + "f";
+
+          final String format = Format.sprintf( pattern, new Object[]
+          { recdata } );
           b = format.getBytes();
         }
         if( b.length > fddata[16] )
-          throw new DBaseException( "string contains too many characters "
-              + recdata );
+          throw new DBaseException( "string contains too many characters " + recdata );
         for( int j = 0; j < b.length; j++ )
           datasec.data[offset + j] = b[j];
         for( int j = b.length; j < fddata[16]; j++ )
@@ -241,8 +234,7 @@ public class DBFDataSection
   }
 
   /**
-   * method: public byte[] getDataSection() returns the data section as a byte
-   * array.
+   * method: public byte[] getDataSection() returns the data section as a byte array.
    */
   public byte[] getDataSection()
   {
@@ -273,8 +265,7 @@ public class DBFDataSection
   }
 
   /**
-   * method: public int getNoOfRecords() returns the number of records within
-   * the container
+   * method: public int getNoOfRecords() returns the number of records within the container
    */
   public int getNoOfRecords()
   {

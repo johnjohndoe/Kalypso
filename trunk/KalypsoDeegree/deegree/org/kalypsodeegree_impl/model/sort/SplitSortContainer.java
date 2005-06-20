@@ -56,8 +56,7 @@ public class SplitSortContainer
   }
 
   /*
-   * private int getFittingSubContainer(GM_Envelope env) {
-   * if(hasSubContainers()) { if() } }
+   * private int getFittingSubContainer(GM_Envelope env) { if(hasSubContainers()) { if() } }
    */
   private SplitSortContainer myParent = null;
 
@@ -106,8 +105,7 @@ public class SplitSortContainer
       add( object );
     }
     /*
-     * else if(!hasSubContainers() && myObjects.size() <MAX_OBJECTS) {
-     * createSubContainers(); add(env,object); }
+     * else if(!hasSubContainers() && myObjects.size() <MAX_OBJECTS) { createSubContainers(); add(env,object); }
      */
     else if( hasSubContainers() )
     {
@@ -221,8 +219,7 @@ public class SplitSortContainer
     }
   }
 
-  private int bestPoint( double midX, double midY, double minX, double minY, double maxX,
-      double maxY )
+  private int bestPoint( double midX, double midY, double minX, double minY, double maxX, double maxY )
   {
     double dist[] = new double[4];
     dist[LEFT_BOTTOM] = Math.pow( minX - midX, 2d ) + Math.pow( minY - midY, 2d );
@@ -297,7 +294,7 @@ public class SplitSortContainer
       {
         if( mySubContainer[i].getEnvelope().contains( env ) )
         {
-          result=mySubContainer[i].query( env, result );
+          result = mySubContainer[i].query( env, result );
           return result;
         }
       }
@@ -337,9 +334,8 @@ public class SplitSortContainer
         mySubContainer[i].remove( env, object );
     }
     /*
-     * env.contains(mySubContainer[i].getEnvelope()) //performance ||
-     * mySubContainer[i].getEnvelope().contains(env) //performance ||
-     * env.intersects(mySubContainer[i].getEnvelope())
+     * env.contains(mySubContainer[i].getEnvelope()) //performance || mySubContainer[i].getEnvelope().contains(env)
+     * //performance || env.intersects(mySubContainer[i].getEnvelope())
      */
     if( !removed )
     {
@@ -396,8 +392,8 @@ public class SplitSortContainer
     double g2x = geoTransform.getDestX( myEnvelope.getMax().getX() );
     double g2y = geoTransform.getDestY( myEnvelope.getMax().getY() );
 
-    g.drawRect( (int)( g1x < g2x ? g1x : g2x ), (int)( g1y < g2y ? g1y : g2y ), (int)Math
-        .abs( ( g2x - g1x ) ), (int)Math.abs( ( g2y - g1y ) ) );
+    g.drawRect( (int)( g1x < g2x ? g1x : g2x ), (int)( g1y < g2y ? g1y : g2y ), (int)Math.abs( ( g2x - g1x ) ),
+        (int)Math.abs( ( g2y - g1y ) ) );
 
     if( hasSubContainers() )
       for( int i = 0; i < 4; i++ )

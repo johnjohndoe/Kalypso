@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import java.awt.Color;
@@ -48,20 +48,24 @@ import java.awt.Color;
 public class TSLinkWithName
 {
   public final String name;
+
   public final String linktype;
+
   public final String href;
+
   public final Color color;
 
-  public TSLinkWithName( final String sname, final String slinktype, final String shref, final String filter, final String scolor )
+  public TSLinkWithName( final String sname, final String slinktype, final String shref, final String filter,
+      final String scolor )
   {
     this.name = sname;
     this.linktype = slinktype;
-    
+
     if( filter != null && filter.length() > 0 )
       this.href = shref + "?" + filter;
     else
       this.href = shref;
-    
+
     color = scolor == null ? null : Color.decode( scolor );
   }
 }

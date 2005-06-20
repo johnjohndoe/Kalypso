@@ -30,7 +30,7 @@ public class SubstitutionGroupRegistrator implements GMLSchemaVisitor
     FeatureType[] featureTypes = schema.getFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
       visit( featureTypes[i] );
-    
+
     final GMLSchema[] importedSchemas = schema.getImportedSchemas();
     for( int i = 0; i < importedSchemas.length; i++ )
     {
@@ -57,12 +57,12 @@ public class SubstitutionGroupRegistrator implements GMLSchemaVisitor
   {
     if( ftp instanceof FeatureAssociationTypeProperty )
     {
-      FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty) ftp;
+      FeatureAssociationTypeProperty fatp = (FeatureAssociationTypeProperty)ftp;
       FeatureType associationFeatureType = fatp.getAssociationFeatureType();
       if( associationFeatureType == null )
         return;
-      if( m_substitutionGroup.equals( (associationFeatureType.getNamespace()
-          + ":" + associationFeatureType.getName()) ) )
+      if( m_substitutionGroup
+          .equals( ( associationFeatureType.getNamespace() + ":" + associationFeatureType.getName() ) ) )
         fatp.registerSubstitution( m_type );
     }
   }

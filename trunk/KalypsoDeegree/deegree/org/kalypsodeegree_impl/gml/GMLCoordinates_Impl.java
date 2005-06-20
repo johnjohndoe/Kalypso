@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLCoordinates;
@@ -72,21 +72,16 @@ import org.w3c.dom.Text;
 
 /**
  * <p>
- * As an alternative to the sequence of &lt;coords&gt;, coordinates can also be
- * conveyed by a single string. By default the coordinates in a tuple are
- * separated by commas, and successive tuples are separated by a space character
- * (#x20). While these delimiters are specified by several attributes, a user is
- * free to define a localized coordinates list that is derived by restriction
- * from gml:CoordinatesType. An instance document could then employ the xsi:type
- * attribute to substitute the localized coordinates list wherever a
- * <coordinates>element is expected; such a subtype could employ other
- * delimiters to reflect local usage.
+ * As an alternative to the sequence of &lt;coords&gt;, coordinates can also be conveyed by a single string. By default
+ * the coordinates in a tuple are separated by commas, and successive tuples are separated by a space character (#x20).
+ * While these delimiters are specified by several attributes, a user is free to define a localized coordinates list
+ * that is derived by restriction from gml:CoordinatesType. An instance document could then employ the xsi:type
+ * attribute to substitute the localized coordinates list wherever a <coordinates>element is expected; such a subtype
+ * could employ other delimiters to reflect local usage.
  * <p>
- * It is expected that a specialized client application will extract and
- * validate string content, as these functions will not be performed by a
- * general XML parser. The formatting attributes will assume their default
- * values if they are not specified for a particular instance; the
- * &lt;coordinates&gt; element must conform to the XML Schema fragments.
+ * It is expected that a specialized client application will extract and validate string content, as these functions
+ * will not be performed by a general XML parser. The formatting attributes will assume their default values if they are
+ * not specified for a particular instance; the &lt;coordinates&gt; element must conform to the XML Schema fragments.
  * 
  * <p>
  * ----------------------------------------------------------
@@ -115,7 +110,7 @@ public class GMLCoordinates_Impl implements GMLCoordinates
    * 
    * @param doc
    * @param coordinates
-   * 
+   *  
    */
   public static GMLCoordinates createGMLCoordinates( Document doc, String coordinates )
   {
@@ -279,22 +274,18 @@ public class GMLCoordinates_Impl implements GMLCoordinates
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/03/13 12:52:15  belger
- * *** empty log message ***
- *
- * Revision 1.5  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:31 doemming
- * *** empty log message *** Revision 1.6 2004/04/07 06:43:48 poth no message
+ * Revision 1.7  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.6 2005/03/13 12:52:15 belger *** empty log message ***
+ * 
+ * Revision 1.5 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:31 doemming ***
+ * empty log message *** Revision 1.6 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.5 2004/03/01 07:45:47 poth no message
  * 

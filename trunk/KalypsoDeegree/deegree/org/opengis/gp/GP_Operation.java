@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gp;
 
@@ -18,10 +16,9 @@ import java.rmi.RemoteException;
 import org.opengis.gc.GC_ParameterInfo;
 
 /**
- * This interface provides descriptive information for a grid coverage
- * processing operation. The descriptive information includes such information
- * as the name of the operation, operation description, number of source grid
- * coverages required for the operation etc.
+ * This interface provides descriptive information for a grid coverage processing operation. The descriptive information
+ * includes such information as the name of the operation, operation description, number of source grid coverages
+ * required for the operation etc.
  * 
  * @version 1.00
  * @since 1.00
@@ -38,8 +35,7 @@ public interface GP_Operation extends Remote
   String getName() throws RemoteException;
 
   /**
-   * Description of the processing operation. If no description, the value will
-   * be an null or empty string.
+   * Description of the processing operation. If no description, the value will be an null or empty string.
    * 
    * @return the description of the processing operation.
    * @throws RemoteException
@@ -57,8 +53,8 @@ public interface GP_Operation extends Remote
   String getVendor() throws RemoteException;
 
   /**
-   * URL for documentation on the processing operation. If no online
-   * documentation is available the string will be empty.
+   * URL for documentation on the processing operation. If no online documentation is available the string will be
+   * empty.
    * 
    * @return the URL for documentation on the processing operation.
    * @throws RemoteException

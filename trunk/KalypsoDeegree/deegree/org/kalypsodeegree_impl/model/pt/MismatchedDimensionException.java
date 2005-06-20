@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
@@ -65,8 +65,8 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Indicates that an operation cannot be completed properly because of a
- * mismatch in the dimensions of object attributes.
+ * Indicates that an operation cannot be completed properly because of a mismatch in the dimensions of object
+ * attributes.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -91,15 +91,13 @@ public class MismatchedDimensionException extends RuntimeException
   }
 
   /**
-   * Construct an exception with a detail message stating that two objects don't
-   * have the same number of dimensions.
+   * Construct an exception with a detail message stating that two objects don't have the same number of dimensions.
    * 
    * @param object1
    *          The first dimensioned object.
    * @param object2
-   *          The second dimensioned object. Its dimension should be different
-   *          than <code>object1</code>'s dimension, otherwise there is no
-   *          dimension mismatch!
+   *          The second dimensioned object. Its dimension should be different than <code>object1</code>'s dimension,
+   *          otherwise there is no dimension mismatch!
    */
   public MismatchedDimensionException( final Dimensioned object1, final Dimensioned object2 )
   {
@@ -107,19 +105,16 @@ public class MismatchedDimensionException extends RuntimeException
   }
 
   /**
-   * Construct an exception with a detail message stating that two objects don't
-   * have the same number of dimensions.
+   * Construct an exception with a detail message stating that two objects don't have the same number of dimensions.
    * 
    * @param dim1
    *          Number of dimensions for the first object.
    * @param dim2
-   *          Number of dimensions for the second object. It shoud be different
-   *          than <code>dim1</code>, otherwise there is no dimension
-   *          mismatch!
+   *          Number of dimensions for the second object. It shoud be different than <code>dim1</code>, otherwise
+   *          there is no dimension mismatch!
    */
   public MismatchedDimensionException( final int dim1, final int dim2 )
   {
-    this( Resources.format( ResourceKeys.ERROR_MISMATCHED_DIMENSION_$2, new Integer( dim1 ),
-        new Integer( dim2 ) ) );
+    this( Resources.format( ResourceKeys.ERROR_MISMATCHED_DIMENSION_$2, new Integer( dim1 ), new Integer( dim2 ) ) );
   }
 }

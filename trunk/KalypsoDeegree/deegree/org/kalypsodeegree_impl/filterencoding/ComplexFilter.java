@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
@@ -68,9 +68,8 @@ import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Encapsulates the information of a <Filter>element that contains an Operation
- * (only) (as defined in the Filter DTD). Operation is one of the following
- * types:
+ * Encapsulates the information of a <Filter>element that contains an Operation (only) (as defined in the Filter DTD).
+ * Operation is one of the following types:
  * <ul>
  * <li>spatial_ops</li>
  * <li>comparison_ops</li>
@@ -136,12 +135,10 @@ public class ComplexFilter extends AbstractFilter
   }
 
   /**
-   * Calculates the <tt>Filter</tt>'s logical value based on the certain
-   * property values of the given feature.
+   * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the
-   *          expression
+   *          that determines the values of <tt>PropertyNames</tt> in the expression
    * @return true, if the <tt>Filter</tt> evaluates to true, else false
    * @throws FilterEvaluationException
    *           if the evaluation fails

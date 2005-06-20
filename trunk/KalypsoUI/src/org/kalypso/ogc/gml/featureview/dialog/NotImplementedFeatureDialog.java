@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
@@ -52,20 +52,21 @@ import org.eclipse.swt.widgets.Shell;
 public class NotImplementedFeatureDialog implements IFeatureDialog
 {
   private final String m_userInfoMessage;
+
   private final String m_cellInfoMessage;
 
-  public NotImplementedFeatureDialog(String userInfoMessage,String cellInfoMessage)
+  public NotImplementedFeatureDialog( String userInfoMessage, String cellInfoMessage )
   {
     super();
     m_userInfoMessage = userInfoMessage;
     m_cellInfoMessage = cellInfoMessage;
   }
-  
+
   public NotImplementedFeatureDialog()
   {
     super();
-    m_userInfoMessage="Die Operation ist noch nicht implementiert.";
-    m_cellInfoMessage="<nicht editierbar>";
+    m_userInfoMessage = "Die Operation ist noch nicht implementiert.";
+    m_cellInfoMessage = "<nicht editierbar>";
   }
 
   /**
@@ -82,7 +83,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
    */
   public void collectChanges( final Collection c )
   {
-    //
+  //
   }
 
   /**

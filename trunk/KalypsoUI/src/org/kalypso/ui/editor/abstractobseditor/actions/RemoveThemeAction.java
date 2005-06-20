@@ -58,8 +58,7 @@ public class RemoveThemeAction extends FullAction
 
   public RemoveThemeAction( final ObservationEditorOutlinePage page )
   {
-    super( "Thema entfernen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE,
-        "Entfernt aktives Thema" );
+    super( "Thema entfernen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Entfernt aktives Thema" );
 
     m_page = page;
   }
@@ -72,11 +71,9 @@ public class RemoveThemeAction extends FullAction
     final ObsViewItem item = m_page.getSelectedItem();
 
     if( item != null
-        && MessageDialog.openConfirm( m_page.getSite().getShell(),
-            "Zeitreihe entfernen", "Wollen Sie wirklich die Zeitreihe "
-                + item.getName() + " entfernen" ) )
+        && MessageDialog.openConfirm( m_page.getSite().getShell(), "Zeitreihe entfernen",
+            "Wollen Sie wirklich die Zeitreihe " + item.getName() + " entfernen" ) )
 
-      m_page.getEditor().postCommand(
-          new RemoveThemeCommand( m_page.getView(), item ), null );
+      m_page.getEditor().postCommand( new RemoveThemeCommand( m_page.getView(), item ), null );
   }
 }

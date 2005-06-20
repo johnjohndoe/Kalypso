@@ -67,7 +67,7 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
   // mir wurscht
   }
@@ -85,9 +85,8 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
 
       final MapPanel mapPanel = ( (GisMapEditor)getEditor() ).getMapPanel();
 
-      final ExportMapOptionsPage page = new ExportMapOptionsPage( mapPanel, "optionPage",
-          "Export Otionen", ImageProvider.IMAGE_UTIL_BERICHT_WIZ, mapPanel.getWidth(), mapPanel
-              .getHeight() );
+      final ExportMapOptionsPage page = new ExportMapOptionsPage( mapPanel, "optionPage", "Export Otionen",
+          ImageProvider.IMAGE_UTIL_BERICHT_WIZ, mapPanel.getWidth(), mapPanel.getHeight() );
       page.setDestinationFormat( "png" );
 
       final Wizard exportWizard = new ExportMapBerichtWizard( page, doc );

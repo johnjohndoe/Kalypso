@@ -36,16 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.test;
+
+import junit.framework.TestCase;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.util.adapter.IAdaptable;
-
-import junit.framework.TestCase;
 
 /**
  * @author schlienger
@@ -55,9 +55,9 @@ public class ObservationCacheTest extends TestCase
   public void testGetObservationFor()
   {
     final IObservation obs = ObservationCache.getInstance().getObservationFor( new FooAdaptable() );
-    
+
     assertNotNull( obs );
-    
+
     System.out.println( obs );
   }
 
@@ -69,8 +69,8 @@ public class ObservationCacheTest extends TestCase
     public Object getAdapter( Class anotherClass )
     {
       if( anotherClass == IObservation.class )
-        return new SimpleObservation(  );
-      
+        return new SimpleObservation();
+
       return null;
     }
   }

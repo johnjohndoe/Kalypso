@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
 /**
- * A sequence of decimals numbers which when written on a width are a sequence
- * of coordinate positions. The width is derived from the CRS or coordinate
- * dimension of the container.
+ * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
+ * derived from the CRS or coordinate dimension of the container.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -91,15 +90,14 @@ public interface GM_Position
   public double getZ();
 
   /**
-   * returns the x- and y-value of the point as a two dimensional array the
-   * first field contains the x- the second field the y-value.
+   * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
+   * the y-value.
    */
   public double[] getAsArray();
 
   /**
-   * translates the coordinates of the position. the first coordinate of the
-   * position will be translated by the first field of <tt>d</tt> the second
-   * coordinate by the second field of <tt>d</tt> and so on...
+   * translates the coordinates of the position. the first coordinate of the position will be translated by the first
+   * field of <tt>d</tt> the second coordinate by the second field of <tt>d</tt> and so on...
    */
   public void translate( double[] d );
 
