@@ -362,24 +362,48 @@ Tabellen editieren erweitern
 --------------------------------------------------------------------------------------------------------
 Jessica:
 
+Vorstellung NA-Modell
+- neues Projekt erstellen
+  import aus shape-files -> Generierung des initialen NA-Modellprojektes 
+  
+
 1) für welche Anwendung (welche Projekte)?
-			
+- NA-Modell: Ingenieurbüros
+- NA-Modell: Studenten, Lehre			
+- NA-Modell: AB-Wasserbau intern
+
 2) Welche Modelle werden verwendet?
-
+diverse NA-Modelle, ObereKollau, 
+ 
 3) Code
-
+KalypsoNA: komplettieren der Unterstützung des kompletten NA-Modells
+Kalypso-TUHH-Manual
 
 4) Erforderliche Überarbeitung von vorhandenem Code 
-
-
+ - I18n komplettieren
+ - GUI (Beispiele: 2 x Save-Diskette)
+ - 
+ 
 5) Anwender
+Ingenieurbüros:
+ Jetzt: 
+ 	- Aufstellung von NA-Modellen in Hamburg
+ 	- Datenerhebung, Kallibrierung
+ Zukunft: Pflege der NA-Modelle
+Studenten:
+ Übung Surface-Hydrology, NA-Modell Aufstellung, Kallibrierung
+ (seit letzter Woche)
+AB-Wasserbau, die Kollegen
 
+Kooperation mit Montenegro/Serbien: Summer-School (NA-Modell)
 
 6) Schnittstellen zu anderen Entwicklern
-
+Marc,Christoph, Gernot, Andreas
 7) Abhängigkeiten
+Marc,Christoph, Gernot, Andreas
 
 8) Anregung
+
 --------------------------------------------------------------------------------------------------------
 Christoph:
 
