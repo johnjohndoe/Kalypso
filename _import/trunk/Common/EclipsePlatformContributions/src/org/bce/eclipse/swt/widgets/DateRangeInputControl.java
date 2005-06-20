@@ -56,8 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * A control for entering a date-range either in the form of a number of days or
- * using a range.
+ * A control for entering a date-range either in the form of a number of days or using a range.
  * 
  * @author schlienger
  */
@@ -97,15 +96,13 @@ public class DateRangeInputControl extends Composite
 
   private final SelListener m_selListener = new SelListener();
 
-  public DateRangeInputControl( final Composite parent, final int style,
-      final DateRangeInputControlStuct struct )
+  public DateRangeInputControl( final Composite parent, final int style, final DateRangeInputControlStuct struct )
   {
-    this( parent, style, struct.useRange, struct.from, struct.to, struct.days,
-        struct.df );
+    this( parent, style, struct.useRange, struct.from, struct.to, struct.days, struct.df );
   }
 
-  public DateRangeInputControl( final Composite parent, final int style,
-      boolean useRange, Date from, Date to, int days, DateFormat df )
+  public DateRangeInputControl( final Composite parent, final int style, boolean useRange, Date from, Date to,
+      int days, DateFormat df )
   {
     super( parent, style );
 
@@ -117,8 +114,7 @@ public class DateRangeInputControl extends Composite
 
     m_btnUseDays = new Button( this, SWT.RADIO );
     m_btnUseDays.setText( "Tagesanzahl:" );
-    m_btnUseDays
-        .setToolTipText( "Anzahl der Tagen (0 = ganzer verfügbarer Zeitraum)" );
+    m_btnUseDays.setToolTipText( "Anzahl der Tagen (0 = ganzer verfügbarer Zeitraum)" );
 
     m_txtDays = new Text( this, SWT.RIGHT | SWT.BORDER );
     m_txtDays.setText( String.valueOf( days ) );
@@ -144,9 +140,7 @@ public class DateRangeInputControl extends Composite
 
     m_btnUseRange = new Button( this, SWT.RADIO );
     m_btnUseRange.setText( "Zeitraum:" );
-    m_btnUseRange
-        .setToolTipText( "Eingabe in der From [Von-Bis] (Datum-Beispiel: "
-            + m_df.format( new Date() ) + ")" );
+    m_btnUseRange.setToolTipText( "Eingabe in der From [Von-Bis] (Datum-Beispiel: " + m_df.format( new Date() ) + ")" );
 
     m_txtFrom = new Text( this, SWT.LEFT | SWT.BORDER );
     m_txtFrom.setSize( 50, m_txtFrom.getSize().y );
@@ -195,27 +189,23 @@ public class DateRangeInputControl extends Composite
   }
 
   /**
-   * Validate the input and return a non-null string if input isn't correct. In
-   * the case of an invalid input, the returned string contains a description of
-   * the problem
+   * Validate the input and return a non-null string if input isn't correct. In the case of an invalid input, the
+   * returned string contains a description of the problem
    */
   public String validateInput()
   {
     if( isUseRange() )
     {
       if( getDateFrom() == null )
-        return "Die Eingabe Datum-Von <" + m_txtFrom.getText()
-            + "> ist nicht gültig.";
+        return "Die Eingabe Datum-Von <" + m_txtFrom.getText() + "> ist nicht gültig.";
 
       if( getDateTo() == null )
-        return "Die Eingabe Datum-Bis <" + m_txtTo.getText()
-            + "> ist nicht gültig.";
+        return "Die Eingabe Datum-Bis <" + m_txtTo.getText() + "> ist nicht gültig.";
     }
     else
     {
       if( getNumberOfDays() < 0 )
-        return "Die Eingabe Tagesanzahl <" + m_txtDays.getText()
-            + "> ist nicht gültig.";
+        return "Die Eingabe Tagesanzahl <" + m_txtDays.getText() + "> ist nicht gültig.";
     }
 
     return null;
@@ -243,13 +233,11 @@ public class DateRangeInputControl extends Composite
 
   public DateRangeInputControlStuct getStruct()
   {
-    return new DateRangeInputControlStuct( isUseRange(), getDateFrom(),
-        getDateTo(), getNumberOfDays(), m_df );
+    return new DateRangeInputControlStuct( isUseRange(), getDateFrom(), getDateTo(), getNumberOfDays(), m_df );
   }
 
   /**
-   * Helper: parses the given string into a date. If a ParseException occurs, it
-   * returns null.
+   * Helper: parses the given string into a date. If a ParseException occurs, it returns null.
    * 
    * @return new Date or null if ParseException occured.
    */
@@ -286,7 +274,7 @@ public class DateRangeInputControl extends Composite
 
     public void widgetDefaultSelected( final SelectionEvent e )
     {
-      // empty
+    // empty
     }
   }
 }

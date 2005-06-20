@@ -47,7 +47,9 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * Provides Tooltips for TableItems
  * 
- * <p>Funktioniert leider nicht! Die Tablecolumn lässt keinerlei Mouse-Events durch</p>
+ * <p>
+ * Funktioniert leider nicht! Die Tablecolumn lässt keinerlei Mouse-Events durch
+ * </p>
  * 
  * @author belger
  */

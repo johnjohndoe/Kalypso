@@ -88,15 +88,15 @@ public abstract class AbstractControlTooltipListener implements Listener
         final Shell labelShell = label.getShell();
         switch( event.type )
         {
-//        case SWT.MouseDown:
-//          final Event e = new Event();
-//          e.item = (TableItem)label.getData( "_TABLEITEM" );
-//
-//          // Assuming table is single select, set the selection as if
-//          // the mouse down event went through to the table
-//          table.setSelection( new TableItem[]
-//          { (TableItem)e.item } );
-//          table.notifyListeners( SWT.Selection, e );
+        //        case SWT.MouseDown:
+        //          final Event e = new Event();
+        //          e.item = (TableItem)label.getData( "_TABLEITEM" );
+        //
+        //          // Assuming table is single select, set the selection as if
+        //          // the mouse down event went through to the table
+        //          table.setSelection( new TableItem[]
+        //          { (TableItem)e.item } );
+        //          table.notifyListeners( SWT.Selection, e );
 
         // fall through
         case SWT.MouseExit:
@@ -154,10 +154,10 @@ public abstract class AbstractControlTooltipListener implements Listener
           m_label.addListener( SWT.MouseExit, m_labelListener );
           m_label.addListener( SWT.MouseDown, m_labelListener );
           final Point size = m_tip.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-          
-//          final Rectangle rect = item.getBounds( 0 );
-          
-//          final Point pt = m_control.toDisplay( rect.x, rect.y );
+
+          //          final Rectangle rect = item.getBounds( 0 );
+
+          //          final Point pt = m_control.toDisplay( rect.x, rect.y );
           final Point pt = m_shell.toDisplay( event.x, event.y );
           m_tip.setBounds( pt.x, pt.y, size.x, size.y );
           m_tip.setVisible( true );

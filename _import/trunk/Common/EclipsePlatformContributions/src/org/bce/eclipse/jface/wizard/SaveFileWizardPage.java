@@ -100,10 +100,11 @@ public class SaveFileWizardPage extends WizardPage
   private StructuredViewer m_formatViewer;
 
   /**
-   * @param formats format objects -> file extension
+   * @param formats
+   *          format objects -> file extension
    */
-  public SaveFileWizardPage( final String pageName, final String title,
-      final ImageDescriptor titleImage, final String groupname, final Map formats )
+  public SaveFileWizardPage( final String pageName, final String title, final ImageDescriptor titleImage,
+      final String groupname, final Map formats )
   {
     super( pageName, title, titleImage );
 
@@ -175,8 +176,8 @@ public class SaveFileWizardPage extends WizardPage
   }
 
   /**
-   * Returns the name of a container with a location that encompasses
-   * targetDirectory. Returns null if there is no conflict.
+   * Returns the name of a container with a location that encompasses targetDirectory. Returns null if there is no
+   * conflict.
    * 
    * @param targetDirectory
    *          the path of the directory to check.
@@ -271,7 +272,7 @@ public class SaveFileWizardPage extends WizardPage
   {
     final Object format = getDestinationFormat();
     final String ext = m_formats.get( format ).toString();
-    
+
     final String destinationValue = getDestinationValue();
     final int index = destinationValue.lastIndexOf( '.' );
     if( index == -1 )
@@ -280,7 +281,7 @@ public class SaveFileWizardPage extends WizardPage
       setDestinationValue( destinationValue.substring( 0, index ) + "." + ext );
   }
 
-   void handleDestinationBrowseButtonPressed()
+  void handleDestinationBrowseButtonPressed()
   {
     final FileDialog dialog = new FileDialog( getContainer().getShell(), SWT.SAVE );
 
@@ -294,13 +295,13 @@ public class SaveFileWizardPage extends WizardPage
       final Map.Entry entry = (Map.Entry)fIt.next();
       filterNames[count] = entry.getKey().toString();
       filterExts[count] = "*." + entry.getValue().toString();
-      
+
       count++;
     }
-    
+
     dialog.setFilterExtensions( filterExts );
     dialog.setFilterNames( filterNames );
-    
+
     dialog.setText( "Datei speichern" );
     final String currentSourceString = getDestinationValue();
     int lastSeparatorIndex = currentSourceString.lastIndexOf( File.separator );
@@ -309,19 +310,19 @@ public class SaveFileWizardPage extends WizardPage
       dialog.setFilterPath( currentSourceString.substring( 0, lastSeparatorIndex ) );
       dialog.setFileName( currentSourceString.substring( lastSeparatorIndex + 1 ) );
     }
-    
+
     final String selectedFileName = dialog.open();
 
     if( selectedFileName != null )
     {
       setErrorMessage( null );
-      
+
       final String newFileName;
       if( selectedFileName.indexOf( '.' ) == -1 )
         newFileName = selectedFileName + "." + m_formats.get( getDestinationFormat() );
       else
         newFileName = selectedFileName;
-      
+
       setDestinationValue( newFileName );
     }
   }
@@ -330,9 +331,9 @@ public class SaveFileWizardPage extends WizardPage
   {
     if( m_destinationNameField.getText().equals( selectedFileName ) )
       return;
-    
+
     m_destinationNameField.setText( selectedFileName );
-    
+
     final int index = selectedFileName.lastIndexOf( '.' );
     if( index != -1 )
     {
@@ -352,8 +353,7 @@ public class SaveFileWizardPage extends WizardPage
   }
 
   /**
-   * Hook method for restoring widget values to the values that they held last
-   * time this wizard was used to completion.
+   * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
   protected void restoreWidgetValues()
   {
@@ -376,10 +376,10 @@ public class SaveFileWizardPage extends WizardPage
 
   private void setDestinationFormat( final Object format )
   {
-    for( final Iterator fIt = m_formats.keySet().iterator(); fIt.hasNext();  )
+    for( final Iterator fIt = m_formats.keySet().iterator(); fIt.hasNext(); )
     {
       final Object key = fIt.next();
-      
+
       if( key.equals( format ) )
       {
         m_formatViewer.setSelection( new StructuredSelection( key ) );
@@ -403,8 +403,7 @@ public class SaveFileWizardPage extends WizardPage
       if( history.size() > COMBO_HISTORY_LENGTH )
         history.remove( COMBO_HISTORY_LENGTH );
 
-      settings.put( STORE_DESTINATION_NAMES_ID, (String[])history.toArray( new String[history
-          .size()] ) );
+      settings.put( STORE_DESTINATION_NAMES_ID, (String[])history.toArray( new String[history.size()] ) );
     }
   }
 

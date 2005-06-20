@@ -20,7 +20,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * The constructor.
    */
-  public EclipsePlatformContributionsPlugin( )
+  public EclipsePlatformContributionsPlugin()
   {
     super();
     plugin = this;
@@ -47,22 +47,20 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the shared instance.
    */
-  public static EclipsePlatformContributionsPlugin getDefault( )
+  public static EclipsePlatformContributionsPlugin getDefault()
   {
     return plugin;
   }
 
   /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not
-   * found.
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
   public static String getResourceString( String key )
   {
-    ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault()
-        .getResourceBundle();
+    ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault().getResourceBundle();
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return ( bundle != null ) ? bundle.getString( key ) : key;
     }
     catch( MissingResourceException e )
     {
@@ -73,7 +71,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle( )
+  public ResourceBundle getResourceBundle()
   {
     try
     {

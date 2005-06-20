@@ -1,13 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+/***********************************************************************************************************************
+ * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/cpl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ * Contributors: IBM Corporation - initial API and implementation
+ **********************************************************************************************************************/
 package org.bce.eclipse.ui.dialogs;
 
 import java.util.ArrayList;
@@ -51,11 +48,10 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   private IContainer m_inputContainer;
 
   /*
-   * abgeleitet von ContainerSelectionDialog  
-   * @author peiler
+   * abgeleitet von ContainerSelectionDialog @author peiler
    */
-  public KalypsoResourceSelectionDialog( Shell parentShell, IResource initialSelection,
-      String message, String[] allowedResourceExtensions, IContainer inputContainer)
+  public KalypsoResourceSelectionDialog( Shell parentShell, IResource initialSelection, String message,
+      String[] allowedResourceExtensions, IContainer inputContainer )
   {
     super( parentShell );
     setTitle( IDEWorkbenchMessages.getString( "Resource selection" ) ); //$NON-NLS-1$
@@ -81,7 +77,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
       {
         if( statusMessage != null && validator != null )
         {
-          String errorMsg = validator.isValid(group.getResourceFullPath());
+          String errorMsg = validator.isValid( group.getResourceFullPath() );
           if( errorMsg == null || errorMsg.equals( "" ) ) { //$NON-NLS-1$
             statusMessage.setText( "" ); //$NON-NLS-1$
             getOkButton().setEnabled( true );
@@ -109,8 +105,8 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
     statusMessage.setFont( parent.getFont() );
 
     // container selection group
-    group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(),
-        m_showClosedProjects, m_allowedResourceExtensions , m_inputContainer);
+    group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(), m_showClosedProjects,
+        m_allowedResourceExtensions, m_inputContainer );
 
     return dialogArea;
   }
@@ -140,9 +136,8 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   }
 
   /**
-   * The <code>ContainerSelectionDialog</code> implementation of this
-   * <code>Dialog</code> method builds a list of the selected resource
-   * containers for later retrieval by the client and closes this dialog.
+   * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of
+   * the selected resource containers for later retrieval by the client and closes this dialog.
    */
   protected void okPressed()
   {

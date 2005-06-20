@@ -66,8 +66,8 @@ public class DateRangeInputDialog extends TitleAreaDialog
 
   private final DateRangeInputControlStuct m_sruct;
 
-  public DateRangeInputDialog( final Shell parentShell, final String title,
-      final String message, final DateRangeInputControlStuct sruct )
+  public DateRangeInputDialog( final Shell parentShell, final String title, final String message,
+      final DateRangeInputControlStuct sruct )
   {
     super( parentShell );
 
@@ -92,15 +92,14 @@ public class DateRangeInputDialog extends TitleAreaDialog
 
     if( err != null )
     {
-      MessageDialog.openInformation( getParentShell(), "Fehlerhafte Eingabe",
-          "Bitte prüfen Sie Ihre Eingabe. " + err );
+      MessageDialog.openInformation( getParentShell(), "Fehlerhafte Eingabe", "Bitte prüfen Sie Ihre Eingabe. " + err );
       return;
     }
 
     super.okPressed();
   }
-  
-  public DateRangeInputControlStuct getStruct( )
+
+  public DateRangeInputControlStuct getStruct()
   {
     return m_control.getStruct();
   }

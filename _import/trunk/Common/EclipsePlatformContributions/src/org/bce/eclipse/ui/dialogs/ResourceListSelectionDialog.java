@@ -1,13 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved.
- * This program and the accompanying materials! are made available under the
- * terms of the Common Public License v1.0 which accompanies this distribution,
+/***********************************************************************************************************************
+ * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved. This program and the accompanying
+ * materials! are made available under the terms of the Common Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/cpl-v10.html
  * 
- * Contributors: IBM Corporation - initial API and implementation Sebastian
- * Davids <sdavids@gmx.de>- Fix for bug 19346 - Dialog font should be activated
- * and used by other components.
- ******************************************************************************/
+ * Contributors: IBM Corporation - initial API and implementation Sebastian Davids <sdavids@gmx.de>- Fix for bug 19346 -
+ * Dialog font should be activated and used by other components.
+ **********************************************************************************************************************/
 package org.bce.eclipse.ui.dialogs;
 
 import java.text.Collator;
@@ -45,8 +43,8 @@ import org.eclipse.ui.internal.ide.StringMatcher;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
- * Shows a list of resources to the user with a text entry field for a string
- * pattern used to filter the list of resources.
+ * Shows a list of resources to the user with a text entry field for a string pattern used to filter the list of
+ * resources.
  * <p>
  * 
  * @since 2.1
@@ -389,8 +387,10 @@ public class ResourceListSelectionDialog extends SelectionDialog
   /**
    * Creates a new instance of the class.
    * 
-   * @param parentShell shell to parent the dialog on
-   * @param resources resources to display in the dialog
+   * @param parentShell
+   *          shell to parent the dialog on
+   * @param resources
+   *          resources to display in the dialog
    */
   public ResourceListSelectionDialog( Shell parentShell, IResource[] resources )
   {
@@ -401,16 +401,18 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Creates a new instance of the class. When this constructor is used to
-   * create the dialog, resources will be gathered dynamically as the pattern
-   * string is specified. Only resources of the given types that match the
-   * pattern string will be listed. To further filter the matching resources,
+   * Creates a new instance of the class. When this constructor is used to create the dialog, resources will be gathered
+   * dynamically as the pattern string is specified. Only resources of the given types that match the pattern string
+   * will be listed. To further filter the matching resources,
    * 
    * @see #select(IResource).
    * 
-   * @param parentShell shell to parent the dialog on
-   * @param container container to get resources from
-   * @param typeMask mask containing IResource types to be considered
+   * @param parentShell
+   *          shell to parent the dialog on
+   * @param container
+   *          container to get resources from
+   * @param typeMask
+   *          mask containing IResource types to be considered
    */
   public ResourceListSelectionDialog( Shell parentShell, IContainer container, int typeMask )
   {
@@ -481,10 +483,10 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Creates the contents of this dialog, initializes the listener and the
-   * update thread.
+   * Creates the contents of this dialog, initializes the listener and the update thread.
    * 
-   * @param parent parent to create the dialog widgets in
+   * @param parent
+   *          parent to create the dialog widgets in
    */
   protected Control createDialogArea( Composite parent )
   {
@@ -605,7 +607,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
       return;
     }
 
-    if( oldPattern != null && ( oldPattern.length() != 0 ) && oldPattern.endsWith( "*" ) && patternString.endsWith( "*" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
+    if( oldPattern != null && ( oldPattern.length() != 0 )
+        && oldPattern.endsWith( "*" ) && patternString.endsWith( "*" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
       int matchLength = oldPattern.length() - 1;
       if( patternString.regionMatches( 0, oldPattern, 0, matchLength ) )
       {
@@ -625,9 +628,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Use a binary search to get the first match for the patternString. This
-   * method assumes the patternString does not contain any '?' characters and
-   * that it contains only one '*' character at the end of the string.
+   * Use a binary search to get the first match for the patternString. This method assumes the patternString does not
+   * contain any '?' characters and that it contains only one '*' character at the end of the string.
    */
   private int getFirstMatch()
   {
@@ -682,7 +684,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
     }
     stringMatcher = new StringMatcher( patternString, true, false );
 
-    if( oldPattern != null && ( oldPattern.length() != 0 ) && oldPattern.endsWith( "*" ) && patternString.endsWith( "*" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
+    if( oldPattern != null && ( oldPattern.length() != 0 )
+        && oldPattern.endsWith( "*" ) && patternString.endsWith( "*" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
       // see if the new pattern is a derivative of the old pattern
       int matchLength = oldPattern.length() - 1;
       if( patternString.regionMatches( 0, oldPattern, 0, matchLength ) )
@@ -715,7 +718,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
   /**
    * Return an image for a resource descriptor.
    * 
-   * @param desc resource descriptor to return image for
+   * @param desc
+   *          resource descriptor to return image for
    * @return an image for a resource descriptor.
    */
   private Image getImage( ResourceDescriptor desc )
@@ -725,9 +729,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Use a binary search to get the last match for the patternString. This
-   * method assumes the patternString does not contain any '?' characters and
-   * that it contains only one '*' character at the end of the string.
+   * Use a binary search to get the last match for the patternString. This method assumes the patternString does not
+   * contain any '?' characters and that it contains only one '*' character at the end of the string.
    */
   private int getLastMatch()
   {
@@ -765,11 +768,11 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Gather the resources of the specified type that match the current pattern
-   * string. Gather the resources using the proxy visitor since this is quicker
-   * than getting the entire resource.
+   * Gather the resources of the specified type that match the current pattern string. Gather the resources using the
+   * proxy visitor since this is quicker than getting the entire resource.
    * 
-   * @param resources resources that match
+   * @param resources
+   *          resources that match
    */
   private void getMatchingResources( final ArrayList resources )
   {
@@ -830,10 +833,10 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Creates a ResourceDescriptor for each IResource, sorts them and removes the
-   * duplicated ones.
+   * Creates a ResourceDescriptor for each IResource, sorts them and removes the duplicated ones.
    * 
-   * @param resources resources to create resource descriptors for
+   * @param resources
+   *          resources to create resource descriptors for
    */
   private void initDescriptors( final IResource resources[] )
   {
@@ -888,7 +891,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
   /**
    * Returns true if the label matches the chosen pattern.
    * 
-   * @param label label to match with the current pattern
+   * @param label
+   *          label to match with the current pattern
    * @return true if the label matches the chosen pattern. false otherwise.
    */
   private boolean match( String label )
@@ -899,8 +903,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * The user has selected a resource and the dialog is closing. Set the
-   * selected resource as the dialog result.
+   * The user has selected a resource and the dialog is closing. Set the selected resource as the dialog result.
    */
   protected void okPressed()
   {
@@ -915,10 +918,9 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Use this method to further filter resources. As resources are gathered, if
-   * a resource matches the current pattern string, this method will be called.
-   * If this method answers false, the resource will not be included in the list
-   * of matches and the resource's children will NOT be considered for matching.
+   * Use this method to further filter resources. As resources are gathered, if a resource matches the current pattern
+   * string, this method will be called. If this method answers false, the resource will not be included in the list of
+   * matches and the resource's children will NOT be considered for matching.
    */
   protected boolean select( IResource resource )
   {
@@ -926,8 +928,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * The text in the pattern text entry has changed. Create a new string matcher
-   * and start a new update tread.
+   * The text in the pattern text entry has changed. Create a new string matcher and start a new update tread.
    */
   private void textChanged()
   {
@@ -942,8 +943,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * A new resource has been selected. Change the contents of the folder names
-   * list.
+   * A new resource has been selected. Change the contents of the folder names list.
    * 
    * @desc resource descriptor of the selected resource
    */
@@ -982,12 +982,15 @@ public class ResourceListSelectionDialog extends SelectionDialog
   }
 
   /**
-   * Update the specified item with the new info from the resource descriptor.
-   * Create a new table item if there is no item.
+   * Update the specified item with the new info from the resource descriptor. Create a new table item if there is no
+   * item.
    * 
-   * @param index index of the resource descriptor
-   * @param itemPos position of the existing item to update
-   * @param itemCount number of items in the resources table widget
+   * @param index
+   *          index of the resource descriptor
+   * @param itemPos
+   *          position of the existing item to update
+   * @param itemCount
+   *          number of items in the resources table widget
    */
   private void updateItem( int index, int itemPos, int itemCount )
   {

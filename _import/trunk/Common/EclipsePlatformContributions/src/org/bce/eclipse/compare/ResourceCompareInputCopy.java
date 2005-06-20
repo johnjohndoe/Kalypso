@@ -73,8 +73,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Einziger Zweck dieser Klasse ist es, die nichtöffentliche Klasse
- * ResourcecompareInput sichtbar zu machen.
+ * Einziger Zweck dieser Klasse ist es, die nichtöffentliche Klasse ResourcecompareInput sichtbar zu machen.
  * 
  * @author belger
  */
@@ -111,8 +110,8 @@ public class ResourceCompareInputCopy extends CompareEditorInput
 
     private String fLastName;
 
-    public MyDiffNode( IDiffContainer parent, int description, ITypedElement ancestor,
-        ITypedElement left, ITypedElement right )
+    public MyDiffNode( IDiffContainer parent, int description, ITypedElement ancestor, ITypedElement left,
+        ITypedElement right )
     {
       super( parent, description, ancestor, left, right );
     }
@@ -336,9 +335,8 @@ public class ResourceCompareInputCopy extends CompareEditorInput
   }
 
   /**
-   * Creates a <code>IStructureComparator</code> for the given input. Returns
-   * <code>null</code> if no <code>IStructureComparator</code> can be found
-   * for the <code>IResource</code>.
+   * Creates a <code>IStructureComparator</code> for the given input. Returns <code>null</code> if no
+   * <code>IStructureComparator</code> can be found for the <code>IResource</code>.
    */
   private IStructureComparator getStructure( IResource input )
   {
@@ -402,11 +400,10 @@ public class ResourceCompareInputCopy extends CompareEditorInput
 
       Differencer d = new Differencer()
       {
-        protected Object visit( Object parent, int description, Object ancestor, Object left,
-            Object right )
+        protected Object visit( Object parent, int description, Object ancestor, Object left, Object right )
         {
-          return new MyDiffNode( (IDiffContainer)parent, description, (ITypedElement)ancestor,
-              (ITypedElement)left, (ITypedElement)right );
+          return new MyDiffNode( (IDiffContainer)parent, description, (ITypedElement)ancestor, (ITypedElement)left,
+              (ITypedElement)right );
         }
       };
 

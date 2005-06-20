@@ -49,8 +49,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * FileSelectWizardPage contains a simple FileFieldEditor that allows the user
- * to enter the file name directly as a string or to use the FileChooserDialog.
+ * FileSelectWizardPage contains a simple FileFieldEditor that allows the user to enter the file name directly as a
+ * string or to use the FileChooserDialog.
  * 
  * @author schlienger
  */
@@ -63,13 +63,14 @@ public class FileSelectWizardPage extends WizardPage
   private FileFieldEditor m_ffe;
 
   /**
-   * @param pageName the name of this page
-   * @param fileName the default name of the file, can be empty
-   * @param fileExtensions [optional, can be null] the list of allowed file
-   *          extensions
+   * @param pageName
+   *          the name of this page
+   * @param fileName
+   *          the default name of the file, can be empty
+   * @param fileExtensions
+   *          [optional, can be null] the list of allowed file extensions
    */
-  public FileSelectWizardPage( final String pageName, final String fileName,
-      final String[] fileExtensions )
+  public FileSelectWizardPage( final String pageName, final String fileName, final String[] fileExtensions )
   {
     super( pageName );
 

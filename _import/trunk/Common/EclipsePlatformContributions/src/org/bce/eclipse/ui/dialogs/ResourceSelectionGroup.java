@@ -1,11 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved.
- * This program and the accompanying materials are made available under the
- * terms of the Common Public License v1.0 which accompanies this distribution,
- * and is available at http://www.eclipse.org/legal/cpl-v10.html
+/***********************************************************************************************************************
+ * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors: IBM Corporation - initial API and implementation
- ******************************************************************************/
+ **********************************************************************************************************************/
 package org.bce.eclipse.ui.dialogs;
 
 import java.util.ArrayList;
@@ -46,11 +45,9 @@ public class ResourceSelectionGroup extends Composite
 
   private boolean m_showClosedProjects;
 
-  private static final String DEFAULT_MSG_NEW_ALLOWED = IDEWorkbenchMessages
-      .getString( "ContainerGroup.message" ); //$NON-NLS-1$
+  private static final String DEFAULT_MSG_NEW_ALLOWED = IDEWorkbenchMessages.getString( "ContainerGroup.message" ); //$NON-NLS-1$
 
-  private static final String DEFAULT_MSG_SELECT_ONLY = IDEWorkbenchMessages
-      .getString( "ContainerGroup.selectFolder" ); //$NON-NLS-1$
+  private static final String DEFAULT_MSG_SELECT_ONLY = IDEWorkbenchMessages.getString( "ContainerGroup.selectFolder" ); //$NON-NLS-1$
 
   private static final int SIZING_SELECTION_PANE_WIDTH = 320;
 
@@ -67,22 +64,17 @@ public class ResourceSelectionGroup extends Composite
   private IContainer m_inputContainer;
 
   /*
-   * übernommen von ContainerSelectionGroup und leicht verändert
-   * @author peiler
+   * übernommen von ContainerSelectionGroup und leicht verändert @author peiler
    */
-  public ResourceSelectionGroup( Composite parent, Listener listener,
-      boolean allowNewContainerName, String message,
-      boolean showClosedProjects, String[] allowedResourceExtensions,
-      IContainer inputContainer )
+  public ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewContainerName, String message,
+      boolean showClosedProjects, String[] allowedResourceExtensions, IContainer inputContainer )
   {
-    this( parent, listener, allowNewContainerName, message, showClosedProjects,
-        SIZING_SELECTION_PANE_HEIGHT, allowedResourceExtensions, inputContainer );
+    this( parent, listener, allowNewContainerName, message, showClosedProjects, SIZING_SELECTION_PANE_HEIGHT,
+        allowedResourceExtensions, inputContainer );
   }
 
-  ResourceSelectionGroup( Composite parent, Listener listener,
-      boolean allowNewResourceName, String message, boolean showClosedProjects,
-      int heightHint, String[] allowedResourceExtensions,
-      IContainer inputContainer )
+  ResourceSelectionGroup( Composite parent, Listener listener, boolean allowNewResourceName, String message,
+      boolean showClosedProjects, int heightHint, String[] allowedResourceExtensions, IContainer inputContainer )
   {
     super( parent, SWT.NONE );
     m_listener = listener;
@@ -107,8 +99,7 @@ public class ResourceSelectionGroup extends Composite
       if( resource == null )
         resourceNameField.setText( "" );//$NON-NLS-1$
       else
-        resourceNameField.setText( resource.getFullPath().makeRelative()
-            .toString() );
+        resourceNameField.setText( resource.getFullPath().makeRelative().toString() );
     }
 
     // fire an event so the parent can update its controls
@@ -132,7 +123,8 @@ public class ResourceSelectionGroup extends Composite
   /**
    * Creates the contents of the composite.
    * 
-   * @param heightHint height hint for the drill down composite
+   * @param heightHint
+   *          height hint for the drill down composite
    */
   public void createContents( String message, int heightHint )
   {
@@ -148,8 +140,7 @@ public class ResourceSelectionGroup extends Composite
     if( m_allowNewResourceName )
     {
       resourceNameField = new Text( this, SWT.SINGLE | SWT.BORDER );
-      resourceNameField
-          .setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       // TODO: add listener to control user input
       //resourceNameField.addListener( SWT.DefaultSelection, m_listener );
       resourceNameField.setFont( this.getFont() );
@@ -168,9 +159,8 @@ public class ResourceSelectionGroup extends Composite
   {
     // Create drill down.
     DrillDownComposite drillDown = new DrillDownComposite( this, SWT.BORDER );
-    GridData spec = new GridData( GridData.VERTICAL_ALIGN_FILL
-        | GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL
-        | GridData.GRAB_VERTICAL );
+    GridData spec = new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL
+        | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL );
     spec.widthHint = SIZING_SELECTION_PANE_WIDTH;
     spec.heightHint = heightHint;
     drillDown.setLayoutData( spec );
@@ -178,19 +168,16 @@ public class ResourceSelectionGroup extends Composite
     // Create tree viewer inside drill down.
     treeViewer = new TreeViewer( drillDown, SWT.NONE );
     drillDown.setChildTree( treeViewer );
-    ResourceContentProvider cp = new ResourceContentProvider(
-        m_allowedResourceExtensions );
+    ResourceContentProvider cp = new ResourceContentProvider( m_allowedResourceExtensions );
     cp.showClosedProjects( m_showClosedProjects );
     treeViewer.setContentProvider( cp );
-    treeViewer.setLabelProvider( WorkbenchLabelProvider
-        .getDecoratingWorkbenchLabelProvider() );
+    treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
     treeViewer.setSorter( new ViewerSorter() );
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
-        IStructuredSelection selection = (IStructuredSelection)event
-            .getSelection();
+        IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         resourceSelectionChanged( (IResource)selection.getFirstElement() ); // allow
         // null
       }

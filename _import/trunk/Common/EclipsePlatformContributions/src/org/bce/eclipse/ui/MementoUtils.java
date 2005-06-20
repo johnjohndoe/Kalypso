@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.bce.eclipse.ui;
 
 import java.io.ByteArrayInputStream;
@@ -57,19 +57,17 @@ import org.eclipse.ui.IMemento;
 public class MementoUtils
 {
   public final static String ISO88591 = "ISO-8859-1";
-  
-  private MementoUtils( )
+
+  private MementoUtils()
   {
-    // do not instanciate
+  // do not instanciate
   }
 
   /**
-   * Saves the given properties into the memento. The properties are simply
-   * serialized using the load/save mechanims of the Properties class. The
-   * string representation is then saved in the text data of the tag.
+   * Saves the given properties into the memento. The properties are simply serialized using the load/save mechanims of
+   * the Properties class. The string representation is then saved in the text data of the tag.
    */
-  public static void saveProperties( final IMemento memento,
-      final Properties props ) throws IOException
+  public static void saveProperties( final IMemento memento, final Properties props ) throws IOException
   {
     final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -78,7 +76,7 @@ public class MementoUtils
       props.store( stream, "" );
 
       memento.putTextData( stream.toString( ISO88591 ) );
-      
+
       stream.close();
     }
     finally
@@ -86,7 +84,7 @@ public class MementoUtils
       stream.close();
     }
   }
-  
+
   /**
    * The pendant to the saveProperties().
    */
@@ -96,9 +94,9 @@ public class MementoUtils
     try
     {
       ins = new ByteArrayInputStream( memento.getTextData().getBytes( ISO88591 ) );
-    
+
       props.load( ins );
-      
+
       ins.close();
     }
     catch( UnsupportedEncodingException e )

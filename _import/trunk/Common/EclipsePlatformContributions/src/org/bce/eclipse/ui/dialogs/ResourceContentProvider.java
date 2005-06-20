@@ -1,13 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+/***********************************************************************************************************************
+ * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/cpl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ * Contributors: IBM Corporation - initial API and implementation
+ **********************************************************************************************************************/
 package org.bce.eclipse.ui.dialogs;
 
 import java.util.ArrayList;
@@ -30,8 +27,7 @@ public class ResourceContentProvider implements ITreeContentProvider
   private String[] m_allowedResourceExtensions;
 
   /*
-   * abgeleitet von ContainerContentProvider
-   * @author N. Peiler
+   * abgeleitet von ContainerContentProvider @author N. Peiler
    */
   public ResourceContentProvider( String[] allowedResourceExtensions )
   {
@@ -98,7 +94,7 @@ public class ResourceContentProvider implements ITreeContentProvider
   {
     if( extension == null )
       return false;
-    if(m_allowedResourceExtensions==null)
+    if( m_allowedResourceExtensions == null )
       return true;
     boolean returnValue = false;
     for( int i = 0; i < m_allowedResourceExtensions.length; i++ )
@@ -146,8 +142,8 @@ public class ResourceContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-   *      java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {

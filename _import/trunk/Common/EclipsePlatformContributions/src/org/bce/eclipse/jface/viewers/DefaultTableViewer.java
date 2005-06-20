@@ -47,8 +47,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * DefaultTableViewer handles common functionality that you wish you had when
- * working with a TableViewer.
+ * DefaultTableViewer handles common functionality that you wish you had when working with a TableViewer.
  * 
  * @author schlienger
  */
@@ -78,8 +77,7 @@ public class DefaultTableViewer extends TableViewer
   /**
    * Adds a column to the underlying table control.
    */
-  public TableColumn addColumn( final String name, final String title,
-      final int width, final boolean isEditable )
+  public TableColumn addColumn( final String name, final String title, final int width, final boolean isEditable )
   {
     final Table table = getTable();
 
